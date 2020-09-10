@@ -1,11 +1,10 @@
 ﻿/*
  
 Main Documentation:
-Implemented by @thS#0305. 2020-09-08-19:20 CET
+Implemented by @thS#0305 and @zCri#5552
 
 Version: 0.0.1 unreleased, not working, not fully implemented.
 
-Proof of Concept Implementation of potential own Launcher.
 
 Probably needs some work and re-implementation. 
 
@@ -22,10 +21,15 @@ Nothing. I repeat: Literally NOTHING. Has been tested.
 General Files / Classes:
     MainWindow.xaml.cs
     Settings.xaml.cs
-    Globals.cs
-    HelperClasses\FilerHandling.cs
-    HelperClasses\RegeditHandler.cs
-    HelperClasses\Logging.cs
+    Popup.xaml.cs
+    SaveFileModder.xaml.cs
+    
+Main To do:
+    Finish implementing MainWindow.xaml (mainly WPF Styles)
+        Think about look of GTAV Button depending on game state.
+    Finish Moving Colors from GUI.cs to MainWindow.xaml.cs
+    Use MainWindow.xaml styles as a baseline for other WIndows. (Settings, Popup, SaveFileModder)
+    Talk to zCri about behavior of update / downgrade button
 
 */
 
@@ -57,92 +61,80 @@ namespace Project_127
     /// </summary>
     public partial class MainWindow : Window
     {
-        [DllImport("kernel32.dll", EntryPoint = "CreateSymbolicLinkW", CharSet = CharSet.Unicode)]
-        public static extern int CreateSymbolicLink(string lpSymlinkFileName, string lpTargetFileName, int dwFlags);
+        public static Brush MyColorWhite { get; private set; } = (Brush)new BrushConverter().ConvertFromString("#ffffff");
+        public static Brush MyColorBlack { get; private set; } = (Brush)new BrushConverter().ConvertFromString("#000000");
+        public static Brush MyColor1 { get; private set; } = (Brush)new BrushConverter().ConvertFromString("#006ec7");
+        public static Brush MyColor2 { get; private set; } = (Brush)new BrushConverter().ConvertFromString("#004177");
 
         /// <summary>
-        /// Constructor of main Window
+        /// DebugPopup Method. Just opens Messagebox with pMsg
         /// </summary>
-        public MainWindow()
+        /// <param name="pMsg"></param>
+        public static void DebugPopup(string pMsg)
         {
-            try
+            System.Windows.Forms.MessageBox.Show(pMsg);
+        }
+
+
+        private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            DragMove();
+        }
+
+        private void btn_Hamburger_Click(object sender, RoutedEventArgs e)
+        {
+            if (this.GridHamburger.Visibility == Visibility.Visible)
             {
-                Log.Logger = new LoggerConfiguration()
-                    .MinimumLevel.Debug()
-                    .WriteTo.File($"{LauncherLogic.Settings.Get("FilesFolder")}\\Logs\\RollSun-Launcher.log", rollingInterval: RollingInterval.Day)
-                    .CreateLogger();
-
-                Log.Information("Starting up.");
-
-                if (Environment.GetCommandLineArgs().Length > 2 && Environment.GetCommandLineArgs()[1].Equals("mcdonalds"))
-                {
-                    Log.Information("Ordering mcdonalds.");
-                    MessageBox.Show("using card number 1, cvv 274, expiration 06/23 to order", "ordering mcdonalds");
-                }
-
-                LauncherLogic.Init();
-
-                InitializeComponent();
-                Log.Information("Initialized UI.");
-            } catch (Exception e)
-            {
-                MessageBox.Show(e.StackTrace, e.Message);
+                this.GridHamburger.Visibility = Visibility.Hidden;
             }
-            
-        }
-
-
-
-        #region UI functionalities
-        /// <summary>
-        /// Yeah...will not comment these things below yet.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void btn_Settings_Click(object sender, RoutedEventArgs e)
-        {
-            Settings settingsWindow = new Settings
+            else
             {
-                Owner = this
-            };
-
-            settingsWindow.Show();
+                this.GridHamburger.Visibility = Visibility.Visible;
+            }
         }
 
-        private void btn_Downgrade_Click(object sender, RoutedEventArgs e)
+        private void btn_Exit_Click(object sender, RoutedEventArgs e)
         {
-            btn_Settings.IsEnabled = false;
-            btn_Downgrade.IsEnabled = false;
-            btn_Upgrade.IsEnabled = false;
-            btn_LaunchGame.IsEnabled = false;
-
-            LauncherLogic.Downgrade();
-
-            btn_Settings.IsEnabled = true;
-            btn_Downgrade.IsEnabled = true;
-            btn_Upgrade.IsEnabled = true;
-            btn_LaunchGame.IsEnabled = true;
+            Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Do you really want to exit?");
+            yesno.ShowDialog();
+            if (yesno.DialogResult == true)
+            {
+                Environment.Exit(0);
+            }
         }
 
         private void btn_Upgrade_Click(object sender, RoutedEventArgs e)
         {
-            btn_Settings.IsEnabled = false;
-            btn_Downgrade.IsEnabled = false;
-            btn_Upgrade.IsEnabled = false;
-            btn_LaunchGame.IsEnabled = false;
 
-            LauncherLogic.Upgrade();
-
-            btn_Settings.IsEnabled = true;
-            btn_Downgrade.IsEnabled = true;
-            btn_Upgrade.IsEnabled = true;
-            btn_LaunchGame.IsEnabled = true;
         }
 
-        private void btn_LaunchGame_Click(object sender, RoutedEventArgs e)
+        private void btn_Downgrade_Click(object sender, RoutedEventArgs e)
         {
 
         }
-        #endregion
+
+        private void btn_SaveFiles_Click(object sender, RoutedEventArgs e)
+        {
+            (new SaveFileHandler()).Show();
+        }
+
+        private void btn_Settings_Click(object sender, RoutedEventArgs e)
+        {
+            (new Settings()).Show();
+        }
+
+        private void btn_Readme_Click(object sender, RoutedEventArgs e)
+        {
+            string msg = "Test";
+            msg += "\nTestLine2";
+            msg += "\nTestLine3";
+
+            new Popup(Popup.PopupWindowTypes.PopupOk, msg).ShowDialog();
+        }
+
+        private void btn_GTA_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

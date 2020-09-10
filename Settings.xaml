@@ -5,11 +5,49 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Project_127"
         mc:Ignorable="d"
-        Title="Settings" Height="171.22" Width="213.927">
-    <Grid>
-        <Button x:Name="InstallationPathButton" Content="GTA V installation path" HorizontalAlignment="Left" VerticalAlignment="Top" Width="138" Margin="0,20,0,0" Click="InstallationPathButton_Click"/>
-        <Button x:Name="LauncherPathButton" Content="Launcher files path" HorizontalAlignment="Left" Margin="0,40,0,0" VerticalAlignment="Top" Width="138" Click="LauncherPathButton_Click"/>
-        <CheckBox x:Name="_500KCheckBox" Content="500K Bonus" HorizontalAlignment="Left" Margin="0,60,0,0" VerticalAlignment="Top" Click="_500KCheckBox_Click"/>
-        <Button x:Name="ResetButton" Content="Reset settings to default" HorizontalAlignment="Left" Margin="0,75,0,0" VerticalAlignment="Top" Width="138" Click="ResetButton_Click"/>
-    </Grid>
+        Title="Settings" Height="400" Width="600" Background="#2E2E2E"
+        
+       
+        WindowStyle="None" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" MouseLeftButtonDown="Window_MouseLeftButtonDown"
+ 
+        >
+    <Window.Resources>
+        <Style TargetType="{x:Type Button}" x:Key="btn">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border Background="{TemplateBinding Background}" BorderBrush="White" BorderThickness="1">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="LightGray"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+    <Border BorderBrush="White" Margin="5" CornerRadius="10" BorderThickness="1">
+
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="4*"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+
+            <Label Grid.Row="0" Grid.Column="0" Content="Test" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+            <Button Grid.Row="0" Grid.Column="1" Style="{StaticResource btn}"   Content="X"/>
+            <!--<Button />-->
+        </Grid>
+    </Border>
 </Window>

@@ -26,7 +26,7 @@ namespace Project_127
         public Settings()
         {
             InitializeComponent();
-            _500KCheckBox.IsChecked = bool.Parse(LauncherLogic.Settings.Get("500KBonus"));
+            //_500KCheckBox.IsChecked = bool.Parse(LauncherLogic.Settings.Get("500KBonus"));
         }
 
         private void ResetButton_Click(object sender, RoutedEventArgs e)
@@ -36,7 +36,7 @@ namespace Project_127
 
         private void _500KCheckBox_Click(object sender, RoutedEventArgs e)
         {
-            LauncherLogic.Settings.Set("500KBonus", _500KCheckBox.IsChecked.ToString());
+            //LauncherLogic.Settings.Set("500KBonus", _500KCheckBox.IsChecked.ToString());
         }
 
         private void InstallationPathButton_Click(object sender, RoutedEventArgs e)
@@ -57,6 +57,11 @@ namespace Project_127
             {
                 LauncherLogic.Settings.Set("FilesFolder", Environment.ExpandEnvironmentVariables(folderBrowserDialog.SelectedPath));
             }
+        }
+
+        private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+
         }
     }
 }
