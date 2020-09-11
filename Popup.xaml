@@ -6,15 +6,16 @@
         xmlns:local="clr-namespace:Project_127"
         mc:Ignorable="d"
         Title="Popup"  Width="600"
-        Background="{x:Static local:MainWindow.MyColorBlack}"
+        Background="{x:Static local:CustomColors.PU_Background}"
         WindowStyle="None" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" MouseLeftButtonDown="Window_MouseLeftButtonDown"
         Height="Auto"
         SizeToContent="WidthAndHeight"
         >
     <Window.Resources>
         <Style TargetType="Button" x:Key="btn">
-            <Setter Property="Background" Value="{x:Static local:MainWindow.MyColorBlack}"/>
-            <Setter Property="Foreground" Value="{x:Static local:MainWindow.MyColorWhite}"/>
+            <Setter Property="Background" Value="{x:Static local:CustomColors.PU_ButtonBackground}"/>
+            <Setter Property="Foreground" Value="{x:Static local:CustomColors.PU_ButtonForeground}"/>
+            <Setter Property="BorderBrush" Value="{x:Static local:CustomColors.PU_ButtonBorderBrush}"/>
             <Setter Property="FontSize" Value="18"/>
             <Setter Property="FontFamily" Value="Tahoma"/>
             <Setter Property="Margin" Value="10"/>
@@ -22,10 +23,10 @@
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
                         <Border Background="{TemplateBinding Background}"
-                            CornerRadius="5"
-                            BorderThickness="3"
+                            CornerRadius="0"
+                            BorderThickness="0"
                             Padding="5"
-                            BorderBrush="{TemplateBinding Foreground}">
+                            BorderBrush="{TemplateBinding BorderBrush}">
                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         </Border>
                     </ControlTemplate>
@@ -33,13 +34,14 @@
             </Setter>
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="{x:Static local:MainWindow.MyColorWhite}"/>
-                    <Setter Property="Foreground" Value="{x:Static local:MainWindow.MyColorBlack}"/>
+                    <Setter Property="Background" Value="{x:Static local:CustomColors.PU_ButtonMOBackground}"/>
+                    <Setter Property="Foreground" Value="{x:Static local:CustomColors.PU_ButtonMOForeground}"/>
+                    <Setter Property="BorderBrush" Value="{x:Static local:CustomColors.PU_ButtonMOBorderBrush}"/>
                 </Trigger>
             </Style.Triggers>
         </Style>
         <Style x:Key="lbl" TargetType="Label">
-            <Setter Property="Foreground" Value="{x:Static local:MainWindow.MyColorWhite}" />
+            <Setter Property="Foreground" Value="{x:Static local:CustomColors.PU_LabelForeground}" />
             <Setter Property="FontFamily" Value="Tahoma" />
             <Setter Property="FontSize" Value="18" />
             <Setter Property="HorizontalAlignment" Value="Stretch"/>
@@ -49,8 +51,8 @@
             <Setter Property="Margin" Value="10" />
         </Style>
     </Window.Resources>
-    <Border BorderBrush="{x:Static local:MainWindow.MyColorWhite}" BorderThickness="2">
-        <Border Background="{x:Static local:MainWindow.MyColorBlack}" Margin="15" CornerRadius="10">
+    <Border BorderBrush="{x:Static local:CustomColors.PU_BorderBrush}" BorderThickness="2">
+        <Border Background="{x:Static local:CustomColors.PU_BorderBrush_Inner}" Margin="15" CornerRadius="10">
 
             <Grid x:Name="myGrid">
                 <Grid.RowDefinitions>

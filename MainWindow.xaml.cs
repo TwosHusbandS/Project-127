@@ -61,10 +61,17 @@ namespace Project_127
     /// </summary>
     public partial class MainWindow : Window
     {
-        public static Brush MyColorWhite { get; private set; } = (Brush)new BrushConverter().ConvertFromString("#ffffff");
-        public static Brush MyColorBlack { get; private set; } = (Brush)new BrushConverter().ConvertFromString("#000000");
-        public static Brush MyColor1 { get; private set; } = (Brush)new BrushConverter().ConvertFromString("#006ec7");
-        public static Brush MyColor2 { get; private set; } = (Brush)new BrushConverter().ConvertFromString("#004177");
+
+        /// <summary>
+        /// Constructor of main Window
+        /// </summary>
+        public MainWindow()
+        {
+            InitializeComponent();
+            this.GridHamburger.Visibility = Visibility.Hidden;
+        }
+
+
 
         /// <summary>
         /// DebugPopup Method. Just opens Messagebox with pMsg
