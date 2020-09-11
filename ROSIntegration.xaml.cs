@@ -27,7 +27,6 @@ namespace Project_127
         }
 
         private const string jsf = @"
-(
 function RGSC_GET_PROFILE_LIST()
 {
 return JSON.stringify({
@@ -172,7 +171,7 @@ head.appendChild(style);
 
 style.type = 'text/css';
 style.appendChild(document.createTextNode(css));
-)";
+";
         private void LoadingStateChange(object sender, LoadingStateChangedEventArgs args)
         {
             if (!args.IsLoading)
