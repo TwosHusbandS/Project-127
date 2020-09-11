@@ -21,7 +21,7 @@ namespace Project_127
     public partial class Settings : Window
     {
         /// <summary>
-        /// Consturor of Settings Window
+        /// Consturor of Settings Window 
         /// </summary>
         public Settings()
         {
