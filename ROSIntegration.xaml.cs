@@ -13,6 +13,13 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+/*
+ * This file is based on LegitimacyNUI.cpp from the CitizenFX Project - http://citizen.re/
+ * 
+ * See the included licenses for licensing information on this code
+ * 
+ * Rewritten for Project 1.27 by @dr490n/@jaredtb  
+ */
 
 namespace Project_127
 {
@@ -163,7 +170,7 @@ location.reload();
 }, 500);
 }
 
-var css = '.rememberContainer, p.Header__signUp { display: none; } .SignInForm__descriptionText .Alert__text { display: none; } .Alert__content:after { content: \'A Rockstar Games Social Club account owning Grand Theft Auto V is required to play FiveM.\'; max-width: 600px; display: inline-block; }',
+var css = '.rememberContainer, p.Header__signUp { display: none; } .SignInForm__descriptionText .Alert__text { display: none; } .Alert__content:after { content: \'A Rockstar Games Social Club account owning Grand Theft Auto V is required to use Project 1.27.\'; max-width: 600px; display: inline-block; }',
     head = document.head || document.getElementsByTagName('head')[0],
     style = document.createElement('style');
 
