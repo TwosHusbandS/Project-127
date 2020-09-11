@@ -10,9 +10,9 @@
         Title="ROSIntegration" Height="450" Width="800">
     <Grid>
         <cefSharp:ChromiumWebBrowser x:Name="browser" Grid.Row="0" Address="https://rgl.rockstargames.com/launcher" LoadingStateChanged="LoadingStateChange">
-            <cefSharp:ChromiumWebBrowser.BrowserSettings>
+            <!--<cefSharp:ChromiumWebBrowser.BrowserSettings>
                 <cefSharpCore:BrowserSettings DefaultEncoding="UTF-8"/>
-            </cefSharp:ChromiumWebBrowser.BrowserSettings>
+            </cefSharp:ChromiumWebBrowser.BrowserSettings>-->
         </cefSharp:ChromiumWebBrowser>
     </Grid>
 </Window>
