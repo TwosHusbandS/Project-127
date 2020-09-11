@@ -34,14 +34,14 @@ namespace Project_127
         /// SFH = SafeFileHandler
         /// MO = Mouse Over
         /// </summary>
-        public static Brush MW_Border { get; private set; } = MyColorWhite70;
+        public static Brush MW_Border { get; private set; } = MyColorWhite;
 
-        public static Brush MW_ButtonBackground { get; private set; } = MyColorWhite70;
-        public static Brush MW_ButtonForeground { get; private set; } = MyColorWhite70;
-        public static Brush MW_ButtonBorderBrush { get; private set; } = MyColorWhite70;
-        public static Brush MW_ButtonMOBackground { get; private set; } = MyColorWhite70;
-        public static Brush MW_ButtonMOForeground { get; private set; } = MyColorWhite70;
-        public static Brush MW_ButtonMOBorderBrush { get; private set; } = MyColorWhite70;
+        public static Brush MW_ButtonBackground { get; private set; } = SetOpacity(MyColorBlack,20);
+        public static Brush MW_ButtonForeground { get; private set; } = MyColorWhite;
+        public static Brush MW_ButtonBorderBrush { get; private set; } = MyColorWhite;
+        public static Brush MW_ButtonMOBackground { get; private set; } = SetOpacity(MyColorBlack, 70);
+        public static Brush MW_ButtonMOForeground { get; private set; } = GetBrushRGB(227, 86, 39);
+        public static Brush MW_ButtonMOBorderBrush { get; private set; } = GetBrushRGB(227, 86, 39);
 
         public static Brush MW_ButtonSmallBackground { get; private set; } = MyColorWhite70;
         public static Brush MW_ButtonSmallForeground { get; private set; } = MyColorWhite70;
@@ -71,46 +71,37 @@ namespace Project_127
 
         /// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        private Brush SetOpacity(Brush pBrush, int pOpacity)
+        private static Brush SetOpacity(Brush pBrush, int pOpacity)
         {
-            pBrush.Opacity = pOpacity;
+            double dOpacity = (((double)pOpacity) / 100);
+            pBrush.Opacity = dOpacity;
             return pBrush;
         }
 
-        private Brush GetBrushHex(string pString)
+        private static Brush GetBrushHex(string pString)
         {
             return (GetBrushHex(pString, 100));
         }
 
-        private Brush GetBrushHex(string pString, int pOpacity)
+        private static Brush GetBrushHex(string pString, int pOpacity)
         {
             Brush rtrn = (Brush)new BrushConverter().ConvertFromString("#" + pString.TrimStart('#'));
-            rtrn.Opacity = pOpacity;
-            return rtrn;
+            return SetOpacity(rtrn,pOpacity);
         }
 
 
-        private Brush GetBrushRGB(string pRGB)
+        private static Brush GetBrushRGB(int r, int g, int b)
         {
-            return GetBrushRGB(pRGB, 100);
+            return GetBrushRGB(r,g,b, 100);
         }
 
 
         // yeye this ugly like yo mama but its just for internal testing. Wont be called in production
-        private Brush GetBrushRGB(string pRGB, int pOpacity)
+        private static Brush GetBrushRGB(int r, int g, int b, int pOpacity)
         {
             try
             {
-                string[] splitRGBS = pRGB.Split(',');
-
-                int[] splitRGBI = new int[splitRGBS.Length];
-
-                for (int i = 0; i <= splitRGBS.Length; i++)
-                {
-                    Int32.TryParse(splitRGBS[i], out splitRGBI[i]);
-                }
-
-                string hex = string.Format("{0:X2}{1:X2}{2:X2}", splitRGBI[0], splitRGBI[1], splitRGBI[2]);
+                string hex = string.Format("{0:X2}{1:X2}{2:X2}", r, g, b);
 
                 return GetBrushHex(hex, pOpacity);
             }
