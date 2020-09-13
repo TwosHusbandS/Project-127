@@ -57,52 +57,29 @@ namespace Project_127
         {
             Log.Information("Checking for user error.");
             //For now it just checks if it needs the initial setup, wont be handling user errors now i guess those users better be smart and not fuck their files up (unless its my fault, then, actually nevermind its still their fault)
-            bool initialized = true;
+            bool needsUpgrade = true;
             foreach (string filePath in Directory.GetFiles($"{Settings.Get("FilesFolder")}\\Downgrade"))
             {
                 string fileName = Path.GetFileName(filePath);
-                if ((File.Exists($"{Settings.Get("GTAVInstallationPath")}\\{fileName}") && (File.GetAttributes($"{Settings.Get("GTAVInstallationPath")}\\{fileName}") & FileAttributes.ReparsePoint) == FileAttributes.ReparsePoint) || !File.Exists($"{Settings.Get("GTAVInstallationPath")}\\{fileName}"))
+                if (File.Exists($"{Settings.Get("GTAVInstallationPath")}\\{fileName}") && (File.GetAttributes($"{Settings.Get("GTAVInstallationPath")}\\{fileName}") & FileAttributes.ReparsePoint) != FileAttributes.ReparsePoint)
                 {
-                    continue;
-                }
-                else
-                {
-                    initialized = false;
-                    break;
+                    Log.Information("File {fileName} needs to be moved, moving it.", fileName);
+                    File.Move($"{Settings.Get("GTAVInstallationPath")}\\{fileName}", $"{Settings.Get("FilesFolder")}\\Upgrade\\{fileName}");
+                    needsUpgrade = true;
                 }
             }
 
             foreach (string filePath in Directory.GetFiles($"{Settings.Get("FilesFolder")}\\Downgrade\\update"))
             {
                 string fileName = Path.GetFileName(filePath);
-                if ((File.Exists($"{Settings.Get("GTAVInstallationPath")}\\update\\{fileName}") && (File.GetAttributes($"{Settings.Get("GTAVInstallationPath")}\\update\\{fileName}") & FileAttributes.ReparsePoint) == FileAttributes.ReparsePoint) || !File.Exists($"{Settings.Get("GTAVInstallationPath")}\\{fileName}"))
+                if (File.Exists($"{Settings.Get("GTAVInstallationPath")}\\update\\{fileName}") && (File.GetAttributes($"{Settings.Get("GTAVInstallationPath")}\\update\\{fileName}") & FileAttributes.ReparsePoint) != FileAttributes.ReparsePoint)
                 {
-                    continue;
-                }
-                else
-                {
-                    initialized = false;
-                    break;
+                    Log.Information("File {fileName} needs to be moved, moving it.", fileName);
+                    File.Move($"{Settings.Get("GTAVInstallationPath")}\\update\\{fileName}", $"{Settings.Get("FilesFolder")}\\Upgrade\\update\\{fileName}");
+                    needsUpgrade = true;
                 }
             }
-
-            if (!initialized)
-            {
-                Log.Warning("Files need initialization, moving required files.");
-                foreach (string filePath in Directory.GetFiles($"{Settings.Get("FilesFolder")}\\Downgrade"))
-                {
-                    string fileName = Path.GetFileName(filePath);
-                    Log.Information("Moving {fileName}.", fileName);
-                    File.Move($"{Settings.Get("GTAVInstallationPath")}\\{fileName}", $"{Settings.Get("FilesFolder")}\\Upgrade\\{fileName}");
-                }
-                foreach (string filePath in Directory.GetFiles($"{Settings.Get("FilesFolder")}\\Downgrade\\update"))
-                {
-                    string fileName = Path.GetFileName(filePath);
-                    Log.Information("Moving {fileName}.", fileName);
-                    File.Move($"{Settings.Get("GTAVInstallationPath")}\\update\\{fileName}", $"{Settings.Get("FilesFolder")}\\Upgrade\\{fileName}");
-                }
-                Upgrade();
-            }
+            if (needsUpgrade) Upgrade();
         }
         #endregion
 
