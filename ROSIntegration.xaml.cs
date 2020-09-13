@@ -185,7 +185,6 @@ style.appendChild(document.createTextNode(css));
             {
                 IFrame frame = browser.GetMainFrame();
                 frame.ExecuteJavaScriptAsync(jsf, "https://rgl.rockstargames.com/temp.js", 0);
-                System.Windows.Forms.MessageBox.Show(frame.Url);
             }
         }
     }
