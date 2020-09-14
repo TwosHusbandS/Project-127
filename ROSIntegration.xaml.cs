@@ -31,9 +31,14 @@ namespace Project_127
         public ROSIntegration()
         {
             InitializeComponent();
+            browser.BrowserSettings.BackgroundColor = 0x13 << 16 | 0x15 << 8 | 0x18;
         }
 
         private const string jsf = @"
+function invokeNative(name, json){
+    CefSharp.PostMessage(name+':'+json);
+}
+
 function RGSC_GET_PROFILE_LIST()
 {
 return JSON.stringify({
@@ -97,7 +102,7 @@ Password: (data.SavePassword || data.AutoSignIn) ? data.Password : '',
 Email: (data.SaveEmail || data.SavePassword || data.AutoSignIn) ? data.Email : ''
 };
 
-window.invokeNative('signin', s);
+invokeNative('signin', s);
 }
 
 RGSC_JS_FINISH_SIGN_IN(JSON.stringify(data));
@@ -108,7 +113,7 @@ function RGSC_RAISE_UI_EVENT(a)
 const d = JSON.parse(a);
 
 if (d.EventId === 1) {
-window.invokeNative('ui', d.Data.Action);
+invokeNative('ui', d.Data.Action);
 }
 }
 
@@ -185,6 +190,38 @@ style.appendChild(document.createTextNode(css));
             {
                 IFrame frame = browser.GetMainFrame();
                 frame.ExecuteJavaScriptAsync(jsf, "https://rgl.rockstargames.com/temp.js", 0);
+            }
+        }
+
+        private void browser_JavascriptMessageReceived(object sender, JavascriptMessageReceivedEventArgs e)
+        {
+            char[] sep = new char[1];
+            sep[0] = ':';
+            string[] message = e.Message.ToString().Split(sep, 2);
+            //System.Windows.Forms.MessageBox.Show(e.Message.ToString());
+            if (message[0] == "ui")
+            {
+                if (message[1] == "Close")
+                {
+                    this.Dispatcher.Invoke(() => 
+                    {
+                        this.Close(); 
+                    });
+                } 
+                else if (message[1] == "Maximize")
+                {
+                    this.Dispatcher.Invoke(() =>
+                    {
+                        this.WindowState = WindowState.Maximized;
+                    });
+                }
+                else if (message[1] == "Minimize")
+                {
+                    this.Dispatcher.Invoke(() =>
+                    {
+                        this.WindowState = WindowState.Minimized;
+                    });
+                }
             }
         }
     }
