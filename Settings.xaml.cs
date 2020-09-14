@@ -15,6 +15,17 @@ using System.Windows.Shapes;
 
 namespace Project_127
 {
+
+	/*
+
+		So Far this is all of zCris Code. Havent touched it yet, only added shit so stuff will compile.
+		Still need to implement all of the settings buttons and checkboxes and shit.
+		Gonna do that after finishing designing the settings window to a state where its semi-usable without causing physical pain due to its uglyness.
+		Gonna documnent this after that of course
+
+	*/
+
+
     /// <summary>
     /// Interaction logic for Settings.xaml
     /// </summary>
@@ -61,7 +72,13 @@ namespace Project_127
 
         private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
+            DragMove();
 
+        }
+
+        private void btn_Close_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close(); 
         }
     }
 }

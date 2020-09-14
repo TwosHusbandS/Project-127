@@ -10,7 +10,7 @@
         WindowStyle="None" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" MouseLeftButtonDown="Window_MouseLeftButtonDown"
         Height="Auto"
         SizeToContent="WidthAndHeight"
-        >
+        Icon="/Artwork/icon.png">
     <Window.Resources>
         <Style TargetType="Button" x:Key="btn">
             <Setter Property="Background" Value="{x:Static local:CustomColors.PU_ButtonBackground}"/>
@@ -23,8 +23,8 @@
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
                         <Border Background="{TemplateBinding Background}"
-                            CornerRadius="0"
-                            BorderThickness="0"
+                            CornerRadius="4"
+                            BorderThickness="{x:Static local:CustomColors.PU_ButtonBorderThickness}"
                             Padding="5"
                             BorderBrush="{TemplateBinding BorderBrush}">
                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
@@ -52,7 +52,7 @@
         </Style>
     </Window.Resources>
     <Border BorderBrush="{x:Static local:CustomColors.PU_BorderBrush}" BorderThickness="2">
-        <Border Background="{x:Static local:CustomColors.PU_BorderBrush_Inner}" Margin="15" CornerRadius="10">
+        <Border BorderBrush="{x:Static local:CustomColors.PU_BorderBrush_Inner}" BorderThickness="2" Margin="10" CornerRadius="10">
 
             <Grid x:Name="myGrid">
                 <Grid.RowDefinitions>
