@@ -19,19 +19,34 @@ namespace Project_127
     /// </summary>
     public partial class Popup : Window
     {
+		/// <summary>
+		/// Defines the Enum "PopupWindowTypes"
+		/// </summary>
+		public enum PopupWindowTypes
+		{
+			PopupYesNo = 1,
+			PopupOk = 2
+		}
 
-        /// <summary>
-        /// Constructor for Popup window.
-        /// </summary>
-        /// <param name="pPopupWindowType"></param>
-        /// <param name="pMsg"></param>
-        /// <param name="pFontSize"></param>
-        public Popup(Popup.PopupWindowTypes pPopupWindowType, string pMsg, int pFontSize)
+
+		/// <summary>
+		/// Constructor for Popup window.
+		/// </summary>
+		/// <param name="pPopupWindowType"></param>
+		/// <param name="pMsg"></param>
+		/// <param name="pTitle"></param>
+		/// <param name="pFontSize"></param>
+		public Popup(Popup.PopupWindowTypes pPopupWindowType, string pMsg, string pTitle, int pFontSize)
         {
+			// Initializing all WPF Elements
             InitializeComponent();
+
+			// Set the Parameters as Properties of new Popup Window
             lbl_Main.FontSize = pFontSize;
             lbl_Main.Content = pMsg;
+            this.Title = pTitle;
 
+			// If its a "OK" Window:
             if (pPopupWindowType == Popup.PopupWindowTypes.PopupOk)
             {
                 Button myButtonOk = new Button();
@@ -44,6 +59,7 @@ namespace Project_127
                 Grid.SetRow(myButtonOk, 1);
                 myButtonOk.Focus();
             }
+			// If its a "Yes/No" Window:
             else if (pPopupWindowType == Popup.PopupWindowTypes.PopupYesNo)
             {
                 Button myButtonYes = new Button();
@@ -65,28 +81,32 @@ namespace Project_127
             }
         }
 
-        /// <summary>
-        /// Defines the Enum "PopupWindowTypes"
-        /// </summary>
-        public enum PopupWindowTypes
-        {
-            PopupYesNo = 1,
-            PopupOk = 2
-        }
 
         /// <summary>
         /// Overloaded (underloaded) Constructor of Popup Window
         /// </summary>
         /// <param name="pPopupWindowType"></param>
         /// <param name="pMsg"></param>
-        public Popup(Popup.PopupWindowTypes pPopupWindowType, string pMsg) : this(pPopupWindowType, pMsg, 18)
+        /// <param name="pTitle"></param>
+        public Popup(Popup.PopupWindowTypes pPopupWindowType, string pMsg, string pTitle) : this(pPopupWindowType, pMsg, pTitle, 18)
         {
 
         }
 
 
         /// <summary>
-        /// Closes Popup / itself
+        /// Overloaded (underloaded) Constructor of Popup Window
+        /// </summary>
+        /// <param name="pPopupWindowType"></param>
+        /// <param name="pMsg"></param>
+        public Popup(Popup.PopupWindowTypes pPopupWindowType, string pMsg) : this(pPopupWindowType, pMsg, "Popup", 18)
+        {
+
+        }
+
+
+        /// <summary>
+        /// Click on "OK". Closes itself.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -108,6 +128,7 @@ namespace Project_127
             this.Close();
         }
 
+
         /// <summary>
         /// Click on "No". Sets DialogResult to "No" and closes itself.
         /// </summary>
@@ -121,14 +142,15 @@ namespace Project_127
         }
 
 
-        /// <summary>
-        /// Method to Drag and Move Window on MouseLeftButtonDown
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            DragMove();
-        }
-    }
-}
+		/// <summary>
+		/// Method which makes the Window draggable, which moves the whole window when holding down Mouse1 on the background
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+		{
+			DragMove(); // Pre-Defined Method
+		}
+
+	} // End of Class
+} // End of Namespace

@@ -1,0 +1,18 @@
+﻿<Window x:Class="Project_127.ROSIntegration"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:cefSharp="clr-namespace:CefSharp.Wpf;assembly=CefSharp.Wpf"
+        xmlns:cefSharpCore="clr-namespace:CefSharp;assembly=CefSharp.Core"
+        xmlns:local="clr-namespace:Project_127"
+        mc:Ignorable="d"
+        Title="ROSIntegration" Height="450" Width="800">
+    <Grid>
+        <cefSharp:ChromiumWebBrowser x:Name="browser" Grid.Row="0" Address="https://rgl.rockstargames.com/launcher" LoadingStateChanged="LoadingStateChange">
+            <cefSharp:ChromiumWebBrowser.BrowserSettings>
+                <cefSharpCore:BrowserSettings DefaultEncoding="UTF-8"/>
+            </cefSharp:ChromiumWebBrowser.BrowserSettings>
+        </cefSharp:ChromiumWebBrowser>
+    </Grid>
+</Window>

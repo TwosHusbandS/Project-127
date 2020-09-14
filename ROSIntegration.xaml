@@ -7,11 +7,17 @@
         xmlns:cefSharpCore="clr-namespace:CefSharp;assembly=CefSharp.Core"
         xmlns:local="clr-namespace:Project_127"
         mc:Ignorable="d"
-        Title="ROSIntegration" Height="450" Width="800">
+        Title="ROSIntegration" Height="450" Width="800"
+        WindowStyle="None"
+        BorderBrush="Black"
+        BorderThickness="0"
+        AllowsTransparency="True"
+        WindowStartupLocation="CenterScreen"
+        Background="#131518">
     <Grid>
-        <cefSharp:ChromiumWebBrowser x:Name="browser" Grid.Row="0" Address="https://rgl.rockstargames.com/launcher" LoadingStateChanged="LoadingStateChange">
+        <cefSharp:ChromiumWebBrowser x:Name="browser" Grid.Row="0" Address="https://rgl.rockstargames.com/launcher" LoadingStateChanged="LoadingStateChange" JavascriptMessageReceived="browser_JavascriptMessageReceived">
             <cefSharp:ChromiumWebBrowser.BrowserSettings>
-                <cefSharpCore:BrowserSettings DefaultEncoding="UTF-8"/>
+                <cefSharpCore:BrowserSettings BackgroundColor="#131518"/>
             </cefSharp:ChromiumWebBrowser.BrowserSettings>
         </cefSharp:ChromiumWebBrowser>
     </Grid>
