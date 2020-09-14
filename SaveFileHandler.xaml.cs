@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,9 +20,121 @@ namespace Project_127
     /// </summary>
     public partial class SaveFileHandler : Window
     {
+		/// <summary>
+		/// Collection of "MyFile" which are used for the Save-Files in the Backup Folder.
+		/// </summary>
+        public static ObservableCollection<MyFile> BackupSaves = new ObservableCollection<MyFile>();
+
+		/// <summary>
+		/// Collection of "MyFile" which are used for the Save-Files in the GTA Folder.
+		/// </summary>
+		public static ObservableCollection<MyFile> GTASaves = new ObservableCollection<MyFile>();
+
+
+		/// <summary>
+		/// Constructor of SaveFileHandler
+		/// </summary>
         public SaveFileHandler()
         {
-            InitializeComponent();
+			// Initializing all WPF Elements
+			InitializeComponent();
+
+			// Set the ItemSource of Both Datagrids for the DataBinding
+            dg_BackupFiles.ItemsSource = BackupSaves;
+            dg_GTAFiles.ItemsSource = GTASaves;
         }
-    }
-}
+
+
+		/// <summary>
+		/// Click on the LeftArrow.
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void btn_LeftArrow_Click(object sender, RoutedEventArgs e)
+		{
+			// Not Fully Implemented
+			BackupSaves.Add(new MyFile("Test1", "TestA"));
+			BackupSaves.Add(new MyFile("Test2", "TestB"));
+			BackupSaves.Add(new MyFile("Test3", "TestC"));
+			BackupSaves.Add(new MyFile("Test4", "TestD"));
+			BackupSaves.Add(new MyFile("Test5", "TestE"));
+		}
+
+
+		/// <summary>
+		/// Click on the Right Arrow.
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void btn_RightArrow_Click(object sender, RoutedEventArgs e)
+		{
+			// Not Fully Implemented
+			MyFile tmp = (MyFile)dg_BackupFiles.SelectedItem;
+			BackupSaves.Remove(tmp);
+			GTASaves.Add(tmp);
+		}
+
+
+		/// <summary>
+		/// Refresh Button
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void btn_Refresh_Click(object sender, RoutedEventArgs e)
+		{
+
+		}
+
+
+		/// <summary>
+		/// Close Button
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void btn_close_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
+
+
+		// Below are Methods we need to make the behaviour of this nice.
+
+
+		/// <summary>
+		/// Method which makes the Window draggable, which moves the whole window when holding down Mouse1 on the background
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+		{
+			DragMove(); // Pre-Defined Method
+		}
+
+
+		/// <summary>
+		/// Enables the scrolling behaviour of the DataGrid for Backup Save-Files
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void Dg_BackupFiles_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            // TODO CTRLF Grab the sv_Object thingy from the sender object. Steal some code that did this with buttons from ProjectKI I think.
+            // Might be hard since it the sender Object is the datagrid not the scrollviewer
+            sv_BackupFiles.ScrollToVerticalOffset(sv_BackupFiles.VerticalOffset - e.Delta / 3);
+        }
+
+
+		/// <summary>
+		/// Enables the scrolling behaviour of the DataGrid for GTA Save-Files
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void Dg_GTAFiles_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            // TODO CTRLF Grab the sv_Object thingy from the sender object. Steal some code that did this with buttons from ProjectKI I think.
+            // Might be hard since it the sender Object is the datagrid not the scrollviewer
+            sv_BackupFiles.ScrollToVerticalOffset(sv_BackupFiles.VerticalOffset - e.Delta / 3);
+        }
+ 
+    } // End of Class
+} // End of Namespace
