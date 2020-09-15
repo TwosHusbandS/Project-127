@@ -5,12 +5,12 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Project_127"
         mc:Ignorable="d"
-        Title="SaveFileHandler" Height="450" Width="700"        
+        Title="Save File Manager" Height="450" Width="700"        
         WindowStyle="None" 
         AllowsTransparency="True" 
         MouseLeftButtonDown="Window_MouseLeftButtonDown" 
         WindowStartupLocation="CenterScreen"
-        ResizeMode="NoResize"
+        ResizeMode="CanMinimize"
         Background="{x:Static local:CustomColors.SFH_Background}"
         Icon="/Artwork/icon.png">
     <Window.Resources>
@@ -161,12 +161,13 @@
         
     </Window.Resources>
     <Border BorderBrush="{x:Static local:CustomColors.SFH_BorderBrush}" BorderThickness="2">
-        <Border BorderBrush="{x:Static local:CustomColors.SFH_BorderBrush_Inner}" BorderThickness="2" Margin="10" CornerRadius="10">
+        <Border BorderBrush="{x:Static local:CustomColors.SFH_BorderBrush_Inner}" BorderThickness="0" Margin="10" CornerRadius="10">
             <Grid>
                 <Grid.RowDefinitions> 
                     <RowDefinition Height="*"/>
-                    <RowDefinition Height="2*"/>
-                    <RowDefinition Height="2*"/>
+                    <RowDefinition Height="1.5*"/>
+                    <RowDefinition Height="1.5*"/>
+                    <RowDefinition Height="1.5*"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
@@ -176,19 +177,21 @@
                 </Grid.ColumnDefinitions>
 
                 <Label Style="{StaticResource lbl}" Grid.Row="0" Grid.Column="0" Content="Backup Savefiles"/>
-                <Button x:Name="btn_Refresh" Style="{StaticResource btn}" Grid.Row="0" Grid.Column="1" Content="Refresh" Click="btn_Refresh_Click"/>
                 <Label Style="{StaticResource lbl}" Grid.Row="0" Grid.Column="2" Content="GTA V Savefiles"/>
 
-                <Button Style="{StaticResource btn}" x:Name="btn_RightArrow" Grid.Row="1" Grid.Column="1" Height="64" Width="64" Click="btn_RightArrow_Click">
+                <Button Style="{StaticResource btn}" x:Name="btn_RightArrow" ToolTip="Move File to GTA Saves Folder" Grid.Row="1" Grid.Column="1" Height="64" Width="64" Click="btn_RightArrow_Click">
                     <Image Source="/Artwork/rightarrow.png"/>
                 </Button>
-                <Button Style="{StaticResource btn}" x:Name="btn_LeftArrow" Grid.Row="2" Grid.Column="1" Height="64" Width="64" Click="btn_LeftArrow_Click">
+                <Button Style="{StaticResource btn}" x:Name="btn_Refresh"  ToolTip="Refresh (detect new Files)" Grid.Row="2" Grid.Column="1" Height="64" Width="64" Click="btn_Refresh_Click">
+                    <Image Source="/Artwork/refresh.png"/>
+                </Button>
+                <Button Style="{StaticResource btn}" x:Name="btn_LeftArrow" ToolTip="Move File to Backup Folder" Grid.Row="3" Grid.Column="1" Height="64" Width="64" Click="btn_LeftArrow_Click">
                     <Image Source="/Artwork/leftarrow.png"/>
                 </Button>
 
-                <Button Style="{StaticResource btn}" x:Name="btn_close" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3" Content="Close" Click="btn_close_Click"/>
+                <Button Style="{StaticResource btn}" x:Name="btn_close" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3" Content="Close" Click="btn_close_Click"/>
 
-                <Border Grid.Row="1" Grid.Column="0" Grid.RowSpan="2" Margin="10,5,5,5" BorderBrush="{x:Static local:CustomColors.SFH_BorderBrush_Inner}" BorderThickness="2">
+                <Border Grid.Row="1" Grid.Column="0" Grid.RowSpan="3" Margin="10,5,5,5" BorderBrush="{x:Static local:CustomColors.SFH_BorderBrush_Inner}" BorderThickness="2">
                     <ScrollViewer x:Name="sv_BackupFiles">
                         <DataGrid x:Name="dg_BackupFiles" ItemsSource="{Binding BackupFiles}" PreviewMouseWheel="Dg_BackupFiles_PreviewMouseWheel">
                             <!--cant style this easily, since it does not derive from FrameworkElement-->
@@ -208,7 +211,7 @@
                     </ScrollViewer>
                 </Border>
 
-                <Border Grid.Row="1" Grid.Column="2" Grid.RowSpan="2" BorderBrush="{x:Static local:CustomColors.PU_BorderBrush_Inner}" BorderThickness="2"  Margin="5,5,10,5">
+                <Border Grid.Row="1" Grid.Column="2" Grid.RowSpan="3" BorderBrush="{x:Static local:CustomColors.PU_BorderBrush_Inner}" BorderThickness="2"  Margin="5,5,10,5">
                     <ScrollViewer x:Name="sv_GTAFiles">
                         <DataGrid x:Name="dg_GTAFiles" ItemsSource="{Binding GTAFiles}"  PreviewMouseWheel="Dg_GTAFiles_PreviewMouseWheel">
                             <!--cant style this easily, since it does not derive from FrameworkElement-->

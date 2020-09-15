@@ -5,16 +5,15 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Project_127"
         mc:Ignorable="d"
-        Title="SaveFileHandler" Height="Auto" Width="700"        
+        Title="Settings" Height="500" Width="500"        
         WindowStyle="None" 
         AllowsTransparency="True" 
         MouseLeftButtonDown="Window_MouseLeftButtonDown" 
         WindowStartupLocation="CenterScreen"
-        ResizeMode="NoResize"
+        ResizeMode="CanMinimize"
         Background="{x:Static local:CustomColors.SE_Background}"
         Icon="/Artwork/icon.png">
     <Window.Resources>
- 
 
         <!--#region Scroll Viewer Style-->
         <!--this is stolen from another project of mine, where it was stolen from another old project where it was probably stolen off stack overflow...-->
@@ -135,6 +134,25 @@
             </Style.Triggers>
         </Style>
 
+        <Style TargetType="Button" x:Key="btn_Set" BasedOn="{StaticResource btn}">
+            <Setter Property="Background" Value="{x:Static local:CustomColors.SE_ButtonSetBackground}"/>
+            <Setter Property="Foreground" Value="{x:Static local:CustomColors.SE_ButtonSetForeground}"/>
+            <Setter Property="BorderBrush" Value="{x:Static local:CustomColors.SE_ButtonSetBorderBrush}"/>
+            <Setter Property="Height" Value="30"/>
+            <Setter Property="Width" Value="100"/>
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="FontFamily" Value="Tahoma"/>
+            <Setter Property="Margin" Value="5"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="{x:Static local:CustomColors.SE_ButtonSetMOBackground}"/>
+                    <Setter Property="Foreground" Value="{x:Static local:CustomColors.SE_ButtonSetMOForeground}"/>
+                    <Setter Property="BorderBrush" Value="{x:Static local:CustomColors.SE_ButtonSetMOBorderBrush}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
         <Style x:Key="lbl" TargetType="Label">
             <Setter Property="Foreground" Value="{x:Static local:CustomColors.SE_LabelForeground}" />
             <Setter Property="FontFamily" Value="Tahoma" />
@@ -146,8 +164,41 @@
             <Setter Property="Margin" Value="0" />
         </Style>
 
-        <Style x:Key="cb" TargetType="CheckBox">
-            <Setter Property="HorizontalAlignment" Value="Center"/>
+        <Style x:Key="lbl_Set_Head" TargetType="Label">
+            <Setter Property="Foreground" Value="{x:Static local:CustomColors.SE_LabelSetForeground}" />
+            <Setter Property="FontFamily" Value="Tahoma" />
+            <Setter Property="Height" Value="30" />
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="FontStyle" Value="Oblique"/>
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="VerticalAlignment" Value="Stretch" />
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="Margin" Value="0" />
+        </Style>
+        <Style x:Key="lbl_Set_Info" TargetType="Label">
+            <Setter Property="Foreground" Value="{x:Static local:CustomColors.SE_LabelSetForeground}" />
+            <Setter Property="FontFamily" Value="Tahoma" />
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="FontStyle" Value="Oblique"/>
+            <Setter Property="HorizontalAlignment" Value="Right"/>
+            <Setter Property="VerticalAlignment" Value="Stretch" />
+            <Setter Property="HorizontalContentAlignment" Value="Right" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="Margin" Value="0" />
+        </Style>
+        <Style x:Key="sp_Set" TargetType="Separator">
+            <Setter Property="Background" Value="{x:Static local:CustomColors.SE_BorderBrush_Inner}" />
+            <Setter Property="Margin" Value="10,5" />
+            <Setter Property="RenderTransform">
+                <Setter.Value>
+                    <ScaleTransform  ScaleY="2" />
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="cb_Set" TargetType="CheckBox">
+            <Setter Property="HorizontalAlignment" Value="Left"/>
             <Setter Property="VerticalAlignment" Value="Center" />
             <Setter Property="LayoutTransform">
                 <Setter.Value>
@@ -157,41 +208,151 @@
         </Style>
 
     </Window.Resources>
+
     <Border BorderBrush="{x:Static local:CustomColors.SE_BorderBrush}" BorderThickness="2">
-        <Border BorderBrush="{x:Static local:CustomColors.SE_BorderBrush_Inner}" BorderThickness="2" Margin="10" CornerRadius="10">
+        <Border BorderBrush="{x:Static local:CustomColors.SE_BorderBrush_Inner}" BorderThickness="0" Margin="10" CornerRadius="10">
 
-            <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="60"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="80"/>
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
+            <Grid x:Name="Grid_Outer">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="40"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="60"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
+                </Grid.ColumnDefinitions>
 
-            <Label Style="{StaticResource lbl}" x:Name="lbl_Settings" Grid.Row="0" Grid.Column="0" Content="Settings"/>
+                <Label Style="{StaticResource lbl}" x:Name="lbl_Settings" Grid.Row="0" Grid.Column="0" Content="Settings"/>
 
+                <!--This actual implementation of this is a joke...I hope no one ever sees this.
+                Im sorry you saw this. Check out reddit.com/r/eyebleach after this...-->
 
-                <Border Grid.Row="1" Grid.Column="0" Margin="10" BorderBrush="Beige" BorderThickness="2" >
-                    <Grid ShowGridLines="True">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="3*"/>
-                            <ColumnDefinition Width="3*"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="50"/>
-                            <RowDefinition Height="50"/>
-                            <RowDefinition Height="50"/>
-                            <RowDefinition Height="50"/>
-                            <RowDefinition Height="50"/>
-                            <RowDefinition Height="50"/>
-                            <RowDefinition Height="50"/>
-                        </Grid.RowDefinitions>
+                <Border  Grid.Row="1" Margin="10" BorderBrush="OrangeRed" BorderThickness="3">
+                    <ScrollViewer>
+                        <StackPanel x:Name="sp_Settings">
+                            <Grid x:Name="Grid_Set_Logging">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <Label Grid.Row="0" Grid.Column="0" Content="Enable Logging"  Style="{StaticResource lbl_Set_Info}" />
+                                <CheckBox Grid.Row="0" Grid.Column="1" x:Name="cb_Set_Logging" Checked="cb_Set_Logging_CheckedChanged" Unchecked="cb_Set_Logging_CheckedChanged" Style="{StaticResource cb_Set}"/>
+                            </Grid>
+                            <Separator Style="{StaticResource sp_Set}"/>
+                            <Grid x:Name="Grid_Set_GTAVPath">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Content="GTA V Installation Path"  Style="{StaticResource lbl_Set_Head}" />
+                                <Label Grid.Row="1" Grid.Column="0" Content="Current Path: "  Style="{StaticResource lbl_Set_Info}" />
+                                <Button Grid.Row="1" Grid.Column="1" x:Name="btn_Set_GTAVPath" Click="btn_Set_GTAVPath_Click" Content="Change Path" Style="{StaticResource btn_Set}"/>
+                            </Grid>
+                            <Separator Style="{StaticResource sp_Set}"/>
+                            <Grid x:Name="Grid_Set_BackupPath">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Content="Backup Path"  Style="{StaticResource lbl_Set_Head}" />
+                                <Label Grid.Row="1" Grid.Column="0" Content="Current Path: "  Style="{StaticResource lbl_Set_Info}" />
+                                <Button Grid.Row="1" Grid.Column="1" x:Name="btn_Set_BackupPath" Click="btn_Set_BackupPath_Click" Content="Change Path" Style="{StaticResource btn_Set}"/>
+                            </Grid>
+                            <Separator Style="{StaticResource sp_Set}"/>
+                            <Grid x:Name="Grid_Set_Preorder">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <Label Grid.Row="0" Grid.Column="0" Content="Enable / Use 500k Pre-Order Bonus "  Style="{StaticResource lbl_Set_Info}" />
+                                <CheckBox Grid.Row="0" Grid.Column="1" x:Name="cb_Set_Preorder" Checked="cb_Set_Preorder_CheckedChanged" Unchecked="cb_Set_Preorder_CheckedChanged" Style="{StaticResource cb_Set}"/>
+                            </Grid>
+                            <Separator Style="{StaticResource sp_Set}"/>
+                            <Grid x:Name="Grid_Set_Livesplit">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <Label Grid.Row="0" Grid.Column="0" Content="Start Livesplit on Game Launch"  Style="{StaticResource lbl_Set_Info}" />
+                                <CheckBox Grid.Row="0" Grid.Column="1" x:Name="cb_Set_Livesplit" Checked="cb_Set_Livesplit_CheckedChanged" Unchecked="cb_Set_Livesplit_CheckedChanged" Style="{StaticResource cb_Set}"/>
+                                <Label Grid.Row="1" Grid.Column="0" Content="Current Path: "  Style="{StaticResource lbl_Set_Info}" />
+                                <Button Grid.Row="1" Grid.Column="1" x:Name="btn_Set_Livesplit" Click="btn_Set_Livesplit_Click" Content="Change Path" Style="{StaticResource btn_Set}"/>
+                            </Grid>
+                            <Separator Style="{StaticResource sp_Set}"/>
+                            <Grid x:Name="Grid_Set_StreamProgram">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <Label Grid.Row="0" Grid.Column="0" Content="Start StreamProgram on Game Launch"  Style="{StaticResource lbl_Set_Info}" />
+                                <CheckBox Grid.Row="0" Grid.Column="1" x:Name="cb_Set_StreamProgram" Checked="cb_Set_StreamProgram_CheckedChanged" Unchecked="cb_Set_StreamProgram_CheckedChanged" Style="{StaticResource cb_Set}"/>
+                                <Label Grid.Row="1" Grid.Column="0" Content="Current Path: "  Style="{StaticResource lbl_Set_Info}" />
+                                <Button Grid.Row="1" Grid.Column="1" x:Name="btn_Set_StreamProgram" Click="btn_Set_StreamProgram_Click" Content="Change Path" Style="{StaticResource btn_Set}"/>
+                            </Grid>
+                            <Separator Style="{StaticResource sp_Set}"/>
+                            <Grid x:Name="Grid_Set_FPSProgram">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <Label Grid.Row="0" Grid.Column="0" Content="Start StreamProgram on Game Launch"  Style="{StaticResource lbl_Set_Info}" />
+                                <CheckBox Grid.Row="0" Grid.Column="1" x:Name="cb_Set_FPSProgram" Checked="cb_Set_FPSProgram_CheckedChanged" Unchecked="cb_Set_FPSProgram_CheckedChanged" Style="{StaticResource cb_Set}"/>
+                                <Label Grid.Row="1" Grid.Column="0" Content="Current Path: "  Style="{StaticResource lbl_Set_Info}" />
+                                <Button Grid.Row="1" Grid.Column="1" x:Name="btn_Set_FPSProgram" Click="btn_Set_FPSProgram_Click" Content="Change Path" Style="{StaticResource btn_Set}"/>
+                            </Grid>
+                            <Separator Style="{StaticResource sp_Set}"/>
+                            <Grid x:Name="Grid_Set_Theme">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Content="Theming:"  Style="{StaticResource lbl_Set_Head}" />
+                                <Label Grid.Row="1" Grid.Column="0" Content="Current Theme: "  Style="{StaticResource lbl_Set_Info}" />
+                                <Button Grid.Row="1" Grid.Column="1" x:Name="btn_Set_ThemePath" Click="btn_Set_ThemePath_Click" Content="Change Path" Style="{StaticResource btn_Set}"/>
+                            </Grid>
+                        </StackPanel>
+                    </ScrollViewer>
+                </Border>
 
-                        <Label Grid.Row="0" Grid.Column="0" Style="{StaticResource lbl}" Content="GTA V Installation Patch"/>
-                        <Label Grid.Row="0" Grid.Column="1" Style="{StaticResource lbl}" Content="DefaultSettings"/>
+                <Button Style="{StaticResource btn}" x:Name="btn_Close" Grid.Row="2" Grid.Column="0" Margin="10" Content="Close" Click="btn_Close_Click"/>
+
+            </Grid>
+        </Border>
+    </Border>
+</Window>
+<!--<Label Grid.Row="0" Grid.Column="0" Style="{StaticResource lbl}" Content="GTA V Installation Patch"/>
+                        <Label Grid.Row="0" Grid.Column="1" Style="{StaticResource lbl}" Content="C:\Program Files(x86)\Steam\SteamLibary\common\SteamApps\Grand Theft Auto V\"/>
                         <Button Grid.Row="0" Grid.Column="2" Style="{StaticResource btn}" Content="Click Me"/>
 
                         <Label Grid.Row="1" Grid.Column="0" Style="{StaticResource lbl}" Content="Backup - Files - Folder"/>
@@ -220,12 +381,7 @@
 
                         <Label Grid.Row="6" Grid.Column="0" Style="{StaticResource lbl}" Content="Stream Program Location"/>
                         <Label Grid.Row="6" Grid.Column="1" Style="{StaticResource lbl}" Content="DefaultSettings"/>
-                        <Button Grid.Row="6" Grid.Column="2" Style="{StaticResource btn}" Content="Click Me"/>
-                    </Grid>
-                </Border>
+                        <Button Grid.Row="6" Grid.Column="2" Style="{StaticResource btn}" Content="Click Me"/>-->
+       
 
-                <Button Style="{StaticResource btn}" x:Name="btn_Close" Grid.Row="2" Grid.Column="0" Margin="10" Content="Close" Click="btn_Close_Click"/>
-        </Grid>
-        </Border>
-    </Border>
-</Window>
+

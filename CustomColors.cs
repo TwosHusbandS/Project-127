@@ -19,39 +19,40 @@ namespace Project_127
         public static Brush MyColorWhite { get; private set; } = (Brush)new BrushConverter().ConvertFromString("#ffffff");
         public static Brush MyColorBlack { get; private set; } = (Brush)new BrushConverter().ConvertFromString("#000000");
         public static Brush MyColorOrange { get; private set; } = (Brush)new BrushConverter().ConvertFromString("#E35627");
+		public static Brush MyColorGreen { get; private set; } = (Brush)new BrushConverter().ConvertFromString("#4cd213");
 
         /// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		
+		/// <summary>
+		/// All other colors:
+		/// MW = MainWindow
+		/// PU = Pop Up
+		/// SE = Settings
+		/// SFH = SafeFileHandler
+		/// MO = Mouse Over
+		/// DG = Data Grid
+		/// </summary>
 
-        /// <summary>
-        /// All other colors:
-        /// MW = MainWindow
-        /// PU = Pop Up
-        /// SE = Settings
-        /// SFH = SafeFileHandler
-        /// MO = Mouse Over
-        /// DG = Data Grid
-        /// </summary>
-        
 
 		// Colors and stuff which is referenced in all of the XAML. 
 		// AFAIK, no Color is hardcoded.
 		// Some of thickness, corner radius, margins are semi-hardcoded in XAML Styles.
 
-        // Border of MainWindow
-        public static Brush MW_Border { get; private set; } = MyColorWhite;
+		// Border of MainWindow
+		public static Brush MW_Border { get; private set; } = MyColorWhite;
 
         // All the HamburgerButton Items, Backgrounds, etc.
         public static Brush MW_HamburgerMenuGridBackground { get; private set; } = SetOpacity(MyColorBlack, 50);
-        public static System.Windows.Thickness MW_ButtonBorderThickness { get; private set; } = new System.Windows.Thickness(2);
+        public static System.Windows.Thickness MW_ButtonBorderThickness { get; private set; } = new System.Windows.Thickness(0);
         public static Brush MW_ButtonBackground { get; private set; } = SetOpacity(MyColorBlack, 70);
         public static Brush MW_ButtonForeground { get; private set; } = MyColorWhite;
-        public static Brush MW_ButtonBorderBrush { get; private set; } = MyColorWhite;
-        public static Brush MW_ButtonMOBackground { get; private set; } = SetOpacity(MyColorOrange, 70);
+		public static Brush MW_ButtonBorderBrush { get; private set; } = MyColorWhite;
+		public static Brush MW_ButtonMOBackground { get; private set; } = SetOpacity(MyColorWhite, 70);
         public static Brush MW_ButtonMOForeground { get; private set; } = MyColorBlack;
-        public static Brush MW_ButtonMOBorderBrush { get; private set; } = MyColorBlack;
+		public static Brush MW_ButtonMOBorderBrush { get; private set; } = MyColorWhite;
 
-        // Hamburger Button and "X"
-        public static Brush MW_ButtonSmallBackground { get; private set; } = SetOpacity(MyColorBlack, 70);
+		// Hamburger Button and "X"
+		public static Brush MW_ButtonSmallBackground { get; private set; } = SetOpacity(MyColorBlack, 70);
         public static Brush MW_ButtonSmallForeground { get; private set; } = MyColorWhite;
         public static Brush MW_ButtonSmallBorderBrush { get; private set; } = MyColorWhite;
         public static Brush MW_ButtonSmallMOBackground { get; private set; } = SetOpacity(MyColorBlack, 70);
@@ -59,25 +60,32 @@ namespace Project_127
         public static Brush MW_ButtonSmallMOBorderBrush { get; private set; } = MyColorOrange;
         public static System.Windows.Thickness MW_ButtonSmallBorderThickness { get; private set; } = new System.Windows.Thickness(2);
 
-        // GTA Launch Button
-        // Border Color will depend on game running or not running, so we will not set this here. I guess. 
-        public static Brush MW_ButtonGTABackground { get; private set; } = SetOpacity(MyColorBlack, 70);
+		// GTA Launch Button
+		// Border Color will depend on game running or not running, so we will not set this here. I guess. 
+		public static Brush MW_ButtonGTAGameNotRunningBorderBrush { get; private set; } = MyColorWhite;
+		public static Brush MW_ButtonGTAGameRunningBorderBrush { get; private set; } = MyColorGreen;
+
+		public static Brush MW_ButtonGTABackground { get; private set; } = SetOpacity(MyColorBlack, 70);
         public static Brush MW_ButtonGTAForeground { get; private set; } = MyColorWhite;
-        public static Brush MW_ButtonGTAMOBackground { get; private set; } = SetOpacity(MyColorBlack,50);
-        public static Brush MW_ButtonGTAMOForeground { get; private set; } = MyColorOrange;
+        public static Brush MW_ButtonGTAMOBackground { get; private set; } = SetOpacity(MyColorOrange, 70);
+        public static Brush MW_ButtonGTAMOForeground { get; private set; } = MyColorBlack;
+
         public static System.Windows.Thickness MW_ButtonGTABorderThickness { get; private set; } = new System.Windows.Thickness(5);
 
-        // POPUP Window
-        public static Brush PU_Background { get; private set; } = MyColorBlack;
-        public static Brush PU_BorderBrush { get; private set; } = MyColorWhite;
+		// POPUP Window
+		public static Brush PU_Background { get; private set; } = GetBrushHex("1a1a1a");
+
+		public static Brush PU_BorderBrush { get; private set; } = MyColorWhite;
         public static Brush PU_BorderBrush_Inner { get; private set; } = MyColorOrange;
-        public static Brush PU_ButtonBackground { get; private set; } = MyColorBlack;
-        public static Brush PU_ButtonForeground { get; private set; } = MyColorWhite;
-        public static Brush PU_ButtonBorderBrush { get; private set; } = MyColorWhite;
-        public static Brush PU_ButtonMOBackground { get; private set; } = MyColorBlack;
-        public static Brush PU_ButtonMOForeground { get; private set; } = MyColorOrange;
-        public static Brush PU_ButtonMOBorderBrush { get; private set; } = MyColorOrange;
-        public static System.Windows.Thickness PU_ButtonBorderThickness { get; private set; } = new System.Windows.Thickness(2);
+
+		public static Brush PU_ButtonBackground { get; private set; } = GetBrushHex("1a1a1a");
+		public static Brush PU_ButtonForeground { get; private set; } = MyColorWhite;
+		public static Brush PU_ButtonBorderBrush { get; private set; } = MyColorWhite;
+		public static Brush PU_ButtonMOBackground { get; private set; } = GetBrushRGB(193, 206, 209);
+		public static Brush PU_ButtonMOForeground { get; private set; } = MyColorBlack;
+		public static Brush PU_ButtonMOBorderBrush { get; private set; } = MyColorBlack;
+
+		public static System.Windows.Thickness PU_ButtonBorderThickness { get; private set; } = new System.Windows.Thickness(2);
         public static Brush PU_LabelForeground { get; private set; } = MyColorWhite;
 
         // SaveFilerHandler Window
@@ -110,6 +118,7 @@ namespace Project_127
 		public static Brush SE_BorderBrush { get; private set; } = MyColorWhite;
 		public static Brush SE_BorderBrush_Inner { get; private set; } = MyColorOrange;
 		public static Brush SE_LabelForeground { get; private set; } = MyColorWhite;
+		public static Brush SE_LabelSetForeground { get; private set; } = MyColorWhite;
 
 		public static Brush SE_ButtonBackground { get; private set; } = MyColorBlack;
 		public static Brush SE_ButtonForeground { get; private set; } = MyColorWhite;
@@ -117,7 +126,14 @@ namespace Project_127
 		public static Brush SE_ButtonMOBackground { get; private set; } = MyColorBlack;
 		public static Brush SE_ButtonMOForeground { get; private set; } = MyColorOrange;
 		public static Brush SE_ButtonMOBorderBrush { get; private set; } = MyColorOrange;
-							 
+
+		public static Brush SE_ButtonSetBackground { get; private set; } = MyColorBlack;
+		public static Brush SE_ButtonSetForeground { get; private set; } = MyColorWhite;
+		public static Brush SE_ButtonSetBorderBrush { get; private set; } = MyColorWhite;
+		public static Brush SE_ButtonSetMOBackground { get; private set; } = MyColorBlack;
+		public static Brush SE_ButtonSetMOForeground { get; private set; } = MyColorOrange;
+		public static Brush SE_ButtonSetMOBorderBrush { get; private set; } = MyColorOrange;
+
 		public static Brush SE_SVBackground { get; private set; } = MyColorBlack;
 		public static Brush SE_SVForeground { get; private set; } = MyColorOrange;
 

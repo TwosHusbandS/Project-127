@@ -5,10 +5,11 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Project_127"
         mc:Ignorable="d"
-        Title="Popup"  Width="600"
+        Title="Popup" 
         Background="{x:Static local:CustomColors.PU_Background}"
-        WindowStyle="None" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" MouseLeftButtonDown="Window_MouseLeftButtonDown"
+        WindowStyle="None" ResizeMode="CanMinimize" WindowStartupLocation="CenterScreen" MouseLeftButtonDown="Window_MouseLeftButtonDown"
         Height="Auto"
+        Width="Auto"
         SizeToContent="WidthAndHeight"
         Icon="/Artwork/icon.png">
     <Window.Resources>
@@ -18,7 +19,7 @@
             <Setter Property="BorderBrush" Value="{x:Static local:CustomColors.PU_ButtonBorderBrush}"/>
             <Setter Property="FontSize" Value="18"/>
             <Setter Property="FontFamily" Value="Tahoma"/>
-            <Setter Property="Margin" Value="10"/>
+            <Setter Property="Margin" Value="15"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
@@ -52,7 +53,8 @@
         </Style>
     </Window.Resources>
     <Border BorderBrush="{x:Static local:CustomColors.PU_BorderBrush}" BorderThickness="2">
-        <Border BorderBrush="{x:Static local:CustomColors.PU_BorderBrush_Inner}" BorderThickness="2" Margin="10" CornerRadius="10">
+        <Border BorderBrush="{x:Static local:CustomColors.PU_BorderBrush_Inner}" BorderThickness="0" Margin="10,5" CornerRadius="10">
+            <!--<Border BorderBrush="{x:Static local:CustomColors.PU_BorderBrush_Inner}" BorderThickness="2" Margin="10" CornerRadius="10">-->
 
             <Grid x:Name="myGrid">
                 <Grid.RowDefinitions>

@@ -57,8 +57,7 @@
     <StartupObject>Project_127.App</StartupObject>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>
-    </ApplicationIcon>
+    <ApplicationIcon>icon.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <ManifestCertificateThumbprint>057B6CFEFFF7EB37C7CFB8C2BBA7017FEF2E7AAD</ManifestCertificateThumbprint>
@@ -190,18 +189,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Artwork\bg.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Artwork\icon.ico" />
-    <Resource Include="Artwork\icon.png" />
     <Resource Include="Artwork\leftarrow.png" />
     <Resource Include="Artwork\lockclosed.png" />
     <Resource Include="Artwork\lockopen.png" />
     <Resource Include="Artwork\rightarrow.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="icon.ico" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.6">
@@ -214,6 +205,21 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Artwork\icon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Artwork\bg.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Artwork\icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Artwork\refresh.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="icon.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

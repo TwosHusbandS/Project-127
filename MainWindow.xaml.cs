@@ -30,18 +30,21 @@ General Files / Classes:
 General Comments and things one should be aware of (still finishing this list)
 Window Icons are set in the Window part of the XAML. Can use resources and relative Paths this way
 
+
 Main To do:
-    Log, cleanup and document all code ive written
-    Work on DataGrid and the move function. Check what if empty / nothing selected. Read Files from Disk every time you open this shit. Add functionality to refresh button
-    Look at and Comment zCri Backend
+	There is still some implementation of the classes behind the GUIs to do.
+		(GTA V Button Behaviour, Copying Files in SaveFileHandler, Settings read on init and hide rows and stuff)    
+	Look at and Comment zCri Backend
     Connect GUI to zCri Backend
+	Log everything
     Thoroughly test everything
-    Implement GTA V Button look depending on game state (Downgraded / Upgraded / Running / Not Running). Display that info in Content and Border respectively.
     Implement Installer + AutoUpdater + Compile .dll's into exe + Sign .exe
 
     Low Prio:
-        Implement Hamburger Animation
         Think of making other winodws like settings and save file handler just a part of the main window after clicking the button
+        Implement Hamburger Animation
+		Theming
+		FPS Limiter
 */
 
 
@@ -93,6 +96,7 @@ namespace Project_127
 
 			// Make sure Hamburger Menu is not opened
 			this.GridHamburgerOuter.Visibility = Visibility.Hidden;
+			this.btn_Auth.Visibility = Visibility.Hidden;
 
 			// Set Image of Auth Button in top right corner.
 			SetAuthButtonBackground(Authstatus.NotAuth);
@@ -153,10 +157,28 @@ namespace Project_127
 			if (this.GridHamburgerOuter.Visibility == Visibility.Visible)
 			{
 				this.GridHamburgerOuter.Visibility = Visibility.Hidden;
+				this.btn_Auth.Visibility = Visibility.Hidden;
 			}
 			else
 			{
 				this.GridHamburgerOuter.Visibility = Visibility.Visible;
+				this.btn_Auth.Visibility = Visibility.Visible;
+			}
+		}
+
+
+		/// <summary>
+		/// Method which gets called when the exit Button is clicked
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void btn_Exit_Click(object sender, RoutedEventArgs e)
+		{
+			Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Do you really want to quit?");
+			yesno.ShowDialog();
+			if (yesno.DialogResult == true)
+			{
+				Environment.Exit(0);
 			}
 		}
 
@@ -175,22 +197,6 @@ namespace Project_127
 
 
 		/// <summary>
-		/// Method which gets called when the exit Button is clicked
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
-		private void btn_Exit_Click(object sender, RoutedEventArgs e)
-		{
-			Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Do you really want to exit?");
-			yesno.ShowDialog();
-			if (yesno.DialogResult == true)
-			{
-				Environment.Exit(0);
-			}
-		}
-
-
-		/// <summary>
 		/// Method which gets called when the Launch GTA Button is clicked
 		/// </summary>
 		/// <param name="sender"></param>
@@ -198,7 +204,7 @@ namespace Project_127
 		private void btn_GTA_Click(object sender, RoutedEventArgs e)
 		{
 			new Popup(Popup.PopupWindowTypes.PopupOk, "Image you started the game and\n this is why the border changes color...").ShowDialog();
-			btn_GTA.BorderBrush = CustomColors.MyColorOrange;
+			btn_GTA.BorderBrush = CustomColors.MW_ButtonGTAGameRunningBorderBrush;
 		}
 
 
