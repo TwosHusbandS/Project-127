@@ -13,13 +13,15 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.Web;
+using System.Windows.Documents.Serialization;
 /*
- * This file is based on LegitimacyNUI.cpp from the CitizenFX Project - http://citizen.re/
- * 
- * See the included licenses for licensing information on this code
- * 
- * Rewritten for Project 1.27 by @dr490n/@jaredtb  
- */
+* This file is based on LegitimacyNUI.cpp from the CitizenFX Project - http://citizen.re/
+* 
+* See the included licenses for licensing information on this code
+* 
+* Rewritten for Project 1.27 by @dr490n/@jaredtb  
+*/
 
 namespace Project_127
 {
@@ -193,7 +195,7 @@ style.appendChild(document.createTextNode(css));
             }
         }
 
-        private void browser_JavascriptMessageReceived(object sender, JavascriptMessageReceivedEventArgs e)
+        private async void browser_JavascriptMessageReceived(object sender, JavascriptMessageReceivedEventArgs e)
         {
             char[] sep = new char[1];
             sep[0] = ':';
@@ -222,6 +224,29 @@ style.appendChild(document.createTextNode(css));
                         this.WindowState = WindowState.Minimized;
                     });
                 }
+            }
+            else if (message[0] == "signin")
+            {
+                //login(message[1]);
+                var json = new System.Web.Script.Serialization.JavaScriptSerializer();
+                var jsond = json.Deserialize<Dictionary<String, String>>(message[1]);
+
+                string ticket = jsond["ticket"];
+                string sessionKey = jsond["sessionKey"];
+                string sessionTicket = jsond["ticket"];
+                UInt64 RockstarID = UInt64.Parse(jsond["RockstarId"]);
+
+                // Call our version of validate
+                bool valsucess = await ROSCommunicationBackend.Login(ticket, sessionKey, sessionTicket, RockstarID);
+
+                this.Dispatcher.Invoke(() =>
+                {
+                    this.Close();
+                });
+            }
+            else
+            {
+                System.Windows.Forms.MessageBox.Show(e.Message.ToString());
             }
         }
     }
