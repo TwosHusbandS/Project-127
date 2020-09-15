@@ -36,7 +36,7 @@ namespace Project_127
 		/// <param name="pMsg"></param>
 		/// <param name="pTitle"></param>
 		/// <param name="pFontSize"></param>
-		public Popup(Popup.PopupWindowTypes pPopupWindowType, string pMsg, string pTitle, int pFontSize)
+		public Popup(Popup.PopupWindowTypes pPopupWindowType, string pMsg, int pFontSize)
         {
 			// Initializing all WPF Elements
             InitializeComponent();
@@ -44,7 +44,6 @@ namespace Project_127
 			// Set the Parameters as Properties of new Popup Window
             lbl_Main.FontSize = pFontSize;
             lbl_Main.Content = pMsg;
-            this.Title = pTitle;
 
 			// If its a "OK" Window:
             if (pPopupWindowType == Popup.PopupWindowTypes.PopupOk)
@@ -87,19 +86,7 @@ namespace Project_127
         /// </summary>
         /// <param name="pPopupWindowType"></param>
         /// <param name="pMsg"></param>
-        /// <param name="pTitle"></param>
-        public Popup(Popup.PopupWindowTypes pPopupWindowType, string pMsg, string pTitle) : this(pPopupWindowType, pMsg, pTitle, 18)
-        {
-
-        }
-
-
-        /// <summary>
-        /// Overloaded (underloaded) Constructor of Popup Window
-        /// </summary>
-        /// <param name="pPopupWindowType"></param>
-        /// <param name="pMsg"></param>
-        public Popup(Popup.PopupWindowTypes pPopupWindowType, string pMsg) : this(pPopupWindowType, pMsg, "Popup", 18)
+        public Popup(Popup.PopupWindowTypes pPopupWindowType, string pMsg) : this(pPopupWindowType, pMsg, 18)
         {
 
         }
