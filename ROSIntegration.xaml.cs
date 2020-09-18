@@ -248,6 +248,14 @@ style.appendChild(document.createTextNode(css));
 
                 // Do somethin with valsuccess (true if ownership is valid)
 
+                if (valsucess)
+                {
+                    MessageBox.Show("YAY");
+                } 
+                else
+                {
+                    MessageBox.Show("Nay");
+                }
 
                 this.Dispatcher.Invoke(() =>
                 {

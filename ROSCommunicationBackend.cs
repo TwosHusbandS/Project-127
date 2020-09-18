@@ -327,7 +327,7 @@ namespace Project_127 {
 
             var req = new HttpRequestMessage
             {
-                RequestUri = new Uri("http://192.81.241.100/launcher/11/launcherservices/app.asmx/GetTitleAccessToken"),
+                RequestUri = new Uri("http://prod.ros.rockstargames.com/launcher/11/launcherservices/app.asmx/GetTitleAccessToken"),
                 Method = HttpMethod.Post,
             };
             req.Headers.Add("Host", "prod.ros.rockstargames.com");
@@ -348,7 +348,6 @@ namespace Project_127 {
             req.Content.Headers.ContentType = new MediaTypeHeaderValue("application/x-www-form-urlencoded");
 
             var reqInfo = string.Format("{0}, {1}, {2}", req.RequestUri, req.Headers, GetROSVersionString());
-            System.Windows.Forms.MessageBox.Show(reqInfo);
 
             var res = httpClient.SendAsync(req).Result;
             if (!res.IsSuccessStatusCode)
