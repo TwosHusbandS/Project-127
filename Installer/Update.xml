@@ -1,8 +1,7 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <item>
-  <version>0.0.1.0</version>
-  <url>https://raw.githubusercontent.com/TwosHusbandS/Project-127/master/Installer/Project_127_Latest.exe</url>
+  <version>0.0.1.1</version>
+  <url>https://raw.githubusercontent.com/TwosHusbandS/Project-127/master/Installer/Project_127_V_0_0_1_1.exe</url>
   <changelog>https://raw.githubusercontent.com/TwosHusbandS/Project-127/master/Installer/changelog.md</changelog>
   <mandatory>false</mandatory>
-  <checksum algorithm="MD5">Update file Checksum</checksum>
 </item>

@@ -5,7 +5,7 @@ Main Client Implementation by "@thS#0305"
 The actual hard lifting of the launching (with fixes) and authentification stuff is achieved by the hardwork of "@dr490n", "@zCri" and "@Special For"
 Artwork, GUI Design, GUI Behaviour, Colorchoice etc. by "@Hossel"
 
-Version: 0.0.1.0 unreleased, not working, not fully implemented.
+Version: 0.0.1.1 unreleased, not working, not fully implemented.
 From now on, versions will be changed here
 as well as in the assembly info of this file (Project 127 -> Properties -> AssemblyInfo.cs -> Very bottom of the file
 
@@ -136,7 +136,7 @@ namespace Project_127
 			SetAuthButtonBackground(Authstatus.NotAuth);
 
 			// Auto Updater
-			//AutoUpdater.Start(Globals.URL_AutoUpdate);
+			AutoUpdater.Start(Globals.URL_AutoUpdate);
 		}
 
 
@@ -326,6 +326,7 @@ namespace Project_127
 			string msg = "Test";
 			msg += "\nTestLine2";
 			msg += "\nTestLine3";
+			msg += "\n\n" + Globals.ProjectVersion.ToString();
 
 			new Popup(Popup.PopupWindowTypes.PopupOk, msg).ShowDialog();
 		}
@@ -426,14 +427,14 @@ namespace Project_127
 					RegistryKey MyKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64).CreateSubKey("SOFTWARE").CreateSubKey("Microsoft").CreateSubKey("Cryptography");
 					string GUID = HelperClasses.RegeditHandler.GetValue(MyKey, "MachineGuid");
 
-					System.Net.WebClient Tmp = new System.Net.WebClient();
-					string Reply = Tmp.DownloadString(Globals.URL_AuthUser);
+
+					System.Net.Http.HttpClient client = new System.Net.Http.HttpClient();
+					string Reply = client.GetStringAsync(Globals.URL_AuthUser).GetAwaiter().GetResult();
 
 					if (Reply.Contains(GUID))
 					{
 						return true;
 					}
-
 				}
 				return false;
 			}
