@@ -15,76 +15,138 @@ using System.Windows.Shapes;
 namespace Project_127
 {
     /// <summary>
-    /// Interaction logic for Settings.xaml
+    /// Class Settings.xaml (Partical class is in SettingsPartial.cs)
     /// </summary>
     public partial class Settings : Window
     {
-		//       zCris backend
-
-		//      private void ResetButton_Click(object sender, RoutedEventArgs e)
-		//      {
-		//          LauncherLogic.ResetSettings();
-		//      }
-
-		//      private void _500KCheckBox_Click(object sender, RoutedEventArgs e)
-		//      {
-		//          LauncherLogic.Settings.Set("500KBonus", _500KCheckBox.IsChecked.ToString());
-		//      }
-
-		//      private void InstallationPathButton_Click(object sender, RoutedEventArgs e)
-		//      {
-		//          FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog();
-		//          folderBrowserDialog.SelectedPath = LauncherLogic.Settings.Get("GTAVInstallationPath");
-		//          if (folderBrowserDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-		//          {
-		//              LauncherLogic.Settings.Set("GTAVInstallationPath", Environment.ExpandEnvironmentVariables(folderBrowserDialog.SelectedPath));
-		//          }
-		//      }
-
-		//      private void LauncherPathButton_Click(object sender, RoutedEventArgs e)
-		//      {
-		//          FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog();
-		//          folderBrowserDialog.SelectedPath = LauncherLogic.Settings.Get("FilesFolder");
-		//          if (folderBrowserDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-		//          {
-		//              LauncherLogic.Settings.Set("FilesFolder", Environment.ExpandEnvironmentVariables(folderBrowserDialog.SelectedPath));
-		//          }
-		//      }
-
-
-
-
-		// OWN STUFF
-
 		/// <summary>
-		/// Property we use to make rows visible and non visible depending on the checkbox above
-		/// </summary>
-		private static int InnerSettingsRowHeight = 40;
-
-
-		/// <summary>
-		/// Consturor of Settings Window 
+		/// Constructor of Settings Window 
 		/// </summary>
 		public Settings()
 		{
 			// Initializing all WPF Elements
 			InitializeComponent();
 
-			LoadSettings();
+			// Sets this for DataBinding
+			this.DataContext = this;
 		}
+
+
+		// There are only Button Clicks and GUI Functions here. Some of the Functionality is in SettingsPartial.cs
 
 
 		/// <summary>
-		/// Function with loads settings.
+		/// Button Click to change the Path of GTA V Installation Path
 		/// </summary>
-		private void LoadSettings()
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void btn_Set_GTAVInstallationPath_Click(object sender, RoutedEventArgs e)
 		{
-			// Load settings from regedit / memory.
-
-			MakeRowVisibleFromCheckbox(cb_Set_FPSProgram);
-			MakeRowVisibleFromCheckbox(cb_Set_Livesplit);
-			MakeRowVisibleFromCheckbox(cb_Set_FPSProgram);
+			GTAVInstallationPath = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.Folder, "Pick the Folder which contains your GTAV.exe", @"C:\");
+			btn_Set_GTAVInstallationPath.Content = GTAVInstallationPath;
 		}
+
+		/// <summary>
+		/// Button Click to change the Path of FileFolder which we use to use for SaveFiles etc.
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void btn_Set_FileFolder_Click(object sender, RoutedEventArgs e)
+		{
+			FileFolder = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.Folder, "Pick the Folder which contains all sort of Files", @"C:\");
+			btn_Set_FileFolder.Content = FileFolder;
+		}
+
+		/// <summary>
+		/// Button Click to change the Path of LiveSplit Executable
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void btn_Set_PathLiveSplit_Click(object sender, RoutedEventArgs e)
+		{
+			PathLiveSplit = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.File, "Select the .exe of the LiveSplit Program", @"C:\");
+			btn_Set_FileFolder.Content = PathLiveSplit;
+		}
+
+		/// <summary>
+		/// Button Click to change the Path of StreamProgram Executable
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void btn_Set_PathStreamProgram_Click(object sender, RoutedEventArgs e)
+		{
+			PathStreamProgram = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.File, "Select the .exe of the Stream Program", @"C:\");
+			btn_Set_FileFolder.Content = PathStreamProgram;
+		}
+
+		/// <summary>
+		/// Button Click to change the Path of FPS Limiter Executable
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void btn_Set_PathFPSLimiter_Click(object sender, RoutedEventArgs e)
+		{
+			PathFPSLimiter = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.File, "Select the .exe of the FPS Limit Program", @"C:\");
+			btn_Set_FileFolder.Content = PathFPSLimiter;
+		}
+
+		/// <summary>
+		/// Button Click to change the Key1 of the JumpScript
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void btn_Set_JumpScriptKey1_Click(object sender, RoutedEventArgs e)
+		{
+			// Needs to be implemented I guess
+			(new Popup(Popup.PopupWindowTypes.PopupOk, "This does nothing so far")).ShowDialog();
+		}
+
+		/// <summary>
+		/// Button Click to change the Key2 of the JumpScript
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void btn_Set_JumpScriptKey2_Click(object sender, RoutedEventArgs e)
+		{
+			// Needs to be implemented I guess
+			(new Popup(Popup.PopupWindowTypes.PopupOk, "This does nothing so far")).ShowDialog();
+		}
+
+		/// <summary>
+		/// Button Click to change the Path of Nohboard executable
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void btn_Set_PathNohboard_Click(object sender, RoutedEventArgs e)
+		{
+			PathLiveSplit = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.File, "Select the .exe of the LiveSplit Program", @"C:\");
+			btn_Set_FileFolder.Content = PathLiveSplit;
+		}
+
+		/// <summary>
+		/// Button Click to select the Folder for the Theme
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void btn_Set_Theme_Click(object sender, RoutedEventArgs e)
+		{
+			(new Popup(Popup.PopupWindowTypes.PopupOk, "This does nothing so far")).ShowDialog();
+			Theme = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.Folder, "Pick the Folder of your Theme", @"C:\");
+			btn_Set_FileFolder.Content = Theme;
+		}
+
+		/// <summary>
+		/// Button Click on Close.
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void btn_Close_Click(object sender, RoutedEventArgs e)
+		{
+			this.Close();
+		}
+
+
+		// Below are Methods we need to make the behaviour of this nice.
 
 
 		/// <summary>
@@ -97,100 +159,5 @@ namespace Project_127
 			DragMove(); // Pre-Defined Method
 		}
 
-
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
-		private void btn_Close_Click(object sender, RoutedEventArgs e)
-        {
-            this.Close(); 
-        }
-
-
-		private void btn_Set_GTAVPath_Click(object sender, RoutedEventArgs e)
-		{
-
-		}
-
-		private void btn_Set_BackupPath_Click(object sender, RoutedEventArgs e)
-		{
-
-		}
-
-
-		private void cb_Set_Preorder_CheckedChanged(object sender, RoutedEventArgs e)
-		{
-
-		}
-
-		private void cb_Set_Logging_CheckedChanged(object sender, RoutedEventArgs e)
-		{
-
-		}
-
-		private void cb_Set_Livesplit_CheckedChanged(object sender, RoutedEventArgs e)
-		{
-			MakeRowVisibleFromCheckbox(cb_Set_Livesplit);
-		}
-
-		private void btn_Set_Livesplit_Click(object sender, RoutedEventArgs e)
-		{
-
-		}
-
-
-		private void cb_Set_StreamProgram_CheckedChanged(object sender, RoutedEventArgs e)
-		{
-			MakeRowVisibleFromCheckbox(cb_Set_StreamProgram);
-		}
-
-		private void btn_Set_StreamProgram_Click(object sender, RoutedEventArgs e)
-		{
-
-		}
-
-		private void cb_Set_FPSProgram_CheckedChanged(object sender, RoutedEventArgs e)
-		{
-			MakeRowVisibleFromCheckbox(cb_Set_FPSProgram);
-		}
-
-		private void btn_Set_FPSProgram_Click(object sender, RoutedEventArgs e)
-		{
-
-		}
-
-		private void btn_Set_ThemePath_Click(object sender, RoutedEventArgs e)
-		{
-
-		}
-
-		private void MakeRowVisibleFromCheckbox(CheckBox pCB)
-		{
-			// Check if Checkbox is null
-			if (pCB != null)
-			{
-				// Get Grid-Name from Name of Checkbox
-				string MyGridName = "Grid" + pCB.Name.Substring(2);
-
-				// Get Grid from Grid-Name
-				Grid MyGrid = (Grid)this.FindName(MyGridName);
-
-				// Check if We have at least 2 rows
-				if (MyGrid != null && MyGrid.RowDefinitions.Count > 1)
-				{
-					// Check the status of the Checkbox and Set the Grid Rowheight accordingly
-					if (pCB.IsChecked == true)
-					{
-						MyGrid.RowDefinitions[1].Height = new GridLength(Settings.InnerSettingsRowHeight);
-					}
-					else
-					{
-						MyGrid.RowDefinitions[1].Height = new GridLength(0);
-					}
-				}
-			}
-		}
 	} // End of Class
 } // End of Namespace

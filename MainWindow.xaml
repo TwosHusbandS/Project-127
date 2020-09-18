@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Project_127"
         mc:Ignorable="d"
+        Closing="Window_Closing"
         Title="Project - 1.27"
         Height="540" Width="800"
         WindowStyle="None" 
@@ -33,45 +34,45 @@
             <Setter Property="Margin" Value="15"/>
             <Setter Property="Width" Value="40"/>
             <Setter Property="Height" Value="40"/>
-            <Setter Property="Background" Value="{x:Static local:CustomColors.MW_ButtonSmallBackground}"/>
-            <Setter Property="Foreground" Value="{x:Static local:CustomColors.MW_ButtonSmallForeground}"/>
-            <Setter Property="BorderBrush" Value="{x:Static local:CustomColors.MW_ButtonSmallBorderBrush}"/>
-            <Setter Property="BorderThickness" Value="{x:Static local:CustomColors.MW_ButtonSmallBorderThickness}"/>
+            <Setter Property="Background" Value="{x:Static local:Globals.MW_ButtonSmallBackground}"/>
+            <Setter Property="Foreground" Value="{x:Static local:Globals.MW_ButtonSmallForeground}"/>
+            <Setter Property="BorderBrush" Value="{x:Static local:Globals.MW_ButtonSmallBorderBrush}"/>
+            <Setter Property="BorderThickness" Value="{x:Static local:Globals.MW_ButtonSmallBorderThickness}"/>
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="{x:Static local:CustomColors.MW_ButtonSmallMOBackground}"/>
-                    <Setter Property="Foreground" Value="{x:Static local:CustomColors.MW_ButtonSmallMOForeground}"/>
-                    <Setter Property="BorderBrush" Value="{x:Static local:CustomColors.MW_ButtonSmallMOBorderBrush}"/>
+                    <Setter Property="Background" Value="{x:Static local:Globals.MW_ButtonSmallMOBackground}"/>
+                    <Setter Property="Foreground" Value="{x:Static local:Globals.MW_ButtonSmallMOForeground}"/>
+                    <Setter Property="BorderBrush" Value="{x:Static local:Globals.MW_ButtonSmallMOBorderBrush}"/>
                 </Trigger>
             </Style.Triggers>
         </Style>
         
         <Style x:Key="btn_hamburgeritem" TargetType="{x:Type Button}" BasedOn="{StaticResource btn}">
-            <Setter Property="Background" Value="{x:Static local:CustomColors.MW_ButtonBackground}"/>
-            <Setter Property="Foreground" Value="{x:Static local:CustomColors.MW_ButtonForeground}"/>
-            <Setter Property="BorderBrush" Value="{x:Static local:CustomColors.MW_ButtonBorderBrush}"/>
-            <Setter Property="BorderThickness" Value="{x:Static local:CustomColors.MW_ButtonBorderThickness}"/>
+            <Setter Property="Background" Value="{x:Static local:Globals.MW_ButtonBackground}"/>
+            <Setter Property="Foreground" Value="{x:Static local:Globals.MW_ButtonForeground}"/>
+            <Setter Property="BorderBrush" Value="{x:Static local:Globals.MW_ButtonBorderBrush}"/>
+            <Setter Property="BorderThickness" Value="{x:Static local:Globals.MW_ButtonBorderThickness}"/>
             <Setter Property="Margin" Value="0,6"/>
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="{x:Static local:CustomColors.MW_ButtonMOBackground}"/>
-                    <Setter Property="Foreground" Value="{x:Static local:CustomColors.MW_ButtonMOForeground}"/>
-                    <Setter Property="BorderBrush" Value="{x:Static local:CustomColors.MW_ButtonMOBorderBrush}"/>
+                    <Setter Property="Background" Value="{x:Static local:Globals.MW_ButtonMOBackground}"/>
+                    <Setter Property="Foreground" Value="{x:Static local:Globals.MW_ButtonMOForeground}"/>
+                    <Setter Property="BorderBrush" Value="{x:Static local:Globals.MW_ButtonMOBorderBrush}"/>
                 </Trigger>
             </Style.Triggers>
         </Style>
         
         <Style x:Key="btn_gta" TargetType="{x:Type Button}" BasedOn="{StaticResource btn}">
-            <Setter Property="Background" Value="{x:Static local:CustomColors.MW_ButtonGTABackground}"/>
-            <Setter Property="Foreground" Value="{x:Static local:CustomColors.MW_ButtonGTAForeground}"/>
-            <Setter Property="BorderThickness" Value="{x:Static local:CustomColors.MW_ButtonGTABorderThickness}"/>
-            <Setter Property="BorderBrush" Value="{x:Static local:CustomColors.MW_ButtonGTAGameNotRunningBorderBrush}"/>
+            <Setter Property="Background" Value="{x:Static local:Globals.MW_ButtonGTABackground}"/>
+            <Setter Property="Foreground" Value="{x:Static local:Globals.MW_ButtonGTAForeground}"/>
+            <Setter Property="BorderThickness" Value="{x:Static local:Globals.MW_ButtonGTABorderThickness}"/>
+            <Setter Property="BorderBrush" Value="{x:Static local:Globals.MW_ButtonGTAGameNotRunningBorderBrush}"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
                         <Border Background="{TemplateBinding Background}"
                             CornerRadius="25"
-                            BorderThickness="{x:Static local:CustomColors.MW_ButtonGTABorderThickness}"
+                            BorderThickness="{x:Static local:Globals.MW_ButtonGTABorderThickness}"
                             Padding="5"
                             BorderBrush="{TemplateBinding BorderBrush}">
                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
@@ -81,8 +82,8 @@
             </Setter>
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="{x:Static local:CustomColors.MW_ButtonGTAMOBackground}"/>
-                    <Setter Property="Foreground" Value="{x:Static local:CustomColors.MW_ButtonGTAMOForeground}"/>
+                    <Setter Property="Background" Value="{x:Static local:Globals.MW_ButtonGTAMOBackground}"/>
+                    <Setter Property="Foreground" Value="{x:Static local:Globals.MW_ButtonGTAMOForeground}"/>
                 </Trigger>
             </Style.Triggers>
         </Style>
@@ -90,11 +91,14 @@
     <!-- Styles and Window Resources above -->
     <!--////////////////////////////////////////-->
     <!-- Actual Content Below -->
-    <Border BorderThickness="2" BorderBrush="{x:Static local:CustomColors.MW_Border}">
+    <Border BorderThickness="2" BorderBrush="{x:Static local:Globals.MW_Border}">
         <Grid x:Name="GridMain">
-            <Grid x:Name="GridHamburgerOuter" Margin="0,0,520,0" Background="{x:Static local:CustomColors.MW_HamburgerMenuGridBackground}">
-                <Grid x:Name="GridHamburgerInner" Margin="15,93,15,149">
+            <Grid x:Name="GridHamburgerOuter" Margin="0,0,520,0" Background="{x:Static local:Globals.MW_HamburgerMenuGridBackground}">
+                <Grid x:Name="GridHamburgerInner" Margin="15, 100, 15, 50">
                     <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
                         <RowDefinition/>
                         <RowDefinition/>
                         <RowDefinition/>
@@ -103,11 +107,14 @@
                         <RowDefinition/>
                     </Grid.RowDefinitions>
                     <Button x:Name="btn_Upgrade" Grid.Row="0" Style="{StaticResource btn_hamburgeritem}" Content="Upgrade" Click="btn_Upgrade_Click"/>
-                    <Button x:Name="btn_Downgrade" Grid.Row="1" Style="{StaticResource btn_hamburgeritem}" Content="Downgrade" Click="btn_Downgrade_Click"/>
-                    <Button x:Name="btn_SaveFiles" Grid.Row="2" Style="{StaticResource btn_hamburgeritem}" Content="Save File Manager" Click="btn_SaveFiles_Click"/>
-                    <Button x:Name="btn_Settings" Grid.Row="3" Style="{StaticResource btn_hamburgeritem}" Content="Settings" Click="btn_Settings_Click"/>
-                    <Button x:Name="btn_Readme" Grid.Row="4" Style="{StaticResource btn_hamburgeritem}" Content="ReadMe" Click="btn_Readme_Click"/>
-                    <Button x:Name="btn_Credits" Grid.Row="5" Style="{StaticResource btn_hamburgeritem}" Content="Credits" Click="btn_Credits_Click"/>
+                    <Button x:Name="btn_Repair" Grid.Row="1" Style="{StaticResource btn_hamburgeritem}" Content="Repair Installation" Click="btn_Repair_Click"/>
+                    <Button x:Name="btn_Downgrade" Grid.Row="2" Style="{StaticResource btn_hamburgeritem}" Content="Downgrade" Click="btn_Downgrade_Click"/>
+                    <Button x:Name="btn_ImportZip" Grid.Row="3" Style="{StaticResource btn_hamburgeritem}" Content="Import ZIP" Click="btn_ImportZip_Click"/>
+                    <Button x:Name="btn_SaveFiles" Grid.Row="4" Style="{StaticResource btn_hamburgeritem}" Content="Save File Manager" Click="btn_SaveFiles_Click"/>
+                    <Button x:Name="btn_Settings" Grid.Row="5" Style="{StaticResource btn_hamburgeritem}" Content="Settings" Click="btn_Settings_Click"/>
+                    <Button x:Name="btn_Speedrun" Grid.Row="6" Style="{StaticResource btn_hamburgeritem}" Content="Speedrun Info" Click="btn_Speedrun_Click"/>
+                    <Button x:Name="btn_Readme" Grid.Row="7" Style="{StaticResource btn_hamburgeritem}" Content="ReadMe" Click="btn_Readme_Click"/>
+                    <Button x:Name="btn_Credits" Grid.Row="8" Style="{StaticResource btn_hamburgeritem}" Content="Credits" Click="btn_Credits_Click"/>
                 </Grid>
                 <!-- GridHamburgerInner -->
             </Grid>
