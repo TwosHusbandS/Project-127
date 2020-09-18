@@ -15,6 +15,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.XPath;
 using System.IO;
+using System.Linq;
 
 /*
  * This file is based on SCUIStub from the CitizenFX Project - http://citizen.re/
@@ -51,7 +52,7 @@ namespace Project_127 {
             if (hasSecurity)
             {
                 byte[] keyData = atob(sessionKey);
-                sessKey = new ArraySegment<byte>(keyData, 0, 16).Array;
+                sessKey = new ArraySegment<byte>(keyData, 0, 16).ToArray();
 
             }
 
@@ -72,6 +73,7 @@ namespace Project_127 {
                 }
             }
 
+
             // Push RC4 encypted data to output
             output.AddRange(RC4.Encrypt(rc4Key, data));
             List<byte> tempContent = new List<byte>(output);
@@ -87,7 +89,9 @@ namespace Project_127 {
             }
             else
             {
-                hashData = new HMACSHA1().ComputeHash(tempContent.ToArray());
+                var hashFunc = new HMACSHA1();
+                hashFunc.Key = rc4Key;
+                hashData = hashFunc.ComputeHash(tempContent.ToArray());
             }
 
             // Append hash to output
@@ -124,21 +128,21 @@ namespace Project_127 {
             }
 
             // Read in blocksize
-            byte[] blockSizeData = RC4.Decrypt(rc4Key, new ArraySegment<byte>(data, 16, 4).Array);
+            byte[] blockSizeData = RC4.Decrypt(rc4Key, new ArraySegment<byte>(data, 16, 4).ToArray());
 
             // Sadly, bitconverter doesn't have an explicit from Big Endian
             int blockSize = (blockSizeData[0] << 24) + (blockSizeData[1] << 16) +
-                (blockSizeData[2] << 8) + blockSizeData[1];
-
-            byte[] fullData = RC4.Decrypt(rc4Key, data);
+                (blockSizeData[2] << 8) + blockSizeData[1] + 20;
+            byte[] encblock = data.Skip(16).ToArray();
+            byte[] fullData = RC4.Decrypt(rc4Key, encblock);
             List<byte> result = new List<byte>();
 
             // Block handling:
-            int start = 20;
-            while (start < size)
+            int start = 4;
+            while (start < (size - 16))
             {
                 // Find the end
-                int end = Math.Min(size, start + blockSize);
+                int end = Math.Min(size - 16, start + blockSize);
 
                 // We ignore the hash at the end of blocks (the decryption corrupted it anyways)
                 end -= 20; 
@@ -149,7 +153,7 @@ namespace Project_127 {
                 ArraySegment<byte> block = new ArraySegment<byte>(fullData, start, len);
 
                 // Push to result
-                result.AddRange(block.Array);
+                result.AddRange(block.ToArray());
 
                 // Move the start for next iteration
                 start += blockSize;
@@ -236,6 +240,10 @@ namespace Project_127 {
             hmacBuff.AddRange(Encoding.ASCII.GetBytes("239"));
             hmacBuff.Add(0);
 
+            // ros-SessionTicket
+            hmacBuff.AddRange(Encoding.ASCII.GetBytes(sessionTicket));
+            hmacBuff.Add(0);
+
             // ros-Challenge
             hmacBuff.AddRange(Encoding.ASCII.GetBytes(btoa(challenge)));
             hmacBuff.Add(0);
@@ -292,12 +300,13 @@ namespace Project_127 {
             validateResponse v = Validate(ticket, sessionKey, sessionTicket, machineHash);
             if (!v.error)
             {
-                string res = EntitlementDecrypt(v.text);
-                System.Windows.Forms.MessageBox.Show(res);
+                //string res = EntitlementDecrypt(v.text); // Not actual entitlements (yet)
+                //MessageBox.Show(res);
+                return true;
             }
             else
             {
-                System.Windows.Forms.MessageBox.Show(v.text);
+                MessageBox.Show(v.text); // Show Error
             }
 
             return false;
@@ -315,25 +324,31 @@ namespace Project_127 {
                             { "ticket", t },
                             { "titleId", "11" },
                         }), sk);
-            System.Windows.Forms.MessageBox.Show(btoa(reqBody));
 
             var req = new HttpRequestMessage
             {
-                RequestUri = new Uri("http://prod.ros.rockstargames.com/launcher/11/launcherservices/app.asmx/GetTitleAccessToken"),
+                RequestUri = new Uri("http://192.81.241.100/launcher/11/launcherservices/app.asmx/GetTitleAccessToken"),
                 Method = HttpMethod.Post,
-                Headers =
-                {
-                    { "Host", "prod.ros.rockstargames.com" },    
-                },
             };
-            req.Headers.TryAddWithoutValidation("User-Agent", GetROSVersionString());
-            req.Headers.TryAddWithoutValidation("ros-SecurityFlags", "239");
-            req.Headers.TryAddWithoutValidation("ros-SessionTicket", st);
+            req.Headers.Add("Host", "prod.ros.rockstargames.com");
+            req.Headers.Add("Accept", "*/*");
+            req.Headers.TryAddWithoutValidation("Accept-Encoding", "identity");
             req.Headers.TryAddWithoutValidation("ros-Challenge", btoa(challenge));
             req.Headers.TryAddWithoutValidation("ros-HeadersHmac", btoa(HeadersHmac(challenge, "POST", "/launcher/11/launcherservices/app.asmx/GetTitleAccessToken", sk, st)));
+            req.Headers.TryAddWithoutValidation("ros-SecurityFlags", "239");
+            req.Headers.TryAddWithoutValidation("ros-SessionTicket", st);
+            req.Headers.TryAddWithoutValidation("User-Agent", GetROSVersionString());
+            req.Headers.Remove("Connection");
+            req.Headers.Remove("Expect");
+            req.Headers.ConnectionClose = true;
+            req.Headers.ExpectContinue = false;
+
             req.Content = new ByteArrayContent(reqBody);
-            //var reqInfo = string.Format("{0}, {1}, {2}", req.RequestUri, req.Headers, GetROSVersionString());
-            //System.Windows.Forms.MessageBox.Show(reqInfo);
+
+            req.Content.Headers.ContentType = new MediaTypeHeaderValue("application/x-www-form-urlencoded");
+
+            var reqInfo = string.Format("{0}, {1}, {2}", req.RequestUri, req.Headers, GetROSVersionString());
+            System.Windows.Forms.MessageBox.Show(reqInfo);
 
             var res = httpClient.SendAsync(req).Result;
             if (!res.IsSuccessStatusCode)
@@ -351,20 +366,20 @@ namespace Project_127 {
                 var xml = new XPathDocument(new StringReader(xmldoc));
                 var nav = xml.CreateNavigator();
 
-                if (navGetOrDefault(nav, "//Response/Status", 0) == 0)
+                if (navGetOrDefault(nav, "//*[local-name()='Response']/*[local-name()='Status']", 0) == 0)
                 {
                     v.error = true;
                     v.text = String.Format("Could not get title access token "
                         + "from the Social Club. Error code: \n{0}/{1}",
-                        navGetOrDefault(nav, "//Response/Error/@Code", "[unknown]"),
-                        navGetOrDefault(nav, "//Response/Error/@CodeEx", "[unknown]")
+                        navGetOrDefault(nav, "//*[local-name()='Response']/*[local-name()='Error']/@Code", "[unknown]"),
+                        navGetOrDefault(nav, "//*[local-name()='Response']/*[local-name()='Error']/@CodeEx", "[unknown]")
                         );
                     v.status = -1;
                     return v;
                 }
                 else
                 {
-                    v.text = navGetOrDefault(nav, "//Response.Result", "");
+                    v.text = navGetOrDefault(nav, "//*[local-name()='Response']/*[local-name()='Result']", "");
                     v.error = v.text == "";
                     v.status = (int)res.StatusCode;
                     return v;
@@ -377,7 +392,7 @@ namespace Project_127 {
         {
             byte[] blob = atob(encBlock);
             var blobseg = new ArraySegment<byte>(blob, 4, blob.Length - 4);
-            byte[] decBlock = EntitlementBlockCipher.decrypt_n(blobseg.Array, blobseg.Count / 16);
+            byte[] decBlock = EntitlementBlockCipher.decrypt_n(blobseg.ToArray(), blobseg.Count / 16);
             return Encoding.UTF8.GetString(decBlock);
         }
 
@@ -389,9 +404,9 @@ namespace Project_127 {
             public ROSCryptoState()
             {
                 byte[] platformStr = atob(ROS_PLATFORM_KEY_LAUNCHER);
-                m_rc4Key = new ArraySegment<byte>(platformStr,1,32).Array;
-                m_xorKey = new ArraySegment<byte>(platformStr, 33, 16).Array;
-                m_hashKey = new ArraySegment<byte>(platformStr, 49, 16).Array;
+                m_rc4Key = new ArraySegment<byte>(platformStr,1,32).ToArray();
+                m_xorKey = new ArraySegment<byte>(platformStr, 33, 16).ToArray();
+                m_hashKey = new ArraySegment<byte>(platformStr, 49, 16).ToArray();
 
                 m_xorKey = RC4.Decrypt(m_rc4Key, m_xorKey);
                 m_hashKey = RC4.Decrypt(m_rc4Key, m_hashKey);

@@ -60,16 +60,16 @@ namespace Project_127
         private static UInt32[] GetSubkey(int idx)
         {
             UInt32[] keyUints = entitlement_key_dec;
-            return new ArraySegment<UInt32>(keyUints,4*idx, 4).Array;
+            return new ArraySegment<UInt32>(keyUints,4*idx, 4).ToArray();
         } 
         private static UInt32[] GetDecryptTable(int idx)
         {
             UInt32[] dtUints = entitlement_tables_dec;
-            return new ArraySegment<UInt32>(dtUints, 16*256*idx, 16*256).Array;
+            return new ArraySegment<UInt32>(dtUints, 16*256*idx, 16*256).ToArray();
         }
         private static UInt32[] GetDecryptBytes(UInt32[] tables, int idx) 
         {
-            return new ArraySegment<UInt32>(tables, 256*idx, 256).Array;
+            return new ArraySegment<UInt32>(tables, 256*idx, 256).ToArray();
         }
         public static byte[] decrypt_n(byte[] inp, int blocks)
         {
@@ -80,7 +80,7 @@ namespace Project_127
 
             for (int i = 0; i < blocks; i++)
             {
-                byte[] inBuf = new ArraySegment<byte>(inp, 16 * i, 16).Array;
+                byte[] inBuf = new ArraySegment<byte>(inp, 16 * i, 16).ToArray();
 
                 outBuf = DecryptRoundA(inBuf, GetSubkey(0), GetDecryptTable(0));
                 outBuf = DecryptRoundA(outBuf, GetSubkey(1), GetDecryptTable(1));

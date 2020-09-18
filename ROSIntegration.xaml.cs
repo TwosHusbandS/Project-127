@@ -15,6 +15,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Web;
 using System.Windows.Documents.Serialization;
+using System.Xml.XPath;
+using System.IO;
 /*
 * This file is based on LegitimacyNUI.cpp from the CitizenFX Project - http://citizen.re/
 * 
@@ -200,7 +202,7 @@ style.appendChild(document.createTextNode(css));
             char[] sep = new char[1];
             sep[0] = ':';
             string[] message = e.Message.ToString().Split(sep, 2);
-            //System.Windows.Forms.MessageBox.Show(e.Message.ToString());
+            //MessageBox.Show(e.Message.ToString());
             if (message[0] == "ui")
             {
                 if (message[1] == "Close")
@@ -231,13 +233,21 @@ style.appendChild(document.createTextNode(css));
                 var json = new System.Web.Script.Serialization.JavaScriptSerializer();
                 var jsond = json.Deserialize<Dictionary<String, String>>(message[1]);
 
+                var uexml = jsond["XMLResponse"];
+                var xmls = System.Net.WebUtility.UrlDecode(uexml);
+                XPathDocument xml = new XPathDocument(new StringReader(xmls));
+                XPathNavigator nav = xml.CreateNavigator();
+
                 string ticket = jsond["ticket"];
                 string sessionKey = jsond["sessionKey"];
-                string sessionTicket = jsond["ticket"];
-                UInt64 RockstarID = UInt64.Parse(jsond["RockstarId"]);
+                string sessionTicket = nav.SelectSingleNode("//*[local-name()='Response']/*[local-name()='SessionTicket']").Value;
+                var RockstarID = UInt64.Parse(nav.SelectSingleNode("//*[local-name()='Response']/*[local-name()='RockstarAccount']/*[local-name()='RockstarId']").Value);
 
                 // Call our version of validate
                 bool valsucess = await ROSCommunicationBackend.Login(ticket, sessionKey, sessionTicket, RockstarID);
+
+                // Do somethin with valsuccess (true if ownership is valid)
+
 
                 this.Dispatcher.Invoke(() =>
                 {
