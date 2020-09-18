@@ -1,6 +1,9 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
@@ -8,15 +11,149 @@ using System.Windows.Media;
 namespace Project_127
 {
     /// <summary>
-    /// Class for Custom Colors and GUI Stuff
+    /// Class for Global / Central Place
     /// </summary>
-    class CustomColors
+    public static class Globals
     {
+		/// <summary>
+		/// Property of our own Installation Path
+		/// </summary>
+		public static string ProjectInstallationPath = Process.GetCurrentProcess().MainModule.FileName.Substring(0, Process.GetCurrentProcess().MainModule.FileName.LastIndexOf('\\'));
 
-        /// <summary>
-        /// Actual Main colors we use:
-        /// </summary>
-        public static Brush MyColorWhite { get; private set; } = (Brush)new BrushConverter().ConvertFromString("#ffffff");
+		/// <summary>
+		/// Property of our ProjectName (for Folders, Regedit, etc.)
+		/// </summary>
+		public static string ProjectName = "Project_127";
+		
+		/// <summary>
+		/// Property of our ProjectNiceName (for GUI)
+		/// </summary>
+		public static string ProjectNiceName = "Project 127";
+
+		/// <summary>
+		/// Property of our own Project Version
+		/// </summary>
+		public static Version ProjectVersion = Assembly.GetExecutingAssembly().GetName().Version;
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public static string URL_AutoUpdate = "https://raw.githubusercontent.com/TwosHusbandS/Project-127/master/Installer/Update.xml";
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public static string URL_AuthUser = "https://raw.githubusercontent.com/TwosHusbandS/Project-127/master/Installer/AuthUser.txt";
+
+		/// <summary>
+		/// Property if we are in Beta
+		/// </summary>
+		public static bool BetaMode = true;
+
+		/// <summary>
+		/// String[] of CommandLineArguments
+		/// </summary>
+		public static string[] CommandLineArguments;
+
+		/// <summary>
+		/// Property of LogFile Location. Will always be in C:\ProgramData\$ProjectName, since we want to start logging before inititng regedit and loading settings
+		/// </summary>
+		public static string Logfile { get; private set; } = Environment.ExpandEnvironmentVariables(@"%ALLUSERSPROFILE%\" + ProjectName + @"\Logfile.log");
+
+		/// <summary>
+		/// Property of the Registry Key we use for our Settings
+		/// </summary>
+		public static RegistryKey MyKey { get; private set; } = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64).CreateSubKey("SOFTWARE").CreateSubKey(ProjectName);
+
+		/// <summary>
+		/// Property of our default Settings
+		/// </summary>
+		public static Dictionary<string, string> MyDefaultSettings { get; private set; } = new Dictionary<string, string>()
+		{
+			{"FirstLaunch", "True" },
+			{"InstallationPath", ProjectInstallationPath },
+			{"GTAVInstallationPath", Environment.ExpandEnvironmentVariables(@"%ProgramFiles(x86)%\Steam\steamapps\common\Grand Theft Auto V")},
+			{"FileFolder", Environment.ExpandEnvironmentVariables(@"%ALLUSERSPROFILE%\" + ProjectName)},
+			{"EnableLogging", "True"},
+			{"EnablePreOrderBonus", "False"},
+			{"EnableAutoSetHighPriority", "True" },
+			{"EnableAutoStartLiveSplit", "True" },
+			{"PathLiveSplit", @"C:\Some\Path\SomeFile.exe" },
+			{"EnableAutoStartStreamProgram", "True" },
+			{"PathStreamProgram", @"C:\Some\Path\SomeFile.exe" },
+			{"EnableAutoStartFPSLimiter", "True" },
+			{"PathFPSLimiter", @"C:\Some\Path\SomeFile.exe" },
+			{"EnableAutoStartJumpScript", "True" },
+			{"JumpScriptKey1", "A" },
+			{"JumpScriptKey2", "A" },
+			{"EnableAutoStartNohboard", "True" },
+			{"EnableNohboardBurhac", "True" },
+			{"PathNohboard", @"C:\Some\Path\SomeFile.exe" },
+			{"Theme", @"" }
+		};
+
+		/// <summary>
+		/// Property of our Settings (Dictionary). Gets the default values on initiating the program. Our Settings will get read from registry on the Init functions.
+		/// </summary>
+		public static Dictionary<string, string> MySettings { get; private set; } = MyDefaultSettings.ToDictionary(entry => entry.Key, entry => entry.Value); // https://stackoverflow.com/a/139626
+		
+		/// <summary>
+		/// Init function which gets called at the very beginning
+		/// </summary>
+		public static void Init()
+		{
+			// Initiates Logging
+			HelperClasses.Logger.Init();
+
+			// Initiates the Settings
+			// Writes Settings Dictionary [copy of default settings at this point] in the registry if the value doesnt already exist
+			// then reads the Regedit Values in the Settings Dictionary
+			Settings.Init();
+
+			// Warning Message if first Launch or if we are in BetaMode
+			if (Settings.FirstLaunch || Globals.BetaMode)
+			{
+				(new Popup(Popup.PopupWindowTypes.PopupOk, "This shit, eh i mean software, is shit, ehm I mean Beta.\nMay break your GTA V Installation.\nDelete your Save Files.\nUninstall Everything.\nUpload your Browsing History to Facebook.\nAnd Set your PC on fire.\n\nWe aint responsible.")).ShowDialog();
+			}
+
+			// Sets "FirstLaunch" to "False"
+			Settings.SetSetting("FirstLaunch", "False");
+		}
+
+
+		/// <summary>
+		/// Proper Exit Method. Gets called when closed (user and taskmgr) and when PC is shutdown. Not when process is killed or power ist lost.
+		/// </summary>
+		public static void ProperExit()
+		{
+			// Kill all GTA and Rockstar related processes.
+
+			// Upgrade if was downgraded
+
+			// TODO CTRLF
+		}
+
+
+		/// <summary>
+		/// DebugPopup Method. Just opens Messagebox with pMsg
+		/// </summary>
+		/// <param name="pMsg"></param>
+		public static void DebugPopup(string pMsg)
+		{
+			System.Windows.Forms.MessageBox.Show(pMsg);
+		}
+
+
+
+
+		/// COLOR STUFF
+
+		/// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+		/// <summary>
+		/// Actual Main colors we use:
+		/// </summary>
+		public static Brush MyColorWhite { get; private set; } = (Brush)new BrushConverter().ConvertFromString("#ffffff");
         public static Brush MyColorBlack { get; private set; } = (Brush)new BrushConverter().ConvertFromString("#000000");
         public static Brush MyColorOrange { get; private set; } = (Brush)new BrushConverter().ConvertFromString("#E35627");
 		public static Brush MyColorGreen { get; private set; } = (Brush)new BrushConverter().ConvertFromString("#4cd213");
@@ -219,14 +356,6 @@ namespace Project_127
         }
 
 
-        /// <summary>
-        /// DebugPopup Method. Just opens Messagebox with pMsg
-        /// </summary>
-        /// <param name="pMsg"></param>
-        public static void DebugPopup(string pMsg)
-        {
-            System.Windows.Forms.MessageBox.Show(pMsg);
-        }
 
     } // End of Class
 } // End of Namespace

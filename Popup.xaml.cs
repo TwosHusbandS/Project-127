@@ -24,8 +24,9 @@ namespace Project_127
 		/// </summary>
 		public enum PopupWindowTypes
 		{
-			PopupYesNo = 1,
-			PopupOk = 2
+			PopupYesNo,
+			PopupOk,
+			PopupOkError
 		}
 
 
@@ -43,10 +44,16 @@ namespace Project_127
 
 			// Set the Parameters as Properties of new Popup Window
             lbl_Main.FontSize = pFontSize;
-            lbl_Main.Content = pMsg;
+			lbl_Main.Content = pMsg;
+
+			// Add "Support Text" to bottom if error
+			if (pPopupWindowType == PopupWindowTypes.PopupOkError)
+			{
+			lbl_Main.Content = pMsg + "\n\nIf this happens a lot,\nContact me on Discord:\n@thS#0305";
+			}
 
 			// If its a "OK" Window:
-            if (pPopupWindowType == Popup.PopupWindowTypes.PopupOk)
+			if (pPopupWindowType.ToString().Contains("PopupOk"))
             {
                 Button myButtonOk = new Button();
                 myButtonOk.Content = "Ok";
@@ -127,6 +134,9 @@ namespace Project_127
             this.Close();
 
         }
+
+
+		// Below are Methods we need to make the behaviour of this nice.
 
 
 		/// <summary>
