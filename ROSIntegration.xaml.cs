@@ -250,7 +250,7 @@ style.appendChild(document.createTextNode(css));
 
                 if (valsucess)
                 {
-                    MessageBox.Show("YAY");
+                    MessageBox.Show("Yay");
                 } 
                 else
                 {

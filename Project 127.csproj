@@ -86,6 +86,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="EntitlementBlock.cs" />
     <Compile Include="EntitlementBlockCipher.cs" />
     <Compile Include="EntitlementTables.cs" />
     <Compile Include="RC4.cs" />

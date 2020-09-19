@@ -18,7 +18,7 @@ using System.IO;
 using System.Linq;
 
 /*
- * This file is based on SCUIStub from the CitizenFX Project - http://citizen.re/
+ * This file is based on SCUIStub/LegitimacyChecking from the CitizenFX Project - http://citizen.re/
  * 
  * See the included licenses for licensing information on this code
  * 
@@ -98,7 +98,7 @@ namespace Project_127 {
             output.AddRange(hashData);
             return output.ToArray();
         }
-    
+
         private static byte[] DecryptROSData(byte[] data, int size, string sessionKey)
         {
             // Initialize state
@@ -133,83 +133,39 @@ namespace Project_127 {
             // Sadly, bitconverter doesn't have an explicit from Big Endian
             int blockSize = (blockSizeData[0] << 24) + (blockSizeData[1] << 16) +
                 (blockSizeData[2] << 8) + blockSizeData[1] + 20;
-            byte[] encblock = data.Skip(16).ToArray();
-            byte[] fullData = RC4.Decrypt(rc4Key, encblock);
-            List<byte> result = new List<byte>();
+            byte[] encblock = data.ToArray();
 
+            List<byte> encresult = new List<byte>();
+
+            encresult.AddRange(new ArraySegment<byte>(encblock, 16, 4));
             // Block handling:
-            int start = 4;
-            while (start < (size - 16))
+            int start = 20;
+            while (start < size)
             {
                 // Find the end
-                int end = Math.Min(size - 16, start + blockSize);
+                int end = Math.Min(size, start + blockSize);
 
-                // We ignore the hash at the end of blocks (the decryption corrupted it anyways)
+                // We ignore the hash at the end of blocks 
                 end -= 20; 
 
                 int len = end - start;
 
-                // Grab deciphered block
-                ArraySegment<byte> block = new ArraySegment<byte>(fullData, start, len);
+                // Grab data block
+                ArraySegment<byte> block = new ArraySegment<byte>(encblock, start, len);
 
                 // Push to result
-                result.AddRange(block.ToArray());
+                encresult.AddRange(block);
 
                 // Move the start for next iteration
-                start += blockSize;
+               start += blockSize;
             }
 
-            return result.ToArray();
+            var result = RC4.Decrypt(rc4Key, encresult.ToArray());
+            
+            return result.Skip(4).ToArray();
 
         }
 
-        /*HeadersHmac(const std::vector<uint8_t, TAlloc>& challenge, const char* method, const char* path, const std::string& sessionKey, const std::string& sessionTicket)
-        {
-        auto hmac = std::unique_ptr<Botan::MessageAuthenticationCode>(Botan::get_mac("HMAC(SHA1)")->clone());
-
-        ROSCryptoState cryptoState;
-
-        // set the key
-        uint8_t hmacKey[16];
-
-        // xor the RC4 key with the platform key (and optionally the session key)
-        auto rc4Xor = Botan::base64_decode(sessionKey);
-
-        for (int i = 0; i < sizeof(hmacKey); i++)
-        {
-            hmacKey[i] = rc4Xor[i] ^ cryptoState.GetXorKey()[i];
-        }
-
-        hmac->set_key(hmacKey, sizeof(hmacKey));
-
-        // method
-        hmac->update(method);
-        hmac->update(0);
-
-        // path
-        hmac->update(path);
-        hmac->update(0);
-
-        // ros-SecurityFlags
-        hmac->update("239");
-        hmac->update(0);
-
-        // ros-SessionTicket
-        hmac->update(sessionTicket);
-        hmac->update(0);
-
-        // ros-Challenge
-        hmac->update(Botan::base64_encode(challenge));
-        hmac->update(0);
-
-        // platform hash key
-        hmac->update(cryptoState.GetHashKey(), 16);
-
-        // set the request header
-        auto hmacValue = hmac->final();
-
-        return hmacValue;
-        }*/
         private static byte[] HeadersHmac(byte[] challenge, string method, string path, string sessionKey, string sessionTicket)
         {
             var HMAC = new HMACSHA1();
@@ -297,11 +253,12 @@ namespace Project_127 {
                 machineHash[i] = IDSegmentBytes[i - 4];
             }
             //Validate();
-            validateResponse v = Validate(ticket, sessionKey, sessionTicket, machineHash);
+            validateResponse v = await Validate(ticket, sessionKey, sessionTicket, machineHash);
             if (!v.error)
             {
                 //string res = EntitlementDecrypt(v.text); // Not actual entitlements (yet)
                 //MessageBox.Show(res);
+                MessageBox.Show(v.text);
                 return true;
             }
             else
@@ -312,7 +269,7 @@ namespace Project_127 {
             return false;
         }
 
-        private static validateResponse Validate(string t, string sk, string st, byte[] mh)
+        private static async Task<validateResponse> Validate(string t, string sk, string st, byte[] mh)
         {
             validateResponse v = new validateResponse();
 
@@ -331,15 +288,13 @@ namespace Project_127 {
                 Method = HttpMethod.Post,
             };
             req.Headers.Add("Host", "prod.ros.rockstargames.com");
-            req.Headers.Add("Accept", "*/*");
-            req.Headers.TryAddWithoutValidation("Accept-Encoding", "identity");
+            //req.Headers.Add("Accept", "*/*");
+            //req.Headers.TryAddWithoutValidation("Accept-Encoding", "identity");
             req.Headers.TryAddWithoutValidation("ros-Challenge", btoa(challenge));
-            req.Headers.TryAddWithoutValidation("ros-HeadersHmac", btoa(HeadersHmac(challenge, "POST", "/launcher/11/launcherservices/app.asmx/GetTitleAccessToken", sk, st)));
+            req.Headers.TryAddWithoutValidation("ros-HeadersHmac", btoa(HeadersHmac(challenge, "POST", req.RequestUri.AbsolutePath, sk, st)));
             req.Headers.TryAddWithoutValidation("ros-SecurityFlags", "239");
             req.Headers.TryAddWithoutValidation("ros-SessionTicket", st);
             req.Headers.TryAddWithoutValidation("User-Agent", GetROSVersionString());
-            req.Headers.Remove("Connection");
-            req.Headers.Remove("Expect");
             req.Headers.ConnectionClose = true;
             req.Headers.ExpectContinue = false;
 
@@ -349,7 +304,7 @@ namespace Project_127 {
 
             var reqInfo = string.Format("{0}, {1}, {2}", req.RequestUri, req.Headers, GetROSVersionString());
 
-            var res = httpClient.SendAsync(req).Result;
+            var res = await httpClient.SendAsync(req);
             if (!res.IsSuccessStatusCode)
             {
                 v.error = true;
@@ -365,34 +320,120 @@ namespace Project_127 {
                 var xml = new XPathDocument(new StringReader(xmldoc));
                 var nav = xml.CreateNavigator();
 
-                if (navGetOrDefault(nav, "//*[local-name()='Response']/*[local-name()='Status']", 0) == 0)
+                if (NavGetOrDefault(nav, "//*[local-name()='Response']/*[local-name()='Status']", 0) == 0)
                 {
                     v.error = true;
                     v.text = String.Format("Could not get title access token "
                         + "from the Social Club. Error code: \n{0}/{1}",
-                        navGetOrDefault(nav, "//*[local-name()='Response']/*[local-name()='Error']/@Code", "[unknown]"),
-                        navGetOrDefault(nav, "//*[local-name()='Response']/*[local-name()='Error']/@CodeEx", "[unknown]")
+                        NavGetOrDefault(nav, "//*[local-name()='Response']/*[local-name()='Error']/@Code", "[unknown]"),
+                        NavGetOrDefault(nav, "//*[local-name()='Response']/*[local-name()='Error']/@CodeEx", "[unknown]")
                         );
                     v.status = -1;
                     return v;
                 }
                 else
                 {
-                    v.text = navGetOrDefault(nav, "//*[local-name()='Response']/*[local-name()='Result']", "");
-                    v.error = v.text == "";
-                    v.status = (int)res.StatusCode;
+                    var acctoken = NavGetOrDefault(nav, "//*[local-name()='Response']/*[local-name()='Result']", "");
+                    if (acctoken == "")
+                    {
+                        return v; // Unknown Error
+                    }
+
+                    // req2.Headers.TryAddWithoutValidation("locale", "en-US");
+                    //req2.Headers.TryAddWithoutValidation("machineHash", btoa(mh));
+
+                    byte[] reqBody2 = EncryptROSData(BuildPostString(
+                        new Dictionary<string, string>{
+                            { "ticket", t },
+                            { "titleAccessToken", acctoken },
+                            { "locale", "en-US"},
+                            { "machineHash", btoa(mh)},
+                        }), sk);
+
+                    var req2 = new HttpRequestMessage
+                    {
+                        RequestUri = new Uri("http://prod.ros.rockstargames.com/launcher/11/launcherservices/entitlements.asmx/GetEntitlementBlock"),
+                        Method = HttpMethod.Post,
+                    };
+                    req2.Headers.Add("Host", "prod.ros.rockstargames.com");
+                    req2.Headers.TryAddWithoutValidation("ros-Challenge", btoa(challenge));
+                    req2.Headers.TryAddWithoutValidation("ros-HeadersHmac", btoa(HeadersHmac(challenge, "POST", req2.RequestUri.AbsolutePath, sk, st)));
+                    req2.Headers.TryAddWithoutValidation("ros-SecurityFlags", "239");
+                    req2.Headers.TryAddWithoutValidation("ros-SessionTicket", st);
+                    req2.Headers.TryAddWithoutValidation("User-Agent", GetROSVersionString());
+                    req2.Headers.ConnectionClose = true;
+                    req2.Headers.ExpectContinue = false;
+
+                    req2.Content = new ByteArrayContent(reqBody2);
+
+                    req2.Content.Headers.ContentType = new MediaTypeHeaderValue("application/x-www-form-urlencoded");
+
+                    res = await httpClient.SendAsync(req2);
+                    
+                    if (!res.IsSuccessStatusCode)
+                    {
+                        v.error = true;
+                        v.text = String.Format("Error {0}: {1}\r\n{2}",
+                            (int)res.StatusCode, res.StatusCode, res.Content.ReadAsStringAsync().Result);
+                        v.status = (int)res.StatusCode + 1000;
+                        return v;
+                    }
+                    else
+                    {
+                        rawResp = res.Content.ReadAsByteArrayAsync().Result;
+                        string exmldoc = Encoding.UTF8.GetString(DecryptROSData(rawResp, rawResp.Length, sk));
+                        var exml = new XPathDocument(new StringReader(exmldoc));
+                        var enav = exml.CreateNavigator();
+
+                        if (NavGetOrDefault(enav, "//*[local-name()='Response']/*[local-name()='Status']", 0) == 0) //you are here
+                        {
+                            v.error = true;
+                            v.text = String.Format("Could not get entitlement block "
+                                + "from the Social Club. Error code: \n{0}/{1}",
+                                NavGetOrDefault(enav, "//*[local-name()='Response']/*[local-name()='Error']/@Code", "[unknown]"),
+                                NavGetOrDefault(enav, "//*[local-name()='Response']/*[local-name()='Error']/@CodeEx", "[unknown]")
+                                );
+                            v.status = -1001;
+                            return v;
+                        }
+                        else
+                        {
+                            v.error = false;
+                            v.text = EntitlementHandler(enav);
+                            v.status = (v.text != "")? 0 : -1002;
+                            return v;
+                        }
+                    }
+
                     return v;
                 }
             }
-            return new validateResponse();
+            return v;
         }
 
-        private static string EntitlementDecrypt(string encBlock)
+        private static string EntitlementHandler(XPathNavigator nav)
+        {
+            // PATH "Response.Result.Data"
+            var encEntBlock = NavGetOrDefault(nav,
+                "//*[local-name()='Response']/*[local-name()='Result']/*[local-name()='Data']",
+                "");
+            if (encEntBlock == "")
+            {
+                return "";
+            }
+            //var decEntBlock = EntitlementDecrypt(encEntBlock);
+
+            var eb = new EntitlementBlock(EntitlementDecrypt(encEntBlock));
+
+            return eb.GetXml();
+        }
+
+        private static byte[] EntitlementDecrypt(string encBlock)
         {
             byte[] blob = atob(encBlock);
             var blobseg = new ArraySegment<byte>(blob, 4, blob.Length - 4);
             byte[] decBlock = EntitlementBlockCipher.decrypt_n(blobseg.ToArray(), blobseg.Count / 16);
-            return Encoding.UTF8.GetString(decBlock);
+            return decBlock;
         }
 
         private class ROSCryptoState
@@ -421,11 +462,11 @@ namespace Project_127 {
             }
         }
 
-        private static string navGetOrDefault(XPathNavigator x, string p, string d)
+        private static string NavGetOrDefault(XPathNavigator x, string p, string d)
         {
             return x.SelectSingleNode(p) != null ? x.SelectSingleNode(p).Value : d;
         }
-        private static int navGetOrDefault(XPathNavigator x, string p, int d)
+        private static int NavGetOrDefault(XPathNavigator x, string p, int d)
         {
             return x.SelectSingleNode(p) != null ? int.Parse(x.SelectSingleNode(p).Value) : d;
         }

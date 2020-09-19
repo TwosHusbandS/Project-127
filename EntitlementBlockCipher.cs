@@ -5,7 +5,13 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
-
+/*
+ * This file is based on LegitimacyChecking from the CitizenFX Project - http://citizen.re/
+ * 
+ * See the included licenses for licensing information on this code
+ * 
+ * Rewritten in C# by @dr490n/@jaredtb  
+ */
 namespace Project_127
 {
     class EntitlementBlockCipher
