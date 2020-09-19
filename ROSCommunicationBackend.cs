@@ -431,8 +431,7 @@ namespace Project_127 {
         private static byte[] EntitlementDecrypt(string encBlock)
         {
             byte[] blob = atob(encBlock);
-            var blobseg = new ArraySegment<byte>(blob, 4, blob.Length - 4);
-            byte[] decBlock = EntitlementBlockCipher.decrypt_n(blobseg.ToArray(), blobseg.Count / 16);
+            byte[] decBlock = EntitlementBlockCipher.DecryptEntitlementBlock(blob);
             return decBlock;
         }
 
