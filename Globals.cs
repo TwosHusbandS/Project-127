@@ -7,18 +7,19 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
+using System.Windows.Threading;
 
 namespace Project_127
 {
-    /// <summary>
-    /// Class for Global / Central Place
-    /// </summary>
-    public static class Globals
-    {
+	/// <summary>
+	/// Class for Global / Central Place
+	/// </summary>
+	public static class Globals
+	{
 		/// <summary>
 		/// Property of our own Installation Path
 		/// </summary>
-		public static string ProjectInstallationPath = Process.GetCurrentProcess().MainModule.FileName.Substring(0, Process.GetCurrentProcess().MainModule.FileName.LastIndexOf('\\'));
+		public static string ProjectInstallationPath { get { return Process.GetCurrentProcess().MainModule.FileName.Substring(0, Process.GetCurrentProcess().MainModule.FileName.LastIndexOf('\\')); } }
 
 		/// <summary>
 		/// Property of our ProjectName (for Folders, Regedit, etc.)
@@ -36,12 +37,12 @@ namespace Project_127
 		public static Version ProjectVersion = Assembly.GetExecutingAssembly().GetName().Version;
 
 		/// <summary>
-		/// 
+		/// URL for AutoUpdaterFile
 		/// </summary>
 		public static string URL_AutoUpdate = "https://raw.githubusercontent.com/TwosHusbandS/Project-127/master/Installer/Update.xml";
 
 		/// <summary>
-		/// 
+		/// URL for AuthUserFile
 		/// </summary>
 		public static string URL_AuthUser = "https://raw.githubusercontent.com/TwosHusbandS/Project-127/master/Installer/AuthUser.txt";
 
@@ -51,19 +52,36 @@ namespace Project_127
 		public static bool BetaMode = true;
 
 		/// <summary>
+		/// String of Steam Install Path
+		/// </summary>
+		public static string SteamInstallPath
+		{
+			get
+			{
+				RegistryKey myRK = Registry.LocalMachine.CreateSubKey("SOFTWARE").CreateSubKey("WOW6432Node").CreateSubKey("Valve").CreateSubKey("Steam");
+				return HelperClasses.RegeditHandler.GetValue(myRK, "InstallPath");
+			}
+		}
+
+		/// <summary>
+		/// Property of the Dispatcher Timer we use to keep track of GameState
+		/// </summary>
+		public static DispatcherTimer MyDispatcherTimer;            
+
+		/// <summary>
 		/// String[] of CommandLineArguments
 		/// </summary>
 		public static string[] CommandLineArguments;
 
 		/// <summary>
-		/// Property of LogFile Location. Will always be in C:\ProgramData\$ProjectName, since we want to start logging before inititng regedit and loading settings
+		/// Property of LogFile Location. Will always be in in the same folder as the executable, since we want to start logging before inititng regedit and loading settings
 		/// </summary>
-		public static string Logfile { get; private set; } = Environment.ExpandEnvironmentVariables(@"%ALLUSERSPROFILE%\" + ProjectName + @"\Logfile.log");
+		public static string Logfile { get; private set; } = ProjectInstallationPath.TrimEnd('\\') + @"\AAA - Logfile.log";
 
 		/// <summary>
 		/// Property of the Registry Key we use for our Settings
 		/// </summary>
-		public static RegistryKey MyKey { get; private set; } = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64).CreateSubKey("SOFTWARE").CreateSubKey(ProjectName);
+		public static RegistryKey MySettingsKey { get; private set; } = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64).CreateSubKey("SOFTWARE").CreateSubKey(ProjectName);
 
 		/// <summary>
 		/// Property of our default Settings
@@ -71,10 +89,11 @@ namespace Project_127
 		public static Dictionary<string, string> MyDefaultSettings { get; private set; } = new Dictionary<string, string>()
 		{
 			{"FirstLaunch", "True" },
-			{"InstallationPath", ProjectInstallationPath },
 			{"GTAVInstallationPath", Environment.ExpandEnvironmentVariables(@"%ProgramFiles(x86)%\Steam\steamapps\common\Grand Theft Auto V")},
 			{"FileFolder", Environment.ExpandEnvironmentVariables(@"%ALLUSERSPROFILE%\" + ProjectName)},
+			{"InstallationState", "Upgraded"},
 			{"EnableLogging", "True"},
+			{"EnableTempFixSteamLaunch", "False"},
 			{"EnablePreOrderBonus", "False"},
 			{"EnableAutoSetHighPriority", "True" },
 			{"EnableAutoStartLiveSplit", "True" },
@@ -100,7 +119,7 @@ namespace Project_127
 		/// <summary>
 		/// Init function which gets called at the very beginning
 		/// </summary>
-		public static void Init()
+		public static void Init(MainWindow pMW)
 		{
 			// Initiates Logging
 			HelperClasses.Logger.Init();
@@ -116,21 +135,54 @@ namespace Project_127
 				(new Popup(Popup.PopupWindowTypes.PopupOk, "This shit, eh i mean software, is shit, ehm I mean Beta.\nMay break your GTA V Installation.\nDelete your Save Files.\nUninstall Everything.\nUpload your Browsing History to Facebook.\nAnd Set your PC on fire.\n\nWe aint responsible.")).ShowDialog();
 			}
 
-			// Sets "FirstLaunch" to "False"
-			Settings.SetSetting("FirstLaunch", "False");
+			// Checks if we are doing first Launch.
+			if (Settings.FirstLaunch)
+			{
+				// Try to find GTA V installation Path
+				string potentialGTAVInstallationPath = Globals.ProjectInstallationPath.TrimEnd('\\').Substring(0, Globals.ProjectInstallationPath.LastIndexOf('\\'));
+				
+				// Prepare this Popup to show it later
+				Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Is: '" + potentialGTAVInstallationPath + "' your GTA V Installation Path?");
+
+				// If our Guess is valid
+				if (LauncherLogic.IsGTAVInstallationPathCorrect(potentialGTAVInstallationPath))
+				{
+					// Ask the User if its correct
+					yesno.ShowDialog();
+				}
+
+				// If it is correct
+				if (yesno.DialogResult == true)
+				{
+					// Set Settings
+					Settings.GTAVInstallationPath = potentialGTAVInstallationPath;
+				}
+				// If it isnt correct
+				else
+				{
+					// Ask User for Path
+					string GTAVInstallationPath = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.Folder, "Pick the Folder which contains your GTAV.exe", @"C:\");
+					Settings.GTAVInstallationPath = GTAVInstallationPath;
+				}
+
+				// Set FirstLaunch to false
+				Settings.FirstLaunch = false;
+			}
+
+			MyDispatcherTimer = new System.Windows.Threading.DispatcherTimer();
+			MyDispatcherTimer.Tick += new EventHandler(pMW.SetGTAVButtonBasedOnGameAndInstallationState);
+			MyDispatcherTimer.Interval = TimeSpan.FromMilliseconds(5000);
+			MyDispatcherTimer.Start();
+			pMW.SetGTAVButtonBasedOnGameAndInstallationState(null, null);
 		}
 
 
 		/// <summary>
-		/// Proper Exit Method. Gets called when closed (user and taskmgr) and when PC is shutdown. Not when process is killed or power ist lost.
+		/// Proper Exit Method. EMPTY FOR NOW. Get called when closed (user and taskmgr) and when PC is shutdown. Not when process is killed or power ist lost.
 		/// </summary>
 		public static void ProperExit()
 		{
-			// Kill all GTA and Rockstar related processes.
 
-			// Upgrade if was downgraded
-
-			// TODO CTRLF
 		}
 
 

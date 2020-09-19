@@ -57,11 +57,11 @@ namespace Project_127
 		private void btn_LeftArrow_Click(object sender, RoutedEventArgs e)
 		{
 			// Not Fully Implemented
-			BackupSaves.Add(new MyFile("Test1", "TestA"));
-			BackupSaves.Add(new MyFile("Test2", "TestB"));
-			BackupSaves.Add(new MyFile("Test3", "TestC"));
-			BackupSaves.Add(new MyFile("Test4", "TestD"));
-			BackupSaves.Add(new MyFile("Test5", "TestE"));
+			//BackupSaves.Add(new MyFile("Test1", "TestA"));
+			//BackupSaves.Add(new MyFile("Test2", "TestB"));
+			//BackupSaves.Add(new MyFile("Test3", "TestC"));
+			//BackupSaves.Add(new MyFile("Test4", "TestD"));
+			//BackupSaves.Add(new MyFile("Test5", "TestE"));
 		}
 
 
@@ -73,9 +73,9 @@ namespace Project_127
 		private void btn_RightArrow_Click(object sender, RoutedEventArgs e)
 		{
 			// Not Fully Implemented
-			MyFile tmp = (MyFile)dg_BackupFiles.SelectedItem; // we need to null check this XD
-			BackupSaves.Remove(tmp);
-			GTASaves.Add(tmp);
+			//MyFile tmp = (MyFile)dg_BackupFiles.SelectedItem; // we need to null check this XD
+			//BackupSaves.Remove(tmp);
+			//GTASaves.Add(tmp);
 		}
 
 

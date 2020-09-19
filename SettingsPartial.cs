@@ -51,7 +51,7 @@ namespace Project_127
 		/// </summary>
 		/// <param name="pKey"></param>
 		/// <returns></returns>
-		public static string GetSetting(string pKey)
+		private static string GetSetting(string pKey)
 		{
 			return Globals.MySettings[pKey];
 		}
@@ -61,7 +61,7 @@ namespace Project_127
 		/// </summary>
 		/// <param name="pKey"></param>
 		/// <param name="pValue"></param>
-		public static void SetSetting(string pKey, string pValue)
+		private static void SetSetting(string pKey, string pValue)
 		{
 			HelperClasses.Logger.Log("Changing Setting '" + pKey + "' to '" + pValue + "'");
 			try
@@ -92,7 +92,7 @@ namespace Project_127
 		/// <summary>
 		/// Resets all Settings to Default Settings 
 		/// </summary>
-		public static void ResetSettings()
+		private static void ResetSettings()
 		{
 			HelperClasses.Logger.Log("Resetting Settings from Regedit", true, 1);
 			foreach (KeyValuePair<string, string> SingleDefaultSetting in Globals.MyDefaultSettings)
@@ -107,7 +107,7 @@ namespace Project_127
 		/// </summary>
 		/// <param name="pString"></param>
 		/// <returns></returns>
-		public static bool GetBoolFromString(string pString)
+		private static bool GetBoolFromString(string pString)
 		{
 			bool tmpBool;
 			bool.TryParse(pString, out tmpBool);
@@ -127,16 +127,9 @@ namespace Project_127
 			{
 				return GetBoolFromString(GetSetting("FirstLaunch"));
 			}
-		}
-
-		/// <summary>
-		/// Settings InstallationPath. Gets from the Dictionary. NO SET.
-		/// </summary>
-		public static string InstallationPath
-		{
-			get
+			set
 			{
-				return GetSetting("InstallationPath");
+				SetSetting("FirstLaunch", value.ToString());
 			}
 		}
 
@@ -171,6 +164,21 @@ namespace Project_127
 		}
 
 		/// <summary>
+		/// Settings GameState. Contains the information if User is currently Upgraded or Downgraded
+		/// </summary>
+		public static LauncherLogic.InstallationStates InstallationState
+		{
+			get
+			{
+				return (LauncherLogic.InstallationStates)Enum.Parse(typeof(LauncherLogic.InstallationStates), GetSetting("InstallationState"));
+			}
+			set
+			{
+				SetSetting("InstallationState", value.ToString());
+			}
+		}
+
+		/// <summary>
 		/// Settings EnableLogging. Gets and Sets from the Dictionary.
 		/// </summary>
 		public static bool EnableLogging
@@ -185,6 +193,21 @@ namespace Project_127
 			}
 		}
 
+		/// <summary>
+		/// Settings EnableTempFixSteamLaunch. Gets and Sets from the Dictionary.
+		/// </summary>
+		public static bool EnableTempFixSteamLaunch
+		{
+			get
+			{
+				return GetBoolFromString(GetSetting("EnableTempFixSteamLaunch"));
+			}
+			set
+			{
+				SetSetting("EnableTempFixSteamLaunch", value.ToString());
+			}
+		}
+		
 		/// <summary>
 		/// Settings EnablePreOrderBonus. Gets and Sets from the Dictionary.
 		/// </summary>

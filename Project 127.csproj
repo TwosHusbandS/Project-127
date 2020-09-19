@@ -239,5 +239,11 @@
   <ItemGroup>
     <Resource Include="Installer\AuthUser.txt" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="MyDLLs\AutoUpdater.NET.dll" />
+    <Content Include="MyDLLs\CefSharp.Core.dll" />
+    <Content Include="MyDLLs\CefSharp.dll" />
+    <Content Include="MyDLLs\CefSharp.Wpf.dll" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

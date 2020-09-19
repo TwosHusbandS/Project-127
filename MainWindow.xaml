@@ -122,7 +122,7 @@
             <Button x:Name="btn_Hamburger" Style="{StaticResource btn_Small}" Content="☰" VerticalAlignment="Top" HorizontalAlignment="Left" Click="btn_Hamburger_Click" />
             <Button x:Name="btn_Exit" Style="{StaticResource btn_Small}" Content="X" VerticalAlignment="Top" HorizontalAlignment="Right" Click="btn_Exit_Click"/>
             <Button x:Name="btn_Auth" Style="{StaticResource btn_Small}" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="60,15,0,0" Click="btn_Auth_Click"/>
-            <Button x:Name="btn_GTA" Style="{StaticResource btn_gta}" Margin="525,400,60,60" Content="Launch GTA V&#xa;Test" Click="btn_GTA_Click" MouseRightButtonDown="btn_GTA_MouseRightButtonDown"/>
+            <Button x:Name="btn_GTA" Style="{StaticResource btn_gta}" Margin="525,400,60,60" Content="GTA V. Downgraded.&#xa;Game NOT running." Click="btn_GTA_Click" MouseRightButtonDown="btn_GTA_MouseRightButtonDown"/>
         </Grid >
         <!-- Main Grid -->
     </Border>

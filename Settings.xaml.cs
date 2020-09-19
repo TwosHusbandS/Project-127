@@ -14,11 +14,11 @@ using System.Windows.Shapes;
 
 namespace Project_127
 {
-    /// <summary>
-    /// Class Settings.xaml (Partical class is in SettingsPartial.cs)
-    /// </summary>
-    public partial class Settings : Window
-    {
+	/// <summary>
+	/// Class Settings.xaml (Partical class is in SettingsPartial.cs)
+	/// </summary>
+	public partial class Settings : Window
+	{
 		/// <summary>
 		/// Constructor of Settings Window 
 		/// </summary>
@@ -43,6 +43,7 @@ namespace Project_127
 		private void btn_Set_GTAVInstallationPath_Click(object sender, RoutedEventArgs e)
 		{
 			GTAVInstallationPath = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.Folder, "Pick the Folder which contains your GTAV.exe", @"C:\");
+			Settings.GTAVInstallationPath = GTAVInstallationPath;
 			btn_Set_GTAVInstallationPath.Content = GTAVInstallationPath;
 		}
 
@@ -54,6 +55,7 @@ namespace Project_127
 		private void btn_Set_FileFolder_Click(object sender, RoutedEventArgs e)
 		{
 			FileFolder = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.Folder, "Pick the Folder which contains all sort of Files", @"C:\");
+			Settings.FileFolder = FileFolder;
 			btn_Set_FileFolder.Content = FileFolder;
 		}
 
@@ -65,6 +67,7 @@ namespace Project_127
 		private void btn_Set_PathLiveSplit_Click(object sender, RoutedEventArgs e)
 		{
 			PathLiveSplit = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.File, "Select the .exe of the LiveSplit Program", @"C:\");
+			Settings.PathLiveSplit = PathLiveSplit;
 			btn_Set_FileFolder.Content = PathLiveSplit;
 		}
 
@@ -76,6 +79,7 @@ namespace Project_127
 		private void btn_Set_PathStreamProgram_Click(object sender, RoutedEventArgs e)
 		{
 			PathStreamProgram = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.File, "Select the .exe of the Stream Program", @"C:\");
+			Settings.PathStreamProgram = PathStreamProgram;
 			btn_Set_FileFolder.Content = PathStreamProgram;
 		}
 
@@ -87,6 +91,7 @@ namespace Project_127
 		private void btn_Set_PathFPSLimiter_Click(object sender, RoutedEventArgs e)
 		{
 			PathFPSLimiter = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.File, "Select the .exe of the FPS Limit Program", @"C:\");
+			Settings.PathFPSLimiter = PathFPSLimiter;
 			btn_Set_FileFolder.Content = PathFPSLimiter;
 		}
 
@@ -120,6 +125,7 @@ namespace Project_127
 		private void btn_Set_PathNohboard_Click(object sender, RoutedEventArgs e)
 		{
 			PathLiveSplit = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.File, "Select the .exe of the LiveSplit Program", @"C:\");
+			Settings.PathLiveSplit = PathLiveSplit;
 			btn_Set_FileFolder.Content = PathLiveSplit;
 		}
 
@@ -145,9 +151,24 @@ namespace Project_127
 			this.Close();
 		}
 
+		/// <summary>
+		/// Button Click on Reset.
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void btn_Reset_Click(object sender, RoutedEventArgs e)
+		{
+			// TODO CTRLF FIX HAVING TO RELOAD WINDOW
+			Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Do you want to reset settings?\nOpen this window again to see results...");
+			yesno.ShowDialog();
+			if (yesno.DialogResult == true)
+			{
+				Settings.ResetSettings();
+				this.Close();
+			}
+		}
 
 		// Below are Methods we need to make the behaviour of this nice.
-
 
 		/// <summary>
 		/// Method which makes the Window draggable, which moves the whole window when holding down Mouse1 on the background
@@ -158,6 +179,7 @@ namespace Project_127
 		{
 			DragMove(); // Pre-Defined Method
 		}
+
 
 	} // End of Class
 } // End of Namespace
