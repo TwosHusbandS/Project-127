@@ -217,6 +217,7 @@
                     <RowDefinition Height="40"/>
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="60"/>
+                    <RowDefinition Height="60"/>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
@@ -278,6 +279,19 @@
                                 <Label Grid.Row="0" Grid.Column="0" Content="Enable Logging"  Style="{StaticResource lbl_Set_Info}" />
                                 <CheckBox Grid.Row="0" Grid.Column="1" x:Name="cb_Set_EnableLogging" IsChecked="{Binding Path=EnableLogging, Mode=TwoWay}" Style="{StaticResource cb_Set}"/>
                             </Grid>
+                            <Separator Style="{StaticResource sp_Set}"/>
+                            <Grid x:Name="Grid_Set_TmpFixSteamLaunch">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <Label Grid.Row="0" Grid.Column="0" Content="Enable TmpFixSteamLaunch"  Style="{StaticResource lbl_Set_Info}" />
+                                <CheckBox Grid.Row="0" Grid.Column="1" x:Name="cb_Set_TmpFixSteamLaunch" IsChecked="{Binding Path=EnableTmpFixSteamLaunch, Mode=TwoWay}" Style="{StaticResource cb_Set}"/>
+                            </Grid>
+                            <!--
                             <Separator Style="{StaticResource sp_Set}"/>
                             <Grid x:Name="Grid_Set_Preorder">
                                 <Grid.RowDefinitions>
@@ -385,12 +399,13 @@
                                 <Label Grid.Row="1" Grid.Column="0" Content="Current Theme: "  Style="{StaticResource lbl_Set_Info}" />
                                 <Button Grid.Row="1" Grid.Column="1" x:Name="btn_Set_Theme" Click="btn_Set_Theme_Click" Content="{Binding Path=Theme, Mode=TwoWay}" Style="{StaticResource btn_Set}"/>
                             </Grid>
-                           
+                           -->
                         </StackPanel>
                     </ScrollViewer>
                 </Border>
 
-                <Button Style="{StaticResource btn}" x:Name="btn_Close" Grid.Row="2" Grid.Column="0" Margin="10" Content="Close" Click="btn_Close_Click"/>
+                <Button Style="{StaticResource btn}" x:Name="btn_Reset" Grid.Row="2" Grid.Column="0" Margin="10" Content="Reset" Click="btn_Reset_Click"/>
+                <Button Style="{StaticResource btn}" x:Name="btn_Close" Grid.Row="3" Grid.Column="0" Margin="10" Content="Close" Click="btn_Close_Click"/>
 
             </Grid>
         </Border>

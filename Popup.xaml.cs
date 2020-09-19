@@ -73,7 +73,7 @@ namespace Project_127
                 myButtonYes.Style = Resources["btn"] as Style;
                 myButtonYes.Click += btn_Yes_Click;
                 myGrid.Children.Add(myButtonYes);
-                Grid.SetColumn(myButtonYes, 1);
+                Grid.SetColumn(myButtonYes, 0);
                 Grid.SetRow(myButtonYes, 1);
                 myButtonYes.Focus();
 
@@ -82,7 +82,7 @@ namespace Project_127
                 myButtonNo.Style = Resources["btn"] as Style;
                 myButtonNo.Click += btn_No_Click;
                 myGrid.Children.Add(myButtonNo);
-                Grid.SetColumn(myButtonNo, 0);
+                Grid.SetColumn(myButtonNo, 1);
                 Grid.SetRow(myButtonNo, 1);
             }
         }

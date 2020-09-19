@@ -42,7 +42,7 @@ namespace Project_127.HelperClasses
 		/// <param name="pData"></param>
 		public static void SetValue(string pValue, string pData)
 		{
-			SetValue(Globals.MyKey, pValue, pData, RegistryValueKind.String);
+			SetValue(Globals.MySettingsKey, pValue, pData, RegistryValueKind.String);
 		}
 
 		/// <summary>
@@ -63,7 +63,7 @@ namespace Project_127.HelperClasses
 		/// <param name="pRegistryValueKind"></param>
 		public static void SetValue(string pValue, string pData, RegistryValueKind pRegistryValueKind)
 		{
-			SetValue(Globals.MyKey, pValue, pData, pRegistryValueKind);
+			SetValue(Globals.MySettingsKey, pValue, pData, pRegistryValueKind);
 		}
 
 		/// <summary>
@@ -92,7 +92,7 @@ namespace Project_127.HelperClasses
 		/// <returns></returns>
 		public static string GetValue(string pValue)
 		{
-			return GetValue(Globals.MyKey, pValue);
+			return GetValue(Globals.MySettingsKey, pValue);
 		}
 
 		/// <summary>
@@ -122,7 +122,7 @@ namespace Project_127.HelperClasses
 		/// <returns></returns>
 		public static bool DoesValueExists(string pValue)
 		{
-			return DoesValueExists(Globals.MyKey, pValue);
+			return DoesValueExists(Globals.MySettingsKey, pValue);
 		}
 
 		/// <summary>

@@ -5,11 +5,21 @@ Main Client Implementation by "@thS#0305"
 The actual hard lifting of the launching (with fixes) and authentification stuff is achieved by the hardwork of "@dr490n", "@zCri" and "@Special For"
 Artwork, GUI Design, GUI Behaviour, Colorchoice etc. by "@Hossel"
 
-Version: 0.0.1.1 unreleased, not working, not fully implemented.
-From now on, versions will be changed here
-as well as in the assembly info of this file (Project 127 -> Properties -> AssemblyInfo.cs -> Very bottom of the file
+Version: 0.0.1.2 unreleased
 
-We are taking some shortcuts here, like requiring admin acces,so we dont have to deal with file or regedit permissions..(app.manifest lines 20 and 21 btw)
+Build Instructions:
+Add a Reference to all the DLLs inside of \MyDLLs\
+
+Deploy Instructions:
+Change Version Number a few Lines Above.
+Change Version Numbner in both of the last lines in AssemblyInfo.cs
+Build installer via Innosetup (Script is in \Installer\)
+Put compiled Installer in \Installer\
+Change Version number and Installer Location in "\Installer\Update.xml"
+Push Commit to github branch.
+Merge branch into master
+
+We need Admin Acces to access registry, and possibly some file permission stuff
  
 Still needs the actual creative way of Launching and the DRM.
 
@@ -33,7 +43,6 @@ General Files / Classes:
     HelperClasses\RegeditHandler.cs
 	HelperClasses\FileHandler.cs
 
-
 General Comments and things one should be aware of (still finishing this list)
 	Window Icons are set in the Window part of the XAML. Can use resources and relative Paths this way
 		This doesnt change the icon when right clicking task bar btw.
@@ -41,23 +50,16 @@ General Comments and things one should be aware of (still finishing this list)
 		DataBinding the ButtonContext is hard for some reason. Works which the checkbox tho, which is kinda weird
 
 Main To do:
-	Programming ToDo:
-		Test Auto Updater
-		Check Installer for Custom options etc.
-	
-	After that:
-	Fix Code signing so we dont get anti virus error
-	Implemt other features (GTA V Button Behaviour, all Settings, Theming)
-    Thoroughly test everything
+	- Test current Version (ZIP File, Special Launch for Testing, GameState button behaviour and all of that)	
 
-	Keep in Mind:
-		GameStates (no settings) with On_Closing Event code are in place
-			if we go with copying files instead of hardlinking
-			we need to change that
+	- Implement not having to refresh Settings Window
+	- Implemt other features (all Settings)
 
-    Low Prio:
+    - Low Prio:
 		Convert Settings and SaveFileHandler in CustomControls
 		Theming
+		Popup start in middle of window
+		Fix Code signing so we dont get anti virus error
         Implement Hamburger Animation
 		Get DataBinding working on Button Context for Settings
 		Own FPS Limiter
@@ -126,7 +128,7 @@ namespace Project_127
 			}
 
 			// Start the Init Process
-			Globals.Init();
+			Globals.Init(this);
 
 			// Make sure Hamburger Menu is invisible when opening window
 			this.GridHamburgerOuter.Visibility = Visibility.Hidden;
@@ -200,8 +202,9 @@ namespace Project_127
 		/// <param name="e"></param>
 		private void btn_GTA_Click(object sender, RoutedEventArgs e)
 		{
-			new Popup(Popup.PopupWindowTypes.PopupOk, "Launching Behaviour not fully implemented yet.\nImage you started the game and\n this is why the border changes color...").ShowDialog();
-			btn_GTA.BorderBrush = Globals.MW_ButtonGTAGameRunningBorderBrush;
+			LauncherLogic.Launch();
+
+			SetGTAVButtonBasedOnGameAndInstallationState(null, null);
 		}
 
 		/// <summary>
@@ -211,8 +214,13 @@ namespace Project_127
 		/// <param name="e"></param>
 		private void btn_GTA_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
 		{
-			new Popup(Popup.PopupWindowTypes.PopupOk, "Right Click Behaviour not fully implemented yet.\nImage this closed the game for you and\n this is why the border changes color...").ShowDialog();
-			btn_GTA.BorderBrush = Globals.MW_ButtonGTAGameNotRunningBorderBrush;
+			Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Do you want to close GTAV?");
+			yesno.ShowDialog();
+			if (yesno.DialogResult == true)
+			{
+				LauncherLogic.KillRelevantProcesses();
+			}
+			SetGTAVButtonBasedOnGameAndInstallationState(null, null);
 		}
 
 
@@ -227,16 +235,28 @@ namespace Project_127
 		private void btn_Upgrade_Click(object sender, RoutedEventArgs e)
 		{
 			HelperClasses.Logger.Log("Clicked the Upgrade Button");
-			if (LauncherLogic.MyGameState == LauncherLogic.GameState.Downgraded)
+			if (LauncherLogic.IsGTAVInstallationPathCorrect())
 			{
-				HelperClasses.Logger.Log("Gamestate looks OK. Will Proceed to try to downgrade.",1);
-				LauncherLogic.Upgrade();
-				LauncherLogic.MyGameState = LauncherLogic.GameState.Upgraded;
+				if (LauncherLogic.InstallationState == LauncherLogic.InstallationStates.Downgraded)
+				{
+					HelperClasses.Logger.Log("Gamestate looks OK. Will Proceed to try to Upgrade.", 1);
+					LauncherLogic.Upgrade();
+					HelperClasses.Logger.Log("Will Set GameState to Upgraded", 1);
+					LauncherLogic.InstallationState = LauncherLogic.InstallationStates.Upgraded;
+				}
+				else
+				{
+					HelperClasses.Logger.Log("This program THINKS you are already Upgraded. Downgrad procedure will not be called.", 1);
+				}
 			}
 			else
 			{
-				HelperClasses.Logger.Log("This program THINKS you are already downgraded. Downgrad procedure will not be called.", 1);
+				HelperClasses.Logger.Log("GTA V Installation Path not found or incorrect. User will get Popup");
+				new Popup(Popup.PopupWindowTypes.PopupOkError, "Error: GTA V Installation Path incorrect.");
 			}
+
+
+			SetGTAVButtonBasedOnGameAndInstallationState(null, null);
 		}
 
 		/// <summary>
@@ -250,9 +270,18 @@ namespace Project_127
 			yesno.ShowDialog();
 			if (yesno.DialogResult == true)
 			{
-				LauncherLogic.Repair();
+				if (LauncherLogic.IsGTAVInstallationPathCorrect())
+				{
+					LauncherLogic.Repair();
+				}
+				else
+				{
+					HelperClasses.Logger.Log("GTA V Installation Path not found or incorrect. User will get Popup");
+					new Popup(Popup.PopupWindowTypes.PopupOkError, "Error: GTA V Installation Path incorrect.");
+				}
 			}
-			LauncherLogic.MyGameState = LauncherLogic.GameState.Upgraded;
+
+			SetGTAVButtonBasedOnGameAndInstallationState(null, null);
 		}
 
 		/// <summary>
@@ -262,11 +291,27 @@ namespace Project_127
 		/// <param name="e"></param>
 		private void btn_Downgrade_Click(object sender, RoutedEventArgs e)
 		{
-			if (LauncherLogic.MyGameState == LauncherLogic.GameState.Upgraded)
+			HelperClasses.Logger.Log("Clicked the Downgrade Button");
+			if (LauncherLogic.IsGTAVInstallationPathCorrect())
 			{
-				LauncherLogic.Downgrade();
-				LauncherLogic.MyGameState = LauncherLogic.GameState.Downgraded;
+				if (LauncherLogic.InstallationState == LauncherLogic.InstallationStates.Upgraded)
+				{
+					HelperClasses.Logger.Log("Gamestate looks OK. Will Proceed to try to Downgrade.", 1);
+					LauncherLogic.Downgrade();
+					HelperClasses.Logger.Log("Will Set GameState to Downgrade", 1);
+					LauncherLogic.InstallationState = LauncherLogic.InstallationStates.Downgraded;
+				}
+				else
+				{
+					HelperClasses.Logger.Log("This program THINKS you are already Downgraded. Upgrade procedure will not be called.", 1);
+				}
 			}
+			else
+			{
+				HelperClasses.Logger.Log("GTA V Installation Path not found or incorrect. User will get Popup");
+				new Popup(Popup.PopupWindowTypes.PopupOkError, "Error: GTA V Installation Path incorrect.");
+			}
+			SetGTAVButtonBasedOnGameAndInstallationState(null, null);
 		}
 
 		/// <summary>
@@ -282,8 +327,16 @@ namespace Project_127
 				HelperClasses.FileHandling.deleteFile(myFile);
 			}
 
-			string ZipFileLocation = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.File, "Title", "", Settings.InstallationPath);
-			ZipFile.ExtractToDirectory(ZipFileLocation, Settings.InstallationPath);
+			string ZipFileLocation = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.File, "Title", "", Globals.ProjectInstallationPath);
+			if (HelperClasses.FileHandling.doesFileExist(ZipFileLocation))
+			{
+				ZipFile.ExtractToDirectory(ZipFileLocation, Globals.ProjectInstallationPath);
+			}
+			else
+			{
+				new Popup(Popup.PopupWindowTypes.PopupOk, "No ZIP File selected");
+			}
+			new Popup(Popup.PopupWindowTypes.PopupOk, "Well...lets hope this worked");
 		}
 
 		/// <summary>
@@ -313,7 +366,13 @@ namespace Project_127
 		/// <param name="e"></param>
 		private void btn_Speedrun_Click(object sender, RoutedEventArgs e)
 		{
+			string msg = "DarkViperAU";
+			msg += "\nCan fix his shit Samsung Phone";
+			msg += "\nWith a custom Rom";
+			msg += "\n\n- Haiku by some Discord Member";
+			msg += "\n\n(Placeholder Text. Will Include some Speedrun Infos and\nLink to some other Resources";
 
+			new Popup(Popup.PopupWindowTypes.PopupOk, msg).ShowDialog();
 		}
 
 		/// <summary>
@@ -323,10 +382,11 @@ namespace Project_127
 		/// <param name="e"></param>
 		private void btn_Readme_Click(object sender, RoutedEventArgs e)
 		{
-			string msg = "Test";
-			msg += "\nTestLine2";
-			msg += "\nTestLine3";
-			msg += "\n\n" + Globals.ProjectVersion.ToString();
+			string msg = "You are running Project 1.27";
+			msg += "\nProgram which helps Speedrunners";
+			msg += "\nAnd has a few features";
+			msg += "\nPlaceholder Text";
+			msg += "\n\nVersion: " + Globals.ProjectVersion.ToString();
 
 			new Popup(Popup.PopupWindowTypes.PopupOk, msg).ShowDialog();
 		}
@@ -338,9 +398,24 @@ namespace Project_127
 		/// <param name="e"></param>
 		private void btn_Credits_Click(object sender, RoutedEventArgs e)
 		{
-			string msg = "DarkViperAU";
-			msg += "\nCan fix his Samsung Phone";
-			msg += "\nWith a custom Rom";
+			string msg = "Special thanks to (no particular order):\n";
+			msg += "\n@dr490n";
+			msg += "\n@Special For";
+			msg += "\n@JakeMiester";
+			msg += "\n@MOMO";
+			msg += "\n@wojtekpolska";
+			msg += "\n@Diamondo25";
+			msg += "\n@S.M.G";
+			msg += "\n@gogsi";
+			msg += "\n@Antibones";
+			msg += "\n@zCri";
+			msg += "\n@Unemployed";
+			msg += "\n@Aperture";
+			msg += "\n@luky";
+			msg += "\n@CrynesSs";
+			msg += "\n@hossel";
+			msg += "\n@Daniel Kinau";
+			msg += "\n@thS";
 
 			new Popup(Popup.PopupWindowTypes.PopupOk, msg).ShowDialog();
 		}
@@ -350,6 +425,34 @@ namespace Project_127
 
 
 		#region GUI Helper Methods
+
+		public void SetGTAVButtonBasedOnGameAndInstallationState(object sender, EventArgs e) // Gets called every DispatcherTimer_Tick. Just starts the read function.
+		{
+			if (LauncherLogic.GameState == LauncherLogic.GameStates.Running)
+			{
+				btn_GTA.BorderBrush = Globals.MW_ButtonGTAGameRunningBorderBrush;
+				if (LauncherLogic.InstallationState == LauncherLogic.InstallationStates.Downgraded)
+				{
+					btn_GTA.Content = "GTA V. Downgraded.\nGame running.";
+				}
+				else
+				{
+					btn_GTA.Content = "GTA V. Upgraded.\nGame running.";
+				}
+			}
+			else
+			{
+				btn_GTA.BorderBrush = Globals.MW_ButtonGTAGameNotRunningBorderBrush;
+				if (LauncherLogic.InstallationState == LauncherLogic.InstallationStates.Downgraded)
+				{
+					btn_GTA.Content = "GTA V. Downgraded.\nGame NOT running.";
+				}
+				else
+				{
+					btn_GTA.Content = "GTA V. Upgraded.\nGame NOT running.";
+				}
+			}
+		}
 
 
 		/// <summary>
@@ -421,7 +524,7 @@ namespace Project_127
 				{
 					if (Globals.CommandLineArguments.Contains("skiplogin"))
 					{
-						return true; 
+						return true;
 					}
 
 					RegistryKey MyKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64).CreateSubKey("SOFTWARE").CreateSubKey("Microsoft").CreateSubKey("Cryptography");
