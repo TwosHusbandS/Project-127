@@ -24,7 +24,7 @@ AllowNoIcons=yes
 ; Uncomment the following line to run in non administrative install mode (install for current user only.)
 ;PrivilegesRequired=lowest
 PrivilegesRequiredOverridesAllowed=dialog
-OutputDir=C:\Users\ingow\source\repos\Project-127\bin\Installer
+OutputDir=C:\Users\ingow\source\repos\Project-127\Installer
 OutputBaseFilename=Project_127_V_0_0_1_2
 SetupIconFile=C:\Users\ingow\source\repos\Project-127\Artwork\icon.ico
 Compression=lzma

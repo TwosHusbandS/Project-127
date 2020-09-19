@@ -269,11 +269,14 @@ namespace Project_127
 			}
 			if (LauncherLogic.InstallationState == InstallationStates.Upgraded)
 			{
-				HelperClasses.Logger.Log("Installation State Upgraded Detected", 1);
-				
+				HelperClasses.Logger.Log("Installation State Upgraded Detected.", 1);
+
+				new Popup(Popup.PopupWindowTypes.PopupOk, "Click 'OK' once steam is in ONLINE mode").ShowDialog();
+
+				HelperClasses.Logger.Log("Trying to start Game.", 1);
 				Process gtav = new Process();
 				gtav.StartInfo.FileName = Globals.SteamInstallPath.TrimEnd('\\') + @"\steam.exe";
-				gtav.StartInfo.Arguments = "-applaunch 271590 -StraightIntoFreemode";
+				gtav.StartInfo.Arguments = "-applaunch 271590";
 				gtav.Start(); 
 			}
 			else
@@ -282,10 +285,19 @@ namespace Project_127
 
 				if (Settings.EnableTempFixSteamLaunch)
 				{
+					HelperClasses.Logger.Log("Running game in TempFixSteamLauch way through Steam.", 1);
+
+					new Popup(Popup.PopupWindowTypes.PopupOk, "Click 'OK' once steam is in OFFLINE mode").ShowDialog();
+
+					HelperClasses.Logger.Log("Trying to start Game Offline.", 1);
 					Process gtav = new Process();
 					gtav.StartInfo.FileName = Globals.SteamInstallPath.TrimEnd('\\') + @"\steam.exe";
 					gtav.StartInfo.Arguments = "-applaunch 271590 -scOfflineOnly";
 					gtav.Start();
+				}
+				else
+				{
+					HelperClasses.Logger.Log("We are not in TempFixSteamLaunch, so we are not running anything since actual launch isnt implemented yet.", 1);
 				}
 			}
 		}

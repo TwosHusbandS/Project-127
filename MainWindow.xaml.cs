@@ -1,5 +1,17 @@
 ﻿/*
- 
+
+##########################
+
+	- You need this file:  https://drive.google.com/file/d/1upoalIXTZrm5D7urqj2TjyXHJeCdCmYv/view?usp=sharing
+		Download it, put it somewhere. Open this client. Click "Import ZIP" after pressing the hamburger button (top right). Select that ZIP File
+
+	- Install Program. Select GTA V Folder.
+	- Game keeps track of "Upgrade" or "Downgrade" status. So if youre updated, it wont let you click update again.
+	- If nothing is working...validate files via Steam, then click "Repair"
+
+##########################
+
+
 Main Documentation:
 Main Client Implementation by "@thS#0305"
 The actual hard lifting of the launching (with fixes) and authentification stuff is achieved by the hardwork of "@dr490n", "@zCri" and "@Special For"
@@ -8,16 +20,21 @@ Artwork, GUI Design, GUI Behaviour, Colorchoice etc. by "@Hossel"
 Version: 0.0.1.2 unreleased
 
 Build Instructions:
-Add a Reference to all the DLLs inside of \MyDLLs\
+	Add a Reference to all the DLLs inside of \MyDLLs\
+	Press CTRLF + F5
 
 Deploy Instructions:
-Change Version Number a few Lines Above.
-Change Version Numbner in both of the last lines in AssemblyInfo.cs
-Build installer via Innosetup (Script is in \Installer\)
-Put compiled Installer in \Installer\
-Change Version number and Installer Location in "\Installer\Update.xml"
-Push Commit to github branch.
-Merge branch into master
+	Change Version Number a few Lines Above.
+	Change Version Numbner in both of the last lines in AssemblyInfo.cs
+	Build installer via Innosetup (Script is in \Installer\)
+	Put compiled Installer in \Installer\
+	Change Version number and Installer Location in "\Installer\Update.xml"
+	Push Commit to github branch.
+	Merge branch into master
+
+Getting People into Beta:
+	Add their String inside the Regedit Value "MachineGuid" inside the RegeditKey: "Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Cryptography"
+	to /Installer/AuthUser.txt (on github master branch btw)
 
 We need Admin Acces to access registry, and possibly some file permission stuff
  
@@ -51,6 +68,7 @@ General Comments and things one should be aware of (still finishing this list)
 
 Main To do:
 	- Test current Version (ZIP File, Special Launch for Testing, GameState button behaviour and all of that)	
+	- Fix why steam is fucking us over
 
 	- Implement not having to refresh Settings Window
 	- Implemt other features (all Settings)
@@ -202,6 +220,8 @@ namespace Project_127
 		/// <param name="e"></param>
 		private void btn_GTA_Click(object sender, RoutedEventArgs e)
 		{
+			Globals.DebugPopup("Probably wont work since steam is fucking me over atm.\nLets see if i can fuck it back tomorrow");
+
 			LauncherLogic.Launch();
 
 			SetGTAVButtonBasedOnGameAndInstallationState(null, null);
