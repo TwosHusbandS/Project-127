@@ -58,7 +58,7 @@ namespace Project_127
 		{
 			get
 			{
-				RegistryKey myRK = Registry.LocalMachine.CreateSubKey("SOFTWARE").CreateSubKey("WOW6432Node").CreateSubKey("Valve").CreateSubKey("Steam");
+				RegistryKey myRK = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64).CreateSubKey("SOFTWARE").CreateSubKey("WOW6432Node").CreateSubKey("Valve").CreateSubKey("Steam");
 				return HelperClasses.RegeditHandler.GetValue(myRK, "InstallPath");
 			}
 		}
