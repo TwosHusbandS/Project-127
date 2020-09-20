@@ -288,8 +288,8 @@
                                     <ColumnDefinition/>
                                     <ColumnDefinition/>
                                 </Grid.ColumnDefinitions>
-                                <Label Grid.Row="0" Grid.Column="0" Content="Enable TmpFixSteamLaunch"  Style="{StaticResource lbl_Set_Info}" />
-                                <CheckBox Grid.Row="0" Grid.Column="1" x:Name="cb_Set_TmpFixSteamLaunch" IsChecked="{Binding Path=EnableTmpFixSteamLaunch, Mode=TwoWay}" Style="{StaticResource cb_Set}"/>
+                                <Label Grid.Row="0" Grid.Column="0" Content="Enable TempFixSteamLaunch"  Style="{StaticResource lbl_Set_Info}" />
+                                <CheckBox Grid.Row="0" Grid.Column="1" x:Name="cb_Set_TempFixSteamLaunch" IsChecked="{Binding Path=EnableTempFixSteamLaunch, Mode=TwoWay}" Style="{StaticResource cb_Set}"/>
                             </Grid>
                             <!--
                             <Separator Style="{StaticResource sp_Set}"/>

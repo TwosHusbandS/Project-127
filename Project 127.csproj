@@ -126,6 +126,7 @@
     <Compile Include="Globals.cs" />
     <Compile Include="HelperClasses\FileHandler.cs" />
     <Compile Include="HelperClasses\Logger.cs" />
+    <Compile Include="HelperClasses\ProcessHandler.cs" />
     <Compile Include="HelperClasses\RegeditHandler.cs" />
     <Compile Include="MyFile.cs" />
     <Compile Include="Popup.xaml.cs">
