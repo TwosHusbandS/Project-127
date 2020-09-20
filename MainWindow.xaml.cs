@@ -2,12 +2,19 @@
 
 ##########################
 
-	- You need this file:  https://drive.google.com/file/d/1upoalIXTZrm5D7urqj2TjyXHJeCdCmYv/view?usp=sharing
-		Download it, put it somewhere. Open this client. Click "Import ZIP" after pressing the hamburger button (top right). Select that ZIP File
+	- Windows 10 Checks all Files for Virus if they are run for the first time. If you open a file (Installer or Program)
+				and the file doesnt appear to be running, just wait 20 seconds. Should open within that timeframe.
+		
+	- You also need this file:  https://drive.google.com/file/d/1upoalIXTZrm5D7urqj2TjyXHJeCdCmYv/view?usp=sharing
 
-	- Install Program. Select GTA V Folder.
-	- Game keeps track of "Upgrade" or "Downgrade" status. So if youre updated, it wont let you click update again.
-	- If nothing is working...validate files via Steam, then click "Repair"
+	- Install Program (preferably on the same Drive where your GTA is installed.
+						Optimally inside the GTAV Installation Folder)
+	- Click the hamburger Icon in the top left. Then click "Import ZIP" and select the ZIP File downloaded above (wait until you get the popup confirming its done)
+	- ENABLE "TempFixSteamLaunch" IN SETTINGS
+	- Game automatically detects if the installation is upgraded or downgraded 
+	- If upgrading / downgrading doesnt yield good results...validate files via Steam, then click "Repair". Should fix most issues.
+	- If something is still not working, please uninstall the program via control panel, run "Project_127_cleanup.bat" AS ADMINISTRATOR, re-install again.
+	- If something is still not working, please include the file "AAA - Logfile.log" when reporting the bug
 
 ##########################
 
@@ -17,7 +24,7 @@ Main Client Implementation by "@thS#0305"
 The actual hard lifting of the launching (with fixes) and authentification stuff is achieved by the hardwork of "@dr490n", "@zCri" and "@Special For"
 Artwork, GUI Design, GUI Behaviour, Colorchoice etc. by "@Hossel"
 
-Version: 0.0.1.3 unreleased
+Version: 0.0.1.4 unreleased
 
 Build Instructions:
 	Add a Reference to all the DLLs inside of \MyDLLs\
@@ -26,6 +33,7 @@ Build Instructions:
 Deploy Instructions:
 	Change Version Number a few Lines Above.
 	Change Version Numbner in both of the last lines in AssemblyInfo.cs
+	Build this program in release
 	Build installer via Innosetup (Script is in \Installer\)
 	Put compiled Installer in \Installer\
 	Change Version number and Installer Location in "\Installer\Update.xml"
@@ -67,11 +75,9 @@ General Comments and things one should be aware of (still finishing this list)
 		DataBinding the ButtonContext is hard for some reason. Works which the checkbox tho, which is kinda weird
 
 Main To do:
-	- Write Instructions how to use this
-		- Use same HDD (or Folder) as GTA
-		- ZIP File
-		- Settings Checkbox for TmpFixForSteam
-
+	- Write Custom Uninstaller - Script
+	- Write Custom Autoupdater
+	- Write getting .ZIP from github
 
 	- Implement not having to refresh Settings Window
 	- Implemt other features (all Settings, auto high priority, auto darkviperau steam core fix)
@@ -220,8 +226,15 @@ namespace Project_127
 		/// <param name="e"></param>
 		private void btn_Auth_Click(object sender, RoutedEventArgs e)
 		{
-			new Popup(Popup.PopupWindowTypes.PopupOk, "Auth not fully implemented yet.\nImage you authed through the\nstuff from dr490n and this\nis why the lock is changing").ShowDialog();
-			SetAuthButtonBackground(Authstatus.Auth);
+			// new Popup(Popup.PopupWindowTypes.PopupOk, "Auth not fully implemented yet.\nImage you authed through the\nstuff from dr490n and this\nis why the lock is changing").ShowDialog();
+			// SetAuthButtonBackground(Authstatus.Auth);
+			string msg = "Size of GTAV in Folder: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\GTA5.exe");
+			msg += "\nSize of Downgraded GTAV: " + LauncherLogic.SizeOfDowngradedGTAV;
+			msg += "\nSize of update.rpf in Folder: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\update\update.rpf");
+			msg += "\nSize of Downgraded update.rpf: " + LauncherLogic.SizeOfDowngradedUPDATE;
+			msg += "\nInstallationState: " + LauncherLogic.InstallationState.ToString();
+
+			Globals.DebugPopup(msg);
 		}
 
 		/// <summary>
@@ -273,7 +286,21 @@ namespace Project_127
 				}
 				else
 				{
-					HelperClasses.Logger.Log("This program THINKS you are already Upgraded. Downgrad procedure will not be called.", 1);
+					HelperClasses.Logger.Log("This program THINKS you are already Upgraded. Update procedure will not be called.", 1);
+					if (Globals.BetaMode)
+					{
+						Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "We are in Beta Mode. Do you want to FORCE the Upgrade?");
+						yesno.ShowDialog();
+						if (yesno.DialogResult == true)
+						{
+							HelperClasses.Logger.Log("Gamestate looks SHIT. Forcing Upgrade since we are in Beta Mode.", 1);
+							LauncherLogic.Upgrade();
+						}
+						else
+						{
+							HelperClasses.Logger.Log("Gamestate looks SHIT. Upgrade was not forced.", 1);
+						}
+					}
 				}
 			}
 			else
@@ -329,6 +356,20 @@ namespace Project_127
 				else
 				{
 					HelperClasses.Logger.Log("This program THINKS you are already Downgraded. Upgrade procedure will not be called.", 1);
+					if (Globals.BetaMode)
+					{
+						Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "We are in Beta Mode. Do you want to FORCE the Downgrade?");
+						yesno.ShowDialog();
+						if (yesno.DialogResult == true)
+						{
+							HelperClasses.Logger.Log("Gamestate looks SHIT. Forcing Downgrade since we are in Beta Mode.", 1);
+							LauncherLogic.Downgrade();
+						}
+						else
+						{
+							HelperClasses.Logger.Log("Gamestate looks SHIT. Downgrade was not forced.", 1);
+						}
+					}
 				}
 			}
 			else
@@ -359,9 +400,9 @@ namespace Project_127
 			}
 			else
 			{
-				new Popup(Popup.PopupWindowTypes.PopupOk, "No ZIP File selected");
+				new Popup(Popup.PopupWindowTypes.PopupOk, "No ZIP File selected").ShowDialog();
 			}
-			new Popup(Popup.PopupWindowTypes.PopupOk, "Well...lets hope this worked");
+			new Popup(Popup.PopupWindowTypes.PopupOk, "Done importing ZIP File").ShowDialog();
 		}
 
 		/// <summary>

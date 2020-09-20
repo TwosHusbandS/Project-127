@@ -59,7 +59,7 @@ namespace Project_127
 		{
 			get
 			{
-				long SizeOfGTAV = HelperClasses.FileHandling.GetSizeOfFile(GTAVFilePath.TrimEnd('\\') + @"\GTAV.exe");
+				long SizeOfGTAV = HelperClasses.FileHandling.GetSizeOfFile(GTAVFilePath.TrimEnd('\\') + @"\GTA5.exe");
 				long SizeOfUpdate = HelperClasses.FileHandling.GetSizeOfFile(GTAVFilePath.TrimEnd('\\') + @"\update\update.rpf");
 
 				if (SizeOfGTAV == SizeOfDowngradedGTAV && SizeOfUpdate == SizeOfDowngradedUPDATE)
@@ -120,7 +120,7 @@ namespace Project_127
 		{
 			KillRelevantProcesses();
 
-			// Creates Symbolic Link in GTAV Installation Folder to all the files of Upgrade Folder
+			// Creates Hardlink Link in GTAV Installation Folder to all the files of Upgrade Folder
 			// If they exist in GTAV Installation Folder,  we delete them from GTAV Installation folder
 
 			HelperClasses.Logger.Log("GTAV Installation Path: " + GTAVFilePath, 1);
@@ -131,7 +131,6 @@ namespace Project_127
 			// Those are WITH the "\" at the end
 			string[] FilesInUpgradesFiles = HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(UpgradeFilePath);
 			string[] CorrespondingFilePathInGTALocation = new string[DowngradeFilePath.Length];
-
 
 			HelperClasses.Logger.Log("Found " + FilesInUpgradesFiles.Length.ToString() + " Files in Upgrade Folder.");
 
@@ -155,13 +154,7 @@ namespace Project_127
 				HelperClasses.FileHandling.HardLinkFiles(CorrespondingFilePathInGTALocation[i], FilesInUpgradesFiles[i]);
 			}
 
-			// CTRLF TODO - JUST TEMPORARY
-			if (Settings.EnableTempFixSteamLaunch)
-			{
-				HelperClasses.Logger.Log("EnableTempFixSteamLaunch detected. Will Uninstall Old and Install New Social Club");
-				Process.Start(SupportFilePath.TrimEnd('\\') + @"\SocialClubOldUninstaller.exe").WaitForExit();
-				Process.Start(SupportFilePath.TrimEnd('\\') + @"\SocialClubNewInstaller.exe").WaitForExit();
-			}
+			// We dont need to mess with social club versions since the launch process doesnt depend on it
 
 			HelperClasses.Logger.Log("Done Upgrading");
 		}
@@ -187,13 +180,7 @@ namespace Project_127
 				HelperClasses.FileHandling.deleteFile(myFileName);
 			}
 
-			// CTRLF TODO - JUST TEMPORARY
-			if (Settings.EnableTempFixSteamLaunch)
-			{
-				HelperClasses.Logger.Log("EnableTempFixSteamLaunch detected. Will Uninstall Old and Install New Social Club");
-				Process.Start(SupportFilePath.TrimEnd('\\') + @"\SocialClubOldUninstaller.exe").WaitForExit();
-				Process.Start(SupportFilePath.TrimEnd('\\') + @"\SocialClubNewInstaller.exe").WaitForExit();
-			}
+			// We dont need to mess with social club versions since the launch process doesnt depend on it
 
 			HelperClasses.Logger.Log("Repair is done. Files in Upgrade Folder deleted.");
 		}
@@ -205,7 +192,7 @@ namespace Project_127
 		{
 			KillRelevantProcesses();
 
-			// Creates Symbolic Link in GTAV Installation Folder to all the files of Downgrade Folder
+			// Creates Hardlink Link in GTAV Installation Folder to all the files of Downgrade Folder
 			// If they exist in GTAV Installation Folder, and in Upgrade Folder, we delete them from GTAV Installation folder
 			// If they exist in GTAV Installation Folder, and NOT in Upgrade Folder, we move them there
 
@@ -215,7 +202,6 @@ namespace Project_127
 			HelperClasses.Logger.Log("UpgradeFilePath: " + UpgradeFilePath, 1);
 
 			// Those are WITH the "\" at the end
-			Globals.DebugPopup("Debug:\n\nGTAV Installation Path: '" + GTAVFilePath + "'\n\nInstallationLocation: '" + Globals.ProjectInstallationPath + "'\n\nDowngradeFilePath: '" + DowngradeFilePath + "'\n\nUpgradeFilePath: '" + UpgradeFilePath + "'");
 			string[] FilesInDowngradeFiles = HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(DowngradeFilePath);
 			string[] CorrespondingFilePathInGTALocation = new string[DowngradeFilePath.Length];
 			string[] CorrespondingFilePathInUpgradeFiles = new string[DowngradeFilePath.Length];
@@ -252,13 +238,6 @@ namespace Project_127
 			}
 
 			// We dont need to mess with social club versions since the launch process doesnt depend on it
-
-			if (Settings.EnableTempFixSteamLaunch)
-			{
-				HelperClasses.Logger.Log("EnableTempFixSteamLaunch detected. Will Uninstall New and Install Old Social Club");
-				Process.Start(SupportFilePath.TrimEnd('\\') + @"\SocialClubNewUninstaller.exe").WaitForExit();
-				Process.Start(SupportFilePath.TrimEnd('\\') + @"\SocialClubOldInstaller.exe").WaitForExit();
-			}
 
 			HelperClasses.Logger.Log("Done Downgrading");
 		}
