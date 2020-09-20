@@ -18,14 +18,14 @@ namespace Project_127
 	/// <summary>
 	/// Class SaveFileHandler.xaml
 	/// </summary>
-	public partial class SaveFileHandler : Window
-    {
+	public partial class SaveFileHandler : UserControl
+	{
 		// THIS CLASS IS NOT FULLY IMPLEMENTED OR WORKING AT ALL
 
 		/// <summary>
 		/// Collection of "MyFile" which are used for the Save-Files in the Backup Folder.
 		/// </summary>
-        public static ObservableCollection<MyFile> BackupSaves = new ObservableCollection<MyFile>();
+		public static ObservableCollection<MyFile> BackupSaves = new ObservableCollection<MyFile>();
 
 		/// <summary>
 		/// Collection of "MyFile" which are used for the Save-Files in the GTA Folder.
@@ -35,8 +35,8 @@ namespace Project_127
 		/// <summary>
 		/// Constructor of SaveFileHandler
 		/// </summary>
-        public SaveFileHandler()
-        {
+		public SaveFileHandler()
+		{
 			// Initializing all WPF Elements
 			InitializeComponent();
 
@@ -90,29 +90,8 @@ namespace Project_127
 		}
 
 
-		/// <summary>
-		/// Close Button
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
-		private void btn_close_Click(object sender, RoutedEventArgs e)
-        {
-            this.Close();
-        }
-
-
 		// Below are Methods we need to make the behaviour of this nice.
 
-
-		/// <summary>
-		/// Method which makes the Window draggable, which moves the whole window when holding down Mouse1 on the background
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
-		private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-		{
-			DragMove(); // Pre-Defined Method
-		}
 
 		/// <summary>
 		/// Enables the scrolling behaviour of the DataGrid for Backup Save-Files
@@ -120,9 +99,9 @@ namespace Project_127
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
 		private void Dg_BackupFiles_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
-        {
-            sv_BackupFiles.ScrollToVerticalOffset(sv_BackupFiles.VerticalOffset - e.Delta / 3);
-        }
+		{
+			sv_BackupFiles.ScrollToVerticalOffset(sv_BackupFiles.VerticalOffset - e.Delta / 3);
+		}
 
 		/// <summary>
 		/// Enables the scrolling behaviour of the DataGrid for GTA Save-Files
@@ -130,9 +109,9 @@ namespace Project_127
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
 		private void Dg_GTAFiles_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
-        {
-            sv_BackupFiles.ScrollToVerticalOffset(sv_BackupFiles.VerticalOffset - e.Delta / 3);
-        }
- 
-    } // End of Class
+		{
+			sv_BackupFiles.ScrollToVerticalOffset(sv_BackupFiles.VerticalOffset - e.Delta / 3);
+		}
+
+	} // End of Class
 } // End of Namespace

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace Project_127
 {
@@ -11,7 +12,7 @@ namespace Project_127
 	/// Partial Class for Settings Window. 
 	/// Also Creates Properties for all Settings, which are easier to interact with than the Dictionary
 	/// </summary>
-	public partial class Settings : Window
+	public partial class Settings : UserControl
 	{
 		/// <summary>
 		/// Initial Function. Gets Called from Globals.Init which gets called from the Contructor of MainWindow

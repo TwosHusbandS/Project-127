@@ -82,17 +82,17 @@ namespace Project_127
 		/// <returns></returns>
 		[DllImport("kernel32.dll", EntryPoint = "CreateSymbolicLinkW", CharSet = CharSet.Unicode)]
 		public static extern int CreateSymbolicLink(string lpSymlinkFileName, string lpTargetFileName, int dwFlags);
-		
+
 		/// <summary>
 		/// Size of Downgraded GTAV.exe. So I can detect the InstallationState (Upgrade / Downgrade)
 		/// </summary>
-		public static long SizeOfDowngradedGTAV = 55468936;
+		public static long SizeOfDowngradedGTAV { get { return HelperClasses.FileHandling.GetSizeOfFile(DowngradeFilePath.TrimEnd('\\') + @"\GTA5.exe"); } }
 
 		/// <summary>
 		/// Size of Downgraded upgrade\upgrade.rpf . So I can detect the InstallationState (Upgrade / Downgrade)
 		/// </summary>
-		public static long SizeOfDowngradedUPDATE = 352569344;
-		
+		public static long SizeOfDowngradedUPDATE { get { return HelperClasses.FileHandling.GetSizeOfFile(DowngradeFilePath.TrimEnd('\\') + @"\update\update.rpf"); } }
+
 		/// <summary>
 		/// Property of often used variable. (UpgradeFilePath)
 		/// </summary>
@@ -139,7 +139,6 @@ namespace Project_127
 			{
 				// Build the Corresponding theoretical Filenames for Upgrade Folder and GTA V Installation Folder
 				CorrespondingFilePathInGTALocation[i] = GTAVFilePath + FilesInUpgradesFiles[i].Substring(UpgradeFilePath.Length);
-
 
 				// If the File exists in GTA V Installation Path
 				if (HelperClasses.FileHandling.doesFileExist(CorrespondingFilePathInGTALocation[i]))
