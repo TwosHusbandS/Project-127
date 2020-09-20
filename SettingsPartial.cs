@@ -164,21 +164,6 @@ namespace Project_127
 		}
 
 		/// <summary>
-		/// Settings GameState. Contains the information if User is currently Upgraded or Downgraded
-		/// </summary>
-		public static LauncherLogic.InstallationStates InstallationState
-		{
-			get
-			{
-				return (LauncherLogic.InstallationStates)Enum.Parse(typeof(LauncherLogic.InstallationStates), GetSetting("InstallationState"));
-			}
-			set
-			{
-				SetSetting("InstallationState", value.ToString());
-			}
-		}
-
-		/// <summary>
 		/// Settings EnableLogging. Gets and Sets from the Dictionary.
 		/// </summary>
 		public static bool EnableLogging
@@ -194,7 +179,7 @@ namespace Project_127
 		}
 
 		/// <summary>
-		/// Settings EnableTempFixSteamLaunch. Gets and Sets from the Dictionary.
+		/// Settings EnableTmpFixSteamLaunch. Gets and Sets from the Dictionary.
 		/// </summary>
 		public static bool EnableTempFixSteamLaunch
 		{

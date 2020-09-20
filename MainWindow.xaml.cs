@@ -17,7 +17,7 @@ Main Client Implementation by "@thS#0305"
 The actual hard lifting of the launching (with fixes) and authentification stuff is achieved by the hardwork of "@dr490n", "@zCri" and "@Special For"
 Artwork, GUI Design, GUI Behaviour, Colorchoice etc. by "@Hossel"
 
-Version: 0.0.1.2 unreleased
+Version: 0.0.1.3 unreleased
 
 Build Instructions:
 	Add a Reference to all the DLLs inside of \MyDLLs\
@@ -67,11 +67,22 @@ General Comments and things one should be aware of (still finishing this list)
 		DataBinding the ButtonContext is hard for some reason. Works which the checkbox tho, which is kinda weird
 
 Main To do:
-	- Test current Version (ZIP File, Special Launch for Testing, GameState button behaviour and all of that)	
-	- Fix why steam is fucking us over
+	- Write Instructions how to use this
+		- Use same HDD (or Folder) as GTA
+		- ZIP File
+		- Settings Checkbox for TmpFixForSteam
+
 
 	- Implement not having to refresh Settings Window
-	- Implemt other features (all Settings)
+	- Implemt other features (all Settings, auto high priority, auto darkviperau steam core fix)
+
+	- Finding GTA V Installation Path automatically		
+			get steam path from regedit as we did
+			go into steam_installation_path/steamapps/, check out "libraryfolders.vdf"
+			get all steam library paths from there
+			loop through them
+			check if they have /steamlibrary/steamapps/appmanifest_271590.acf
+			congratulations we have found a GTA V installation
 
     - Low Prio:
 		Convert Settings and SaveFileHandler in CustomControls
@@ -220,9 +231,7 @@ namespace Project_127
 		/// <param name="e"></param>
 		private void btn_GTA_Click(object sender, RoutedEventArgs e)
 		{
-			Globals.DebugPopup("Probably wont work since steam is fucking me over atm.\nLets see if i can fuck it back tomorrow");
-
-			LauncherLogic.Launch();
+ 			LauncherLogic.Launch();
 
 			SetGTAVButtonBasedOnGameAndInstallationState(null, null);
 		}
@@ -261,8 +270,6 @@ namespace Project_127
 				{
 					HelperClasses.Logger.Log("Gamestate looks OK. Will Proceed to try to Upgrade.", 1);
 					LauncherLogic.Upgrade();
-					HelperClasses.Logger.Log("Will Set GameState to Upgraded", 1);
-					LauncherLogic.InstallationState = LauncherLogic.InstallationStates.Upgraded;
 				}
 				else
 				{
@@ -318,8 +325,6 @@ namespace Project_127
 				{
 					HelperClasses.Logger.Log("Gamestate looks OK. Will Proceed to try to Downgrade.", 1);
 					LauncherLogic.Downgrade();
-					HelperClasses.Logger.Log("Will Set GameState to Downgrade", 1);
-					LauncherLogic.InstallationState = LauncherLogic.InstallationStates.Downgraded;
 				}
 				else
 				{
@@ -390,7 +395,7 @@ namespace Project_127
 			msg += "\nCan fix his shit Samsung Phone";
 			msg += "\nWith a custom Rom";
 			msg += "\n\n- Haiku by some Discord Member";
-			msg += "\n\n(Placeholder Text. Will Include some Speedrun Infos and\nLink to some other Resources";
+			msg += "\n\n(Placeholder Text. Will Include some Speedrun Infos\n and Link to some other Resources)";
 
 			new Popup(Popup.PopupWindowTypes.PopupOk, msg).ShowDialog();
 		}

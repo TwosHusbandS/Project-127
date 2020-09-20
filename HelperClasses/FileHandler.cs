@@ -23,7 +23,7 @@ namespace Project_127.HelperClasses
 		/// <param name="lpSecurityAttributes"></param>
 		/// <returns></returns>
 		[DllImport("Kernel32.dll", CharSet = CharSet.Unicode)]
-		static extern bool CreateHardLink(string lpFileName,string lpExistingFileName,IntPtr lpSecurityAttributes);
+		static extern bool CreateHardLink(string lpFileName, string lpExistingFileName, IntPtr lpSecurityAttributes);
 
 		/// <summary>
 		/// Enum of PathDialogType to open a FileExplorer or a FolderExplorer depending on which we need.
@@ -202,6 +202,22 @@ namespace Project_127.HelperClasses
 		}
 
 		/// <summary>
+		/// Gets the Size of one File in Bytes as Long
+		/// </summary>
+		/// <param name="pFilePath"></param>
+		/// <returns></returns>
+		public static long GetSizeOfFile(string pFilePath)
+		{
+			long mySize = 0;
+			if (doesFileExist(pFilePath))
+			{
+				FileInfo myFileInfo = new FileInfo(pFilePath);
+				mySize = myFileInfo.Length;
+			}
+			return mySize;
+		}
+
+		/// <summary>
 		/// read File
 		/// </summary>
 		/// <param name="pPath"></param>
@@ -266,7 +282,7 @@ namespace Project_127.HelperClasses
 				catch (Exception e)
 				{
 					System.Windows.Forms.MessageBox.Show("Deleting File failed ('" + pFilePath + "').\nI suggest you restart the Program and contact me if it happens again.\n\nErrorMessage:\n" + e.ToString());
-					HelperClasses.Logger.Log("Deleting File failed ('" + pFilePath + "').",true,0);
+					HelperClasses.Logger.Log("Deleting File failed ('" + pFilePath + "').", true, 0);
 				}
 			}
 		}
@@ -294,7 +310,7 @@ namespace Project_127.HelperClasses
 			catch (Exception e)
 			{
 				System.Windows.Forms.MessageBox.Show("Create File failed ('" + PathCombine(pPath, pFile) + "').\nI suggest you restart the Program and contact me if it happens again.\n\nErrorMessage:\n" + e.ToString());
-				HelperClasses.Logger.Log("Create File failed ('" + PathCombine(pPath, pFile) + "').", true,0);
+				HelperClasses.Logger.Log("Create File failed ('" + PathCombine(pPath, pFile) + "').", true, 0);
 			}
 		}
 
@@ -357,6 +373,25 @@ namespace Project_127.HelperClasses
 			{
 				File.Delete(pFilePath);
 			}
+		}
+
+		// ALL SORTS OF RANDOM METHODS
+
+		/// <summary>
+		/// String.TrimEnd() now works with a string as well with chars
+		/// </summary>
+		/// <param name="input"></param>
+		/// <param name="suffixToRemove"></param>
+		/// <param name="comparisonType"></param>
+		/// <returns></returns>
+		public static string TrimEnd(this string input, string suffixToRemove, StringComparison comparisonType = StringComparison.CurrentCulture)
+		{
+			if (suffixToRemove != null && input.EndsWith(suffixToRemove, comparisonType))
+			{
+				return input.Substring(0, input.Length - suffixToRemove.Length);
+			}
+
+			return input;
 		}
 
 	} // End of Class

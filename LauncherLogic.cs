@@ -59,11 +59,17 @@ namespace Project_127
 		{
 			get
 			{
-				return Settings.InstallationState;
-			}
-			set
-			{
-				Settings.InstallationState = value;
+				long SizeOfGTAV = HelperClasses.FileHandling.GetSizeOfFile(GTAVFilePath.TrimEnd('\\') + @"\GTAV.exe");
+				long SizeOfUpdate = HelperClasses.FileHandling.GetSizeOfFile(GTAVFilePath.TrimEnd('\\') + @"\update\update.rpf");
+
+				if (SizeOfGTAV == SizeOfDowngradedGTAV && SizeOfUpdate == SizeOfDowngradedUPDATE)
+				{
+					return InstallationStates.Downgraded;
+				}
+				else
+				{
+					return InstallationStates.Upgraded;
+				}
 			}
 		}
 
@@ -76,7 +82,17 @@ namespace Project_127
 		/// <returns></returns>
 		[DllImport("kernel32.dll", EntryPoint = "CreateSymbolicLinkW", CharSet = CharSet.Unicode)]
 		public static extern int CreateSymbolicLink(string lpSymlinkFileName, string lpTargetFileName, int dwFlags);
+		
+		/// <summary>
+		/// Size of Downgraded GTAV.exe. So I can detect the InstallationState (Upgrade / Downgrade)
+		/// </summary>
+		public static long SizeOfDowngradedGTAV = 55468936;
 
+		/// <summary>
+		/// Size of Downgraded upgrade\upgrade.rpf . So I can detect the InstallationState (Upgrade / Downgrade)
+		/// </summary>
+		public static long SizeOfDowngradedUPDATE = 352569344;
+		
 		/// <summary>
 		/// Property of often used variable. (UpgradeFilePath)
 		/// </summary>
@@ -179,8 +195,7 @@ namespace Project_127
 				Process.Start(SupportFilePath.TrimEnd('\\') + @"\SocialClubNewInstaller.exe").WaitForExit();
 			}
 
-			LauncherLogic.InstallationState = LauncherLogic.InstallationStates.Upgraded;
-			HelperClasses.Logger.Log("Repair is done. Files in Upgrade Folder deleted. GameState set to Upgraded");
+			HelperClasses.Logger.Log("Repair is done. Files in Upgrade Folder deleted.");
 		}
 
 		/// <summary>
@@ -270,14 +285,11 @@ namespace Project_127
 			if (LauncherLogic.InstallationState == InstallationStates.Upgraded)
 			{
 				HelperClasses.Logger.Log("Installation State Upgraded Detected.", 1);
-
-				new Popup(Popup.PopupWindowTypes.PopupOk, "Click 'OK' once steam is in ONLINE mode").ShowDialog();
-
-				HelperClasses.Logger.Log("Trying to start Game.", 1);
+				HelperClasses.Logger.Log("Trying to start Game normally through Steam.", 1);
 				Process gtav = new Process();
 				gtav.StartInfo.FileName = Globals.SteamInstallPath.TrimEnd('\\') + @"\steam.exe";
 				gtav.StartInfo.Arguments = "-applaunch 271590";
-				gtav.Start(); 
+				gtav.Start();
 			}
 			else
 			{
@@ -285,9 +297,9 @@ namespace Project_127
 
 				if (Settings.EnableTempFixSteamLaunch)
 				{
-					HelperClasses.Logger.Log("Running game in TempFixSteamLauch way through Steam.", 1);
+					new Popup(Popup.PopupWindowTypes.PopupOk, "TempFixSteamLaunch launches this game through steam when downgraded\nThis only works if you have a working steam downgrade\nThis also will not be in the final release, its just to test the Client,\nwhich does not contain the actual Fixed Launch yet.\n\nClick 'OK' once steam is running and in OFFLINE mode\nOr if you wanna try this with Steam online (-scOfflineOnly is set anyways)\nYou probably wont need to do this in the next upgrade.").ShowDialog();
 
-					new Popup(Popup.PopupWindowTypes.PopupOk, "Click 'OK' once steam is in OFFLINE mode").ShowDialog();
+					HelperClasses.Logger.Log("Running game in TempFixSteamLauch way through Steam.", 1);
 
 					HelperClasses.Logger.Log("Trying to start Game Offline.", 1);
 					Process gtav = new Process();
@@ -308,27 +320,8 @@ namespace Project_127
 		/// </summary>
 		public static void KillRelevantProcesses()
 		{
-			HelperClasses.Logger.Log("Trying to kill all relevant Processes");
-
-			Process[] allProcesses = Process.GetProcesses();
-
-			foreach (Process myProc in allProcesses)
-			{
-				// WIP Implementation.
-				// TODO CTRLF
-				if (myProc.ProcessName.ToString().ToLower().Contains("gta") || myProc.ProcessName.ToString().ToLower().Contains("subprocess"))
-				{
-					HelperClasses.Logger.Log("Found: '" + myProc.ProcessName.ToString() + "'. Will try to kill it.",1);
-					try
-					{
-						myProc.Kill();
-					}
-					catch (Exception e)
-					{
-						HelperClasses.Logger.Log("Failed to kill: '" + myProc.ProcessName.ToString() + "'. Error Message: " + e.ToString(), 1);
-					}
-				}
-			}
+			HelperClasses.Logger.Log("Trying to kill all Rockstar related Processes");
+			HelperClasses.ProcessHandler.KillRockstarProcesses();
 		}
 
 		/// <summary>
