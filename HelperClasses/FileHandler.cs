@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -103,6 +104,40 @@ namespace Project_127.HelperClasses
 		}
 
 		/// <summary>
+		/// Gets all the Files in one Folder (NOT Subfolders)
+		/// </summary>
+		/// <param name="pPath"></param>
+		/// <returns></returns>
+		public static string[] GetFilesFromFolder(string pPath)
+		{
+			if (doesPathExist(pPath))
+			{
+				return (Directory.GetFiles(pPath, "*", SearchOption.TopDirectoryOnly));
+			}
+			else
+			{
+				return (new string[0]);
+			}
+		}
+
+		/// <summary>
+		/// Reads the content of a File. In one string (not string array for line)
+		/// </summary>
+		/// <param name="pFilePath"></param>
+		/// <returns></returns>
+		public static string ReadContentOfFile(string pFilePath)
+		{
+			string rtrn = "";
+
+			if (doesFileExist(pFilePath))
+			{
+				rtrn =File.ReadAllText(pFilePath);
+			}
+
+			return rtrn;
+		}
+
+		/// <summary>
 		/// Creates Hardlink A for File B
 		/// </summary>
 		/// <param name="pLinkFilePath"></param>
@@ -176,6 +211,25 @@ namespace Project_127.HelperClasses
 
 		// A lot of self written functions for File stuff below.
 		// Lots of overloaded stuff. Nothing checks for errors, like file permissions or sth.
+
+
+		public static string GetXMLTagContent(string pXML, string pTag)
+		{
+			string rtrn = "";
+
+			Regex regex = new Regex(@"<" + pTag + ">.+</" + pTag + ">");
+			Match match = regex.Match(pXML);
+
+			if (match.Success)
+			{
+				string tmp = match.Value;
+
+				rtrn = tmp.Substring(tmp.IndexOf('>') + 1, tmp.LastIndexOf('<') - 2 - pTag.Length);
+			}
+
+			return rtrn;
+		}
+
 
 		/// <summary>
 		/// Makes "C:\Some\Path(\)" and "Somefile.txt" into "C:\Some\Path\Somefile.txt". Doesnt check for errors.

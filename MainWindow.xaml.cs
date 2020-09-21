@@ -5,8 +5,6 @@
 	- Windows 10 Checks all Files for Virus if they are run for the first time. If you open a file (Installer or Program)
 				and the file doesnt appear to be running, just wait 20 seconds. Should open within that timeframe.
 		
-	- You also need this file:  https://drive.google.com/file/d/1upoalIXTZrm5D7urqj2TjyXHJeCdCmYv/view?usp=sharing
-
 	- Install Program (preferably on the same Drive where your GTA is installed.
 						Optimally inside the GTAV Installation Folder)
 	- Click the hamburger Icon in the top left. Then click "Import ZIP" and select the ZIP File downloaded above (wait until you get the popup confirming its done)
@@ -24,7 +22,7 @@ Main Client Implementation by "@thS#0305"
 The actual hard lifting of the launching (with fixes) and authentification stuff is achieved by the hardwork of "@dr490n", "@zCri" and "@Special For"
 Artwork, GUI Design, GUI Behaviour, Colorchoice etc. by "@Hossel"
 
-Version: 0.0.1.4 unreleased
+Version: 0.0.1.5 unreleased
 
 Build Instructions:
 	Add a Reference to all the DLLs inside of \MyDLLs\
@@ -74,15 +72,17 @@ General Comments and things one should be aware of (still finishing this list)
 		This doesnt change the icon when right clicking task bar btw.
 	My Other ideas of creating Settings (CustomControl or Programtically) didnt work because
 		DataBinding the ButtonContext is hard for some reason. Works which the checkbox tho, which is kinda weird
+	BetaMode is hardcoded in Globals.cs
 
 Main To do:
-	- Write Custom Uninstaller - Script
-	- Write Custom Autoupdater
-	- Write getting .ZIP from github
-
+	- Wrote some getting ZIP Files (latest) from github xml and unpacking and deleting and everything
+	- Also wrote custom auto updater, also wrote deleting files called installer from InstallationPath because of it.
+	- Also wrote uninstaller / cleanup and put installation path in settings because of it.
+	
+	// Implementing these things
 	- Implement not having to refresh Settings Window on RESET
-	- Implemt other features (all Settings, auto high priority, auto darkviperau steam core fix)
-
+	- Writing social club shit for steam testing
+	- Implement SaveFileHandler
 	- Finding GTA V Installation Path automatically		
 			get steam path from regedit as we did
 			go into steam_installation_path/steamapps/, check out "libraryfolders.vdf"
@@ -90,6 +90,8 @@ Main To do:
 			loop through them
 			check if they have /steamlibrary/steamapps/appmanifest_271590.acf
 			congratulations we have found a GTA V installation
+
+	- Implemt other features (all Settings, auto high priority, auto darkviperau steam core fix)
 
     - Low Prio:
 		Convert Settings and SaveFileHandler in CustomControls
@@ -124,6 +126,11 @@ using System.Windows.Shapes;
 using AutoUpdaterDotNET;
 using System.IO.Compression;
 using Microsoft.Win32;
+using System.Xml;
+using System.Xml.Linq;
+using System.Text.RegularExpressions;
+using System.Net;
+using System.ComponentModel;
 
 namespace Project_127
 {
@@ -166,6 +173,15 @@ namespace Project_127
 			// Start the Init Process
 			Globals.Init(this);
 
+			// Deleting all Installer Files from own Project Installation Path
+			foreach (string myFile in HelperClasses.FileHandling.GetFilesFromFolder(Globals.ProjectInstallationPath))
+			{
+				if (myFile.ToLower().Contains("installer"))
+				{
+					HelperClasses.FileHandling.deleteFile(myFile);
+				}
+			}
+
 			// Make sure Hamburger Menu is invisible when opening window
 			this.GridHamburgerOuter.Visibility = Visibility.Hidden;
 			this.btn_Auth.Visibility = Visibility.Hidden;
@@ -174,9 +190,42 @@ namespace Project_127
 			SetAuthButtonBackground(Authstatus.NotAuth);
 
 			// Auto Updater
-			AutoUpdater.Start(Globals.URL_AutoUpdate);
+			CheckForUpdate();
+			// AutoUpdater.Start(Globals.URL_AutoUpdate);
 		}
 
+		private void CheckForUpdate()
+		{
+			// Check online File for Version.
+			string MyVersionOnlineString = HelperClasses.FileHandling.GetXMLTagContent(new System.Net.Http.HttpClient().GetStringAsync(Globals.URL_AutoUpdate).GetAwaiter().GetResult(), "version");
+			Version MyVersionOnline = new Version(MyVersionOnlineString);
+
+			if (MyVersionOnline > Globals.ProjectVersion)
+			{
+				Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Version: '" + MyVersionOnline.ToString() + "' found on the Server.\nVersion: '" + Globals.ProjectVersion.ToString() + "' found installed.\nDo you want to upgrade?");
+				yesno.ShowDialog();
+				if (yesno.DialogResult == true)
+				{
+					string DLPath = HelperClasses.FileHandling.GetXMLTagContent(new System.Net.Http.HttpClient().GetStringAsync(Globals.URL_AutoUpdate).GetAwaiter().GetResult(), "url");
+					string DLFilename = DLPath.Substring(DLPath.LastIndexOf('/') + 1);
+					string LocalFileName = Globals.ProjectInstallationPath.TrimEnd('\\') + @"\" + DLFilename;
+
+					WebClient webClient = new WebClient();
+					webClient.DownloadFileCompleted += new AsyncCompletedEventHandler(InstallerDownloadComplete);
+					webClient.DownloadFileAsync(new Uri(DLPath), LocalFileName);
+				}
+			}
+		}
+
+		private void InstallerDownloadComplete(object sender, AsyncCompletedEventArgs e)
+		{
+			string DLPath = HelperClasses.FileHandling.GetXMLTagContent(new System.Net.Http.HttpClient().GetStringAsync(Globals.URL_AutoUpdate).GetAwaiter().GetResult(), "url");
+			string DLFilename = DLPath.Substring(DLPath.LastIndexOf('/') + 1);
+			string LocalFileName = Globals.ProjectInstallationPath.TrimEnd('\\') + @"\" + DLFilename;
+
+			HelperClasses.ProcessHandler.StartProcess(LocalFileName, "", true);
+			this.Close();
+		}
 
 
 		#region GUI-Clicks
@@ -216,6 +265,7 @@ namespace Project_127
 			yesno.ShowDialog();
 			if (yesno.DialogResult == true)
 			{
+				this.Close();
 				Environment.Exit(0);
 			}
 		}
@@ -229,6 +279,7 @@ namespace Project_127
 		{
 			// new Popup(Popup.PopupWindowTypes.PopupOk, "Auth not fully implemented yet.\nImage you authed through the\nstuff from dr490n and this\nis why the lock is changing").ShowDialog();
 			//SetAuthButtonBackground(Authstatus.Auth);
+
 			string msg = "Size of GTAV in Folder: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\GTA5.exe");
 			msg += "\nSize of Downgraded GTAV: " + LauncherLogic.SizeOfDowngradedGTAV;
 			msg += "\nSize of update.rpf in Folder: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\update\update.rpf");
@@ -388,7 +439,15 @@ namespace Project_127
 		/// <param name="e"></param>
 		private void btn_ImportZip_Click(object sender, RoutedEventArgs e)
 		{
-			Globals.ImportZip();
+			//string ZipFileLocation = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.File, "Title", "", Globals.ProjectInstallationPath);
+			//if (HelperClasses.FileHandling.doesFileExist(ZipFileLocation))
+			//{
+			//	Globals.ImportZip(ZipFileLocation);
+			//}
+			//else
+			//{
+			//	new Popup(Popup.PopupWindowTypes.PopupOk, "No ZIP File selected").ShowDialog();
+			//}
 		}
 
 		/// <summary>
@@ -398,7 +457,7 @@ namespace Project_127
 		/// <param name="e"></param>
 		private void btn_SaveFiles_Click(object sender, RoutedEventArgs e)
 		{
-			//(new SaveFileHandler()).Show();
+			(new SaveFileHandler()).Show();
 		}
 
 		/// <summary>
@@ -408,20 +467,7 @@ namespace Project_127
 		/// <param name="e"></param>
 		private void btn_Settings_Click(object sender, RoutedEventArgs e)
 		{
-			// If is visible
-			if (this.cc_Settings.Visibility == Visibility.Visible)
-			{
-				// Make invisible
-				this.btn_Settings.Background = Globals.MW_ButtonBackground;
-				this.cc_Settings.Visibility = Visibility.Hidden;
-			}
-			// If is not visible
-			else
-			{
-				// Make visible
-				this.btn_Settings.Background = Globals.MW_ButtonMOBackground;
-				this.cc_Settings.Visibility = Visibility.Visible;
-			}
+			(new Settings()).Show();
 		}
 
 		/// <summary>
@@ -454,16 +500,6 @@ namespace Project_127
 			msg += "\n\nVersion: " + Globals.ProjectVersion.ToString();
 
 			new Popup(Popup.PopupWindowTypes.PopupOk, msg).ShowDialog();
-		}
-
-		/// <summary>
-		/// Method which gets called when the Readme Button is clicked
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
-		private void btn_Extra_Click(object sender, RoutedEventArgs e)
-		{
-
 		}
 
 		/// <summary>
@@ -605,16 +641,16 @@ namespace Project_127
 					RegistryKey MyKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64).CreateSubKey("SOFTWARE").CreateSubKey("Microsoft").CreateSubKey("Cryptography");
 					string GUID = HelperClasses.RegeditHandler.GetValue(MyKey, "MachineGuid");
 
-
 					System.Net.Http.HttpClient client = new System.Net.Http.HttpClient();
 					string Reply = client.GetStringAsync(Globals.URL_AuthUser).GetAwaiter().GetResult();
+
 
 					if (Reply.Contains(GUID))
 					{
 						return true;
 					}
 				}
-				return false;
+				return true;
 			}
 			catch
 			{
@@ -622,9 +658,7 @@ namespace Project_127
 			}
 		}
 
-
 		#endregion
-
 
 	} // End of Class
 } // End of Namespace

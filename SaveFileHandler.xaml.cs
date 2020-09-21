@@ -18,7 +18,7 @@ namespace Project_127
 	/// <summary>
 	/// Class SaveFileHandler.xaml
 	/// </summary>
-	public partial class SaveFileHandler : UserControl
+	public partial class SaveFileHandler : Window
 	{
 		// THIS CLASS IS NOT FULLY IMPLEMENTED OR WORKING AT ALL
 
@@ -90,8 +90,29 @@ namespace Project_127
 		}
 
 
+		/// <summary>
+		/// Close Button
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void btn_close_Click(object sender, RoutedEventArgs e)
+		{
+			this.Close();
+		}
+
+
 		// Below are Methods we need to make the behaviour of this nice.
 
+
+		/// <summary>
+		/// Method which makes the Window draggable, which moves the whole window when holding down Mouse1 on the background
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+		{
+			DragMove(); // Pre-Defined Method
+		}
 
 		/// <summary>
 		/// Enables the scrolling behaviour of the DataGrid for Backup Save-Files

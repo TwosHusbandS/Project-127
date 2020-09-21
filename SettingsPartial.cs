@@ -12,7 +12,7 @@ namespace Project_127
 	/// Partial Class for Settings Window. 
 	/// Also Creates Properties for all Settings, which are easier to interact with than the Dictionary
 	/// </summary>
-	public partial class Settings : UserControl
+	public partial class Settings : Window
 	{
 		/// <summary>
 		/// Initial Function. Gets Called from Globals.Init which gets called from the Contructor of MainWindow
