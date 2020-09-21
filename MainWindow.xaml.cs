@@ -22,7 +22,7 @@ Main Client Implementation by "@thS#0305"
 The actual hard lifting of the launching (with fixes) and authentification stuff is achieved by the hardwork of "@dr490n", "@zCri" and "@Special For"
 Artwork, GUI Design, GUI Behaviour, Colorchoice etc. by "@Hossel"
 
-Version: 0.0.1.5 unreleased
+Version: 0.0.1.6 unreleased
 
 Build Instructions:
 	Add a Reference to all the DLLs inside of \MyDLLs\
@@ -75,13 +75,13 @@ General Comments and things one should be aware of (still finishing this list)
 	BetaMode is hardcoded in Globals.cs
 
 Main To do:
-	- Wrote some getting ZIP Files (latest) from github xml and unpacking and deleting and everything
+	- Wrote some getting ZIP Files (latest) from github xml and unpacking and deleting and everything, with version-check of zip file
 	- Also wrote custom auto updater, also wrote deleting files called installer from InstallationPath because of it.
 	- Also wrote uninstaller / cleanup and put installation path in settings because of it.
+	- Also getting all URLs based off of the Update URL which contains all other Links
 	
 	// Implementing these things
 	- Implement not having to refresh Settings Window on RESET
-	- Writing social club shit for steam testing
 	- Implement SaveFileHandler
 	- Finding GTA V Installation Path automatically		
 			get steam path from regedit as we did
@@ -223,7 +223,7 @@ namespace Project_127
 			string DLFilename = DLPath.Substring(DLPath.LastIndexOf('/') + 1);
 			string LocalFileName = Globals.ProjectInstallationPath.TrimEnd('\\') + @"\" + DLFilename;
 
-			HelperClasses.ProcessHandler.StartProcess(LocalFileName, "", true);
+			HelperClasses.ProcessHandler.StartProcess(LocalFileName, "", true, false);
 			this.Close();
 		}
 
