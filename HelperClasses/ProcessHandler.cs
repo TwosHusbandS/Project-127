@@ -168,7 +168,7 @@ namespace Project_127.HelperClasses
 		/// <param name="pFilepath"></param>
 		/// <param name="runAsAdmin"></param>
 		/// <param name="waitForexit"></param>
-		public static void StartProcess(string pFilepath, string CommandLineArguments, bool runAsAdmin)
+		public static void StartProcess(string pFilepath, string CommandLineArguments, bool runAsAdmin, bool waitForExit)
 		{
 			if (FileHandling.doesFileExist(pFilepath))
 			{
@@ -183,6 +183,10 @@ namespace Project_127.HelperClasses
 				proc.StartInfo.Verb = "runas";
 				}
 			proc.Start();
+			if (waitForExit)
+				{
+					proc.WaitForExit();
+				}
 			}
 		}
 

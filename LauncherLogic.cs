@@ -238,6 +238,14 @@ namespace Project_127
 
 			// We dont need to mess with social club versions since the launch process doesnt depend on it
 
+			if (Settings.EnableTempFixSteamLaunch)
+			{
+				HelperClasses.Logger.Log("We are in TempFixSteamLaunch and will Mess with social Club installations");
+				HelperClasses.ProcessHandler.StartProcess(SupportFilePath.TrimEnd('\\') + @"\SocialClubNewUninstaller", "", true, true);
+				new Popup(Popup.PopupWindowTypes.PopupOk, "Started the Uninstaller of new Social Club.\nClick 'OK' once the Uninstall progress is done").ShowDialog();
+				HelperClasses.ProcessHandler.StartProcess(SupportFilePath.TrimEnd('\\') + @"\SocialClubOldInstaller", "", true, true);
+				new Popup(Popup.PopupWindowTypes.PopupOk, "Started the Installation of old Social Club.\nClick 'OK' once the Install progress is done").ShowDialog();
+			}
 			HelperClasses.Logger.Log("Done Downgrading");
 		}
 

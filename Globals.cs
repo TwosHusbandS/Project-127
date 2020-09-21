@@ -209,6 +209,8 @@ namespace Project_127
 			{
 				string pathOfNewZip = HelperClasses.FileHandling.GetXMLTagContent(new System.Net.Http.HttpClient().GetStringAsync(Globals.URL_AutoUpdate).GetAwaiter().GetResult(), "zip");
 
+				new Popup(Popup.PopupWindowTypes.PopupOk, "Downloading ZIP now. Click Okay and then just wait until the next popup appears").ShowDialog();
+
 				WebClient webClient = new WebClient();
 				webClient.DownloadFileCompleted += new AsyncCompletedEventHandler(ZipFileDownloadCompleted);
 				webClient.DownloadFileAsync(new Uri(pathOfNewZip), ZipFileDownloadLocation);

@@ -42,8 +42,14 @@ namespace Project_127
 			// Initializing all WPF Elements
             InitializeComponent();
 
+			double x = (Application.Current.MainWindow.Left + Width) / 2;
+			double y = (Application.Current.MainWindow.Top + Height) / 2;
+
+			this.Left = x - (this.Width / 2);
+			this.Top = y - (this.Height / 2);
+
 			// Set the Parameters as Properties of new Popup Window
-            lbl_Main.FontSize = pFontSize;
+			lbl_Main.FontSize = pFontSize;
 			lbl_Main.Content = pMsg;
 
 			// Add "Support Text" to bottom if error
@@ -108,7 +114,7 @@ namespace Project_127
         {
             this.DialogResult = true; // probably not needed...
             this.Close();
-        }
+		}
 
 
         /// <summary>
