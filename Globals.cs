@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO.Compression;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -169,6 +170,23 @@ namespace Project_127
 				Settings.FirstLaunch = false;
 			}
 
+			// Check if GTA V Folder is correct
+			while (!LauncherLogic.IsGTAVInstallationPathCorrect(Settings.GTAVInstallationPath))
+			{
+				new Popup(Popup.PopupWindowTypes.PopupOk, "GTA V Installation Path detected to be wrong. Please choose a new one").ShowDialog();
+
+				string GTAVInstallationPath = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.Folder, "Pick the Folder which contains your GTAV.exe", @"C:\");
+				Settings.GTAVInstallationPath = GTAVInstallationPath;
+			}
+
+			// Check if we have the ZIP Files
+			while (!HelperClasses.FileHandling.doesPathExist(Globals.ProjectInstallationPath.TrimEnd('\\') + @"\Project_127_Files"))
+			{
+				new Popup(Popup.PopupWindowTypes.PopupOk, "You seem to not have imported the ZIP File").ShowDialog();
+
+				ImportZip();
+			}
+
 			MyDispatcherTimer = new System.Windows.Threading.DispatcherTimer();
 			MyDispatcherTimer.Tick += new EventHandler(pMW.SetGTAVButtonBasedOnGameAndInstallationState);
 			MyDispatcherTimer.Interval = TimeSpan.FromMilliseconds(5000);
@@ -183,6 +201,30 @@ namespace Project_127
 		public static void ProperExit()
 		{
 
+		}
+
+		/// <summary>
+		/// Method to import Zip File
+		/// </summary>
+		public static void ImportZip()
+		{
+
+			string[] myFiles = HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(Globals.ProjectInstallationPath.TrimEnd('\\') + @"\Project_127_Files");
+			foreach (string myFile in myFiles)
+			{
+				HelperClasses.FileHandling.deleteFile(myFile);
+			}
+
+			string ZipFileLocation = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.File, "Title", "", Globals.ProjectInstallationPath);
+			if (HelperClasses.FileHandling.doesFileExist(ZipFileLocation))
+			{
+				ZipFile.ExtractToDirectory(ZipFileLocation, Globals.ProjectInstallationPath);
+			}
+			else
+			{
+				new Popup(Popup.PopupWindowTypes.PopupOk, "No ZIP File selected").ShowDialog();
+			}
+			new Popup(Popup.PopupWindowTypes.PopupOk, "Done importing ZIP File").ShowDialog();
 		}
 
 
@@ -303,7 +345,7 @@ namespace Project_127
 
 
 		// Settings Window
-		public static Brush SE_Background { get; private set; } = MyColorBlack;
+		public static Brush SE_Background { get; private set; } = SetOpacity(MyColorBlack,70);
 		public static Brush SE_BorderBrush { get; private set; } = MyColorWhite;
 		public static Brush SE_BorderBrush_Inner { get; private set; } = MyColorOrange;
 		public static Brush SE_LabelForeground { get; private set; } = MyColorWhite;

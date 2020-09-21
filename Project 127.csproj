@@ -138,10 +138,10 @@
     <Compile Include="SaveFileHandler.xaml.cs">
       <DependentUpon>SaveFileHandler.xaml</DependentUpon>
     </Compile>
+    <Compile Include="SettingsPartial.cs" />
     <Compile Include="Settings.xaml.cs">
       <DependentUpon>Settings.xaml</DependentUpon>
     </Compile>
-    <Compile Include="SettingsPartial.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -168,8 +168,8 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Settings.xaml">
-      <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
@@ -241,6 +241,7 @@
     <Resource Include="Installer\AuthUser.txt" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Artwork\bg_blur.png" />
     <Content Include="MyDLLs\AutoUpdater.NET.dll" />
     <Content Include="MyDLLs\CefSharp.Core.dll" />
     <Content Include="MyDLLs\CefSharp.dll" />

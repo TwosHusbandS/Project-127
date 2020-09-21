@@ -62,10 +62,11 @@ General Files / Classes:
     ROSIntegration.xaml.cs (Auth stuff from @dr490n)
     
     Globals.cs 
-	MyFile.cs (Custom Class for Objects for the SaveFileHandler, Very much subject to change)
 	LauncherLogic.cs
+	MyFile.cs (Custom Class for Objects for the SaveFileHandler, Very much subject to change)
     HelperClasses\Logger.cs
     HelperClasses\RegeditHandler.cs
+    HelperClasses\ProcessHandler.cs
 	HelperClasses\FileHandler.cs
 
 General Comments and things one should be aware of (still finishing this list)
@@ -79,7 +80,7 @@ Main To do:
 	- Write Custom Autoupdater
 	- Write getting .ZIP from github
 
-	- Implement not having to refresh Settings Window
+	- Implement not having to refresh Settings Window on RESET
 	- Implemt other features (all Settings, auto high priority, auto darkviperau steam core fix)
 
 	- Finding GTA V Installation Path automatically		
@@ -227,7 +228,7 @@ namespace Project_127
 		private void btn_Auth_Click(object sender, RoutedEventArgs e)
 		{
 			// new Popup(Popup.PopupWindowTypes.PopupOk, "Auth not fully implemented yet.\nImage you authed through the\nstuff from dr490n and this\nis why the lock is changing").ShowDialog();
-			// SetAuthButtonBackground(Authstatus.Auth);
+			//SetAuthButtonBackground(Authstatus.Auth);
 			string msg = "Size of GTAV in Folder: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\GTA5.exe");
 			msg += "\nSize of Downgraded GTAV: " + LauncherLogic.SizeOfDowngradedGTAV;
 			msg += "\nSize of update.rpf in Folder: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\update\update.rpf");
@@ -387,22 +388,7 @@ namespace Project_127
 		/// <param name="e"></param>
 		private void btn_ImportZip_Click(object sender, RoutedEventArgs e)
 		{
-			string[] myFiles = HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(LauncherLogic.DowngradeFilePath);
-			foreach (string myFile in myFiles)
-			{
-				HelperClasses.FileHandling.deleteFile(myFile);
-			}
-
-			string ZipFileLocation = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.File, "Title", "", Globals.ProjectInstallationPath);
-			if (HelperClasses.FileHandling.doesFileExist(ZipFileLocation))
-			{
-				ZipFile.ExtractToDirectory(ZipFileLocation, Globals.ProjectInstallationPath);
-			}
-			else
-			{
-				new Popup(Popup.PopupWindowTypes.PopupOk, "No ZIP File selected").ShowDialog();
-			}
-			new Popup(Popup.PopupWindowTypes.PopupOk, "Done importing ZIP File").ShowDialog();
+			Globals.ImportZip();
 		}
 
 		/// <summary>
@@ -412,7 +398,7 @@ namespace Project_127
 		/// <param name="e"></param>
 		private void btn_SaveFiles_Click(object sender, RoutedEventArgs e)
 		{
-			(new SaveFileHandler()).Show();
+			//(new SaveFileHandler()).Show();
 		}
 
 		/// <summary>
@@ -422,7 +408,20 @@ namespace Project_127
 		/// <param name="e"></param>
 		private void btn_Settings_Click(object sender, RoutedEventArgs e)
 		{
-			(new Settings()).Show();
+			// If is visible
+			if (this.cc_Settings.Visibility == Visibility.Visible)
+			{
+				// Make invisible
+				this.btn_Settings.Background = Globals.MW_ButtonBackground;
+				this.cc_Settings.Visibility = Visibility.Hidden;
+			}
+			// If is not visible
+			else
+			{
+				// Make visible
+				this.btn_Settings.Background = Globals.MW_ButtonMOBackground;
+				this.cc_Settings.Visibility = Visibility.Visible;
+			}
 		}
 
 		/// <summary>
@@ -455,6 +454,16 @@ namespace Project_127
 			msg += "\n\nVersion: " + Globals.ProjectVersion.ToString();
 
 			new Popup(Popup.PopupWindowTypes.PopupOk, msg).ShowDialog();
+		}
+
+		/// <summary>
+		/// Method which gets called when the Readme Button is clicked
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void btn_Extra_Click(object sender, RoutedEventArgs e)
+		{
+
 		}
 
 		/// <summary>
@@ -612,6 +621,7 @@ namespace Project_127
 				return false;
 			}
 		}
+
 
 		#endregion
 

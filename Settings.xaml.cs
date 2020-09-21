@@ -12,12 +12,14 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
+
+
 namespace Project_127
 {
 	/// <summary>
 	/// Class Settings.xaml (Partical class is in SettingsPartial.cs)
 	/// </summary>
-	public partial class Settings : Window
+	public partial class Settings : UserControl
 	{
 		/// <summary>
 		/// Constructor of Settings Window 
@@ -141,15 +143,7 @@ namespace Project_127
 			btn_Set_FileFolder.Content = Theme;
 		}
 
-		/// <summary>
-		/// Button Click on Close.
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
-		private void btn_Close_Click(object sender, RoutedEventArgs e)
-		{
-			this.Close();
-		}
+
 
 		/// <summary>
 		/// Button Click on Reset.
@@ -164,22 +158,11 @@ namespace Project_127
 			if (yesno.DialogResult == true)
 			{
 				Settings.ResetSettings();
-				this.Close();
+				//this.Close();
 			}
-		}
-
-		// Below are Methods we need to make the behaviour of this nice.
-
-		/// <summary>
-		/// Method which makes the Window draggable, which moves the whole window when holding down Mouse1 on the background
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
-		private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-		{
-			DragMove(); // Pre-Defined Method
 		}
 
 
 	} // End of Class
 } // End of Namespace
+
