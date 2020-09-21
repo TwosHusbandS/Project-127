@@ -162,5 +162,29 @@ namespace Project_127.HelperClasses
 			}
 		}
 
+		/// <summary>
+		/// Starts a Process
+		/// </summary>
+		/// <param name="pFilepath"></param>
+		/// <param name="runAsAdmin"></param>
+		/// <param name="waitForexit"></param>
+		public static void StartProcess(string pFilepath, string CommandLineArguments, bool runAsAdmin)
+		{
+			if (FileHandling.doesFileExist(pFilepath))
+			{
+			Process proc = new Process();
+			proc.StartInfo.FileName = pFilepath;
+			if (string.IsNullOrEmpty(CommandLineArguments))
+				{
+					proc.StartInfo.Arguments = CommandLineArguments;
+				}
+			if (runAsAdmin)
+				{
+				proc.StartInfo.Verb = "runas";
+				}
+			proc.Start();
+			}
+		}
+
 	} // End of Class
 } // End of Namespace

@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Closing="Window_Closing"
         Title="Project - 1.27"
-        Height="540" Width="900"
+        Height="540" Width="800"
         WindowStyle="None" 
         AllowsTransparency="True" 
         MouseLeftButtonDown="Window_MouseLeftButtonDown" 
@@ -93,62 +93,36 @@
     <!-- Actual Content Below -->
     <Border BorderThickness="2" BorderBrush="{x:Static local:Globals.MW_Border}">
         <Grid x:Name="GridMain">
-            <Border BorderBrush="White" Margin="0,0,650,0"  BorderThickness="2">
-                <Grid x:Name="GridHamburgerOuter" Background="{x:Static local:Globals.MW_HamburgerMenuGridBackground}">
-                    <Grid x:Name="GridHamburgerInner" Margin="15, 100, 15, 50">
-                        <Grid.RowDefinitions>
-                            <RowDefinition/>
-                            <RowDefinition/>
-                            <RowDefinition/>
-                            <RowDefinition/>
-                            <RowDefinition/>
-                            <RowDefinition/>
-                        </Grid.RowDefinitions>
-                        <Button x:Name="btn_Upgrade" Grid.Row="0" Style="{StaticResource btn_hamburgeritem}" Content="Upgrade" Click="btn_Upgrade_Click"/>
-                        <Button x:Name="btn_Downgrade" Grid.Row="1" Style="{StaticResource btn_hamburgeritem}" Content="Downgrade" Click="btn_Downgrade_Click"/>
-                        <Button x:Name="btn_SaveFiles" Grid.Row="2" Style="{StaticResource btn_hamburgeritem}" Content="Save File Manager" Click="btn_SaveFiles_Click"/>
-                        <Button x:Name="btn_Settings" Grid.Row="3" Style="{StaticResource btn_hamburgeritem}" Content="Settings" Click="btn_Settings_Click"/>
-                        <Button x:Name="btn_Credits" Grid.Row="4" Style="{StaticResource btn_hamburgeritem}" Content="Credits" Click="btn_Credits_Click"/>
-                        <Button x:Name="btn_Extra" Grid.Row="5" Style="{StaticResource btn_hamburgeritem}" Content="Extra" Click="btn_Extra_Click"/>
-                    </Grid>
-                    <!-- GridHamburgerInner -->
+            <Grid x:Name="GridHamburgerOuter" Margin="0,0,520,0" Background="{x:Static local:Globals.MW_HamburgerMenuGridBackground}">
+                <Grid x:Name="GridHamburgerInner" Margin="15, 100, 15, 50">
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Button x:Name="btn_Upgrade" Grid.Row="0" Style="{StaticResource btn_hamburgeritem}" Content="Upgrade" Click="btn_Upgrade_Click"/>
+                    <Button x:Name="btn_Repair" Grid.Row="1" Style="{StaticResource btn_hamburgeritem}" Content="Repair Installation" Click="btn_Repair_Click"/>
+                    <Button x:Name="btn_Downgrade" Grid.Row="2" Style="{StaticResource btn_hamburgeritem}" Content="Downgrade" Click="btn_Downgrade_Click"/>
+                    <Button x:Name="btn_ImportZip" Grid.Row="3" Style="{StaticResource btn_hamburgeritem}" Content="Import ZIP" Click="btn_ImportZip_Click"/>
+                    <Button x:Name="btn_SaveFiles" Grid.Row="4" Style="{StaticResource btn_hamburgeritem}" Content="Save File Manager" Click="btn_SaveFiles_Click"/>
+                    <Button x:Name="btn_Settings" Grid.Row="5" Style="{StaticResource btn_hamburgeritem}" Content="Settings" Click="btn_Settings_Click"/>
+                    <Button x:Name="btn_Speedrun" Grid.Row="6" Style="{StaticResource btn_hamburgeritem}" Content="Speedrun Info" Click="btn_Speedrun_Click"/>
+                    <Button x:Name="btn_Readme" Grid.Row="7" Style="{StaticResource btn_hamburgeritem}" Content="ReadMe" Click="btn_Readme_Click"/>
+                    <Button x:Name="btn_Credits" Grid.Row="8" Style="{StaticResource btn_hamburgeritem}" Content="Credits" Click="btn_Credits_Click"/>
                 </Grid>
-                <!-- GridHamburgerOuter -->
-            </Border>
-
-                <Button x:Name="btn_Hamburger" Style="{StaticResource btn_Small}" Content="☰" VerticalAlignment="Top" HorizontalAlignment="Left" Click="btn_Hamburger_Click" />
-                <Button x:Name="btn_Exit" Style="{StaticResource btn_Small}" Content="X" VerticalAlignment="Top" HorizontalAlignment="Right" Click="btn_Exit_Click"/>
-                <Button x:Name="btn_Auth" Style="{StaticResource btn_Small}" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="60,15,0,0" Click="btn_Auth_Click"/>
-            <Border BorderBrush="White" Margin="245,0,0,0"  BorderThickness="2">
-
-                <!--<Grid Margin="270,70,30,30">-->
-                <Grid Margin="0">
-
-                    <Button x:Name="btn_GTA" Visibility="Hidden" Style="{StaticResource btn_gta}" Margin="320,320,0,0" Content="GTA V. Downgraded.&#xa;Game NOT running." Click="btn_GTA_Click" MouseRightButtonDown="btn_GTA_MouseRightButtonDown"/>
-
-                    <local:Settings x:Name="cc_Settings" Visibility="Hidden">
-                    </local:Settings>
-
-                    <local:SaveFileHandler x:Name="cc_SaveFileHandler" Visibility="Hidden">
-                    </local:SaveFileHandler>
-
-                    <Grid x:Name="grd_Extra" Visibility="Hidden" Background="Green" Margin="250,100,100,0">
-                        <Grid.RowDefinitions>
-                            <RowDefinition/>
-                            <RowDefinition/>
-                            <RowDefinition/>
-                            <RowDefinition/>
-                        </Grid.RowDefinitions>
-                        <Button x:Name="btn_Repair" Grid.Row="0" Style="{StaticResource btn_hamburgeritem}" Margin="20" Content="Repair Installation" Click="btn_Repair_Click"/>
-                        <Button x:Name="btn_ImportZip" Grid.Row="1" Style="{StaticResource btn_hamburgeritem}" Margin="20" Content="Import ZIP" Click="btn_ImportZip_Click"/>
-                        <Button x:Name="btn_Speedrun" Grid.Row="2" Style="{StaticResource btn_hamburgeritem}" Margin="20" Content="Speedrun Info" Click="btn_Speedrun_Click"/>
-                        <Button x:Name="btn_ReadMe" Grid.Row="3" Style="{StaticResource btn_hamburgeritem}" Margin="20" Content="ReadMe" Click="btn_Readme_Click"/>
-
-                    </Grid>
-
-                </Grid>
-            </Border>
-
+                <!-- GridHamburgerInner -->
+            </Grid>
+            <!-- GridHamburgerOuter -->
+            <Button x:Name="btn_Hamburger" Style="{StaticResource btn_Small}" Content="☰" VerticalAlignment="Top" HorizontalAlignment="Left" Click="btn_Hamburger_Click" />
+            <Button x:Name="btn_Exit" Style="{StaticResource btn_Small}" Content="X" VerticalAlignment="Top" HorizontalAlignment="Right" Click="btn_Exit_Click"/>
+            <Button x:Name="btn_Auth" Style="{StaticResource btn_Small}" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="60,15,0,0" Click="btn_Auth_Click"/>
+            <Button x:Name="btn_GTA" Style="{StaticResource btn_gta}" Margin="525,400,60,60" Content="GTA V. Downgraded.&#xa;Game NOT running." Click="btn_GTA_Click" MouseRightButtonDown="btn_GTA_MouseRightButtonDown"/>
         </Grid >
         <!-- Main Grid -->
     </Border>

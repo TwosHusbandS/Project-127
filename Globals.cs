@@ -1,9 +1,11 @@
 ﻿using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO.Compression;
 using System.Linq;
+using System.Net;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
@@ -26,7 +28,7 @@ namespace Project_127
 		/// Property of our ProjectName (for Folders, Regedit, etc.)
 		/// </summary>
 		public static string ProjectName = "Project_127";
-		
+
 		/// <summary>
 		/// Property of our ProjectNiceName (for GUI)
 		/// </summary>
@@ -45,7 +47,17 @@ namespace Project_127
 		/// <summary>
 		/// URL for AuthUserFile
 		/// </summary>
-		public static string URL_AuthUser = "https://raw.githubusercontent.com/TwosHusbandS/Project-127/master/Installer/AuthUser.txt";
+		public static string URL_AuthUser = HelperClasses.FileHandling.GetXMLTagContent(new System.Net.Http.HttpClient().GetStringAsync(Globals.URL_AutoUpdate).GetAwaiter().GetResult(), "authuser");
+
+		/// <summary>
+		/// URL for the latest Zip File
+		/// </summary>
+		public static string URL_LatestZIP = HelperClasses.FileHandling.GetXMLTagContent(new System.Net.Http.HttpClient().GetStringAsync(Globals.URL_AutoUpdate).GetAwaiter().GetResult(), "zip");
+
+		/// <summary>
+		/// Download Location of Zip File
+		/// </summary>
+		public static string ZipFileDownloadLocation = Globals.ProjectInstallationPath + @"\NewZipFile.zip";
 
 		/// <summary>
 		/// Property if we are in Beta
@@ -67,7 +79,7 @@ namespace Project_127
 		/// <summary>
 		/// Property of the Dispatcher Timer we use to keep track of GameState
 		/// </summary>
-		public static DispatcherTimer MyDispatcherTimer;            
+		public static DispatcherTimer MyDispatcherTimer;
 
 		/// <summary>
 		/// String[] of CommandLineArguments
@@ -90,9 +102,9 @@ namespace Project_127
 		public static Dictionary<string, string> MyDefaultSettings { get; private set; } = new Dictionary<string, string>()
 		{
 			{"FirstLaunch", "True" },
+			{"InstallationPath", ProjectInstallationPath },
 			{"GTAVInstallationPath", Environment.ExpandEnvironmentVariables(@"%ProgramFiles(x86)%\Steam\steamapps\common\Grand Theft Auto V")},
 			{"FileFolder", Environment.ExpandEnvironmentVariables(@"%ALLUSERSPROFILE%\" + ProjectName)},
-			{"InstallationState", "Upgraded"},
 			{"EnableLogging", "True"},
 			{"EnableTempFixSteamLaunch", "False"},
 			{"EnablePreOrderBonus", "False"},
@@ -116,7 +128,7 @@ namespace Project_127
 		/// Property of our Settings (Dictionary). Gets the default values on initiating the program. Our Settings will get read from registry on the Init functions.
 		/// </summary>
 		public static Dictionary<string, string> MySettings { get; private set; } = MyDefaultSettings.ToDictionary(entry => entry.Key, entry => entry.Value); // https://stackoverflow.com/a/139626
-		
+
 		/// <summary>
 		/// Init function which gets called at the very beginning
 		/// </summary>
@@ -139,9 +151,12 @@ namespace Project_127
 			// Checks if we are doing first Launch.
 			if (Settings.FirstLaunch)
 			{
+				// Set Own Installation Path in Regedit Settings
+				Globals.MySettings["InstallationPath"] = ProjectInstallationPath;
+
 				// Try to find GTA V installation Path
 				string potentialGTAVInstallationPath = Globals.ProjectInstallationPath.TrimEnd('\\').Substring(0, Globals.ProjectInstallationPath.LastIndexOf('\\'));
-				
+
 				// Prepare this Popup to show it later
 				Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Is: '" + potentialGTAVInstallationPath + "' your GTA V Installation Path?");
 
@@ -179,19 +194,43 @@ namespace Project_127
 				Settings.GTAVInstallationPath = GTAVInstallationPath;
 			}
 
-			// Check if we have the ZIP Files
-			while (!HelperClasses.FileHandling.doesPathExist(Globals.ProjectInstallationPath.TrimEnd('\\') + @"\Project_127_Files"))
-			{
-				new Popup(Popup.PopupWindowTypes.PopupOk, "You seem to not have imported the ZIP File").ShowDialog();
+			// Check our version of the ZIP File
+			int ZipVersion = 0;
+			Int32.TryParse(HelperClasses.FileHandling.ReadContentOfFile(Globals.ProjectInstallationPath.TrimEnd('\\') + @"\Project_127_Files\Version.txt"), out ZipVersion);
 
-				ImportZip();
+			// Check whats the latest Version of the ZIP File in GITHUB
+			int ZipOnlineVersion = 0;
+			Int32.TryParse(HelperClasses.FileHandling.GetXMLTagContent(new System.Net.Http.HttpClient().GetStringAsync(Globals.URL_AutoUpdate).GetAwaiter().GetResult(), "zipversion"), out ZipOnlineVersion);
+
+			HelperClasses.Logger.Log("ZipVersion = '" + ZipVersion.ToString() + "', ZipOnlineVersion = '" + ZipOnlineVersion + "'");
+
+			// If Zip file from Server is newer
+			if (ZipOnlineVersion > ZipVersion)
+			{
+				string pathOfNewZip = HelperClasses.FileHandling.GetXMLTagContent(new System.Net.Http.HttpClient().GetStringAsync(Globals.URL_AutoUpdate).GetAwaiter().GetResult(), "zip");
+
+				WebClient webClient = new WebClient();
+				webClient.DownloadFileCompleted += new AsyncCompletedEventHandler(ZipFileDownloadCompleted);
+				webClient.DownloadFileAsync(new Uri(pathOfNewZip), ZipFileDownloadLocation);
 			}
+
 
 			MyDispatcherTimer = new System.Windows.Threading.DispatcherTimer();
 			MyDispatcherTimer.Tick += new EventHandler(pMW.SetGTAVButtonBasedOnGameAndInstallationState);
 			MyDispatcherTimer.Interval = TimeSpan.FromMilliseconds(5000);
 			MyDispatcherTimer.Start();
 			pMW.SetGTAVButtonBasedOnGameAndInstallationState(null, null);
+		}
+
+		/// <summary>
+		/// Is called when the ZIP Download is complete
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private static void ZipFileDownloadCompleted(object sender, AsyncCompletedEventArgs e)
+		{
+			ImportZip(ZipFileDownloadLocation);
+			HelperClasses.FileHandling.deleteFile(ZipFileDownloadLocation);
 		}
 
 
@@ -206,24 +245,18 @@ namespace Project_127
 		/// <summary>
 		/// Method to import Zip File
 		/// </summary>
-		public static void ImportZip()
+		public static void ImportZip(string pZipFileLocation)
 		{
-
 			string[] myFiles = HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(Globals.ProjectInstallationPath.TrimEnd('\\') + @"\Project_127_Files");
 			foreach (string myFile in myFiles)
 			{
+				if (!myFile.Contains("UpgradeFiles"))
+				{
 				HelperClasses.FileHandling.deleteFile(myFile);
+				}
 			}
 
-			string ZipFileLocation = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.File, "Title", "", Globals.ProjectInstallationPath);
-			if (HelperClasses.FileHandling.doesFileExist(ZipFileLocation))
-			{
-				ZipFile.ExtractToDirectory(ZipFileLocation, Globals.ProjectInstallationPath);
-			}
-			else
-			{
-				new Popup(Popup.PopupWindowTypes.PopupOk, "No ZIP File selected").ShowDialog();
-			}
+			ZipFile.ExtractToDirectory(pZipFileLocation, Globals.ProjectInstallationPath);
 			new Popup(Popup.PopupWindowTypes.PopupOk, "Done importing ZIP File").ShowDialog();
 		}
 
@@ -248,12 +281,12 @@ namespace Project_127
 		/// Actual Main colors we use:
 		/// </summary>
 		public static Brush MyColorWhite { get; private set; } = (Brush)new BrushConverter().ConvertFromString("#ffffff");
-        public static Brush MyColorBlack { get; private set; } = (Brush)new BrushConverter().ConvertFromString("#000000");
-        public static Brush MyColorOrange { get; private set; } = (Brush)new BrushConverter().ConvertFromString("#E35627");
+		public static Brush MyColorBlack { get; private set; } = (Brush)new BrushConverter().ConvertFromString("#000000");
+		public static Brush MyColorOrange { get; private set; } = (Brush)new BrushConverter().ConvertFromString("#E35627");
 		public static Brush MyColorGreen { get; private set; } = (Brush)new BrushConverter().ConvertFromString("#4cd213");
 
-        /// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		
+		/// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 		/// <summary>
 		/// All other colors:
 		/// MW = MainWindow
@@ -272,24 +305,24 @@ namespace Project_127
 		// Border of MainWindow
 		public static Brush MW_Border { get; private set; } = MyColorWhite;
 
-        // All the HamburgerButton Items, Backgrounds, etc.
-        public static Brush MW_HamburgerMenuGridBackground { get; private set; } = SetOpacity(MyColorBlack, 50);
-        public static System.Windows.Thickness MW_ButtonBorderThickness { get; private set; } = new System.Windows.Thickness(0);
-        public static Brush MW_ButtonBackground { get; private set; } = SetOpacity(MyColorBlack, 70);
-        public static Brush MW_ButtonForeground { get; private set; } = MyColorWhite;
+		// All the HamburgerButton Items, Backgrounds, etc.
+		public static Brush MW_HamburgerMenuGridBackground { get; private set; } = SetOpacity(MyColorBlack, 50);
+		public static System.Windows.Thickness MW_ButtonBorderThickness { get; private set; } = new System.Windows.Thickness(0);
+		public static Brush MW_ButtonBackground { get; private set; } = SetOpacity(MyColorBlack, 70);
+		public static Brush MW_ButtonForeground { get; private set; } = MyColorWhite;
 		public static Brush MW_ButtonBorderBrush { get; private set; } = MyColorWhite;
 		public static Brush MW_ButtonMOBackground { get; private set; } = SetOpacity(MyColorWhite, 70);
-        public static Brush MW_ButtonMOForeground { get; private set; } = MyColorBlack;
+		public static Brush MW_ButtonMOForeground { get; private set; } = MyColorBlack;
 		public static Brush MW_ButtonMOBorderBrush { get; private set; } = MyColorWhite;
 
 		// Hamburger Button and "X"
 		public static Brush MW_ButtonSmallBackground { get; private set; } = SetOpacity(MyColorBlack, 70);
-        public static Brush MW_ButtonSmallForeground { get; private set; } = MyColorWhite;
-        public static Brush MW_ButtonSmallBorderBrush { get; private set; } = MyColorWhite;
-        public static Brush MW_ButtonSmallMOBackground { get; private set; } = SetOpacity(MyColorBlack, 70);
-        public static Brush MW_ButtonSmallMOForeground { get; private set; } = MyColorOrange;
-        public static Brush MW_ButtonSmallMOBorderBrush { get; private set; } = MyColorOrange;
-        public static System.Windows.Thickness MW_ButtonSmallBorderThickness { get; private set; } = new System.Windows.Thickness(2);
+		public static Brush MW_ButtonSmallForeground { get; private set; } = MyColorWhite;
+		public static Brush MW_ButtonSmallBorderBrush { get; private set; } = MyColorWhite;
+		public static Brush MW_ButtonSmallMOBackground { get; private set; } = SetOpacity(MyColorBlack, 70);
+		public static Brush MW_ButtonSmallMOForeground { get; private set; } = MyColorOrange;
+		public static Brush MW_ButtonSmallMOBorderBrush { get; private set; } = MyColorOrange;
+		public static System.Windows.Thickness MW_ButtonSmallBorderThickness { get; private set; } = new System.Windows.Thickness(2);
 
 		// GTA Launch Button
 		// Border Color will depend on game running or not running, so we will not set this here. I guess. 
@@ -297,17 +330,17 @@ namespace Project_127
 		public static Brush MW_ButtonGTAGameRunningBorderBrush { get; private set; } = MyColorGreen;
 
 		public static Brush MW_ButtonGTABackground { get; private set; } = SetOpacity(MyColorBlack, 70);
-        public static Brush MW_ButtonGTAForeground { get; private set; } = MyColorWhite;
-        public static Brush MW_ButtonGTAMOBackground { get; private set; } = SetOpacity(MyColorOrange, 70);
-        public static Brush MW_ButtonGTAMOForeground { get; private set; } = MyColorBlack;
+		public static Brush MW_ButtonGTAForeground { get; private set; } = MyColorWhite;
+		public static Brush MW_ButtonGTAMOBackground { get; private set; } = SetOpacity(MyColorOrange, 70);
+		public static Brush MW_ButtonGTAMOForeground { get; private set; } = MyColorBlack;
 
-        public static System.Windows.Thickness MW_ButtonGTABorderThickness { get; private set; } = new System.Windows.Thickness(5);
+		public static System.Windows.Thickness MW_ButtonGTABorderThickness { get; private set; } = new System.Windows.Thickness(5);
 
 		// POPUP Window
 		public static Brush PU_Background { get; private set; } = GetBrushHex("1a1a1a");
 
 		public static Brush PU_BorderBrush { get; private set; } = MyColorWhite;
-        public static Brush PU_BorderBrush_Inner { get; private set; } = MyColorOrange;
+		public static Brush PU_BorderBrush_Inner { get; private set; } = MyColorOrange;
 
 		public static Brush PU_ButtonBackground { get; private set; } = GetBrushHex("1a1a1a");
 		public static Brush PU_ButtonForeground { get; private set; } = MyColorWhite;
@@ -317,35 +350,35 @@ namespace Project_127
 		public static Brush PU_ButtonMOBorderBrush { get; private set; } = MyColorBlack;
 
 		public static System.Windows.Thickness PU_ButtonBorderThickness { get; private set; } = new System.Windows.Thickness(2);
-        public static Brush PU_LabelForeground { get; private set; } = MyColorWhite;
+		public static Brush PU_LabelForeground { get; private set; } = MyColorWhite;
 
-        // SaveFilerHandler Window
-        public static Brush SFH_Background { get; private set; } = MyColorBlack;
-        public static Brush SFH_BorderBrush { get; private set; } = MyColorWhite;
-        public static Brush SFH_BorderBrush_Inner { get; private set; } = MyColorOrange;
-        public static Brush SFH_LabelForeground { get; private set; } = MyColorWhite;
+		// SaveFilerHandler Window
+		public static Brush SFH_Background { get; private set; } = MyColorBlack;
+		public static Brush SFH_BorderBrush { get; private set; } = MyColorWhite;
+		public static Brush SFH_BorderBrush_Inner { get; private set; } = MyColorOrange;
+		public static Brush SFH_LabelForeground { get; private set; } = MyColorWhite;
 
-        public static Brush SFH_ButtonBackground { get; private set; } = MyColorBlack;
-        public static Brush SFH_ButtonForeground { get; private set; } = MyColorWhite;
-        public static Brush SFH_ButtonBorderBrush { get; private set; } = MyColorWhite;
-        public static Brush SFH_ButtonMOBackground { get; private set; } = MyColorBlack;
-        public static Brush SFH_ButtonMOForeground { get; private set; } = MyColorOrange;
-        public static Brush SFH_ButtonMOBorderBrush { get; private set; } = MyColorOrange;
+		public static Brush SFH_ButtonBackground { get; private set; } = MyColorBlack;
+		public static Brush SFH_ButtonForeground { get; private set; } = MyColorWhite;
+		public static Brush SFH_ButtonBorderBrush { get; private set; } = MyColorWhite;
+		public static Brush SFH_ButtonMOBackground { get; private set; } = MyColorBlack;
+		public static Brush SFH_ButtonMOForeground { get; private set; } = MyColorOrange;
+		public static Brush SFH_ButtonMOBorderBrush { get; private set; } = MyColorOrange;
 
-        public static Brush SFH_SVBackground { get; private set; } = MyColorBlack;
-        public static Brush SFH_SVForeground { get; private set; } = MyColorOrange;
+		public static Brush SFH_SVBackground { get; private set; } = MyColorBlack;
+		public static Brush SFH_SVForeground { get; private set; } = MyColorOrange;
 
-        public static Brush SFH_DGBackground { get; private set; } = MyColorBlack;
-        public static Brush SFH_DGForeground { get; private set; } = MyColorWhite;
-        public static Brush SFH_DGCellBackground { get; private set; } = MyColorBlack;
-        
-        public static Brush SFH_DGCellSelected { get; private set; } =  MyColorOrange;
+		public static Brush SFH_DGBackground { get; private set; } = MyColorBlack;
+		public static Brush SFH_DGForeground { get; private set; } = MyColorWhite;
+		public static Brush SFH_DGCellBackground { get; private set; } = MyColorBlack;
 
-        public static System.Windows.Thickness SFH_ButtonBorderThickness { get; private set; } = new System.Windows.Thickness(2);
+		public static Brush SFH_DGCellSelected { get; private set; } = MyColorOrange;
+
+		public static System.Windows.Thickness SFH_ButtonBorderThickness { get; private set; } = new System.Windows.Thickness(2);
 
 
 		// Settings Window
-		public static Brush SE_Background { get; private set; } = SetOpacity(MyColorBlack,70);
+		public static Brush SE_Background { get; private set; } = SetOpacity(MyColorBlack, 70);
 		public static Brush SE_BorderBrush { get; private set; } = MyColorWhite;
 		public static Brush SE_BorderBrush_Inner { get; private set; } = MyColorOrange;
 		public static Brush SE_LabelForeground { get; private set; } = MyColorWhite;
@@ -371,7 +404,7 @@ namespace Project_127
 		public static System.Windows.Thickness SE_ButtonBorderThickness { get; private set; } = new System.Windows.Thickness(2);
 
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		
+
 		/// <summary>
 		/// Takes a Brush and a Opacity (0-100) and returns a Brush.
 		/// </summary>
@@ -379,12 +412,12 @@ namespace Project_127
 		/// <param name="pOpacity"></param>
 		/// <returns></returns>
 		private static Brush SetOpacity(Brush pBrush, int pOpacity)
-        {
-            double dOpacity = (((double)pOpacity) / 100);
-            Brush NewBrush = pBrush.Clone();
-            NewBrush.Opacity = dOpacity;
-            return NewBrush;
-        }
+		{
+			double dOpacity = (((double)pOpacity) / 100);
+			Brush NewBrush = pBrush.Clone();
+			NewBrush.Opacity = dOpacity;
+			return NewBrush;
+		}
 
 
 		/// <summary>
@@ -392,10 +425,10 @@ namespace Project_127
 		/// </summary>
 		/// <param name="pString"></param>
 		/// <returns></returns>
-        private static Brush GetBrushHex(string pString)
-        {
-            return (GetBrushHex(pString, 100));
-        }
+		private static Brush GetBrushHex(string pString)
+		{
+			return (GetBrushHex(pString, 100));
+		}
 
 
 		/// <summary>
@@ -405,10 +438,10 @@ namespace Project_127
 		/// <param name="pOpacity"></param>
 		/// <returns></returns>
 		private static Brush GetBrushHex(string pString, int pOpacity)
-        {
-            Brush rtrn = (Brush)new BrushConverter().ConvertFromString("#" + pString.TrimStart('#'));
-            return SetOpacity(rtrn,pOpacity);
-        }
+		{
+			Brush rtrn = (Brush)new BrushConverter().ConvertFromString("#" + pString.TrimStart('#'));
+			return SetOpacity(rtrn, pOpacity);
+		}
 
 
 		/// <summary>
@@ -418,10 +451,10 @@ namespace Project_127
 		/// <param name="g"></param>
 		/// <param name="b"></param>
 		/// <returns></returns>
-        private static Brush GetBrushRGB(int r, int g, int b)
-        {
-            return GetBrushRGB(r,g,b, 100);
-        }
+		private static Brush GetBrushRGB(int r, int g, int b)
+		{
+			return GetBrushRGB(r, g, b, 100);
+		}
 
 
 		/// <summary>
@@ -434,22 +467,22 @@ namespace Project_127
 		/// <returns></returns>
 		// yeye this ugly like yo mama but its just for internal testing. Wont be called in production
 		private static Brush GetBrushRGB(int r, int g, int b, int pOpacity)
-        {
-            try
-            {
-                string hex = string.Format("{0:X2}{1:X2}{2:X2}", r, g, b);
+		{
+			try
+			{
+				string hex = string.Format("{0:X2}{1:X2}{2:X2}", r, g, b);
 
-                return GetBrushHex(hex, pOpacity);
-            }
-            catch
-            {
-                System.Windows.Forms.MessageBox.Show("this shouldnt have happened. Error in RGB / Hex conversion");
-                Environment.Exit(1);
-                return null;
-            }
-        }
+				return GetBrushHex(hex, pOpacity);
+			}
+			catch
+			{
+				System.Windows.Forms.MessageBox.Show("this shouldnt have happened. Error in RGB / Hex conversion");
+				Environment.Exit(1);
+				return null;
+			}
+		}
 
 
 
-    } // End of Class
+	} // End of Class
 } // End of Namespace

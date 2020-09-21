@@ -12,14 +12,12 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-
-
 namespace Project_127
 {
 	/// <summary>
 	/// Class Settings.xaml (Partical class is in SettingsPartial.cs)
 	/// </summary>
-	public partial class Settings : UserControl
+	public partial class Settings : Window
 	{
 		/// <summary>
 		/// Constructor of Settings Window 
@@ -45,8 +43,15 @@ namespace Project_127
 		private void btn_Set_GTAVInstallationPath_Click(object sender, RoutedEventArgs e)
 		{
 			GTAVInstallationPath = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.Folder, "Pick the Folder which contains your GTAV.exe", @"C:\");
-			Settings.GTAVInstallationPath = GTAVInstallationPath;
-			btn_Set_GTAVInstallationPath.Content = GTAVInstallationPath;
+			if (LauncherLogic.IsGTAVInstallationPathCorrect(GTAVInstallationPath))
+			{
+				Settings.GTAVInstallationPath = GTAVInstallationPath;
+			}
+			else
+			{
+				new Popup(Popup.PopupWindowTypes.PopupOk, "GTA V Path detected to be wrong. Settings will not change").ShowDialog();
+			}
+			btn_Set_GTAVInstallationPath.Content = Settings.GTAVInstallationPath;
 		}
 
 		/// <summary>
@@ -143,7 +148,15 @@ namespace Project_127
 			btn_Set_FileFolder.Content = Theme;
 		}
 
-
+		/// <summary>
+		/// Button Click on Close.
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void btn_Close_Click(object sender, RoutedEventArgs e)
+		{
+			this.Close();
+		}
 
 		/// <summary>
 		/// Button Click on Reset.
@@ -158,11 +171,22 @@ namespace Project_127
 			if (yesno.DialogResult == true)
 			{
 				Settings.ResetSettings();
-				//this.Close();
+				this.Close();
 			}
+		}
+
+		// Below are Methods we need to make the behaviour of this nice.
+
+		/// <summary>
+		/// Method which makes the Window draggable, which moves the whole window when holding down Mouse1 on the background
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+		{
+			DragMove(); // Pre-Defined Method
 		}
 
 
 	} // End of Class
 } // End of Namespace
-
