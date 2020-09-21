@@ -22,7 +22,7 @@ Main Client Implementation by "@thS#0305"
 The actual hard lifting of the launching (with fixes) and authentification stuff is achieved by the hardwork of "@dr490n", "@zCri" and "@Special For"
 Artwork, GUI Design, GUI Behaviour, Colorchoice etc. by "@Hossel"
 
-Version: 0.0.1.6 unreleased
+Version: 0.0.1.7 unreleased
 
 Build Instructions:
 	Add a Reference to all the DLLs inside of \MyDLLs\
@@ -79,19 +79,16 @@ Main To do:
 	- Also wrote custom auto updater, also wrote deleting files called installer from InstallationPath because of it.
 	- Also wrote uninstaller / cleanup and put installation path in settings because of it.
 	- Also getting all URLs based off of the Update URL which contains all other Links
+	- Wrote Updating Settings GUI on Reset etc.
+	
+	^ Test that
 	
 	// Implementing these things
-	- Implement not having to refresh Settings Window on RESET
-	- Implement SaveFileHandler
-	- Finding GTA V Installation Path automatically		
-			get steam path from regedit as we did
-			go into steam_installation_path/steamapps/, check out "libraryfolders.vdf"
-			get all steam library paths from there
-			loop through them
-			check if they have /steamlibrary/steamapps/appmanifest_271590.acf
-			congratulations we have found a GTA V installation
 
-	- Implemt other features (all Settings, auto high priority, auto darkviperau steam core fix)
+	- Implement Popup with Progressbar for Upgrade and ZIP File stuff, to take make the main window unclickable
+	- Add A LOT, A LOT, A LOT of logging
+
+	- Implemt other features (SaveFileHandler,all Settings, auto high priority, auto darkviperau steam core fix)
 
     - Low Prio:
 		Convert Settings and SaveFileHandler in CustomControls
@@ -191,7 +188,6 @@ namespace Project_127
 
 			// Auto Updater
 			CheckForUpdate();
-			// AutoUpdater.Start(Globals.URL_AutoUpdate);
 		}
 
 		private void CheckForUpdate()
@@ -277,16 +273,35 @@ namespace Project_127
 		/// <param name="e"></param>
 		private void btn_Auth_Click(object sender, RoutedEventArgs e)
 		{
-			// new Popup(Popup.PopupWindowTypes.PopupOk, "Auth not fully implemented yet.\nImage you authed through the\nstuff from dr490n and this\nis why the lock is changing").ShowDialog();
-			//SetAuthButtonBackground(Authstatus.Auth);
+			new Popup(Popup.PopupWindowTypes.PopupOk, "Auth not fully implemented yet.\nImage you authed through the\nstuff from dr490n and this\nis why the lock is changing").ShowDialog();
+			SetAuthButtonBackground(Authstatus.Auth);
 
-			string msg = "Size of GTAV in Folder: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\GTA5.exe");
-			msg += "\nSize of Downgraded GTAV: " + LauncherLogic.SizeOfDowngradedGTAV;
-			msg += "\nSize of update.rpf in Folder: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\update\update.rpf");
-			msg += "\nSize of Downgraded update.rpf: " + LauncherLogic.SizeOfDowngradedUPDATE;
-			msg += "\nInstallationState: " + LauncherLogic.InstallationState.ToString();
+			//string msg = "Size of GTAV in Folder: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\GTA5.exe");
+			//msg += "\nSize of Downgraded GTAV: " + LauncherLogic.SizeOfDowngradedGTAV;
+			//msg += "\nSize of update.rpf in Folder: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\update\update.rpf");
+			//msg += "\nSize of Downgraded update.rpf: " + LauncherLogic.SizeOfDowngradedUPDATE;
+			//msg += "\nInstallationState: " + LauncherLogic.InstallationState.ToString();
+			//Globals.DebugPopup(msg);
 
-			Globals.DebugPopup(msg);
+			//string[] MyLines = HelperClasses.FileHandling.ReadFileEachLine(Globals.SteamInstallPath.TrimEnd('\\') + @"\steamapps\libraryfolders.vdf");
+			//for (int i = 0; i <= MyLines.Length - 1; i++)
+			//{
+			//	MyLines[i] = MyLines[i].Replace("\t", "").Replace(" ", "");
+			//
+			//	// String from Regex: #"\d{1,4}""[a-zA-Z\\:]*"# (yes we are matching ", I used # as semicolons for string beginnign and end
+			//	Regex MyRegex = new Regex("\"\\d{1,4}\"\"[a-zA-Z\\\\:]*\"");
+			//	Match MyMatch = MyRegex.Match(MyLines[i]);
+			//	if (MyMatch.Success)
+			//	{
+			//		MyLines[i] = MyLines[i].TrimEnd('"');
+			//		MyLines[i] = MyLines[i].Substring(MyLines[i].LastIndexOf('"') + 1);
+			//		MyLines[i] = MyLines[i].Replace(@"\\", @"\");
+			//		if (HelperClasses.FileHandling.doesFileExist(MyLines[i].TrimEnd('\\') + @"\steamapps\appmanifest_271590.acf"))
+			//		{
+			//			Globals.DebugPopup(MyLines[i].TrimEnd('\\') + @"\steamapps\common\Grand Theft Auto V\");
+			//		}
+			//	}
+			//}
 		}
 
 		/// <summary>
@@ -439,15 +454,15 @@ namespace Project_127
 		/// <param name="e"></param>
 		private void btn_ImportZip_Click(object sender, RoutedEventArgs e)
 		{
-			//string ZipFileLocation = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.File, "Title", "", Globals.ProjectInstallationPath);
-			//if (HelperClasses.FileHandling.doesFileExist(ZipFileLocation))
-			//{
-			//	Globals.ImportZip(ZipFileLocation);
-			//}
-			//else
-			//{
-			//	new Popup(Popup.PopupWindowTypes.PopupOk, "No ZIP File selected").ShowDialog();
-			//}
+			string ZipFileLocation = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.File, "Title", "", Globals.ProjectInstallationPath);
+			if (HelperClasses.FileHandling.doesFileExist(ZipFileLocation))
+			{
+				Globals.ImportZip(ZipFileLocation);
+			}
+			else
+			{
+				new Popup(Popup.PopupWindowTypes.PopupOk, "No ZIP File selected").ShowDialog();
+			}
 		}
 
 		/// <summary>

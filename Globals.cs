@@ -103,7 +103,7 @@ namespace Project_127
 		{
 			{"FirstLaunch", "True" },
 			{"InstallationPath", ProjectInstallationPath },
-			{"GTAVInstallationPath", Environment.ExpandEnvironmentVariables(@"%ProgramFiles(x86)%\Steam\steamapps\common\Grand Theft Auto V")},
+			{"GTAVInstallationPath", ""},
 			{"FileFolder", Environment.ExpandEnvironmentVariables(@"%ALLUSERSPROFILE%\" + ProjectName)},
 			{"EnableLogging", "True"},
 			{"EnableTempFixSteamLaunch", "False"},
@@ -158,23 +158,36 @@ namespace Project_127
 				string potentialGTAVInstallationPath = Globals.ProjectInstallationPath.TrimEnd('\\').Substring(0, Globals.ProjectInstallationPath.LastIndexOf('\\'));
 
 				// Prepare this Popup to show it later
-				Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Is: '" + potentialGTAVInstallationPath + "' your GTA V Installation Path?");
 
 				// If our Guess is valid
 				if (LauncherLogic.IsGTAVInstallationPathCorrect(potentialGTAVInstallationPath))
 				{
-					// Ask the User if its correct
+					// Ask the User if its the right path
+					Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Is: '" + potentialGTAVInstallationPath + "' your GTA V Installation Path?");
 					yesno.ShowDialog();
+					if (yesno.DialogResult == true)
+					{
+						Settings.GTAVInstallationPath = potentialGTAVInstallationPath;
+					}
 				}
 
-				// If it is correct
-				if (yesno.DialogResult == true)
+				// If Setting is not correct
+				if (LauncherLogic.IsGTAVInstallationPathCorrect(Settings.GTAVInstallationPath))
 				{
-					// Set Settings
-					Settings.GTAVInstallationPath = potentialGTAVInstallationPath;
+					// Doing some Magic
+					string newPotentialGTAVInstallationPath = LauncherLogic.GetGTAVPathMagic();
+
+					// Ask the User if its the right path
+					Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Is: '" + newPotentialGTAVInstallationPath + "' your GTA V Installation Path?");
+					yesno.ShowDialog();
+					if (yesno.DialogResult == true)
+					{
+						Settings.GTAVInstallationPath = newPotentialGTAVInstallationPath;
+					}
 				}
-				// If it isnt correct
-				else
+
+				// If Setting is STILL not correct
+				if (LauncherLogic.IsGTAVInstallationPathCorrect(Settings.GTAVInstallationPath))
 				{
 					// Ask User for Path
 					string GTAVInstallationPath = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.Folder, "Pick the Folder which contains your GTAV.exe", @"C:\");
@@ -215,7 +228,6 @@ namespace Project_127
 				webClient.DownloadFileCompleted += new AsyncCompletedEventHandler(ZipFileDownloadCompleted);
 				webClient.DownloadFileAsync(new Uri(pathOfNewZip), ZipFileDownloadLocation);
 			}
-
 
 			MyDispatcherTimer = new System.Windows.Threading.DispatcherTimer();
 			MyDispatcherTimer.Tick += new EventHandler(pMW.SetGTAVButtonBasedOnGameAndInstallationState);
