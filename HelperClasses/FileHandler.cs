@@ -213,6 +213,19 @@ namespace Project_127.HelperClasses
 		// Lots of overloaded stuff. Nothing checks for errors, like file permissions or sth.
 
 
+		public static string[] ReadFileEachLine(string pFilePath)
+		{
+			if (doesFileExist(pFilePath))
+			{
+				return File.ReadAllLines(pFilePath);
+			}
+			else
+			{
+				return null;
+			}
+		}
+
+
 		public static string GetXMLTagContent(string pXML, string pTag)
 		{
 			string rtrn = "";

@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -13,8 +14,8 @@ namespace Project_127
 	/// <summary>
 	/// Class for the launching
 	/// </summary>
-    public static class LauncherLogic
-    {
+	public static class LauncherLogic
+	{
 		/// <summary>
 		/// Enum for InstallationStates
 		/// </summary>
@@ -102,7 +103,7 @@ namespace Project_127
 		/// Property of often used variable. (DowngradeFilePath)
 		/// </summary>
 		public static string DowngradeFilePath = Globals.ProjectInstallationPath.TrimEnd('\\') + @"\Project_127_Files\DowngradeFiles\";
-		
+
 		/// <summary>
 		/// Property of often used variable. (SupportFilePath)
 		/// </summary>
@@ -127,7 +128,7 @@ namespace Project_127
 			HelperClasses.Logger.Log("InstallationLocation: " + Globals.ProjectInstallationPath, 1);
 			HelperClasses.Logger.Log("DowngradeFilePath: " + DowngradeFilePath, 1);
 			HelperClasses.Logger.Log("UpgradeFilePath: " + UpgradeFilePath, 1);
-			
+
 			// Those are WITH the "\" at the end
 			string[] FilesInUpgradesFiles = HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(UpgradeFilePath);
 			string[] CorrespondingFilePathInGTALocation = new string[DowngradeFilePath.Length];
@@ -144,7 +145,7 @@ namespace Project_127
 				if (HelperClasses.FileHandling.doesFileExist(CorrespondingFilePathInGTALocation[i]))
 				{
 					// Delete from GTA V Installation Path
-					HelperClasses.Logger.Log("File found in GTA V Installation Path and the Upgrade Folder. Will delete '" + CorrespondingFilePathInGTALocation[i] + "'",1);
+					HelperClasses.Logger.Log("File found in GTA V Installation Path and the Upgrade Folder. Will delete '" + CorrespondingFilePathInGTALocation[i] + "'", 1);
 					HelperClasses.FileHandling.deleteFile(CorrespondingFilePathInGTALocation[i]);
 				}
 
@@ -173,7 +174,7 @@ namespace Project_127
 			KillRelevantProcesses();
 
 			string[] FilesInUpgradeFiles = Directory.GetFiles(UpgradeFilePath, "*", SearchOption.AllDirectories);
-			HelperClasses.Logger.Log("Found " + FilesInUpgradeFiles.Length.ToString() + " Files in Upgrade Folder. Will try to delete them",1);
+			HelperClasses.Logger.Log("Found " + FilesInUpgradeFiles.Length.ToString() + " Files in Upgrade Folder. Will try to delete them", 1);
 			foreach (string myFileName in FilesInUpgradeFiles)
 			{
 				HelperClasses.FileHandling.deleteFile(myFileName);
@@ -221,7 +222,7 @@ namespace Project_127
 					if (HelperClasses.FileHandling.doesFileExist(CorrespondingFilePathInUpgradeFiles[i]))
 					{
 						// Delete from GTA V Installation Path
-						HelperClasses.Logger.Log("Found '" + CorrespondingFilePathInGTALocation[i] + "' in GTA V Installation Path and $UpgradeFiles. Will delelte from GTA V Installation",1);
+						HelperClasses.Logger.Log("Found '" + CorrespondingFilePathInGTALocation[i] + "' in GTA V Installation Path and $UpgradeFiles. Will delelte from GTA V Installation", 1);
 						HelperClasses.FileHandling.deleteFile(CorrespondingFilePathInGTALocation[i]);
 					}
 					else
@@ -241,12 +242,53 @@ namespace Project_127
 			if (Settings.EnableTempFixSteamLaunch)
 			{
 				HelperClasses.Logger.Log("We are in TempFixSteamLaunch and will Mess with social Club installations");
-				HelperClasses.ProcessHandler.StartProcess(SupportFilePath.TrimEnd('\\') + @"\SocialClubNewUninstaller", "", true, true);
+				HelperClasses.ProcessHandler.StartProcess(SupportFilePath.TrimEnd('\\') + @"\SocialClubNewUninstaller.exe", "", true, true);
 				new Popup(Popup.PopupWindowTypes.PopupOk, "Started the Uninstaller of new Social Club.\nClick 'OK' once the Uninstall progress is done").ShowDialog();
-				HelperClasses.ProcessHandler.StartProcess(SupportFilePath.TrimEnd('\\') + @"\SocialClubOldInstaller", "", true, true);
+				HelperClasses.ProcessHandler.StartProcess(SupportFilePath.TrimEnd('\\') + @"\SocialClubOldInstaller.exe", "", true, true);
 				new Popup(Popup.PopupWindowTypes.PopupOk, "Started the Installation of old Social Club.\nClick 'OK' once the Install progress is done").ShowDialog();
 			}
 			HelperClasses.Logger.Log("Done Downgrading");
+		}
+
+
+		public static string GetGTAVPathMagic()
+		{
+			// Get all Lines of that File
+			string[] MyLines = HelperClasses.FileHandling.ReadFileEachLine(Globals.SteamInstallPath.TrimEnd('\\') + @"\steamapps\libraryfolders.vdf");
+			
+			// Loop through those Lines
+			for (int i = 0; i <= MyLines.Length - 1; i++)
+			{
+				// Clear them of Tabs and Spaces
+				MyLines[i] = MyLines[i].Replace("\t", "").Replace(" ", "");
+
+				// String from Regex: #"\d{1,4}""[a-zA-Z\\:]*"# (yes we are matching ", I used # as semicolons for string beginnign and end
+				Regex MyRegex = new Regex("\"\\d{1,4}\"\"[a-zA-Z\\\\:]*\"");
+				Match MyMatch = MyRegex.Match(MyLines[i]);
+
+				// Regex Match them to see if we like them
+				if (MyMatch.Success)
+				{
+					// Do some other stuff to get the actual path from it
+					MyLines[i] = MyLines[i].TrimEnd('"');
+					MyLines[i] = MyLines[i].Substring(MyLines[i].LastIndexOf('"') + 1);
+					MyLines[i] = MyLines[i].Replace(@"\\", @"\");
+					
+					// If the Path contains this file, it is the GTA V Path
+					if (HelperClasses.FileHandling.doesFileExist(MyLines[i].TrimEnd('\\') + @"\steamapps\appmanifest_271590.acf"))
+					{
+						// Build the Path to GTAV
+						MyLines[i] = MyLines[i].TrimEnd('\\') + @"\steamapps\common\Grand Theft Auto V\";
+						
+						// Check if we can find a file from the game
+						if (IsGTAVInstallationPathCorrect(MyLines[i]))
+						{
+							return MyLines[i];
+						}
+					}
+				}
+			}
+			return "";
 		}
 
 		public static void Launch()
@@ -254,7 +296,7 @@ namespace Project_127
 			HelperClasses.Logger.Log("Trying to Launch the game.");
 			if (LauncherLogic.GameState == GameStates.Running)
 			{
-				HelperClasses.Logger.Log("Game deteced running.",1);
+				HelperClasses.Logger.Log("Game deteced running.", 1);
 				Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Game is detected as running.\nDo you want to close it\nand run it again?");
 				yesno.ShowDialog();
 				if (yesno.DialogResult == true)
@@ -299,7 +341,7 @@ namespace Project_127
 				}
 			}
 		}
-	
+
 
 		/// <summary>
 		/// Helper Method which kills all Rockstar / GTA / Social Club Processes
@@ -345,33 +387,33 @@ namespace Project_127
 		//if uninitialized probably just reset settings and restart and let the autosetup do the job, but not for half state
 		//also implement autosetup in checks, what we need to do is: get list of file names from downgrade folder, get files with those names in the gtav root and move them to upgrade folder
 		public static void PerformChecksZCRI()
-        {
-            // CHANGE LOG Log.Information("Checking for user error.");
-            //For now it just checks if it needs the initial setup, wont be handling user errors now i guess those users better be smart and not fuck their files up (unless its my fault, then, actually nevermind its still their fault)
-            bool needsUpgrade = true;
-            foreach (string filePath in Directory.GetFiles($"{Settings.FileFolder}\\Downgrade"))
-            {
-                string fileName = Path.GetFileName(filePath);
-                if (File.Exists($"{Settings.GTAVInstallationPath}\\{fileName}") && (File.GetAttributes($"{Settings.GTAVInstallationPath}\\{fileName}") & FileAttributes.ReparsePoint) != FileAttributes.ReparsePoint)
-                {
-                    // CHANGE LOG Log.Information("File {fileName} needs to be moved, moving it.", fileName);
-                    File.Move($"{Settings.GTAVInstallationPath}\\{fileName}", $"{Settings.FileFolder}\\Upgrade\\{fileName}");
-                    needsUpgrade = true;
-                }
-            }
+		{
+			// CHANGE LOG Log.Information("Checking for user error.");
+			//For now it just checks if it needs the initial setup, wont be handling user errors now i guess those users better be smart and not fuck their files up (unless its my fault, then, actually nevermind its still their fault)
+			bool needsUpgrade = true;
+			foreach (string filePath in Directory.GetFiles($"{Settings.FileFolder}\\Downgrade"))
+			{
+				string fileName = Path.GetFileName(filePath);
+				if (File.Exists($"{Settings.GTAVInstallationPath}\\{fileName}") && (File.GetAttributes($"{Settings.GTAVInstallationPath}\\{fileName}") & FileAttributes.ReparsePoint) != FileAttributes.ReparsePoint)
+				{
+					// CHANGE LOG Log.Information("File {fileName} needs to be moved, moving it.", fileName);
+					File.Move($"{Settings.GTAVInstallationPath}\\{fileName}", $"{Settings.FileFolder}\\Upgrade\\{fileName}");
+					needsUpgrade = true;
+				}
+			}
 
-            foreach (string filePath in Directory.GetFiles($"{Settings.FileFolder}\\Downgrade\\update"))
-            {
-                string fileName = Path.GetFileName(filePath);
-                if (File.Exists($"{Settings.GTAVInstallationPath}\\update\\{fileName}") && (File.GetAttributes($"{Settings.GTAVInstallationPath}\\update\\{fileName}") & FileAttributes.ReparsePoint) != FileAttributes.ReparsePoint)
-                {
-                    // CHANGE LOG Log.Information("File {fileName} needs to be moved, moving it.", fileName);
-                    File.Move($"{Settings.GTAVInstallationPath}\\update\\{fileName}", $"{Settings.FileFolder}\\Upgrade\\update\\{fileName}");
-                    needsUpgrade = true;
-                }
-            }
-            if (needsUpgrade) Upgrade();
-        }
+			foreach (string filePath in Directory.GetFiles($"{Settings.FileFolder}\\Downgrade\\update"))
+			{
+				string fileName = Path.GetFileName(filePath);
+				if (File.Exists($"{Settings.GTAVInstallationPath}\\update\\{fileName}") && (File.GetAttributes($"{Settings.GTAVInstallationPath}\\update\\{fileName}") & FileAttributes.ReparsePoint) != FileAttributes.ReparsePoint)
+				{
+					// CHANGE LOG Log.Information("File {fileName} needs to be moved, moving it.", fileName);
+					File.Move($"{Settings.GTAVInstallationPath}\\update\\{fileName}", $"{Settings.FileFolder}\\Upgrade\\update\\{fileName}");
+					needsUpgrade = true;
+				}
+			}
+			if (needsUpgrade) Upgrade();
+		}
 
 	} // End of Class
 } // End of NameSpace
