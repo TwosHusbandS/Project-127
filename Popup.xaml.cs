@@ -26,7 +26,7 @@ namespace Project_127
 		{
 			PopupYesNo,
 			PopupOk,
-			PopupOkError
+			PopupOkError,
 		}
 
 

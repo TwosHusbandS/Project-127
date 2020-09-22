@@ -250,9 +250,90 @@ namespace Project_127
 			HelperClasses.Logger.Log("Done Downgrading");
 		}
 
+		/// <summary>
+		/// Guessing Game with GTA V Paths. Have 2 ways of detecting it.
+		/// </summary>
+		public static void GTAVPathGuessingGame()
+		{
+			HelperClasses.Logger.Log("Trying to guess GTAV Path");
 
+			// Try to find GTA V installation Path
+			string potentialGTAVInstallationPath = Globals.ProjectInstallationPath.TrimEnd('\\').Substring(0, Globals.ProjectInstallationPath.LastIndexOf('\\'));
+			HelperClasses.Logger.Log("First GTAV Location Guess is: '" + potentialGTAVInstallationPath + "'");
+
+			// If our Guess is valid
+			if (LauncherLogic.IsGTAVInstallationPathCorrect(potentialGTAVInstallationPath))
+			{
+				HelperClasses.Logger.Log("First GTAV Location Guess is valid");
+
+				// Ask the User if its the right path
+				Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Is: '" + potentialGTAVInstallationPath + "' your GTA V Installation Path?");
+				yesno.ShowDialog();
+				if (yesno.DialogResult == true)
+				{
+					Settings.GTAVInstallationPath = potentialGTAVInstallationPath;
+					HelperClasses.Logger.Log("First GTAV guess was chosen by User");
+					return;
+				}
+				HelperClasses.Logger.Log("First GTAV guess was denied by user");
+			}
+
+			// If Setting is not correct
+			if (!(LauncherLogic.IsGTAVInstallationPathCorrect(Settings.GTAVInstallationPath)))
+			{
+				// Doing some Magic
+				string newPotentialGTAVInstallationPath = LauncherLogic.GetGTAVPathMagic();
+				HelperClasses.Logger.Log("Second GTAV Location Guess is: '" + newPotentialGTAVInstallationPath + "'");
+
+				// If that path is correct
+				if (LauncherLogic.IsGTAVInstallationPathCorrect(newPotentialGTAVInstallationPath))
+				{
+					// Ask the User if its the right path
+					HelperClasses.Logger.Log("Second GTAV Location Guess is valid");
+					Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Is: '" + newPotentialGTAVInstallationPath + "' your GTA V Installation Path?");
+					yesno.ShowDialog();
+					if (yesno.DialogResult == true)
+					{
+						Settings.GTAVInstallationPath = newPotentialGTAVInstallationPath;
+						HelperClasses.Logger.Log("Second GTAV guess was chosen by User");
+						return;
+					}
+					HelperClasses.Logger.Log("Second GTAV guess was denied by user");
+				}
+			}
+
+			// If Setting is STILL not correct
+			if (!(LauncherLogic.IsGTAVInstallationPathCorrect(Settings.GTAVInstallationPath)))
+			{
+				// Ask User for Path
+				SetGTAVPathManually();
+			}
+		}
+
+		/// <summary>
+		/// Method to set the GTA V Path manually
+		/// </summary>
+		public static void SetGTAVPathManually()
+		{
+			HelperClasses.Logger.Log("Asking User for GTA V Installation path");
+			string GTAVInstallationPath = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.Folder, "Pick the Folder which contains your GTAV.exe", @"C:\");
+			while (!(LauncherLogic.IsGTAVInstallationPathCorrect(GTAVInstallationPath)))
+			{
+				HelperClasses.Logger.Log("GTA V installation path detected to be faulty. Asking user to try again");
+				new Popup(Popup.PopupWindowTypes.PopupOk, "GTA V Path detected to be faulty. Try again");
+				GTAVInstallationPath = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.Folder, "Pick the Folder which contains your GTAV.exe", @"C:\");
+			}
+			Settings.GTAVInstallationPath = GTAVInstallationPath;
+		}
+
+		/// <summary>
+		/// "Cleanest" way of getting the GTA V Path automatically
+		/// </summary>
+		/// <returns></returns>
 		public static string GetGTAVPathMagic()
 		{
+			HelperClasses.Logger.Log("GTAV Path Magic by steam");
+
 			// Get all Lines of that File
 			string[] MyLines = HelperClasses.FileHandling.ReadFileEachLine(Globals.SteamInstallPath.TrimEnd('\\') + @"\steamapps\libraryfolders.vdf");
 			
@@ -283,14 +364,19 @@ namespace Project_127
 						// Check if we can find a file from the game
 						if (IsGTAVInstallationPathCorrect(MyLines[i]))
 						{
+							HelperClasses.Logger.Log("GTAV Path Magic by steam detected to be: '" + MyLines[i] + "'", 2);
 							return MyLines[i];
 						}
 					}
 				}
 			}
+			HelperClasses.Logger.Log("GTAV Path Magic by steam didnt work", 2);
 			return "";
 		}
 
+		/// <summary>
+		/// This actually launches the game
+		/// </summary>
 		public static void Launch()
 		{
 			HelperClasses.Logger.Log("Trying to Launch the game.");
@@ -319,7 +405,7 @@ namespace Project_127
 				gtav.StartInfo.Arguments = "-applaunch 271590";
 				gtav.Start();
 			}
-			else
+			else if (LauncherLogic.InstallationState == InstallationStates.Downgraded)
 			{
 				HelperClasses.Logger.Log("Installation State Downgraded Detected", 1);
 
@@ -337,7 +423,10 @@ namespace Project_127
 				}
 				else
 				{
-					HelperClasses.Logger.Log("We are not in TempFixSteamLaunch, so we are not running anything since actual launch isnt implemented yet.", 1);
+					// TO DO, Clean this Up, move to ProcessHandler HelperClass
+					HelperClasses.Logger.Log("Launching Downgraded", 1);
+					new Popup(Popup.PopupWindowTypes.PopupOk, "Please double click Test9.bat in GTA V Installation Path").ShowDialog();
+					Process.Start("explorer.exe", GTAVFilePath);
 				}
 			}
 		}
@@ -359,12 +448,15 @@ namespace Project_127
 		/// <returns></returns>
 		public static bool IsGTAVInstallationPathCorrect(string pPath)
 		{
+			HelperClasses.Logger.Log("Trying to see if GTAV Installation Path ('" + pPath + "')",1);
 			if (HelperClasses.FileHandling.doesFileExist(pPath.TrimEnd('\\') + @"\x64a.rpf"))
 			{
+				HelperClasses.Logger.Log("Looks good", 2);
 				return true;
 			}
 			else
 			{
+				HelperClasses.Logger.Log("Looks bad", 2);
 				return false;
 			}
 		}
@@ -378,42 +470,6 @@ namespace Project_127
 			return IsGTAVInstallationPathCorrect(Settings.GTAVInstallationPath);
 		}
 
-		// Havent looked at this yet, but its probably useful.
-
-		//TODO: do checks for user errors, if uninitialized or half state, or whatever, and fix them
-		//case 1: check against 1.27 if every filename of 1.27 folder is a symlink in gtav root, else uninitialized / half state
-		//case 2: check against 1.27 if every filename of 1.27 folder exists in gtav root, else missing symlinks, or nonexistent files
-		//case 3: support files not present in support folder inside data folder, well nothing we can do unless downloading from thing but notify users
-		//if uninitialized probably just reset settings and restart and let the autosetup do the job, but not for half state
-		//also implement autosetup in checks, what we need to do is: get list of file names from downgrade folder, get files with those names in the gtav root and move them to upgrade folder
-		public static void PerformChecksZCRI()
-		{
-			// CHANGE LOG Log.Information("Checking for user error.");
-			//For now it just checks if it needs the initial setup, wont be handling user errors now i guess those users better be smart and not fuck their files up (unless its my fault, then, actually nevermind its still their fault)
-			bool needsUpgrade = true;
-			foreach (string filePath in Directory.GetFiles($"{Settings.FileFolder}\\Downgrade"))
-			{
-				string fileName = Path.GetFileName(filePath);
-				if (File.Exists($"{Settings.GTAVInstallationPath}\\{fileName}") && (File.GetAttributes($"{Settings.GTAVInstallationPath}\\{fileName}") & FileAttributes.ReparsePoint) != FileAttributes.ReparsePoint)
-				{
-					// CHANGE LOG Log.Information("File {fileName} needs to be moved, moving it.", fileName);
-					File.Move($"{Settings.GTAVInstallationPath}\\{fileName}", $"{Settings.FileFolder}\\Upgrade\\{fileName}");
-					needsUpgrade = true;
-				}
-			}
-
-			foreach (string filePath in Directory.GetFiles($"{Settings.FileFolder}\\Downgrade\\update"))
-			{
-				string fileName = Path.GetFileName(filePath);
-				if (File.Exists($"{Settings.GTAVInstallationPath}\\update\\{fileName}") && (File.GetAttributes($"{Settings.GTAVInstallationPath}\\update\\{fileName}") & FileAttributes.ReparsePoint) != FileAttributes.ReparsePoint)
-				{
-					// CHANGE LOG Log.Information("File {fileName} needs to be moved, moving it.", fileName);
-					File.Move($"{Settings.GTAVInstallationPath}\\update\\{fileName}", $"{Settings.FileFolder}\\Upgrade\\update\\{fileName}");
-					needsUpgrade = true;
-				}
-			}
-			if (needsUpgrade) Upgrade();
-		}
 
 	} // End of Class
 } // End of NameSpace

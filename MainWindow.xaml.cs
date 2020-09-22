@@ -19,10 +19,10 @@
 
 Main Documentation:
 Main Client Implementation by "@thS#0305"
-The actual hard lifting of the launching (with fixes) and authentification stuff is achieved by the hardwork of "@dr490n", "@zCri" and "@Special For"
+The actual hard lifting of the launching (with fixes) and authentification stuff is achieved by the hardwork of "@dr490n", "@Special For" and "@zCri"
 Artwork, GUI Design, GUI Behaviour, Colorchoice etc. by "@Hossel"
 
-Version: 0.0.1.7 unreleased
+Version: 0.0.1.8 unreleased
 
 Build Instructions:
 	Add a Reference to all the DLLs inside of \MyDLLs\
@@ -32,8 +32,7 @@ Deploy Instructions:
 	Change Version Number a few Lines Above.
 	Change Version Numbner in both of the last lines in AssemblyInfo.cs
 	Build this program in release
-	Build installer via Innosetup (Script is in \Installer\)
-	Put compiled Installer in \Installer\
+	Build installer via Innosetup (Script is in \Installer\) [Change Version in Version and OutputName]
 	Change Version number and Installer Location in "\Installer\Update.xml"
 	Push Commit to github branch.
 	Merge branch into master
@@ -85,10 +84,14 @@ Main To do:
 	
 	// Implementing these things
 
-	- Implement Popup with Progressbar for Upgrade and ZIP File stuff, to take make the main window unclickable
+	- Gotta Check something...importing zip needs some work I guess...unsure if to overwrite Version.cs when importing via button
+		- at the moment you can not "integrate" a zip file. it overrides everything (including version.txt), apart from "UpgradeFiles" folder
+		- You do have the option to opt out of zip upgrades tho.
+	- Gotta Check something...I think this program might crash if offline because it tries to autoupdate and connect to github...awkward
+
 	- Add A LOT, A LOT, A LOT of logging
 
-	- Implemt other features (SaveFileHandler,all Settings, auto high priority, auto darkviperau steam core fix)
+	- Implemet other features (SaveFileHandler,all Settings, auto high priority, auto darkviperau steam core fix)
 
     - Low Prio:
 		Convert Settings and SaveFileHandler in CustomControls
@@ -196,31 +199,28 @@ namespace Project_127
 			string MyVersionOnlineString = HelperClasses.FileHandling.GetXMLTagContent(new System.Net.Http.HttpClient().GetStringAsync(Globals.URL_AutoUpdate).GetAwaiter().GetResult(), "version");
 			Version MyVersionOnline = new Version(MyVersionOnlineString);
 
+			HelperClasses.Logger.Log("Checking for Update");
+			HelperClasses.Logger.Log("MyVersionOnline = '" + MyVersionOnline.ToString() + "', Globals.ProjectVersion = '" + Globals.ProjectVersion + "'");
+
 			if (MyVersionOnline > Globals.ProjectVersion)
 			{
+				HelperClasses.Logger.Log("Update found");
 				Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Version: '" + MyVersionOnline.ToString() + "' found on the Server.\nVersion: '" + Globals.ProjectVersion.ToString() + "' found installed.\nDo you want to upgrade?");
 				yesno.ShowDialog();
 				if (yesno.DialogResult == true)
 				{
+					HelperClasses.Logger.Log("Update found. User wants it");
 					string DLPath = HelperClasses.FileHandling.GetXMLTagContent(new System.Net.Http.HttpClient().GetStringAsync(Globals.URL_AutoUpdate).GetAwaiter().GetResult(), "url");
 					string DLFilename = DLPath.Substring(DLPath.LastIndexOf('/') + 1);
 					string LocalFileName = Globals.ProjectInstallationPath.TrimEnd('\\') + @"\" + DLFilename;
 
-					WebClient webClient = new WebClient();
-					webClient.DownloadFileCompleted += new AsyncCompletedEventHandler(InstallerDownloadComplete);
-					webClient.DownloadFileAsync(new Uri(DLPath), LocalFileName);
+					new PopupDownload(PopupDownloadTypes.Installer, DLPath, LocalFileName).ShowDialog();
+				}
+				else
+				{
+					HelperClasses.Logger.Log("Update found. User does not wants it");
 				}
 			}
-		}
-
-		private void InstallerDownloadComplete(object sender, AsyncCompletedEventArgs e)
-		{
-			string DLPath = HelperClasses.FileHandling.GetXMLTagContent(new System.Net.Http.HttpClient().GetStringAsync(Globals.URL_AutoUpdate).GetAwaiter().GetResult(), "url");
-			string DLFilename = DLPath.Substring(DLPath.LastIndexOf('/') + 1);
-			string LocalFileName = Globals.ProjectInstallationPath.TrimEnd('\\') + @"\" + DLFilename;
-
-			HelperClasses.ProcessHandler.StartProcess(LocalFileName, "", true, false);
-			this.Close();
 		}
 
 
@@ -276,6 +276,54 @@ namespace Project_127
 			new Popup(Popup.PopupWindowTypes.PopupOk, "Auth not fully implemented yet.\nImage you authed through the\nstuff from dr490n and this\nis why the lock is changing").ShowDialog();
 			SetAuthButtonBackground(Authstatus.Auth);
 
+			//string c1 = Settings.GTAVInstallationPath.Substring(0, 2);
+			//string c2 = "cd " + Settings.GTAVInstallationPath;
+			//string c3 = "start Test9.bat";
+
+			//Process.Start("cmd.exe", "/c " + c1 + " && " + c2 + " && " + c3);
+
+			//HelperClasses.Logger.Log("Dragon is doing some magic. Launching Downgraded GTAV", 1);
+			//Process p = new Process();
+			//p.StartInfo.UseShellExecute = true;
+			////p.StartInfo.FileName = Settings.GTAVInstallationPath.TrimEnd('\\') + @"\PlayGTAV.exe"; ;
+			//p.StartInfo.FileName = Settings.GTAVInstallationPath.TrimEnd('\\') + @"\Test9.bat"; ;
+			//p.StartInfo.Verb = "runas";
+			//p.StartInfo.CreateNoWindow = false;
+			//p.StartInfo.WorkingDirectory = Settings.GTAVInstallationPath.TrimEnd('\\');
+			//p.Start();
+
+
+
+
+
+
+
+
+
+
+
+			//string ZZZGTAVPATH = Settings.GTAVInstallationPath.TrimEnd('\\') + @"\PlayGTAV.exe";
+
+			//Process.Start(@"C:\Program Files\TeamSpeak 3 Client\ts3client_win64.exe");
+
+			//Process p = new Process();
+			//p.StartInfo.UseShellExecute = true;
+			//p.StartInfo.FileName = Settings.GTAVInstallationPath.TrimEnd('\\') + @"\PlayGTAV.exe"; ;
+			//p.StartInfo.CreateNoWindow = true;
+			//p.StartInfo.WorkingDirectory = Settings.GTAVInstallationPath.TrimEnd('\\');
+			//p.Start();
+
+			//Process.Start(Settings.GTAVInstallationPath.TrimEnd('\\') + @"\Test9.bat");
+			//Globals.DebugPopup(Settings.GTAVInstallationPath.TrimEnd('\\') + @"\Test9.bat");
+			//Process.Start(Settings.GTAVInstallationPath.TrimEnd('\\') + @"\Test9.bat");
+			//HelperClasses.ProcessHandler.StartProcess(Settings.GTAVInstallationPath.TrimEnd('\\') + @"\PlayGTAV.exe", "",false,false);
+			//HelperClasses.ProcessHandler.StartProcess(Settings.GTAVInstallationPath.TrimEnd('\\') + @"\Test9.bat", "",false,false);
+
+
+
+
+
+
 			//string msg = "Size of GTAV in Folder: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\GTA5.exe");
 			//msg += "\nSize of Downgraded GTAV: " + LauncherLogic.SizeOfDowngradedGTAV;
 			//msg += "\nSize of update.rpf in Folder: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\update\update.rpf");
@@ -302,6 +350,9 @@ namespace Project_127
 			//		}
 			//	}
 			//}
+
+			//string pathOfNewZip = HelperClasses.FileHandling.GetXMLTagContent(new System.Net.Http.HttpClient().GetStringAsync(Globals.URL_AutoUpdate).GetAwaiter().GetResult(), "zip");
+			//new PopupDownload(PopupDownloadTypes.ZIP, @"https://github.com/TwosHusbandS/Project-127/releases/download/V0/Project_127_Files_V3.zip", Globals.ZipFileDownloadLocation).ShowDialog();
 		}
 
 		/// <summary>
@@ -472,7 +523,8 @@ namespace Project_127
 		/// <param name="e"></param>
 		private void btn_SaveFiles_Click(object sender, RoutedEventArgs e)
 		{
-			(new SaveFileHandler()).Show();
+			new Popup(Popup.PopupWindowTypes.PopupOk, "SaveFileHanlder not fully implemented yet").ShowDialog();
+			// (new SaveFileHandler()).Show();
 		}
 
 		/// <summary>
@@ -508,11 +560,16 @@ namespace Project_127
 		/// <param name="e"></param>
 		private void btn_Readme_Click(object sender, RoutedEventArgs e)
 		{
+			// Check our version of the ZIP File
+			int ZipVersion = 0;
+			Int32.TryParse(HelperClasses.FileHandling.ReadContentOfFile(Globals.ProjectInstallationPath.TrimEnd('\\') + @"\Project_127_Files\Version.txt"), out ZipVersion);
+
+
 			string msg = "You are running Project 1.27";
 			msg += "\nProgram which helps Speedrunners";
 			msg += "\nAnd has a few features";
 			msg += "\nPlaceholder Text";
-			msg += "\n\nVersion: " + Globals.ProjectVersion.ToString();
+			msg += "\n\nZipFileVersion: '" + ZipVersion.ToString() + "'\nVersion: '" + Globals.ProjectVersion.ToString() + "'";
 
 			new Popup(Popup.PopupWindowTypes.PopupOk, msg).ShowDialog();
 		}
