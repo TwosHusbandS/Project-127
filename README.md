@@ -31,6 +31,6 @@ Beta Test Instructions:
 - Start Game (doesnt matter which State) via the Button on the Bottom Left Corner.
 - This is where you guys come into Play. We have not found a consistent way of Launching the Crack for everyone.
 - We have: "PlayGTAV.exe", "Test3Fixed.bat", "Test9.bat", "Test15.bat", "Test17.bat" as way of launching.
-	They can all be launched with and without Admin Rights. Just try around and report back in .
+	They can all be launched with and without Admin Rights. Just try around and report back in https://forms.gle/cQRmKJaZwW7ve6Jg6.
 
-	Hope much of this works, Hope you can use this, Hope we can have some good Data and Findings, and I hope everyone has a good day https://forms.gle/cQRmKJaZwW7ve6Jg6.
+	Hope much of this works, Hope you can use this, Hope we can have some good Data and Findings, and I hope everyone has a good day.
