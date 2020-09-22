@@ -210,8 +210,6 @@
     </Window.Resources>
 
     <Border BorderBrush="{x:Static local:Globals.SE_BorderBrush}" BorderThickness="2">
-        <Border BorderBrush="{x:Static local:Globals.SE_BorderBrush_Inner}" BorderThickness="0" Margin="10" CornerRadius="10">
-
             <Grid x:Name="Grid_Outer">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="40"/>
@@ -237,7 +235,7 @@
                 I only leave this comment so I can feel good after implementing this the proper way
                 -->
 
-                <Border  Grid.Row="1" Margin="10" BorderBrush="OrangeRed" BorderThickness="3">
+            <Border  Grid.Row="1" Margin="10" BorderBrush="{x:Static local:Globals.SE_BorderBrush_Inner}" BorderThickness="3">
                     <ScrollViewer>
                         <StackPanel x:Name="sp_Settings">
                             <Grid x:Name="Grid_Set_GTAVInstallationPath">
@@ -291,7 +289,7 @@
                                 <Label Grid.Row="0" Grid.Column="0" Content="Enable TempFixSteamLaunch"  Style="{StaticResource lbl_Set_Info}" />
                                 <CheckBox Grid.Row="0" Grid.Column="1" x:Name="cb_Set_TempFixSteamLaunch" IsChecked="{Binding Path=EnableTempFixSteamLaunch, Mode=TwoWay}" Style="{StaticResource cb_Set}"/>
                             </Grid>
-                            
+                            <!--
                             <Separator Style="{StaticResource sp_Set}"/>
                             <Grid x:Name="Grid_Set_Preorder">
                                 <Grid.RowDefinitions>
@@ -412,7 +410,7 @@
                                 <Label Grid.Row="1" Grid.Column="0" Content="Current Theme: "  Style="{StaticResource lbl_Set_Info}" />
                                 <Button Grid.Row="1" Grid.Column="1" x:Name="btn_Set_Theme" Click="btn_Set_Theme_Click" Content="{Binding Path=Theme, Mode=TwoWay}" Style="{StaticResource btn_Set}"/>
                             </Grid>
-                           
+                           -->
                         </StackPanel>
                     </ScrollViewer>
                 </Border>
@@ -422,39 +420,4 @@
 
             </Grid>
         </Border>
-    </Border>
 </Window>
-<!--<Label Grid.Row="0" Grid.Column="0" Style="{StaticResource lbl}" Content="GTA V Installation Patch"/>
-                        <Label Grid.Row="0" Grid.Column="1" Style="{StaticResource lbl}" Content="C:\Program Files(x86)\Steam\SteamLibary\common\SteamApps\Grand Theft Auto V\"/>
-                        <Button Grid.Row="0" Grid.Column="2" Style="{StaticResource btn}" Content="Click Me"/>
-
-                        <Label Grid.Row="1" Grid.Column="0" Style="{StaticResource lbl}" Content="Backup - Files - Folder"/>
-                        <Label Grid.Row="1" Grid.Column="1" Style="{StaticResource lbl}" Content="DefaultSettings"/>
-                        <Button Grid.Row="1" Grid.Column="2" Style="{StaticResource btn}" Content="Click Me"/>
-
-                        <Label Grid.Row="2" Grid.Column="0" Style="{StaticResource lbl}" Content="Enable / Use 500k Bonus"/>
-                        <Label Grid.Row="2" Grid.Column="1" Style="{StaticResource lbl}" Content="DefaultSettings"/>
-                        <CheckBox Grid.Row="2" Grid.Column="2"  Style="{StaticResource cb}"/>
-
-                        <Label Grid.Row="2" Grid.Column="0" Style="{StaticResource lbl}" Content="Enable / Use 500k Bonus"/>
-                        <Label Grid.Row="2" Grid.Column="1" Style="{StaticResource lbl}" Content="DefaultSettings"/>
-                        <CheckBox Grid.Row="2" Grid.Column="2"  Style="{StaticResource cb}"/>
-
-                        <Label Grid.Row="3" Grid.Column="0" Style="{StaticResource lbl}" Content="Automatically start Autosplit"/>
-                        <Label Grid.Row="3" Grid.Column="1" Style="{StaticResource lbl}" Content="DefaultSettings"/>
-                        <CheckBox Grid.Row="3" Grid.Column="2"  Style="{StaticResource cb}"/>
-
-                        <Label Grid.Row="4" Grid.Column="0" Style="{StaticResource lbl}" Content="Autosplit Program Location"/>
-                        <Label Grid.Row="4" Grid.Column="1" Style="{StaticResource lbl}" Content="DefaultSettings"/>
-                        <Button Grid.Row="4" Grid.Column="2" Style="{StaticResource btn}" Content="Click Me"/>
-
-                        <Label Grid.Row="5" Grid.Column="0" Style="{StaticResource lbl}" Content="Automatically start Stream"/>
-                        <Label Grid.Row="5" Grid.Column="1" Style="{StaticResource lbl}" Content="DefaultSettings"/>
-                        <CheckBox Grid.Row="5" Grid.Column="2"  Style="{StaticResource cb}"/>
-
-                        <Label Grid.Row="6" Grid.Column="0" Style="{StaticResource lbl}" Content="Stream Program Location"/>
-                        <Label Grid.Row="6" Grid.Column="1" Style="{StaticResource lbl}" Content="DefaultSettings"/>
-                        <Button Grid.Row="6" Grid.Column="2" Style="{StaticResource btn}" Content="Click Me"/>-->
-       
-
-

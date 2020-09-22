@@ -139,6 +139,9 @@
     <Compile Include="Popup.xaml.cs">
       <DependentUpon>Popup.xaml</DependentUpon>
     </Compile>
+    <Compile Include="PopupDownload.xaml.cs">
+      <DependentUpon>PopupDownload.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ROSIntegration.xaml.cs">
       <DependentUpon>ROSIntegration.xaml</DependentUpon>
     </Compile>
@@ -163,6 +166,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Popup.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="PopupDownload.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

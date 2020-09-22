@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Project 1.27"
-#define MyAppVersion "0.0.1.7"
+#define MyAppVersion "0.0.1.8"
 #define MyAppPublisher "Project 1.27 Inc."
 #define MyAppURL "https://github.com/TwosHusbandS/Project-127/blob/master/README.md"
 #define MyAppExeName "Project 1.27.exe"
@@ -25,7 +25,7 @@ AllowNoIcons=yes
 ;PrivilegesRequired=lowest
 PrivilegesRequiredOverridesAllowed=dialog
 OutputDir=C:\Users\ingow\source\repos\Project-127\Installer
-OutputBaseFilename=Project_127_Installer_V_0_0_1_7
+OutputBaseFilename=Project_127_Installer_V_0_0_1_8
 SetupIconFile=C:\Users\ingow\source\repos\Project-127\Artwork\icon.ico
 Compression=lzma
 SolidCompression=yes

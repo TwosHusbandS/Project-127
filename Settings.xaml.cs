@@ -172,6 +172,8 @@ namespace Project_127
 			{
 				Settings.ResetSettings();
 				RefreshGUI();
+				LauncherLogic.SetGTAVPathManually();
+				btn_Set_GTAVInstallationPath.Content = Settings.GTAVInstallationPath;
 			}
 		}
 
@@ -184,21 +186,21 @@ namespace Project_127
 			btn_Set_FileFolder.Content = Settings.FileFolder;
 			cb_Set_EnableLogging.IsChecked = Settings.EnableLogging;
 			cb_Set_TempFixSteamLaunch.IsChecked = Settings.EnableTempFixSteamLaunch;
-			cb_Set_EnablePreOrderBonus.IsChecked = Settings.EnablePreOrderBonus;
-			cb_Set_AutoSetHighPriority.IsChecked = Settings.EnableAutoSetHighPriority;
-			btn_Set_PathFPSLimiter.Content = Settings.PathFPSLimiter;
-			btn_Set_PathLiveSplit.Content = Settings.PathLiveSplit;
-			btn_Set_PathStreamProgram.Content = Settings.PathStreamProgram;
-			btn_Set_PathNohboard.Content = Settings.PathNohboard;
-			btn_Set_JumpScriptKey1.Content = Settings.JumpScriptKey1;
-			btn_Set_JumpScriptKey2.Content = Settings.JumpScriptKey2;
-			btn_Set_Theme.Content = Settings.Theme;
-			cb_Set_EnableAutoStartFPSLimiter.IsChecked = Settings.EnableAutoStartFPSLimiter;
-			cb_Set_EnableAutoStartJumpScript.IsChecked = Settings.EnableAutoStartJumpScript;
-			cb_Set_EnableAutoStartLiveSplit.IsChecked = Settings.EnableAutoStartLiveSplit;
-			cb_Set_EnableAutoStartNohboard.IsChecked = Settings.EnableAutoStartNohboard;
-			cb_Set_EnableAutoStartStreamProgram.IsChecked = Settings.EnableAutoStartStreamProgram;
-			cb_Set_EnableNohboardBurhac.IsChecked = Settings.EnableNohboardBurhac;
+			//cb_Set_EnablePreOrderBonus.IsChecked = Settings.EnablePreOrderBonus;
+			//cb_Set_AutoSetHighPriority.IsChecked = Settings.EnableAutoSetHighPriority;
+			//btn_Set_PathFPSLimiter.Content = Settings.PathFPSLimiter;
+			//btn_Set_PathLiveSplit.Content = Settings.PathLiveSplit;
+			//btn_Set_PathStreamProgram.Content = Settings.PathStreamProgram;
+			//btn_Set_PathNohboard.Content = Settings.PathNohboard;
+			//btn_Set_JumpScriptKey1.Content = Settings.JumpScriptKey1;
+			//btn_Set_JumpScriptKey2.Content = Settings.JumpScriptKey2;
+			//btn_Set_Theme.Content = Settings.Theme;
+			//cb_Set_EnableAutoStartFPSLimiter.IsChecked = Settings.EnableAutoStartFPSLimiter;
+			//cb_Set_EnableAutoStartJumpScript.IsChecked = Settings.EnableAutoStartJumpScript;
+			//cb_Set_EnableAutoStartLiveSplit.IsChecked = Settings.EnableAutoStartLiveSplit;
+			//cb_Set_EnableAutoStartNohboard.IsChecked = Settings.EnableAutoStartNohboard;
+			//cb_Set_EnableAutoStartStreamProgram.IsChecked = Settings.EnableAutoStartStreamProgram;
+			//cb_Set_EnableNohboardBurhac.IsChecked = Settings.EnableNohboardBurhac;
 		}
 
 		// Below are Methods we need to make the behaviour of this nice.
