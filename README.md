@@ -8,6 +8,9 @@ Instructions:
 - Download this installer: 
 	INSTALL THE PROGRAM ON THE SAME DRIVE WHERE GTA V IS INSTALLED. If you want to know why, PM me (@thS#0305)
 	Probably best to install this program inside of the GTAV Installation, but just make sure its on the save drive
+	
+	INSTALL THIS WITH A FULLY UPDATED AND UP TO DATE GTA V.
+	ALSO LAUNCHING THE UPGRADED GAME FOR NOW, ONLY WORKS WITH STEAM. YOU CAN MANUALLY START IT VIA ROCKSTAR THO.
 - Windows 10 Checks all Files for Virus if they are run for the first time. 
 	If you open a file (Installer or Program) and the file doesnt appear to be running, just wait 20 seconds.
 	Should open within that timeframe. 
