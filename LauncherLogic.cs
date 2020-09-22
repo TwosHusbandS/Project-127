@@ -425,7 +425,7 @@ namespace Project_127
 				{
 					// TO DO, Clean this Up, move to ProcessHandler HelperClass
 					HelperClasses.Logger.Log("Launching Downgraded", 1);
-					new Popup(Popup.PopupWindowTypes.PopupOk, "Please double click Test9.bat in GTA V Installation Path").ShowDialog();
+					new Popup(Popup.PopupWindowTypes.PopupOk, "This is where we need your help. Try to find out which Launch Method works for you. There is:\nPlayGTAV.exe\nTest3Fixed.bat\nTest9.bat\nTest15.bat\nTest17.bat\nand even more. Try all of them with and without starting as admin.\n Then report back on:\n").ShowDialog();
 					Process.Start("explorer.exe", GTAVFilePath);
 				}
 			}

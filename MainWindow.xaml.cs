@@ -8,10 +8,9 @@
 	- Install Program (preferably on the same Drive where your GTA is installed.
 						Optimally inside the GTAV Installation Folder)
 	- Click the hamburger Icon in the top left. Then click "Import ZIP" and select the ZIP File downloaded above (wait until you get the popup confirming its done)
-	- ENABLE "TempFixSteamLaunch" IN SETTINGS
 	- Game automatically detects if the installation is upgraded or downgraded 
 	- If upgrading / downgrading doesnt yield good results...validate files via Steam, then click "Repair". Should fix most issues.
-	- If something is still not working, please uninstall the program via control panel, run "Project_127_cleanup.bat" AS ADMINISTRATOR, re-install again.
+	- If something is still not working, please uninstall the program via control panel, run ".bat" AS ADMINISTRATOR, re-install again.
 	- If something is still not working, please include the file "AAA - Logfile.log" when reporting the bug
 
 ##########################
@@ -22,7 +21,7 @@ Main Client Implementation by "@thS#0305"
 The actual hard lifting of the launching (with fixes) and authentification stuff is achieved by the hardwork of "@dr490n", "@Special For" and "@zCri"
 Artwork, GUI Design, GUI Behaviour, Colorchoice etc. by "@Hossel"
 
-Version: 0.0.1.8 unreleased
+Version: 0.0.1.9 unreleased
 
 Build Instructions:
 	Add a Reference to all the DLLs inside of \MyDLLs\
@@ -74,22 +73,10 @@ General Comments and things one should be aware of (still finishing this list)
 	BetaMode is hardcoded in Globals.cs
 
 Main To do:
-	- Wrote some getting ZIP Files (latest) from github xml and unpacking and deleting and everything, with version-check of zip file
-	- Also wrote custom auto updater, also wrote deleting files called installer from InstallationPath because of it.
-	- Also wrote uninstaller / cleanup and put installation path in settings because of it.
-	- Also getting all URLs based off of the Update URL which contains all other Links
-	- Wrote Updating Settings GUI on Reset etc.
-	
-	^ Test that
-	
-	// Implementing these things
-
 	- Gotta Check something...importing zip needs some work I guess...unsure if to overwrite Version.cs when importing via button
 		- at the moment you can not "integrate" a zip file. it overrides everything (including version.txt), apart from "UpgradeFiles" folder
 		- You do have the option to opt out of zip upgrades tho.
 	- Gotta Check something...I think this program might crash if offline because it tries to autoupdate and connect to github...awkward
-
-	- Add A LOT, A LOT, A LOT of logging
 
 	- Implemet other features (SaveFileHandler,all Settings, auto high priority, auto darkviperau steam core fix)
 
