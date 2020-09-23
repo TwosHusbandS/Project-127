@@ -177,6 +177,7 @@ namespace Project_127
 			HelperClasses.Logger.Log("Found " + FilesInUpgradeFiles.Length.ToString() + " Files in Upgrade Folder. Will try to delete them", 1);
 			foreach (string myFileName in FilesInUpgradeFiles)
 			{
+				HelperClasses.Logger.Log("Deleting '" + myFileName + "' from $Upgrade Folder", 2);
 				HelperClasses.FileHandling.deleteFile(myFileName);
 			}
 
@@ -255,16 +256,16 @@ namespace Project_127
 		/// </summary>
 		public static void GTAVPathGuessingGame()
 		{
-			HelperClasses.Logger.Log("Trying to guess GTAV Path");
+			HelperClasses.Logger.Log("Playing the GTAV Guessing Game");
 
 			// Try to find GTA V installation Path
 			string potentialGTAVInstallationPath = Globals.ProjectInstallationPath.TrimEnd('\\').Substring(0, Globals.ProjectInstallationPath.LastIndexOf('\\'));
 			HelperClasses.Logger.Log("First GTAV Location Guess is: '" + potentialGTAVInstallationPath + "'");
 
 			// If our Guess is valid
-			if (LauncherLogic.IsGTAVInstallationPathCorrect(potentialGTAVInstallationPath))
+			if (LauncherLogic.IsGTAVInstallationPathCorrect(potentialGTAVInstallationPath, false))
 			{
-				HelperClasses.Logger.Log("First GTAV Location Guess is valid");
+				HelperClasses.Logger.Log("First GTAV Location Guess is theoretical valid");
 
 				// Ask the User if its the right path
 				Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Is: '" + potentialGTAVInstallationPath + "' your GTA V Installation Path?");
@@ -272,42 +273,57 @@ namespace Project_127
 				if (yesno.DialogResult == true)
 				{
 					Settings.GTAVInstallationPath = potentialGTAVInstallationPath;
-					HelperClasses.Logger.Log("First GTAV guess was chosen by User");
+					HelperClasses.Logger.Log("First GTAV guess was picked by User");
 					return;
 				}
-				HelperClasses.Logger.Log("First GTAV guess was denied by user");
+				HelperClasses.Logger.Log("First GTAV guess was NOT picked by User");
+			}
+			else
+			{
+				HelperClasses.Logger.Log("First GTAV Location Guess is NOT theoretical valid");
 			}
 
-			// If Setting is not correct
-			if (!(LauncherLogic.IsGTAVInstallationPathCorrect(Settings.GTAVInstallationPath)))
+			// If Setting is not correct, we need to guess more. Settings would have been set my code above.
+			if (!(LauncherLogic.IsGTAVInstallationPathCorrect(Settings.GTAVInstallationPath, false)))
 			{
+				HelperClasses.Logger.Log("Settings.GTAVInstallationPath is not a valid GTA V Installation Path. Will do second guess now.");
+
 				// Doing some Magic
 				string newPotentialGTAVInstallationPath = LauncherLogic.GetGTAVPathMagic();
 				HelperClasses.Logger.Log("Second GTAV Location Guess is: '" + newPotentialGTAVInstallationPath + "'");
 
 				// If that path is correct
-				if (LauncherLogic.IsGTAVInstallationPathCorrect(newPotentialGTAVInstallationPath))
+				if (LauncherLogic.IsGTAVInstallationPathCorrect(newPotentialGTAVInstallationPath, false))
 				{
 					// Ask the User if its the right path
-					HelperClasses.Logger.Log("Second GTAV Location Guess is valid");
+					HelperClasses.Logger.Log("Second GTAV Location Guess is theoretical valid");
 					Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Is: '" + newPotentialGTAVInstallationPath + "' your GTA V Installation Path?");
 					yesno.ShowDialog();
 					if (yesno.DialogResult == true)
 					{
 						Settings.GTAVInstallationPath = newPotentialGTAVInstallationPath;
-						HelperClasses.Logger.Log("Second GTAV guess was chosen by User");
+						HelperClasses.Logger.Log("Second GTAV guess was picked by User");
 						return;
 					}
-					HelperClasses.Logger.Log("Second GTAV guess was denied by user");
+					HelperClasses.Logger.Log("Second GTAV guess was NOT picked by User");
+				}
+				else
+				{
+					HelperClasses.Logger.Log("Second GTAV Location Guess is NOT theoretical valid");
 				}
 			}
 
 			// If Setting is STILL not correct
-			if (!(LauncherLogic.IsGTAVInstallationPathCorrect(Settings.GTAVInstallationPath)))
+			if (!(LauncherLogic.IsGTAVInstallationPathCorrect(Settings.GTAVInstallationPath, false)))
 			{
+				// Log
+				HelperClasses.Logger.Log("After two guesses we still dont have the correct GTAVInstallationPath. User has to do it manually now.");
+
 				// Ask User for Path
 				SetGTAVPathManually();
 			}
+
+			HelperClasses.Logger.Log("End of GTAVPathGuessingGame");
 		}
 
 		/// <summary>
@@ -316,14 +332,17 @@ namespace Project_127
 		public static void SetGTAVPathManually()
 		{
 			HelperClasses.Logger.Log("Asking User for GTA V Installation path");
-			string GTAVInstallationPath = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.Folder, "Pick the Folder which contains your GTAV.exe", @"C:\");
-			while (!(LauncherLogic.IsGTAVInstallationPathCorrect(GTAVInstallationPath)))
+			string GTAVInstallationPathUserChoice = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.Folder, "Pick the Folder which contains your GTAV.exe", @"C:\");
+			HelperClasses.Logger.Log("Users picked path is: '" + GTAVInstallationPathUserChoice + "'");
+			while (!(LauncherLogic.IsGTAVInstallationPathCorrect(GTAVInstallationPathUserChoice, false)))
 			{
-				HelperClasses.Logger.Log("GTA V installation path detected to be faulty. Asking user to try again");
+				HelperClasses.Logger.Log("Users picked path detected to be faulty. Asking user to try again");
 				new Popup(Popup.PopupWindowTypes.PopupOk, "GTA V Path detected to be faulty. Try again");
-				GTAVInstallationPath = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.Folder, "Pick the Folder which contains your GTAV.exe", @"C:\");
+				GTAVInstallationPathUserChoice = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.Folder, "Pick the Folder which contains your GTAV.exe", @"C:\");
+				HelperClasses.Logger.Log("New Users picked path is: '" + GTAVInstallationPathUserChoice + "'");
 			}
-			Settings.GTAVInstallationPath = GTAVInstallationPath;
+			HelperClasses.Logger.Log("Picked path '" + GTAVInstallationPathUserChoice + "'´is valid and will be set as Settings.GTAVInstallationPath.");
+			Settings.GTAVInstallationPath = GTAVInstallationPathUserChoice;
 		}
 
 		/// <summary>
@@ -332,11 +351,11 @@ namespace Project_127
 		/// <returns></returns>
 		public static string GetGTAVPathMagic()
 		{
-			HelperClasses.Logger.Log("GTAV Path Magic by steam");
+			HelperClasses.Logger.Log("GTAV Path Magic by steam", 2);
 
 			// Get all Lines of that File
 			string[] MyLines = HelperClasses.FileHandling.ReadFileEachLine(Globals.SteamInstallPath.TrimEnd('\\') + @"\steamapps\libraryfolders.vdf");
-			
+
 			// Loop through those Lines
 			for (int i = 0; i <= MyLines.Length - 1; i++)
 			{
@@ -354,23 +373,23 @@ namespace Project_127
 					MyLines[i] = MyLines[i].TrimEnd('"');
 					MyLines[i] = MyLines[i].Substring(MyLines[i].LastIndexOf('"') + 1);
 					MyLines[i] = MyLines[i].Replace(@"\\", @"\");
-					
+
 					// If the Path contains this file, it is the GTA V Path
 					if (HelperClasses.FileHandling.doesFileExist(MyLines[i].TrimEnd('\\') + @"\steamapps\appmanifest_271590.acf"))
 					{
 						// Build the Path to GTAV
 						MyLines[i] = MyLines[i].TrimEnd('\\') + @"\steamapps\common\Grand Theft Auto V\";
-						
+
 						// Check if we can find a file from the game
 						if (IsGTAVInstallationPathCorrect(MyLines[i]))
 						{
-							HelperClasses.Logger.Log("GTAV Path Magic by steam detected to be: '" + MyLines[i] + "'", 2);
+							HelperClasses.Logger.Log("GTAV Path Magic by steam detected to be: '" + MyLines[i] + "'", 3);
 							return MyLines[i];
 						}
 					}
 				}
 			}
-			HelperClasses.Logger.Log("GTAV Path Magic by steam didnt work", 2);
+			HelperClasses.Logger.Log("GTAV Path Magic by steam didnt work", 3);
 			return "";
 		}
 
@@ -425,8 +444,10 @@ namespace Project_127
 				{
 					// TO DO, Clean this Up, move to ProcessHandler HelperClass
 					HelperClasses.Logger.Log("Launching Downgraded", 1);
-					new Popup(Popup.PopupWindowTypes.PopupOk, "This is where we need your help. Try to find out which Launch Method works for you. There is:\nPlayGTAV.exe\nTest3Fixed.bat\nTest9.bat\nTest15.bat\nTest17.bat\nand even more. Try all of them with and without starting as admin.\n Then report back on:\n").ShowDialog();
-					Process.Start("explorer.exe", GTAVFilePath);
+					Process p = new Process();
+					p.StartInfo.FileName = Settings.GTAVInstallationPath.TrimEnd('\\') + @"\PlayGTAV.exe";
+					p.StartInfo.WorkingDirectory = @"F:\SteamLibrary\steamapps\common\Grand Theft Auto V\";
+					p.Start();
 				}
 			}
 		}
@@ -446,17 +467,17 @@ namespace Project_127
 		/// </summary>
 		/// <param name="pPath"></param>
 		/// <returns></returns>
-		public static bool IsGTAVInstallationPathCorrect(string pPath)
+		public static bool IsGTAVInstallationPathCorrect(string pPath, bool pLogThis = true)
 		{
-			HelperClasses.Logger.Log("Trying to see if GTAV Installation Path ('" + pPath + "')",1);
+			if (pLogThis) { HelperClasses.Logger.Log("Trying to see if GTAV Installation Path ('" + pPath + "') is a theoretical valid Path", 3); }
 			if (HelperClasses.FileHandling.doesFileExist(pPath.TrimEnd('\\') + @"\x64a.rpf"))
 			{
-				HelperClasses.Logger.Log("Looks good", 2);
+				if (pLogThis) { HelperClasses.Logger.Log("It is", 4); }
 				return true;
 			}
 			else
 			{
-				HelperClasses.Logger.Log("Looks bad", 2);
+				if (pLogThis) { HelperClasses.Logger.Log("It is not", 4); }
 				return false;
 			}
 		}

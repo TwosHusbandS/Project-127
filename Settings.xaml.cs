@@ -45,12 +45,16 @@ namespace Project_127
 			GTAVInstallationPath = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.Folder, "Pick the Folder which contains your GTAV.exe", @"C:\");
 			if (LauncherLogic.IsGTAVInstallationPathCorrect(GTAVInstallationPath))
 			{
+				HelperClasses.Logger.Log("Choosen Path of Set_GTAVInstallationPath Button is theoretical valid. Changing Settings");
 				Settings.GTAVInstallationPath = GTAVInstallationPath;
 			}
 			else
 			{
+				HelperClasses.Logger.Log("Choosen Path of Set_GTAVInstallationPath Button is theoretical INVALID. NOT Changing Settings");
 				new Popup(Popup.PopupWindowTypes.PopupOk, "GTA V Path detected to be wrong. Settings will not change").ShowDialog();
 			}
+
+			// This just updates the button content
 			btn_Set_GTAVInstallationPath.Content = Settings.GTAVInstallationPath;
 		}
 
@@ -170,10 +174,12 @@ namespace Project_127
 			yesno.ShowDialog();
 			if (yesno.DialogResult == true)
 			{
+				HelperClasses.Logger.Log("Resetting Settings STARTED, this will explain the following messages");
 				Settings.ResetSettings();
 				RefreshGUI();
-				LauncherLogic.SetGTAVPathManually();
+				LauncherLogic.GTAVPathGuessingGame();
 				btn_Set_GTAVInstallationPath.Content = Settings.GTAVInstallationPath;
+				HelperClasses.Logger.Log("Resetting Settings DONE");
 			}
 		}
 

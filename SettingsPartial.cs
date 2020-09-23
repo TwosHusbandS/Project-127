@@ -23,11 +23,12 @@ namespace Project_127
 			HelperClasses.Logger.Log("Initiating Regedit Setup Part of Settings", true, 1);
 
 			// Writes our Settings (Copy of DefaultSettings) to Registry if the Value does not exist.
+			HelperClasses.Logger.Log("Writing MySettings (at this point a copy of MyDefaultSettings to the Regedit if the Value doesnt exist", true, 1);
 			foreach (KeyValuePair<string, string> KVP in Globals.MySettings)
 			{
 				if (!(HelperClasses.RegeditHandler.DoesValueExists(KVP.Key)))
 				{
-					HelperClasses.Logger.Log("We had to write " + KVP.Key.ToString() + " to the Registry", true, 2);
+					HelperClasses.Logger.Log("Writing '" + KVP.Key.ToString() + "' to the Registry (Value: '" + KVP.Value.ToString() + "') as a Part of Initiating Settings.", true, 2);
 					HelperClasses.RegeditHandler.SetValue(KVP.Key, KVP.Value);
 				}
 			}
@@ -39,11 +40,11 @@ namespace Project_127
 
 			if (Settings.EnableLogging)
 			{
-			HelperClasses.Logger.Log("Settings initiated. Will continue Logging.", true, 0);
+			HelperClasses.Logger.Log("Settings initiated and loaded. Will continue Logging.", true, 0);
 			}
 			else
 			{
-			HelperClasses.Logger.Log("Settings initiated. Will stop Logging", true, 0);
+			HelperClasses.Logger.Log("Settings initiated and loaded. Will stop Logging", true, 0);
 			}
 		}
 
@@ -52,7 +53,7 @@ namespace Project_127
 		/// </summary>
 		/// <param name="pKey"></param>
 		/// <returns></returns>
-		private static string GetSetting(string pKey)
+		public static string GetSetting(string pKey)
 		{
 			return Globals.MySettings[pKey];
 		}
@@ -62,7 +63,7 @@ namespace Project_127
 		/// </summary>
 		/// <param name="pKey"></param>
 		/// <param name="pValue"></param>
-		private static void SetSetting(string pKey, string pValue)
+		public static void SetSetting(string pKey, string pValue)
 		{
 			HelperClasses.Logger.Log("Changing Setting '" + pKey + "' to '" + pValue + "'");
 			try

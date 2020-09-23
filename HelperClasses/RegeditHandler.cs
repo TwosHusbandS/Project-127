@@ -135,7 +135,9 @@ namespace Project_127.HelperClasses
 		{
 			try
 			{
-				return (!(String.IsNullOrEmpty(GetValue(pRKey, pValue))));
+				// Not using our custom GetValue Method so that this does not show up in logs...
+				string val = pRKey.GetValue(pValue).ToString();
+				return (!(String.IsNullOrEmpty(val)));
 			}
 			catch
 			{

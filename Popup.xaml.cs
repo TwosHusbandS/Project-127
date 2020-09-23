@@ -61,37 +61,50 @@ namespace Project_127
 			// If its a "OK" Window:
 			if (pPopupWindowType.ToString().Contains("PopupOk"))
             {
+				// Creates Button
                 Button myButtonOk = new Button();
                 myButtonOk.Content = "Ok";
                 myButtonOk.Style = Resources["btn"] as Style;
                 myButtonOk.Click += btn_Ok_Click;
+
+				// Adds it to the Grid
                 myGrid.Children.Add(myButtonOk);
                 Grid.SetColumn(myButtonOk, 0);
                 Grid.SetColumnSpan(myButtonOk, 2);
                 Grid.SetRow(myButtonOk, 1);
-                myButtonOk.Focus();
+
+				// Focusing the "Ok" Button so you can just hit "Space" or "Enter" to trigger the Click event
+				myButtonOk.Focus();
             }
 			// If its a "Yes/No" Window:
             else if (pPopupWindowType == Popup.PopupWindowTypes.PopupYesNo)
             {
+				// Creating the "Yes" Button
                 Button myButtonYes = new Button();
                 myButtonYes.Content = "Yes";
                 myButtonYes.Style = Resources["btn"] as Style;
                 myButtonYes.Click += btn_Yes_Click;
+
+				// Adding it to the Grid
                 myGrid.Children.Add(myButtonYes);
                 Grid.SetColumn(myButtonYes, 0);
                 Grid.SetRow(myButtonYes, 1);
-                myButtonYes.Focus();
 
+				// Creating the "No" Button
                 Button myButtonNo = new Button();
                 myButtonNo.Content = "No";
                 myButtonNo.Style = Resources["btn"] as Style;
                 myButtonNo.Click += btn_No_Click;
-                myGrid.Children.Add(myButtonNo);
+
+				// Adding it to the Grid
+				myGrid.Children.Add(myButtonNo);
                 Grid.SetColumn(myButtonNo, 1);
                 Grid.SetRow(myButtonNo, 1);
-            }
-        }
+
+				// Focusing the "Yes" Button so you can just hit "Space" or "Enter" to trigger the Click event
+				myButtonYes.Focus();
+			}
+		}
 
 
         /// <summary>
