@@ -118,7 +118,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Resources;
 using System.Windows.Shapes;
-using AutoUpdaterDotNET;
+//using AutoUpdaterDotNET;
 using System.IO.Compression;
 using Microsoft.Win32;
 using System.Xml;
