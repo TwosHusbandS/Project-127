@@ -220,45 +220,7 @@ static uint64_t BigLongLong(uint64_t val)
     return (val << 32) | (val >> 32);
 }
 
-/*class EntitlementBlock
-{
-public:
-    static std::shared_ptr<EntitlementBlock> Read(const uint8_t* buffer, const uint8_t* rsaPubKey = nullptr);
 
-public:
-    inline uint64_t GetRockstarId() const
-    {
-        return m_rockstarId;
-    }
-
-    inline const std::string& GetMachineHash() const
-    {
-        return m_machineHash;
-    }
-
-    inline const std::string& GetXml() const
-    {
-        return m_xml;
-    }
-
-    inline time_t GetExpirationDate() const
-    {
-        return m_date;
-    }
-
-    inline bool IsValid() const
-    {
-        return m_valid;
-    }
-
-private:
-    uint64_t m_rockstarId;
-    std::string m_machineHash;
-    std::string m_xml;
-    time_t m_date;
-    bool m_valid;
-};
-*/
 
 // This is an example of an exported function.
 extern "C" ENTITLEMENTDECRYPT_API bool fnEntitlementDecrypt(uint8_t * in, int len)
