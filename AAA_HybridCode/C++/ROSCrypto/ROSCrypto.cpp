@@ -12,7 +12,7 @@
 #include "pch.h"
 #include "framework.h"
 #include <stdint.h>
-#include "EntitlementDecrypt.h"
+#include "ROSCrypto.h"
 #include <vector>
 #include <botan/block_cipher.h>
 #include <botan/cbc.h>
@@ -223,7 +223,7 @@ static uint64_t BigLongLong(uint64_t val)
 
 
 // This is an example of an exported function.
-extern "C" ENTITLEMENTDECRYPT_API bool fnEntitlementDecrypt(uint8_t * in, int len)
+extern "C" ROSCRYPTO_API bool fnEntitlementDecrypt(uint8_t * in, int len)
 {
     Botan::secure_vector<uint8_t> blob(in, in + len);
     auto cbc = new Botan::CBC_Decryption(new EntitlementBlockCipher(), new Botan::Null_Padding());
@@ -243,3 +243,5 @@ extern "C" ENTITLEMENTDECRYPT_API bool fnEntitlementDecrypt(uint8_t * in, int le
 
     return true;
 }
+
+//extern "C" ROSCRYPTO_API void 

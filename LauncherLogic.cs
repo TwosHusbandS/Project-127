@@ -334,7 +334,7 @@ namespace Project_127
 			HelperClasses.Logger.Log("Asking User for GTA V Installation path");
 			string GTAVInstallationPathUserChoice = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.Folder, "Pick the Folder which contains your GTAV.exe", @"C:\");
 			HelperClasses.Logger.Log("Users picked path is: '" + GTAVInstallationPathUserChoice + "'");
-			while (!(LauncherLogic.IsGTAVInstallationPathCorrect(GTAVInstallationPathUserChoice, false)))
+			//while (!(LauncherLogic.IsGTAVInstallationPathCorrect(GTAVInstallationPathUserChoice, false)))
 			{
 				HelperClasses.Logger.Log("Users picked path detected to be faulty. Asking user to try again");
 				new Popup(Popup.PopupWindowTypes.PopupOk, "GTA V Path detected to be faulty. Try again");

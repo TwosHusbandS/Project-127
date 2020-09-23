@@ -227,12 +227,12 @@ style.appendChild(document.createTextNode(css));
                     });
                 }
             }
-            else if (message[0] == "signin")
+            else if (message[0] == "signin") //if this is called, we have a valid login
             {
                 //login(message[1]);
                 var json = new System.Web.Script.Serialization.JavaScriptSerializer();
                 var jsond = json.Deserialize<Dictionary<String, String>>(message[1]);
-
+                MessageBox.Show(message[1]);
                 var uexml = jsond["XMLResponse"];
                 var xmls = System.Net.WebUtility.UrlDecode(uexml);
                 XPathDocument xml = new XPathDocument(new StringReader(xmls));

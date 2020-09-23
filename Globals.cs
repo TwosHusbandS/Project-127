@@ -163,7 +163,7 @@ namespace Project_127
 
 			// Check if GTA V Folder is correct
 			HelperClasses.Logger.Log("While Loop during intitial start-up to make sure GTAV Path is valid");
-			while (!LauncherLogic.IsGTAVInstallationPathCorrect(Settings.GTAVInstallationPath))
+			//while (!LauncherLogic.IsGTAVInstallationPathCorrect(Settings.GTAVInstallationPath))
 			{
 				new Popup(Popup.PopupWindowTypes.PopupOk, "GTA V Installation Path detected to be wrong. Please choose a new one").ShowDialog();
 
