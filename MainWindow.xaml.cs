@@ -21,10 +21,9 @@ Main Client Implementation by "@thS#0305"
 The actual hard lifting of the launching (with fixes) and authentification stuff is achieved by the hardwork of "@dr490n", "@Special For" and "@zCri"
 Artwork, GUI Design, GUI Behaviour, Colorchoice etc. by "@Hossel"
 
-Version: 0.0.2.0 unreleased
+Version: 0.0.2.1 Closed Beta
 
 Build Instructions:
-	Add a Reference to all the DLLs inside of \MyDLLs\
 	Press CTRLF + F5
 
 Deploy Instructions:
@@ -87,8 +86,13 @@ Main To do:
 		Own FPS Limiter
 
 	- AAAA
-		Was in the middle of making this shit not crash when github is unreachable. Will need to work on that. Not done.
-		Just pushing "hotfix" to make this work with new zip file.
+		- Was in the middle of making this shit not crash when github is unreachable. Will need to work on that. Not done.
+		 Just pushing "hotfix" to make this work with new zip file.
+
+		- Work on Loop crashing for some people. Maybe max limit 3 or something
+
+		
+
 
 Weird Beta Reportings:
 	- Reloe double GTAV Location check on firstlaunch 
@@ -96,6 +100,9 @@ Weird Beta Reportings:
 		// Changed in what order functions are called
 		// and am doing more detailed logging.
 		// Shouldnt happen again, or if it does we will know why.
+
+	- Multiple People reporting looping asking for GTAV Path. 
+		// Probably has to do with the Method which checks if GTAV Patch is valid
 */
 
 using System;
@@ -118,7 +125,6 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Resources;
 using System.Windows.Shapes;
-//using AutoUpdaterDotNET;
 using System.IO.Compression;
 using Microsoft.Win32;
 using System.Xml;
@@ -134,14 +140,7 @@ namespace Project_127
 	/// </summary>
 	public partial class MainWindow : Window
 	{
-		/// <summary>
-		/// Enum we use to change the Auth Button Image (lock)
-		/// </summary>
-		enum Authstatus
-		{
-			NotAuth = 0,
-			Auth = 1
-		}
+
 
 		/// <summary>
 		/// Constructor of Main Window
@@ -184,8 +183,10 @@ namespace Project_127
 			this.GridHamburgerOuter.Visibility = Visibility.Hidden;
 			this.btn_Auth.Visibility = Visibility.Hidden;
 
-			// Set Image of Auth Button in top right corner.
-			SetAuthButtonBackground(Authstatus.NotAuth);
+			// Set Image of Buttons
+			SetButtonMouseOverMagic(btn_Auth, false);
+			SetButtonMouseOverMagic(btn_Exit, false);
+			SetButtonMouseOverMagic(btn_Hamburger, false);
 
 			// Auto Updater
 			CheckForUpdate();
@@ -206,7 +207,7 @@ namespace Project_127
 
 				// Logging some stuff
 				HelperClasses.Logger.Log("Checking for Project 1.27 Update during start up procedure");
-				HelperClasses.Logger.Log("MyVersionOnline = '" + MyVersionOnline.ToString() + "', Globals.ProjectVersion = '" + Globals.ProjectVersion + "'",1);
+				HelperClasses.Logger.Log("MyVersionOnline = '" + MyVersionOnline.ToString() + "', Globals.ProjectVersion = '" + Globals.ProjectVersion + "'", 1);
 
 				// If Online Version is "bigger" than our own local Version
 				if (MyVersionOnline > Globals.ProjectVersion)
@@ -219,7 +220,7 @@ namespace Project_127
 					if (yesno.DialogResult == true)
 					{
 						// User wants Update
-						HelperClasses.Logger.Log("Update found. User wants it",1);
+						HelperClasses.Logger.Log("Update found. User wants it", 1);
 						string DLPath = HelperClasses.FileHandling.GetXMLTagContent(HelperClasses.FileHandling.GetStringFromURL(Globals.URL_AutoUpdate), "url");
 						string DLFilename = DLPath.Substring(DLPath.LastIndexOf('/') + 1);
 						string LocalFileName = Globals.ProjectInstallationPath.TrimEnd('\\') + @"\" + DLFilename;
@@ -229,7 +230,7 @@ namespace Project_127
 					else
 					{
 						// User doesnt want update
-						HelperClasses.Logger.Log("Update found. User does not wants it",1);
+						HelperClasses.Logger.Log("Update found. User does not wants it", 1);
 					}
 				}
 				else
@@ -295,7 +296,16 @@ namespace Project_127
 		/// <param name="e"></param>
 		private void btn_Auth_Click(object sender, RoutedEventArgs e)
 		{
-			//new Popup(Popup.PopupWindowTypes.PopupOk, "Auth not fully implemented yet.\nImage you authed through the\nstuff from dr490n and this\nis why the lock is changing").ShowDialog();
+			new Popup(Popup.PopupWindowTypes.PopupOk, "Auth not fully implemented yet.\nImage you authed through the\nstuff from dr490n and this\nis why the lock is changing").ShowDialog();
+			if (LauncherLogic.AuthState == LauncherLogic.Authstates.Auth)
+			{
+				LauncherLogic.AuthState = LauncherLogic.Authstates.NotAuth;
+			}
+			else
+			{
+				LauncherLogic.AuthState = LauncherLogic.Authstates.Auth;
+			}
+			SetButtonMouseOverMagic(btn_Auth, true);
 			//SetAuthButtonBackground(Authstatus.Auth);
 
 			//string c1 = Settings.GTAVInstallationPath.Substring(0, 2);
@@ -651,70 +661,25 @@ namespace Project_127
 
 		public void SetGTAVButtonBasedOnGameAndInstallationState(object sender, EventArgs e) // Gets called every DispatcherTimer_Tick. Just starts the read function.
 		{
+			if (LauncherLogic.InstallationState == LauncherLogic.InstallationStates.Downgraded)
+			{
+				btn_GTA.Content = "Launch GTA V\n   Downgraded";
+			}
+			else
+			{
+				btn_GTA.Content = "Launch GTA V\n   Upgraded";
+			}
+
 			if (LauncherLogic.GameState == LauncherLogic.GameStates.Running)
 			{
 				btn_GTA.BorderBrush = Globals.MW_ButtonGTAGameRunningBorderBrush;
-				if (LauncherLogic.InstallationState == LauncherLogic.InstallationStates.Downgraded)
-				{
-					btn_GTA.Content = "GTA V. Downgraded.\nGame running.";
-				}
-				else
-				{
-					btn_GTA.Content = "GTA V. Upgraded.\nGame running.";
-				}
 			}
 			else
 			{
 				btn_GTA.BorderBrush = Globals.MW_ButtonGTAGameNotRunningBorderBrush;
-				if (LauncherLogic.InstallationState == LauncherLogic.InstallationStates.Downgraded)
-				{
-					btn_GTA.Content = "GTA V. Downgraded.\nGame NOT running.";
-				}
-				else
-				{
-					btn_GTA.Content = "GTA V. Upgraded.\nGame NOT running.";
-				}
 			}
 		}
 
-
-		/// <summary>
-		/// Method which sets the Background Image of the Auth Button
-		/// </summary>
-		/// <param name="pAuthStatus"></param>
-		private void SetAuthButtonBackground(Authstatus pAuthStatus)
-		{
-			string artwork = "";
-
-			// Set Artwork string depending on which state we have
-			if (pAuthStatus == Authstatus.Auth)
-			{
-				artwork = @"Artwork\lockclosed.png";
-			}
-			else if (pAuthStatus == Authstatus.NotAuth)
-			{
-				artwork = @"Artwork\lockopen.png";
-			}
-
-
-			// Im not checking if the file exists, since its compiled in the .exe as of this moment...
-			// May have to think about that for theming...
-
-			// Actual Code which changes the image of the auth button
-			try
-			{
-				Uri resourceUri = new Uri(artwork, UriKind.Relative);
-				StreamResourceInfo streamInfo = Application.GetResourceStream(resourceUri);
-				BitmapFrame temp = BitmapFrame.Create(streamInfo.Stream);
-				var brush = new ImageBrush();
-				brush.ImageSource = temp;
-				btn_Auth.Background = brush;
-			}
-			catch
-			{
-				HelperClasses.Logger.Log("Failed to set Background Image for Auth Button");
-			}
-		}
 
 		/// <summary>
 		/// Method which makes the Window draggable, which moves the whole window when holding down Mouse1 on the background
@@ -734,6 +699,88 @@ namespace Project_127
 		private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
 		{
 			Globals.ProperExit();
+		}
+
+
+		private void SetButtonBackground(Button myBtn, string pArtpath)
+		{
+			try
+			{
+				Uri resourceUri = new Uri(pArtpath, UriKind.Relative);
+				StreamResourceInfo streamInfo = Application.GetResourceStream(resourceUri);
+				BitmapFrame temp = BitmapFrame.Create(streamInfo.Stream);
+				var brush = new ImageBrush();
+				brush.ImageSource = temp;
+				myBtn.Background = brush;
+			}
+			catch
+			{
+				HelperClasses.Logger.Log("Failed to set Background Image for Button");
+			}
+		}
+
+
+		private void SetButtonMouseOverMagic(Button myBtn, bool pMouseOver)
+		{
+			switch (myBtn.Name)
+			{
+				case "btn_Hamburger":
+					if (pMouseOver)
+					{
+						SetButtonBackground(myBtn, @"Artwork\hamburger_mo.png");
+					}
+					else
+					{
+						SetButtonBackground(myBtn, @"Artwork\hamburger.png");
+					}
+					break;
+				case "btn_Exit":
+					if (pMouseOver)
+					{
+						SetButtonBackground(myBtn, @"Artwork\exit_mo.png");
+					}
+					else
+					{
+						SetButtonBackground(myBtn, @"Artwork\exit.png");
+					}
+					break;
+				case "btn_Auth":
+					if (pMouseOver)
+					{
+						if (LauncherLogic.AuthState == LauncherLogic.Authstates.Auth)
+						{
+							SetButtonBackground(myBtn, @"Artwork\lock_closed_mo.png");
+						}
+						else if (LauncherLogic.AuthState == LauncherLogic.Authstates.NotAuth)
+						{
+							SetButtonBackground(myBtn, @"Artwork\lock_open_mo.png");
+						}
+					}
+					else
+					{
+						if (LauncherLogic.AuthState == LauncherLogic.Authstates.Auth)
+						{
+							SetButtonBackground(myBtn, @"Artwork\lock_closed.png");
+						}
+						else if (LauncherLogic.AuthState == LauncherLogic.Authstates.NotAuth)
+						{
+							SetButtonBackground(myBtn, @"Artwork\lock_open.png");
+						}
+					}
+					break;
+				default:
+					break;
+			}
+		}
+
+		private void btn_Small_MouseEnter(object sender, MouseEventArgs e)
+		{
+			SetButtonMouseOverMagic((Button)sender, true);
+		}
+
+		private void btn_Small_MouseLeave(object sender, MouseEventArgs e)
+		{
+			SetButtonMouseOverMagic((Button)sender, false);
 		}
 
 		/// <summary>
@@ -776,6 +823,9 @@ namespace Project_127
 		}
 
 		#endregion
+
+
+
 
 	} // End of Class
 } // End of Namespace

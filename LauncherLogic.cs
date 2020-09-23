@@ -17,6 +17,15 @@ namespace Project_127
 	public static class LauncherLogic
 	{
 		/// <summary>
+		/// Enum we use to change the Auth Button Image (lock)
+		/// </summary>
+		public enum Authstates
+		{
+			NotAuth = 0,
+			Auth = 1
+		}
+
+		/// <summary>
 		/// Enum for InstallationStates
 		/// </summary>
 		public enum InstallationStates
@@ -32,6 +41,21 @@ namespace Project_127
 		{
 			Running,
 			NonRunning
+		}
+
+		private static Authstates _AuthState = Authstates.NotAuth;
+
+		public static Authstates AuthState
+		{
+			get
+			{
+				return _AuthState;
+			}
+			set
+			{
+				_AuthState = value;
+				// Call Something
+			}
 		}
 
 		/// <summary>
@@ -337,7 +361,14 @@ namespace Project_127
 			while (!(LauncherLogic.IsGTAVInstallationPathCorrect(GTAVInstallationPathUserChoice, false)))
 			{
 				HelperClasses.Logger.Log("Users picked path detected to be faulty. Asking user to try again");
-				new Popup(Popup.PopupWindowTypes.PopupOk, "GTA V Path detected to be faulty. Try again");
+				Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "GTA V Path detected to be not correct. Are you sure?\nForce '" + GTAVInstallationPathUserChoice + "' as your GTAV Installation Location?");
+				yesno.ShowDialog();
+				if (yesno.DialogResult == true)
+				{
+					HelperClasses.Logger.Log("Will force the Path that user picked even tho Algorithm think its faulty.");
+					Settings.GTAVInstallationPath = GTAVInstallationPathUserChoice;
+					return;
+				}
 				GTAVInstallationPathUserChoice = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.Folder, "Pick the Folder which contains your GTAV.exe", @"C:\");
 				HelperClasses.Logger.Log("New Users picked path is: '" + GTAVInstallationPathUserChoice + "'");
 			}
@@ -446,7 +477,7 @@ namespace Project_127
 					HelperClasses.Logger.Log("Launching Downgraded", 1);
 					Process p = new Process();
 					p.StartInfo.FileName = Settings.GTAVInstallationPath.TrimEnd('\\') + @"\PlayGTAV.exe";
-					p.StartInfo.WorkingDirectory = @"F:\SteamLibrary\steamapps\common\Grand Theft Auto V\";
+					p.StartInfo.WorkingDirectory = Settings.GTAVInstallationPath.TrimEnd('\\');
 					p.Start();
 				}
 			}

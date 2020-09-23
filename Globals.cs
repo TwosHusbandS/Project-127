@@ -162,15 +162,12 @@ namespace Project_127
 			}
 
 			// Check if GTA V Folder is correct
-			HelperClasses.Logger.Log("While Loop during intitial start-up to make sure GTAV Path is valid");
-			while (!LauncherLogic.IsGTAVInstallationPathCorrect(Settings.GTAVInstallationPath))
+			HelperClasses.Logger.Log("Intitial start-up to make sure GTAV Path is valid (NOT FIRSTLAUNCH)");
+			if (!LauncherLogic.IsGTAVInstallationPathCorrect(Settings.GTAVInstallationPath))
 			{
-				new Popup(Popup.PopupWindowTypes.PopupOk, "GTA V Installation Path detected to be wrong. Please choose a new one").ShowDialog();
-
-				string GTAVInstallationPath = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.Folder, "Pick the Folder which contains your GTAV.exe", @"C:\");
-				Settings.GTAVInstallationPath = GTAVInstallationPath;
+				HelperClasses.Logger.Log("Settings.GTAVInstallationPath detected to be wrong calling LauncherLogic.SetGTAVPathManually()");
+				LauncherLogic.SetGTAVPathManually();
 			}
-			HelperClasses.Logger.Log("While Loop during intitial start-up to make sure GTAV Path is valid");
 
 			// Check our version of the ZIP File
 			int ZipVersion = 0;
@@ -270,8 +267,10 @@ namespace Project_127
 		/// <summary>
 		/// Actual Main colors we use:
 		/// </summary>
-		public static Brush MyColorWhite { get; private set; } = (Brush)new BrushConverter().ConvertFromString("#c1ced1");
-		public static Brush MyColorBlack { get; private set; } = (Brush)new BrushConverter().ConvertFromString("#1a1a1a");
+		public static Brush MyColorWhite { get; private set; } = (Brush)new BrushConverter().ConvertFromString("#FFFFFF");
+		public static Brush MyColorOffWhite { get; private set; } = (Brush)new BrushConverter().ConvertFromString("#c1ced1");
+		public static Brush MyColorBlack { get; private set; } = (Brush)new BrushConverter().ConvertFromString("#000000");
+		public static Brush MyColorOffBlack { get; private set; } = (Brush)new BrushConverter().ConvertFromString("#1a1a1a");
 		public static Brush MyColorOrange { get; private set; } = (Brush)new BrushConverter().ConvertFromString("#E35627");
 		public static Brush MyColorGreen { get; private set; } = (Brush)new BrushConverter().ConvertFromString("#4cd213");
 
@@ -294,25 +293,25 @@ namespace Project_127
 
 		// Border of MainWindow
 		public static Brush MW_Border { get; private set; } = MyColorWhite;
-
 		// All the HamburgerButton Items, Backgrounds, etc.
-		public static Brush MW_HamburgerMenuGridBackground { get; private set; } = SetOpacity(MyColorBlack, 50);
 		public static System.Windows.Thickness MW_ButtonBorderThickness { get; private set; } = new System.Windows.Thickness(0);
+		public static Brush MW_HamburgerMenuGridBackground { get; private set; } = SetOpacity(MyColorBlack, 50);
 		public static Brush MW_ButtonBackground { get; private set; } = SetOpacity(MyColorBlack, 70);
 		public static Brush MW_ButtonForeground { get; private set; } = MyColorWhite;
 		public static Brush MW_ButtonBorderBrush { get; private set; } = MyColorWhite;
-		public static Brush MW_ButtonMOBackground { get; private set; } = SetOpacity(MyColorWhite, 70);
+		public static Brush MW_ButtonMOBackground { get; private set; } = MyColorOffWhite;
 		public static Brush MW_ButtonMOForeground { get; private set; } = MyColorBlack;
 		public static Brush MW_ButtonMOBorderBrush { get; private set; } = MyColorWhite;
 
 		// Hamburger Button and "X"
-		public static Brush MW_ButtonSmallBackground { get; private set; } = SetOpacity(MyColorBlack, 70);
-		public static Brush MW_ButtonSmallForeground { get; private set; } = MyColorWhite;
-		public static Brush MW_ButtonSmallBorderBrush { get; private set; } = MyColorWhite;
-		public static Brush MW_ButtonSmallMOBackground { get; private set; } = SetOpacity(MyColorWhite, 70);
-		public static Brush MW_ButtonSmallMOForeground { get; private set; } = MyColorBlack;
-		public static Brush MW_ButtonSmallMOBorderBrush { get; private set; } = MyColorWhite;
-		public static System.Windows.Thickness MW_ButtonSmallBorderThickness { get; private set; } = new System.Windows.Thickness(2);
+		// These have no effect since these are all Icons now...
+		//public static Brush MW_ButtonSmallBackground { get; private set; } = SetOpacity(MyColorBlack, 70);
+		//public static Brush MW_ButtonSmallForeground { get; private set; } = MyColorWhite;
+		//public static Brush MW_ButtonSmallBorderBrush { get; private set; } = MyColorWhite;
+		//public static Brush MW_ButtonSmallMOBackground { get; private set; } = SetOpacity(MyColorWhite, 70);
+		//public static Brush MW_ButtonSmallMOForeground { get; private set; } = MyColorBlack;
+		//public static Brush MW_ButtonSmallMOBorderBrush { get; private set; } = MyColorWhite;
+		public static System.Windows.Thickness MW_ButtonSmallBorderThickness { get; private set; } = new System.Windows.Thickness(0);
 
 		// GTA Launch Button
 		// Border Color will depend on game running or not running, so we will not set this here. I guess. 
@@ -321,27 +320,27 @@ namespace Project_127
 
 		public static Brush MW_ButtonGTABackground { get; private set; } = SetOpacity(MyColorBlack, 70);
 		public static Brush MW_ButtonGTAForeground { get; private set; } = MyColorWhite;
-		public static Brush MW_ButtonGTAMOBackground { get; private set; } = SetOpacity(MyColorOrange, 70);
+		public static Brush MW_ButtonGTAMOBackground { get; private set; } = SetOpacity(MyColorOffWhite, 100);
 		public static Brush MW_ButtonGTAMOForeground { get; private set; } = MyColorBlack;
 
 		public static System.Windows.Thickness MW_ButtonGTABorderThickness { get; private set; } = new System.Windows.Thickness(5);
 
 		// POPUP Window
-		public static Brush PU_Background { get; private set; } = MyColorBlack;
+		public static Brush PU_Background { get; private set; } = MyColorOffBlack;
 
 		public static Brush PU_BorderBrush { get; private set; } = MyColorWhite;
 		public static Brush PU_BorderBrush_Inner { get; private set; } = MyColorWhite;
 
-		public static Brush PU_ButtonBackground { get; private set; } = MyColorBlack;
+		public static Brush PU_ButtonBackground { get; private set; } = MyColorOffBlack;
 		public static Brush PU_ButtonForeground { get; private set; } = MyColorWhite;
 		public static Brush PU_ButtonBorderBrush { get; private set; } = MyColorWhite;
-		public static Brush PU_ButtonMOBackground { get; private set; } = MyColorWhite;
-		public static Brush PU_ButtonMOForeground { get; private set; } = MyColorBlack;
-		public static Brush PU_ButtonMOBorderBrush { get; private set; } = MyColorBlack;
+		public static Brush PU_ButtonMOBackground { get; private set; } = MyColorOffWhite;
+		public static Brush PU_ButtonMOForeground { get; private set; } = MyColorOffBlack;
+		public static Brush PU_ButtonMOBorderBrush { get; private set; } = MyColorOffBlack;
 
-		public static Brush PU_ProgressBarBackground { get; private set; } = MyColorBlack;
-		public static Brush PU_ProgressBarForeground { get; private set; } = MyColorWhite;
-		public static Brush PU_ProgressBarBorderBrush { get; private set; } = MyColorBlack;
+		public static Brush PU_ProgressBarBackground { get; private set; } = MyColorOffBlack;
+		public static Brush PU_ProgressBarForeground { get; private set; } = MyColorOffWhite;
+		public static Brush PU_ProgressBarBorderBrush { get; private set; } = MyColorOffBlack;
 		public static System.Windows.Thickness PU_ButtonBorderThickness { get; private set; } = new System.Windows.Thickness(2);
 		public static Brush PU_LabelForeground { get; private set; } = MyColorWhite;
 

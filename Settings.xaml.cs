@@ -191,7 +191,7 @@ namespace Project_127
 			btn_Set_GTAVInstallationPath.Content = Settings.GTAVInstallationPath;
 			btn_Set_FileFolder.Content = Settings.FileFolder;
 			cb_Set_EnableLogging.IsChecked = Settings.EnableLogging;
-			cb_Set_TempFixSteamLaunch.IsChecked = Settings.EnableTempFixSteamLaunch;
+			//cb_Set_TempFixSteamLaunch.IsChecked = Settings.EnableTempFixSteamLaunch;
 			//cb_Set_EnablePreOrderBonus.IsChecked = Settings.EnablePreOrderBonus;
 			//cb_Set_AutoSetHighPriority.IsChecked = Settings.EnableAutoSetHighPriority;
 			//btn_Set_PathFPSLimiter.Content = Settings.PathFPSLimiter;
