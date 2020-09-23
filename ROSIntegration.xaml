@@ -7,11 +7,10 @@
         xmlns:cefSharpCore="clr-namespace:CefSharp;assembly=CefSharp.Core"
         xmlns:local="clr-namespace:Project_127"
         mc:Ignorable="d"
-        Title="ROSIntegration" Height="450" Width="800"
-        WindowStyle="None"
+        Title="ROSIntegration" Height="600" Width="800"
+        WindowStyle="ToolWindow"
         BorderBrush="Black"
         BorderThickness="0"
-        AllowsTransparency="True"
         WindowStartupLocation="CenterScreen"
         Background="#131518">
     <Grid>
