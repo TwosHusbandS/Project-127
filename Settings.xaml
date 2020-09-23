@@ -4,22 +4,123 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Project_127"
+        xmlns:control = "clr-namespace:Project_127" 
         mc:Ignorable="d"
-        Title="Settings" Height="400" Width="600" Background="#2E2E2E"
-        
-       
-        WindowStyle="None" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" MouseLeftButtonDown="Window_MouseLeftButtonDown"
- 
-        >
+        Title="Settings" Height="500" Width="500"        
+        WindowStyle="None" 
+        AllowsTransparency="True" 
+        MouseLeftButtonDown="Window_MouseLeftButtonDown" 
+        WindowStartupLocation="CenterScreen"
+        ResizeMode="CanMinimize"
+        Background="{x:Static local:Globals.SE_Background}"
+        Icon="/Artwork/icon.png">
     <Window.Resources>
-        <Style TargetType="{x:Type Button}" x:Key="btn">
-            <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="Foreground" Value="White"/>
+
+        <!--#region Scroll Viewer Style-->
+        <!--this is stolen from another project of mine, where it was stolen from another old project where it was probably stolen off stack overflow...-->
+
+        <Style x:Key="{x:Type ScrollBar}" TargetType="{x:Type ScrollBar}">
+            <Setter Property="Stylus.IsFlicksEnabled" Value="false" />
+            <Setter Property="Foreground" Value="{x:Static local:Globals.SE_SVForeground}" />
+            <Setter Property="Background" Value="{x:Static local:Globals.SE_SVBackground}" />
+            <Setter Property="Width" Value="12" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ScrollBar}">
+                        <Grid x:Name="GridRoot" Width="16" Background="{TemplateBinding Background}">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="0.00001*" />
+                            </Grid.RowDefinitions>
+
+                            <Track x:Name="PART_Track" Grid.Row="0" IsDirectionReversed="true" Focusable="false">
+                                <Track.Thumb>
+                                    <Thumb x:Name="Thumb" Background="{TemplateBinding Foreground}" Style="{DynamicResource ScrollThumbs}" />
+                                </Track.Thumb>
+                                <Track.IncreaseRepeatButton>
+                                    <RepeatButton x:Name="PageUp" Command="ScrollBar.PageDownCommand" Opacity="0" Focusable="false" />
+                                </Track.IncreaseRepeatButton>
+                                <Track.DecreaseRepeatButton>
+                                    <RepeatButton x:Name="PageDown" Command="ScrollBar.PageUpCommand" Opacity="0" Focusable="false" />
+                                </Track.DecreaseRepeatButton>
+                            </Track>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger SourceName="Thumb" Property="IsMouseOver" Value="true">
+                            </Trigger>
+                            <Trigger SourceName="Thumb" Property="IsDragging" Value="true">
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="false">
+                                <Setter TargetName="Thumb" Property="Visibility" Value="Collapsed" />
+                            </Trigger>
+                            <Trigger Property="Orientation" Value="Horizontal">
+                                <Setter TargetName="GridRoot" Property="LayoutTransform">
+                                    <Setter.Value>
+                                        <RotateTransform Angle="-90" />
+                                    </Setter.Value>
+                                </Setter>
+                                <Setter TargetName="PART_Track" Property="LayoutTransform">
+                                    <Setter.Value>
+                                        <RotateTransform Angle="-90" />
+                                    </Setter.Value>
+                                </Setter>
+                                <Setter Property="Width" Value="Auto" />
+                                <Setter Property="Height" Value="12" />
+                                <Setter TargetName="Thumb" Property="Tag" Value="Horizontal" />
+                                <Setter TargetName="PageDown" Property="Command" Value="ScrollBar.PageLeftCommand" />
+                                <Setter TargetName="PageUp" Property="Command" Value="ScrollBar.PageRightCommand" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="ScrollThumbs" TargetType="{x:Type Thumb}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Thumb}">
+                        <Grid x:Name="Grid">
+                            <Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="Auto" Height="Auto" Fill="Transparent" />
+                            <Border x:Name="Rectangle1" CornerRadius="5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="12.5" Height="Auto"  Background="{TemplateBinding Background}" />
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="Tag" Value="Horizontal">
+                                <Setter TargetName="Rectangle1" Property="Width" Value="Auto" />
+                                <Setter TargetName="Rectangle1" Property="Height" Value="7" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="sv" TargetType="ScrollViewer">
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="VerticalAlignment" Value="Stretch"/>
+            <Setter Property="VerticalScrollBarVisibility" Value="Auto"/>
+        </Style>
+
+
+
+        <!--#endregion-->
+
+
+
+        <Style TargetType="Button" x:Key="btn">
+            <Setter Property="Background" Value="{x:Static local:Globals.SE_ButtonBackground}"/>
+            <Setter Property="Foreground" Value="{x:Static local:Globals.SE_ButtonForeground}"/>
+            <Setter Property="BorderBrush" Value="{x:Static local:Globals.SE_ButtonBorderBrush}"/>
+            <Setter Property="FontSize" Value="18"/>
+            <Setter Property="FontFamily" Value="Tahoma"/>
             <Setter Property="Margin" Value="5"/>
             <Setter Property="Template">
                 <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type Button}">
-                        <Border Background="{TemplateBinding Background}" BorderBrush="White" BorderThickness="1">
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                            CornerRadius="5"
+                            BorderThickness="{x:Static local:Globals.SE_ButtonBorderThickness}"
+                            Padding="5"
+                            BorderBrush="{TemplateBinding BorderBrush}">
                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         </Border>
                     </ControlTemplate>
@@ -27,27 +128,296 @@
             </Setter>
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="LightGray"/>
+                    <Setter Property="Background" Value="{x:Static local:Globals.SE_ButtonMOBackground}"/>
+                    <Setter Property="Foreground" Value="{x:Static local:Globals.SE_ButtonMOForeground}"/>
+                    <Setter Property="BorderBrush" Value="{x:Static local:Globals.SE_ButtonMOBorderBrush}"/>
                 </Trigger>
             </Style.Triggers>
         </Style>
+
+        <Style TargetType="Button" x:Key="btn_Set" BasedOn="{StaticResource btn}">
+            <Setter Property="Background" Value="{x:Static local:Globals.SE_ButtonSetBackground}"/>
+            <Setter Property="Foreground" Value="{x:Static local:Globals.SE_ButtonSetForeground}"/>
+            <Setter Property="BorderBrush" Value="{x:Static local:Globals.SE_ButtonSetBorderBrush}"/>
+            <Setter Property="Height" Value="30"/>
+            <Setter Property="Width" Value="100"/>
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="FontFamily" Value="Tahoma"/>
+            <Setter Property="Margin" Value="5"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="{x:Static local:Globals.SE_ButtonSetMOBackground}"/>
+                    <Setter Property="Foreground" Value="{x:Static local:Globals.SE_ButtonSetMOForeground}"/>
+                    <Setter Property="BorderBrush" Value="{x:Static local:Globals.SE_ButtonSetMOBorderBrush}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="lbl" TargetType="Label">
+            <Setter Property="Foreground" Value="{x:Static local:Globals.SE_LabelForeground}" />
+            <Setter Property="FontFamily" Value="Tahoma" />
+            <Setter Property="FontSize" Value="18" />
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="VerticalAlignment" Value="Stretch" />
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="Margin" Value="0" />
+        </Style>
+
+        <Style x:Key="lbl_Set_Head" TargetType="Label">
+            <Setter Property="Foreground" Value="{x:Static local:Globals.SE_LabelSetForeground}" />
+            <Setter Property="FontFamily" Value="Tahoma" />
+            <Setter Property="Height" Value="30" />
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="FontStyle" Value="Oblique"/>
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="VerticalAlignment" Value="Stretch" />
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="Margin" Value="0" />
+        </Style>
+        <Style x:Key="lbl_Set_Info" TargetType="Label">
+            <Setter Property="Foreground" Value="{x:Static local:Globals.SE_LabelSetForeground}" />
+            <Setter Property="FontFamily" Value="Tahoma" />
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="HorizontalAlignment" Value="Right"/>
+            <Setter Property="VerticalAlignment" Value="Stretch" />
+            <Setter Property="HorizontalContentAlignment" Value="Right" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="Margin" Value="0" />
+        </Style>
+        <Style x:Key="sp_Set" TargetType="Separator">
+            <Setter Property="Background" Value="{x:Static local:Globals.SE_BorderBrush_Inner}" />
+            <Setter Property="Margin" Value="10,5" />
+            <Setter Property="RenderTransform">
+                <Setter.Value>
+                    <ScaleTransform  ScaleY="2" />
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="cb_Set" TargetType="CheckBox">
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="LayoutTransform">
+                <Setter.Value>
+                    <ScaleTransform ScaleX="2" ScaleY="2" />
+                </Setter.Value>
+            </Setter>
+        </Style>
+
     </Window.Resources>
-    <Border BorderBrush="White" Margin="5" CornerRadius="10" BorderThickness="1">
 
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition/>
-                <RowDefinition/>
-                <RowDefinition/>
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="4*"/>
-                <ColumnDefinition/>
-            </Grid.ColumnDefinitions>
+    <Border BorderBrush="{x:Static local:Globals.SE_BorderBrush}" BorderThickness="2">
+            <Grid x:Name="Grid_Outer">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="40"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="60"/>
+                    <RowDefinition Height="60"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
 
-            <Label Grid.Row="0" Grid.Column="0" Content="Test" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-            <Button Grid.Row="0" Grid.Column="1" Style="{StaticResource btn}"   Content="X"/>
-            <!--<Button />-->
-        </Grid>
-    </Border>
+                <Label Style="{StaticResource lbl}" x:Name="lbl_Settings" Grid.Row="0" Grid.Column="0" Content="Settings"/>
+
+                <!--
+                This actual implementation of this is a joke...I hope no one ever sees this.
+                Im sorry you saw this. Check out reddit.com/r/eyebleach after this...
+                We should really use CustomControls or create this programatically ,
+                but Databinding was a bitch and I didnt want to add another layer of code
+                above the settings and regedit stuff, which is already spread through 4 files (3 classes)
+                
+                Also had to rush this since closed beta is approaching. This aint pretty but shit fucking works
+                
+                I only leave this comment so I can feel good after implementing this the proper way
+                -->
+
+            <Border  Grid.Row="1" Margin="10" BorderBrush="{x:Static local:Globals.SE_BorderBrush_Inner}" BorderThickness="3">
+                    <ScrollViewer>
+                        <StackPanel x:Name="sp_Settings">
+                            <Grid x:Name="Grid_Set_GTAVInstallationPath">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Content="GTA V Installation Path"  Style="{StaticResource lbl_Set_Head}" />
+                                <Label Grid.Row="1" Grid.Column="0" Content="Current Path: "  Style="{StaticResource lbl_Set_Info}" />
+                            <Button Grid.Row="1" Grid.Column="1" x:Name="btn_Set_GTAVInstallationPath" Click="btn_Set_GTAVInstallationPath_Click" Content="{Binding Path=GTAVInstallationPath, Mode=TwoWay}" Style="{StaticResource btn_Set}"/>
+                            </Grid>
+                            <Separator Style="{StaticResource sp_Set}"/>
+                            <Grid x:Name="Grid_Set_BackupPath">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Content="Backup Path"  Style="{StaticResource lbl_Set_Head}" />
+                                <Label Grid.Row="1" Grid.Column="0" Content="Current Path: "  Style="{StaticResource lbl_Set_Info}" />
+                                <Button Grid.Row="1" Grid.Column="1" x:Name="btn_Set_FileFolder" Click="btn_Set_FileFolder_Click" Content="{Binding Path=FileFolder, Mode=TwoWay}" Style="{StaticResource btn_Set}"/>
+                            </Grid>
+                            <Separator Style="{StaticResource sp_Set}"/>
+                            <Grid x:Name="Grid_Set_Logging">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <Label Grid.Row="0" Grid.Column="0" Content="Enable Logging"  Style="{StaticResource lbl_Set_Info}" />
+                                <CheckBox Grid.Row="0" Grid.Column="1" x:Name="cb_Set_EnableLogging" IsChecked="{Binding Path=EnableLogging, Mode=TwoWay}" Style="{StaticResource cb_Set}"/>
+                            </Grid>
+                            <Separator Style="{StaticResource sp_Set}"/>
+                            <Grid x:Name="Grid_Set_TmpFixSteamLaunch">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <Label Grid.Row="0" Grid.Column="0" Content="Enable TempFixSteamLaunch"  Style="{StaticResource lbl_Set_Info}" />
+                                <CheckBox Grid.Row="0" Grid.Column="1" x:Name="cb_Set_TempFixSteamLaunch" IsChecked="{Binding Path=EnableTempFixSteamLaunch, Mode=TwoWay}" Style="{StaticResource cb_Set}"/>
+                            </Grid>
+                            <!--
+                            <Separator Style="{StaticResource sp_Set}"/>
+                            <Grid x:Name="Grid_Set_Preorder">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <Label Grid.Row="0" Grid.Column="0" Content="Enable / Use 500k Pre-Order Bonus "  Style="{StaticResource lbl_Set_Info}" />
+                                <CheckBox Grid.Row="0" Grid.Column="1" x:Name="cb_Set_EnablePreOrderBonus" IsChecked="{Binding Path=EnablePreOrderBonus, Mode=TwoWay}" Style="{StaticResource cb_Set}"/>
+                            </Grid>
+                            <Separator Style="{StaticResource sp_Set}"/>
+                            <Grid x:Name="Grid_Set_AutoHighPriority">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <Label Grid.Row="0" Grid.Column="0" Content="Automatically set Process Priority to 'HIGH'"  Style="{StaticResource lbl_Set_Info}" />
+                                <CheckBox Grid.Row="0" Grid.Column="1" x:Name="cb_Set_AutoSetHighPriority" IsChecked="{Binding Path=EnableAutoSetHighPriority, Mode=TwoWay}" Style="{StaticResource cb_Set}"/>
+                            </Grid>
+                            <Separator Style="{StaticResource sp_Set}"/>
+                            <Grid x:Name="Grid_Set_Livesplit">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <Label Grid.Row="0" Grid.Column="0" Content="Start Livesplit on Game Launch"  Style="{StaticResource lbl_Set_Info}" />
+                                <CheckBox Grid.Row="0" Grid.Column="1" x:Name="cb_Set_EnableAutoStartLiveSplit" IsChecked="{Binding Path=EnableAutoStartLiveSplit, Mode=TwoWay}" Style="{StaticResource cb_Set}"/>
+                                <Label Grid.Row="1" Grid.Column="0" Content="Current Path: "  Style="{StaticResource lbl_Set_Info}" />
+                                <Button Grid.Row="1" Grid.Column="1" x:Name="btn_Set_PathLiveSplit" Click="btn_Set_PathLiveSplit_Click" Content="{Binding Path=PathLiveSplit, Mode=TwoWay}" Style="{StaticResource btn_Set}"/>
+                            </Grid>
+                            <Separator Style="{StaticResource sp_Set}"/>
+                            <Grid x:Name="Grid_Set_StreamProgram">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <Label Grid.Row="0" Grid.Column="0" Content="Start StreamProgram on Game Launch"  Style="{StaticResource lbl_Set_Info}" />
+                                <CheckBox Grid.Row="0" Grid.Column="1" x:Name="cb_Set_EnableAutoStartStreamProgram" IsChecked="{Binding Path=EnableAutoStartStreamProgram, Mode=TwoWay}" Style="{StaticResource cb_Set}"/>
+                                <Label Grid.Row="1" Grid.Column="0" Content="Current Path: "  Style="{StaticResource lbl_Set_Info}" />
+                                <Button Grid.Row="1" Grid.Column="1" x:Name="btn_Set_PathStreamProgram" Click="btn_Set_PathStreamProgram_Click" Content="{Binding Path=PathStreamProgram, Mode=TwoWay}" Style="{StaticResource btn_Set}"/>
+                            </Grid>
+                            <Separator Style="{StaticResource sp_Set}"/>
+                            <Grid x:Name="Grid_Set_FPSLimiter">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <Label Grid.Row="0" Grid.Column="0" Content="Start FPS Limiter on Game Launch"  Style="{StaticResource lbl_Set_Info}" />
+                                <CheckBox Grid.Row="0" Grid.Column="1" x:Name="cb_Set_EnableAutoStartFPSLimiter" IsChecked="{Binding Path=EnableAutoStartFPSLimiter, Mode=TwoWay}" Style="{StaticResource cb_Set}"/>
+                                <Label Grid.Row="1" Grid.Column="0" Content="Current Path: "  Style="{StaticResource lbl_Set_Info}" />
+                                <Button Grid.Row="1" Grid.Column="1" x:Name="btn_Set_PathFPSLimiter" Click="btn_Set_PathFPSLimiter_Click" Content="{Binding Path=PathFPSLimiter, Mode=TwoWay}" Style="{StaticResource btn_Set}"/>
+                            </Grid>
+                            <Separator Style="{StaticResource sp_Set}"/>
+                            <Grid x:Name="Grid_Set_JumpScript">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <Label Grid.Row="0" Grid.Column="0" Content="Start JumpScript on Game Launch"  Style="{StaticResource lbl_Set_Info}" />
+                                <CheckBox Grid.Row="0" Grid.Column="1" x:Name="cb_Set_EnableAutoStartJumpScript" IsChecked="{Binding Path=EnableAutoStartJumpScript, Mode=TwoWay}" Style="{StaticResource cb_Set}"/>
+                                <Button Grid.Row="1" Grid.Column="0" x:Name="btn_Set_JumpScriptKey1" Click="btn_Set_JumpScriptKey1_Click" Content="{Binding Path=JumpScriptKey1, Mode=TwoWay}" Style="{StaticResource btn_Set}" HorizontalAlignment="Right"/>
+                                <Button Grid.Row="1" Grid.Column="1" x:Name="btn_Set_JumpScriptKey2" Click="btn_Set_JumpScriptKey2_Click" Content="{Binding Path=JumpScriptKey2, Mode=TwoWay}" Style="{StaticResource btn_Set}"/>
+                            </Grid>
+                            <Separator Style="{StaticResource sp_Set}"/>
+                            <Grid x:Name="Grid_Set_Nohboard">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="2*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="2*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Label Grid.Row="0" Grid.Column="0" Content="Start Nohboard on Game Launch"  Style="{StaticResource lbl_Set_Info}" />
+                                <CheckBox Grid.Row="0" Grid.Column="1" x:Name="cb_Set_EnableAutoStartNohboard" IsChecked="{Binding Path=EnableAutoStartNohboard, Mode=TwoWay}" Style="{StaticResource cb_Set}"/>
+                                <Label Grid.Row="0" Grid.Column="2" Content="Use Burhac Setup"  Style="{StaticResource lbl_Set_Info}" />
+                                <CheckBox Grid.Row="0" Grid.Column="3" x:Name="cb_Set_EnableNohboardBurhac" IsChecked="{Binding Path=EnableNohboardBurhac, Mode=TwoWay}" Style="{StaticResource cb_Set}"/>
+
+                                <Label Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Content="Current Path: "  Style="{StaticResource lbl_Set_Info}" />
+                                <Button Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="2" x:Name="btn_Set_PathNohboard" Click="btn_Set_PathNohboard_Click" Content="{Binding Path=PathNohboard, Mode=TwoWay}" Style="{StaticResource btn_Set}"/>
+                            </Grid>
+                            <Separator Style="{StaticResource sp_Set}"/>
+                            <Grid x:Name="Grid_Set_Theme">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Content="Theming:"  Style="{StaticResource lbl_Set_Head}" />
+                                <Label Grid.Row="1" Grid.Column="0" Content="Current Theme: "  Style="{StaticResource lbl_Set_Info}" />
+                                <Button Grid.Row="1" Grid.Column="1" x:Name="btn_Set_Theme" Click="btn_Set_Theme_Click" Content="{Binding Path=Theme, Mode=TwoWay}" Style="{StaticResource btn_Set}"/>
+                            </Grid>
+                           -->
+                        </StackPanel>
+                    </ScrollViewer>
+                </Border>
+
+                <Button Style="{StaticResource btn}" x:Name="btn_Reset" Grid.Row="2" Grid.Column="0" Margin="10" Content="Reset" Click="btn_Reset_Click"/>
+                <Button Style="{StaticResource btn}" x:Name="btn_Close" Grid.Row="3" Grid.Column="0" Margin="10" Content="Close" Click="btn_Close_Click"/>
+
+            </Grid>
+        </Border>
 </Window>
