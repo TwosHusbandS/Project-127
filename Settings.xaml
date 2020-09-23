@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:Project_127"
         xmlns:control = "clr-namespace:Project_127" 
         mc:Ignorable="d"
-        Title="Settings" Height="500" Width="500"        
+        Title="Settings" Height="600" Width="620"        
         WindowStyle="None" 
         AllowsTransparency="True" 
         MouseLeftButtonDown="Window_MouseLeftButtonDown" 
@@ -210,20 +210,20 @@
     </Window.Resources>
 
     <Border BorderBrush="{x:Static local:Globals.SE_BorderBrush}" BorderThickness="2">
-            <Grid x:Name="Grid_Outer">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="40"/>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="60"/>
-                    <RowDefinition Height="60"/>
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
+        <Grid x:Name="Grid_Outer">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="60"/>
+                <RowDefinition Height="60"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
 
-                <Label Style="{StaticResource lbl}" x:Name="lbl_Settings" Grid.Row="0" Grid.Column="0" Content="Settings"/>
+            <Label Style="{StaticResource lbl}" x:Name="lbl_Settings" Grid.Row="0" Grid.Column="0" Content="Settings"/>
 
-                <!--
+            <!--
                 This actual implementation of this is a joke...I hope no one ever sees this.
                 Im sorry you saw this. Check out reddit.com/r/eyebleach after this...
                 We should really use CustomControls or create this programatically ,
@@ -236,188 +236,188 @@
                 -->
 
             <Border  Grid.Row="1" Margin="10" BorderBrush="{x:Static local:Globals.SE_BorderBrush_Inner}" BorderThickness="3">
-                    <ScrollViewer>
-                        <StackPanel x:Name="sp_Settings">
-                            <Grid x:Name="Grid_Set_GTAVInstallationPath">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition/>
-                                    <RowDefinition/>
-                                </Grid.RowDefinitions>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition/>
-                                    <ColumnDefinition/>
-                                </Grid.ColumnDefinitions>
-                                <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Content="GTA V Installation Path"  Style="{StaticResource lbl_Set_Head}" />
-                                <Label Grid.Row="1" Grid.Column="0" Content="Current Path: "  Style="{StaticResource lbl_Set_Info}" />
+                <ScrollViewer>
+                    <StackPanel x:Name="sp_Settings">
+                        <Grid x:Name="Grid_Set_GTAVInstallationPath">
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Content="GTA V Installation Path"  Style="{StaticResource lbl_Set_Head}" />
+                            <Label Grid.Row="1" Grid.Column="0" Content="Current Path: "  Style="{StaticResource lbl_Set_Info}" />
                             <Button Grid.Row="1" Grid.Column="1" x:Name="btn_Set_GTAVInstallationPath" Click="btn_Set_GTAVInstallationPath_Click" Content="{Binding Path=GTAVInstallationPath, Mode=TwoWay}" Style="{StaticResource btn_Set}"/>
-                            </Grid>
-                            <Separator Style="{StaticResource sp_Set}"/>
-                            <Grid x:Name="Grid_Set_BackupPath">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition/>
-                                    <RowDefinition/>
-                                </Grid.RowDefinitions>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition/>
-                                    <ColumnDefinition/>
-                                </Grid.ColumnDefinitions>
-                                <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Content="Backup Path"  Style="{StaticResource lbl_Set_Head}" />
-                                <Label Grid.Row="1" Grid.Column="0" Content="Current Path: "  Style="{StaticResource lbl_Set_Info}" />
-                                <Button Grid.Row="1" Grid.Column="1" x:Name="btn_Set_FileFolder" Click="btn_Set_FileFolder_Click" Content="{Binding Path=FileFolder, Mode=TwoWay}" Style="{StaticResource btn_Set}"/>
-                            </Grid>
-                            <Separator Style="{StaticResource sp_Set}"/>
-                            <Grid x:Name="Grid_Set_Logging">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition/>
-                                </Grid.RowDefinitions>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition/>
-                                    <ColumnDefinition/>
-                                </Grid.ColumnDefinitions>
-                                <Label Grid.Row="0" Grid.Column="0" Content="Enable Logging"  Style="{StaticResource lbl_Set_Info}" />
-                                <CheckBox Grid.Row="0" Grid.Column="1" x:Name="cb_Set_EnableLogging" IsChecked="{Binding Path=EnableLogging, Mode=TwoWay}" Style="{StaticResource cb_Set}"/>
-                            </Grid>
-                            <Separator Style="{StaticResource sp_Set}"/>
-                            <Grid x:Name="Grid_Set_TmpFixSteamLaunch">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition/>
-                                </Grid.RowDefinitions>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition/>
-                                    <ColumnDefinition/>
-                                </Grid.ColumnDefinitions>
-                                <Label Grid.Row="0" Grid.Column="0" Content="Enable TempFixSteamLaunch"  Style="{StaticResource lbl_Set_Info}" />
-                                <CheckBox Grid.Row="0" Grid.Column="1" x:Name="cb_Set_TempFixSteamLaunch" IsChecked="{Binding Path=EnableTempFixSteamLaunch, Mode=TwoWay}" Style="{StaticResource cb_Set}"/>
-                            </Grid>
-                            <!--
-                            <Separator Style="{StaticResource sp_Set}"/>
-                            <Grid x:Name="Grid_Set_Preorder">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition/>
-                                    <RowDefinition/>
-                                </Grid.RowDefinitions>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition/>
-                                    <ColumnDefinition/>
-                                </Grid.ColumnDefinitions>
-                                <Label Grid.Row="0" Grid.Column="0" Content="Enable / Use 500k Pre-Order Bonus "  Style="{StaticResource lbl_Set_Info}" />
-                                <CheckBox Grid.Row="0" Grid.Column="1" x:Name="cb_Set_EnablePreOrderBonus" IsChecked="{Binding Path=EnablePreOrderBonus, Mode=TwoWay}" Style="{StaticResource cb_Set}"/>
-                            </Grid>
-                            <Separator Style="{StaticResource sp_Set}"/>
-                            <Grid x:Name="Grid_Set_AutoHighPriority">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition/>
-                                    <RowDefinition/>
-                                </Grid.RowDefinitions>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition/>
-                                    <ColumnDefinition/>
-                                </Grid.ColumnDefinitions>
-                                <Label Grid.Row="0" Grid.Column="0" Content="Automatically set Process Priority to 'HIGH'"  Style="{StaticResource lbl_Set_Info}" />
-                                <CheckBox Grid.Row="0" Grid.Column="1" x:Name="cb_Set_AutoSetHighPriority" IsChecked="{Binding Path=EnableAutoSetHighPriority, Mode=TwoWay}" Style="{StaticResource cb_Set}"/>
-                            </Grid>
-                            <Separator Style="{StaticResource sp_Set}"/>
-                            <Grid x:Name="Grid_Set_Livesplit">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition/>
-                                    <RowDefinition/>
-                                </Grid.RowDefinitions>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition/>
-                                    <ColumnDefinition/>
-                                </Grid.ColumnDefinitions>
-                                <Label Grid.Row="0" Grid.Column="0" Content="Start Livesplit on Game Launch"  Style="{StaticResource lbl_Set_Info}" />
-                                <CheckBox Grid.Row="0" Grid.Column="1" x:Name="cb_Set_EnableAutoStartLiveSplit" IsChecked="{Binding Path=EnableAutoStartLiveSplit, Mode=TwoWay}" Style="{StaticResource cb_Set}"/>
-                                <Label Grid.Row="1" Grid.Column="0" Content="Current Path: "  Style="{StaticResource lbl_Set_Info}" />
-                                <Button Grid.Row="1" Grid.Column="1" x:Name="btn_Set_PathLiveSplit" Click="btn_Set_PathLiveSplit_Click" Content="{Binding Path=PathLiveSplit, Mode=TwoWay}" Style="{StaticResource btn_Set}"/>
-                            </Grid>
-                            <Separator Style="{StaticResource sp_Set}"/>
-                            <Grid x:Name="Grid_Set_StreamProgram">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition/>
-                                    <RowDefinition/>
-                                </Grid.RowDefinitions>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition/>
-                                    <ColumnDefinition/>
-                                </Grid.ColumnDefinitions>
-                                <Label Grid.Row="0" Grid.Column="0" Content="Start StreamProgram on Game Launch"  Style="{StaticResource lbl_Set_Info}" />
-                                <CheckBox Grid.Row="0" Grid.Column="1" x:Name="cb_Set_EnableAutoStartStreamProgram" IsChecked="{Binding Path=EnableAutoStartStreamProgram, Mode=TwoWay}" Style="{StaticResource cb_Set}"/>
-                                <Label Grid.Row="1" Grid.Column="0" Content="Current Path: "  Style="{StaticResource lbl_Set_Info}" />
-                                <Button Grid.Row="1" Grid.Column="1" x:Name="btn_Set_PathStreamProgram" Click="btn_Set_PathStreamProgram_Click" Content="{Binding Path=PathStreamProgram, Mode=TwoWay}" Style="{StaticResource btn_Set}"/>
-                            </Grid>
-                            <Separator Style="{StaticResource sp_Set}"/>
-                            <Grid x:Name="Grid_Set_FPSLimiter">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition/>
-                                    <RowDefinition/>
-                                </Grid.RowDefinitions>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition/>
-                                    <ColumnDefinition/>
-                                </Grid.ColumnDefinitions>
-                                <Label Grid.Row="0" Grid.Column="0" Content="Start FPS Limiter on Game Launch"  Style="{StaticResource lbl_Set_Info}" />
-                                <CheckBox Grid.Row="0" Grid.Column="1" x:Name="cb_Set_EnableAutoStartFPSLimiter" IsChecked="{Binding Path=EnableAutoStartFPSLimiter, Mode=TwoWay}" Style="{StaticResource cb_Set}"/>
-                                <Label Grid.Row="1" Grid.Column="0" Content="Current Path: "  Style="{StaticResource lbl_Set_Info}" />
-                                <Button Grid.Row="1" Grid.Column="1" x:Name="btn_Set_PathFPSLimiter" Click="btn_Set_PathFPSLimiter_Click" Content="{Binding Path=PathFPSLimiter, Mode=TwoWay}" Style="{StaticResource btn_Set}"/>
-                            </Grid>
-                            <Separator Style="{StaticResource sp_Set}"/>
-                            <Grid x:Name="Grid_Set_JumpScript">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition/>
-                                    <RowDefinition/>
-                                </Grid.RowDefinitions>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition/>
-                                    <ColumnDefinition/>
-                                </Grid.ColumnDefinitions>
-                                <Label Grid.Row="0" Grid.Column="0" Content="Start JumpScript on Game Launch"  Style="{StaticResource lbl_Set_Info}" />
-                                <CheckBox Grid.Row="0" Grid.Column="1" x:Name="cb_Set_EnableAutoStartJumpScript" IsChecked="{Binding Path=EnableAutoStartJumpScript, Mode=TwoWay}" Style="{StaticResource cb_Set}"/>
-                                <Button Grid.Row="1" Grid.Column="0" x:Name="btn_Set_JumpScriptKey1" Click="btn_Set_JumpScriptKey1_Click" Content="{Binding Path=JumpScriptKey1, Mode=TwoWay}" Style="{StaticResource btn_Set}" HorizontalAlignment="Right"/>
-                                <Button Grid.Row="1" Grid.Column="1" x:Name="btn_Set_JumpScriptKey2" Click="btn_Set_JumpScriptKey2_Click" Content="{Binding Path=JumpScriptKey2, Mode=TwoWay}" Style="{StaticResource btn_Set}"/>
-                            </Grid>
-                            <Separator Style="{StaticResource sp_Set}"/>
-                            <Grid x:Name="Grid_Set_Nohboard">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition/>
-                                    <RowDefinition/>
-                                </Grid.RowDefinitions>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="2*"/>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="2*"/>
-                                    <ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
-                                <Label Grid.Row="0" Grid.Column="0" Content="Start Nohboard on Game Launch"  Style="{StaticResource lbl_Set_Info}" />
-                                <CheckBox Grid.Row="0" Grid.Column="1" x:Name="cb_Set_EnableAutoStartNohboard" IsChecked="{Binding Path=EnableAutoStartNohboard, Mode=TwoWay}" Style="{StaticResource cb_Set}"/>
-                                <Label Grid.Row="0" Grid.Column="2" Content="Use Burhac Setup"  Style="{StaticResource lbl_Set_Info}" />
-                                <CheckBox Grid.Row="0" Grid.Column="3" x:Name="cb_Set_EnableNohboardBurhac" IsChecked="{Binding Path=EnableNohboardBurhac, Mode=TwoWay}" Style="{StaticResource cb_Set}"/>
+                        </Grid>
 
-                                <Label Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Content="Current Path: "  Style="{StaticResource lbl_Set_Info}" />
-                                <Button Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="2" x:Name="btn_Set_PathNohboard" Click="btn_Set_PathNohboard_Click" Content="{Binding Path=PathNohboard, Mode=TwoWay}" Style="{StaticResource btn_Set}"/>
-                            </Grid>
-                            <Separator Style="{StaticResource sp_Set}"/>
-                            <Grid x:Name="Grid_Set_Theme">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition/>
-                                    <RowDefinition/>
-                                </Grid.RowDefinitions>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition/>
-                                    <ColumnDefinition/>
-                                </Grid.ColumnDefinitions>
-                                <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Content="Theming:"  Style="{StaticResource lbl_Set_Head}" />
-                                <Label Grid.Row="1" Grid.Column="0" Content="Current Theme: "  Style="{StaticResource lbl_Set_Info}" />
-                                <Button Grid.Row="1" Grid.Column="1" x:Name="btn_Set_Theme" Click="btn_Set_Theme_Click" Content="{Binding Path=Theme, Mode=TwoWay}" Style="{StaticResource btn_Set}"/>
-                            </Grid>
-                           -->
-                        </StackPanel>
-                    </ScrollViewer>
-                </Border>
+                        <Grid x:Name="Grid_Set_BackupPath">
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Content="Backup Path"  Style="{StaticResource lbl_Set_Head}" />
+                            <Label Grid.Row="1" Grid.Column="0" Content="Current Path: "  Style="{StaticResource lbl_Set_Info}" />
+                            <Button Grid.Row="1" Grid.Column="1" x:Name="btn_Set_FileFolder" Click="btn_Set_FileFolder_Click" Content="{Binding Path=FileFolder, Mode=TwoWay}" Style="{StaticResource btn_Set}"/>
+                        </Grid>
 
-                <Button Style="{StaticResource btn}" x:Name="btn_Reset" Grid.Row="2" Grid.Column="0" Margin="10" Content="Reset" Click="btn_Reset_Click"/>
-                <Button Style="{StaticResource btn}" x:Name="btn_Close" Grid.Row="3" Grid.Column="0" Margin="10" Content="Close" Click="btn_Close_Click"/>
+                        <Grid x:Name="Grid_Set_Logging">
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Row="0" Grid.Column="0" Content="Enable Logging"  Style="{StaticResource lbl_Set_Info}" />
+                            <CheckBox Grid.Row="0" Grid.Column="1" x:Name="cb_Set_EnableLogging" IsChecked="{Binding Path=EnableLogging, Mode=TwoWay}" Style="{StaticResource cb_Set}"/>
+                        </Grid>
 
-            </Grid>
-        </Border>
+                        <!--<Grid x:Name="Grid_Set_TmpFixSteamLaunch">
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Row="0" Grid.Column="0" Content="Enable TempFixSteamLaunch"  Style="{StaticResource lbl_Set_Info}" />
+                            <CheckBox Grid.Row="0" Grid.Column="1" x:Name="cb_Set_TempFixSteamLaunch" IsChecked="{Binding Path=EnableTempFixSteamLaunch, Mode=TwoWay}" Style="{StaticResource cb_Set}"/>
+                        </Grid>
+
+
+                        <Grid x:Name="Grid_Set_Preorder">
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Row="0" Grid.Column="0" Content="Enable / Use 500k Pre-Order Bonus "  Style="{StaticResource lbl_Set_Info}" />
+                            <CheckBox Grid.Row="0" Grid.Column="1" x:Name="cb_Set_EnablePreOrderBonus" IsChecked="{Binding Path=EnablePreOrderBonus, Mode=TwoWay}" Style="{StaticResource cb_Set}"/>
+                        </Grid>
+
+                        <Grid x:Name="Grid_Set_AutoHighPriority">
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Row="0" Grid.Column="0" Content="Automatically set Process Priority to 'HIGH'"  Style="{StaticResource lbl_Set_Info}" />
+                            <CheckBox Grid.Row="0" Grid.Column="1" x:Name="cb_Set_AutoSetHighPriority" IsChecked="{Binding Path=EnableAutoSetHighPriority, Mode=TwoWay}" Style="{StaticResource cb_Set}"/>
+                        </Grid>
+
+                        <Grid x:Name="Grid_Set_Livesplit">
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Row="0" Grid.Column="0" Content="Start Livesplit on Game Launch"  Style="{StaticResource lbl_Set_Info}" />
+                            <CheckBox Grid.Row="0" Grid.Column="1" x:Name="cb_Set_EnableAutoStartLiveSplit" IsChecked="{Binding Path=EnableAutoStartLiveSplit, Mode=TwoWay}" Style="{StaticResource cb_Set}"/>
+                            <Label Grid.Row="1" Grid.Column="0" Content="Current Path: "  Style="{StaticResource lbl_Set_Info}" />
+                            <Button Grid.Row="1" Grid.Column="1" x:Name="btn_Set_PathLiveSplit" Click="btn_Set_PathLiveSplit_Click" Content="{Binding Path=PathLiveSplit, Mode=TwoWay}" Style="{StaticResource btn_Set}"/>
+                        </Grid>
+
+                        <Grid x:Name="Grid_Set_StreamProgram">
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Row="0" Grid.Column="0" Content="Start StreamProgram on Game Launch"  Style="{StaticResource lbl_Set_Info}" />
+                            <CheckBox Grid.Row="0" Grid.Column="1" x:Name="cb_Set_EnableAutoStartStreamProgram" IsChecked="{Binding Path=EnableAutoStartStreamProgram, Mode=TwoWay}" Style="{StaticResource cb_Set}"/>
+                            <Label Grid.Row="1" Grid.Column="0" Content="Current Path: "  Style="{StaticResource lbl_Set_Info}" />
+                            <Button Grid.Row="1" Grid.Column="1" x:Name="btn_Set_PathStreamProgram" Click="btn_Set_PathStreamProgram_Click" Content="{Binding Path=PathStreamProgram, Mode=TwoWay}" Style="{StaticResource btn_Set}"/>
+                        </Grid>
+
+                        <Grid x:Name="Grid_Set_FPSLimiter">
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Row="0" Grid.Column="0" Content="Start FPS Limiter on Game Launch"  Style="{StaticResource lbl_Set_Info}" />
+                            <CheckBox Grid.Row="0" Grid.Column="1" x:Name="cb_Set_EnableAutoStartFPSLimiter" IsChecked="{Binding Path=EnableAutoStartFPSLimiter, Mode=TwoWay}" Style="{StaticResource cb_Set}"/>
+                            <Label Grid.Row="1" Grid.Column="0" Content="Current Path: "  Style="{StaticResource lbl_Set_Info}" />
+                            <Button Grid.Row="1" Grid.Column="1" x:Name="btn_Set_PathFPSLimiter" Click="btn_Set_PathFPSLimiter_Click" Content="{Binding Path=PathFPSLimiter, Mode=TwoWay}" Style="{StaticResource btn_Set}"/>
+                        </Grid>
+
+                        <Grid x:Name="Grid_Set_JumpScript">
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Row="0" Grid.Column="0" Content="Start JumpScript on Game Launch"  Style="{StaticResource lbl_Set_Info}" />
+                            <CheckBox Grid.Row="0" Grid.Column="1" x:Name="cb_Set_EnableAutoStartJumpScript" IsChecked="{Binding Path=EnableAutoStartJumpScript, Mode=TwoWay}" Style="{StaticResource cb_Set}"/>
+                            <Button Grid.Row="1" Grid.Column="0" x:Name="btn_Set_JumpScriptKey1" Click="btn_Set_JumpScriptKey1_Click" Content="{Binding Path=JumpScriptKey1, Mode=TwoWay}" Style="{StaticResource btn_Set}" HorizontalAlignment="Right"/>
+                            <Button Grid.Row="1" Grid.Column="1" x:Name="btn_Set_JumpScriptKey2" Click="btn_Set_JumpScriptKey2_Click" Content="{Binding Path=JumpScriptKey2, Mode=TwoWay}" Style="{StaticResource btn_Set}"/>
+                        </Grid>
+
+                        <Grid x:Name="Grid_Set_Nohboard">
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="2*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="2*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Row="0" Grid.Column="0" Content="Start Nohboard on Game Launch"  Style="{StaticResource lbl_Set_Info}" />
+                            <CheckBox Grid.Row="0" Grid.Column="1" x:Name="cb_Set_EnableAutoStartNohboard" IsChecked="{Binding Path=EnableAutoStartNohboard, Mode=TwoWay}" Style="{StaticResource cb_Set}"/>
+                            <Label Grid.Row="0" Grid.Column="2" Content="Use Burhac Setup"  Style="{StaticResource lbl_Set_Info}" />
+                            <CheckBox Grid.Row="0" Grid.Column="3" x:Name="cb_Set_EnableNohboardBurhac" IsChecked="{Binding Path=EnableNohboardBurhac, Mode=TwoWay}" Style="{StaticResource cb_Set}"/>
+
+                            <Label Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Content="Current Path: "  Style="{StaticResource lbl_Set_Info}" />
+                            <Button Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="2" x:Name="btn_Set_PathNohboard" Click="btn_Set_PathNohboard_Click" Content="{Binding Path=PathNohboard, Mode=TwoWay}" Style="{StaticResource btn_Set}"/>
+                        </Grid>
+
+                        <Grid x:Name="Grid_Set_Theme">
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Content="Theming:"  Style="{StaticResource lbl_Set_Head}" />
+                            <Label Grid.Row="1" Grid.Column="0" Content="Current Theme: "  Style="{StaticResource lbl_Set_Info}" />
+                            <Button Grid.Row="1" Grid.Column="1" x:Name="btn_Set_Theme" Click="btn_Set_Theme_Click" Content="{Binding Path=Theme, Mode=TwoWay}" Style="{StaticResource btn_Set}"/>
+                        </Grid>-->
+
+                    </StackPanel>
+                </ScrollViewer>
+            </Border>
+
+            <Button Style="{StaticResource btn}" x:Name="btn_Reset" Grid.Row="2" Grid.Column="0" Margin="10" Content="Reset" Click="btn_Reset_Click"/>
+            <Button Style="{StaticResource btn}" x:Name="btn_Close" Grid.Row="3" Grid.Column="0" Margin="10" Content="Close" Click="btn_Close_Click"/>
+
+        </Grid>
+    </Border>
 </Window>
