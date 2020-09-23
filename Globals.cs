@@ -47,12 +47,7 @@ namespace Project_127
 		/// <summary>
 		/// URL for AuthUserFile
 		/// </summary>
-		public static string URL_AuthUser = HelperClasses.FileHandling.GetXMLTagContent(new System.Net.Http.HttpClient().GetStringAsync(Globals.URL_AutoUpdate).GetAwaiter().GetResult(), "authuser");
-
-		/// <summary>
-		/// URL for the latest Zip File
-		/// </summary>
-		public static string URL_LatestZIP = HelperClasses.FileHandling.GetXMLTagContent(new System.Net.Http.HttpClient().GetStringAsync(Globals.URL_AutoUpdate).GetAwaiter().GetResult(), "zip");
+		public static string URL_AuthUser = HelperClasses.FileHandling.GetXMLTagContent(HelperClasses.FileHandling.GetStringFromURL(Globals.URL_AutoUpdate), "authuser");
 
 		/// <summary>
 		/// Download Location of Zip File
@@ -121,7 +116,7 @@ namespace Project_127
 			{"EnableAutoStartNohboard", "True" },
 			{"EnableNohboardBurhac", "True" },
 			{"PathNohboard", @"C:\Some\Path\SomeFile.exe" },
-			{"Theme", @"" }
+			{"Theme", @"Empty" }
 		};
 
 		/// <summary>
@@ -135,6 +130,7 @@ namespace Project_127
 		public static void Init(MainWindow pMW)
 		{
 			// Initiates Logging
+			// This is also responsible for the intial first few messages on startup.
 			HelperClasses.Logger.Init();
 
 			// Initiates the Settings
@@ -152,17 +148,21 @@ namespace Project_127
 			if (Settings.FirstLaunch)
 			{
 				// Set Own Installation Path in Regedit Settings
-				HelperClasses.Logger.Log("We are launching this for the first time. Setting Installation Path to '" + ProjectInstallationPath + "'");
-				Globals.MySettings["InstallationPath"] = ProjectInstallationPath;
+				HelperClasses.Logger.Log("FirstLaunch Procedure Started");
+				HelperClasses.Logger.Log("Setting Installation Path to '" + ProjectInstallationPath + "'",1);
+				Settings.SetSetting("InstallationPath", ProjectInstallationPath);
 
 				// Calling this to get the Path automatically
 				LauncherLogic.GTAVPathGuessingGame();
 
 				// Set FirstLaunch to false
 				Settings.FirstLaunch = false;
+
+				HelperClasses.Logger.Log("FirstLaunch Procedure Ended");
 			}
 
 			// Check if GTA V Folder is correct
+			HelperClasses.Logger.Log("While Loop during intitial start-up to make sure GTAV Path is valid");
 			while (!LauncherLogic.IsGTAVInstallationPathCorrect(Settings.GTAVInstallationPath))
 			{
 				new Popup(Popup.PopupWindowTypes.PopupOk, "GTA V Installation Path detected to be wrong. Please choose a new one").ShowDialog();
@@ -170,6 +170,7 @@ namespace Project_127
 				string GTAVInstallationPath = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.Folder, "Pick the Folder which contains your GTAV.exe", @"C:\");
 				Settings.GTAVInstallationPath = GTAVInstallationPath;
 			}
+			HelperClasses.Logger.Log("While Loop during intitial start-up to make sure GTAV Path is valid");
 
 			// Check our version of the ZIP File
 			int ZipVersion = 0;
@@ -177,13 +178,12 @@ namespace Project_127
 
 			// Check whats the latest Version of the ZIP File in GITHUB
 			int ZipOnlineVersion = 0;
-			Int32.TryParse(HelperClasses.FileHandling.GetXMLTagContent(new System.Net.Http.HttpClient().GetStringAsync(Globals.URL_AutoUpdate).GetAwaiter().GetResult(), "zipversion"), out ZipOnlineVersion);
+			Int32.TryParse(HelperClasses.FileHandling.GetXMLTagContent(HelperClasses.FileHandling.GetStringFromURL(Globals.URL_AutoUpdate), "zipversion"), out ZipOnlineVersion);
 
 			HelperClasses.Logger.Log("Checking for ZIP - Update");
 			HelperClasses.Logger.Log("ZipVersion = '" + ZipVersion.ToString() + "', ZipOnlineVersion = '" + ZipOnlineVersion + "'");
 
 			// If Zip file from Server is newer
-
 			if (ZipOnlineVersion > ZipVersion)
 			{
 				HelperClasses.Logger.Log("Update for ZIP found");
@@ -192,15 +192,20 @@ namespace Project_127
 				if (yesno.DialogResult == true)
 				{
 					HelperClasses.Logger.Log("User wants update for ZIP");
-					string pathOfNewZip = HelperClasses.FileHandling.GetXMLTagContent(new System.Net.Http.HttpClient().GetStringAsync(Globals.URL_AutoUpdate).GetAwaiter().GetResult(), "zip");
-					new PopupDownload(PopupDownloadTypes.ZIP, pathOfNewZip, ZipFileDownloadLocation).ShowDialog();
+					string pathOfNewZip = HelperClasses.FileHandling.GetXMLTagContent(HelperClasses.FileHandling.GetStringFromURL(Globals.URL_AutoUpdate), "zip");
+					new PopupProgress(PopupDownloadTypes.ZIP, pathOfNewZip, ZipFileDownloadLocation).ShowDialog();
 				}
 				else
 				{
 					HelperClasses.Logger.Log("User does not want update for ZIP");
 				}
 			}
+			else
+			{
+				HelperClasses.Logger.Log("NO Update for ZIP found");
+			}
 
+			// Starting the Dispatcher Timer for the automatic updates of the GTA V Button
 			MyDispatcherTimer = new System.Windows.Threading.DispatcherTimer();
 			MyDispatcherTimer.Tick += new EventHandler(pMW.SetGTAVButtonBasedOnGameAndInstallationState);
 			MyDispatcherTimer.Interval = TimeSpan.FromMilliseconds(5000);
@@ -335,7 +340,7 @@ namespace Project_127
 		public static Brush PU_ButtonMOBorderBrush { get; private set; } = MyColorBlack;
 
 		public static Brush PU_ProgressBarBackground { get; private set; } = MyColorBlack;
-		public static Brush PU_ProgressBarForeground { get; private set; } = MyColorBlack;
+		public static Brush PU_ProgressBarForeground { get; private set; } = MyColorWhite;
 		public static Brush PU_ProgressBarBorderBrush { get; private set; } = MyColorBlack;
 		public static System.Windows.Thickness PU_ButtonBorderThickness { get; private set; } = new System.Windows.Thickness(2);
 		public static Brush PU_LabelForeground { get; private set; } = MyColorWhite;

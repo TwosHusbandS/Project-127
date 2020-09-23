@@ -131,7 +131,7 @@ namespace Project_127.HelperClasses
 
 			if (doesFileExist(pFilePath))
 			{
-				rtrn =File.ReadAllText(pFilePath);
+				rtrn = File.ReadAllText(pFilePath);
 			}
 
 			return rtrn;
@@ -144,22 +144,29 @@ namespace Project_127.HelperClasses
 		/// <param name="pRealFilePath"></param>
 		public static void HardLinkFiles(string pLinkFilePath, string pRealFilePath)
 		{
+			// If the file already exists, we delete it
 			if (doesFileExist(pLinkFilePath))
 			{
-				HelperClasses.Logger.Log("Creating SymLink in: '" + pLinkFilePath + "' for existing file '" + pRealFilePath + "'. Target File exists. Im deleting it. YOLO. Target File already exists", true, 0);
+				HelperClasses.Logger.Log("Creating Hardlink in: '" + pLinkFilePath + "' for existing file '" + pRealFilePath + "'. Target File already exists. Im deleting it. YOLO.", true, 0);
 				deleteFile(pLinkFilePath);
 			}
 
+			// Try to Hardlink
 			try
 			{
+				// String of Folder of Hardlink
 				string[] sth = PathSplitUp(pLinkFilePath);
+
+				// Create the folder (if it doesnt exist...
 				createPath(sth[0]);
+
+				//Creating the actual Hardlink
 				CreateHardLink(pLinkFilePath, pRealFilePath, IntPtr.Zero);
 			}
 			catch (Exception e)
 			{
-				System.Windows.Forms.MessageBox.Show("Creating SymLink in: '" + pLinkFilePath + "' for existing file '" + pRealFilePath + "' failed.\nI suggest you restart the Program and contact me if it happens again.\n\nErrorMessage:\n" + e.ToString());
-				HelperClasses.Logger.Log("Creating SymLink in: '" + pLinkFilePath + "' for existing file '" + pRealFilePath + "' failed", true, 0);
+				new Popup(Popup.PopupWindowTypes.PopupOkError, "Creating Hardlink in: '" + pLinkFilePath + "' for existing file '" + pRealFilePath + "' failed.\nI suggest you restart the Program (maybe Repair) and contact me if it happens again.\n\nErrorMessage:\n" + e.ToString()).ShowDialog();
+				HelperClasses.Logger.Log("Creating Hardlink in: '" + pLinkFilePath + "' for existing file '" + pRealFilePath + "' failed", true, 0);
 			}
 		}
 
@@ -183,7 +190,7 @@ namespace Project_127.HelperClasses
 			}
 			catch (Exception e)
 			{
-				System.Windows.Forms.MessageBox.Show("Moving File: '" + pMoveFromFilePath + "' to '" + pMoveToFilePath + "' failed.\nI suggest you restart the Program and contact me if it happens again.\n\nErrorMessage:\n" + e.ToString());
+				new Popup(Popup.PopupWindowTypes.PopupOkError, "Moving File: '" + pMoveFromFilePath + "' to '" + pMoveToFilePath + "' failed.\nI suggest you restart the Program and contact me if it happens again.\n\nErrorMessage:\n" + e.ToString()).ShowDialog();
 				HelperClasses.Logger.Log("Moving File: '" + pMoveFromFilePath + "' to '" + pMoveToFilePath + "' failed.", true, 0);
 			}
 		}
@@ -205,6 +212,7 @@ namespace Project_127.HelperClasses
 			}
 			catch (Exception e)
 			{
+				new Popup(Popup.PopupWindowTypes.PopupOkError, "Writing to Log failed. File was probably deleted after start of Program.\nI suggest you restart the Program and contact me if it happens again.\n\nErrorMessage:\n" + e.ToString()).ShowDialog();
 				System.Windows.Forms.MessageBox.Show("Writing to Log failed. File was probably deleted after start of Program.\nI suggest you restart the Program and contact me if it happens again.\n\nErrorMessage:\n" + e.ToString());
 			}
 		}
@@ -212,7 +220,11 @@ namespace Project_127.HelperClasses
 		// A lot of self written functions for File stuff below.
 		// Lots of overloaded stuff. Nothing checks for errors, like file permissions or sth.
 
-
+		/// <summary>
+		/// ReadFileEachLine
+		/// </summary>
+		/// <param name="pFilePath"></param>
+		/// <returns></returns>
 		public static string[] ReadFileEachLine(string pFilePath)
 		{
 			if (doesFileExist(pFilePath))
@@ -225,7 +237,12 @@ namespace Project_127.HelperClasses
 			}
 		}
 
-
+		/// <summary>
+		/// GetXMLTagContent
+		/// </summary>
+		/// <param name="pXML"></param>
+		/// <param name="pTag"></param>
+		/// <returns></returns>
 		public static string GetXMLTagContent(string pXML, string pTag)
 		{
 			string rtrn = "";
@@ -242,6 +259,30 @@ namespace Project_127.HelperClasses
 
 			return rtrn;
 		}
+
+
+		/// <summary>
+		/// Gets String from URL
+		/// </summary>
+		/// <param name="pURL"></param>
+		/// <returns></returns>
+		public static string GetStringFromURL(string pURL)
+		{
+			string rtrn = "";
+
+			try
+			{
+				rtrn = new System.Net.Http.HttpClient().GetStringAsync(pURL).GetAwaiter().GetResult();
+			}
+			catch (Exception e)
+			{
+				new Popup(Popup.PopupWindowTypes.PopupOkError, "GetStringFromURL failed. Probably Network related. URL = '" + pURL + "'.\nI suggest you restart the Program and contact me if it happens again.\n\nErrorMessage:\n" + e.ToString()).ShowDialog();
+				HelperClasses.Logger.Log("GetStringFromURL failed. Probably Network related. URL = '" + pURL + "'", true, 0);
+			}
+
+			return rtrn;
+		}
+
 
 
 		/// <summary>
@@ -348,7 +389,7 @@ namespace Project_127.HelperClasses
 				}
 				catch (Exception e)
 				{
-					System.Windows.Forms.MessageBox.Show("Deleting File failed ('" + pFilePath + "').\nI suggest you restart the Program and contact me if it happens again.\n\nErrorMessage:\n" + e.ToString());
+					new Popup(Popup.PopupWindowTypes.PopupOkError, "Deleting File failed ('" + pFilePath + "').\nI suggest you restart the Program and contact me if it happens again.\n\nErrorMessage:\n" + e.ToString()).ShowDialog();
 					HelperClasses.Logger.Log("Deleting File failed ('" + pFilePath + "').", true, 0);
 				}
 			}
@@ -376,7 +417,7 @@ namespace Project_127.HelperClasses
 			}
 			catch (Exception e)
 			{
-				System.Windows.Forms.MessageBox.Show("Create File failed ('" + PathCombine(pPath, pFile) + "').\nI suggest you restart the Program and contact me if it happens again.\n\nErrorMessage:\n" + e.ToString());
+				new Popup(Popup.PopupWindowTypes.PopupOkError, "Create File failed ('" + PathCombine(pPath, pFile) + "').\nI suggest you restart the Program and contact me if it happens again.\n\nErrorMessage:\n" + e.ToString()).ShowDialog();
 				HelperClasses.Logger.Log("Create File failed ('" + PathCombine(pPath, pFile) + "').", true, 0);
 			}
 		}

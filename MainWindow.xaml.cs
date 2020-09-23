@@ -21,7 +21,7 @@ Main Client Implementation by "@thS#0305"
 The actual hard lifting of the launching (with fixes) and authentification stuff is achieved by the hardwork of "@dr490n", "@Special For" and "@zCri"
 Artwork, GUI Design, GUI Behaviour, Colorchoice etc. by "@Hossel"
 
-Version: 0.0.1.9 unreleased
+Version: 0.0.2.0 unreleased
 
 Build Instructions:
 	Add a Reference to all the DLLs inside of \MyDLLs\
@@ -71,23 +71,31 @@ General Comments and things one should be aware of (still finishing this list)
 	My Other ideas of creating Settings (CustomControl or Programtically) didnt work because
 		DataBinding the ButtonContext is hard for some reason. Works which the checkbox tho, which is kinda weird
 	BetaMode is hardcoded in Globals.cs
+	Importing ZIP needs some work. Currently overwrites all files (including version.txt) apart from "UpgradeFiles" Folder
 
 Main To do:
-	- Gotta Check something...importing zip needs some work I guess...unsure if to overwrite Version.cs when importing via button
-		- at the moment you can not "integrate" a zip file. it overrides everything (including version.txt), apart from "UpgradeFiles" folder
-		- You do have the option to opt out of zip upgrades tho.
-	- Gotta Check something...I think this program might crash if offline because it tries to autoupdate and connect to github...awkward
-
+	- Giving the option to copy / paste instead of Hardlinks
 	- Implemet other features (SaveFileHandler,all Settings, auto high priority, auto darkviperau steam core fix)
 
     - Low Prio:
 		Convert Settings and SaveFileHandler in CustomControls
-		Theming
 		Popup start in middle of window
 		Fix Code signing so we dont get anti virus error
         Implement Hamburger Animation
+		Theming
 		Get DataBinding working on Button Context for Settings
 		Own FPS Limiter
+
+	- AAAA
+		Was in the middle of making this shit not crash when github is unreachable. Will need to work on that. Not done.
+		Just pushing "hotfix" to make this work with new zip file.
+
+Weird Beta Reportings:
+	- Reloe double GTAV Location check on firstlaunch 
+		// No idea why this happened...cant explain
+		// Changed in what order functions are called
+		// and am doing more detailed logging.
+		// Shouldnt happen again, or if it does we will know why.
 */
 
 using System;
@@ -143,6 +151,7 @@ namespace Project_127
 			// Initializing all WPF Elements
 			InitializeComponent();
 
+
 			// Dont run anything when we are on 32 bit...
 			// If this ever gets changed, take a second look at regedit class and path(different for 32 and 64 bit OS)
 			if (Environment.Is64BitOperatingSystem == false)
@@ -151,20 +160,22 @@ namespace Project_127
 				Environment.Exit(1);
 			}
 
+			// Start the Init Process
+			Globals.Init(this);
+
 			if (!CheckIfAllowedToRun())
 			{
 				new Popup(Popup.PopupWindowTypes.PopupOkError, "You are not allowed to run this beta.").ShowDialog();
 				Environment.Exit(2);
 			}
 
-			// Start the Init Process
-			Globals.Init(this);
-
 			// Deleting all Installer Files from own Project Installation Path
+			HelperClasses.Logger.Log("Checking if there is an old Installer in the Project InstallationPath during startup procedure.");
 			foreach (string myFile in HelperClasses.FileHandling.GetFilesFromFolder(Globals.ProjectInstallationPath))
 			{
 				if (myFile.ToLower().Contains("installer"))
 				{
+					HelperClasses.Logger.Log("Found old installer File ('" + HelperClasses.FileHandling.PathSplitUp(myFile)[1] + "') in the Directory. Will delete it.");
 					HelperClasses.FileHandling.deleteFile(myFile);
 				}
 			}
@@ -178,35 +189,59 @@ namespace Project_127
 
 			// Auto Updater
 			CheckForUpdate();
+
+			HelperClasses.Logger.Log("Startup procedure (Constructor of MainWindow) completed.");
 		}
 
 		private void CheckForUpdate()
 		{
 			// Check online File for Version.
-			string MyVersionOnlineString = HelperClasses.FileHandling.GetXMLTagContent(new System.Net.Http.HttpClient().GetStringAsync(Globals.URL_AutoUpdate).GetAwaiter().GetResult(), "version");
-			Version MyVersionOnline = new Version(MyVersionOnlineString);
+			string MyVersionOnlineString = HelperClasses.FileHandling.GetXMLTagContent(HelperClasses.FileHandling.GetStringFromURL(Globals.URL_AutoUpdate), "version");
 
-			HelperClasses.Logger.Log("Checking for Update");
-			HelperClasses.Logger.Log("MyVersionOnline = '" + MyVersionOnline.ToString() + "', Globals.ProjectVersion = '" + Globals.ProjectVersion + "'");
-
-			if (MyVersionOnline > Globals.ProjectVersion)
+			// If this is empty,  github returned ""
+			if (!(String.IsNullOrEmpty(MyVersionOnlineString)))
 			{
-				HelperClasses.Logger.Log("Update found");
-				Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Version: '" + MyVersionOnline.ToString() + "' found on the Server.\nVersion: '" + Globals.ProjectVersion.ToString() + "' found installed.\nDo you want to upgrade?");
-				yesno.ShowDialog();
-				if (yesno.DialogResult == true)
-				{
-					HelperClasses.Logger.Log("Update found. User wants it");
-					string DLPath = HelperClasses.FileHandling.GetXMLTagContent(new System.Net.Http.HttpClient().GetStringAsync(Globals.URL_AutoUpdate).GetAwaiter().GetResult(), "url");
-					string DLFilename = DLPath.Substring(DLPath.LastIndexOf('/') + 1);
-					string LocalFileName = Globals.ProjectInstallationPath.TrimEnd('\\') + @"\" + DLFilename;
+				// Building a Version out of the String
+				Version MyVersionOnline = new Version(MyVersionOnlineString);
 
-					new PopupDownload(PopupDownloadTypes.Installer, DLPath, LocalFileName).ShowDialog();
+				// Logging some stuff
+				HelperClasses.Logger.Log("Checking for Project 1.27 Update during start up procedure");
+				HelperClasses.Logger.Log("MyVersionOnline = '" + MyVersionOnline.ToString() + "', Globals.ProjectVersion = '" + Globals.ProjectVersion + "'",1);
+
+				// If Online Version is "bigger" than our own local Version
+				if (MyVersionOnline > Globals.ProjectVersion)
+				{
+					// Update Found.
+					HelperClasses.Logger.Log("Update found,1");
+					Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Version: '" + MyVersionOnline.ToString() + "' found on the Server.\nVersion: '" + Globals.ProjectVersion.ToString() + "' found installed.\nDo you want to upgrade?");
+					yesno.ShowDialog();
+					// Asking User if he wants update.
+					if (yesno.DialogResult == true)
+					{
+						// User wants Update
+						HelperClasses.Logger.Log("Update found. User wants it",1);
+						string DLPath = HelperClasses.FileHandling.GetXMLTagContent(HelperClasses.FileHandling.GetStringFromURL(Globals.URL_AutoUpdate), "url");
+						string DLFilename = DLPath.Substring(DLPath.LastIndexOf('/') + 1);
+						string LocalFileName = Globals.ProjectInstallationPath.TrimEnd('\\') + @"\" + DLFilename;
+
+						new PopupProgress(PopupDownloadTypes.Installer, DLPath, LocalFileName).ShowDialog();
+					}
+					else
+					{
+						// User doesnt want update
+						HelperClasses.Logger.Log("Update found. User does not wants it",1);
+					}
 				}
 				else
 				{
-					HelperClasses.Logger.Log("Update found. User does not wants it");
+					// No update found
+					HelperClasses.Logger.Log("No Update Found");
 				}
+			}
+			else
+			{
+				// String return is fucked
+				HelperClasses.Logger.Log("Did not get most up to date Project 1.27 Version from Github. Github offline or your PC offline. Probably. Lets hope so.");
 			}
 		}
 
@@ -260,8 +295,8 @@ namespace Project_127
 		/// <param name="e"></param>
 		private void btn_Auth_Click(object sender, RoutedEventArgs e)
 		{
-			new Popup(Popup.PopupWindowTypes.PopupOk, "Auth not fully implemented yet.\nImage you authed through the\nstuff from dr490n and this\nis why the lock is changing").ShowDialog();
-			SetAuthButtonBackground(Authstatus.Auth);
+			//new Popup(Popup.PopupWindowTypes.PopupOk, "Auth not fully implemented yet.\nImage you authed through the\nstuff from dr490n and this\nis why the lock is changing").ShowDialog();
+			//SetAuthButtonBackground(Authstatus.Auth);
 
 			//string c1 = Settings.GTAVInstallationPath.Substring(0, 2);
 			//string c2 = "cd " + Settings.GTAVInstallationPath;
@@ -269,15 +304,7 @@ namespace Project_127
 
 			//Process.Start("cmd.exe", "/c " + c1 + " && " + c2 + " && " + c3);
 
-			//HelperClasses.Logger.Log("Dragon is doing some magic. Launching Downgraded GTAV", 1);
-			//Process p = new Process();
-			//p.StartInfo.UseShellExecute = true;
-			////p.StartInfo.FileName = Settings.GTAVInstallationPath.TrimEnd('\\') + @"\PlayGTAV.exe"; ;
-			//p.StartInfo.FileName = Settings.GTAVInstallationPath.TrimEnd('\\') + @"\Test9.bat"; ;
-			//p.StartInfo.Verb = "runas";
-			//p.StartInfo.CreateNoWindow = false;
-			//p.StartInfo.WorkingDirectory = Settings.GTAVInstallationPath.TrimEnd('\\');
-			//p.Start();
+
 
 
 
@@ -349,7 +376,15 @@ namespace Project_127
 		/// <param name="e"></param>
 		private void btn_GTA_Click(object sender, RoutedEventArgs e)
 		{
- 			LauncherLogic.Launch();
+			string msg = "GTA V Installation is (probably) " + LauncherLogic.InstallationState.ToString() + ". The Game is (probably) " + LauncherLogic.GameState.ToString() + ".";
+
+			Popup conf = new Popup(Popup.PopupWindowTypes.PopupYesNo, msg + "\nDo you want to Launch the Game?");
+			conf.ShowDialog();
+			if (conf.DialogResult == true)
+			{
+				HelperClasses.Logger.Log("Clicked Launch Button", 1);
+				LauncherLogic.Launch();
+			}
 
 			SetGTAVButtonBasedOnGameAndInstallationState(null, null);
 		}
@@ -381,12 +416,21 @@ namespace Project_127
 		/// <param name="e"></param>
 		private void btn_Upgrade_Click(object sender, RoutedEventArgs e)
 		{
+			// Confirmation Popup
+			Popup conf = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Are you sure you want to Upgrade?");
+			conf.ShowDialog();
+			if (conf.DialogResult == false)
+			{
+				return;
+			}
+
+			// Actual Upgrade Button Code
 			HelperClasses.Logger.Log("Clicked the Upgrade Button");
 			if (LauncherLogic.IsGTAVInstallationPathCorrect())
 			{
 				if (LauncherLogic.InstallationState == LauncherLogic.InstallationStates.Downgraded)
 				{
-					HelperClasses.Logger.Log("Gamestate looks OK. Will Proceed to try to Upgrade.", 1);
+					HelperClasses.Logger.Log("Gamestate looks OK (Downgraded). Will Proceed to try to Upgrade.", 1);
 					LauncherLogic.Upgrade();
 				}
 				else
@@ -394,16 +438,16 @@ namespace Project_127
 					HelperClasses.Logger.Log("This program THINKS you are already Upgraded. Update procedure will not be called.", 1);
 					if (Globals.BetaMode)
 					{
-						Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "We are in Beta Mode. Do you want to FORCE the Upgrade?");
+						Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "We are in Beta Mode. Do you want to FORCE the Upgrade?\nThe program thinks youre already Upgraded. Things might go wrong if you force this.");
 						yesno.ShowDialog();
 						if (yesno.DialogResult == true)
 						{
-							HelperClasses.Logger.Log("Gamestate looks SHIT. Forcing Upgrade since we are in Beta Mode.", 1);
+							HelperClasses.Logger.Log("Gamestate looks SHIT (Upgraded). Forcing Upgrade since we are in Beta Mode.", 1);
 							LauncherLogic.Upgrade();
 						}
 						else
 						{
-							HelperClasses.Logger.Log("Gamestate looks SHIT. Upgrade was not forced.", 1);
+							HelperClasses.Logger.Log("Gamestate looks SHIT (Upgraded). Upgrade was not forced.", 1);
 						}
 					}
 				}
@@ -450,12 +494,21 @@ namespace Project_127
 		/// <param name="e"></param>
 		private void btn_Downgrade_Click(object sender, RoutedEventArgs e)
 		{
+			// Confirmation Popup
+			Popup conf = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Are you sure you want to Downgrade?");
+			conf.ShowDialog();
+			if (conf.DialogResult == false)
+			{
+				return;
+			}
+
+			// Actual Code behind Downgrade Button
 			HelperClasses.Logger.Log("Clicked the Downgrade Button");
 			if (LauncherLogic.IsGTAVInstallationPathCorrect())
 			{
 				if (LauncherLogic.InstallationState == LauncherLogic.InstallationStates.Upgraded)
 				{
-					HelperClasses.Logger.Log("Gamestate looks OK. Will Proceed to try to Downgrade.", 1);
+					HelperClasses.Logger.Log("Gamestate looks OK (Upgraded). Will Proceed to try to Downgrade.", 1);
 					LauncherLogic.Downgrade();
 				}
 				else
@@ -463,16 +516,16 @@ namespace Project_127
 					HelperClasses.Logger.Log("This program THINKS you are already Downgraded. Upgrade procedure will not be called.", 1);
 					if (Globals.BetaMode)
 					{
-						Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "We are in Beta Mode. Do you want to FORCE the Downgrade?");
+						Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "We are in Beta Mode. Do you want to FORCE the Downgrade?\nThe program thinks youre already Downgraded. Things might go wrong if you force this.");
 						yesno.ShowDialog();
 						if (yesno.DialogResult == true)
 						{
-							HelperClasses.Logger.Log("Gamestate looks SHIT. Forcing Downgrade since we are in Beta Mode.", 1);
+							HelperClasses.Logger.Log("Gamestate looks SHIT (Downgraded). Forcing Downgrade since we are in Beta Mode.", 1);
 							LauncherLogic.Downgrade();
 						}
 						else
 						{
-							HelperClasses.Logger.Log("Gamestate looks SHIT. Downgrade was not forced.", 1);
+							HelperClasses.Logger.Log("Gamestate looks SHIT (Downgraded). Downgrade was not forced.", 1);
 						}
 					}
 				}
@@ -700,12 +753,17 @@ namespace Project_127
 					RegistryKey MyKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64).CreateSubKey("SOFTWARE").CreateSubKey("Microsoft").CreateSubKey("Cryptography");
 					string GUID = HelperClasses.RegeditHandler.GetValue(MyKey, "MachineGuid");
 
-					System.Net.Http.HttpClient client = new System.Net.Http.HttpClient();
-					string Reply = client.GetStringAsync(Globals.URL_AuthUser).GetAwaiter().GetResult();
-
+					string Reply = HelperClasses.FileHandling.GetStringFromURL(Globals.URL_AuthUser);
 
 					if (Reply.Contains(GUID))
 					{
+						return true;
+					}
+
+					if (String.IsNullOrEmpty(Reply))
+					{
+						// Letting Users in if github is down...
+						new Popup(Popup.PopupWindowTypes.PopupOk, "Letting you in since Github appears to be down...").ShowDialog();
 						return true;
 					}
 				}

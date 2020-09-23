@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Closing="Window_Closing"
         Title="Project - 1.27"
-        Height="540" Width="800"
+        Height="540" Width="900"
         WindowStyle="None" 
         AllowsTransparency="True" 
         MouseLeftButtonDown="Window_MouseLeftButtonDown" 
