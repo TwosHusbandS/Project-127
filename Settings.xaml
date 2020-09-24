@@ -249,7 +249,7 @@
                             </Grid.ColumnDefinitions>
                             <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Content="GTA V Installation Path"  Style="{StaticResource lbl_Set_Head}" />
                             <Label Grid.Row="1" Grid.Column="0" Content="Current Path: "  Style="{StaticResource lbl_Set_Info}" />
-                            <Button Grid.Row="1" Grid.Column="1" x:Name="btn_Set_GTAVInstallationPath" Click="btn_Set_GTAVInstallationPath_Click" Content="{Binding Path=GTAVInstallationPath, Mode=TwoWay}" Style="{StaticResource btn_Set}"/>
+                            <Button Grid.Row="1" Grid.Column="1" x:Name="btn_Set_GTAVInstallationPath" Click="btn_Set_GTAVInstallationPath_Click" Content="{Binding Path=GTAVInstallationPath}" Style="{StaticResource btn_Set}"/>
                         </Grid>
 
                         <Grid x:Name="Grid_Set_BackupPath">
@@ -278,7 +278,7 @@
                             <CheckBox Grid.Row="0" Grid.Column="1" x:Name="cb_Set_EnableLogging" IsChecked="{Binding Path=EnableLogging, Mode=TwoWay}" Style="{StaticResource cb_Set}"/>
                         </Grid>
 
-                        <!--<Grid x:Name="Grid_Set_TmpFixSteamLaunch">
+                        <Grid x:Name="Grid_Set_CopyFilesInsteadOfHardlinking">
                             <Grid.RowDefinitions>
                                 <RowDefinition/>
                             </Grid.RowDefinitions>
@@ -286,11 +286,11 @@
                                 <ColumnDefinition/>
                                 <ColumnDefinition/>
                             </Grid.ColumnDefinitions>
-                            <Label Grid.Row="0" Grid.Column="0" Content="Enable TempFixSteamLaunch"  Style="{StaticResource lbl_Set_Info}" />
-                            <CheckBox Grid.Row="0" Grid.Column="1" x:Name="cb_Set_TempFixSteamLaunch" IsChecked="{Binding Path=EnableTempFixSteamLaunch, Mode=TwoWay}" Style="{StaticResource cb_Set}"/>
+                            <Label Grid.Row="0" Grid.Column="0" Content="Enable CopyFilesInsteadOfHardlinking"  Style="{StaticResource lbl_Set_Info}" />
+                            <CheckBox Grid.Row="0" Grid.Column="1" x:Name="cb_Set_CopyFilesInsteadOfHardlinking" IsChecked="{Binding Path=EnableCopyFilesInsteadOfHardlinking, Mode=TwoWay}" Style="{StaticResource cb_Set}"/>
                         </Grid>
 
-
+                        <!--
                         <Grid x:Name="Grid_Set_Preorder">
                             <Grid.RowDefinitions>
                                 <RowDefinition/>

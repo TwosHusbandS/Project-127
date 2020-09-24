@@ -42,20 +42,19 @@ namespace Project_127
 		/// <param name="e"></param>
 		private void btn_Set_GTAVInstallationPath_Click(object sender, RoutedEventArgs e)
 		{
-			GTAVInstallationPath = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.Folder, "Pick the Folder which contains your GTAV.exe", @"C:\");
+			string MyGTAVInstallationPath = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.Folder, "Pick the Folder which contains your GTAV.exe", @"C:\");
 			if (LauncherLogic.IsGTAVInstallationPathCorrect(GTAVInstallationPath))
 			{
 				HelperClasses.Logger.Log("Choosen Path of Set_GTAVInstallationPath Button is theoretical valid. Changing Settings");
-				Settings.GTAVInstallationPath = GTAVInstallationPath;
+				Settings.GTAVInstallationPath = MyGTAVInstallationPath;
 			}
 			else
 			{
 				HelperClasses.Logger.Log("Choosen Path of Set_GTAVInstallationPath Button is theoretical INVALID. NOT Changing Settings");
 				new Popup(Popup.PopupWindowTypes.PopupOk, "GTA V Path detected to be wrong. Settings will not change").ShowDialog();
 			}
-
-			// This just updates the button content
 			btn_Set_GTAVInstallationPath.Content = Settings.GTAVInstallationPath;
+			// This just updates the button content
 		}
 
 		/// <summary>

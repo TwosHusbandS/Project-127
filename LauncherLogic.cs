@@ -65,8 +65,7 @@ namespace Project_127
 		{
 			get
 			{
-				Process[] pname = Process.GetProcessesByName("GTAV.exe");
-				if (pname.Length > 0)
+				if (HelperClasses.ProcessHandler.IsGtaRunning())
 				{
 					return GameStates.Running;
 				}
@@ -173,9 +172,20 @@ namespace Project_127
 					HelperClasses.FileHandling.deleteFile(CorrespondingFilePathInGTALocation[i]);
 				}
 
-				// Creates actual Symbolic Link
-				HelperClasses.Logger.Log("Will create HardLink in '" + CorrespondingFilePathInGTALocation[i] + "' to the file in '" + FilesInUpgradesFiles[i] + "'", 1);
-				HelperClasses.FileHandling.HardLinkFiles(CorrespondingFilePathInGTALocation[i], FilesInUpgradesFiles[i]);
+
+				if (Settings.EnableCopyFilesInsteadOfHardlinking)
+				{
+					HelperClasses.Logger.Log("Will copy file: '" + FilesInUpgradesFiles[i] + "' to location in '" + CorrespondingFilePathInGTALocation[i] + "'", 1);
+					HelperClasses.Logger.Log("TO DO CTRLF CTRL F TODO NOT IMPLEMENTED YET");
+				}
+				else
+				{
+					// Creates actual Symbolic Link
+					HelperClasses.Logger.Log("Will create HardLink in '" + CorrespondingFilePathInGTALocation[i] + "' to the file in '" + FilesInUpgradesFiles[i] + "'", 1);
+					HelperClasses.FileHandling.HardLinkFiles(CorrespondingFilePathInGTALocation[i], FilesInUpgradesFiles[i]);
+				}
+
+
 			}
 
 			// We dont need to mess with social club versions since the launch process doesnt depend on it
@@ -257,21 +267,22 @@ namespace Project_127
 						HelperClasses.FileHandling.moveFile(CorrespondingFilePathInGTALocation[i], CorrespondingFilePathInUpgradeFiles[i]);
 					}
 				}
-				// Creates actual Symbolic Link
-				HelperClasses.Logger.Log("Will create HardLink in '" + CorrespondingFilePathInGTALocation[i] + "' to the file in '" + FilesInDowngradeFiles[i] + "'", 1);
-				HelperClasses.FileHandling.HardLinkFiles(CorrespondingFilePathInGTALocation[i], FilesInDowngradeFiles[i]);
+
+				if (Settings.EnableCopyFilesInsteadOfHardlinking)
+				{
+					HelperClasses.Logger.Log("Will copy file: '" + FilesInDowngradeFiles[i] + "' to location in '" + CorrespondingFilePathInGTALocation[i] + "'", 1);
+					HelperClasses.Logger.Log("TO DO CTRLF CTRL F TODO NOT IMPLEMENTED YET");
+				}
+				else
+				{
+					// Creates actual Symbolic Link
+					HelperClasses.Logger.Log("Will create HardLink in '" + CorrespondingFilePathInGTALocation[i] + "' to the file in '" + FilesInDowngradeFiles[i] + "'", 1);
+					HelperClasses.FileHandling.HardLinkFiles(CorrespondingFilePathInGTALocation[i], FilesInDowngradeFiles[i]);
+				}
 			}
 
 			// We dont need to mess with social club versions since the launch process doesnt depend on it
 
-			if (Settings.EnableTempFixSteamLaunch)
-			{
-				HelperClasses.Logger.Log("We are in TempFixSteamLaunch and will Mess with social Club installations");
-				HelperClasses.ProcessHandler.StartProcess(SupportFilePath.TrimEnd('\\') + @"\SocialClubNewUninstaller.exe", "", true, true);
-				new Popup(Popup.PopupWindowTypes.PopupOk, "Started the Uninstaller of new Social Club.\nClick 'OK' once the Uninstall progress is done").ShowDialog();
-				HelperClasses.ProcessHandler.StartProcess(SupportFilePath.TrimEnd('\\') + @"\SocialClubOldInstaller.exe", "", true, true);
-				new Popup(Popup.PopupWindowTypes.PopupOk, "Started the Installation of old Social Club.\nClick 'OK' once the Install progress is done").ShowDialog();
-			}
 			HelperClasses.Logger.Log("Done Downgrading");
 		}
 
@@ -459,27 +470,13 @@ namespace Project_127
 			{
 				HelperClasses.Logger.Log("Installation State Downgraded Detected", 1);
 
-				if (Settings.EnableTempFixSteamLaunch)
-				{
-					new Popup(Popup.PopupWindowTypes.PopupOk, "TempFixSteamLaunch launches this game through steam when downgraded\nThis only works if you have a working steam downgrade\nThis also will not be in the final release, its just to test the Client,\nwhich does not contain the actual Fixed Launch yet.\n\nClick 'OK' once steam is running and in OFFLINE mode\nOr if you wanna try this with Steam online (-scOfflineOnly is set anyways)\nYou probably wont need to do this in the next upgrade.").ShowDialog();
 
-					HelperClasses.Logger.Log("Running game in TempFixSteamLauch way through Steam.", 1);
-
-					HelperClasses.Logger.Log("Trying to start Game Offline.", 1);
-					Process gtav = new Process();
-					gtav.StartInfo.FileName = Globals.SteamInstallPath.TrimEnd('\\') + @"\steam.exe";
-					gtav.StartInfo.Arguments = "-applaunch 271590 -scOfflineOnly";
-					gtav.Start();
-				}
-				else
-				{
-					// TO DO, Clean this Up, move to ProcessHandler HelperClass
-					HelperClasses.Logger.Log("Launching Downgraded", 1);
-					Process p = new Process();
-					p.StartInfo.FileName = Settings.GTAVInstallationPath.TrimEnd('\\') + @"\PlayGTAV.exe";
-					p.StartInfo.WorkingDirectory = Settings.GTAVInstallationPath.TrimEnd('\\');
-					p.Start();
-				}
+				// TO DO, Clean this Up, move to ProcessHandler HelperClass
+				HelperClasses.Logger.Log("Launching Downgraded", 1);
+				Process p = new Process();
+				p.StartInfo.FileName = Settings.GTAVInstallationPath.TrimEnd('\\') + @"\PlayGTAV.exe";
+				p.StartInfo.WorkingDirectory = Settings.GTAVInstallationPath.TrimEnd('\\');
+				p.Start();
 			}
 		}
 
@@ -501,7 +498,7 @@ namespace Project_127
 		public static bool IsGTAVInstallationPathCorrect(string pPath, bool pLogThis = true)
 		{
 			if (pLogThis) { HelperClasses.Logger.Log("Trying to see if GTAV Installation Path ('" + pPath + "') is a theoretical valid Path", 3); }
-			if (HelperClasses.FileHandling.doesFileExist(pPath.TrimEnd('\\') + @"\x64a.rpf"))
+			if (HelperClasses.FileHandling.doesFileExist(pPath.TrimEnd('\\') + @"\x64b.rpf"))
 			{
 				if (pLogThis) { HelperClasses.Logger.Log("It is", 4); }
 				return true;

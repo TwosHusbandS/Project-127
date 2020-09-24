@@ -72,9 +72,20 @@ General Comments and things one should be aware of (still finishing this list)
 	BetaMode is hardcoded in Globals.cs
 	Importing ZIP needs some work. Currently overwrites all files (including version.txt) apart from "UpgradeFiles" Folder
 
+
 Main To do:
-	- Giving the option to copy / paste instead of Hardlinks
-	- Implemet other features (SaveFileHandler,all Settings, auto high priority, auto darkviperau steam core fix)
+	- TO DO:
+		- Use Copy / Pasting instead of Hardlink (Working on GUI for that, backend is mostly done, just needs to be called)
+		- Also give option to store ZIP in a different location from this client
+		- Give user some way of knowing that the program is doing something...
+		
+
+	- Implemet other features 
+		- auto high priority
+		- make OpenFolderDialog pretty
+		- SaveFileHandler
+		- auto darkviperau steam core fix
+		- all Settings
 
     - Low Prio:
 		Convert Settings and SaveFileHandler in CustomControls
@@ -84,25 +95,16 @@ Main To do:
 		Theming
 		Get DataBinding working on Button Context for Settings
 		Own FPS Limiter
-
-	- AAAA
-		- Was in the middle of making this shit not crash when github is unreachable. Will need to work on that. Not done.
-		 Just pushing "hotfix" to make this work with new zip file.
-
-		- Work on Loop crashing for some people. Maybe max limit 3 or something
-
-		
-
+		Fix starting as Admin...
 
 Weird Beta Reportings:
-	- Reloe double GTAV Location check on firstlaunch 
-		// No idea why this happened...cant explain
-		// Changed in what order functions are called
-		// and am doing more detailed logging.
-		// Shouldnt happen again, or if it does we will know why.
+	- Reloe and JakeMiester and dr490n had some issues with the GTA V Path Settings
+			Changed a lot of the backend for that. Should all be fixed.
+			If given Path is detected to be wrong, but user has to confirm this three times every startup...
+	- Game wasnt launching for most
+			I actually hardcoded the Path...its now fixed.
 
-	- Multiple People reporting looping asking for GTAV Path. 
-		// Probably has to do with the Method which checks if GTAV Patch is valid
+
 */
 
 using System;
@@ -150,31 +152,45 @@ namespace Project_127
 			// Initializing all WPF Elements
 			InitializeComponent();
 
-
-			// Dont run anything when we are on 32 bit...
-			// If this ever gets changed, take a second look at regedit class and path(different for 32 and 64 bit OS)
+			//Dont run anything when we are on 32 bit...
+			//If this ever gets changed, take a second look at regedit class and path(different for 32 and 64 bit OS)
 			if (Environment.Is64BitOperatingSystem == false)
 			{
 				(new Popup(Popup.PopupWindowTypes.PopupOkError, "32 Bit Operating System detected.\nGTA (afaik) does not run on 32 Bit at all.")).ShowDialog();
 				Environment.Exit(1);
 			}
 
-			// Start the Init Process
+			// Start the Init Process of Logger, Settings, Globals, Regedit here, since we need the Logger in the next Line if it fails...
 			Globals.Init(this);
 
-			if (!CheckIfAllowedToRun())
+			// Checks if a Process with the same ProcessName is already running
+			if (Process.GetProcessesByName(Process.GetCurrentProcess().ProcessName).Length > 1)
 			{
-				new Popup(Popup.PopupWindowTypes.PopupOkError, "You are not allowed to run this beta.").ShowDialog();
+				HelperClasses.Logger.Log("Program is open twice. This will exit.");
+				(new Popup(Popup.PopupWindowTypes.PopupOkError, "Program is open twice. This will exit.")).ShowDialog();
 				Environment.Exit(2);
 			}
 
+			// Checks if you are allowed to run this Beta
+			if (!CheckIfAllowedToRun())
+			{
+				HelperClasses.Logger.Log("You are not allowed to run this Beta.");
+				new Popup(Popup.PopupWindowTypes.PopupOkError, "You are not allowed to run this Beta.").ShowDialog();
+				Environment.Exit(3);
+			}
+
 			// Deleting all Installer Files from own Project Installation Path
-			HelperClasses.Logger.Log("Checking if there is an old Installer in the Project InstallationPath during startup procedure.");
+			HelperClasses.Logger.Log("Checking if there is an old Installer or ZIP Files in the Project InstallationPath during startup procedure.");
 			foreach (string myFile in HelperClasses.FileHandling.GetFilesFromFolder(Globals.ProjectInstallationPath))
 			{
 				if (myFile.ToLower().Contains("installer"))
 				{
 					HelperClasses.Logger.Log("Found old installer File ('" + HelperClasses.FileHandling.PathSplitUp(myFile)[1] + "') in the Directory. Will delete it.");
+					HelperClasses.FileHandling.deleteFile(myFile);
+				}
+				if (HelperClasses.FileHandling.PathSplitUp(myFile)[1].ToLower() == HelperClasses.FileHandling.PathSplitUp(Globals.ZipFileDownloadLocation)[1].ToLower())
+				{
+					HelperClasses.Logger.Log("Found old ZIP File ('" + HelperClasses.FileHandling.PathSplitUp(myFile)[1] + "') in the Directory. Will delete it.");
 					HelperClasses.FileHandling.deleteFile(myFile);
 				}
 			}
@@ -193,6 +209,7 @@ namespace Project_127
 
 			HelperClasses.Logger.Log("Startup procedure (Constructor of MainWindow) completed.");
 		}
+
 
 		private void CheckForUpdate()
 		{
@@ -305,78 +322,23 @@ namespace Project_127
 			{
 				LauncherLogic.AuthState = LauncherLogic.Authstates.Auth;
 			}
-			SetButtonMouseOverMagic(btn_Auth, true);
-			//SetAuthButtonBackground(Authstatus.Auth);
-
-			//string c1 = Settings.GTAVInstallationPath.Substring(0, 2);
-			//string c2 = "cd " + Settings.GTAVInstallationPath;
-			//string c3 = "start Test9.bat";
-
-			//Process.Start("cmd.exe", "/c " + c1 + " && " + c2 + " && " + c3);
+			// Yes this is correct
+			SetButtonMouseOverMagic(btn_Auth, false);
 
 
-
-
-
-
-
-
-
-
-
-
-
-			//string ZZZGTAVPATH = Settings.GTAVInstallationPath.TrimEnd('\\') + @"\PlayGTAV.exe";
-
-			//Process.Start(@"C:\Program Files\TeamSpeak 3 Client\ts3client_win64.exe");
-
-			//Process p = new Process();
-			//p.StartInfo.UseShellExecute = true;
-			//p.StartInfo.FileName = Settings.GTAVInstallationPath.TrimEnd('\\') + @"\PlayGTAV.exe"; ;
-			//p.StartInfo.CreateNoWindow = true;
-			//p.StartInfo.WorkingDirectory = Settings.GTAVInstallationPath.TrimEnd('\\');
-			//p.Start();
-
-			//Process.Start(Settings.GTAVInstallationPath.TrimEnd('\\') + @"\Test9.bat");
-			//Globals.DebugPopup(Settings.GTAVInstallationPath.TrimEnd('\\') + @"\Test9.bat");
-			//Process.Start(Settings.GTAVInstallationPath.TrimEnd('\\') + @"\Test9.bat");
-			//HelperClasses.ProcessHandler.StartProcess(Settings.GTAVInstallationPath.TrimEnd('\\') + @"\PlayGTAV.exe", "",false,false);
-			//HelperClasses.ProcessHandler.StartProcess(Settings.GTAVInstallationPath.TrimEnd('\\') + @"\Test9.bat", "",false,false);
-
-
-
-
-
-
-			//string msg = "Size of GTAV in Folder: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\GTA5.exe");
-			//msg += "\nSize of Downgraded GTAV: " + LauncherLogic.SizeOfDowngradedGTAV;
-			//msg += "\nSize of update.rpf in Folder: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\update\update.rpf");
-			//msg += "\nSize of Downgraded update.rpf: " + LauncherLogic.SizeOfDowngradedUPDATE;
-			//msg += "\nInstallationState: " + LauncherLogic.InstallationState.ToString();
-			//Globals.DebugPopup(msg);
-
-			//string[] MyLines = HelperClasses.FileHandling.ReadFileEachLine(Globals.SteamInstallPath.TrimEnd('\\') + @"\steamapps\libraryfolders.vdf");
-			//for (int i = 0; i <= MyLines.Length - 1; i++)
-			//{
-			//	MyLines[i] = MyLines[i].Replace("\t", "").Replace(" ", "");
-			//
-			//	// String from Regex: #"\d{1,4}""[a-zA-Z\\:]*"# (yes we are matching ", I used # as semicolons for string beginnign and end
-			//	Regex MyRegex = new Regex("\"\\d{1,4}\"\"[a-zA-Z\\\\:]*\"");
-			//	Match MyMatch = MyRegex.Match(MyLines[i]);
-			//	if (MyMatch.Success)
-			//	{
-			//		MyLines[i] = MyLines[i].TrimEnd('"');
-			//		MyLines[i] = MyLines[i].Substring(MyLines[i].LastIndexOf('"') + 1);
-			//		MyLines[i] = MyLines[i].Replace(@"\\", @"\");
-			//		if (HelperClasses.FileHandling.doesFileExist(MyLines[i].TrimEnd('\\') + @"\steamapps\appmanifest_271590.acf"))
-			//		{
-			//			Globals.DebugPopup(MyLines[i].TrimEnd('\\') + @"\steamapps\common\Grand Theft Auto V\");
-			//		}
-			//	}
-			//}
-
-			//string pathOfNewZip = HelperClasses.FileHandling.GetXMLTagContent(new System.Net.Http.HttpClient().GetStringAsync(Globals.URL_AutoUpdate).GetAwaiter().GetResult(), "zip");
-			//new PopupDownload(PopupDownloadTypes.ZIP, @"https://github.com/TwosHusbandS/Project-127/releases/download/V0/Project_127_Files_V3.zip", Globals.ZipFileDownloadLocation).ShowDialog();
+			// Debug Info users can give me easily...
+			string msg = "Size of GTAV in Folder: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\GTA5.exe");
+			msg += "\nSize of Downgraded GTAV: " + LauncherLogic.SizeOfDowngradedGTAV;
+			msg += "\nSize of update.rpf in Folder: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\update\update.rpf");
+			msg += "\nSize of Downgraded update.rpf: " + LauncherLogic.SizeOfDowngradedUPDATE;
+			msg += "\nDetected InstallationState: " + LauncherLogic.InstallationState.ToString();
+			msg += "\n\nGlobals.ProjectInstallationPath: " + Globals.ProjectInstallationPath;
+			msg += "\nLauncherLogic.GTAVFilePath: " + LauncherLogic.GTAVFilePath.ToString();
+			msg += "\nLauncherLogic.UpgradeFilePath: " + LauncherLogic.UpgradeFilePath.ToString();
+			msg += "\nLauncherLogic.DowngradeFilePath: " + LauncherLogic.DowngradeFilePath.ToString();
+			msg += "\nLauncherLogic.SupportFilePath: " + LauncherLogic.SupportFilePath.ToString();
+			msg += "\n\nThat was just some DebugInfo. Should give some info I guess.";
+			Globals.DebugPopup(msg);
 		}
 
 		/// <summary>
@@ -465,7 +427,12 @@ namespace Project_127
 			else
 			{
 				HelperClasses.Logger.Log("GTA V Installation Path not found or incorrect. User will get Popup");
-				new Popup(Popup.PopupWindowTypes.PopupOkError, "Error: GTA V Installation Path incorrect.");
+				Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Error: GTA V Installation Path incorrect.\nGTAV Installation Path: '" + LauncherLogic.GTAVFilePath + "'\nInstallationState (probably): '" + LauncherLogic.InstallationState.ToString() + "'\n. Force this Upgrade?");
+				yesno.ShowDialog();
+				if (yesno.DialogResult == true)
+				{
+					LauncherLogic.Downgrade();
+				}
 			}
 
 
@@ -479,7 +446,7 @@ namespace Project_127
 		/// <param name="e"></param>
 		private void btn_Repair_Click(object sender, RoutedEventArgs e)
 		{
-			Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "This Method is supposed to be called when there was a Game Update.\nOr you verified Files through Steam.\nIs that the case?");
+			Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "This Method is supposed to be called when there was a Game Update.\nOr you verified Files through Steam.\nIs that the case?\nGTAV Installation Path is: '" + Settings.GTAVInstallationPath + "'");
 			yesno.ShowDialog();
 			if (yesno.DialogResult == true)
 			{
@@ -505,7 +472,7 @@ namespace Project_127
 		private void btn_Downgrade_Click(object sender, RoutedEventArgs e)
 		{
 			// Confirmation Popup
-			Popup conf = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Are you sure you want to Downgrade?");
+			Popup conf = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Are you sure you want to Downgrade?\nGTAV Installation Path is: '" + Settings.GTAVInstallationPath + "'");
 			conf.ShowDialog();
 			if (conf.DialogResult == false)
 			{
@@ -543,7 +510,12 @@ namespace Project_127
 			else
 			{
 				HelperClasses.Logger.Log("GTA V Installation Path not found or incorrect. User will get Popup");
-				new Popup(Popup.PopupWindowTypes.PopupOkError, "Error: GTA V Installation Path incorrect.");
+				Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Error: GTA V Installation Path incorrect.\nGTAV Installation Path: '" + LauncherLogic.GTAVFilePath + "'\nInstallationState (probably): '" + LauncherLogic.InstallationState.ToString() + "'\n. Force this Downgrade?");
+				yesno.ShowDialog();
+				if (yesno.DialogResult == true)
+				{
+					LauncherLogic.Downgrade();
+				}
 			}
 			SetGTAVButtonBasedOnGameAndInstallationState(null, null);
 		}
@@ -575,6 +547,18 @@ namespace Project_127
 		{
 			new Popup(Popup.PopupWindowTypes.PopupOk, "SaveFileHanlder not fully implemented yet").ShowDialog();
 			// (new SaveFileHandler()).Show();
+
+			//List<string> sourc = new List<string>();
+			//List<string> destinatio = new List<string>();
+
+			//sourc.Add(@"C:\Users\ingow\Downloads\AAA_UBUNTU.iso");
+			//destinatio.Add(@"C:\Users\ingow\Downloads\AAA\AAA_UBUNTU.iso");
+			//sourc.Add(@"C:\Users\ingow\Downloads\AAA_POPOS.iso");
+			//destinatio.Add(@"C:\Users\ingow\Downloads\AAA\AAA_POPOS.iso");
+			//sourc.Add(@"C:\Users\ingow\Downloads\AAA_X17.iso");
+			//destinatio.Add(@"C:\Users\ingow\Downloads\AAA\AAA_X17.iso");
+
+			//new CopyFileProgress(sourc, destinatio).Show();
 		}
 
 		/// <summary>
@@ -800,7 +784,8 @@ namespace Project_127
 					RegistryKey MyKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64).CreateSubKey("SOFTWARE").CreateSubKey("Microsoft").CreateSubKey("Cryptography");
 					string GUID = HelperClasses.RegeditHandler.GetValue(MyKey, "MachineGuid");
 
-					string Reply = HelperClasses.FileHandling.GetStringFromURL(Globals.URL_AuthUser);
+					string URL_AuthUser = HelperClasses.FileHandling.GetXMLTagContent(HelperClasses.FileHandling.GetStringFromURL(Globals.URL_AutoUpdate), "authuser");
+					string Reply = HelperClasses.FileHandling.GetStringFromURL(URL_AuthUser);
 
 					if (Reply.Contains(GUID))
 					{

@@ -181,17 +181,17 @@ namespace Project_127
 		}
 
 		/// <summary>
-		/// Settings EnableTmpFixSteamLaunch. Gets and Sets from the Dictionary.
+		/// Settings EnableCopyFilesInsteadOfHardlinking. Gets and Sets from the Dictionary.
 		/// </summary>
-		public static bool EnableTempFixSteamLaunch
+		public static bool EnableCopyFilesInsteadOfHardlinking
 		{
 			get
 			{
-				return GetBoolFromString(GetSetting("EnableTempFixSteamLaunch"));
+				return GetBoolFromString(GetSetting("EnableCopyFilesInsteadOfHardlinking"));
 			}
 			set
 			{
-				SetSetting("EnableTempFixSteamLaunch", value.ToString());
+				SetSetting("EnableCopyFilesInsteadOfHardlinking", value.ToString());
 			}
 		}
 		

@@ -45,11 +45,6 @@ namespace Project_127
 		public static string URL_AutoUpdate = "https://raw.githubusercontent.com/TwosHusbandS/Project-127/master/Installer/Update.xml";
 
 		/// <summary>
-		/// URL for AuthUserFile
-		/// </summary>
-		public static string URL_AuthUser = HelperClasses.FileHandling.GetXMLTagContent(HelperClasses.FileHandling.GetStringFromURL(Globals.URL_AutoUpdate), "authuser");
-
-		/// <summary>
 		/// Download Location of Zip File
 		/// </summary>
 		public static string ZipFileDownloadLocation = Globals.ProjectInstallationPath + @"\NewZipFile.zip";
@@ -101,7 +96,7 @@ namespace Project_127
 			{"GTAVInstallationPath", ""},
 			{"FileFolder", Environment.ExpandEnvironmentVariables(@"%ALLUSERSPROFILE%\" + ProjectName)},
 			{"EnableLogging", "True"},
-			{"EnableTempFixSteamLaunch", "False"},
+			{"EnableCopyFilesInsteadOfHardlinking", "False"},
 			{"EnablePreOrderBonus", "False"},
 			{"EnableAutoSetHighPriority", "True" },
 			{"EnableAutoStartLiveSplit", "True" },
@@ -161,12 +156,12 @@ namespace Project_127
 				HelperClasses.Logger.Log("FirstLaunch Procedure Ended");
 			}
 
-			// Check if GTA V Folder is correct
-			HelperClasses.Logger.Log("Intitial start-up to make sure GTAV Path is valid (NOT FIRSTLAUNCH)");
-			if (!LauncherLogic.IsGTAVInstallationPathCorrect(Settings.GTAVInstallationPath))
+			// Just checks if the GTAVInstallationPath is empty.
+			// So we dont have to "Force" the path every startup...
+			if (!String.IsNullOrEmpty(Settings.GTAVInstallationPath))
 			{
-				HelperClasses.Logger.Log("Settings.GTAVInstallationPath detected to be wrong calling LauncherLogic.SetGTAVPathManually()");
-				LauncherLogic.SetGTAVPathManually();
+				// Calling this to get the Path automatically
+				LauncherLogic.GTAVPathGuessingGame();
 			}
 
 			// Check our version of the ZIP File
@@ -225,6 +220,13 @@ namespace Project_127
 		{
 			HelperClasses.Logger.Log("Importing ZIP File: '" + pZipFileLocation + "'");
 
+			if (HelperClasses.FileHandling.doesFileExist(ZipFileDownloadLocation))
+			{
+				HelperClasses.Logger.Log("Found old leftover ZIP file in: '" + ZipFileDownloadLocation + "'. Will delete btw.");
+				HelperClasses.FileHandling.deleteFile(ZipFileDownloadLocation);
+			}
+
+
 			string[] myFiles = HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(Globals.ProjectInstallationPath.TrimEnd('\\') + @"\Project_127_Files");
 			foreach (string myFile in myFiles)
 			{
@@ -245,6 +247,7 @@ namespace Project_127
 			}
 
 			new Popup(Popup.PopupWindowTypes.PopupOk, "Done importing ZIP File").ShowDialog();
+			HelperClasses.Logger.Log("Done Importing ZIP File: '" + pZipFileLocation + "'");
 		}
 
 
