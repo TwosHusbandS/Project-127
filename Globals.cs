@@ -23,7 +23,7 @@ namespace Project_127
 		/// <summary>
 		/// Property of our own Installation Path
 		/// </summary>
-		public static string ProjectInstallationPath { get { return Process.GetCurrentProcess().MainModule.FileName.Substring(0, Process.GetCurrentProcess().MainModule.FileName.LastIndexOf('\\')); } }
+		public static string ProjectInstallationPath { get { return Settings.InstallationPath; } }
 
 		/// <summary>
 		/// Property of our ProjectName (for Folders, Regedit, etc.)
@@ -34,6 +34,19 @@ namespace Project_127
 		/// Property of our ProjectNiceName (for GUI)
 		/// </summary>
 		public static string ProjectNiceName = "Project 127";
+
+		/// <summary>
+		/// Property of the ZIP Version currently installed
+		/// </summary>
+		public static int ZipVersion
+		{
+			get
+			{
+				int _ZipVersion = 0;
+				Int32.TryParse(HelperClasses.FileHandling.ReadContentOfFile(LauncherLogic.ZIPFilePath.TrimEnd('\\') + @"\Project_127_Files\Version.txt"), out _ZipVersion);
+				return _ZipVersion;	
+			}
+		}
 
 		/// <summary>
 		/// Property of our own Project Version
@@ -92,10 +105,16 @@ namespace Project_127
 		/// </summary>
 		public static Dictionary<string, string> MyDefaultSettings { get; private set; } = new Dictionary<string, string>()
 		{
+			/*
+			Previously Used Settings Variables, we cannot use anymore, since they are written,
+			and we are not able to reset only them (for now...):
+				- "FileFolder"
+			*/
+
 			{"FirstLaunch", "True" },
-			{"InstallationPath", ProjectInstallationPath },
+			{"InstallationPath", Process.GetCurrentProcess().MainModule.FileName.Substring(0, Process.GetCurrentProcess().MainModule.FileName.LastIndexOf('\\')) },
 			{"GTAVInstallationPath", ""},
-			{"FileFolder", Environment.ExpandEnvironmentVariables(@"%ALLUSERSPROFILE%\" + ProjectName)},
+			{"ZIPExtractionPath", Process.GetCurrentProcess().MainModule.FileName.Substring(0, Process.GetCurrentProcess().MainModule.FileName.LastIndexOf('\\')) },
 			{"EnableLogging", "True"},
 			{"EnableCopyFilesInsteadOfHardlinking", "False"},
 			{"EnablePreOrderBonus", "False"},
@@ -165,16 +184,12 @@ namespace Project_127
 				LauncherLogic.GTAVPathGuessingGame();
 			}
 
-			// Check our version of the ZIP File
-			int ZipVersion = 0;
-			Int32.TryParse(HelperClasses.FileHandling.ReadContentOfFile(Globals.ProjectInstallationPath.TrimEnd('\\') + @"\Project_127_Files\Version.txt"), out ZipVersion);
-
 			// Check whats the latest Version of the ZIP File in GITHUB
 			int ZipOnlineVersion = 0;
 			Int32.TryParse(HelperClasses.FileHandling.GetXMLTagContent(HelperClasses.FileHandling.GetStringFromURL(Globals.URL_AutoUpdate), "zipversion"), out ZipOnlineVersion);
 
 			HelperClasses.Logger.Log("Checking for ZIP - Update");
-			HelperClasses.Logger.Log("ZipVersion = '" + ZipVersion.ToString() + "', ZipOnlineVersion = '" + ZipOnlineVersion + "'");
+			HelperClasses.Logger.Log("ZipVersion = '" + Globals.ZipVersion + "', ZipOnlineVersion = '" + ZipOnlineVersion + "'");
 
 			// If Zip file from Server is newer
 			if (ZipOnlineVersion > ZipVersion)
@@ -186,7 +201,10 @@ namespace Project_127
 				{
 					HelperClasses.Logger.Log("User wants update for ZIP");
 					string pathOfNewZip = HelperClasses.FileHandling.GetXMLTagContent(HelperClasses.FileHandling.GetStringFromURL(Globals.URL_AutoUpdate), "zip");
+					
+					// Downloads ZIP, calls extraction Method after download
 					new PopupDownload(PopupDownloadTypes.ZIP, pathOfNewZip, ZipFileDownloadLocation).ShowDialog();
+					Globals.ImportZip(ZipFileDownloadLocation, true);
 				}
 				else
 				{
@@ -211,7 +229,7 @@ namespace Project_127
 		/// </summary>
 		public static void ProperExit()
 		{
-
+			HelperClasses.Logger.Log("Program closed. Proper Exit. Ended normally");
 		}
 
 		/// <summary>
@@ -220,17 +238,14 @@ namespace Project_127
 		public static void ImportZip(string pZipFileLocation, bool deleteFileAfter = false)
 		{
 			LauncherLogic.InstallationStates OldInstallationState = LauncherLogic.InstallationState;
-
+			string OldHash = HelperClasses.FileHandling.CreateDirectoryMd5(LauncherLogic.DowngradeFilePath);
+			
 			HelperClasses.Logger.Log("Importing ZIP File: '" + pZipFileLocation + "'");
+			HelperClasses.Logger.Log("Old ZIP File Version: '" + Globals.ZipVersion + "'");
+			HelperClasses.Logger.Log("Old Installation State: '" + OldInstallationState + "'");
+			HelperClasses.Logger.Log("Old Hash of Downgrade Folder: '" + OldHash + "'");
 
-			if (HelperClasses.FileHandling.doesFileExist(ZipFileDownloadLocation))
-			{
-				HelperClasses.Logger.Log("Found old leftover ZIP file in: '" + ZipFileDownloadLocation + "'. Will delete btw.");
-				HelperClasses.FileHandling.deleteFile(ZipFileDownloadLocation);
-			}
-
-
-			string[] myFiles = HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(Globals.ProjectInstallationPath.TrimEnd('\\') + @"\Project_127_Files");
+			string[] myFiles = HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(LauncherLogic.ZIPFilePath.TrimEnd('\\') + @"\Project_127_Files");
 			foreach (string myFile in myFiles)
 			{
 				if (!myFile.Contains("UpgradeFiles"))
@@ -239,7 +254,7 @@ namespace Project_127
 				}
 			}
 
-			HelperClasses.Logger.Log("Extracting ZIP File: '" + pZipFileLocation + "' to the path: '" + Globals.ProjectInstallationPath + "'");
+			HelperClasses.Logger.Log("Extracting ZIP File: '" + pZipFileLocation + "' to the path: '" + LauncherLogic.ZIPFilePath + "'");
 
 			new PopupProgress(PopupProgress.ProgressTypes.ZIPFile, pZipFileLocation).ShowDialog();
    
@@ -249,16 +264,26 @@ namespace Project_127
 				HelperClasses.FileHandling.deleteFile(pZipFileLocation);
 			}
 
-			HelperClasses.Logger.Log("Done Importing ZIP File: '" + pZipFileLocation + "'");
+			LauncherLogic.InstallationStates NewInstallationState = LauncherLogic.InstallationState;
+			string NewHash = HelperClasses.FileHandling.CreateDirectoryMd5(LauncherLogic.DowngradeFilePath);
 
-			Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "ZIP File imported. You were downgraded before.\nYou should upgrade and downgrade again.\nWant the program to do it for you?");
-			yesno.ShowDialog();
-			if (yesno.DialogResult == true)
+			HelperClasses.Logger.Log("Done Importing ZIP File: '" + pZipFileLocation + "'");
+			HelperClasses.Logger.Log("New ZIP File Version: '" + Globals.ZipVersion + "'");
+			HelperClasses.Logger.Log("New Installation State: '" + NewInstallationState + "'");
+			HelperClasses.Logger.Log("New Hash of Downgrade Folder: '" + NewHash + "'");
+
+
+			// If the state was Downgraded
+			if (OldInstallationState == LauncherLogic.InstallationStates.Downgraded)
 			{
-				LauncherLogic.Upgrade();
-				LauncherLogic.Downgrade();
+				// If old and new Hash (of downgrade folder) dont match
+				if (OldHash != NewHash)
+				{
+					LauncherLogic.Downgrade();
+				}
 			}
 
+			new Popup(Popup.PopupWindowTypes.PopupOk, "ZIP File imported (Version: '" + Globals.ZipVersion + "')").ShowDialog();
 		}
 
 

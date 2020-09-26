@@ -58,15 +58,57 @@ namespace Project_127
 		}
 
 		/// <summary>
-		/// Button Click to change the Path of FileFolder which we use to use for SaveFiles etc.
+		/// Button Click to change the Path of ZIPExtractionPath which we use to use for all Contents of ZIP File etc.
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
-		private void btn_Set_FileFolder_Click(object sender, RoutedEventArgs e)
+		private void btn_Set_ZIPExtractionPath_Click(object sender, RoutedEventArgs e)
 		{
-			FileFolder = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.Folder, "Pick the Folder which contains all sort of Files", @"C:\");
-			Settings.FileFolder = FileFolder;
-			btn_Set_FileFolder.Content = FileFolder;
+			// Grabbing the new Path from FolderDialogThingy
+			string _ZIPExtractionPath = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.Folder, "Pick the Folder where the ZIP Files (Upgrade / Downgrade / Savefiles will be extracted. ", @"C:\");
+			
+			// If its a valid Path (no "") and if its a new Path
+			if (HelperClasses.FileHandling.doesPathExist(_ZIPExtractionPath) && _ZIPExtractionPath.TrimEnd('\\') != Settings.ZIPExtractionPath.TrimEnd('\\'))
+			{
+				// List of File Operations for the ZIP Move progress
+				List<MyFileOperation> MyFileOperations = new List<MyFileOperation>();
+
+				// List of FileNames
+				string[] FilesInOldZIPExtractionPath = HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(Settings.ZIPExtractionPath);
+				string[] FilesInNewZIPExtractionPath = new string[FilesInOldZIPExtractionPath.Length];
+
+				// Loop through all Files there
+				for (int i = 0; i <= FilesInOldZIPExtractionPath.Length - 1; i++)
+				{
+					// Build new Path of each File
+					FilesInNewZIPExtractionPath[i] = _ZIPExtractionPath.TrimEnd('\\') + @"\" + FilesInOldZIPExtractionPath[i].Substring((Settings.ZIPExtractionPath.TrimEnd('\\') + @"\").Length);
+
+					// Add File Operation for that new File
+					MyFileOperations.Add(new MyFileOperation(MyFileOperation.FileOperations.Move, FilesInOldZIPExtractionPath[i], FilesInNewZIPExtractionPath[i], "Moving File '" + FilesInOldZIPExtractionPath[i] + "' to Location '" + FilesInNewZIPExtractionPath[i] + "' while moving ZIP Files",0));
+				}
+
+				// Execute all File Operations
+				new PopupProgress(PopupProgress.ProgressTypes.FileOperation, "Moving ZIP File Location" , MyFileOperations).ShowDialog();
+
+				// Grabbign the current Installation State
+				LauncherLogic.InstallationStates myOldInstallationState = LauncherLogic.InstallationState;
+
+				// Actually changing the Settings here
+				Settings.ZIPExtractionPath = _ZIPExtractionPath;
+
+				// Repeating a Downgrade or Upgrade so we are back to original State and Hardlinks are now properly set again
+				if (myOldInstallationState == LauncherLogic.InstallationStates.Upgraded)
+				{
+					LauncherLogic.Upgrade();
+				}
+				else
+				{
+					LauncherLogic.Downgrade();
+				}
+
+				// Now Updating Button
+				btn_Set_ZIPExtractionPath.Content = ZIPExtractionPath;
+			}
 		}
 
 		/// <summary>
@@ -76,9 +118,7 @@ namespace Project_127
 		/// <param name="e"></param>
 		private void btn_Set_PathLiveSplit_Click(object sender, RoutedEventArgs e)
 		{
-			PathLiveSplit = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.File, "Select the .exe of the LiveSplit Program", @"C:\");
-			Settings.PathLiveSplit = PathLiveSplit;
-			btn_Set_FileFolder.Content = PathLiveSplit;
+
 		}
 
 		/// <summary>
@@ -88,9 +128,7 @@ namespace Project_127
 		/// <param name="e"></param>
 		private void btn_Set_PathStreamProgram_Click(object sender, RoutedEventArgs e)
 		{
-			PathStreamProgram = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.File, "Select the .exe of the Stream Program", @"C:\");
-			Settings.PathStreamProgram = PathStreamProgram;
-			btn_Set_FileFolder.Content = PathStreamProgram;
+
 		}
 
 		/// <summary>
@@ -100,9 +138,7 @@ namespace Project_127
 		/// <param name="e"></param>
 		private void btn_Set_PathFPSLimiter_Click(object sender, RoutedEventArgs e)
 		{
-			PathFPSLimiter = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.File, "Select the .exe of the FPS Limit Program", @"C:\");
-			Settings.PathFPSLimiter = PathFPSLimiter;
-			btn_Set_FileFolder.Content = PathFPSLimiter;
+
 		}
 
 		/// <summary>
@@ -134,9 +170,7 @@ namespace Project_127
 		/// <param name="e"></param>
 		private void btn_Set_PathNohboard_Click(object sender, RoutedEventArgs e)
 		{
-			PathLiveSplit = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.File, "Select the .exe of the LiveSplit Program", @"C:\");
-			Settings.PathLiveSplit = PathLiveSplit;
-			btn_Set_FileFolder.Content = PathLiveSplit;
+
 		}
 
 		/// <summary>
@@ -146,9 +180,7 @@ namespace Project_127
 		/// <param name="e"></param>
 		private void btn_Set_Theme_Click(object sender, RoutedEventArgs e)
 		{
-			(new Popup(Popup.PopupWindowTypes.PopupOk, "This does nothing so far")).ShowDialog();
-			Theme = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.Folder, "Pick the Folder of your Theme", @"C:\");
-			btn_Set_FileFolder.Content = Theme;
+
 		}
 
 		/// <summary>
@@ -188,7 +220,7 @@ namespace Project_127
 		private void RefreshGUI()
 		{
 			btn_Set_GTAVInstallationPath.Content = Settings.GTAVInstallationPath;
-			btn_Set_FileFolder.Content = Settings.FileFolder;
+			btn_Set_ZIPExtractionPath.Content = Settings.ZIPExtractionPath;
 			cb_Set_EnableLogging.IsChecked = Settings.EnableLogging;
 			//cb_Set_TempFixSteamLaunch.IsChecked = Settings.EnableTempFixSteamLaunch;
 			//cb_Set_EnablePreOrderBonus.IsChecked = Settings.EnablePreOrderBonus;

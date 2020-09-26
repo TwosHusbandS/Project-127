@@ -118,19 +118,24 @@ namespace Project_127
 		public static long SizeOfDowngradedUPDATE { get { return HelperClasses.FileHandling.GetSizeOfFile(DowngradeFilePath.TrimEnd('\\') + @"\update\update.rpf"); } }
 
 		/// <summary>
+		/// Path of where the ZIP File is extracted
+		/// </summary>
+		public static string ZIPFilePath { get { return Settings.ZIPExtractionPath.TrimEnd('\\') + @"\"; } }
+
+		/// <summary>
 		/// Property of often used variable. (UpgradeFilePath)
 		/// </summary>
-		public static string UpgradeFilePath = Globals.ProjectInstallationPath.TrimEnd('\\') + @"\Project_127_Files\UpgradeFiles\";
+		public static string UpgradeFilePath = LauncherLogic.ZIPFilePath.TrimEnd('\\') + @"\Project_127_Files\UpgradeFiles\";
 
 		/// <summary>
 		/// Property of often used variable. (DowngradeFilePath)
 		/// </summary>
-		public static string DowngradeFilePath = Globals.ProjectInstallationPath.TrimEnd('\\') + @"\Project_127_Files\DowngradeFiles\";
+		public static string DowngradeFilePath = LauncherLogic.ZIPFilePath.TrimEnd('\\') + @"\Project_127_Files\DowngradeFiles\";
 
 		/// <summary>
 		/// Property of often used variable. (SupportFilePath)
 		/// </summary>
-		public static string SupportFilePath = Globals.ProjectInstallationPath.TrimEnd('\\') + @"\Project_127_Files\SupportFiles\";
+		public static string SupportFilePath = LauncherLogic.ZIPFilePath.TrimEnd('\\') + @"\Project_127_Files\SupportFiles\";
 
 		/// <summary>
 		/// Property of often used variable. (GTAVFilePath)
@@ -153,6 +158,7 @@ namespace Project_127
 			HelperClasses.Logger.Log("Initiating Upgrade", 0);
 			HelperClasses.Logger.Log("GTAV Installation Path: " + GTAVFilePath, 1);
 			HelperClasses.Logger.Log("InstallationLocation: " + Globals.ProjectInstallationPath, 1);
+			HelperClasses.Logger.Log("ZIP File Location: " + LauncherLogic.ZIPFilePath, 1);
 			HelperClasses.Logger.Log("DowngradeFilePath: " + DowngradeFilePath, 1);
 			HelperClasses.Logger.Log("UpgradeFilePath: " + UpgradeFilePath, 1);
 
@@ -198,6 +204,7 @@ namespace Project_127
 			HelperClasses.Logger.Log("Initiating Repair.", 0);
 			HelperClasses.Logger.Log("GTAV Installation Path: " + GTAVFilePath, 1);
 			HelperClasses.Logger.Log("InstallationLocation: " + Globals.ProjectInstallationPath, 1);
+			HelperClasses.Logger.Log("ZIP File Location: " + LauncherLogic.ZIPFilePath, 1);
 			HelperClasses.Logger.Log("DowngradeFilePath: " + DowngradeFilePath, 1);
 			HelperClasses.Logger.Log("UpgradeFilePath: " + UpgradeFilePath, 1);
 
@@ -235,6 +242,7 @@ namespace Project_127
 			HelperClasses.Logger.Log("Initiating Downgrade", 0);
 			HelperClasses.Logger.Log("GTAV Installation Path: " + GTAVFilePath, 1);
 			HelperClasses.Logger.Log("InstallationLocation: " + Globals.ProjectInstallationPath, 1);
+			HelperClasses.Logger.Log("ZIP File Location: " + LauncherLogic.ZIPFilePath, 1);
 			HelperClasses.Logger.Log("DowngradeFilePath: " + DowngradeFilePath, 1);
 			HelperClasses.Logger.Log("UpgradeFilePath: " + UpgradeFilePath, 1);
 
@@ -290,7 +298,7 @@ namespace Project_127
 
 			// Try to find GTA V installation Path
 			string potentialGTAVInstallationPath = Globals.ProjectInstallationPath.TrimEnd('\\').Substring(0, Globals.ProjectInstallationPath.LastIndexOf('\\'));
-			HelperClasses.Logger.Log("First GTAV Location Guess is: '" + potentialGTAVInstallationPath + "'");
+			HelperClasses.Logger.Log("First GTAV Location Guess (based on Project 1.27 Installation Folder) is: '" + potentialGTAVInstallationPath + "'");
 
 			// If our Guess is valid
 			if (LauncherLogic.IsGTAVInstallationPathCorrect(potentialGTAVInstallationPath, false))
@@ -320,7 +328,7 @@ namespace Project_127
 
 				// Doing some Magic
 				string newPotentialGTAVInstallationPath = LauncherLogic.GetGTAVPathMagic();
-				HelperClasses.Logger.Log("Second GTAV Location Guess is: '" + newPotentialGTAVInstallationPath + "'");
+				HelperClasses.Logger.Log("Second GTAV Location Guess (via Steam Regedit and Files) is: '" + newPotentialGTAVInstallationPath + "'");
 
 				// If that path is correct
 				if (LauncherLogic.IsGTAVInstallationPathCorrect(newPotentialGTAVInstallationPath, false))
@@ -343,11 +351,41 @@ namespace Project_127
 				}
 			}
 
+			// If Setting is not correct, we need to guess more. Settings would have been set my code above.
+			if (!(LauncherLogic.IsGTAVInstallationPathCorrect(Settings.GTAVInstallationPath, false)))
+			{
+				HelperClasses.Logger.Log("Settings.GTAVInstallationPath is not a valid GTA V Installation Path. Will do third guess now.");
+
+
+				string newnewPotentialGTAVInstallationPath = ZIPFilePath.TrimEnd('\\').Substring(0, Globals.ProjectInstallationPath.LastIndexOf('\\'));
+				HelperClasses.Logger.Log("Third GTAV Location Guess (based on ZIP File Location) is: '" + newnewPotentialGTAVInstallationPath + "'");
+
+				// If that path is correct
+				if (LauncherLogic.IsGTAVInstallationPathCorrect(newnewPotentialGTAVInstallationPath, false))
+				{
+					// Ask the User if its the right path
+					HelperClasses.Logger.Log("Third GTAV Location Guess is theoretical valid");
+					Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Is: '" + newnewPotentialGTAVInstallationPath + "' your GTA V Installation Path?");
+					yesno.ShowDialog();
+					if (yesno.DialogResult == true)
+					{
+						Settings.GTAVInstallationPath = newnewPotentialGTAVInstallationPath;
+						HelperClasses.Logger.Log("Third GTAV guess was picked by User");
+						return;
+					}
+					HelperClasses.Logger.Log("Third GTAV guess was NOT picked by User");
+				}
+				else
+				{
+					HelperClasses.Logger.Log("Third GTAV Location Guess is NOT theoretical valid");
+				}
+			}
+
 			// If Setting is STILL not correct
 			if (!(LauncherLogic.IsGTAVInstallationPathCorrect(Settings.GTAVInstallationPath, false)))
 			{
 				// Log
-				HelperClasses.Logger.Log("After two guesses we still dont have the correct GTAVInstallationPath. User has to do it manually now.");
+				HelperClasses.Logger.Log("After three guesses we still dont have the correct GTAVInstallationPath. User has to do it manually now.");
 
 				// Ask User for Path
 				SetGTAVPathManually();

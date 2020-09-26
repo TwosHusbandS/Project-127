@@ -27,7 +27,7 @@ namespace Project_127.HelperClasses
 
 			HelperClasses.Logger.Log("", true, 0);
 			HelperClasses.Logger.Log("", true, 0);
-			HelperClasses.Logger.Log(" === Project - 127 Started. Logging initiated === ", true, 0);
+			HelperClasses.Logger.Log(" === Project - 127 Started (Version: " + Globals.ProjectVersion + "). Logging initiated === ", true, 0);
 		}
 
 		/// <summary>

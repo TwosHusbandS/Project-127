@@ -121,7 +121,7 @@ namespace Project_127
 
 
 		/// <summary>
-		/// Settings FirstLaunch. Gets from the Dictionary. NO SET.
+		/// Settings FirstLaunch. Gets from the Dictionary.
 		/// </summary>
 		public static bool FirstLaunch
 		{
@@ -132,6 +132,17 @@ namespace Project_127
 			set
 			{
 				SetSetting("FirstLaunch", value.ToString());
+			}
+		}
+
+		/// <summary>
+		/// Settings InstallationPath. Gets from Dictionary. NO SET
+		/// </summary>
+		public static string InstallationPath
+		{
+			get
+			{
+				return GetSetting("InstallationPath"); 
 			}
 		}
 
@@ -151,17 +162,17 @@ namespace Project_127
 		}
 
 		/// <summary>
-		/// Settings FileFolder. Gets and Sets from the Dictionary.
+		/// Settings ZIPExtractionPath. Gets and Sets from the Dictionary.
 		/// </summary>
-		public static string FileFolder
+		public static string ZIPExtractionPath
 		{
 			get
 			{
-				return GetSetting("FileFolder");
+				return GetSetting("ZIPExtractionPath");
 			}
 			set
 			{
-				SetSetting("FileFolder", value);
+				SetSetting("ZIPExtractionPath", value);
 			}
 		}
 

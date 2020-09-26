@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -195,6 +196,19 @@ namespace Project_127.HelperClasses
 			}
 		}
 
+
+
+		public static void WriteStringToFileOverwrite(string pFilePath, string[] pContent)
+		{
+
+			if (doesFileExist(pFilePath))
+			{
+				deleteFile(pFilePath);
+			}
+			File.WriteAllLines(pFilePath, pContent);
+		}
+
+
 		/// <summary>
 		/// Method we use to add one line of text as a new line to a text file
 		/// </summary>
@@ -258,6 +272,38 @@ namespace Project_127.HelperClasses
 			}
 
 			return rtrn;
+		}
+
+
+
+		/// <summary>
+		/// Method to get Hash from a Folder
+		/// </summary>
+		/// <param name="srcPath"></param>
+		/// <returns></returns>
+		public static string CreateDirectoryMd5(string srcPath)
+		{
+			var myFiles = Directory.GetFiles(srcPath, "*", SearchOption.AllDirectories).OrderBy(p => p).ToArray();
+
+			using (var md5 = MD5.Create())
+			{
+				foreach (var myFile in myFiles)
+				{
+					// hash path
+					byte[] pathBytes = Encoding.UTF8.GetBytes(myFile);
+					md5.TransformBlock(pathBytes, 0, pathBytes.Length, pathBytes, 0);
+
+					// hash contents
+					byte[] contentBytes = File.ReadAllBytes(myFile);
+
+					md5.TransformBlock(contentBytes, 0, contentBytes.Length, contentBytes, 0);
+				}
+
+				//Handles empty filePaths case
+				md5.TransformFinalBlock(new byte[0], 0, 0);
+
+				return BitConverter.ToString(md5.Hash).Replace("-", "").ToLower();
+			}
 		}
 
 
@@ -415,7 +461,7 @@ namespace Project_127.HelperClasses
 			}
 			try
 			{
-				File.Copy(pSource,pDestination);
+				File.Copy(pSource, pDestination);
 			}
 			catch (Exception e)
 			{

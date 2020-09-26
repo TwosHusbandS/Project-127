@@ -78,7 +78,7 @@ General Comments and things one should be aware of (still finishing this list)
 	- My Other ideas of creating Settings (CustomControl or Programtically) didnt work because
 		DataBinding the ButtonContext is hard for some reason. Works which the checkbox tho, which is kinda weird
 	- BetaMode is hardcoded in Globals.cs
-	- Importing ZIP needs some work. Currently overwrites all files (including version.txt) apart from "UpgradeFiles" Folder
+	- Importing ZIP currently overwrites all files (including version.txt) apart from "UpgradeFiles" Folder
 	- We are doing some funky AdminRelauncher() stuff. This means debugger wont work tho.
 		To actually debug this we need to change the requestedExecutionLevel in App Manifest.
 		Never built with requestedExecutionLevel administrator tho. Will fail to launch from installer
@@ -87,46 +87,52 @@ Main To do:
 	- Things changed since last official release (not last commit)
 		-> Lots. Lots. Lots.
 		-> Admin Relauncher
-		-> Using Lists of MyFileOperation objects for any big file stuff we do.
-		-> Progress Window and information for unpacking Zip, and file operations
 		-> Rewrite of GTA V Path stuff
 		-> BugFix for closed beta auth
 		-> Make it not not crash when github unreachable
+		-> Using Lists of MyFileOperation objects for any big file stuff we do. (backend change of file operations)
+		-> ProgressBar for File Operations, and extracting ZIP
+		-> Proper Debug Message on rightclick of auth button.
+		-> Lots of small Fixes and changes.
+		-> Should auto downgrade if needed based on hashes of downgrade folder after importing zip
+		-> You can now change location of ZIP File (where it is extracted)
 
 	-REMEMBER:
 		-> Release with admin mode manifest thingy...		
 		-> Make Installer start the program after installation
+
 					
 	- TO DO:
-		-> Give option to store ZIP in a different location from this client
-			=> Use FilesFolder settings (rename tho)
-			=> Change reference of installationpath to reference of that settings everywhere
-				(Upgrading/Downgrading/Repairing, ZIP Stuff of all kinds, ZIP Version stuff)
-			=> Copy then delete (safer than moving) all files when changing that settings
-			=> Remember to use get for all references so all references update when changing the setting
-		-> When Importing Zip
-			=> we currently check if we need to upgrade/downgrade again.
-			=> We wanna compare hash of the imported zip files. Overwrite in $DownloadFiles folder
-				if state was downgraded, just downgrade again (shouldnt delete files in UpgradeFolder)
-		-> PopupProgress (for file operations and extracting zip)
-			=> Add Progressbar.
-				> For File Options == DONE
-				> For Unzipping (Currently broken)
-					https://stackoverflow.com/a/26733624
-		-> Proper Debug Button on right click auth
-			(and fix left click while we are at it...)
-			
+		-> After Implementing Custom ZIP FIle Location, 
+			=> Program is crashing on startup.
+			=> Probably some static non static stuff, null reference, property, initialize thingy
+
+		-> Zip update currently breaks on extraction for some reason. (It wants to overwrite some files in UpgradeFiles...
+			=> Download itself works, Extraction itself works
+			=> Test auto download new ZIP, auto download new Installer, Extract ZIP, and Extract ZIP after auto download
+		
+		-> Custom ZIP File Location User Error Checks:
+			=> User might get confused with the Project_127_Files Folder. 
+				Maybe we should actually check parent folders and child folders when User is selecting a Path for ZIP File
+				And also when guessing GTA V Path
+
 		// After that, release for internal build to test new and rewritten backend
 		
 		-> Full Cleanup code (auto document everything and also write a few lines in important locations)
-		-> SaveFileHandler, just manage our own, probably only need one list for datagrid, ask if we need to overwrite
-		-> FirstLaucnh and Reset function and GUIs with GTA V installation, ZIP File Location
+		-> SaveFileHandler, just manage our own SaveFiles, probably only need one list for datagrid, ask if we need to overwrite
+		-> FirstLauch and Reset function and GUIs with GTA V installation, ZIP File Location
 		-> Regedit Cleanup of everything not in default settings
-		-> Add proper Text for popupss
-		-> Write ReadME
+		-> Regedit Value of "Last-Run-Version" which we can use to do some cleanups
+		-> Add proper Text for popups (by Hossel and JakeM)
+		-> Write 
+			=> ReadME
+			=> User Instructions
+			=> Advanced Users Instructions
+			=> Dev Instructions
+			=> Changelog
 		-> $UpgradeFiles has downgrade files in them. Why? And how to Fix?
 			=> Cant figure out how to fix that at the moment
-		-> Think about making a spawner
+		-> Think about making a spawner to spawn processes
 		-> auto high priority
 		-> auto steam core fix
 		-> make OpenFolderDialog pretty...I know its possible, just google more and more
@@ -226,7 +232,7 @@ namespace Project_127
 				Environment.Exit(3);
 			}
 
-			// Deleting all Installer Files from own Project Installation Path
+			// Deleting all Installer and ZIP Files from own Project Installation Path
 			HelperClasses.Logger.Log("Checking if there is an old Installer or ZIP Files in the Project InstallationPath during startup procedure.");
 			foreach (string myFile in HelperClasses.FileHandling.GetFilesFromFolder(Globals.ProjectInstallationPath))
 			{
@@ -235,7 +241,7 @@ namespace Project_127
 					HelperClasses.Logger.Log("Found old installer File ('" + HelperClasses.FileHandling.PathSplitUp(myFile)[1] + "') in the Directory. Will delete it.");
 					HelperClasses.FileHandling.deleteFile(myFile);
 				}
-				if (HelperClasses.FileHandling.PathSplitUp(myFile)[1].ToLower() == HelperClasses.FileHandling.PathSplitUp(Globals.ZipFileDownloadLocation)[1].ToLower())
+				if (myFile == Globals.ZipFileDownloadLocation)
 				{
 					HelperClasses.Logger.Log("Found old ZIP File ('" + HelperClasses.FileHandling.PathSplitUp(myFile)[1] + "') in the Directory. Will delete it.");
 					HelperClasses.FileHandling.deleteFile(myFile);
@@ -336,6 +342,8 @@ namespace Project_127
 						string LocalFileName = Globals.ProjectInstallationPath.TrimEnd('\\') + @"\" + DLFilename;
 
 						new PopupDownload(PopupDownloadTypes.Installer, DLPath, LocalFileName).ShowDialog();
+						HelperClasses.ProcessHandler.StartProcess(LocalFileName, "", true, false);
+						Environment.Exit(0);
 					}
 					else
 					{
@@ -415,21 +423,46 @@ namespace Project_127
 			}
 			// Yes this is correct
 			SetButtonMouseOverMagic(btn_Auth, false);
+		}
 
-
+		/// <summary>
+		/// Right click on Auth button. Gives proper Debug Output
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void btn_Auth_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+		{
 			// Debug Info users can give me easily...
-			string msg = "Size of GTAV in Folder: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\GTA5.exe");
-			msg += "\nSize of Downgraded GTAV: " + LauncherLogic.SizeOfDowngradedGTAV;
-			msg += "\nSize of update.rpf in Folder: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\update\update.rpf");
-			msg += "\nSize of Downgraded update.rpf: " + LauncherLogic.SizeOfDowngradedUPDATE;
-			msg += "\nDetected InstallationState: " + LauncherLogic.InstallationState.ToString();
-			msg += "\n\nGlobals.ProjectInstallationPath: " + Globals.ProjectInstallationPath;
-			msg += "\nLauncherLogic.GTAVFilePath: " + LauncherLogic.GTAVFilePath.ToString();
-			msg += "\nLauncherLogic.UpgradeFilePath: " + LauncherLogic.UpgradeFilePath.ToString();
-			msg += "\nLauncherLogic.DowngradeFilePath: " + LauncherLogic.DowngradeFilePath.ToString();
-			msg += "\nLauncherLogic.SupportFilePath: " + LauncherLogic.SupportFilePath.ToString();
-			msg += "\n\nThat was just some DebugInfo. Should give some info I guess.";
-			Globals.DebugPopup(msg);
+			List<string> DebugMessage = new List<string>();
+
+			DebugMessage.Add("Project 1.27 Version: '" + Globals.ProjectVersion + "'" );
+			DebugMessage.Add("ZIP Version: '" + Globals.ZipVersion + "'" );
+			DebugMessage.Add("Project 1.27 Installation Path '" + Globals.ProjectInstallationPath + "'" );
+			DebugMessage.Add("ZIP Extraction Path '" + LauncherLogic.ZIPFilePath + "'" );
+			DebugMessage.Add("LauncherLogic.GTAVFilePath: '" + LauncherLogic.GTAVFilePath + "'");
+			DebugMessage.Add("LauncherLogic.UpgradeFilePath: '" + LauncherLogic.UpgradeFilePath + "'");
+			DebugMessage.Add("LauncherLogic.DowngradeFilePath: '" + LauncherLogic.DowngradeFilePath + "'");
+			DebugMessage.Add("LauncherLogic.SupportFilePath: '" + LauncherLogic.SupportFilePath + "'");
+			DebugMessage.Add("Detected GameState: '" + LauncherLogic.GameState + "'");
+			DebugMessage.Add("Detected InstallationState: '" + LauncherLogic.InstallationState + "'");
+			DebugMessage.Add("    Size of GTA5.exe in GTAV Installation Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\GTA5.exe"));
+			DebugMessage.Add("    Size of GTA5.exe in Downgrade Files Folder: " + LauncherLogic.SizeOfDowngradedGTAV);
+			DebugMessage.Add("    Size of update.rpf in GTAV Installation Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\GTA5.exe"));
+			DebugMessage.Add("    Size of update.rpf in Downgrade Files Folder: " + LauncherLogic.SizeOfDowngradedUPDATE);
+			DebugMessage.Add("Settings: ");
+			foreach (KeyValuePair<string,string> KVP in Globals.MySettings)
+			{
+				DebugMessage.Add("    " + KVP.Key + ": '" + KVP.Value + "'");
+			}
+
+			// Building DebugPath
+			string DebugFile = Globals.ProjectInstallationPath.TrimEnd('\\') + @"\AAA_DEBUG.txt";
+
+			// Deletes File, Creates File, Adds to it
+			HelperClasses.FileHandling.WriteStringToFileOverwrite(DebugFile, DebugMessage.ToArray());
+
+			// Opens the File
+			Process.Start("notepad.exe", DebugFile);
 		}
 
 		/// <summary>
@@ -498,7 +531,7 @@ namespace Project_127
 		private void btn_Upgrade_Click(object sender, RoutedEventArgs e)
 		{
 			// Confirmation Popup
-			Popup conf = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Are you sure you want to Upgrade?");
+			Popup conf = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Are you sure you want to Upgrade?\nGTAV Installation Path is: '" + Settings.GTAVInstallationPath + "'");
 			conf.ShowDialog();
 			if (conf.DialogResult == false)
 			{
@@ -566,7 +599,12 @@ namespace Project_127
 				else
 				{
 					HelperClasses.Logger.Log("GTA V Installation Path not found or incorrect. User will get Popup");
-					new Popup(Popup.PopupWindowTypes.PopupOkError, "Error: GTA V Installation Path incorrect.");
+					Popup conf = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Error: GTA V Installation Path incorrect.\nGTAV Installation Path: '" + LauncherLogic.GTAVFilePath + "'\nForce this Repair?");
+					conf.ShowDialog();
+					if (conf.DialogResult == true)
+					{
+						LauncherLogic.Repair();
+					}
 				}
 			}
 
@@ -705,7 +743,7 @@ namespace Project_127
 		{
 			// Check our version of the ZIP File
 			int ZipVersion = 0;
-			Int32.TryParse(HelperClasses.FileHandling.ReadContentOfFile(Globals.ProjectInstallationPath.TrimEnd('\\') + @"\Project_127_Files\Version.txt"), out ZipVersion);
+			Int32.TryParse(HelperClasses.FileHandling.ReadContentOfFile(LauncherLogic.ZIPFilePath.TrimEnd('\\') + @"\Project_127_Files\Version.txt"), out ZipVersion);
 
 
 			string msg = "You are running Project 1.27";
@@ -924,9 +962,10 @@ namespace Project_127
 			}
 		}
 
+
+
+
 		#endregion
-
-
 
 
 	} // End of Class

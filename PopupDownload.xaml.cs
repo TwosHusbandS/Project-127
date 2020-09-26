@@ -87,8 +87,9 @@ namespace Project_127
 			{
 				webClient.DownloadFileAsync(new Uri(DownloadURL), DownloadLocation);
 			}
-			catch
+			catch (Exception e)
 			{
+				HelperClasses.Logger.Log("Update of '" + PopupDownloadType.ToString() + "' failed for some reason." + e.Message);
 				new Popup(Popup.PopupWindowTypes.PopupOkError, "Update of '" + PopupDownloadType.ToString() + "' failed for some reason.\nI suggest restarting the program and opting out of update");
 			}
 		}
@@ -102,26 +103,9 @@ namespace Project_127
 		private void DownloadCompleted(object sender, AsyncCompletedEventArgs e)
 		{
 			HelperClasses.Logger.Log("Download Popup: Download Done");
-
-			// If ZIP Download
-			if (this.PopupDownloadType == PopupDownloadTypes.ZIP)
-			{
-				// Import ZIP File, download downloaded ZIP, closing this window
-				HelperClasses.Logger.Log("Download Popup: Download Done, starting Globals.ImportZip()");
-				lbl_Main.Content = "Download Complete\nUnpacking ZIP File...";
-				Globals.ImportZip(DownloadLocation, true);
-				pb_Main.Value = 100;
-				this.Close();
-			}
-			// If Installer Download
-			else if (this.PopupDownloadType == PopupDownloadTypes.Installer)
-			{
-				// Starting newly downloaded Installer, Closing this Programm
-				HelperClasses.Logger.Log("Download Popup: Download Done, starting new Installer");
-				lbl_Main.Content = "Downgrade Complete\nStarting Installer...";
-				HelperClasses.ProcessHandler.StartProcess(DownloadLocation, "", true, false);
-				Environment.Exit(0);
-			}
+			lbl_Main.Content = "Download Complete.";
+			pb_Main.Value = 100;
+			this.Close();
 		}
 
 		/// <summary>
@@ -131,13 +115,14 @@ namespace Project_127
 		/// <param name="e"></param>
 		private void DownloadProgressed(object sender, DownloadProgressChangedEventArgs e)
 		{
+			pb_Main.Value = (double)e.ProgressPercentage;
 			if (this.PopupDownloadType == PopupDownloadTypes.ZIP)
 			{
-				pb_Main.Value = (double)e.ProgressPercentage;
+				lbl_Main.Content = "Downloading ZIP File...(" + pb_Main.Value + "%)";
 			}
 			else if (this.PopupDownloadType == PopupDownloadTypes.Installer)
 			{
-				pb_Main.Value = (double)e.ProgressPercentage;
+				lbl_Main.Content = "Downloading Installer...(" + pb_Main.Value + "%)";
 			}
 		}
 
