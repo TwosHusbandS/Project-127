@@ -82,6 +82,7 @@ General Comments and things one should be aware of (still finishing this list)
 	- We are doing some funky AdminRelauncher() stuff. This means debugger wont work tho.
 		To actually debug this we need to change the requestedExecutionLevel in App Manifest.
 		Never built with requestedExecutionLevel administrator tho. Will fail to launch from installer
+	- Installation Path gets written to Registry on every Launch to make sure its always up to date.
 
 Main To do:
 	- Things changed since last official release (not last commit)
@@ -100,21 +101,11 @@ Main To do:
 	-REMEMBER:
 		-> Release with admin mode manifest thingy...		
 		-> Make Installer start the program after installation
-
 					
 	- TO DO:
-		-> After Implementing Custom ZIP FIle Location, 
-			=> Program is crashing on startup.
-			=> Probably some static non static stuff, null reference, property, initialize thingy
-
-		-> Zip update currently breaks on extraction for some reason. (It wants to overwrite some files in UpgradeFiles...
+		-> Zip update currently breaks on extraction for some reason. (It wants to overwrite some files in UpgradeFiles (which dont exist)...
 			=> Download itself works, Extraction itself works
 			=> Test auto download new ZIP, auto download new Installer, Extract ZIP, and Extract ZIP after auto download
-		
-		-> Custom ZIP File Location User Error Checks:
-			=> User might get confused with the Project_127_Files Folder. 
-				Maybe we should actually check parent folders and child folders when User is selecting a Path for ZIP File
-				And also when guessing GTA V Path
 
 		// After that, release for internal build to test new and rewritten backend
 		
@@ -130,6 +121,10 @@ Main To do:
 			=> Advanced Users Instructions
 			=> Dev Instructions
 			=> Changelog
+		-> Custom ZIP File Location User Error Checks:
+			=> User might get confused with the Project_127_Files Folder. 
+				Maybe we should actually check parent folders and child folders when User is selecting a Path for ZIP File
+				And also when guessing GTA V Path
 		-> $UpgradeFiles has downgrade files in them. Why? And how to Fix?
 			=> Cant figure out how to fix that at the moment
 		-> Think about making a spawner to spawn processes

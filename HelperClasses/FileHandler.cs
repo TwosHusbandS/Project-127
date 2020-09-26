@@ -139,6 +139,30 @@ namespace Project_127.HelperClasses
 		}
 
 		/// <summary>
+		/// Gets the Creation Date of one file in "yyyy-MM-ddTHH:mm:ss" Format
+		/// </summary>
+		/// <param name="pFilePath"></param>
+		/// <returns></returns>
+		public static string GetCreationDate(string pFilePath)
+		{
+			string rtrn = "";
+			if (doesFileExist(pFilePath))
+			{
+				try
+				{
+					DateTime creation = File.GetLastWriteTime(pFilePath);
+					rtrn = creation.ToString("yyyy-MM-ddTHH:mm:ss");
+				}
+				catch
+				{
+					HelperClasses.Logger.Log("Getting Creation Date of File: '" + pFilePath + "' failed.");
+					new Popup(Popup.PopupWindowTypes.PopupOkError, "Getting Creation Date of File: '" + pFilePath + "' failed.").ShowDialog();
+				}
+			}
+			return rtrn;
+		}
+
+		/// <summary>
 		/// Creates Hardlink A for File B
 		/// </summary>
 		/// <param name="pLinkFilePath"></param>

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -25,9 +26,12 @@ namespace Project_127.HelperClasses
 			HelperClasses.FileHandling.createFile(Globals.Logfile);
 			}
 
+
+			string MyCreationDate = HelperClasses.FileHandling.GetCreationDate(Process.GetCurrentProcess().MainModule.FileName);
+
 			HelperClasses.Logger.Log("", true, 0);
 			HelperClasses.Logger.Log("", true, 0);
-			HelperClasses.Logger.Log(" === Project - 127 Started (Version: " + Globals.ProjectVersion + "). Logging initiated === ", true, 0);
+			HelperClasses.Logger.Log(" === Project - 127 Started (Version: '" + Globals.ProjectVersion + "' BuildInfo: '" + Globals.BuildInfo + "' Built at: '" + MyCreationDate + "' Central European Time). Logging initiated === ", true, 0);
 		}
 
 		/// <summary>
@@ -38,7 +42,7 @@ namespace Project_127.HelperClasses
 		{
 			if (pSkipLogSetting)
 			{
-				string LogMessage = "[" + DateTime.Now.ToString("yyyy.MM.dd-HH:mm:ss") + "] - "; 
+				string LogMessage = "[" + DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss") + "] - "; 
 				
 				// Yes this for loop is correct. If Log level 0, we dont add another "- "
 				for (int i = 0; i <= pLogLevel - 1; i++)

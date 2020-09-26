@@ -23,7 +23,7 @@ namespace Project_127
 		/// <summary>
 		/// Property of our own Installation Path
 		/// </summary>
-		public static string ProjectInstallationPath { get { return Settings.InstallationPath; } }
+		public static string ProjectInstallationPath { get { return Process.GetCurrentProcess().MainModule.FileName.Substring(0, Process.GetCurrentProcess().MainModule.FileName.LastIndexOf('\\')); } }
 
 		/// <summary>
 		/// Property of our ProjectName (for Folders, Regedit, etc.)
@@ -69,6 +69,11 @@ namespace Project_127
 		public static bool BetaMode = true;
 
 		/// <summary>
+		/// Property of other Buildinfo. Will be in the top message of logs
+		/// </summary>
+		public static string BuildInfo = "Bleeding Edge";
+
+		/// <summary>
 		/// String of Steam Install Path
 		/// </summary>
 		public static string SteamInstallPath
@@ -98,7 +103,7 @@ namespace Project_127
 		/// <summary>
 		/// Property of the Registry Key we use for our Settings
 		/// </summary>													
-		public static RegistryKey MySettingsKey { get { return RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64).CreateSubKey("SOFTWARE").CreateSubKey(ProjectName); } } // = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64).CreateSubKey("SOFTWARE").CreateSubKey(ProjectName);
+		public static RegistryKey MySettingsKey { get { return RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64).CreateSubKey("SOFTWARE").CreateSubKey(ProjectName); } } 
 
 		/// <summary>
 		/// Property of our default Settings
@@ -216,6 +221,9 @@ namespace Project_127
 				HelperClasses.Logger.Log("NO Update for ZIP found");
 			}
 
+			// Writing ProjectInstallationPath to Registry.
+			Settings.InstallationPath = Globals.ProjectInstallationPath;
+
 			// Starting the Dispatcher Timer for the automatic updates of the GTA V Button
 			MyDispatcherTimer = new System.Windows.Threading.DispatcherTimer();
 			MyDispatcherTimer.Tick += new EventHandler(pMW.SetGTAVButtonBasedOnGameAndInstallationState);
@@ -239,7 +247,7 @@ namespace Project_127
 		{
 			LauncherLogic.InstallationStates OldInstallationState = LauncherLogic.InstallationState;
 			string OldHash = HelperClasses.FileHandling.CreateDirectoryMd5(LauncherLogic.DowngradeFilePath);
-			
+
 			HelperClasses.Logger.Log("Importing ZIP File: '" + pZipFileLocation + "'");
 			HelperClasses.Logger.Log("Old ZIP File Version: '" + Globals.ZipVersion + "'");
 			HelperClasses.Logger.Log("Old Installation State: '" + OldInstallationState + "'");
@@ -250,14 +258,14 @@ namespace Project_127
 			{
 				if (!myFile.Contains("UpgradeFiles"))
 				{
-				HelperClasses.FileHandling.deleteFile(myFile);
+					HelperClasses.FileHandling.deleteFile(myFile);
 				}
 			}
 
 			HelperClasses.Logger.Log("Extracting ZIP File: '" + pZipFileLocation + "' to the path: '" + LauncherLogic.ZIPFilePath + "'");
 
 			new PopupProgress(PopupProgress.ProgressTypes.ZIPFile, pZipFileLocation).ShowDialog();
-   
+
 			if (deleteFileAfter)
 			{
 				HelperClasses.Logger.Log("Deleting ZIP File: '" + pZipFileLocation + "'");

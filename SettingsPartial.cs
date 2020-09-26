@@ -136,13 +136,17 @@ namespace Project_127
 		}
 
 		/// <summary>
-		/// Settings InstallationPath. Gets from Dictionary. NO SET
+		/// Settings InstallationPath. Gets and Sets from Dictionary.
 		/// </summary>
 		public static string InstallationPath
 		{
 			get
 			{
 				return GetSetting("InstallationPath"); 
+			}
+			set
+			{
+				SetSetting("InstallationPath", value);
 			}
 		}
 
