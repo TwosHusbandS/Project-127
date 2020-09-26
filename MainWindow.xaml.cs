@@ -2,9 +2,14 @@
 
 ##########################
 
+I guess User needs to know:
+
+	- Installer Location: https://github.com/TwosHusbandS/Project-127/tree/master/Installer
+	- Uninstaller / Cleanup.exe: https://github.com/TwosHusbandS/Project-127/raw/master/Installer/Cleanup.exe
+	- Changelogs: https://github.com/TwosHusbandS/Project-127/tree/master/Installer/Changelogs
+
 	- Windows 10 Checks all Files for Virus if they are run for the first time. If you open a file (Installer or Program)
 				and the file doesnt appear to be running, just wait 20 seconds. Should open within that timeframe.
-		
 	- Install Program (preferably on the same Drive where your GTA is installed.
 						Optimally inside the GTAV Installation Folder)
 	- Click the hamburger Icon in the top left. Then click "Import ZIP" and select the ZIP File downloaded above (wait until you get the popup confirming its done)
@@ -15,20 +20,19 @@
 
 ##########################
 
-
 Main Documentation:
-Main Client Implementation by "@thS#0305"
-The actual hard lifting of the launching (with fixes) and authentification stuff is achieved by the hardwork of "@dr490n", "@Special For" and "@zCri"
-Artwork, GUI Design, GUI Behaviour, Colorchoice etc. by "@Hossel"
-
+Actual code (partially closed source) which authentificates, handles entitlement and launches the game is done by @dr490n with the help of other members of the core team like @Special For and @zCri
+Artwork, Design of GUI, GUI Behaviourehaviour, Colorchoices etc. by "@Hossel"
+Client by "@thS"
 Version: 0.0.2.1 Closed Beta
 
 Build Instructions:
-	Press CTRLF + F5
+	Press CTRLF + F5, pray that nuget does its magic.
 
 Deploy Instructions:
 	Change Version Number a few Lines Above.
 	Change Version Numbner in both of the last lines in AssemblyInfo.cs
+	Make sure app manifest is set to NOT require admin
 	Build this program in release
 	Build installer via Innosetup (Script is in \Installer\) [Change Version in Version and OutputName]
 	Change Version number and Installer Location in "\Installer\Update.xml"
@@ -39,63 +43,105 @@ Getting People into Beta:
 	Add their String inside the Regedit Value "MachineGuid" inside the RegeditKey: "Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Cryptography"
 	to /Installer/AuthUser.txt (on github master branch btw)
 
-We need Admin Acces to access registry, and possibly some file permission stuff
- 
-Still needs the actual creative way of Launching and the DRM.
-
 Comments like "TODO", "TO DO", "CTRLF", "CTRL-F", and "CTRL F" are just ways of finding a specific line quickly via searching
 
-Hybrid code can be found in AAA_HybridCode.
-
-Not much. I repeat: Literally Not much. Has been tested.
+Hybrid code can be found in AAA_HybridCode. // Is this still the case? 2020-09-26
 
 General Files / Classes:
-    MainWindow.xaml.cs
-    Popup.xaml.cs
-    Settings.xaml.cs + SettingsPartial.cs
-    SaveFileModder.xaml.cs
-    ROSIntegration.xaml.cs (Auth stuff from @dr490n)
-    
-    Globals.cs 
-	LauncherLogic.cs
-	MyFile.cs (Custom Class for Objects for the SaveFileHandler, Very much subject to change)
-    HelperClasses\Logger.cs
-    HelperClasses\RegeditHandler.cs
-    HelperClasses\ProcessHandler.cs
-	HelperClasses\FileHandler.cs
+	Windows:
+		MainWindow.xaml.cs
+		Settings.xaml.cs
+			SettingsPartial.cs
+		SaveFileModder.xaml.cs
+		Popup.xaml.cs // Normal Popup (OK & YES/NO)
+		PopupDownload.xaml.cs // Popup for Downloading Files
+		PopupProgress.xaml.cs // Popup for large file operation with semi-optinal loading bar
+		ROSIntegration.xaml.cs // Auth window fo @dr490n
+
+	Classes:
+		Globals.cs  // Global Variables and Central Place
+		LauncherLogic.cs // Most of the downgrade, upgrade, repair, launch things
+		MySaveFile.cs // Custom Class for Objects for the SaveFileHandler, Very much subject to change
+		MyFileOperation.cs // One file operation (move/delete/copy/hardlink), used for bigger file operations 
+		HelperClasses\Logger.cs // Own logger
+		HelperClasses\RegeditHandler.cs // Wrappers for used Regedit things
+		HelperClasses\ProcessHandler.cs // Wrappers for process stuff, Subject to change
+		HelperClasses\FileHandler.cs // Wrapers for file stuff
+		EntitlementBlock.cs // Backend by @d490n
+		EntitlementBlockCipher.cs // Backend by @d490n
+		RC4.cs // Backend by @d490n
+		ROSCommunicationBackend.cs // Backend by @d490n
 
 General Comments and things one should be aware of (still finishing this list)
-	Window Icons are set in the Window part of the XAML. Can use resources and relative Paths this way
+	- Window Icons are set in the Window part of the XAML. Can use resources and relative Paths this way
 		This doesnt change the icon when right clicking task bar btw.
-	My Other ideas of creating Settings (CustomControl or Programtically) didnt work because
+	- My Other ideas of creating Settings (CustomControl or Programtically) didnt work because
 		DataBinding the ButtonContext is hard for some reason. Works which the checkbox tho, which is kinda weird
-	BetaMode is hardcoded in Globals.cs
-	Importing ZIP needs some work. Currently overwrites all files (including version.txt) apart from "UpgradeFiles" Folder
-
+	- BetaMode is hardcoded in Globals.cs
+	- Importing ZIP needs some work. Currently overwrites all files (including version.txt) apart from "UpgradeFiles" Folder
+	- We are doing some funky AdminRelauncher() stuff. This means debugger wont work tho.
+		To actually debug this we need to change the requestedExecutionLevel in App Manifest.
+		Never built with requestedExecutionLevel administrator tho. Will fail to launch from installer
 
 Main To do:
+	- Things changed since last official release (not last commit)
+		-> Lots. Lots. Lots.
+		-> Admin Relauncher
+		-> Using Lists of MyFileOperation objects for any big file stuff we do.
+		-> Progress Window and information for unpacking Zip, and file operations
+		-> Rewrite of GTA V Path stuff
+		-> BugFix for closed beta auth
+		-> Make it not not crash when github unreachable
+
+	-REMEMBER:
+		-> Release with admin mode manifest thingy...		
+		-> Make Installer start the program after installation
+					
 	- TO DO:
-		- Use Copy / Pasting instead of Hardlink (Working on GUI for that, backend is mostly done, just needs to be called)
-		- Also give option to store ZIP in a different location from this client
-		- Give user some way of knowing that the program is doing something...
+		-> Give option to store ZIP in a different location from this client
+			=> Use FilesFolder settings (rename tho)
+			=> Change reference of installationpath to reference of that settings everywhere
+				(Upgrading/Downgrading/Repairing, ZIP Stuff of all kinds, ZIP Version stuff)
+			=> Copy then delete (safer than moving) all files when changing that settings
+			=> Remember to use get for all references so all references update when changing the setting
+		-> When Importing Zip
+			=> we currently check if we need to upgrade/downgrade again.
+			=> We wanna compare hash of the imported zip files. Overwrite in $DownloadFiles folder
+				if state was downgraded, just downgrade again (shouldnt delete files in UpgradeFolder)
+		-> PopupProgress (for file operations and extracting zip)
+			=> Add Progressbar.
+				> For File Options == DONE
+				> For Unzipping (Currently broken)
+					https://stackoverflow.com/a/26733624
+		-> Proper Debug Button on right click auth
+			(and fix left click while we are at it...)
+			
+		// After that, release for internal build to test new and rewritten backend
 		
+		-> Full Cleanup code (auto document everything and also write a few lines in important locations)
+		-> SaveFileHandler, just manage our own, probably only need one list for datagrid, ask if we need to overwrite
+		-> FirstLaucnh and Reset function and GUIs with GTA V installation, ZIP File Location
+		-> Regedit Cleanup of everything not in default settings
+		-> Add proper Text for popupss
+		-> Write ReadME
+		-> $UpgradeFiles has downgrade files in them. Why? And how to Fix?
+			=> Cant figure out how to fix that at the moment
+		-> Think about making a spawner
+		-> auto high priority
+		-> auto steam core fix
+		-> make OpenFolderDialog pretty...I know its possible, just google more and more
+
+		// After that, release rublic built + auto upgrade
 
 	- Implemet other features 
-		- auto high priority
-		- make OpenFolderDialog pretty
-		- SaveFileHandler
-		- auto darkviperau steam core fix
-		- all Settings
+		-> just see all Settings
 
     - Low Prio:
 		Convert Settings and SaveFileHandler in CustomControls
-		Popup start in middle of window
+		Add Audio Effects
+		Popup start in middle of window, instead of CenterScreen
 		Fix Code signing so we dont get anti virus error
-        Implement Hamburger Animation
 		Theming
-		Get DataBinding working on Button Context for Settings
-		Own FPS Limiter
-		Fix starting as Admin...
 
 Weird Beta Reportings:
 	- Reloe and JakeMiester and dr490n had some issues with the GTA V Path Settings
@@ -103,7 +149,6 @@ Weird Beta Reportings:
 			If given Path is detected to be wrong, but user has to confirm this three times every startup...
 	- Game wasnt launching for most
 			I actually hardcoded the Path...its now fixed.
-
 
 */
 
@@ -152,6 +197,9 @@ namespace Project_127
 			// Initializing all WPF Elements
 			InitializeComponent();
 
+			// Admin Relauncher
+			AdminRelauncher();
+
 			//Dont run anything when we are on 32 bit...
 			//If this ever gets changed, take a second look at regedit class and path(different for 32 and 64 bit OS)
 			if (Environment.Is64BitOperatingSystem == false)
@@ -160,16 +208,15 @@ namespace Project_127
 				Environment.Exit(1);
 			}
 
-			// Start the Init Process of Logger, Settings, Globals, Regedit here, since we need the Logger in the next Line if it fails...
-			Globals.Init(this);
-
 			// Checks if a Process with the same ProcessName is already running
 			if (Process.GetProcessesByName(Process.GetCurrentProcess().ProcessName).Length > 1)
 			{
-				HelperClasses.Logger.Log("Program is open twice. This will exit.");
 				(new Popup(Popup.PopupWindowTypes.PopupOkError, "Program is open twice. This will exit.")).ShowDialog();
 				Environment.Exit(2);
 			}
+
+			// Start the Init Process of Logger, Settings, Globals, Regedit here, since we need the Logger in the next Line if it fails...
+			Globals.Init(this);
 
 			// Checks if you are allowed to run this Beta
 			if (!CheckIfAllowedToRun())
@@ -197,7 +244,6 @@ namespace Project_127
 
 			// Make sure Hamburger Menu is invisible when opening window
 			this.GridHamburgerOuter.Visibility = Visibility.Hidden;
-			this.btn_Auth.Visibility = Visibility.Hidden;
 
 			// Set Image of Buttons
 			SetButtonMouseOverMagic(btn_Auth, false);
@@ -210,7 +256,54 @@ namespace Project_127
 			HelperClasses.Logger.Log("Startup procedure (Constructor of MainWindow) completed.");
 		}
 
+		/// <summary>
+		/// Responsible for Re-Launching this App as Admin if it isnt.
+		/// </summary>
+		private void AdminRelauncher()
+		{
+			if (!IsRunAsAdmin())
+			{
+				ProcessStartInfo proc = new ProcessStartInfo();
+				proc.UseShellExecute = true;
+				proc.WorkingDirectory = Environment.CurrentDirectory;
+				proc.FileName = Assembly.GetEntryAssembly().CodeBase;
+				proc.Arguments = Globals.CommandLineArguments.ToString();
 
+				proc.Verb = "runas";
+
+				try
+				{
+					Process.Start(proc);
+					Application.Current.Shutdown();
+				}
+				catch (Exception ex)
+				{
+					Console.WriteLine("This program must be run as an administrator! \n\n" + ex.ToString());
+				}
+			}
+		}
+
+		/// <summary>
+		/// Method which checks if this program is run as admin. Returns one bool
+		/// </summary>
+		/// <returns></returns>
+		private bool IsRunAsAdmin()
+		{
+			try
+			{
+				WindowsIdentity id = WindowsIdentity.GetCurrent();
+				WindowsPrincipal principal = new WindowsPrincipal(id);
+				return principal.IsInRole(WindowsBuiltInRole.Administrator);
+			}
+			catch (Exception)
+			{
+				return false;
+			}
+		}
+
+		/// <summary>
+		/// Method which does the UpdateCheck on Startup
+		/// </summary>
 		private void CheckForUpdate()
 		{
 			// Check online File for Version.
@@ -242,7 +335,7 @@ namespace Project_127
 						string DLFilename = DLPath.Substring(DLPath.LastIndexOf('/') + 1);
 						string LocalFileName = Globals.ProjectInstallationPath.TrimEnd('\\') + @"\" + DLFilename;
 
-						new PopupProgress(PopupDownloadTypes.Installer, DLPath, LocalFileName).ShowDialog();
+						new PopupDownload(PopupDownloadTypes.Installer, DLPath, LocalFileName).ShowDialog();
 					}
 					else
 					{
@@ -279,14 +372,12 @@ namespace Project_127
 			{
 				// Make invisible
 				this.GridHamburgerOuter.Visibility = Visibility.Hidden;
-				this.btn_Auth.Visibility = Visibility.Hidden;
 			}
 			// If is not visible
 			else
 			{
 				// Make visible
 				this.GridHamburgerOuter.Visibility = Visibility.Visible;
-				this.btn_Auth.Visibility = Visibility.Visible;
 			}
 		}
 
@@ -348,16 +439,34 @@ namespace Project_127
 		/// <param name="e"></param>
 		private void btn_GTA_Click(object sender, RoutedEventArgs e)
 		{
-			string msg = "GTA V Installation is (probably) " + LauncherLogic.InstallationState.ToString() + ". The Game is (probably) " + LauncherLogic.GameState.ToString() + ".";
-
-			Popup conf = new Popup(Popup.PopupWindowTypes.PopupYesNo, msg + "\nDo you want to Launch the Game?");
-			conf.ShowDialog();
-			if (conf.DialogResult == true)
+			if (LauncherLogic.GameState == LauncherLogic.GameStates.Running)
 			{
-				HelperClasses.Logger.Log("Clicked Launch Button", 1);
-				LauncherLogic.Launch();
+				HelperClasses.Logger.Log("Game deteced running.", 1);
+				Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Game is detected as running.\nDo you want to close it\nand run it again?");
+				yesno.ShowDialog();
+				if (yesno.DialogResult == true)
+				{
+					HelperClasses.Logger.Log("Killing all Processes.", 1);
+					LauncherLogic.KillRelevantProcesses();
+				}
+				else
+				{
+					HelperClasses.Logger.Log("Not wanting to kill all Processes, im aborting Launch function", 1);
+					return;
+				}
 			}
+			else
+			{
+				string msg = "GTA V Installation is (probably) " + LauncherLogic.InstallationState.ToString() + ". The Game is (probably) " + LauncherLogic.GameState.ToString() + ".";
 
+				Popup conf = new Popup(Popup.PopupWindowTypes.PopupYesNo, msg + "\nDo you want to Launch the Game?");
+				conf.ShowDialog();
+				if (conf.DialogResult == true)
+				{
+					HelperClasses.Logger.Log("User wantst to Launch", 1);
+					LauncherLogic.Launch();
+				}
+			}
 			SetGTAVButtonBasedOnGameAndInstallationState(null, null);
 		}
 
@@ -647,21 +756,25 @@ namespace Project_127
 		{
 			if (LauncherLogic.InstallationState == LauncherLogic.InstallationStates.Downgraded)
 			{
-				btn_GTA.Content = "Launch GTA V\n   Downgraded";
+				lbl_GTA.Foreground = Globals.MW_GTALabelDowngradedForeground;
+				lbl_GTA.Content = "Downgraded";
 			}
 			else
 			{
-				btn_GTA.Content = "Launch GTA V\n   Upgraded";
+				lbl_GTA.Foreground = Globals.MW_GTALabelUpgradedForeground;
+				lbl_GTA.Content = "Upgraded";
 			}
-
 			if (LauncherLogic.GameState == LauncherLogic.GameStates.Running)
 			{
 				btn_GTA.BorderBrush = Globals.MW_ButtonGTAGameRunningBorderBrush;
+				btn_GTA.Content = "Exit GTA V";
 			}
 			else
 			{
 				btn_GTA.BorderBrush = Globals.MW_ButtonGTAGameNotRunningBorderBrush;
+				btn_GTA.Content = "Launch GTA V";
 			}
+
 		}
 
 
@@ -785,18 +898,22 @@ namespace Project_127
 					string GUID = HelperClasses.RegeditHandler.GetValue(MyKey, "MachineGuid");
 
 					string URL_AuthUser = HelperClasses.FileHandling.GetXMLTagContent(HelperClasses.FileHandling.GetStringFromURL(Globals.URL_AutoUpdate), "authuser");
-					string Reply = HelperClasses.FileHandling.GetStringFromURL(URL_AuthUser);
+					string ServerUse = HelperClasses.FileHandling.GetStringFromURL(URL_AuthUser);
 
-					if (Reply.Contains(GUID))
-					{
-						return true;
-					}
-
-					if (String.IsNullOrEmpty(Reply))
+					if (String.IsNullOrEmpty(ServerUse))
 					{
 						// Letting Users in if github is down...
 						new Popup(Popup.PopupWindowTypes.PopupOk, "Letting you in since Github appears to be down...").ShowDialog();
 						return true;
+					}
+
+					if (ServerUse.Contains(GUID))
+					{
+						return true;
+					}
+					else
+					{
+						return false;
 					}
 				}
 				return true;

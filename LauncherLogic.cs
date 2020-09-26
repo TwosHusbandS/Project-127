@@ -142,11 +142,15 @@ namespace Project_127
 		/// </summary>
 		public static void Upgrade()
 		{
+			// Saving all the File Operations I want to do, executing this at the end of this Method
+			List<MyFileOperation> MyFileOperations = new List<MyFileOperation>();
+
 			KillRelevantProcesses();
 
 			// Creates Hardlink Link in GTAV Installation Folder to all the files of Upgrade Folder
 			// If they exist in GTAV Installation Folder,  we delete them from GTAV Installation folder
 
+			HelperClasses.Logger.Log("Initiating Upgrade", 0);
 			HelperClasses.Logger.Log("GTAV Installation Path: " + GTAVFilePath, 1);
 			HelperClasses.Logger.Log("InstallationLocation: " + Globals.ProjectInstallationPath, 1);
 			HelperClasses.Logger.Log("DowngradeFilePath: " + DowngradeFilePath, 1);
@@ -168,25 +172,15 @@ namespace Project_127
 				if (HelperClasses.FileHandling.doesFileExist(CorrespondingFilePathInGTALocation[i]))
 				{
 					// Delete from GTA V Installation Path
-					HelperClasses.Logger.Log("File found in GTA V Installation Path and the Upgrade Folder. Will delete '" + CorrespondingFilePathInGTALocation[i] + "'", 1);
-					HelperClasses.FileHandling.deleteFile(CorrespondingFilePathInGTALocation[i]);
+					MyFileOperations.Add(new MyFileOperation(MyFileOperation.FileOperations.Delete, CorrespondingFilePathInGTALocation[i], "", "File found in GTA V Installation Path and the Upgrade Folder. Will delete '" + CorrespondingFilePathInGTALocation[i] + "'", 1));
 				}
 
-
-				if (Settings.EnableCopyFilesInsteadOfHardlinking)
-				{
-					HelperClasses.Logger.Log("Will copy file: '" + FilesInUpgradesFiles[i] + "' to location in '" + CorrespondingFilePathInGTALocation[i] + "'", 1);
-					HelperClasses.Logger.Log("TO DO CTRLF CTRL F TODO NOT IMPLEMENTED YET");
-				}
-				else
-				{
-					// Creates actual Symbolic Link
-					HelperClasses.Logger.Log("Will create HardLink in '" + CorrespondingFilePathInGTALocation[i] + "' to the file in '" + FilesInUpgradesFiles[i] + "'", 1);
-					HelperClasses.FileHandling.HardLinkFiles(CorrespondingFilePathInGTALocation[i], FilesInUpgradesFiles[i]);
-				}
-
-
+				// Creates actual Hard Link (this will further down check if we should copy based on settings)
+				MyFileOperations.Add(new MyFileOperation(MyFileOperation.FileOperations.Hardlink, FilesInUpgradesFiles[i], CorrespondingFilePathInGTALocation[i], "Will create HardLink in '" + CorrespondingFilePathInGTALocation[i] + "' to the file in '" + FilesInUpgradesFiles[i] + "'", 1));
 			}
+
+			// Actually executing the File Operations
+			new PopupProgress(PopupProgress.ProgressTypes.FileOperation, "Upgrade", MyFileOperations).ShowDialog();
 
 			// We dont need to mess with social club versions since the launch process doesnt depend on it
 
@@ -198,8 +192,10 @@ namespace Project_127
 		/// </summary>
 		public static void Repair()
 		{
-			HelperClasses.Logger.Log("Initiating Repair.");
+			// Saving all the File Operations I want to do, executing this at the end of this Method
+			List<MyFileOperation> MyFileOperations = new List<MyFileOperation>();
 
+			HelperClasses.Logger.Log("Initiating Repair.", 0);
 			HelperClasses.Logger.Log("GTAV Installation Path: " + GTAVFilePath, 1);
 			HelperClasses.Logger.Log("InstallationLocation: " + Globals.ProjectInstallationPath, 1);
 			HelperClasses.Logger.Log("DowngradeFilePath: " + DowngradeFilePath, 1);
@@ -211,9 +207,11 @@ namespace Project_127
 			HelperClasses.Logger.Log("Found " + FilesInUpgradeFiles.Length.ToString() + " Files in Upgrade Folder. Will try to delete them", 1);
 			foreach (string myFileName in FilesInUpgradeFiles)
 			{
-				HelperClasses.Logger.Log("Deleting '" + myFileName + "' from $Upgrade Folder", 2);
-				HelperClasses.FileHandling.deleteFile(myFileName);
+				MyFileOperations.Add(new MyFileOperation(MyFileOperation.FileOperations.Delete, myFileName, "", "Deleting '" + (myFileName) + "' from the $UpgradeFolder", 2));
 			}
+
+			// Actually executing the File Operations
+			new PopupProgress(PopupProgress.ProgressTypes.FileOperation, "Repair", MyFileOperations).ShowDialog();
 
 			// We dont need to mess with social club versions since the launch process doesnt depend on it
 
@@ -225,12 +223,16 @@ namespace Project_127
 		/// </summary>
 		public static void Downgrade()
 		{
+			// Saving all the File Operations I want to do, executing this at the end of this Method
+			List<MyFileOperation> MyFileOperations = new List<MyFileOperation>();
+
 			KillRelevantProcesses();
 
 			// Creates Hardlink Link in GTAV Installation Folder to all the files of Downgrade Folder
 			// If they exist in GTAV Installation Folder, and in Upgrade Folder, we delete them from GTAV Installation folder
 			// If they exist in GTAV Installation Folder, and NOT in Upgrade Folder, we move them there
 
+			HelperClasses.Logger.Log("Initiating Downgrade", 0);
 			HelperClasses.Logger.Log("GTAV Installation Path: " + GTAVFilePath, 1);
 			HelperClasses.Logger.Log("InstallationLocation: " + Globals.ProjectInstallationPath, 1);
 			HelperClasses.Logger.Log("DowngradeFilePath: " + DowngradeFilePath, 1);
@@ -257,29 +259,22 @@ namespace Project_127
 					if (HelperClasses.FileHandling.doesFileExist(CorrespondingFilePathInUpgradeFiles[i]))
 					{
 						// Delete from GTA V Installation Path
-						HelperClasses.Logger.Log("Found '" + CorrespondingFilePathInGTALocation[i] + "' in GTA V Installation Path and $UpgradeFiles. Will delelte from GTA V Installation", 1);
-						HelperClasses.FileHandling.deleteFile(CorrespondingFilePathInGTALocation[i]);
+						MyFileOperations.Add(new MyFileOperation(MyFileOperation.FileOperations.Delete, CorrespondingFilePathInGTALocation[i], "", "Found '" + CorrespondingFilePathInGTALocation[i] + "' in GTA V Installation Path and $UpgradeFiles. Will delelte from GTA V Installation", 1));
 					}
 					else
 					{
 						// Move File from GTA V Installation Path to Upgrade Folder
-						HelperClasses.Logger.Log("Found '" + CorrespondingFilePathInGTALocation[i] + "' in GTA V Installation Path and NOT in $UpgradeFiles. Will move it from GTA V Installation to $UpgradeFiles", 1);
-						HelperClasses.FileHandling.moveFile(CorrespondingFilePathInGTALocation[i], CorrespondingFilePathInUpgradeFiles[i]);
+						MyFileOperations.Add(new MyFileOperation(MyFileOperation.FileOperations.Move, CorrespondingFilePathInGTALocation[i], CorrespondingFilePathInUpgradeFiles[i], "Found '" + CorrespondingFilePathInGTALocation[i] + "' in GTA V Installation Path and NOT in $UpgradeFiles. Will move it from GTA V Installation to $UpgradeFiles", 1));
 					}
 				}
 
-				if (Settings.EnableCopyFilesInsteadOfHardlinking)
-				{
-					HelperClasses.Logger.Log("Will copy file: '" + FilesInDowngradeFiles[i] + "' to location in '" + CorrespondingFilePathInGTALocation[i] + "'", 1);
-					HelperClasses.Logger.Log("TO DO CTRLF CTRL F TODO NOT IMPLEMENTED YET");
-				}
-				else
-				{
-					// Creates actual Symbolic Link
-					HelperClasses.Logger.Log("Will create HardLink in '" + CorrespondingFilePathInGTALocation[i] + "' to the file in '" + FilesInDowngradeFiles[i] + "'", 1);
-					HelperClasses.FileHandling.HardLinkFiles(CorrespondingFilePathInGTALocation[i], FilesInDowngradeFiles[i]);
-				}
+
+				// Creates actual Hard Link (this will further down check if we should copy based on settings)
+				MyFileOperations.Add(new MyFileOperation(MyFileOperation.FileOperations.Hardlink, FilesInDowngradeFiles[i], CorrespondingFilePathInGTALocation[i], "Will create HardLink in '" + CorrespondingFilePathInGTALocation[i] + "' to the file in '" + FilesInDowngradeFiles[i] + "'", 1));
 			}
+
+			// Actually executing the File Operations
+			new PopupProgress(PopupProgress.ProgressTypes.FileOperation, "Downgrade", MyFileOperations).ShowDialog();
 
 			// We dont need to mess with social club versions since the launch process doesnt depend on it
 
@@ -441,25 +436,10 @@ namespace Project_127
 		public static void Launch()
 		{
 			HelperClasses.Logger.Log("Trying to Launch the game.");
-			if (LauncherLogic.GameState == GameStates.Running)
-			{
-				HelperClasses.Logger.Log("Game deteced running.", 1);
-				Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Game is detected as running.\nDo you want to close it\nand run it again?");
-				yesno.ShowDialog();
-				if (yesno.DialogResult == true)
-				{
-					HelperClasses.Logger.Log("Killing all Processes.", 1);
-					KillRelevantProcesses();
-				}
-				else
-				{
-					HelperClasses.Logger.Log("Not wanting to kill all Processes, im aborting Launch function", 1);
-					return;
-				}
-			}
 			if (LauncherLogic.InstallationState == InstallationStates.Upgraded)
 			{
 				HelperClasses.Logger.Log("Installation State Upgraded Detected.", 1);
+
 				HelperClasses.Logger.Log("Trying to start Game normally through Steam.", 1);
 				Process gtav = new Process();
 				gtav.StartInfo.FileName = Globals.SteamInstallPath.TrimEnd('\\') + @"\steam.exe";
@@ -469,7 +449,6 @@ namespace Project_127
 			else if (LauncherLogic.InstallationState == InstallationStates.Downgraded)
 			{
 				HelperClasses.Logger.Log("Installation State Downgraded Detected", 1);
-
 
 				// TO DO, Clean this Up, move to ProcessHandler HelperClass
 				HelperClasses.Logger.Log("Launching Downgraded", 1);

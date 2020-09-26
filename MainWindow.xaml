@@ -46,7 +46,17 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
-
+        <Style x:Key="lbl" TargetType="Label">
+            <Setter Property="Foreground" Value="{x:Static local:Globals.MW_GTALabelDowngradedForeground}" />
+            <Setter Property="FontFamily" Value="Tahoma" />
+            <Setter Property="FontSize" Value="18" />
+            <Setter Property="TextBlock.TextAlignment" Value="Left"/>
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="HorizontalContentAlignment" Value="Left" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="Margin" Value="0" />
+        </Style>
         <Style x:Key="btn_hamburgeritem" TargetType="{x:Type Button}" BasedOn="{StaticResource btn}">
             <Setter Property="Background" Value="{x:Static local:Globals.MW_ButtonBackground}"/>
             <Setter Property="Foreground" Value="{x:Static local:Globals.MW_ButtonForeground}"/>
@@ -118,11 +128,12 @@
                     <Button x:Name="btn_Credits" Grid.Row="8" Style="{StaticResource btn_hamburgeritem}" Content="Credits" Click="btn_Credits_Click"/>
                 </Grid>
                 <!-- GridHamburgerInner -->
+                <Label x:Name="lbl_GTA" Style="{StaticResource lbl}" Content="ASDF" Margin="110,0,0,460" Width="160"/>
+                <Button x:Name="btn_Auth" Style="{StaticResource btn_Small}" MouseEnter="btn_Small_MouseEnter" MouseLeave="btn_Small_MouseLeave" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="60,15,0,0" Click="btn_Auth_Click"/>
             </Grid>
             <!-- GridHamburgerOuter -->
             <Button x:Name="btn_Hamburger" Style="{StaticResource btn_Small}" MouseEnter="btn_Small_MouseEnter" MouseLeave="btn_Small_MouseLeave" VerticalAlignment="Top" HorizontalAlignment="Left" Click="btn_Hamburger_Click" />
             <Button x:Name="btn_Exit" Style="{StaticResource btn_Small}" MouseEnter="btn_Small_MouseEnter" MouseLeave="btn_Small_MouseLeave" VerticalAlignment="Top" HorizontalAlignment="Right" Click="btn_Exit_Click"/>
-            <Button x:Name="btn_Auth" Style="{StaticResource btn_Small}" MouseEnter="btn_Small_MouseEnter" MouseLeave="btn_Small_MouseLeave" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="60,15,0,0" Click="btn_Auth_Click"/>
             <Button x:Name="btn_GTA" Style="{StaticResource btn_gta}" Margin="625,400,60,60" Content="GTA V.&#xa;Downgraded." Click="btn_GTA_Click" MouseRightButtonDown="btn_GTA_MouseRightButtonDown"/>
         </Grid >
         <!-- Main Grid -->

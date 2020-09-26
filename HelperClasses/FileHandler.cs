@@ -395,6 +395,35 @@ namespace Project_127.HelperClasses
 			}
 		}
 
+
+		/// <summary>
+		/// Copy File A to file B. Does not overwrite
+		/// </summary>
+		/// <param name="pSource"></param>
+		/// <param name="pDestination"></param>
+		public static void copyFile(string pSource, string pDestination)
+		{
+			if (!File.Exists(pSource))
+			{
+				HelperClasses.Logger.Log("Copying File ['" + pSource + "' to '" + pDestination + "'] failed since SourceFile ('" + pSource + "') does NOT exist.", true, 0);
+				return;
+			}
+			if (File.Exists(pDestination))
+			{
+				HelperClasses.Logger.Log("Copying File ['" + pSource + "' to '" + pDestination + "'] failed since DestinationFile ('" + pDestination + "') DOES exist.", true, 0);
+				return;
+			}
+			try
+			{
+				File.Copy(pSource,pDestination);
+			}
+			catch (Exception e)
+			{
+				HelperClasses.Logger.Log("Copying File ['" + pSource + "' to '" + pDestination + "'] failed since trycatch failed." + e.Message.ToString(), true, 0);
+			}
+		}
+
+
 		/// <summary>
 		/// Creates File (and Folder(s). Overrides existing file.
 		/// </summary>

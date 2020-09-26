@@ -87,6 +87,9 @@
       <HintPath>packages\Autoupdater.NET.Official.1.6.3\lib\net45\AutoUpdater.NET.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="DotNetZip, Version=1.13.8.0, Culture=neutral, PublicKeyToken=6583c7c814667745, processorArchitecture=MSIL">
+      <HintPath>packages\DotNetZip.1.13.8\lib\net40\DotNetZip.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Text.Json, Version=4.0.1.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL" />
@@ -115,22 +118,23 @@
     </ApplicationDefinition>
     <Compile Include="EntitlementBlock.cs" />
     <Compile Include="EntitlementBlockCipher.cs" />
+    <Compile Include="MyFileOperation.cs" />
     <Compile Include="RC4.cs" />
     <Compile Include="ROSCommunicationBackend.cs" />
-    <Compile Include="CopyFileProgress.xaml.cs">
-      <DependentUpon>CopyFileProgress.xaml</DependentUpon>
+    <Compile Include="PopupProgress.xaml.cs">
+      <DependentUpon>PopupProgress.xaml</DependentUpon>
     </Compile>
     <Compile Include="Globals.cs" />
     <Compile Include="HelperClasses\FileHandler.cs" />
     <Compile Include="HelperClasses\Logger.cs" />
     <Compile Include="HelperClasses\ProcessHandler.cs" />
     <Compile Include="HelperClasses\RegeditHandler.cs" />
-    <Compile Include="MyFile.cs" />
+    <Compile Include="MySaveFile.cs" />
     <Compile Include="Popup.xaml.cs">
       <DependentUpon>Popup.xaml</DependentUpon>
     </Compile>
-    <Compile Include="PopupProgress.xaml.cs">
-      <DependentUpon>PopupProgress.xaml</DependentUpon>
+    <Compile Include="PopupDownload.xaml.cs">
+      <DependentUpon>PopupDownload.xaml</DependentUpon>
     </Compile>
     <Compile Include="ROSIntegration.xaml.cs">
       <DependentUpon>ROSIntegration.xaml</DependentUpon>
@@ -142,7 +146,7 @@
     <Compile Include="Settings.xaml.cs">
       <DependentUpon>Settings.xaml</DependentUpon>
     </Compile>
-    <Page Include="CopyFileProgress.xaml">
+    <Page Include="PopupProgress.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -163,7 +167,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="PopupProgress.xaml">
+    <Page Include="PopupDownload.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -249,7 +253,9 @@
     <Resource Include="Artwork\rightarrow.png" />
     <Content Include="MyDLLs\AutoUpdater.NET.dll" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Installer\Changelogs\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

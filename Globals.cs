@@ -8,6 +8,7 @@ using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Media;
 using System.Windows.Threading;
@@ -83,8 +84,8 @@ namespace Project_127
 
 		/// <summary>
 		/// Property of the Registry Key we use for our Settings
-		/// </summary>
-		public static RegistryKey MySettingsKey { get; private set; } = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64).CreateSubKey("SOFTWARE").CreateSubKey(ProjectName);
+		/// </summary>													
+		public static RegistryKey MySettingsKey { get { return RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64).CreateSubKey("SOFTWARE").CreateSubKey(ProjectName); } } // = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64).CreateSubKey("SOFTWARE").CreateSubKey(ProjectName);
 
 		/// <summary>
 		/// Property of our default Settings
@@ -158,7 +159,7 @@ namespace Project_127
 
 			// Just checks if the GTAVInstallationPath is empty.
 			// So we dont have to "Force" the path every startup...
-			if (!String.IsNullOrEmpty(Settings.GTAVInstallationPath))
+			if (String.IsNullOrEmpty(Settings.GTAVInstallationPath))
 			{
 				// Calling this to get the Path automatically
 				LauncherLogic.GTAVPathGuessingGame();
@@ -185,7 +186,7 @@ namespace Project_127
 				{
 					HelperClasses.Logger.Log("User wants update for ZIP");
 					string pathOfNewZip = HelperClasses.FileHandling.GetXMLTagContent(HelperClasses.FileHandling.GetStringFromURL(Globals.URL_AutoUpdate), "zip");
-					new PopupProgress(PopupDownloadTypes.ZIP, pathOfNewZip, ZipFileDownloadLocation).ShowDialog();
+					new PopupDownload(PopupDownloadTypes.ZIP, pathOfNewZip, ZipFileDownloadLocation).ShowDialog();
 				}
 				else
 				{
@@ -218,6 +219,8 @@ namespace Project_127
 		/// </summary>
 		public static void ImportZip(string pZipFileLocation, bool deleteFileAfter = false)
 		{
+			LauncherLogic.InstallationStates OldInstallationState = LauncherLogic.InstallationState;
+
 			HelperClasses.Logger.Log("Importing ZIP File: '" + pZipFileLocation + "'");
 
 			if (HelperClasses.FileHandling.doesFileExist(ZipFileDownloadLocation))
@@ -237,17 +240,25 @@ namespace Project_127
 			}
 
 			HelperClasses.Logger.Log("Extracting ZIP File: '" + pZipFileLocation + "' to the path: '" + Globals.ProjectInstallationPath + "'");
-			ZipFile.ExtractToDirectory(pZipFileLocation, Globals.ProjectInstallationPath);
 
-
+			new PopupProgress(PopupProgress.ProgressTypes.ZIPFile, pZipFileLocation).ShowDialog();
+   
 			if (deleteFileAfter)
 			{
 				HelperClasses.Logger.Log("Deleting ZIP File: '" + pZipFileLocation + "'");
 				HelperClasses.FileHandling.deleteFile(pZipFileLocation);
 			}
 
-			new Popup(Popup.PopupWindowTypes.PopupOk, "Done importing ZIP File").ShowDialog();
 			HelperClasses.Logger.Log("Done Importing ZIP File: '" + pZipFileLocation + "'");
+
+			Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "ZIP File imported. You were downgraded before.\nYou should upgrade and downgrade again.\nWant the program to do it for you?");
+			yesno.ShowDialog();
+			if (yesno.DialogResult == true)
+			{
+				LauncherLogic.Upgrade();
+				LauncherLogic.Downgrade();
+			}
+
 		}
 
 
@@ -305,6 +316,9 @@ namespace Project_127
 		public static Brush MW_ButtonMOBackground { get; private set; } = MyColorOffWhite;
 		public static Brush MW_ButtonMOForeground { get; private set; } = MyColorBlack;
 		public static Brush MW_ButtonMOBorderBrush { get; private set; } = MyColorWhite;
+
+		public static Brush MW_GTALabelDowngradedForeground { get; private set; } = MyColorGreen;
+		public static Brush MW_GTALabelUpgradedForeground { get; private set; } = Brushes.Red;
 
 		// Hamburger Button and "X"
 		// These have no effect since these are all Icons now...
@@ -451,6 +465,25 @@ namespace Project_127
 		private static Brush GetBrushRGB(int r, int g, int b)
 		{
 			return GetBrushRGB(r, g, b, 100);
+		}
+
+
+		/// <summary>
+		/// Replacing substring with other substring, ignores cases. Used for replacing hardlink with copy in some logs when needed
+		/// </summary>
+		/// <param name="input"></param>
+		/// <param name="search"></param>
+		/// <param name="replacement"></param>
+		/// <returns></returns>
+		public static string ReplaceCaseInsensitive(string input, string search, string replacement)
+		{
+			string result = Regex.Replace(
+				input,
+				Regex.Escape(search),
+				replacement.Replace("$", "$$"),
+				RegexOptions.IgnoreCase
+			);
+			return result;
 		}
 
 
