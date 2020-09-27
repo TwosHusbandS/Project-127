@@ -32,6 +32,8 @@ Build Instructions:
 Deploy Instructions:
 	Change Version Number a few Lines Above.
 	Change Version Numbner in both of the last lines in AssemblyInfo.cs
+	Check if BetaMode in Globals.cs is correct
+	Check if BuildInfo in Globals.cs is correct
 	Make sure app manifest is set to NOT require admin
 	Build this program in release
 	Build installer via Innosetup (Script is in \Installer\) [Change Version in Version and OutputName]
@@ -91,36 +93,37 @@ Main To do:
 		-> Rewrite of GTA V Path stuff
 		-> BugFix for closed beta auth
 		-> Make it not not crash when github unreachable
+		-> Option to Use Copy Files instead of Hardlinks
 		-> Using Lists of MyFileOperation objects for any big file stuff we do. (backend change of file operations)
 		-> ProgressBar for File Operations, and extracting ZIP
-		-> Proper Debug Message on rightclick of auth button.
+		-> Proper Debug Message on rightclick of auth button and a way of getting the logfile after right clicking hamburger button.
 		-> Lots of small Fixes and changes.
 		-> Should auto downgrade if needed based on hashes of downgrade folder after importing zip
 		-> You can now change location of ZIP File (where it is extracted)
+		-> Method for Defaulting the EnableCopyFilesInsteadOfHardlinking written
+		-> Refactured some of the GTA V Guessing Game
 
 	-REMEMBER:
 		-> Release with admin mode manifest thingy...		
 		-> Make Installer start the program after installation
 					
 	- TO DO:
-		-> Zip update currently breaks on extraction for some reason. (It wants to overwrite some files in UpgradeFiles (which dont exist)...
-			=> Download itself works, Extraction itself works
-			=> Test auto download new ZIP, auto download new Installer, Extract ZIP, and Extract ZIP after auto download
-
-		// After that, release for internal build to test new and rewritten backend
-		
+		-> Call dr490n windows
+		-> Settings dont update content
+			=> Databinding does not work so im updating manually
+				>> Having trouble updating the CopyInsteadHardlinking checkbox when settings are open and the function recommends another value for it and you press "yes"
+				>> Think about Behaviour when resettings. Probably calling reset, calling InitImportantSettings, close Settings Window
+		-> Add Rockstar and Epic support
 		-> Full Cleanup code (auto document everything and also write a few lines in important locations)
-		-> SaveFileHandler, just manage our own SaveFiles, probably only need one list for datagrid, ask if we need to overwrite
-		-> FirstLauch and Reset function and GUIs with GTA V installation, ZIP File Location
-		-> Regedit Cleanup of everything not in default settings
-		-> Regedit Value of "Last-Run-Version" which we can use to do some cleanups
+		-> Write Chanelog.md
 		-> Add proper Text for popups (by Hossel and JakeM)
-		-> Write 
-			=> ReadME
-			=> User Instructions
-			=> Advanced Users Instructions
-			=> Dev Instructions
-			=> Changelog
+
+		// Release
+
+		-> Regedit Value of "Last-Run-Version" which we can use to do some cleanups
+			=> if value = 0.3.0; messagebox to upgrade or verify game files, delete every regedit, delete zipfiles extraced files, restart
+		-> SaveFileHandler, just manage our own SaveFiles, probably only need one list for datagrid, ask if we need to overwrite
+		-> Regedit Cleanup of everything not in default settings
 		-> Custom ZIP File Location User Error Checks:
 			=> User might get confused with the Project_127_Files Folder. 
 				Maybe we should actually check parent folders and child folders when User is selecting a Path for ZIP File
@@ -131,6 +134,7 @@ Main To do:
 		-> auto high priority
 		-> auto steam core fix
 		-> make OpenFolderDialog pretty...I know its possible, just google more and more
+		-> Make DataBinding work on Settings...
 
 		// After that, release rublic built + auto upgrade
 
@@ -227,7 +231,27 @@ namespace Project_127
 				Environment.Exit(3);
 			}
 
+
 			// Deleting all Installer and ZIP Files from own Project Installation Path
+			DeleteOldFiles();
+
+			// Make sure Hamburger Menu is invisible when opening window
+			this.GridHamburgerOuter.Visibility = Visibility.Hidden;
+
+			// Set Image of Buttons
+			SetButtonMouseOverMagic(btn_Auth, false);
+			SetButtonMouseOverMagic(btn_Exit, false);
+			SetButtonMouseOverMagic(btn_Hamburger, false);
+
+			// Auto Updater
+			CheckForUpdate();
+
+			HelperClasses.Logger.Log("Startup procedure (Constructor of MainWindow) completed.");
+		}
+
+
+		private void DeleteOldFiles()
+		{
 			HelperClasses.Logger.Log("Checking if there is an old Installer or ZIP Files in the Project InstallationPath during startup procedure.");
 			foreach (string myFile in HelperClasses.FileHandling.GetFilesFromFolder(Globals.ProjectInstallationPath))
 			{
@@ -242,19 +266,6 @@ namespace Project_127
 					HelperClasses.FileHandling.deleteFile(myFile);
 				}
 			}
-
-			// Make sure Hamburger Menu is invisible when opening window
-			this.GridHamburgerOuter.Visibility = Visibility.Hidden;
-
-			// Set Image of Buttons
-			SetButtonMouseOverMagic(btn_Auth, false);
-			SetButtonMouseOverMagic(btn_Exit, false);
-			SetButtonMouseOverMagic(btn_Hamburger, false);
-
-			// Auto Updater
-			CheckForUpdate();
-
-			HelperClasses.Logger.Log("Startup procedure (Constructor of MainWindow) completed.");
 		}
 
 		/// <summary>
@@ -385,6 +396,20 @@ namespace Project_127
 		}
 
 		/// <summary>
+		/// Rightclick on Hamburger Button
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void btn_Hamburger_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+		{
+			if (Globals.BetaMode)
+			{
+				// Opens the File
+				Process.Start("notepad.exe", Globals.Logfile);
+			}
+		}
+
+		/// <summary>
 		/// Method which gets called when the exit Button is clicked
 		/// </summary>
 		/// <param name="sender"></param>
@@ -427,37 +452,40 @@ namespace Project_127
 		/// <param name="e"></param>
 		private void btn_Auth_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
 		{
-			// Debug Info users can give me easily...
-			List<string> DebugMessage = new List<string>();
-
-			DebugMessage.Add("Project 1.27 Version: '" + Globals.ProjectVersion + "'" );
-			DebugMessage.Add("ZIP Version: '" + Globals.ZipVersion + "'" );
-			DebugMessage.Add("Project 1.27 Installation Path '" + Globals.ProjectInstallationPath + "'" );
-			DebugMessage.Add("ZIP Extraction Path '" + LauncherLogic.ZIPFilePath + "'" );
-			DebugMessage.Add("LauncherLogic.GTAVFilePath: '" + LauncherLogic.GTAVFilePath + "'");
-			DebugMessage.Add("LauncherLogic.UpgradeFilePath: '" + LauncherLogic.UpgradeFilePath + "'");
-			DebugMessage.Add("LauncherLogic.DowngradeFilePath: '" + LauncherLogic.DowngradeFilePath + "'");
-			DebugMessage.Add("LauncherLogic.SupportFilePath: '" + LauncherLogic.SupportFilePath + "'");
-			DebugMessage.Add("Detected GameState: '" + LauncherLogic.GameState + "'");
-			DebugMessage.Add("Detected InstallationState: '" + LauncherLogic.InstallationState + "'");
-			DebugMessage.Add("    Size of GTA5.exe in GTAV Installation Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\GTA5.exe"));
-			DebugMessage.Add("    Size of GTA5.exe in Downgrade Files Folder: " + LauncherLogic.SizeOfDowngradedGTAV);
-			DebugMessage.Add("    Size of update.rpf in GTAV Installation Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\GTA5.exe"));
-			DebugMessage.Add("    Size of update.rpf in Downgrade Files Folder: " + LauncherLogic.SizeOfDowngradedUPDATE);
-			DebugMessage.Add("Settings: ");
-			foreach (KeyValuePair<string,string> KVP in Globals.MySettings)
+			if (Globals.BetaMode)
 			{
-				DebugMessage.Add("    " + KVP.Key + ": '" + KVP.Value + "'");
+				// Debug Info users can give me easily...
+				List<string> DebugMessage = new List<string>();
+
+				DebugMessage.Add("Project 1.27 Version: '" + Globals.ProjectVersion + "'");
+				DebugMessage.Add("ZIP Version: '" + Globals.ZipVersion + "'");
+				DebugMessage.Add("Project 1.27 Installation Path '" + Globals.ProjectInstallationPath + "'");
+				DebugMessage.Add("ZIP Extraction Path '" + LauncherLogic.ZIPFilePath + "'");
+				DebugMessage.Add("LauncherLogic.GTAVFilePath: '" + LauncherLogic.GTAVFilePath + "'");
+				DebugMessage.Add("LauncherLogic.UpgradeFilePath: '" + LauncherLogic.UpgradeFilePath + "'");
+				DebugMessage.Add("LauncherLogic.DowngradeFilePath: '" + LauncherLogic.DowngradeFilePath + "'");
+				DebugMessage.Add("LauncherLogic.SupportFilePath: '" + LauncherLogic.SupportFilePath + "'");
+				DebugMessage.Add("Detected GameState: '" + LauncherLogic.GameState + "'");
+				DebugMessage.Add("Detected InstallationState: '" + LauncherLogic.InstallationState + "'");
+				DebugMessage.Add("    Size of GTA5.exe in GTAV Installation Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\GTA5.exe"));
+				DebugMessage.Add("    Size of GTA5.exe in Downgrade Files Folder: " + LauncherLogic.SizeOfDowngradedGTAV);
+				DebugMessage.Add("    Size of update.rpf in GTAV Installation Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\GTA5.exe"));
+				DebugMessage.Add("    Size of update.rpf in Downgrade Files Folder: " + LauncherLogic.SizeOfDowngradedUPDATE);
+				DebugMessage.Add("Settings: ");
+				foreach (KeyValuePair<string, string> KVP in Globals.MySettings)
+				{
+					DebugMessage.Add("    " + KVP.Key + ": '" + KVP.Value + "'");
+				}
+
+				// Building DebugPath
+				string DebugFile = Globals.ProjectInstallationPath.TrimEnd('\\') + @"\AAA - DEBUG.txt";
+
+				// Deletes File, Creates File, Adds to it
+				HelperClasses.FileHandling.WriteStringToFileOverwrite(DebugFile, DebugMessage.ToArray());
+
+				// Opens the File
+				Process.Start("notepad.exe", DebugFile);
 			}
-
-			// Building DebugPath
-			string DebugFile = Globals.ProjectInstallationPath.TrimEnd('\\') + @"\AAA_DEBUG.txt";
-
-			// Deletes File, Creates File, Adds to it
-			HelperClasses.FileHandling.WriteStringToFileOverwrite(DebugFile, DebugMessage.ToArray());
-
-			// Opens the File
-			Process.Start("notepad.exe", DebugFile);
 		}
 
 		/// <summary>
@@ -535,7 +563,7 @@ namespace Project_127
 
 			// Actual Upgrade Button Code
 			HelperClasses.Logger.Log("Clicked the Upgrade Button");
-			if (LauncherLogic.IsGTAVInstallationPathCorrect())
+			if (LauncherLogic.IsGTAVInstallationPathCorrect() || Globals.ZipVersion == 0)
 			{
 				if (LauncherLogic.InstallationState == LauncherLogic.InstallationStates.Downgraded)
 				{
@@ -564,7 +592,7 @@ namespace Project_127
 			else
 			{
 				HelperClasses.Logger.Log("GTA V Installation Path not found or incorrect. User will get Popup");
-				Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Error: GTA V Installation Path incorrect.\nGTAV Installation Path: '" + LauncherLogic.GTAVFilePath + "'\nInstallationState (probably): '" + LauncherLogic.InstallationState.ToString() + "'\n. Force this Upgrade?");
+				Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Error: GTA V Installation Path incorrect or ZIP Version == 0.\nGTAV Installation Path: '" + LauncherLogic.GTAVFilePath + "'\nInstallationState (probably): '" + LauncherLogic.InstallationState.ToString() + "'\n. Force this Upgrade?");
 				yesno.ShowDialog();
 				if (yesno.DialogResult == true)
 				{
@@ -587,14 +615,14 @@ namespace Project_127
 			yesno.ShowDialog();
 			if (yesno.DialogResult == true)
 			{
-				if (LauncherLogic.IsGTAVInstallationPathCorrect())
+				if (LauncherLogic.IsGTAVInstallationPathCorrect() || Globals.ZipVersion == 0)
 				{
 					LauncherLogic.Repair();
 				}
 				else
 				{
 					HelperClasses.Logger.Log("GTA V Installation Path not found or incorrect. User will get Popup");
-					Popup conf = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Error: GTA V Installation Path incorrect.\nGTAV Installation Path: '" + LauncherLogic.GTAVFilePath + "'\nForce this Repair?");
+					Popup conf = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Error: GTA V Installation Path incorrect or ZIP Version == 0.\nGTAV Installation Path: '" + LauncherLogic.GTAVFilePath + "'\nForce this Repair?");
 					conf.ShowDialog();
 					if (conf.DialogResult == true)
 					{
@@ -623,7 +651,7 @@ namespace Project_127
 
 			// Actual Code behind Downgrade Button
 			HelperClasses.Logger.Log("Clicked the Downgrade Button");
-			if (LauncherLogic.IsGTAVInstallationPathCorrect())
+			if (LauncherLogic.IsGTAVInstallationPathCorrect() || Globals.ZipVersion == 0)
 			{
 				if (LauncherLogic.InstallationState == LauncherLogic.InstallationStates.Upgraded)
 				{
@@ -652,7 +680,7 @@ namespace Project_127
 			else
 			{
 				HelperClasses.Logger.Log("GTA V Installation Path not found or incorrect. User will get Popup");
-				Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Error: GTA V Installation Path incorrect.\nGTAV Installation Path: '" + LauncherLogic.GTAVFilePath + "'\nInstallationState (probably): '" + LauncherLogic.InstallationState.ToString() + "'\n. Force this Downgrade?");
+				Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Error:\nGTA V Installation Path incorrect or ZIP Version == 0.\nGTAV Installation Path: '" + LauncherLogic.GTAVFilePath + "'\nInstallationState (probably): '" + LauncherLogic.InstallationState.ToString() + "'\n. Force this Downgrade?");
 				yesno.ShowDialog();
 				if (yesno.DialogResult == true)
 				{
@@ -956,6 +984,7 @@ namespace Project_127
 				return false;
 			}
 		}
+
 
 
 

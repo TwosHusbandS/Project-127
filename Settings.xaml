@@ -261,7 +261,7 @@
                                 <ColumnDefinition/>
                                 <ColumnDefinition/>
                             </Grid.ColumnDefinitions>
-                            <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Content="Backup Path"  Style="{StaticResource lbl_Set_Head}" />
+                            <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Content="Path used for storing Files (Upgrade, Downgrade, SafeFiles etc.)"  Style="{StaticResource lbl_Set_Head}" />
                             <Label Grid.Row="1" Grid.Column="0" Content="Current Path: "  Style="{StaticResource lbl_Set_Info}" />
                             <Button Grid.Row="1" Grid.Column="1" x:Name="btn_Set_ZIPExtractionPath" Click="btn_Set_ZIPExtractionPath_Click" Content="{Binding Path=ZIPExtractionPath, Mode=TwoWay}" Style="{StaticResource btn_Set}"/>
                         </Grid>

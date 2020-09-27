@@ -36,7 +36,6 @@ namespace Project_127
 
 		string ZipFileWeWannaExtract;
 
-
 		public PopupProgress(ProgressTypes pProgressType, string pParam1, List<MyFileOperation> pMyFileOperations = null)
 		{
 			InitializeComponent();
@@ -58,6 +57,7 @@ namespace Project_127
 			StartWork();
 		}
 
+		[STAThread]
 		public async void StartWork()
 		{
 			await Task.Run(new Action(ActualWork));
@@ -65,6 +65,7 @@ namespace Project_127
 			this.Close();
 		}
 
+		[STAThread]
 		public void ActualWork()
 		{
 			HelperClasses.Logger.Log("lets see if we get here");
@@ -83,7 +84,6 @@ namespace Project_127
 					j++;
 					this.Dispatcher.Invoke(() =>
 					{
-						HelperClasses.Logger.Log("j = '" + j.ToString() + "', count = '" + count.ToString() + "'");
 						myPB.Value = j / count * 100;
 						myLBL.Content = "Doing a " + Operation + "...(" + myPB.Value + "%)";
 					});
@@ -118,14 +118,18 @@ namespace Project_127
 								file.ExtractToFile(LauncherLogic.ZIPFilePath.TrimEnd('\\') + @"\" + file.FullName);
 							}
 
-							filesExtracted++;
-							long progress = (100 * filesExtracted / totalFiles);
-							this.Dispatcher.Invoke(() =>
-							{
-								HelperClasses.Logger.Log("filesExtracted = '" + filesExtracted + "', totalFiles = '" + totalFiles + "'");
+							Application.Current.Dispatcher.Invoke((Action)delegate {
+								filesExtracted++;
+								long progress = (100 * filesExtracted / totalFiles);
 								myPB.Value = progress;
 								myLBL.Content = "Extracting ZIP...(" + progress + "%)";
 							});
+
+							//this.Dispatcher.Invoke(() =>
+							//{
+							//	myPB.Value = progress;
+							//	myLBL.Content = "Extracting ZIP...(" + progress + "%)";
+							//});
 						}
 					}
 				}

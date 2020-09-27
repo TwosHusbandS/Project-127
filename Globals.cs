@@ -173,7 +173,7 @@ namespace Project_127
 				Settings.SetSetting("InstallationPath", ProjectInstallationPath);
 
 				// Calling this to get the Path automatically
-				LauncherLogic.GTAVPathGuessingGame();
+				Settings.InitImportantSettings();
 
 				// Set FirstLaunch to false
 				Settings.FirstLaunch = false;
@@ -183,12 +183,37 @@ namespace Project_127
 
 			// Just checks if the GTAVInstallationPath is empty.
 			// So we dont have to "Force" the path every startup...
-			if (String.IsNullOrEmpty(Settings.GTAVInstallationPath))
+			if (String.IsNullOrEmpty(Settings.GTAVInstallationPath) || String.IsNullOrEmpty(Settings.ZIPExtractionPath))
 			{
 				// Calling this to get the Path automatically
-				LauncherLogic.GTAVPathGuessingGame();
+				Settings.InitImportantSettings();
 			}
+			
+			// Writing ProjectInstallationPath to Registry.
+			Settings.InstallationPath = Globals.ProjectInstallationPath;
 
+			// Check whats the latest Version of the ZIP File in GITHUB
+			CheckForZipUpdate();
+
+			// Starting the Dispatcher Timer for the automatic updates of the GTA V Button
+			MyDispatcherTimer = new System.Windows.Threading.DispatcherTimer();
+			MyDispatcherTimer.Tick += new EventHandler(pMW.SetGTAVButtonBasedOnGameAndInstallationState);
+			MyDispatcherTimer.Interval = TimeSpan.FromMilliseconds(5000);
+			MyDispatcherTimer.Start();
+			pMW.SetGTAVButtonBasedOnGameAndInstallationState(null, null);
+		}
+
+		/// <summary>
+		/// Proper Exit Method. EMPTY FOR NOW. Get called when closed (user and taskmgr) and when PC is shutdown. Not when process is killed or power ist lost.
+		/// </summary>
+		public static void ProperExit()
+		{
+			HelperClasses.Logger.Log("Program closed. Proper Exit. Ended normally");
+		}
+
+
+		private static void CheckForZipUpdate()
+		{
 			// Check whats the latest Version of the ZIP File in GITHUB
 			int ZipOnlineVersion = 0;
 			Int32.TryParse(HelperClasses.FileHandling.GetXMLTagContent(HelperClasses.FileHandling.GetStringFromURL(Globals.URL_AutoUpdate), "zipversion"), out ZipOnlineVersion);
@@ -206,7 +231,7 @@ namespace Project_127
 				{
 					HelperClasses.Logger.Log("User wants update for ZIP");
 					string pathOfNewZip = HelperClasses.FileHandling.GetXMLTagContent(HelperClasses.FileHandling.GetStringFromURL(Globals.URL_AutoUpdate), "zip");
-					
+
 					// Downloads ZIP, calls extraction Method after download
 					new PopupDownload(PopupDownloadTypes.ZIP, pathOfNewZip, ZipFileDownloadLocation).ShowDialog();
 					Globals.ImportZip(ZipFileDownloadLocation, true);
@@ -220,24 +245,6 @@ namespace Project_127
 			{
 				HelperClasses.Logger.Log("NO Update for ZIP found");
 			}
-
-			// Writing ProjectInstallationPath to Registry.
-			Settings.InstallationPath = Globals.ProjectInstallationPath;
-
-			// Starting the Dispatcher Timer for the automatic updates of the GTA V Button
-			MyDispatcherTimer = new System.Windows.Threading.DispatcherTimer();
-			MyDispatcherTimer.Tick += new EventHandler(pMW.SetGTAVButtonBasedOnGameAndInstallationState);
-			MyDispatcherTimer.Interval = TimeSpan.FromMilliseconds(5000);
-			MyDispatcherTimer.Start();
-			pMW.SetGTAVButtonBasedOnGameAndInstallationState(null, null);
-		}
-
-		/// <summary>
-		/// Proper Exit Method. EMPTY FOR NOW. Get called when closed (user and taskmgr) and when PC is shutdown. Not when process is killed or power ist lost.
-		/// </summary>
-		public static void ProperExit()
-		{
-			HelperClasses.Logger.Log("Program closed. Proper Exit. Ended normally");
 		}
 
 		/// <summary>
@@ -446,6 +453,35 @@ namespace Project_127
 		public static Brush SE_SVForeground { get; private set; } = MyColorWhite;
 
 		public static System.Windows.Thickness SE_ButtonBorderThickness { get; private set; } = new System.Windows.Thickness(2);
+
+
+
+		// InitSettings Window. For FirstLaunch and Resetting
+		public static Brush IS_Background { get; private set; } = MyColorBlack;
+		public static Brush IS_BorderBrush { get; private set; } = MyColorWhite;
+		public static Brush IS_BorderBrush_Inner { get; private set; } = MyColorWhite;
+							
+		public static Brush IS_LabelForeground { get; private set; } = MyColorWhite;
+		public static Brush IS_LabelSetForeground { get; private set; } = MyColorWhite;
+							
+		public static Brush IS_ButtonBackground { get; private set; } = MyColorBlack;
+		public static Brush IS_ButtonForeground { get; private set; } = MyColorWhite;
+		public static Brush IS_ButtonBorderBrush { get; private set; } = MyColorWhite;
+		public static Brush IS_ButtonMOBackground { get; private set; } = MyColorWhite;
+		public static Brush IS_ButtonMOForeground { get; private set; } = MyColorBlack;
+		public static Brush IS_ButtonMOBorderBrush { get; private set; } = MyColorWhite;
+							
+		public static Brush IS_ButtonSetBackground { get; private set; } = MyColorBlack;
+		public static Brush IS_ButtonSetForeground { get; private set; } = MyColorWhite;
+		public static Brush IS_ButtonSetBorderBrush { get; private set; } = MyColorWhite;
+		public static Brush IS_ButtonSetMOBackground { get; private set; } = MyColorWhite;
+		public static Brush IS_ButtonSetMOForeground { get; private set; } = MyColorBlack;
+		public static Brush IS_ButtonSetMOBorderBrush { get; private set; } = MyColorWhite;
+							
+		public static Brush IS_SVBackground { get; private set; } = MyColorBlack;
+		public static Brush IS_SVForeground { get; private set; } = MyColorWhite;
+
+		public static System.Windows.Thickness IS_ButtonBorderThickness { get; private set; } = new System.Windows.Thickness(2);
 
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

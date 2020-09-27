@@ -197,6 +197,7 @@
     </EmbeddedResource>
     <None Include="app.manifest" />
     <None Include="Installer\Changelog.md" />
+    <None Include="Installer\Changelogs\V_0_0_3_0_Changelog.md" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -246,9 +247,7 @@
     <Resource Include="Artwork\rightarrow.png" />
     <Content Include="MyDLLs\AutoUpdater.NET.dll" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Installer\Changelogs\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

@@ -31,7 +31,8 @@ namespace Project_127.HelperClasses
 
 			HelperClasses.Logger.Log("", true, 0);
 			HelperClasses.Logger.Log("", true, 0);
-			HelperClasses.Logger.Log(" === Project - 127 Started (Version: '" + Globals.ProjectVersion + "' BuildInfo: '" + Globals.BuildInfo + "' Built at: '" + MyCreationDate + "' Central European Time). Logging initiated === ", true, 0);
+			HelperClasses.Logger.Log(" === Project - 127 Started (Version: '" + Globals.ProjectVersion + "' BuildInfo: '" + Globals.BuildInfo + "' Built at: '" + MyCreationDate + "' Central European Time) ===", true,0);
+			HelperClasses.Logger.Log("Logging initiated", true, 0);
 		}
 
 		/// <summary>

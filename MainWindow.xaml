@@ -132,7 +132,7 @@
                 <Button x:Name="btn_Auth" Style="{StaticResource btn_Small}" MouseEnter="btn_Small_MouseEnter" MouseLeave="btn_Small_MouseLeave" MouseRightButtonDown="btn_Auth_MouseRightButtonDown" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="60,15,0,0" Click="btn_Auth_Click"/>
             </Grid>
             <!-- GridHamburgerOuter -->
-            <Button x:Name="btn_Hamburger" Style="{StaticResource btn_Small}" MouseEnter="btn_Small_MouseEnter" MouseLeave="btn_Small_MouseLeave" VerticalAlignment="Top" HorizontalAlignment="Left" Click="btn_Hamburger_Click" />
+            <Button x:Name="btn_Hamburger" Style="{StaticResource btn_Small}" MouseEnter="btn_Small_MouseEnter" MouseLeave="btn_Small_MouseLeave" MouseRightButtonDown="btn_Hamburger_MouseRightButtonDown" VerticalAlignment="Top" HorizontalAlignment="Left" Click="btn_Hamburger_Click" />
             <Button x:Name="btn_Exit" Style="{StaticResource btn_Small}" MouseEnter="btn_Small_MouseEnter" MouseLeave="btn_Small_MouseLeave" VerticalAlignment="Top" HorizontalAlignment="Right" Click="btn_Exit_Click"/>
             <Button x:Name="btn_GTA" Style="{StaticResource btn_gta}" Margin="625,400,60,60" Content="GTA V.&#xa;Downgraded." Click="btn_GTA_Click" MouseRightButtonDown="btn_GTA_MouseRightButtonDown"/>
         </Grid >
