@@ -70,7 +70,7 @@ namespace Project_127
 			var sig = new List<byte>((int)sigSize);
 			sig.AddRange(new ArraySegment<byte>(buffer, offset, (int)sigSize));
 
-			//~sig doesn't matter (not like someone could change the RSA pub...)
+			//~sig doesn't matter (not like someone couldn't change the RSA pub...)
 
 
 			m_valid = true; // Sure

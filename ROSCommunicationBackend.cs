@@ -133,7 +133,7 @@ namespace Project_127 {
             // Sadly, bitconverter doesn't have an explicit from Big Endian
             int blockSize = (blockSizeData[0] << 24) + (blockSizeData[1] << 16) +
                 (blockSizeData[2] << 8) + blockSizeData[1] + 20;
-            byte[] encblock = data.ToArray();
+            byte[] encblock = data;//.ToArray();
 
             List<byte> encresult = new List<byte>();
 
@@ -240,6 +240,18 @@ namespace Project_127 {
             retval.RemoveAt(retval.Count - 1);
             return retval.ToArray();
         }
+        private static byte[] HeaderBuild(Dictionary<string, string> headers)
+        {
+            List<byte> retval = new List<byte>();
+            foreach (KeyValuePair<string, string> field in headers)
+            {
+                retval.AddRange(Encoding.UTF8.GetBytes(field.Key));
+                retval.AddRange(Encoding.UTF8.GetBytes(": "));
+                retval.AddRange(Encoding.UTF8.GetBytes(field.Value));
+                retval.AddRange(Encoding.UTF8.GetBytes("\r\n"));
+            }
+            return retval.ToArray();
+        }
 
         public static async Task<bool> Login(string ticket, string sessionKey, string sessionTicket, UInt64 RockstarID)
         {
@@ -341,7 +353,8 @@ namespace Project_127 {
 
                     // req2.Headers.TryAddWithoutValidation("locale", "en-US");
                     //req2.Headers.TryAddWithoutValidation("machineHash", btoa(mh));
-
+                    var targetURI = new Uri("http://prod.ros.rockstargames.com/launcher/11/launcherservices/entitlements.asmx/GetEntitlementBlock");
+                    var LKey = new List<byte>();
                     byte[] reqBody2 = EncryptROSData(BuildPostString(
                         new Dictionary<string, string>{
                             { "ticket", t },
@@ -349,8 +362,34 @@ namespace Project_127 {
                             { "locale", "en-US"},
                             { "machineHash", btoa(mh)},
                         }), sk);
+                    LKey.Add(Settings.EnablePreOrderBonus ? (byte)1 : (byte)0);
 
-                    var req2 = new HttpRequestMessage
+                    byte[] reqHeaders = HeaderBuild(
+                        new Dictionary<string, string>{
+                            { "ros-Challenge", btoa(challenge)},
+                            { "ros-HeadersHmac", btoa(HeadersHmac(challenge, "POST", targetURI.AbsolutePath, sk, st)) },
+                            { "ros-SecurityFlags", "239"},
+                            { "ros-SessionTicket", st},
+                        });
+                    LKey.AddRange(BitConverter.GetBytes((UInt16)sk.Length));
+                    LKey.AddRange(Encoding.UTF8.GetBytes(sk));
+
+                    LKey.AddRange(BitConverter.GetBytes((UInt16)reqHeaders.Length));
+                    LKey.AddRange(reqHeaders);
+
+                    LKey.AddRange(BitConverter.GetBytes((UInt16)reqBody2.Length));
+                    LKey.AddRange(reqBody2);
+
+                    var launcBin = LKey.ToArray();
+                    using (var b = new BinaryWriter(File.Open("launc.dat", FileMode.Create)))
+                    {
+                        b.Write(launcBin);
+                    }
+                    v.error = false;
+                    v.status = 200;
+                    v.text = "Launcher token data written";
+                    return v;
+                    /*var req2 = new HttpRequestMessage
                     {
                         RequestUri = new Uri("http://prod.ros.rockstargames.com/launcher/11/launcherservices/entitlements.asmx/GetEntitlementBlock"),
                         Method = HttpMethod.Post,
@@ -363,6 +402,7 @@ namespace Project_127 {
                     req2.Headers.TryAddWithoutValidation("User-Agent", GetROSVersionString());
                     req2.Headers.ConnectionClose = true;
                     req2.Headers.ExpectContinue = false;
+                    
 
                     req2.Content = new ByteArrayContent(reqBody2);
 
@@ -403,7 +443,7 @@ namespace Project_127 {
                             v.status = (v.text != "")? 0 : -1002;
                             return v;
                         }
-                    }
+                    }*/
 
                     return v;
                 }
