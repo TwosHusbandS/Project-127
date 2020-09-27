@@ -270,7 +270,7 @@ namespace Project_127 {
             {
                 //string res = EntitlementDecrypt(v.text); // Not actual entitlements (yet)
                 //MessageBox.Show(res);
-                MessageBox.Show(v.text);
+                //MessageBox.Show(v.text);
                 return true;
             }
             else

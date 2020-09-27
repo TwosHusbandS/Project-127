@@ -250,11 +250,11 @@ style.appendChild(document.createTextNode(css));
 
                 if (valsucess)
                 {
-                    MessageBox.Show("Yay");
+                    MessageBox.Show("Login Success");
                 } 
                 else
                 {
-                    MessageBox.Show("Nay");
+                    MessageBox.Show("Login Failure");
                 }
 
                 this.Dispatcher.Invoke(() =>
