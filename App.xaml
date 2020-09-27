@@ -4,7 +4,7 @@
              xmlns:local="clr-namespace:Project_127"
              Startup="Application_Startup"
              SessionEnding="Application_SessionEnding"
-             StartupUri="ROSIntegration.xaml">
+             StartupUri="MainWindow.xaml">
     <Application.Resources>
          
     </Application.Resources>
