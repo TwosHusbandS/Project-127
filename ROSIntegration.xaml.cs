@@ -247,8 +247,7 @@ style.appendChild(document.createTextNode(css));
 
 
                 // Call our version of validate
-                bool valsucess = await ROSCommunicationBackend.Login(ticket, sessionKey, sessionTicket, RockstarID, ctime);
-                ROSCommunicationBackend.
+                bool valsucess = await ROSCommunicationBackend.Login(ticket, sessionKey, sessionTicket, RockstarID, ctime, RockstarNick);
                 // Do somethin with valsuccess (true if ownership is valid)
 
                 if (valsucess)
