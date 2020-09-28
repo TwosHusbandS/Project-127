@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -27,7 +28,9 @@ namespace Project_127
 			// Initializing all WPF Elements
 			InitializeComponent();
 
-			// Sets this for DataBinding
+			// Needed for GUI Shit
+			combox_Set_Retail.ItemsSource = Enum.GetValues(typeof(Retailers)).Cast<Retailers>();
+			combox_Set_Retail.SelectedItem = Settings.Retailer;
 			this.DataContext = this;
 		}
 
@@ -81,7 +84,7 @@ namespace Project_127
 		private void btn_Set_GTAVInstallationPath_Click(object sender, RoutedEventArgs e)
 		{
 			SetGTAVPathManually();
-			btn_Set_GTAVInstallationPath.Content = Settings.GTAVInstallationPath;
+			RefreshGUI();
 		}
 
 		/// <summary>
@@ -107,7 +110,8 @@ namespace Project_127
 				HelperClasses.Logger.Log("Changing ZIP Path did not work. Probably non existing Path or same Path as before");
 				new Popup(Popup.PopupWindowTypes.PopupOk, "Changing ZIP Path did not work. Probably non existing Path or same Path as before");
 			}
-			btn_Set_ZIPExtractionPath.Content = Settings.ZIPExtractionPath;
+
+			RefreshGUI();
 		}
 
 
@@ -117,11 +121,12 @@ namespace Project_127
 			if (HelperClasses.FileHandling.doesPathExist(pNewZIPPath) && pNewZIPPath.TrimEnd('\\') != Settings.ZIPExtractionPath.TrimEnd('\\'))
 			{
 				HelperClasses.Logger.Log("Potential New ZIPExtractionPath exists and is new, lets continue");
-				
+
 				// List of File Operations for the ZIP Move progress
 				List<MyFileOperation> MyFileOperations = new List<MyFileOperation>();
 
 				// List of FileNames
+				string OldZipExtractionPath = Settings.ZIPExtractionPath;
 				string[] FilesInOldZIPExtractionPath = HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(Settings.ZIPExtractionPath);
 				string[] FilesInNewZIPExtractionPath = new string[FilesInOldZIPExtractionPath.Length];
 
@@ -144,6 +149,10 @@ namespace Project_127
 				new PopupProgress(PopupProgress.ProgressTypes.FileOperation, "Moving ZIP File Location", MyFileOperations).ShowDialog();
 				HelperClasses.Logger.Log("Done with moving all relevant Files");
 
+				HelperClasses.Logger.Log("Creating new Folders if needed");
+				HelperClasses.FileHandling.CreateAllZIPPaths(pNewZIPPath);
+				HelperClasses.Logger.Log("Done creating new Folders we needed");
+
 				// Grabbign the current Installation State
 				LauncherLogic.InstallationStates myOldInstallationState = LauncherLogic.InstallationState;
 				HelperClasses.Logger.Log("Old Installation State = '" + myOldInstallationState + "'");
@@ -163,6 +172,8 @@ namespace Project_127
 				}
 
 				SetDefaultEnableCopyingHardlinking();
+
+				HelperClasses.FileHandling.DeleteFolder(OldZipExtractionPath.TrimEnd('\\') + @"\Project_127_Files");
 
 				return true;
 			}
@@ -316,9 +327,8 @@ namespace Project_127
 				Settings.ResetSettings();
 				RefreshGUI();
 				Settings.InitImportantSettings();
-				btn_Set_GTAVInstallationPath.Content = Settings.GTAVInstallationPath;
-				btn_Set_ZIPExtractionPath.Content = Settings.ZIPExtractionPath;
 				HelperClasses.Logger.Log("Resetting Settings DONE");
+				this.Close();
 			}
 		}
 
@@ -331,8 +341,8 @@ namespace Project_127
 			btn_Set_ZIPExtractionPath.Content = Settings.ZIPExtractionPath;
 			cb_Set_EnableLogging.IsChecked = Settings.EnableLogging;
 			cb_Set_CopyFilesInsteadOfHardlinking.IsChecked = Settings.EnableCopyFilesInsteadOfHardlinking;
-			//cb_Set_TempFixSteamLaunch.IsChecked = Settings.EnableTempFixSteamLaunch;
-			//cb_Set_EnablePreOrderBonus.IsChecked = Settings.EnablePreOrderBonus;
+			cb_Set_EnablePreOrderBonus.IsChecked = Settings.EnablePreOrderBonus;
+			combox_Set_Retail.SelectedItem = Settings.Retailer;
 			//cb_Set_AutoSetHighPriority.IsChecked = Settings.EnableAutoSetHighPriority;
 			//btn_Set_PathFPSLimiter.Content = Settings.PathFPSLimiter;
 			//btn_Set_PathLiveSplit.Content = Settings.PathLiveSplit;
@@ -361,6 +371,24 @@ namespace Project_127
 			DragMove(); // Pre-Defined Method
 		}
 
+		private void btn_Set_ZIPExtractionPath_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+		{
+			Process.Start("explorer.exe", Settings.ZIPExtractionPath);
+		}
 
+		private void btn_Set_GTAVInstallationPath_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+		{
+			Process.Start("explorer.exe", Settings.GTAVInstallationPath);
+		}
+
+		private void btn_RefreshGUI_Click(object sender, RoutedEventArgs e)
+		{
+			RefreshGUI();
+		}
+
+		private void combox_Set_Retail_SelectionChanged(object sender, SelectionChangedEventArgs e)
+		{
+			Retailer = (Retailers)System.Enum.Parse(typeof(Retailers), combox_Set_Retail.SelectedItem.ToString());
+		}
 	} // End of Class
 } // End of Namespace

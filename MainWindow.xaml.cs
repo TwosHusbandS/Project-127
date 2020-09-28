@@ -24,7 +24,7 @@ Main Documentation:
 Actual code (partially closed source) which authentificates, handles entitlement and launches the game is done by @dr490n with the help of other members of the core team like @Special For and @zCri
 Artwork, Design of GUI, GUI Behaviourehaviour, Colorchoices etc. by "@Hossel"
 Client by "@thS"
-Version: 0.0.2.1 Closed Beta
+Version: 0.0.2.9 Closed Beta
 
 Build Instructions:
 	Press CTRLF + F5, pray that nuget does its magic.
@@ -55,7 +55,7 @@ General Files / Classes:
 		Settings.xaml.cs
 			SettingsPartial.cs
 		SaveFileModder.xaml.cs
-		Popup.xaml.cs // Normal Popup (OK & YES/NO)
+		Popup.xaml.cs // Normal Popup (OK & OKERROR & YES/NO)
 		PopupDownload.xaml.cs // Popup for Downloading Files
 		PopupProgress.xaml.cs // Popup for large file operation with semi-optinal loading bar
 		ROSIntegration.xaml.cs // Auth window fo @dr490n
@@ -90,6 +90,7 @@ Main To do:
 	- Things changed since last official release (not last commit)
 		-> Lots. Lots. Lots.
 		-> Admin Relauncher
+		-> Installer can now Launch the Program
 		-> Rewrite of GTA V Path stuff
 		-> BugFix for closed beta auth
 		-> Make it not not crash when github unreachable
@@ -99,9 +100,12 @@ Main To do:
 		-> Proper Debug Message on rightclick of auth button and a way of getting the logfile after right clicking hamburger button.
 		-> Lots of small Fixes and changes.
 		-> Should auto downgrade if needed based on hashes of downgrade folder after importing zip
-		-> You can now change location of ZIP File (where it is extracted)
-		-> Method for Defaulting the EnableCopyFilesInsteadOfHardlinking written
-		-> Refactured some of the GTA V Guessing Game
+		-> You can now change location of ZIP File (where it is extracted), it will Move Files and delete Old Folder
+		-> Method for Defaulting the EnableCopyFilesInsteadOfHardlinking when something are changed
+		-> New FirstLaunch Options, Messages, and Logic
+		-> Refactured some of the GTA V Guessing Game, now guessing 7 Paths, lets hope one is correct
+		-> Checking if the GTAV Path and the ZIPFilePath are working correctly before Upgrading / Downgrading
+		-> Add Rockstar and Epic support, Frontend + Backend
 
 	-REMEMBER:
 		-> Release with admin mode manifest thingy...		
@@ -109,15 +113,9 @@ Main To do:
 					
 	- TO DO:
 		-> Call dr490n windows
-		-> Settings dont update content
-			=> Databinding does not work so im updating manually
-				>> Having trouble updating the CopyInsteadHardlinking checkbox when settings are open and the function recommends another value for it and you press "yes"
-				>> Think about Behaviour when resettings. Probably calling reset, calling InitImportantSettings, close Settings Window
-		-> Add Rockstar and Epic support
 		-> Full Cleanup code (auto document everything and also write a few lines in important locations)
-		-> Write Chanelog.md
-		-> Add proper Text for popups (by Hossel and JakeM)
-
+		-> Fill Changelog.md with Info from above
+		
 		// Release
 
 		-> Regedit Value of "Last-Run-Version" which we can use to do some cleanups
@@ -127,14 +125,15 @@ Main To do:
 		-> Custom ZIP File Location User Error Checks:
 			=> User might get confused with the Project_127_Files Folder. 
 				Maybe we should actually check parent folders and child folders when User is selecting a Path for ZIP File
-				And also when guessing GTA V Path
 		-> $UpgradeFiles has downgrade files in them. Why? And how to Fix?
 			=> Cant figure out how to fix that at the moment
 		-> Think about making a spawner to spawn processes
 		-> auto high priority
 		-> auto steam core fix
 		-> make OpenFolderDialog pretty...I know its possible, just google more and more
-		-> Make DataBinding work on Settings...
+		-> Get data binding to work after everything else is Gucci (if not set a property of main window instance  being a reference to the latest settings instance
+		-> Settings dont update content
+			=> Currently it calls the Refresh Method after each click...
 
 		// After that, release rublic built + auto upgrade
 
@@ -216,8 +215,16 @@ namespace Project_127
 			// Checks if a Process with the same ProcessName is already running
 			if (Process.GetProcessesByName(Process.GetCurrentProcess().ProcessName).Length > 1)
 			{
-				(new Popup(Popup.PopupWindowTypes.PopupOkError, "Program is open twice. This will exit.")).ShowDialog();
-				Environment.Exit(2);
+				Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Program is open twice. Do you want to force close the old Instance?");
+				yesno.ShowDialog();
+				if (yesno.DialogResult == true)
+				{
+					HelperClasses.ProcessHandler.KillProcessContains("Project 1.27");
+				}
+				else
+				{
+					Environment.Exit(2);
+				}
 			}
 
 			// Start the Init Process of Logger, Settings, Globals, Regedit here, since we need the Logger in the next Line if it fails...
@@ -247,6 +254,7 @@ namespace Project_127
 			CheckForUpdate();
 
 			HelperClasses.Logger.Log("Startup procedure (Constructor of MainWindow) completed.");
+			HelperClasses.Logger.Log("--------------------------------------------------------");
 		}
 
 
@@ -554,7 +562,7 @@ namespace Project_127
 		private void btn_Upgrade_Click(object sender, RoutedEventArgs e)
 		{
 			// Confirmation Popup
-			Popup conf = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Are you sure you want to Upgrade?\nGTAV Installation Path is: '" + Settings.GTAVInstallationPath + "'");
+			Popup conf = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Do you want to Upgrade?");
 			conf.ShowDialog();
 			if (conf.DialogResult == false)
 			{
@@ -563,7 +571,7 @@ namespace Project_127
 
 			// Actual Upgrade Button Code
 			HelperClasses.Logger.Log("Clicked the Upgrade Button");
-			if (LauncherLogic.IsGTAVInstallationPathCorrect() || Globals.ZipVersion == 0)
+			if (LauncherLogic.IsGTAVInstallationPathCorrect() && Globals.ZipVersion != 0)
 			{
 				if (LauncherLogic.InstallationState == LauncherLogic.InstallationStates.Downgraded)
 				{
@@ -615,7 +623,7 @@ namespace Project_127
 			yesno.ShowDialog();
 			if (yesno.DialogResult == true)
 			{
-				if (LauncherLogic.IsGTAVInstallationPathCorrect() || Globals.ZipVersion == 0)
+				if (LauncherLogic.IsGTAVInstallationPathCorrect() && Globals.ZipVersion != 0)
 				{
 					LauncherLogic.Repair();
 				}
@@ -642,7 +650,7 @@ namespace Project_127
 		private void btn_Downgrade_Click(object sender, RoutedEventArgs e)
 		{
 			// Confirmation Popup
-			Popup conf = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Are you sure you want to Downgrade?\nGTAV Installation Path is: '" + Settings.GTAVInstallationPath + "'");
+			Popup conf = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Do you want to Downgrade?");
 			conf.ShowDialog();
 			if (conf.DialogResult == false)
 			{
@@ -651,7 +659,7 @@ namespace Project_127
 
 			// Actual Code behind Downgrade Button
 			HelperClasses.Logger.Log("Clicked the Downgrade Button");
-			if (LauncherLogic.IsGTAVInstallationPathCorrect() || Globals.ZipVersion == 0)
+			if (LauncherLogic.IsGTAVInstallationPathCorrect() && Globals.ZipVersion != 0)
 			{
 				if (LauncherLogic.InstallationState == LauncherLogic.InstallationStates.Upgraded)
 				{
@@ -700,6 +708,7 @@ namespace Project_127
 			string ZipFileLocation = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.File, "Title", "", Globals.ProjectInstallationPath);
 			if (HelperClasses.FileHandling.doesFileExist(ZipFileLocation))
 			{
+
 				Globals.ImportZip(ZipFileLocation);
 			}
 			else
@@ -748,13 +757,15 @@ namespace Project_127
 		/// <param name="e"></param>
 		private void btn_Speedrun_Click(object sender, RoutedEventArgs e)
 		{
-			string msg = "DarkViperAU";
-			msg += "\nCan fix his shit Samsung Phone";
-			msg += "\nWith a custom Rom";
-			msg += "\n\n- Haiku by some Discord Member";
-			msg += "\n\n(Placeholder Text. Will Include some Speedrun Infos\n and Link to some other Resources)";
-
-			new Popup(Popup.PopupWindowTypes.PopupOk, msg).ShowDialog();
+			new Popup(Popup.PopupWindowTypes.PopupOk,
+			"This Popup will contain Information about GTAV Speedrunning.\n" +
+			"Paragraphs explaining the basics, rules, categories etc.\n" +
+			"And some link to resources like the Leaderboard, Guides\n" +
+			"Useful Programs, Maps, and whatever else is useful\n\n" +
+			"I am not a speedrunner or very involved with the GTA V Community,\n" +
+			"if you read this, and could shoot me a PM on Discord with stuff\n" +
+			"you want to Read here, that would be great."
+			).ShowDialog();
 		}
 
 		/// <summary>
@@ -764,18 +775,21 @@ namespace Project_127
 		/// <param name="e"></param>
 		private void btn_Readme_Click(object sender, RoutedEventArgs e)
 		{
-			// Check our version of the ZIP File
-			int ZipVersion = 0;
-			Int32.TryParse(HelperClasses.FileHandling.ReadContentOfFile(LauncherLogic.ZIPFilePath.TrimEnd('\\') + @"\Project_127_Files\Version.txt"), out ZipVersion);
-
-
-			string msg = "You are running Project 1.27";
-			msg += "\nProgram which helps Speedrunners";
-			msg += "\nAnd has a few features";
-			msg += "\nPlaceholder Text";
-			msg += "\n\nZipFileVersion: '" + ZipVersion.ToString() + "'\nVersion: '" + Globals.ProjectVersion.ToString() + "'";
-
-			new Popup(Popup.PopupWindowTypes.PopupOk, msg).ShowDialog();
+			new Popup(Popup.PopupWindowTypes.PopupOk,
+			"You are running Project 1.27, a tool for the GTAV Speedrunning Community.\n" +
+			"This was created for the Patch 1.27 Downgrade Problem which started in August of 2020\n" +
+			"This Tool has a few Features (apart from Downgrading, Upgrading, and Launching the Game)\n" +
+			"and I suggest you checkout the Github Link of this Project to have an overview of all Features\n" +
+			"as well as as detailed Instructions on how to use this Program, Access to the latest Installer,\n" +
+			"Uninstaller, Patchnotes, ReadMe etc.\n\n" +
+			"Special Shoutouts to @dr490n who was responsible for getting the Downgraded Game\n" +
+			"to Launch, added Patches against In Game Triggers, wrote the Authentification Backend,\n" +
+			"Decryption and got the PreOrder Entitlement to work. Thanks Mate.\n\n" +
+			"Also: whoever reads this. I hope you have a great day.\n\n" +
+			"Project 1.27 Version: '" + Globals.ProjectVersion + "', BuildInfo: '" + Globals.BuildInfo + "', ZIP Version: '" + Globals.ZipVersion + "'\n\n" +
+			"If you have any troubles with this Program or Ideas for new Features or anything,\n" +
+			"feel free to Contact me on Discord: @thS#0305"
+			).ShowDialog();
 		}
 
 		/// <summary>
@@ -785,26 +799,23 @@ namespace Project_127
 		/// <param name="e"></param>
 		private void btn_Credits_Click(object sender, RoutedEventArgs e)
 		{
-			string msg = "Special thanks to (no particular order):\n";
-			msg += "\n@dr490n";
-			msg += "\n@Special For";
-			msg += "\n@JakeMiester";
-			msg += "\n@MOMO";
-			msg += "\n@wojtekpolska";
-			msg += "\n@Diamondo25";
-			msg += "\n@S.M.G";
-			msg += "\n@gogsi";
-			msg += "\n@Antibones";
-			msg += "\n@zCri";
-			msg += "\n@Unemployed";
-			msg += "\n@Aperture";
-			msg += "\n@luky";
-			msg += "\n@CrynesSs";
-			msg += "\n@hossel";
-			msg += "\n@Daniel Kinau";
-			msg += "\n@thS";
-
-			new Popup(Popup.PopupWindowTypes.PopupOk, msg).ShowDialog();
+			new Popup(Popup.PopupWindowTypes.PopupOk,
+			"Solving the Patch 1.27 Downgrade Problem has been achieved by a month of hard work\n" +
+			"by a number of dedicated individuals. This would not have been possible without the\n" +
+			"hard work of a number of very talented individuals from all walks of life,\n" +
+			"who have contributed skills in Reverse Engineering, Programming,\n" +
+			"Decryption, Project Management, Scripting and Testing.\n" +
+			"Below is a list of some of the main contributors to the project,\n" +
+			"although our thanks go out to everyone who has helped throughout the process.\n\n" +
+			"@dr490n, @Special For, @thS, @zCri\n" +
+			"@hossel, @JakeMiester, @MOMO, @Daniel Kinau\n" +
+			"@Antibones, @Aperture, @Diamondo25, @wojtekpolska\n\n" +
+			"Shoutouts to FiveM and Goldberg, whose Source Code proved to be vital\n" +
+			"to understand and reverse engineer the GTAV Launch Process\n\n" +
+			"Special Shoutouts to @dr490n who was responsible for getting the Downgraded Game\n" +
+			"to Launch, added Patches against In Game Triggers, wrote the Authentification Backend,\n" +
+			"Decryption and got the PreOrder Entitlement to work. Thanks Mate."
+			).ShowDialog();
 		}
 
 

@@ -54,91 +54,47 @@ namespace Project_127
 		/// </summary>
 		public static void InitImportantSettings()
 		{
+			Settings.GTAVInstallationPath = "";
+
 			HelperClasses.Logger.Log("InitImportantSettings when Settings Reset or FirstLaunch or Paths wrong on Launch");
 			HelperClasses.Logger.Log("Playing the GTAV Guessing Game");
 
-			// Try to find GTA V installation Path
-			string potentialGTAVInstallationPath = Globals.ProjectInstallationPath.TrimEnd('\\').Substring(0, Globals.ProjectInstallationPath.LastIndexOf('\\'));
-			HelperClasses.Logger.Log("First GTAV Location Guess (based on Project 1.27 Installation Folder) is: '" + potentialGTAVInstallationPath + "'");
+			List<string> GTAVPathGuesses = new List<string>();
 
-			// If our Guess is valid
-			if (LauncherLogic.IsGTAVInstallationPathCorrect(potentialGTAVInstallationPath, false))
+			GTAVPathGuesses.Add(Globals.ProjectInstallationPath.TrimEnd('\\').Substring(0, Globals.ProjectInstallationPath.LastIndexOf('\\')));
+			GTAVPathGuesses.Add(Globals.ProjectInstallationPath.TrimEnd('\\'));
+			GTAVPathGuesses.Add(Settings.ZIPExtractionPath.TrimEnd('\\').Substring(0, Globals.ProjectInstallationPath.LastIndexOf('\\')));
+			GTAVPathGuesses.Add(Settings.ZIPExtractionPath);
+			GTAVPathGuesses.Add(LauncherLogic.GetGTAVPathMagicSteam());
+			GTAVPathGuesses.Add(LauncherLogic.GetGTAVPathMagicEpic());
+			GTAVPathGuesses.Add(LauncherLogic.GetGTAVPathMagicRockstar());
+
+			int i = 0;
+			foreach (string GTAVPathGuess in GTAVPathGuesses)
 			{
-				HelperClasses.Logger.Log("First GTAV Location Guess is theoretical valid");
-
-				// Ask the User if its the right path
-				Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Is: '" + potentialGTAVInstallationPath + "' your GTA V Installation Path?");
-				yesno.ShowDialog();
-				if (yesno.DialogResult == true)
+				if (String.IsNullOrEmpty(Settings.GTAVInstallationPath))
 				{
-					Settings.GTAVInstallationPath = potentialGTAVInstallationPath;
-					HelperClasses.Logger.Log("First GTAV guess was picked by User");
-					return;
-				}
-				HelperClasses.Logger.Log("First GTAV guess was NOT picked by User");
-			}
-			else
-			{
-				HelperClasses.Logger.Log("First GTAV Location Guess is NOT theoretical valid");
-			}
-
-			// If Setting is not correct, we need to guess more. Settings would have been set my code above.
-			if (!(LauncherLogic.IsGTAVInstallationPathCorrect(Settings.GTAVInstallationPath, false)))
-			{
-				HelperClasses.Logger.Log("Settings.GTAVInstallationPath is not a valid GTA V Installation Path. Will do second guess now.");
-
-				// Doing some Magic
-				string newPotentialGTAVInstallationPath = LauncherLogic.GetGTAVPathMagic();
-				HelperClasses.Logger.Log("Second GTAV Location Guess (via Steam Regedit and Files) is: '" + newPotentialGTAVInstallationPath + "'");
-
-				// If that path is correct
-				if (LauncherLogic.IsGTAVInstallationPathCorrect(newPotentialGTAVInstallationPath, false))
-				{
-					// Ask the User if its the right path
-					HelperClasses.Logger.Log("Second GTAV Location Guess is theoretical valid");
-					Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Is: '" + newPotentialGTAVInstallationPath + "' your GTA V Installation Path?");
-					yesno.ShowDialog();
-					if (yesno.DialogResult == true)
+					i++;
+					HelperClasses.Logger.Log("GTAV Guess Number " + i + "is: '" + GTAVPathGuess + "'");
+					if (LauncherLogic.IsGTAVInstallationPathCorrect(GTAVPathGuess, false))
 					{
-						Settings.GTAVInstallationPath = newPotentialGTAVInstallationPath;
-						HelperClasses.Logger.Log("Second GTAV guess was picked by User");
-						return;
+						HelperClasses.Logger.Log("GTAV Guess Number " + i + "is theoretically valid. Asking user if he wants it");
+						Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Is: '" + GTAVPathGuess + "' your GTA V Installation Path?");
+						yesno.ShowDialog();
+						if (yesno.DialogResult == true)
+						{
+							Settings.GTAVInstallationPath = GTAVPathGuess;
+							HelperClasses.Logger.Log("GTAV Guess Number " + i + " was picked by User");
+						}
+						else
+						{
+							HelperClasses.Logger.Log("GTAV Guess Number " + i + " was NOT picked by User, moving on");
+						}
 					}
-					HelperClasses.Logger.Log("Second GTAV guess was NOT picked by User");
-				}
-				else
-				{
-					HelperClasses.Logger.Log("Second GTAV Location Guess is NOT theoretical valid");
-				}
-			}
-
-			// If Setting is not correct, we need to guess more. Settings would have been set my code above.
-			if (!(LauncherLogic.IsGTAVInstallationPathCorrect(Settings.GTAVInstallationPath, false)))
-			{
-				HelperClasses.Logger.Log("Settings.GTAVInstallationPath is not a valid GTA V Installation Path. Will do third guess now.");
-
-
-				string newnewPotentialGTAVInstallationPath = Settings.ZIPExtractionPath.TrimEnd('\\').Substring(0, Globals.ProjectInstallationPath.LastIndexOf('\\'));
-				HelperClasses.Logger.Log("Third GTAV Location Guess (based on ZIP File Location) is: '" + newnewPotentialGTAVInstallationPath + "'");
-
-				// If that path is correct
-				if (LauncherLogic.IsGTAVInstallationPathCorrect(newnewPotentialGTAVInstallationPath, false))
-				{
-					// Ask the User if its the right path
-					HelperClasses.Logger.Log("Third GTAV Location Guess is theoretical valid");
-					Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Is: '" + newnewPotentialGTAVInstallationPath + "' your GTA V Installation Path?");
-					yesno.ShowDialog();
-					if (yesno.DialogResult == true)
+					else
 					{
-						Settings.GTAVInstallationPath = newnewPotentialGTAVInstallationPath;
-						HelperClasses.Logger.Log("Third GTAV guess was picked by User");
-						return;
+						HelperClasses.Logger.Log("GTAV Guess Number " + i + "is theoretically invalid, moving on");
 					}
-					HelperClasses.Logger.Log("Third GTAV guess was NOT picked by User");
-				}
-				else
-				{
-					HelperClasses.Logger.Log("Third GTAV Location Guess is NOT theoretical valid");
 				}
 			}
 
@@ -146,7 +102,7 @@ namespace Project_127
 			if (!(LauncherLogic.IsGTAVInstallationPathCorrect(Settings.GTAVInstallationPath, false)))
 			{
 				// Log
-				HelperClasses.Logger.Log("After three guesses we still dont have the correct GTAVInstallationPath. User has to do it manually now.");
+				HelperClasses.Logger.Log("After " + i + " guesses we still dont have the correct GTAVInstallationPath. User has to do it manually now. Fucking casual");
 
 				// Ask User for Path
 				SetGTAVPathManually(false);
@@ -184,6 +140,7 @@ namespace Project_127
 			HelperClasses.Logger.Log("LogInfo - GTAVInstallationPath: '" + Settings.GTAVInstallationPath + "'");
 			HelperClasses.Logger.Log("LogInfo - ZIPExtractionPath: '" + Settings.ZIPExtractionPath + "'");
 			HelperClasses.Logger.Log("LogInfo - EnableCopyOverHardlink: '" + Settings.EnableCopyFilesInsteadOfHardlinking + "'");
+			HelperClasses.Logger.Log("LogInfo - Retailer: '" + Settings.Retailer + "'");
 			HelperClasses.Logger.Log("End of InitImportantSettings");
 		}
 
@@ -362,6 +319,27 @@ namespace Project_127
 			{
 				SetSetting("EnablePreOrderBonus", value.ToString());
 			}
+		}
+
+
+		public static Retailers Retailer
+		{
+			get
+			{
+				return (Retailers)System.Enum.Parse(typeof(Retailers), GetSetting("Retailer"));
+			}
+			set
+			{
+				SetSetting("Retailer", value.ToString());
+			}
+		}
+	
+
+		public enum Retailers
+		{
+			Steam,
+			Rockstar,
+			Epic
 		}
 
 		/// <summary>

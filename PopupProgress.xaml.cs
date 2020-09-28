@@ -68,11 +68,13 @@ namespace Project_127
 		[STAThread]
 		public void ActualWork()
 		{
-			HelperClasses.Logger.Log("lets see if we get here");
 			HelperClasses.Logger.Log("ProgressType: '" + ProgressType + "'");
-			HelperClasses.Logger.Log("ZipFileWeWannaExtract: '" + ZipFileWeWannaExtract + "'");
-			HelperClasses.Logger.Log("ZIPExtractPath: '" + LauncherLogic.ZIPFilePath + "'");
-
+			
+			if (ProgressType == ProgressTypes.ZIPFile)
+			{
+				HelperClasses.Logger.Log("ZipFileWeWannaExtract: '" + ZipFileWeWannaExtract + "'");
+				HelperClasses.Logger.Log("ZIPExtractPath: '" + LauncherLogic.ZIPFilePath + "'");
+			}
 
 			if (ProgressType == ProgressTypes.FileOperation)
 			{
@@ -84,7 +86,7 @@ namespace Project_127
 					j++;
 					this.Dispatcher.Invoke(() =>
 					{
-						myPB.Value = j / count * 100;
+						myPB.Value = (int)(j / count * 100);
 						myLBL.Content = "Doing a " + Operation + "...(" + myPB.Value + "%)";
 					});
 				}
@@ -115,7 +117,9 @@ namespace Project_127
 						{
 							if (!string.IsNullOrEmpty(file.Name))
 							{
-								file.ExtractToFile(LauncherLogic.ZIPFilePath.TrimEnd('\\') + @"\" + file.FullName);
+								string PathOnDisk = LauncherLogic.ZIPFilePath.TrimEnd('\\') + @"\" + file.FullName.Replace(@"/", @"\");
+								HelperClasses.FileHandling.createPathOfFile(PathOnDisk);
+								file.ExtractToFile(PathOnDisk);
 							}
 
 							Application.Current.Dispatcher.Invoke((Action)delegate {

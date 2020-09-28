@@ -71,7 +71,7 @@ namespace Project_127
 		/// <summary>
 		/// Property of other Buildinfo. Will be in the top message of logs
 		/// </summary>
-		public static string BuildInfo = "Bleeding Edge";
+		public static string BuildInfo = "Built 0, No Auth";
 
 		/// <summary>
 		/// String of Steam Install Path
@@ -123,7 +123,9 @@ namespace Project_127
 			{"EnableLogging", "True"},
 			{"EnableCopyFilesInsteadOfHardlinking", "False"},
 			{"EnablePreOrderBonus", "False"},
+			{"Retailer", "Steam"},
 			{"EnableAutoSetHighPriority", "True" },
+			{"EnableAutoSteamCoreFix", "True" },
 			{"EnableAutoStartLiveSplit", "True" },
 			{"PathLiveSplit", @"C:\Some\Path\SomeFile.exe" },
 			{"EnableAutoStartStreamProgram", "True" },
@@ -161,7 +163,16 @@ namespace Project_127
 			// Warning Message if first Launch or if we are in BetaMode
 			if (Settings.FirstLaunch || Globals.BetaMode)
 			{
-				(new Popup(Popup.PopupWindowTypes.PopupOk, "This shit, eh i mean software, is shit, ehm I mean Beta.\nMay break your GTA V Installation.\nDelete your Save Files.\nUninstall Everything.\nUpload your Browsing History to Facebook.\nAnd Set your PC on fire.\n\nWe aint responsible.")).ShowDialog();
+				new Popup(Popup.PopupWindowTypes.PopupOk,
+				"Project 1.27 got a big Update!\n" +
+				"This software is unfinished, there may be bugs and we are in no way guaranteeing\n" +
+				"that this does not break your PC or GTA V Installation.\n" +
+				"The UI too, is still very unfinished, and not all planned features are implemented at this point.\n" +
+				"We thought it would be a better choice to release this now, even with the potential Issues,\n" +
+				"unimplemented features, and ugly UI, so that people can actually play.\n" +
+				"An update will be pushed as soon as possible to provide more features,\n" +
+				"a more stable client, and make it not look like a \"hányadék\".\n\n" +
+				" - The Project 1.27 Team").ShowDialog();
 			}
 
 			// Checks if we are doing first Launch.
@@ -247,11 +258,16 @@ namespace Project_127
 			}
 		}
 
+
+
+
 		/// <summary>
 		/// Method to import Zip File
 		/// </summary>
 		public static void ImportZip(string pZipFileLocation, bool deleteFileAfter = false)
 		{
+			HelperClasses.FileHandling.CreateAllZIPPaths(Settings.ZIPExtractionPath);
+
 			LauncherLogic.InstallationStates OldInstallationState = LauncherLogic.InstallationState;
 			string OldHash = HelperClasses.FileHandling.CreateDirectoryMd5(LauncherLogic.DowngradeFilePath);
 
@@ -259,6 +275,7 @@ namespace Project_127
 			HelperClasses.Logger.Log("Old ZIP File Version: '" + Globals.ZipVersion + "'");
 			HelperClasses.Logger.Log("Old Installation State: '" + OldInstallationState + "'");
 			HelperClasses.Logger.Log("Old Hash of Downgrade Folder: '" + OldHash + "'");
+			HelperClasses.Logger.Log("Settings.ZIPPath: '" + Settings.ZIPExtractionPath + "'");
 
 			string[] myFiles = HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(LauncherLogic.ZIPFilePath.TrimEnd('\\') + @"\Project_127_Files");
 			foreach (string myFile in myFiles)

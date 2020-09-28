@@ -124,6 +124,14 @@ namespace Project_127.HelperClasses
 			}
 		}
 
+
+
+		public static void createPathOfFile(string pFilePath)
+		{
+			string path = pFilePath.Substring(0, pFilePath.LastIndexOf('\\'));
+			createPath(path);
+		}
+
 		/// <summary>
 		/// Reads the content of a File. In one string (not string array for line)
 		/// </summary>
@@ -564,13 +572,43 @@ namespace Project_127.HelperClasses
 			return Directory.Exists(pFolderPath);
 		}
 
+
+		public static void DeleteFolder(string pPath)
+		{
+			try
+			{
+				Directory.Delete(pPath, true);
+			}
+			catch (Exception e)
+			{
+				HelperClasses.Logger.Log("Failed to delete Folder for some reason. " + e.ToString());
+			}
+		}
+
 		/// <summary>
 		/// Creates a Path. Works for SubSubPaths.
 		/// </summary>
 		/// <param name="pFolderPath"></param>
 		public static void createPath(string pFolderPath)
 		{
-			Directory.CreateDirectory(pFolderPath);
+			if (!doesPathExist(pFolderPath))
+			{
+				Directory.CreateDirectory(pFolderPath);
+			}
+		}
+
+
+		public static void CreateAllZIPPaths(string pZIPFileExtractLocation)
+		{
+			// TODO, CTRLF FIX THIS MESS. OTHERWISE ZIP EXTRACTING SHIT WILL BREAK BECAUSE ITS A PIECE OF SHIT
+			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files");
+			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\DowngradeFiles");
+			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\DowngradeFiles\update");
+			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\UpgradeFiles");
+			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\UpgradeFiles\update");
+			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\SupportFiles\");
+			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\SupportFiles\Installer");
+			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\SupportFiles\SaveFiles");
 		}
 
 		/// <summary>

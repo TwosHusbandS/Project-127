@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -97,15 +98,11 @@ namespace Project_127
 			}
 		}
 
+
 		/// <summary>
-		/// Reference to the Windows Function
+		/// Just a reference to the GameVersion we are running. GameVersion as in Retailer
 		/// </summary>
-		/// <param name="lpSymlinkFileName"></param>
-		/// <param name="lpTargetFileName"></param>
-		/// <param name="dwFlags"></param>
-		/// <returns></returns>
-		[DllImport("kernel32.dll", EntryPoint = "CreateSymbolicLinkW", CharSet = CharSet.Unicode)]
-		public static extern int CreateSymbolicLink(string lpSymlinkFileName, string lpTargetFileName, int dwFlags);
+		public static Settings.Retailers GameVersion { get { return Settings.Retailer; } }
 
 		/// <summary>
 		/// Size of Downgraded GTAV.exe. So I can detect the InstallationState (Upgrade / Downgrade)
@@ -289,15 +286,75 @@ namespace Project_127
 			HelperClasses.Logger.Log("Done Downgrading");
 		}
 
-	
 
+		/// <summary>
+		/// "Cleanest" way of getting the GTA V Path automatically
+		/// </summary>
+		/// <returns></returns>
+		public static string GetGTAVPathMagicEpic()
+		{
+			HelperClasses.Logger.Log("GTAV Path Magic by epic", 2);
+
+			string[] MyFiles = HelperClasses.FileHandling.GetFilesFromFolder(@"C:\ProgramData\Epic\EpicGamesLauncher\Data\Manifests");
+
+			foreach (string MyFile in MyFiles)
+			{
+				Regex MyRegex = new Regex(@"C:\\ProgramData\\Epic\\EpicGamesLauncher\\Data\\Manifests\\[0-9A-F]*.item");
+				Match MyMatch = MyRegex.Match(MyFile);
+
+				// Regex Match them to see if we like them
+				if (MyMatch.Success)
+				{
+					// Get all Lines of that File
+					string[] MyLines = HelperClasses.FileHandling.ReadFileEachLine(MyFile);
+
+					// Loop through those Lines
+					for (int i = 0; i <= MyLines.Length - 1; i++)
+					{
+						// Clear them of Tabs and Spaces
+						MyLines[i] = MyLines[i].Replace("\t", "").Replace(" ", "");
+						MyLines[i] = MyLines[i].TrimEnd(',').TrimEnd('"');
+
+						// if DisplayName is something else, lets exit
+						if (MyLines[i].Contains("\"DisplayName\":"))
+						{
+							if (!MyLines[i].Contains("GrandTheftAutoV"))
+							{
+								break;
+							}
+						}
+
+
+						if (MyLines[i].Contains("\"InstallLocation\":"))
+						{
+							string path = MyLines[i].Substring(MyLines[i].LastIndexOf('"')).Replace(@"\\", @"\");
+							HelperClasses.Logger.Log("GTAV Path Magic by Epic detected to be: '" + path + "'", 3);
+							return path;
+						}
+					}
+				}
+			}
+			HelperClasses.Logger.Log("GTAV Path Magic by Epic didnt work", 3);
+			return "";
+		}
 
 
 		/// <summary>
 		/// "Cleanest" way of getting the GTA V Path automatically
 		/// </summary>
 		/// <returns></returns>
-		public static string GetGTAVPathMagic()
+		public static string GetGTAVPathMagicRockstar()
+		{
+			HelperClasses.Logger.Log("GTAV Path Magic by Rockstar", 2);
+			RegistryKey myRK2 = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64).OpenSubKey(@"SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\{5EFC6C07-6B87-43FC-9524-F9E967241741}");
+			return HelperClasses.RegeditHandler.GetValue(myRK2, "InstallLocation");
+		}
+
+		/// <summary>
+		/// "Cleanest" way of getting the GTA V Path automatically
+		/// </summary>
+		/// <returns></returns>
+		public static string GetGTAVPathMagicSteam()
 		{
 			HelperClasses.Logger.Log("GTAV Path Magic by steam", 2);
 
@@ -351,11 +408,26 @@ namespace Project_127
 			{
 				HelperClasses.Logger.Log("Installation State Upgraded Detected.", 1);
 
-				HelperClasses.Logger.Log("Trying to start Game normally through Steam.", 1);
-				Process gtav = new Process();
-				gtav.StartInfo.FileName = Globals.SteamInstallPath.TrimEnd('\\') + @"\steam.exe";
-				gtav.StartInfo.Arguments = "-applaunch 271590";
-				gtav.Start();
+				if (GameVersion == Settings.Retailers.Steam)
+				{
+					HelperClasses.Logger.Log("Trying to start Game normally through Steam.", 1);
+					Process gtav = new Process();
+					gtav.StartInfo.FileName = Globals.SteamInstallPath.TrimEnd('\\') + @"\steam.exe";
+					gtav.StartInfo.Arguments = "-applaunch 271590";
+					gtav.Start();
+				}
+				else if (GameVersion == Settings.Retailers.Epic)
+				{
+					HelperClasses.Logger.Log("Trying to start Game normally through EpicGames.", 1);
+					Process.Start(@"com.epicgames.launcher://apps/9d2d0eb64d5c44529cece33fe2a46482?action=launch&silent=true");
+				}
+				else
+				{
+					HelperClasses.Logger.Log("Trying to start Game normally through Rockstar.", 1);
+					Process.Start(Settings.GTAVInstallationPath.TrimEnd('\\') + @"\PlayGTAV.exe");
+				}
+
+				HelperClasses.Logger.Log("Upgraded Game should be launched");
 			}
 			else if (LauncherLogic.InstallationState == InstallationStates.Downgraded)
 			{
@@ -367,6 +439,8 @@ namespace Project_127
 				p.StartInfo.FileName = Settings.GTAVInstallationPath.TrimEnd('\\') + @"\PlayGTAV.exe";
 				p.StartInfo.WorkingDirectory = Settings.GTAVInstallationPath.TrimEnd('\\');
 				p.Start();
+
+				HelperClasses.Logger.Log("Downgraded Game should be launched");
 			}
 		}
 
