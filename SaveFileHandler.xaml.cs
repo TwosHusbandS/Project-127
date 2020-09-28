@@ -25,12 +25,12 @@ namespace Project_127
 		/// <summary>
 		/// Collection of "MyFile" which are used for the Save-Files in the Backup Folder.
 		/// </summary>
-		public static ObservableCollection<MyFile> BackupSaves = new ObservableCollection<MyFile>();
+		public static ObservableCollection<MySaveFile> BackupSaves = new ObservableCollection<MySaveFile>();
 
 		/// <summary>
 		/// Collection of "MyFile" which are used for the Save-Files in the GTA Folder.
 		/// </summary>
-		public static ObservableCollection<MyFile> GTASaves = new ObservableCollection<MyFile>();
+		public static ObservableCollection<MySaveFile> GTASaves = new ObservableCollection<MySaveFile>();
 
 		/// <summary>
 		/// Constructor of SaveFileHandler
@@ -57,11 +57,11 @@ namespace Project_127
 		private void btn_LeftArrow_Click(object sender, RoutedEventArgs e)
 		{
 			// Not Fully Implemented
-			BackupSaves.Add(new MyFile("Test1", "TestA"));
-			BackupSaves.Add(new MyFile("Test2", "TestB"));
-			BackupSaves.Add(new MyFile("Test3", "TestC"));
-			BackupSaves.Add(new MyFile("Test4", "TestD"));
-			BackupSaves.Add(new MyFile("Test5", "TestE"));
+			BackupSaves.Add(new MySaveFile("Test1", "TestA"));
+			BackupSaves.Add(new MySaveFile("Test2", "TestB"));
+			BackupSaves.Add(new MySaveFile("Test3", "TestC"));
+			BackupSaves.Add(new MySaveFile("Test4", "TestD"));
+			BackupSaves.Add(new MySaveFile("Test5", "TestE"));
 		}
 
 
