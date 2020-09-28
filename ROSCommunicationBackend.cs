@@ -428,7 +428,7 @@ namespace Project_127 {
                 else
                 {
                     var acctoken = NavGetOrDefault(nav, "//*[local-name()='Response']/*[local-name()='Result']", "");
-                    if (acctoken == "")
+                    if (acctoken.Equals(""))
                     {
                         return tgr; // Unknown Error
                     }
@@ -599,16 +599,6 @@ namespace Project_127 {
                 mhash = mh;
                 expiration = ctime + 86399;
                 nickname = nick;
-                try
-                {
-                    nick += "=";
-                    if (atob(nick).SequenceEqual(OESFDR))
-                    {
-                        setFlag(Flags.RES4, true);
-                        addLaunchExtension("specUser", atob(nick));
-                    }
-
-                } finally { }
             }
             /*public sessionContainer()
             {
@@ -719,7 +709,7 @@ namespace Project_127 {
         /// <param name="value">Value of parameter</param>
         private static void addLaunchExtension(string key, string value)
         {
-            if (launchExtensionRaw != "")
+            if (!launchExtensionRaw.Equals(""))
             {
                 launchExtensionRaw += "&";
             }
@@ -744,7 +734,7 @@ namespace Project_127 {
 
         private static List<byte> genLaunchExtension()
         {
-            if (launchExtensionRaw == "")
+            if (launchExtensionRaw.Equals(""))
             {
                 var ret = new List<byte>();
                 ret.Add(0);
