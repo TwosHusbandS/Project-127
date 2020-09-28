@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -17,6 +18,15 @@ namespace Project_127
 	public static class LauncherLogic
 	{
 		/// <summary>
+		/// Enum we use to change the Auth Button Image (lock)
+		/// </summary>
+		public enum Authstates
+		{
+			NotAuth = 0,
+			Auth = 1
+		}
+
+		/// <summary>
 		/// Enum for InstallationStates
 		/// </summary>
 		public enum InstallationStates
@@ -34,6 +44,21 @@ namespace Project_127
 			NonRunning
 		}
 
+		private static Authstates _AuthState = Authstates.NotAuth;
+
+		public static Authstates AuthState
+		{
+			get
+			{
+				return _AuthState;
+			}
+			set
+			{
+				_AuthState = value;
+				// Call Something
+			}
+		}
+
 		/// <summary>
 		/// Property of our GameState
 		/// </summary>
@@ -41,8 +66,7 @@ namespace Project_127
 		{
 			get
 			{
-				Process[] pname = Process.GetProcessesByName("GTAV.exe");
-				if (pname.Length > 0)
+				if (HelperClasses.ProcessHandler.IsGtaRunning())
 				{
 					return GameStates.Running;
 				}
@@ -74,15 +98,11 @@ namespace Project_127
 			}
 		}
 
+
 		/// <summary>
-		/// Reference to the Windows Function
+		/// Just a reference to the GameVersion we are running. GameVersion as in Retailer
 		/// </summary>
-		/// <param name="lpSymlinkFileName"></param>
-		/// <param name="lpTargetFileName"></param>
-		/// <param name="dwFlags"></param>
-		/// <returns></returns>
-		[DllImport("kernel32.dll", EntryPoint = "CreateSymbolicLinkW", CharSet = CharSet.Unicode)]
-		public static extern int CreateSymbolicLink(string lpSymlinkFileName, string lpTargetFileName, int dwFlags);
+		public static Settings.Retailers GameVersion { get { return Settings.Retailer; } }
 
 		/// <summary>
 		/// Size of Downgraded GTAV.exe. So I can detect the InstallationState (Upgrade / Downgrade)
@@ -95,37 +115,47 @@ namespace Project_127
 		public static long SizeOfDowngradedUPDATE { get { return HelperClasses.FileHandling.GetSizeOfFile(DowngradeFilePath.TrimEnd('\\') + @"\update\update.rpf"); } }
 
 		/// <summary>
+		/// Path of where the ZIP File is extracted
+		/// </summary>
+		public static string ZIPFilePath { get { return Settings.ZIPExtractionPath.TrimEnd('\\') + @"\"; } }
+
+		/// <summary>
 		/// Property of often used variable. (UpgradeFilePath)
 		/// </summary>
-		public static string UpgradeFilePath = Globals.ProjectInstallationPath.TrimEnd('\\') + @"\Project_127_Files\UpgradeFiles\";
+		public static string UpgradeFilePath { get { return LauncherLogic.ZIPFilePath.TrimEnd('\\') + @"\Project_127_Files\UpgradeFiles\"; } }
 
 		/// <summary>
 		/// Property of often used variable. (DowngradeFilePath)
 		/// </summary>
-		public static string DowngradeFilePath = Globals.ProjectInstallationPath.TrimEnd('\\') + @"\Project_127_Files\DowngradeFiles\";
+		public static string DowngradeFilePath { get { return LauncherLogic.ZIPFilePath.TrimEnd('\\') + @"\Project_127_Files\DowngradeFiles\"; } }
 
 		/// <summary>
 		/// Property of often used variable. (SupportFilePath)
 		/// </summary>
-		public static string SupportFilePath = Globals.ProjectInstallationPath.TrimEnd('\\') + @"\Project_127_Files\SupportFiles\";
+		public static string SupportFilePath { get { return LauncherLogic.ZIPFilePath.TrimEnd('\\') + @"\Project_127_Files\SupportFiles\"; } }
 
 		/// <summary>
 		/// Property of often used variable. (GTAVFilePath)
 		/// </summary>
-		public static string GTAVFilePath = Settings.GTAVInstallationPath.TrimEnd('\\') + @"\";
+		public static string GTAVFilePath { get { return Settings.GTAVInstallationPath.TrimEnd('\\') + @"\"; } }
 
 		/// <summary>
 		/// Method for Upgrading the Game back to latest Version
 		/// </summary>
 		public static void Upgrade()
 		{
+			// Saving all the File Operations I want to do, executing this at the end of this Method
+			List<MyFileOperation> MyFileOperations = new List<MyFileOperation>();
+
 			KillRelevantProcesses();
 
 			// Creates Hardlink Link in GTAV Installation Folder to all the files of Upgrade Folder
 			// If they exist in GTAV Installation Folder,  we delete them from GTAV Installation folder
 
+			HelperClasses.Logger.Log("Initiating Upgrade", 0);
 			HelperClasses.Logger.Log("GTAV Installation Path: " + GTAVFilePath, 1);
 			HelperClasses.Logger.Log("InstallationLocation: " + Globals.ProjectInstallationPath, 1);
+			HelperClasses.Logger.Log("ZIP File Location: " + LauncherLogic.ZIPFilePath, 1);
 			HelperClasses.Logger.Log("DowngradeFilePath: " + DowngradeFilePath, 1);
 			HelperClasses.Logger.Log("UpgradeFilePath: " + UpgradeFilePath, 1);
 
@@ -145,14 +175,15 @@ namespace Project_127
 				if (HelperClasses.FileHandling.doesFileExist(CorrespondingFilePathInGTALocation[i]))
 				{
 					// Delete from GTA V Installation Path
-					HelperClasses.Logger.Log("File found in GTA V Installation Path and the Upgrade Folder. Will delete '" + CorrespondingFilePathInGTALocation[i] + "'", 1);
-					HelperClasses.FileHandling.deleteFile(CorrespondingFilePathInGTALocation[i]);
+					MyFileOperations.Add(new MyFileOperation(MyFileOperation.FileOperations.Delete, CorrespondingFilePathInGTALocation[i], "", "File found in GTA V Installation Path and the Upgrade Folder. Will delete '" + CorrespondingFilePathInGTALocation[i] + "'", 1));
 				}
 
-				// Creates actual Symbolic Link
-				HelperClasses.Logger.Log("Will create HardLink in '" + CorrespondingFilePathInGTALocation[i] + "' to the file in '" + FilesInUpgradesFiles[i] + "'", 1);
-				HelperClasses.FileHandling.HardLinkFiles(CorrespondingFilePathInGTALocation[i], FilesInUpgradesFiles[i]);
+				// Creates actual Hard Link (this will further down check if we should copy based on settings)
+				MyFileOperations.Add(new MyFileOperation(MyFileOperation.FileOperations.Hardlink, FilesInUpgradesFiles[i], CorrespondingFilePathInGTALocation[i], "Will create HardLink in '" + CorrespondingFilePathInGTALocation[i] + "' to the file in '" + FilesInUpgradesFiles[i] + "'", 1));
 			}
+
+			// Actually executing the File Operations
+			new PopupProgress(PopupProgress.ProgressTypes.FileOperation, "Upgrade", MyFileOperations).ShowDialog();
 
 			// We dont need to mess with social club versions since the launch process doesnt depend on it
 
@@ -164,10 +195,13 @@ namespace Project_127
 		/// </summary>
 		public static void Repair()
 		{
-			HelperClasses.Logger.Log("Initiating Repair.");
+			// Saving all the File Operations I want to do, executing this at the end of this Method
+			List<MyFileOperation> MyFileOperations = new List<MyFileOperation>();
 
+			HelperClasses.Logger.Log("Initiating Repair.", 0);
 			HelperClasses.Logger.Log("GTAV Installation Path: " + GTAVFilePath, 1);
 			HelperClasses.Logger.Log("InstallationLocation: " + Globals.ProjectInstallationPath, 1);
+			HelperClasses.Logger.Log("ZIP File Location: " + LauncherLogic.ZIPFilePath, 1);
 			HelperClasses.Logger.Log("DowngradeFilePath: " + DowngradeFilePath, 1);
 			HelperClasses.Logger.Log("UpgradeFilePath: " + UpgradeFilePath, 1);
 
@@ -177,9 +211,11 @@ namespace Project_127
 			HelperClasses.Logger.Log("Found " + FilesInUpgradeFiles.Length.ToString() + " Files in Upgrade Folder. Will try to delete them", 1);
 			foreach (string myFileName in FilesInUpgradeFiles)
 			{
-				HelperClasses.Logger.Log("Deleting '" + myFileName + "' from $Upgrade Folder", 2);
-				HelperClasses.FileHandling.deleteFile(myFileName);
+				MyFileOperations.Add(new MyFileOperation(MyFileOperation.FileOperations.Delete, myFileName, "", "Deleting '" + (myFileName) + "' from the $UpgradeFolder", 2));
 			}
+
+			// Actually executing the File Operations
+			new PopupProgress(PopupProgress.ProgressTypes.FileOperation, "Repair", MyFileOperations).ShowDialog();
 
 			// We dont need to mess with social club versions since the launch process doesnt depend on it
 
@@ -191,14 +227,19 @@ namespace Project_127
 		/// </summary>
 		public static void Downgrade()
 		{
+			// Saving all the File Operations I want to do, executing this at the end of this Method
+			List<MyFileOperation> MyFileOperations = new List<MyFileOperation>();
+
 			KillRelevantProcesses();
 
 			// Creates Hardlink Link in GTAV Installation Folder to all the files of Downgrade Folder
 			// If they exist in GTAV Installation Folder, and in Upgrade Folder, we delete them from GTAV Installation folder
 			// If they exist in GTAV Installation Folder, and NOT in Upgrade Folder, we move them there
 
+			HelperClasses.Logger.Log("Initiating Downgrade", 0);
 			HelperClasses.Logger.Log("GTAV Installation Path: " + GTAVFilePath, 1);
 			HelperClasses.Logger.Log("InstallationLocation: " + Globals.ProjectInstallationPath, 1);
+			HelperClasses.Logger.Log("ZIP File Location: " + LauncherLogic.ZIPFilePath, 1);
 			HelperClasses.Logger.Log("DowngradeFilePath: " + DowngradeFilePath, 1);
 			HelperClasses.Logger.Log("UpgradeFilePath: " + UpgradeFilePath, 1);
 
@@ -223,133 +264,97 @@ namespace Project_127
 					if (HelperClasses.FileHandling.doesFileExist(CorrespondingFilePathInUpgradeFiles[i]))
 					{
 						// Delete from GTA V Installation Path
-						HelperClasses.Logger.Log("Found '" + CorrespondingFilePathInGTALocation[i] + "' in GTA V Installation Path and $UpgradeFiles. Will delelte from GTA V Installation", 1);
-						HelperClasses.FileHandling.deleteFile(CorrespondingFilePathInGTALocation[i]);
+						MyFileOperations.Add(new MyFileOperation(MyFileOperation.FileOperations.Delete, CorrespondingFilePathInGTALocation[i], "", "Found '" + CorrespondingFilePathInGTALocation[i] + "' in GTA V Installation Path and $UpgradeFiles. Will delelte from GTA V Installation", 1));
 					}
 					else
 					{
 						// Move File from GTA V Installation Path to Upgrade Folder
-						HelperClasses.Logger.Log("Found '" + CorrespondingFilePathInGTALocation[i] + "' in GTA V Installation Path and NOT in $UpgradeFiles. Will move it from GTA V Installation to $UpgradeFiles", 1);
-						HelperClasses.FileHandling.moveFile(CorrespondingFilePathInGTALocation[i], CorrespondingFilePathInUpgradeFiles[i]);
+						MyFileOperations.Add(new MyFileOperation(MyFileOperation.FileOperations.Move, CorrespondingFilePathInGTALocation[i], CorrespondingFilePathInUpgradeFiles[i], "Found '" + CorrespondingFilePathInGTALocation[i] + "' in GTA V Installation Path and NOT in $UpgradeFiles. Will move it from GTA V Installation to $UpgradeFiles", 1));
 					}
 				}
-				// Creates actual Symbolic Link
-				HelperClasses.Logger.Log("Will create HardLink in '" + CorrespondingFilePathInGTALocation[i] + "' to the file in '" + FilesInDowngradeFiles[i] + "'", 1);
-				HelperClasses.FileHandling.HardLinkFiles(CorrespondingFilePathInGTALocation[i], FilesInDowngradeFiles[i]);
+
+
+				// Creates actual Hard Link (this will further down check if we should copy based on settings)
+				MyFileOperations.Add(new MyFileOperation(MyFileOperation.FileOperations.Hardlink, FilesInDowngradeFiles[i], CorrespondingFilePathInGTALocation[i], "Will create HardLink in '" + CorrespondingFilePathInGTALocation[i] + "' to the file in '" + FilesInDowngradeFiles[i] + "'", 1));
 			}
+
+			// Actually executing the File Operations
+			new PopupProgress(PopupProgress.ProgressTypes.FileOperation, "Downgrade", MyFileOperations).ShowDialog();
 
 			// We dont need to mess with social club versions since the launch process doesnt depend on it
 
-			if (Settings.EnableTempFixSteamLaunch)
-			{
-				HelperClasses.Logger.Log("We are in TempFixSteamLaunch and will Mess with social Club installations");
-				HelperClasses.ProcessHandler.StartProcess(SupportFilePath.TrimEnd('\\') + @"\SocialClubNewUninstaller.exe", "", true, true);
-				new Popup(Popup.PopupWindowTypes.PopupOk, "Started the Uninstaller of new Social Club.\nClick 'OK' once the Uninstall progress is done").ShowDialog();
-				HelperClasses.ProcessHandler.StartProcess(SupportFilePath.TrimEnd('\\') + @"\SocialClubOldInstaller.exe", "", true, true);
-				new Popup(Popup.PopupWindowTypes.PopupOk, "Started the Installation of old Social Club.\nClick 'OK' once the Install progress is done").ShowDialog();
-			}
 			HelperClasses.Logger.Log("Done Downgrading");
 		}
 
+
 		/// <summary>
-		/// Guessing Game with GTA V Paths. Have 2 ways of detecting it.
+		/// "Cleanest" way of getting the GTA V Path automatically
 		/// </summary>
-		public static void GTAVPathGuessingGame()
+		/// <returns></returns>
+		public static string GetGTAVPathMagicEpic()
 		{
-			HelperClasses.Logger.Log("Playing the GTAV Guessing Game");
+			HelperClasses.Logger.Log("GTAV Path Magic by epic", 2);
 
-			// Try to find GTA V installation Path
-			string potentialGTAVInstallationPath = Globals.ProjectInstallationPath.TrimEnd('\\').Substring(0, Globals.ProjectInstallationPath.LastIndexOf('\\'));
-			HelperClasses.Logger.Log("First GTAV Location Guess is: '" + potentialGTAVInstallationPath + "'");
+			string[] MyFiles = HelperClasses.FileHandling.GetFilesFromFolder(@"C:\ProgramData\Epic\EpicGamesLauncher\Data\Manifests");
 
-			// If our Guess is valid
-			if (LauncherLogic.IsGTAVInstallationPathCorrect(potentialGTAVInstallationPath, false))
+			foreach (string MyFile in MyFiles)
 			{
-				HelperClasses.Logger.Log("First GTAV Location Guess is theoretical valid");
+				Regex MyRegex = new Regex(@"C:\\ProgramData\\Epic\\EpicGamesLauncher\\Data\\Manifests\\[0-9A-F]*.item");
+				Match MyMatch = MyRegex.Match(MyFile);
 
-				// Ask the User if its the right path
-				Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Is: '" + potentialGTAVInstallationPath + "' your GTA V Installation Path?");
-				yesno.ShowDialog();
-				if (yesno.DialogResult == true)
+				// Regex Match them to see if we like them
+				if (MyMatch.Success)
 				{
-					Settings.GTAVInstallationPath = potentialGTAVInstallationPath;
-					HelperClasses.Logger.Log("First GTAV guess was picked by User");
-					return;
-				}
-				HelperClasses.Logger.Log("First GTAV guess was NOT picked by User");
-			}
-			else
-			{
-				HelperClasses.Logger.Log("First GTAV Location Guess is NOT theoretical valid");
-			}
+					// Get all Lines of that File
+					string[] MyLines = HelperClasses.FileHandling.ReadFileEachLine(MyFile);
 
-			// If Setting is not correct, we need to guess more. Settings would have been set my code above.
-			if (!(LauncherLogic.IsGTAVInstallationPathCorrect(Settings.GTAVInstallationPath, false)))
-			{
-				HelperClasses.Logger.Log("Settings.GTAVInstallationPath is not a valid GTA V Installation Path. Will do second guess now.");
-
-				// Doing some Magic
-				string newPotentialGTAVInstallationPath = LauncherLogic.GetGTAVPathMagic();
-				HelperClasses.Logger.Log("Second GTAV Location Guess is: '" + newPotentialGTAVInstallationPath + "'");
-
-				// If that path is correct
-				if (LauncherLogic.IsGTAVInstallationPathCorrect(newPotentialGTAVInstallationPath, false))
-				{
-					// Ask the User if its the right path
-					HelperClasses.Logger.Log("Second GTAV Location Guess is theoretical valid");
-					Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Is: '" + newPotentialGTAVInstallationPath + "' your GTA V Installation Path?");
-					yesno.ShowDialog();
-					if (yesno.DialogResult == true)
+					// Loop through those Lines
+					for (int i = 0; i <= MyLines.Length - 1; i++)
 					{
-						Settings.GTAVInstallationPath = newPotentialGTAVInstallationPath;
-						HelperClasses.Logger.Log("Second GTAV guess was picked by User");
-						return;
+						// Clear them of Tabs and Spaces
+						MyLines[i] = MyLines[i].Replace("\t", "").Replace(" ", "");
+						MyLines[i] = MyLines[i].TrimEnd(',').TrimEnd('"');
+
+						// if DisplayName is something else, lets exit
+						if (MyLines[i].Contains("\"DisplayName\":"))
+						{
+							if (!MyLines[i].Contains("GrandTheftAutoV"))
+							{
+								break;
+							}
+						}
+
+
+						if (MyLines[i].Contains("\"InstallLocation\":"))
+						{
+							string path = MyLines[i].Substring(MyLines[i].LastIndexOf('"')).Replace(@"\\", @"\");
+							HelperClasses.Logger.Log("GTAV Path Magic by Epic detected to be: '" + path + "'", 3);
+							return path;
+						}
 					}
-					HelperClasses.Logger.Log("Second GTAV guess was NOT picked by User");
-				}
-				else
-				{
-					HelperClasses.Logger.Log("Second GTAV Location Guess is NOT theoretical valid");
 				}
 			}
-
-			// If Setting is STILL not correct
-			if (!(LauncherLogic.IsGTAVInstallationPathCorrect(Settings.GTAVInstallationPath, false)))
-			{
-				// Log
-				HelperClasses.Logger.Log("After two guesses we still dont have the correct GTAVInstallationPath. User has to do it manually now.");
-
-				// Ask User for Path
-				SetGTAVPathManually();
-			}
-
-			HelperClasses.Logger.Log("End of GTAVPathGuessingGame");
+			HelperClasses.Logger.Log("GTAV Path Magic by Epic didnt work", 3);
+			return "";
 		}
 
+
 		/// <summary>
-		/// Method to set the GTA V Path manually
+		/// "Cleanest" way of getting the GTA V Path automatically
 		/// </summary>
-		public static void SetGTAVPathManually()
+		/// <returns></returns>
+		public static string GetGTAVPathMagicRockstar()
 		{
-			HelperClasses.Logger.Log("Asking User for GTA V Installation path");
-			string GTAVInstallationPathUserChoice = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.Folder, "Pick the Folder which contains your GTAV.exe", @"C:\");
-			HelperClasses.Logger.Log("Users picked path is: '" + GTAVInstallationPathUserChoice + "'");
-			//while (!(LauncherLogic.IsGTAVInstallationPathCorrect(GTAVInstallationPathUserChoice, false)))
-			{
-				HelperClasses.Logger.Log("Users picked path detected to be faulty. Asking user to try again");
-				new Popup(Popup.PopupWindowTypes.PopupOk, "GTA V Path detected to be faulty. Try again");
-				GTAVInstallationPathUserChoice = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.Folder, "Pick the Folder which contains your GTAV.exe", @"C:\");
-				HelperClasses.Logger.Log("New Users picked path is: '" + GTAVInstallationPathUserChoice + "'");
-			}
-			HelperClasses.Logger.Log("Picked path '" + GTAVInstallationPathUserChoice + "'´is valid and will be set as Settings.GTAVInstallationPath.");
-			Settings.GTAVInstallationPath = GTAVInstallationPathUserChoice;
+			HelperClasses.Logger.Log("GTAV Path Magic by Rockstar", 2);
+			RegistryKey myRK2 = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64).OpenSubKey(@"SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\{5EFC6C07-6B87-43FC-9524-F9E967241741}");
+			return HelperClasses.RegeditHandler.GetValue(myRK2, "InstallLocation");
 		}
 
 		/// <summary>
 		/// "Cleanest" way of getting the GTA V Path automatically
 		/// </summary>
 		/// <returns></returns>
-		public static string GetGTAVPathMagic()
+		public static string GetGTAVPathMagicSteam()
 		{
 			HelperClasses.Logger.Log("GTAV Path Magic by steam", 2);
 
@@ -399,56 +404,43 @@ namespace Project_127
 		public static void Launch()
 		{
 			HelperClasses.Logger.Log("Trying to Launch the game.");
-			if (LauncherLogic.GameState == GameStates.Running)
-			{
-				HelperClasses.Logger.Log("Game deteced running.", 1);
-				Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Game is detected as running.\nDo you want to close it\nand run it again?");
-				yesno.ShowDialog();
-				if (yesno.DialogResult == true)
-				{
-					HelperClasses.Logger.Log("Killing all Processes.", 1);
-					KillRelevantProcesses();
-				}
-				else
-				{
-					HelperClasses.Logger.Log("Not wanting to kill all Processes, im aborting Launch function", 1);
-					return;
-				}
-			}
 			if (LauncherLogic.InstallationState == InstallationStates.Upgraded)
 			{
 				HelperClasses.Logger.Log("Installation State Upgraded Detected.", 1);
-				HelperClasses.Logger.Log("Trying to start Game normally through Steam.", 1);
-				Process gtav = new Process();
-				gtav.StartInfo.FileName = Globals.SteamInstallPath.TrimEnd('\\') + @"\steam.exe";
-				gtav.StartInfo.Arguments = "-applaunch 271590";
-				gtav.Start();
+
+				if (GameVersion == Settings.Retailers.Steam)
+				{
+					HelperClasses.Logger.Log("Trying to start Game normally through Steam.", 1);
+					Process gtav = new Process();
+					gtav.StartInfo.FileName = Globals.SteamInstallPath.TrimEnd('\\') + @"\steam.exe";
+					gtav.StartInfo.Arguments = "-applaunch 271590";
+					gtav.Start();
+				}
+				else if (GameVersion == Settings.Retailers.Epic)
+				{
+					HelperClasses.Logger.Log("Trying to start Game normally through EpicGames.", 1);
+					Process.Start(@"com.epicgames.launcher://apps/9d2d0eb64d5c44529cece33fe2a46482?action=launch&silent=true");
+				}
+				else
+				{
+					HelperClasses.Logger.Log("Trying to start Game normally through Rockstar.", 1);
+					Process.Start(Settings.GTAVInstallationPath.TrimEnd('\\') + @"\PlayGTAV.exe");
+				}
+
+				HelperClasses.Logger.Log("Upgraded Game should be launched");
 			}
 			else if (LauncherLogic.InstallationState == InstallationStates.Downgraded)
 			{
 				HelperClasses.Logger.Log("Installation State Downgraded Detected", 1);
 
-				if (Settings.EnableTempFixSteamLaunch)
-				{
-					new Popup(Popup.PopupWindowTypes.PopupOk, "TempFixSteamLaunch launches this game through steam when downgraded\nThis only works if you have a working steam downgrade\nThis also will not be in the final release, its just to test the Client,\nwhich does not contain the actual Fixed Launch yet.\n\nClick 'OK' once steam is running and in OFFLINE mode\nOr if you wanna try this with Steam online (-scOfflineOnly is set anyways)\nYou probably wont need to do this in the next upgrade.").ShowDialog();
+				// TO DO, Clean this Up, move to ProcessHandler HelperClass
+				HelperClasses.Logger.Log("Launching Downgraded", 1);
+				Process p = new Process();
+				p.StartInfo.FileName = Settings.GTAVInstallationPath.TrimEnd('\\') + @"\PlayGTAV.exe";
+				p.StartInfo.WorkingDirectory = Settings.GTAVInstallationPath.TrimEnd('\\');
+				p.Start();
 
-					HelperClasses.Logger.Log("Running game in TempFixSteamLauch way through Steam.", 1);
-
-					HelperClasses.Logger.Log("Trying to start Game Offline.", 1);
-					Process gtav = new Process();
-					gtav.StartInfo.FileName = Globals.SteamInstallPath.TrimEnd('\\') + @"\steam.exe";
-					gtav.StartInfo.Arguments = "-applaunch 271590 -scOfflineOnly";
-					gtav.Start();
-				}
-				else
-				{
-					// TO DO, Clean this Up, move to ProcessHandler HelperClass
-					HelperClasses.Logger.Log("Launching Downgraded", 1);
-					Process p = new Process();
-					p.StartInfo.FileName = Settings.GTAVInstallationPath.TrimEnd('\\') + @"\PlayGTAV.exe";
-					p.StartInfo.WorkingDirectory = @"F:\SteamLibrary\steamapps\common\Grand Theft Auto V\";
-					p.Start();
-				}
+				HelperClasses.Logger.Log("Downgraded Game should be launched");
 			}
 		}
 
@@ -470,7 +462,7 @@ namespace Project_127
 		public static bool IsGTAVInstallationPathCorrect(string pPath, bool pLogThis = true)
 		{
 			if (pLogThis) { HelperClasses.Logger.Log("Trying to see if GTAV Installation Path ('" + pPath + "') is a theoretical valid Path", 3); }
-			if (HelperClasses.FileHandling.doesFileExist(pPath.TrimEnd('\\') + @"\x64a.rpf"))
+			if (HelperClasses.FileHandling.doesFileExist(pPath.TrimEnd('\\') + @"\x64b.rpf"))
 			{
 				if (pLogThis) { HelperClasses.Logger.Log("It is", 4); }
 				return true;

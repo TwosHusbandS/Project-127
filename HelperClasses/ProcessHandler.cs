@@ -51,7 +51,7 @@ namespace Project_127.HelperClasses
 			Process[] MyProcesses = Process.GetProcesses();
 			foreach (Process MyProcess in MyProcesses)
 			{
-				if (MyProcess.ProcessName.ToLower() == pProcessName.ToLower().TrimEnd(".exe") + ".exe")
+				if (MyProcess.ProcessName.ToLower() == pProcessName.ToLower().TrimEnd(".exe"))
 				{
 					return true;
 				}

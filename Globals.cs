@@ -8,6 +8,7 @@ using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Media;
 using System.Windows.Threading;
@@ -35,6 +36,19 @@ namespace Project_127
 		public static string ProjectNiceName = "Project 127";
 
 		/// <summary>
+		/// Property of the ZIP Version currently installed
+		/// </summary>
+		public static int ZipVersion
+		{
+			get
+			{
+				int _ZipVersion = 0;
+				Int32.TryParse(HelperClasses.FileHandling.ReadContentOfFile(LauncherLogic.ZIPFilePath.TrimEnd('\\') + @"\Project_127_Files\Version.txt"), out _ZipVersion);
+				return _ZipVersion;	
+			}
+		}
+
+		/// <summary>
 		/// Property of our own Project Version
 		/// </summary>
 		public static Version ProjectVersion = Assembly.GetExecutingAssembly().GetName().Version;
@@ -45,11 +59,6 @@ namespace Project_127
 		public static string URL_AutoUpdate = "https://raw.githubusercontent.com/TwosHusbandS/Project-127/master/Installer/Update.xml";
 
 		/// <summary>
-		/// URL for AuthUserFile
-		/// </summary>
-		public static string URL_AuthUser = HelperClasses.FileHandling.GetXMLTagContent(HelperClasses.FileHandling.GetStringFromURL(Globals.URL_AutoUpdate), "authuser");
-
-		/// <summary>
 		/// Download Location of Zip File
 		/// </summary>
 		public static string ZipFileDownloadLocation = Globals.ProjectInstallationPath + @"\NewZipFile.zip";
@@ -58,6 +67,11 @@ namespace Project_127
 		/// Property if we are in Beta
 		/// </summary>
 		public static bool BetaMode = true;
+
+		/// <summary>
+		/// Property of other Buildinfo. Will be in the top message of logs
+		/// </summary>
+		public static string BuildInfo = "Built 0, No Auth";
 
 		/// <summary>
 		/// String of Steam Install Path
@@ -88,22 +102,30 @@ namespace Project_127
 
 		/// <summary>
 		/// Property of the Registry Key we use for our Settings
-		/// </summary>
-		public static RegistryKey MySettingsKey { get; private set; } = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64).CreateSubKey("SOFTWARE").CreateSubKey(ProjectName);
+		/// </summary>													
+		public static RegistryKey MySettingsKey { get { return RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64).CreateSubKey("SOFTWARE").CreateSubKey(ProjectName); } } 
 
 		/// <summary>
 		/// Property of our default Settings
 		/// </summary>
 		public static Dictionary<string, string> MyDefaultSettings { get; private set; } = new Dictionary<string, string>()
 		{
+			/*
+			Previously Used Settings Variables, we cannot use anymore, since they are written,
+			and we are not able to reset only them (for now...):
+				- "FileFolder"
+			*/
+
 			{"FirstLaunch", "True" },
-			{"InstallationPath", ProjectInstallationPath },
+			{"InstallationPath", Process.GetCurrentProcess().MainModule.FileName.Substring(0, Process.GetCurrentProcess().MainModule.FileName.LastIndexOf('\\')) },
 			{"GTAVInstallationPath", ""},
-			{"FileFolder", Environment.ExpandEnvironmentVariables(@"%ALLUSERSPROFILE%\" + ProjectName)},
+			{"ZIPExtractionPath", Process.GetCurrentProcess().MainModule.FileName.Substring(0, Process.GetCurrentProcess().MainModule.FileName.LastIndexOf('\\')) },
 			{"EnableLogging", "True"},
-			{"EnableTempFixSteamLaunch", "False"},
+			{"EnableCopyFilesInsteadOfHardlinking", "False"},
 			{"EnablePreOrderBonus", "False"},
+			{"Retailer", "Steam"},
 			{"EnableAutoSetHighPriority", "True" },
+			{"EnableAutoSteamCoreFix", "True" },
 			{"EnableAutoStartLiveSplit", "True" },
 			{"PathLiveSplit", @"C:\Some\Path\SomeFile.exe" },
 			{"EnableAutoStartStreamProgram", "True" },
@@ -141,7 +163,16 @@ namespace Project_127
 			// Warning Message if first Launch or if we are in BetaMode
 			if (Settings.FirstLaunch || Globals.BetaMode)
 			{
-				(new Popup(Popup.PopupWindowTypes.PopupOk, "This shit, eh i mean software, is shit, ehm I mean Beta.\nMay break your GTA V Installation.\nDelete your Save Files.\nUninstall Everything.\nUpload your Browsing History to Facebook.\nAnd Set your PC on fire.\n\nWe aint responsible.")).ShowDialog();
+				new Popup(Popup.PopupWindowTypes.PopupOk,
+				"Project 1.27 got a big Update!\n" +
+				"This software is unfinished, there may be bugs and we are in no way guaranteeing\n" +
+				"that this does not break your PC or GTA V Installation.\n" +
+				"The UI too, is still very unfinished, and not all planned features are implemented at this point.\n" +
+				"We thought it would be a better choice to release this now, even with the potential Issues,\n" +
+				"unimplemented features, and ugly UI, so that people can actually play.\n" +
+				"An update will be pushed as soon as possible to provide more features,\n" +
+				"a more stable client, and make it not look like a \"hányadék\".\n\n" +
+				" - The Project 1.27 Team").ShowDialog();
 			}
 
 			// Checks if we are doing first Launch.
@@ -153,7 +184,7 @@ namespace Project_127
 				Settings.SetSetting("InstallationPath", ProjectInstallationPath);
 
 				// Calling this to get the Path automatically
-				LauncherLogic.GTAVPathGuessingGame();
+				Settings.InitImportantSettings();
 
 				// Set FirstLaunch to false
 				Settings.FirstLaunch = false;
@@ -161,49 +192,20 @@ namespace Project_127
 				HelperClasses.Logger.Log("FirstLaunch Procedure Ended");
 			}
 
-			// Check if GTA V Folder is correct
-			HelperClasses.Logger.Log("While Loop during intitial start-up to make sure GTAV Path is valid");
-			//while (!LauncherLogic.IsGTAVInstallationPathCorrect(Settings.GTAVInstallationPath))
+
+			// Just checks if the GTAVInstallationPath is empty.
+			// So we dont have to "Force" the path every startup...
+			if (String.IsNullOrEmpty(Settings.GTAVInstallationPath) || String.IsNullOrEmpty(Settings.ZIPExtractionPath))
 			{
-				new Popup(Popup.PopupWindowTypes.PopupOk, "GTA V Installation Path detected to be wrong. Please choose a new one").ShowDialog();
-
-				string GTAVInstallationPath = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.Folder, "Pick the Folder which contains your GTAV.exe", @"C:\");
-				Settings.GTAVInstallationPath = GTAVInstallationPath;
+				// Calling this to get the Path automatically
+				Settings.InitImportantSettings();
 			}
-			HelperClasses.Logger.Log("While Loop during intitial start-up to make sure GTAV Path is valid");
-
-			// Check our version of the ZIP File
-			int ZipVersion = 0;
-			Int32.TryParse(HelperClasses.FileHandling.ReadContentOfFile(Globals.ProjectInstallationPath.TrimEnd('\\') + @"\Project_127_Files\Version.txt"), out ZipVersion);
+			
+			// Writing ProjectInstallationPath to Registry.
+			Settings.InstallationPath = Globals.ProjectInstallationPath;
 
 			// Check whats the latest Version of the ZIP File in GITHUB
-			int ZipOnlineVersion = 0;
-			Int32.TryParse(HelperClasses.FileHandling.GetXMLTagContent(HelperClasses.FileHandling.GetStringFromURL(Globals.URL_AutoUpdate), "zipversion"), out ZipOnlineVersion);
-
-			HelperClasses.Logger.Log("Checking for ZIP - Update");
-			HelperClasses.Logger.Log("ZipVersion = '" + ZipVersion.ToString() + "', ZipOnlineVersion = '" + ZipOnlineVersion + "'");
-
-			// If Zip file from Server is newer
-			if (ZipOnlineVersion > ZipVersion)
-			{
-				HelperClasses.Logger.Log("Update for ZIP found");
-				Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "ZIP Version: '" + ZipOnlineVersion.ToString() + "' found on the Server.\nZIP Version: '" + ZipVersion.ToString() + "' found installed.\nDo you want to upgrade?");
-				yesno.ShowDialog();
-				if (yesno.DialogResult == true)
-				{
-					HelperClasses.Logger.Log("User wants update for ZIP");
-					string pathOfNewZip = HelperClasses.FileHandling.GetXMLTagContent(HelperClasses.FileHandling.GetStringFromURL(Globals.URL_AutoUpdate), "zip");
-					new PopupProgress(PopupDownloadTypes.ZIP, pathOfNewZip, ZipFileDownloadLocation).ShowDialog();
-				}
-				else
-				{
-					HelperClasses.Logger.Log("User does not want update for ZIP");
-				}
-			}
-			else
-			{
-				HelperClasses.Logger.Log("NO Update for ZIP found");
-			}
+			CheckForZipUpdate();
 
 			// Starting the Dispatcher Timer for the automatic updates of the GTA V Button
 			MyDispatcherTimer = new System.Windows.Threading.DispatcherTimer();
@@ -218,28 +220,76 @@ namespace Project_127
 		/// </summary>
 		public static void ProperExit()
 		{
-
+			HelperClasses.Logger.Log("Program closed. Proper Exit. Ended normally");
 		}
+
+
+		private static void CheckForZipUpdate()
+		{
+			// Check whats the latest Version of the ZIP File in GITHUB
+			int ZipOnlineVersion = 0;
+			Int32.TryParse(HelperClasses.FileHandling.GetXMLTagContent(HelperClasses.FileHandling.GetStringFromURL(Globals.URL_AutoUpdate), "zipversion"), out ZipOnlineVersion);
+
+			HelperClasses.Logger.Log("Checking for ZIP - Update");
+			HelperClasses.Logger.Log("ZipVersion = '" + Globals.ZipVersion + "', ZipOnlineVersion = '" + ZipOnlineVersion + "'");
+
+			// If Zip file from Server is newer
+			if (ZipOnlineVersion > ZipVersion)
+			{
+				HelperClasses.Logger.Log("Update for ZIP found");
+				Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "ZIP Version: '" + ZipOnlineVersion.ToString() + "' found on the Server.\nZIP Version: '" + ZipVersion.ToString() + "' found installed.\nDo you want to upgrade?");
+				yesno.ShowDialog();
+				if (yesno.DialogResult == true)
+				{
+					HelperClasses.Logger.Log("User wants update for ZIP");
+					string pathOfNewZip = HelperClasses.FileHandling.GetXMLTagContent(HelperClasses.FileHandling.GetStringFromURL(Globals.URL_AutoUpdate), "zip");
+
+					// Downloads ZIP, calls extraction Method after download
+					new PopupDownload(PopupDownloadTypes.ZIP, pathOfNewZip, ZipFileDownloadLocation).ShowDialog();
+					Globals.ImportZip(ZipFileDownloadLocation, true);
+				}
+				else
+				{
+					HelperClasses.Logger.Log("User does not want update for ZIP");
+				}
+			}
+			else
+			{
+				HelperClasses.Logger.Log("NO Update for ZIP found");
+			}
+		}
+
+
+
 
 		/// <summary>
 		/// Method to import Zip File
 		/// </summary>
 		public static void ImportZip(string pZipFileLocation, bool deleteFileAfter = false)
 		{
-			HelperClasses.Logger.Log("Importing ZIP File: '" + pZipFileLocation + "'");
+			HelperClasses.FileHandling.CreateAllZIPPaths(Settings.ZIPExtractionPath);
 
-			string[] myFiles = HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(Globals.ProjectInstallationPath.TrimEnd('\\') + @"\Project_127_Files");
+			LauncherLogic.InstallationStates OldInstallationState = LauncherLogic.InstallationState;
+			string OldHash = HelperClasses.FileHandling.CreateDirectoryMd5(LauncherLogic.DowngradeFilePath);
+
+			HelperClasses.Logger.Log("Importing ZIP File: '" + pZipFileLocation + "'");
+			HelperClasses.Logger.Log("Old ZIP File Version: '" + Globals.ZipVersion + "'");
+			HelperClasses.Logger.Log("Old Installation State: '" + OldInstallationState + "'");
+			HelperClasses.Logger.Log("Old Hash of Downgrade Folder: '" + OldHash + "'");
+			HelperClasses.Logger.Log("Settings.ZIPPath: '" + Settings.ZIPExtractionPath + "'");
+
+			string[] myFiles = HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(LauncherLogic.ZIPFilePath.TrimEnd('\\') + @"\Project_127_Files");
 			foreach (string myFile in myFiles)
 			{
 				if (!myFile.Contains("UpgradeFiles"))
 				{
-				HelperClasses.FileHandling.deleteFile(myFile);
+					HelperClasses.FileHandling.deleteFile(myFile);
 				}
 			}
 
-			HelperClasses.Logger.Log("Extracting ZIP File: '" + pZipFileLocation + "' to the path: '" + Globals.ProjectInstallationPath + "'");
-			ZipFile.ExtractToDirectory(pZipFileLocation, Globals.ProjectInstallationPath);
+			HelperClasses.Logger.Log("Extracting ZIP File: '" + pZipFileLocation + "' to the path: '" + LauncherLogic.ZIPFilePath + "'");
 
+			new PopupProgress(PopupProgress.ProgressTypes.ZIPFile, pZipFileLocation).ShowDialog();
 
 			if (deleteFileAfter)
 			{
@@ -247,7 +297,26 @@ namespace Project_127
 				HelperClasses.FileHandling.deleteFile(pZipFileLocation);
 			}
 
-			new Popup(Popup.PopupWindowTypes.PopupOk, "Done importing ZIP File").ShowDialog();
+			LauncherLogic.InstallationStates NewInstallationState = LauncherLogic.InstallationState;
+			string NewHash = HelperClasses.FileHandling.CreateDirectoryMd5(LauncherLogic.DowngradeFilePath);
+
+			HelperClasses.Logger.Log("Done Importing ZIP File: '" + pZipFileLocation + "'");
+			HelperClasses.Logger.Log("New ZIP File Version: '" + Globals.ZipVersion + "'");
+			HelperClasses.Logger.Log("New Installation State: '" + NewInstallationState + "'");
+			HelperClasses.Logger.Log("New Hash of Downgrade Folder: '" + NewHash + "'");
+
+
+			// If the state was Downgraded
+			if (OldInstallationState == LauncherLogic.InstallationStates.Downgraded)
+			{
+				// If old and new Hash (of downgrade folder) dont match
+				if (OldHash != NewHash)
+				{
+					LauncherLogic.Downgrade();
+				}
+			}
+
+			new Popup(Popup.PopupWindowTypes.PopupOk, "ZIP File imported (Version: '" + Globals.ZipVersion + "')").ShowDialog();
 		}
 
 
@@ -270,8 +339,10 @@ namespace Project_127
 		/// <summary>
 		/// Actual Main colors we use:
 		/// </summary>
-		public static Brush MyColorWhite { get; private set; } = (Brush)new BrushConverter().ConvertFromString("#c1ced1");
-		public static Brush MyColorBlack { get; private set; } = (Brush)new BrushConverter().ConvertFromString("#1a1a1a");
+		public static Brush MyColorWhite { get; private set; } = (Brush)new BrushConverter().ConvertFromString("#FFFFFF");
+		public static Brush MyColorOffWhite { get; private set; } = (Brush)new BrushConverter().ConvertFromString("#c1ced1");
+		public static Brush MyColorBlack { get; private set; } = (Brush)new BrushConverter().ConvertFromString("#000000");
+		public static Brush MyColorOffBlack { get; private set; } = (Brush)new BrushConverter().ConvertFromString("#1a1a1a");
 		public static Brush MyColorOrange { get; private set; } = (Brush)new BrushConverter().ConvertFromString("#E35627");
 		public static Brush MyColorGreen { get; private set; } = (Brush)new BrushConverter().ConvertFromString("#4cd213");
 
@@ -294,25 +365,28 @@ namespace Project_127
 
 		// Border of MainWindow
 		public static Brush MW_Border { get; private set; } = MyColorWhite;
-
 		// All the HamburgerButton Items, Backgrounds, etc.
-		public static Brush MW_HamburgerMenuGridBackground { get; private set; } = SetOpacity(MyColorBlack, 50);
 		public static System.Windows.Thickness MW_ButtonBorderThickness { get; private set; } = new System.Windows.Thickness(0);
+		public static Brush MW_HamburgerMenuGridBackground { get; private set; } = SetOpacity(MyColorBlack, 50);
 		public static Brush MW_ButtonBackground { get; private set; } = SetOpacity(MyColorBlack, 70);
 		public static Brush MW_ButtonForeground { get; private set; } = MyColorWhite;
 		public static Brush MW_ButtonBorderBrush { get; private set; } = MyColorWhite;
-		public static Brush MW_ButtonMOBackground { get; private set; } = SetOpacity(MyColorWhite, 70);
+		public static Brush MW_ButtonMOBackground { get; private set; } = MyColorOffWhite;
 		public static Brush MW_ButtonMOForeground { get; private set; } = MyColorBlack;
 		public static Brush MW_ButtonMOBorderBrush { get; private set; } = MyColorWhite;
 
+		public static Brush MW_GTALabelDowngradedForeground { get; private set; } = MyColorGreen;
+		public static Brush MW_GTALabelUpgradedForeground { get; private set; } = Brushes.Red;
+
 		// Hamburger Button and "X"
-		public static Brush MW_ButtonSmallBackground { get; private set; } = SetOpacity(MyColorBlack, 70);
-		public static Brush MW_ButtonSmallForeground { get; private set; } = MyColorWhite;
-		public static Brush MW_ButtonSmallBorderBrush { get; private set; } = MyColorWhite;
-		public static Brush MW_ButtonSmallMOBackground { get; private set; } = SetOpacity(MyColorWhite, 70);
-		public static Brush MW_ButtonSmallMOForeground { get; private set; } = MyColorBlack;
-		public static Brush MW_ButtonSmallMOBorderBrush { get; private set; } = MyColorWhite;
-		public static System.Windows.Thickness MW_ButtonSmallBorderThickness { get; private set; } = new System.Windows.Thickness(2);
+		// These have no effect since these are all Icons now...
+		//public static Brush MW_ButtonSmallBackground { get; private set; } = SetOpacity(MyColorBlack, 70);
+		//public static Brush MW_ButtonSmallForeground { get; private set; } = MyColorWhite;
+		//public static Brush MW_ButtonSmallBorderBrush { get; private set; } = MyColorWhite;
+		//public static Brush MW_ButtonSmallMOBackground { get; private set; } = SetOpacity(MyColorWhite, 70);
+		//public static Brush MW_ButtonSmallMOForeground { get; private set; } = MyColorBlack;
+		//public static Brush MW_ButtonSmallMOBorderBrush { get; private set; } = MyColorWhite;
+		public static System.Windows.Thickness MW_ButtonSmallBorderThickness { get; private set; } = new System.Windows.Thickness(0);
 
 		// GTA Launch Button
 		// Border Color will depend on game running or not running, so we will not set this here. I guess. 
@@ -321,27 +395,27 @@ namespace Project_127
 
 		public static Brush MW_ButtonGTABackground { get; private set; } = SetOpacity(MyColorBlack, 70);
 		public static Brush MW_ButtonGTAForeground { get; private set; } = MyColorWhite;
-		public static Brush MW_ButtonGTAMOBackground { get; private set; } = SetOpacity(MyColorOrange, 70);
+		public static Brush MW_ButtonGTAMOBackground { get; private set; } = SetOpacity(MyColorOffWhite, 100);
 		public static Brush MW_ButtonGTAMOForeground { get; private set; } = MyColorBlack;
 
 		public static System.Windows.Thickness MW_ButtonGTABorderThickness { get; private set; } = new System.Windows.Thickness(5);
 
 		// POPUP Window
-		public static Brush PU_Background { get; private set; } = MyColorBlack;
+		public static Brush PU_Background { get; private set; } = MyColorOffBlack;
 
 		public static Brush PU_BorderBrush { get; private set; } = MyColorWhite;
 		public static Brush PU_BorderBrush_Inner { get; private set; } = MyColorWhite;
 
-		public static Brush PU_ButtonBackground { get; private set; } = MyColorBlack;
+		public static Brush PU_ButtonBackground { get; private set; } = MyColorOffBlack;
 		public static Brush PU_ButtonForeground { get; private set; } = MyColorWhite;
 		public static Brush PU_ButtonBorderBrush { get; private set; } = MyColorWhite;
-		public static Brush PU_ButtonMOBackground { get; private set; } = MyColorWhite;
-		public static Brush PU_ButtonMOForeground { get; private set; } = MyColorBlack;
-		public static Brush PU_ButtonMOBorderBrush { get; private set; } = MyColorBlack;
+		public static Brush PU_ButtonMOBackground { get; private set; } = MyColorOffWhite;
+		public static Brush PU_ButtonMOForeground { get; private set; } = MyColorOffBlack;
+		public static Brush PU_ButtonMOBorderBrush { get; private set; } = MyColorOffBlack;
 
-		public static Brush PU_ProgressBarBackground { get; private set; } = MyColorBlack;
-		public static Brush PU_ProgressBarForeground { get; private set; } = MyColorWhite;
-		public static Brush PU_ProgressBarBorderBrush { get; private set; } = MyColorBlack;
+		public static Brush PU_ProgressBarBackground { get; private set; } = MyColorOffBlack;
+		public static Brush PU_ProgressBarForeground { get; private set; } = MyColorOffWhite;
+		public static Brush PU_ProgressBarBorderBrush { get; private set; } = MyColorOffBlack;
 		public static System.Windows.Thickness PU_ButtonBorderThickness { get; private set; } = new System.Windows.Thickness(2);
 		public static Brush PU_LabelForeground { get; private set; } = MyColorWhite;
 
@@ -398,6 +472,35 @@ namespace Project_127
 
 		public static System.Windows.Thickness SE_ButtonBorderThickness { get; private set; } = new System.Windows.Thickness(2);
 
+
+
+		// InitSettings Window. For FirstLaunch and Resetting
+		public static Brush IS_Background { get; private set; } = MyColorBlack;
+		public static Brush IS_BorderBrush { get; private set; } = MyColorWhite;
+		public static Brush IS_BorderBrush_Inner { get; private set; } = MyColorWhite;
+							
+		public static Brush IS_LabelForeground { get; private set; } = MyColorWhite;
+		public static Brush IS_LabelSetForeground { get; private set; } = MyColorWhite;
+							
+		public static Brush IS_ButtonBackground { get; private set; } = MyColorBlack;
+		public static Brush IS_ButtonForeground { get; private set; } = MyColorWhite;
+		public static Brush IS_ButtonBorderBrush { get; private set; } = MyColorWhite;
+		public static Brush IS_ButtonMOBackground { get; private set; } = MyColorWhite;
+		public static Brush IS_ButtonMOForeground { get; private set; } = MyColorBlack;
+		public static Brush IS_ButtonMOBorderBrush { get; private set; } = MyColorWhite;
+							
+		public static Brush IS_ButtonSetBackground { get; private set; } = MyColorBlack;
+		public static Brush IS_ButtonSetForeground { get; private set; } = MyColorWhite;
+		public static Brush IS_ButtonSetBorderBrush { get; private set; } = MyColorWhite;
+		public static Brush IS_ButtonSetMOBackground { get; private set; } = MyColorWhite;
+		public static Brush IS_ButtonSetMOForeground { get; private set; } = MyColorBlack;
+		public static Brush IS_ButtonSetMOBorderBrush { get; private set; } = MyColorWhite;
+							
+		public static Brush IS_SVBackground { get; private set; } = MyColorBlack;
+		public static Brush IS_SVForeground { get; private set; } = MyColorWhite;
+
+		public static System.Windows.Thickness IS_ButtonBorderThickness { get; private set; } = new System.Windows.Thickness(2);
+
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 		/// <summary>
@@ -449,6 +552,25 @@ namespace Project_127
 		private static Brush GetBrushRGB(int r, int g, int b)
 		{
 			return GetBrushRGB(r, g, b, 100);
+		}
+
+
+		/// <summary>
+		/// Replacing substring with other substring, ignores cases. Used for replacing hardlink with copy in some logs when needed
+		/// </summary>
+		/// <param name="input"></param>
+		/// <param name="search"></param>
+		/// <param name="replacement"></param>
+		/// <returns></returns>
+		public static string ReplaceCaseInsensitive(string input, string search, string replacement)
+		{
+			string result = Regex.Replace(
+				input,
+				Regex.Escape(search),
+				replacement.Replace("$", "$$"),
+				RegexOptions.IgnoreCase
+			);
+			return result;
 		}
 
 

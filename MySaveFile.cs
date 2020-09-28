@@ -9,7 +9,7 @@ namespace Project_127
 	/// <summary>
 	/// Class for "MyFile" Objects. Used in the DataGrids for the SaveFileManagement
 	/// </summary>
-    public class MyFile
+    public class MySaveFile
     {
 		/// <summary>
 		/// FileName Property.
@@ -26,7 +26,7 @@ namespace Project_127
 		/// </summary>
 		/// <param name="pFilename"></param>
 		/// <param name="pPathname"></param>
-        public MyFile(string pFilename, string pPathname)
+        public MySaveFile(string pFilename, string pPathname)
         {
             this.Filename = pFilename;
             this.Pathname = pPathname;
