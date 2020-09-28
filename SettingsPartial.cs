@@ -247,6 +247,21 @@ namespace Project_127
 		}
 
 		/// <summary>
+		/// Settings LastLaunchedVersion. Gets and Sets from Dictionary.
+		/// </summary>
+		public static Version LastLaunchedVersion
+		{
+			get
+			{
+				return new Version(GetSetting("LastLaunchedVersion"));
+			}
+			set
+			{
+				SetSetting("LastLaunchedVersion", value.ToString());
+			}
+		}
+
+		/// <summary>
 		/// Settings GTAVInstallationPath. Gets and Sets from the Dictionary.
 		/// </summary>
 		public static string GTAVInstallationPath
@@ -321,7 +336,21 @@ namespace Project_127
 			}
 		}
 
+		
+		/// <summary>
+		/// Enum for all Retailers
+		/// </summary>
+		public enum Retailers
+		{
+			Steam,
+			Rockstar,
+			Epic
+		}
 
+
+		/// <summary>
+		/// Settings Retailer. Gets and Sets from Dictionary.
+		/// </summary>
 		public static Retailers Retailer
 		{
 			get
@@ -333,14 +362,7 @@ namespace Project_127
 				SetSetting("Retailer", value.ToString());
 			}
 		}
-	
 
-		public enum Retailers
-		{
-			Steam,
-			Rockstar,
-			Epic
-		}
 
 		/// <summary>
 		/// Settings EnableAutoSetHighPriority. Gets and Sets from the Dictionary.
@@ -356,6 +378,7 @@ namespace Project_127
 				SetSetting("EnableAutoSetHighPriority", value.ToString());
 			}
 		}
+
 
 		/// <summary>
 		/// Settings EnableAutoStartLiveSplit. Gets and Sets from the Dictionary.

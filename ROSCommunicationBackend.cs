@@ -463,7 +463,10 @@ namespace Project_127 {
                     LKey.AddRange(BitConverter.GetBytes((UInt16)reqBody2.Length));
                     LKey.AddRange(reqBody2);
 
-                    LKey.AddRange(genLaunchExtension());
+                    //LKey.AddRange(genLaunchExtension());
+					LKey.Add(0);
+					LKey.Add(0);
+
 
                     var launcBin = LKey.ToArray();
                     var outdir = Settings.GTAVInstallationPath;

@@ -1,30 +1,10 @@
 ﻿/*
 
-##########################
-
-I guess User needs to know:
-
-	- Installer Location: https://github.com/TwosHusbandS/Project-127/tree/master/Installer
-	- Uninstaller / Cleanup.exe: https://github.com/TwosHusbandS/Project-127/raw/master/Installer/Cleanup.exe
-	- Changelogs: https://github.com/TwosHusbandS/Project-127/tree/master/Installer/Changelogs
-
-	- Windows 10 Checks all Files for Virus if they are run for the first time. If you open a file (Installer or Program)
-				and the file doesnt appear to be running, just wait 20 seconds. Should open within that timeframe.
-	- Install Program (preferably on the same Drive where your GTA is installed.
-						Optimally inside the GTAV Installation Folder)
-	- Click the hamburger Icon in the top left. Then click "Import ZIP" and select the ZIP File downloaded above (wait until you get the popup confirming its done)
-	- Game automatically detects if the installation is upgraded or downgraded 
-	- If upgrading / downgrading doesnt yield good results...validate files via Steam, then click "Repair". Should fix most issues.
-	- If something is still not working, please uninstall the program via control panel, run ".bat" AS ADMINISTRATOR, re-install again.
-	- If something is still not working, please include the file "AAA - Logfile.log" when reporting the bug
-
-##########################
-
 Main Documentation:
 Actual code (partially closed source) which authentificates, handles entitlement and launches the game is done by @dr490n with the help of other members of the core team like @Special For and @zCri
 Artwork, Design of GUI, GUI Behaviourehaviour, Colorchoices etc. by "@Hossel"
 Client by "@thS"
-Version: 0.0.2.9 Closed Beta
+Version: 0.0.3.0 Closed Beta
 
 Build Instructions:
 	Press CTRLF + F5, pray that nuget does its magic.
@@ -86,6 +66,10 @@ General Comments and things one should be aware of (still finishing this list)
 		Never built with requestedExecutionLevel administrator tho. Will fail to launch from installer
 	- Installation Path gets written to Registry on every Launch to make sure its always up to date.
 
+	#####################################################################################################
+	##### This needs some some cleanup. Just pushing now so we can get closed beta Auth testing #########
+	#####################################################################################################
+
 Main To do:
 	- Things changed since last official release (not last commit)
 		-> Lots. Lots. Lots.
@@ -106,20 +90,17 @@ Main To do:
 		-> Refactured some of the GTA V Guessing Game, now guessing 7 Paths, lets hope one is correct
 		-> Checking if the GTAV Path and the ZIPFilePath are working correctly before Upgrading / Downgrading
 		-> Add Rockstar and Epic support, Frontend + Backend
+		-> Added Proper Authentication to FrontEnd of this, BackEnd of this, and the patched emu files by dr490n.
 
 	-REMEMBER:
 		-> Release with admin mode manifest thingy...		
-		-> Make Installer start the program after installation
+		-> Fix Installer with everything (autolaunch app,include new files)
 					
 	- TO DO:
-		-> Call dr490n windows
 		-> Full Cleanup code (auto document everything and also write a few lines in important locations)
-		-> Fill Changelog.md with Info from above
 		
 		// Release
 
-		-> Regedit Value of "Last-Run-Version" which we can use to do some cleanups
-			=> if value = 0.3.0; messagebox to upgrade or verify game files, delete every regedit, delete zipfiles extraced files, restart
 		-> SaveFileHandler, just manage our own SaveFiles, probably only need one list for datagrid, ask if we need to overwrite
 		-> Regedit Cleanup of everything not in default settings
 		-> Custom ZIP File Location User Error Checks:
@@ -128,6 +109,7 @@ Main To do:
 		-> $UpgradeFiles has downgrade files in them. Why? And how to Fix?
 			=> Cant figure out how to fix that at the moment
 		-> Think about making a spawner to spawn processes
+		-> Regedit Value "LastLaunchedVersion" is there and be used with the next Version.
 		-> auto high priority
 		-> auto steam core fix
 		-> make OpenFolderDialog pretty...I know its possible, just google more and more
@@ -191,7 +173,11 @@ namespace Project_127
 	/// </summary>
 	public partial class MainWindow : Window
 	{
-
+		/*
+		MainWindow:
+		- Contains all Main GUI stuff
+		- a few Methods we need on Starting like AutoUpdating or Re-Launching with Admin
+		*/
 
 		/// <summary>
 		/// Constructor of Main Window
@@ -246,8 +232,8 @@ namespace Project_127
 			this.GridHamburgerOuter.Visibility = Visibility.Hidden;
 
 			// Set Image of Buttons
-			SetButtonMouseOverMagic(btn_Auth, false);
 			SetButtonMouseOverMagic(btn_Exit, false);
+			SetButtonMouseOverMagic(btn_Auth, false);
 			SetButtonMouseOverMagic(btn_Hamburger, false);
 
 			// Auto Updater
@@ -258,37 +244,22 @@ namespace Project_127
 		}
 
 
-		private void DeleteOldFiles()
-		{
-			HelperClasses.Logger.Log("Checking if there is an old Installer or ZIP Files in the Project InstallationPath during startup procedure.");
-			foreach (string myFile in HelperClasses.FileHandling.GetFilesFromFolder(Globals.ProjectInstallationPath))
-			{
-				if (myFile.ToLower().Contains("installer"))
-				{
-					HelperClasses.Logger.Log("Found old installer File ('" + HelperClasses.FileHandling.PathSplitUp(myFile)[1] + "') in the Directory. Will delete it.");
-					HelperClasses.FileHandling.deleteFile(myFile);
-				}
-				if (myFile == Globals.ZipFileDownloadLocation)
-				{
-					HelperClasses.Logger.Log("Found old ZIP File ('" + HelperClasses.FileHandling.PathSplitUp(myFile)[1] + "') in the Directory. Will delete it.");
-					HelperClasses.FileHandling.deleteFile(myFile);
-				}
-			}
-		}
-
 		/// <summary>
 		/// Responsible for Re-Launching this App as Admin if it isnt.
 		/// </summary>
 		private void AdminRelauncher()
 		{
+			// If not run as Admin
 			if (!IsRunAsAdmin())
 			{
+				// Prepare new ProcessStartInfo with all Arguments and stuff
 				ProcessStartInfo proc = new ProcessStartInfo();
 				proc.UseShellExecute = true;
 				proc.WorkingDirectory = Environment.CurrentDirectory;
 				proc.FileName = Assembly.GetEntryAssembly().CodeBase;
 				proc.Arguments = Globals.CommandLineArguments.ToString();
 
+				// Make sure its admin
 				proc.Verb = "runas";
 
 				try
@@ -296,12 +267,13 @@ namespace Project_127
 					Process.Start(proc);
 					Application.Current.Shutdown();
 				}
-				catch (Exception ex)
+				catch (Exception e)
 				{
-					Console.WriteLine("This program must be run as an administrator! \n\n" + ex.ToString());
+					Globals.DebugPopup("This program must be run as an administrator!");
 				}
 			}
 		}
+
 
 		/// <summary>
 		/// Method which checks if this program is run as admin. Returns one bool
@@ -318,6 +290,77 @@ namespace Project_127
 			catch (Exception)
 			{
 				return false;
+			}
+		}
+
+
+		/// <summary>
+		/// Exits when you are not supposed to run this. Its ugly. It works. Meh.
+		/// </summary>
+		private bool CheckIfAllowedToRun()
+		{
+			try
+			{
+				if (Globals.BetaMode)
+				{
+					if (Globals.CommandLineArguments.Contains("skiplogin"))
+					{
+						return true;
+					}
+
+					RegistryKey MyKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64).CreateSubKey("SOFTWARE").CreateSubKey("Microsoft").CreateSubKey("Cryptography");
+					string GUID = HelperClasses.RegeditHandler.GetValue(MyKey, "MachineGuid");
+
+					string URL_AuthUser = HelperClasses.FileHandling.GetXMLTagContent(HelperClasses.FileHandling.GetStringFromURL(Globals.URL_AutoUpdate), "authuser");
+					string ServerUse = HelperClasses.FileHandling.GetStringFromURL(URL_AuthUser);
+
+					if (String.IsNullOrEmpty(ServerUse))
+					{
+						// Letting Users in if github is down...
+						new Popup(Popup.PopupWindowTypes.PopupOk, "Letting you in since Github appears to be down...").ShowDialog();
+						return true;
+					}
+
+					if (ServerUse.Contains(GUID))
+					{
+						return true;
+					}
+					else
+					{
+						return false;
+					}
+				}
+				return true;
+			}
+			catch
+			{
+				return false;
+			}
+		}
+
+
+		/// <summary>
+		/// Deleting all Old Files (Installer and ZIP Files) from the Installation Folder
+		/// </summary>
+		private void DeleteOldFiles()
+		{
+			HelperClasses.Logger.Log("Checking if there is an old Installer or ZIP Files in the Project InstallationPath during startup procedure.");
+
+			// Looping through all Files in the Installation Path
+			foreach (string myFile in HelperClasses.FileHandling.GetFilesFromFolder(Globals.ProjectInstallationPath))
+			{
+				// If it contains the word installer, delete it
+				if (myFile.ToLower().Contains("installer"))
+				{
+					HelperClasses.Logger.Log("Found old installer File ('" + HelperClasses.FileHandling.PathSplitUp(myFile)[1] + "') in the Directory. Will delete it.");
+					HelperClasses.FileHandling.deleteFile(myFile);
+				}
+				// If it is the Name of the ZIP File we download, we delete it
+				if (myFile == Globals.ZipFileDownloadLocation)
+				{
+					HelperClasses.Logger.Log("Found old ZIP File ('" + HelperClasses.FileHandling.PathSplitUp(myFile)[1] + "') in the Directory. Will delete it.");
+					HelperClasses.FileHandling.deleteFile(myFile);
+				}
 			}
 		}
 
@@ -417,21 +460,6 @@ namespace Project_127
 			}
 		}
 
-		/// <summary>
-		/// Method which gets called when the exit Button is clicked
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
-		private void btn_Exit_Click(object sender, RoutedEventArgs e)
-		{
-			Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Do you really want to quit?");
-			yesno.ShowDialog();
-			if (yesno.DialogResult == true)
-			{
-				this.Close();
-				Environment.Exit(0);
-			}
-		}
 
 		/// <summary>
 		/// Method which gets called when the Auth Button is clicked
@@ -453,6 +481,7 @@ namespace Project_127
 			// Yes this is correct
 			SetButtonMouseOverMagic(btn_Auth, false);
 		}
+
 
 		/// <summary>
 		/// Right click on Auth button. Gives proper Debug Output
@@ -497,6 +526,24 @@ namespace Project_127
 			}
 		}
 
+
+		/// <summary>
+		/// Method which gets called when the exit Button is clicked
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void btn_Exit_Click(object sender, RoutedEventArgs e)
+		{
+			Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Do you really want to quit?");
+			yesno.ShowDialog();
+			if (yesno.DialogResult == true)
+			{
+				this.Close();
+				Environment.Exit(0);
+			}
+		}
+
+
 		/// <summary>
 		/// Method which gets called when the Launch GTA Button is clicked
 		/// </summary>
@@ -532,8 +579,9 @@ namespace Project_127
 					LauncherLogic.Launch();
 				}
 			}
-			SetGTAVButtonBasedOnGameAndInstallationState(null, null);
+			UpdateGUIDispatcherTimer();
 		}
+
 
 		/// <summary>
 		/// Method which gets called when the Launch GTA Button is RIGHT - clicked
@@ -548,7 +596,7 @@ namespace Project_127
 			{
 				LauncherLogic.KillRelevantProcesses();
 			}
-			SetGTAVButtonBasedOnGameAndInstallationState(null, null);
+			UpdateGUIDispatcherTimer();
 		}
 
 
@@ -609,8 +657,8 @@ namespace Project_127
 				}
 			}
 
-
-			SetGTAVButtonBasedOnGameAndInstallationState(null, null);
+			// Call Update GUI Method
+			UpdateGUIDispatcherTimer();
 		}
 
 		/// <summary>
@@ -640,7 +688,7 @@ namespace Project_127
 				}
 			}
 
-			SetGTAVButtonBasedOnGameAndInstallationState(null, null);
+			UpdateGUIDispatcherTimer();
 		}
 
 		/// <summary>
@@ -696,7 +744,7 @@ namespace Project_127
 					LauncherLogic.Downgrade();
 				}
 			}
-			SetGTAVButtonBasedOnGameAndInstallationState(null, null);
+			UpdateGUIDispatcherTimer();
 		}
 
 		/// <summary>
@@ -709,7 +757,6 @@ namespace Project_127
 			string ZipFileLocation = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.File, "Title", "", Globals.ProjectInstallationPath);
 			if (HelperClasses.FileHandling.doesFileExist(ZipFileLocation))
 			{
-
 				Globals.ImportZip(ZipFileLocation);
 			}
 			else
@@ -726,19 +773,6 @@ namespace Project_127
 		private void btn_SaveFiles_Click(object sender, RoutedEventArgs e)
 		{
 			new Popup(Popup.PopupWindowTypes.PopupOk, "SaveFileHanlder not fully implemented yet").ShowDialog();
-			// (new SaveFileHandler()).Show();
-
-			//List<string> sourc = new List<string>();
-			//List<string> destinatio = new List<string>();
-
-			//sourc.Add(@"C:\Users\ingow\Downloads\AAA_UBUNTU.iso");
-			//destinatio.Add(@"C:\Users\ingow\Downloads\AAA\AAA_UBUNTU.iso");
-			//sourc.Add(@"C:\Users\ingow\Downloads\AAA_POPOS.iso");
-			//destinatio.Add(@"C:\Users\ingow\Downloads\AAA\AAA_POPOS.iso");
-			//sourc.Add(@"C:\Users\ingow\Downloads\AAA_X17.iso");
-			//destinatio.Add(@"C:\Users\ingow\Downloads\AAA\AAA_X17.iso");
-
-			//new CopyFileProgress(sourc, destinatio).Show();
 		}
 
 		/// <summary>
@@ -825,7 +859,12 @@ namespace Project_127
 
 		#region GUI Helper Methods
 
-		public void SetGTAVButtonBasedOnGameAndInstallationState(object sender, EventArgs e) // Gets called every DispatcherTimer_Tick. Just starts the read function.
+		/// <summary>
+		/// Updates the GUI with relevant stuff. Gets called every 5 Seconds
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		public void UpdateGUIDispatcherTimer(object sender = null, EventArgs e = null) // Gets called every DispatcherTimer_Tick. Just starts the read function.
 		{
 			if (LauncherLogic.InstallationState == LauncherLogic.InstallationStates.Downgraded)
 			{
@@ -871,7 +910,11 @@ namespace Project_127
 			Globals.ProperExit();
 		}
 
-
+		/// <summary>
+		/// Sets the Backgrund of a specific Button
+		/// </summary>
+		/// <param name="myBtn"></param>
+		/// <param name="pArtpath"></param>
 		private void SetButtonBackground(Button myBtn, string pArtpath)
 		{
 			try
@@ -889,7 +932,11 @@ namespace Project_127
 			}
 		}
 
-
+		/// <summary>
+		/// Method we use to call SetButtonBackground with the right parameters to Update GUI
+		/// </summary>
+		/// <param name="myBtn"></param>
+		/// <param name="pMouseOver"></param>
 		private void SetButtonMouseOverMagic(Button myBtn, bool pMouseOver)
 		{
 			switch (myBtn.Name)
@@ -943,62 +990,25 @@ namespace Project_127
 			}
 		}
 
+		/// <summary>
+		/// MouseEnter event for updating background image of buttons
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void btn_Small_MouseEnter(object sender, MouseEventArgs e)
 		{
 			SetButtonMouseOverMagic((Button)sender, true);
 		}
 
+		/// <summary>
+		/// MouseLeave event for updating background image of buttons
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void btn_Small_MouseLeave(object sender, MouseEventArgs e)
 		{
 			SetButtonMouseOverMagic((Button)sender, false);
 		}
-
-		/// <summary>
-		/// Exits when you are not supposed to run this. Its ugly. It works. Meh.
-		/// </summary>
-		private bool CheckIfAllowedToRun()
-		{
-			try
-			{
-				if (Globals.BetaMode)
-				{
-					if (Globals.CommandLineArguments.Contains("skiplogin"))
-					{
-						return true;
-					}
-
-					RegistryKey MyKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64).CreateSubKey("SOFTWARE").CreateSubKey("Microsoft").CreateSubKey("Cryptography");
-					string GUID = HelperClasses.RegeditHandler.GetValue(MyKey, "MachineGuid");
-
-					string URL_AuthUser = HelperClasses.FileHandling.GetXMLTagContent(HelperClasses.FileHandling.GetStringFromURL(Globals.URL_AutoUpdate), "authuser");
-					string ServerUse = HelperClasses.FileHandling.GetStringFromURL(URL_AuthUser);
-
-					if (String.IsNullOrEmpty(ServerUse))
-					{
-						// Letting Users in if github is down...
-						new Popup(Popup.PopupWindowTypes.PopupOk, "Letting you in since Github appears to be down...").ShowDialog();
-						return true;
-					}
-
-					if (ServerUse.Contains(GUID))
-					{
-						return true;
-					}
-					else
-					{
-						return false;
-					}
-				}
-				return true;
-			}
-			catch
-			{
-				return false;
-			}
-		}
-
-
-
 
 
 		#endregion

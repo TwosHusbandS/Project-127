@@ -76,6 +76,7 @@ namespace Project_127
 		// There are only Button Clicks and GUI Functions here. Some of the Functionality is in SettingsPartial.cs
 
 
+
 		/// <summary>
 		/// Button Click to change the Path of GTA V Installation Path
 		/// </summary>
@@ -86,6 +87,18 @@ namespace Project_127
 			SetGTAVPathManually();
 			RefreshGUI();
 		}
+
+
+		/// <summary>
+		/// RightClick on the GTA V Path Button
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void btn_Set_GTAVInstallationPath_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+		{
+			Process.Start("explorer.exe", Settings.GTAVInstallationPath);
+		}
+
 
 		/// <summary>
 		/// Button Click to change the Path of ZIPExtractionPath which we use to use for all Contents of ZIP File etc.
@@ -115,6 +128,11 @@ namespace Project_127
 		}
 
 
+		/// <summary>
+		/// Method which gets called when changing the Path of the ZIP Extraction
+		/// </summary>
+		/// <param name="pNewZIPPath"></param>
+		/// <returns></returns>
 		public static bool ChangeZIPExtractionPath(string pNewZIPPath)
 		{
 			HelperClasses.Logger.Log("Called Method to Change ZIP File Path");
@@ -184,8 +202,9 @@ namespace Project_127
 			}
 		}
 
+
 		/// <summary>
-		/// Method which
+		/// Method which checks what Setting it recommends (Hardlinking or Copying
 		/// </summary>
 		public static void SetDefaultEnableCopyingHardlinking()
 		{
@@ -228,6 +247,16 @@ namespace Project_127
 		}
 
 
+		/// <summary>
+		/// Event that gets triggered when the ComboBox of Retailers changed.
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void combox_Set_Retail_SelectionChanged(object sender, SelectionChangedEventArgs e)
+		{
+			Retailer = (Retailers)System.Enum.Parse(typeof(Retailers), combox_Set_Retail.SelectedItem.ToString());
+		}
+
 
 		/// <summary>
 		/// Button Click to change the Path of LiveSplit Executable
@@ -266,8 +295,7 @@ namespace Project_127
 		/// <param name="e"></param>
 		private void btn_Set_JumpScriptKey1_Click(object sender, RoutedEventArgs e)
 		{
-			// Needs to be implemented I guess
-			(new Popup(Popup.PopupWindowTypes.PopupOk, "This does nothing so far")).ShowDialog();
+
 		}
 
 		/// <summary>
@@ -277,8 +305,7 @@ namespace Project_127
 		/// <param name="e"></param>
 		private void btn_Set_JumpScriptKey2_Click(object sender, RoutedEventArgs e)
 		{
-			// Needs to be implemented I guess
-			(new Popup(Popup.PopupWindowTypes.PopupOk, "This does nothing so far")).ShowDialog();
+
 		}
 
 		/// <summary>
@@ -318,19 +345,35 @@ namespace Project_127
 		/// <param name="e"></param>
 		private void btn_Reset_Click(object sender, RoutedEventArgs e)
 		{
-			// TODO CTRLF FIX HAVING TO RELOAD WINDOW
 			Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Do you want to reset settings?");
 			yesno.ShowDialog();
 			if (yesno.DialogResult == true)
 			{
 				HelperClasses.Logger.Log("Resetting Settings STARTED, this will explain the following messages");
 				Settings.ResetSettings();
-				RefreshGUI();
 				Settings.InitImportantSettings();
-				HelperClasses.Logger.Log("Resetting Settings DONE");
-				this.Close();
+				RefreshGUI();
 			}
 		}
+
+
+		private void btn_Set_ZIPExtractionPath_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+		{
+			Process.Start("explorer.exe", Settings.ZIPExtractionPath);
+		}
+
+
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void btn_RefreshGUI_Click(object sender, RoutedEventArgs e)
+		{
+			RefreshGUI();
+		}
+
 
 		/// <summary>
 		/// Refresh GUI Method...
@@ -371,24 +414,6 @@ namespace Project_127
 			DragMove(); // Pre-Defined Method
 		}
 
-		private void btn_Set_ZIPExtractionPath_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
-		{
-			Process.Start("explorer.exe", Settings.ZIPExtractionPath);
-		}
 
-		private void btn_Set_GTAVInstallationPath_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
-		{
-			Process.Start("explorer.exe", Settings.GTAVInstallationPath);
-		}
-
-		private void btn_RefreshGUI_Click(object sender, RoutedEventArgs e)
-		{
-			RefreshGUI();
-		}
-
-		private void combox_Set_Retail_SelectionChanged(object sender, SelectionChangedEventArgs e)
-		{
-			Retailer = (Retailers)System.Enum.Parse(typeof(Retailers), combox_Set_Retail.SelectedItem.ToString());
-		}
 	} // End of Class
 } // End of Namespace
