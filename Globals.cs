@@ -71,7 +71,7 @@ namespace Project_127
 		/// <summary>
 		/// Property of other Buildinfo. Will be in the top message of logs
 		/// </summary>
-		public static string BuildInfo = "Built 0, No Auth";
+		public static string BuildInfo = "Built 1, Auth working, not tested with new compiled emu files which require Auth";
 
 		/// <summary>
 		/// String of Steam Install Path

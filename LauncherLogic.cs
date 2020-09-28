@@ -20,7 +20,7 @@ namespace Project_127
 		/// <summary>
 		/// Enum we use to change the Auth Button Image (lock)
 		/// </summary>
-		public enum Authstates
+		public enum AuthStates
 		{
 			NotAuth = 0,
 			Auth = 1
@@ -44,18 +44,18 @@ namespace Project_127
 			NonRunning
 		}
 
-		private static Authstates _AuthState = Authstates.NotAuth;
-
-		public static Authstates AuthState
+		public static AuthStates AuthState
 		{
 			get
 			{
-				return _AuthState;
-			}
-			set
-			{
-				_AuthState = value;
-				// Call Something
+				if (ROSCommunicationBackend.SessionValid)
+				{
+					return AuthStates.Auth;
+				}
+				else
+				{
+					return AuthStates.NotAuth;
+				}
 			}
 		}
 
@@ -401,7 +401,7 @@ namespace Project_127
 		/// <summary>
 		/// This actually launches the game
 		/// </summary>
-		public static void Launch()
+		public static async void Launch()
 		{
 			HelperClasses.Logger.Log("Trying to Launch the game.");
 			if (LauncherLogic.InstallationState == InstallationStates.Upgraded)
@@ -433,14 +433,31 @@ namespace Project_127
 			{
 				HelperClasses.Logger.Log("Installation State Downgraded Detected", 1);
 
+				if (AuthState == AuthStates.Auth)
+				{
+					HelperClasses.Logger.Log("You are already Authenticated. Will Launch Game Now");
+				}
+				else
+				{
+					HelperClasses.Logger.Log("You are NOT Authenticated. Throwing up Window now.");
+					new ROSIntegration().ShowDialog();
+					if (AuthState == AuthStates.NotAuth)
+					{
+						HelperClasses.Logger.Log("Manual User Auth on Launch click did not work. Launch method will exit");
+						new Popup(Popup.PopupWindowTypes.PopupOk, "Authentication not sucessfull. Will abort Launch Function. Please Try again");
+						return;
+					}
+				}
+
+				// Generates Token needed to Launch Downgraded GTAV
+				HelperClasses.Logger.Log("Letting Dragon work his magic");
+				await ROSCommunicationBackend.GenToken();
+
 				// TO DO, Clean this Up, move to ProcessHandler HelperClass
-				HelperClasses.Logger.Log("Launching Downgraded", 1);
 				Process p = new Process();
 				p.StartInfo.FileName = Settings.GTAVInstallationPath.TrimEnd('\\') + @"\PlayGTAV.exe";
 				p.StartInfo.WorkingDirectory = Settings.GTAVInstallationPath.TrimEnd('\\');
 				p.Start();
-
-				HelperClasses.Logger.Log("Downgraded Game should be launched");
 			}
 		}
 

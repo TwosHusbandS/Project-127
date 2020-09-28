@@ -541,7 +541,7 @@ namespace Project_127 {
         /// Returns wheter a session is valid (not expired & logged in)
         /// </summary>
 
-        public bool SessionValid
+        public static bool SessionValid
         {
             get
             {

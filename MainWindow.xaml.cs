@@ -440,15 +440,16 @@ namespace Project_127
 		/// <param name="e"></param>
 		private void btn_Auth_Click(object sender, RoutedEventArgs e)
 		{
-			new Popup(Popup.PopupWindowTypes.PopupOk, "Auth not fully implemented yet.\nImage you authed through the\nstuff from dr490n and this\nis why the lock is changing").ShowDialog();
-			if (LauncherLogic.AuthState == LauncherLogic.Authstates.Auth)
+			if (LauncherLogic.AuthState == LauncherLogic.AuthStates.NotAuth)
 			{
-				LauncherLogic.AuthState = LauncherLogic.Authstates.NotAuth;
+				ROSIntegration myROSIntegration = new ROSIntegration();
+				myROSIntegration.ShowDialog();
 			}
 			else
 			{
-				LauncherLogic.AuthState = LauncherLogic.Authstates.Auth;
+				new Popup(Popup.PopupWindowTypes.PopupOk, "You are already authenticated.").ShowDialog();
 			}
+
 			// Yes this is correct
 			SetButtonMouseOverMagic(btn_Auth, false);
 		}
@@ -846,7 +847,7 @@ namespace Project_127
 				btn_GTA.BorderBrush = Globals.MW_ButtonGTAGameNotRunningBorderBrush;
 				btn_GTA.Content = "Launch GTA V";
 			}
-
+			SetButtonMouseOverMagic(btn_Auth, false);
 		}
 
 
@@ -916,22 +917,22 @@ namespace Project_127
 				case "btn_Auth":
 					if (pMouseOver)
 					{
-						if (LauncherLogic.AuthState == LauncherLogic.Authstates.Auth)
+						if (LauncherLogic.AuthState == LauncherLogic.AuthStates.Auth)
 						{
 							SetButtonBackground(myBtn, @"Artwork\lock_closed_mo.png");
 						}
-						else if (LauncherLogic.AuthState == LauncherLogic.Authstates.NotAuth)
+						else if (LauncherLogic.AuthState == LauncherLogic.AuthStates.NotAuth)
 						{
 							SetButtonBackground(myBtn, @"Artwork\lock_open_mo.png");
 						}
 					}
 					else
 					{
-						if (LauncherLogic.AuthState == LauncherLogic.Authstates.Auth)
+						if (LauncherLogic.AuthState == LauncherLogic.AuthStates.Auth)
 						{
 							SetButtonBackground(myBtn, @"Artwork\lock_closed.png");
 						}
-						else if (LauncherLogic.AuthState == LauncherLogic.Authstates.NotAuth)
+						else if (LauncherLogic.AuthState == LauncherLogic.AuthStates.NotAuth)
 						{
 							SetButtonBackground(myBtn, @"Artwork\lock_open.png");
 						}
