@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -74,6 +75,9 @@ namespace Project_127.HelperClasses
 			return "";
 		}
 
+
+		// CTRLF TODO TO DO FIX, Bottom overload could be shit....
+
 		/// <summary>
 		/// 
 		/// </summary>
@@ -120,6 +124,14 @@ namespace Project_127.HelperClasses
 			}
 		}
 
+
+
+		public static void createPathOfFile(string pFilePath)
+		{
+			string path = pFilePath.Substring(0, pFilePath.LastIndexOf('\\'));
+			createPath(path);
+		}
+
 		/// <summary>
 		/// Reads the content of a File. In one string (not string array for line)
 		/// </summary>
@@ -134,6 +146,30 @@ namespace Project_127.HelperClasses
 				rtrn = File.ReadAllText(pFilePath);
 			}
 
+			return rtrn;
+		}
+
+		/// <summary>
+		/// Gets the Creation Date of one file in "yyyy-MM-ddTHH:mm:ss" Format
+		/// </summary>
+		/// <param name="pFilePath"></param>
+		/// <returns></returns>
+		public static string GetCreationDate(string pFilePath)
+		{
+			string rtrn = "";
+			if (doesFileExist(pFilePath))
+			{
+				try
+				{
+					DateTime creation = File.GetLastWriteTime(pFilePath);
+					rtrn = creation.ToString("yyyy-MM-ddTHH:mm:ss");
+				}
+				catch
+				{
+					HelperClasses.Logger.Log("Getting Creation Date of File: '" + pFilePath + "' failed.");
+					new Popup(Popup.PopupWindowTypes.PopupOkError, "Getting Creation Date of File: '" + pFilePath + "' failed.").ShowDialog();
+				}
+			}
 			return rtrn;
 		}
 
@@ -195,6 +231,19 @@ namespace Project_127.HelperClasses
 			}
 		}
 
+
+
+		public static void WriteStringToFileOverwrite(string pFilePath, string[] pContent)
+		{
+
+			if (doesFileExist(pFilePath))
+			{
+				deleteFile(pFilePath);
+			}
+			File.WriteAllLines(pFilePath, pContent);
+		}
+
+
 		/// <summary>
 		/// Method we use to add one line of text as a new line to a text file
 		/// </summary>
@@ -213,7 +262,7 @@ namespace Project_127.HelperClasses
 			catch (Exception e)
 			{
 				new Popup(Popup.PopupWindowTypes.PopupOkError, "Writing to Log failed. File was probably deleted after start of Program.\nI suggest you restart the Program and contact me if it happens again.\n\nErrorMessage:\n" + e.ToString()).ShowDialog();
-				System.Windows.Forms.MessageBox.Show("Writing to Log failed. File was probably deleted after start of Program.\nI suggest you restart the Program and contact me if it happens again.\n\nErrorMessage:\n" + e.ToString());
+				System.Windows.Forms.MessageBox.Show("Writing to Log failed. File was probably deleted after start of Program.\n\nLogmessage:'" + pLineContent + "'\nI suggest you restart the Program and contact me if it happens again.\n\nErrorMessage:\n" + e.ToString());
 			}
 		}
 
@@ -258,6 +307,38 @@ namespace Project_127.HelperClasses
 			}
 
 			return rtrn;
+		}
+
+
+
+		/// <summary>
+		/// Method to get Hash from a Folder
+		/// </summary>
+		/// <param name="srcPath"></param>
+		/// <returns></returns>
+		public static string CreateDirectoryMd5(string srcPath)
+		{
+			var myFiles = Directory.GetFiles(srcPath, "*", SearchOption.AllDirectories).OrderBy(p => p).ToArray();
+
+			using (var md5 = MD5.Create())
+			{
+				foreach (var myFile in myFiles)
+				{
+					// hash path
+					byte[] pathBytes = Encoding.UTF8.GetBytes(myFile);
+					md5.TransformBlock(pathBytes, 0, pathBytes.Length, pathBytes, 0);
+
+					// hash contents
+					byte[] contentBytes = File.ReadAllBytes(myFile);
+
+					md5.TransformBlock(contentBytes, 0, contentBytes.Length, contentBytes, 0);
+				}
+
+				//Handles empty filePaths case
+				md5.TransformFinalBlock(new byte[0], 0, 0);
+
+				return BitConverter.ToString(md5.Hash).Replace("-", "").ToLower();
+			}
 		}
 
 
@@ -395,6 +476,35 @@ namespace Project_127.HelperClasses
 			}
 		}
 
+
+		/// <summary>
+		/// Copy File A to file B. Does not overwrite
+		/// </summary>
+		/// <param name="pSource"></param>
+		/// <param name="pDestination"></param>
+		public static void copyFile(string pSource, string pDestination)
+		{
+			if (!File.Exists(pSource))
+			{
+				HelperClasses.Logger.Log("Copying File ['" + pSource + "' to '" + pDestination + "'] failed since SourceFile ('" + pSource + "') does NOT exist.", true, 0);
+				return;
+			}
+			if (File.Exists(pDestination))
+			{
+				HelperClasses.Logger.Log("Copying File ['" + pSource + "' to '" + pDestination + "'] failed since DestinationFile ('" + pDestination + "') DOES exist.", true, 0);
+				return;
+			}
+			try
+			{
+				File.Copy(pSource, pDestination);
+			}
+			catch (Exception e)
+			{
+				HelperClasses.Logger.Log("Copying File ['" + pSource + "' to '" + pDestination + "'] failed since trycatch failed." + e.Message.ToString(), true, 0);
+			}
+		}
+
+
 		/// <summary>
 		/// Creates File (and Folder(s). Overrides existing file.
 		/// </summary>
@@ -462,13 +572,43 @@ namespace Project_127.HelperClasses
 			return Directory.Exists(pFolderPath);
 		}
 
+
+		public static void DeleteFolder(string pPath)
+		{
+			try
+			{
+				Directory.Delete(pPath, true);
+			}
+			catch (Exception e)
+			{
+				HelperClasses.Logger.Log("Failed to delete Folder for some reason. " + e.ToString());
+			}
+		}
+
 		/// <summary>
 		/// Creates a Path. Works for SubSubPaths.
 		/// </summary>
 		/// <param name="pFolderPath"></param>
 		public static void createPath(string pFolderPath)
 		{
-			Directory.CreateDirectory(pFolderPath);
+			if (!doesPathExist(pFolderPath))
+			{
+				Directory.CreateDirectory(pFolderPath);
+			}
+		}
+
+
+		public static void CreateAllZIPPaths(string pZIPFileExtractLocation)
+		{
+			// TODO, CTRLF FIX THIS MESS. OTHERWISE ZIP EXTRACTING SHIT WILL BREAK BECAUSE ITS A PIECE OF SHIT
+			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files");
+			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\DowngradeFiles");
+			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\DowngradeFiles\update");
+			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\UpgradeFiles");
+			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\UpgradeFiles\update");
+			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\SupportFiles\");
+			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\SupportFiles\Installer");
+			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\SupportFiles\SaveFiles");
 		}
 
 		/// <summary>

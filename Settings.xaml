@@ -216,6 +216,7 @@
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="60"/>
                 <RowDefinition Height="60"/>
+                <RowDefinition Height="60"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
@@ -249,10 +250,10 @@
                             </Grid.ColumnDefinitions>
                             <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Content="GTA V Installation Path"  Style="{StaticResource lbl_Set_Head}" />
                             <Label Grid.Row="1" Grid.Column="0" Content="Current Path: "  Style="{StaticResource lbl_Set_Info}" />
-                            <Button Grid.Row="1" Grid.Column="1" x:Name="btn_Set_GTAVInstallationPath" Click="btn_Set_GTAVInstallationPath_Click" Content="{Binding Path=GTAVInstallationPath, Mode=TwoWay}" Style="{StaticResource btn_Set}"/>
+                            <Button Grid.Row="1" Grid.Column="1" x:Name="btn_Set_GTAVInstallationPath" Click="btn_Set_GTAVInstallationPath_Click" MouseRightButtonDown="btn_Set_GTAVInstallationPath_MouseRightButtonDown" Content="{Binding Path=GTAVInstallationPath}" Style="{StaticResource btn_Set}"/>
                         </Grid>
 
-                        <Grid x:Name="Grid_Set_BackupPath">
+                        <Grid x:Name="Grid_Set_ZIPExtractionPath">
                             <Grid.RowDefinitions>
                                 <RowDefinition/>
                                 <RowDefinition/>
@@ -261,9 +262,21 @@
                                 <ColumnDefinition/>
                                 <ColumnDefinition/>
                             </Grid.ColumnDefinitions>
-                            <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Content="Backup Path"  Style="{StaticResource lbl_Set_Head}" />
+                            <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Content="Path used for storing Files (Upgrade, Downgrade, SafeFiles etc.)"  Style="{StaticResource lbl_Set_Head}" />
                             <Label Grid.Row="1" Grid.Column="0" Content="Current Path: "  Style="{StaticResource lbl_Set_Info}" />
-                            <Button Grid.Row="1" Grid.Column="1" x:Name="btn_Set_FileFolder" Click="btn_Set_FileFolder_Click" Content="{Binding Path=FileFolder, Mode=TwoWay}" Style="{StaticResource btn_Set}"/>
+                            <Button Grid.Row="1" Grid.Column="1" x:Name="btn_Set_ZIPExtractionPath" Click="btn_Set_ZIPExtractionPath_Click" MouseRightButtonDown="btn_Set_ZIPExtractionPath_MouseRightButtonDown" Content="{Binding Path=ZIPExtractionPath, Mode=TwoWay}" Style="{StaticResource btn_Set}"/>
+                        </Grid>
+
+                        <Grid x:Name="Grid_Set_Retail">
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Row="0" Grid.Column="0" Content="Retail Version:"  Style="{StaticResource lbl_Set_Info}" />
+                            <ComboBox Grid.Row="0" Grid.Column="1" x:Name="combox_Set_Retail" SelectionChanged="combox_Set_Retail_SelectionChanged"/>
                         </Grid>
 
                         <Grid x:Name="Grid_Set_Logging">
@@ -278,7 +291,7 @@
                             <CheckBox Grid.Row="0" Grid.Column="1" x:Name="cb_Set_EnableLogging" IsChecked="{Binding Path=EnableLogging, Mode=TwoWay}" Style="{StaticResource cb_Set}"/>
                         </Grid>
 
-                        <!--<Grid x:Name="Grid_Set_TmpFixSteamLaunch">
+                        <Grid x:Name="Grid_Set_CopyFilesInsteadOfHardlinking">
                             <Grid.RowDefinitions>
                                 <RowDefinition/>
                             </Grid.RowDefinitions>
@@ -286,11 +299,11 @@
                                 <ColumnDefinition/>
                                 <ColumnDefinition/>
                             </Grid.ColumnDefinitions>
-                            <Label Grid.Row="0" Grid.Column="0" Content="Enable TempFixSteamLaunch"  Style="{StaticResource lbl_Set_Info}" />
-                            <CheckBox Grid.Row="0" Grid.Column="1" x:Name="cb_Set_TempFixSteamLaunch" IsChecked="{Binding Path=EnableTempFixSteamLaunch, Mode=TwoWay}" Style="{StaticResource cb_Set}"/>
+                            <Label Grid.Row="0" Grid.Column="0" Content="Enable CopyFilesInsteadOfHardlinking"  Style="{StaticResource lbl_Set_Info}" />
+                            <CheckBox Grid.Row="0" Grid.Column="1" x:Name="cb_Set_CopyFilesInsteadOfHardlinking" IsChecked="{Binding Path=EnableCopyFilesInsteadOfHardlinking, Mode=TwoWay}" Style="{StaticResource cb_Set}"/>
                         </Grid>
 
-
+                    
                         <Grid x:Name="Grid_Set_Preorder">
                             <Grid.RowDefinitions>
                                 <RowDefinition/>
@@ -303,7 +316,7 @@
                             <Label Grid.Row="0" Grid.Column="0" Content="Enable / Use 500k Pre-Order Bonus "  Style="{StaticResource lbl_Set_Info}" />
                             <CheckBox Grid.Row="0" Grid.Column="1" x:Name="cb_Set_EnablePreOrderBonus" IsChecked="{Binding Path=EnablePreOrderBonus, Mode=TwoWay}" Style="{StaticResource cb_Set}"/>
                         </Grid>
-
+                        <!--
                         <Grid x:Name="Grid_Set_AutoHighPriority">
                             <Grid.RowDefinitions>
                                 <RowDefinition/>
@@ -416,7 +429,8 @@
             </Border>
 
             <Button Style="{StaticResource btn}" x:Name="btn_Reset" Grid.Row="2" Grid.Column="0" Margin="10" Content="Reset" Click="btn_Reset_Click"/>
-            <Button Style="{StaticResource btn}" x:Name="btn_Close" Grid.Row="3" Grid.Column="0" Margin="10" Content="Close" Click="btn_Close_Click"/>
+            <Button Style="{StaticResource btn}" x:Name="btn_RefreshGUI" Grid.Row="3" Grid.Column="0" Margin="10" Content="Refresh GUI" Click="btn_RefreshGUI_Click"/>
+            <Button Style="{StaticResource btn}" x:Name="btn_Close" Grid.Row="4" Grid.Column="0" Margin="10" Content="Close" Click="btn_Close_Click"/>
 
         </Grid>
     </Border>

@@ -16,6 +16,9 @@ using System.Threading.Tasks;
 using System.Xml.XPath;
 using System.IO;
 using System.Linq;
+using System.Web.UI;
+using System.Security.Permissions;
+using System.Configuration;
 
 /*
  * This file is based on SCUIStub/LegitimacyChecking from the CitizenFX Project - http://citizen.re/
@@ -25,13 +28,66 @@ using System.Linq;
  * Rewritten in C# by @dr490n/@jaredtb  
  */
 namespace Project_127 {
+
+
     public class ROSCommunicationBackend
     {
+
+        private static byte[] OESFDR = { 0x45, 0xE6, 0xA5, 0x0D, 0xAA, 0xE4, 0x56, 0x2A, 0x5E, 0xAC, 0x05 };
+        private static sessionContainer session = null;
+
+        private static byte laflags; //Launch Attribute Flags
+
+
+        /// <summary>
+        /// Sets a Launch Attribute Flag
+        /// </summary>
+        /// <param name="flag">Flag to set</param>
+        /// <param name="state">State of flag</param>
+        public static void setFlag(Flags flag, bool state)
+        {
+            setFlag((int)flag, state);
+        }
+
+        /// <summary>
+        /// Sets a Launch Attribute Flag
+        /// </summary>
+        /// <param name="flag">Flag to set</param>
+        /// <param name="state">State of flag</param>
+        public static void setFlag(int flag, bool state)
+        {
+            if (flag > 7)
+            {
+                return;
+            }
+            if (state)
+            {
+                laflags = (byte)(laflags | 1 << flag);
+            }
+            else
+            {
+                laflags = (byte)(laflags & (0xFF ^ (1 << flag)));
+            }
+
+        }
+
         private static HttpClient httpClient = new HttpClient();
+
+        /// <summary>
+        /// Binary to ascii (Base64 Encode)
+        /// </summary>
+        /// <param name="data">Data to encode</param>
+        /// <returns>Encoded binary data</returns>
         public static string btoa(byte[] data)
         {
             return System.Convert.ToBase64String(data);
         }
+
+        /// <summary>
+        /// Ascii to binary (Base64 Decode)
+        /// </summary>
+        /// <param name="data">Data to decode</param>
+        /// <returns>Decoded binary data</returns>
         public static byte[] atob(string data)
         {
             return System.Convert.FromBase64String(data);
@@ -133,7 +189,7 @@ namespace Project_127 {
             // Sadly, bitconverter doesn't have an explicit from Big Endian
             int blockSize = (blockSizeData[0] << 24) + (blockSizeData[1] << 16) +
                 (blockSizeData[2] << 8) + blockSizeData[1] + 20;
-            byte[] encblock = data.ToArray();
+            byte[] encblock = data;//.ToArray();
 
             List<byte> encresult = new List<byte>();
 
@@ -146,7 +202,7 @@ namespace Project_127 {
                 int end = Math.Min(size, start + blockSize);
 
                 // We ignore the hash at the end of blocks 
-                end -= 20; 
+                end -= 20;
 
                 int len = end - start;
 
@@ -157,11 +213,11 @@ namespace Project_127 {
                 encresult.AddRange(block);
 
                 // Move the start for next iteration
-               start += blockSize;
+                start += blockSize;
             }
 
             var result = RC4.Decrypt(rc4Key, encresult.ToArray());
-            
+
             return result.Skip(4).ToArray();
 
         }
@@ -225,7 +281,7 @@ namespace Project_127 {
             return String.Format("ros {0}", base64str);
         }
 
-        private static byte[] BuildPostString(Dictionary<string,string> form)
+        private static byte[] BuildPostString(Dictionary<string, string> form)
         {
             List<byte> retval = new List<byte>();
             foreach (KeyValuePair<string, string> field in form)
@@ -240,9 +296,35 @@ namespace Project_127 {
             retval.RemoveAt(retval.Count - 1);
             return retval.ToArray();
         }
-
-        public static async Task<bool> Login(string ticket, string sessionKey, string sessionTicket, UInt64 RockstarID)
+        private static byte[] HeaderBuild(Dictionary<string, string> headers)
         {
+            List<byte> retval = new List<byte>();
+            foreach (KeyValuePair<string, string> field in headers)
+            {
+                retval.AddRange(Encoding.UTF8.GetBytes(field.Key));
+                retval.AddRange(Encoding.UTF8.GetBytes(": "));
+                retval.AddRange(Encoding.UTF8.GetBytes(field.Value));
+                retval.AddRange(Encoding.UTF8.GetBytes("\r\n"));
+            }
+            return retval.ToArray();
+        }
+
+        /// <summary>
+        /// Generates the persistent session from aquired session attributes
+        /// </summary>
+        /// <param name="ticket">Ticket</param>
+        /// <param name="sessionKey">Session Key</param>
+        /// <param name="sessionTicket">Session Ticket</param>
+        /// <param name="RockstarID">Rockstar ID</param>
+        /// <param name="ctime">Current Time</param>
+        /// <param name="nick">User Nickname</param>
+        /// <returns></returns>
+        public static async Task<bool> Login(string ticket, string sessionKey, string sessionTicket, UInt64 RockstarID, Int64 ctime = 0, string nick = "")
+        {
+            if (ctime == 0)
+            {
+                ctime = GetPosixTime();
+            }
             var RNG = new RNGCryptoServiceProvider();
             byte[] machineHash = new byte[32];
             RNG.GetBytes(machineHash);
@@ -253,34 +335,46 @@ namespace Project_127 {
                 machineHash[i] = IDSegmentBytes[i - 4];
             }
             //Validate();
-            validateResponse v = await Validate(ticket, sessionKey, sessionTicket, machineHash);
-            if (!v.error)
+            session = new sessionContainer(ticket, sessionKey, sessionTicket, machineHash, ctime, nick);
+
+            var res = await GenToken();
+            if (!res.error)
             {
                 //string res = EntitlementDecrypt(v.text); // Not actual entitlements (yet)
                 //MessageBox.Show(res);
-                MessageBox.Show(v.text);
+                //MessageBox.Show(v.text);
                 return true;
             }
             else
             {
-                MessageBox.Show(v.text); // Show Error
+                MessageBox.Show(res.text); // Show Error
             }
 
             return false;
         }
 
-        private static async Task<validateResponse> Validate(string t, string sk, string st, byte[] mh)
+        /// <summary>
+        /// Generates a token for the GTA Launcher
+        /// </summary>
+        public static async Task<tokenGenResponse> GenToken()
         {
-            validateResponse v = new validateResponse();
+            tokenGenResponse tgr = new tokenGenResponse();
+
+            if (!session.isValid())
+            {
+                tgr.status = 0;
+                tgr.text = "Session Expired";
+                return tgr;
+            }
 
             var RNG = new RNGCryptoServiceProvider();
             var challenge = new byte[8];
             RNG.GetBytes(challenge);
             byte[] reqBody = EncryptROSData(BuildPostString(
                         new Dictionary<string, string>{
-                            { "ticket", t },
+                            { "ticket", session.ticket },
                             { "titleId", "11" },
-                        }), sk);
+                        }), session.sessionKey);
 
             var req = new HttpRequestMessage
             {
@@ -291,9 +385,9 @@ namespace Project_127 {
             //req.Headers.Add("Accept", "*/*");
             //req.Headers.TryAddWithoutValidation("Accept-Encoding", "identity");
             req.Headers.TryAddWithoutValidation("ros-Challenge", btoa(challenge));
-            req.Headers.TryAddWithoutValidation("ros-HeadersHmac", btoa(HeadersHmac(challenge, "POST", req.RequestUri.AbsolutePath, sk, st)));
+            req.Headers.TryAddWithoutValidation("ros-HeadersHmac", btoa(HeadersHmac(challenge, "POST", req.RequestUri.AbsolutePath, session.sessionKey, session.sessionTicket)));
             req.Headers.TryAddWithoutValidation("ros-SecurityFlags", "239");
-            req.Headers.TryAddWithoutValidation("ros-SessionTicket", st);
+            req.Headers.TryAddWithoutValidation("ros-SessionTicket", session.sessionTicket);
             req.Headers.TryAddWithoutValidation("User-Agent", GetROSVersionString());
             req.Headers.ConnectionClose = true;
             req.Headers.ExpectContinue = false;
@@ -307,48 +401,87 @@ namespace Project_127 {
             var res = await httpClient.SendAsync(req);
             if (!res.IsSuccessStatusCode)
             {
-                v.error = true;
-                v.text = String.Format("Error {0}: {1}\n{2}",
+                tgr.error = true;
+                tgr.text = String.Format("Error {0}: {1}\n{2}",
                     (int)res.StatusCode, res.StatusCode, res.Content.ReadAsStringAsync().Result);
-                v.status = (int)res.StatusCode;
-                return v;
+                tgr.status = (int)res.StatusCode;
+                return tgr;
             }
             else
             {
                 byte[] rawResp = res.Content.ReadAsByteArrayAsync().Result;
-                string xmldoc = Encoding.UTF8.GetString(DecryptROSData(rawResp, rawResp.Length, sk));
+                string xmldoc = Encoding.UTF8.GetString(DecryptROSData(rawResp, rawResp.Length, session.sessionKey));
                 var xml = new XPathDocument(new StringReader(xmldoc));
                 var nav = xml.CreateNavigator();
 
                 if (NavGetOrDefault(nav, "//*[local-name()='Response']/*[local-name()='Status']", 0) == 0)
                 {
-                    v.error = true;
-                    v.text = String.Format("Could not get title access token "
+                    tgr.error = true;
+                    tgr.text = String.Format("Could not get title access token "
                         + "from the Social Club. Error code: \n{0}/{1}",
                         NavGetOrDefault(nav, "//*[local-name()='Response']/*[local-name()='Error']/@Code", "[unknown]"),
                         NavGetOrDefault(nav, "//*[local-name()='Response']/*[local-name()='Error']/@CodeEx", "[unknown]")
                         );
-                    v.status = -1;
-                    return v;
+                    tgr.status = -1;
+                    return tgr;
                 }
                 else
                 {
                     var acctoken = NavGetOrDefault(nav, "//*[local-name()='Response']/*[local-name()='Result']", "");
-                    if (acctoken == "")
+                    if (acctoken.Equals(""))
                     {
-                        return v; // Unknown Error
+                        return tgr; // Unknown Error
                     }
 
-                    // req2.Headers.TryAddWithoutValidation("locale", "en-US");
+                    //req2.Headers.TryAddWithoutValidation("locale", "en-US");
                     //req2.Headers.TryAddWithoutValidation("machineHash", btoa(mh));
-
+                    var targetURI = new Uri("http://prod.ros.rockstargames.com/launcher/11/launcherservices/entitlements.asmx/GetEntitlementBlock");
+                    var LKey = new List<byte>();
                     byte[] reqBody2 = EncryptROSData(BuildPostString(
                         new Dictionary<string, string>{
-                            { "ticket", t },
+                            { "ticket", session.ticket },
                             { "titleAccessToken", acctoken },
                             { "locale", "en-US"},
-                            { "machineHash", btoa(mh)},
-                        }), sk);
+                            { "machineHash", btoa(session.machineHash)},
+                        }), session.sessionKey);
+                    setFlag(Flags.preorder, Settings.EnablePreOrderBonus);
+                    LKey.Add(laflags);
+
+                    byte[] reqHeaders = HeaderBuild(
+                        new Dictionary<string, string>{
+                            { "ros-Challenge", btoa(challenge)},
+                            { "ros-HeadersHmac", btoa(HeadersHmac(challenge, "POST", targetURI.AbsolutePath, session.sessionKey, session.sessionTicket)) },
+                            { "ros-SecurityFlags", "239"},
+                            { "ros-SessionTicket", session.sessionTicket},
+                        });
+                    LKey.AddRange(BitConverter.GetBytes((UInt16)session.sessionKey.Length));
+                    LKey.AddRange(Encoding.UTF8.GetBytes(session.sessionKey));
+
+                    LKey.AddRange(BitConverter.GetBytes((UInt16)reqHeaders.Length));
+                    LKey.AddRange(reqHeaders);
+
+                    LKey.AddRange(BitConverter.GetBytes((UInt16)reqBody2.Length));
+                    LKey.AddRange(reqBody2);
+
+                    //LKey.AddRange(genLaunchExtension());
+					LKey.Add(0);
+					LKey.Add(0);
+
+
+                    var launcBin = LKey.ToArray();
+                    var outdir = Settings.GTAVInstallationPath;
+                    if (!outdir.EndsWith("\\"))
+                    {
+                        outdir += "\\";
+                    }
+
+                    using (var b = new BinaryWriter(File.Open(outdir + "launc.dat", FileMode.Create)))
+                    {
+                        b.Write(launcBin);
+                    }
+                    tgr.error = false;
+                    tgr.status = 200;
+                    tgr.text = "Launcher token data written";
 
                     var req2 = new HttpRequestMessage
                     {
@@ -357,60 +490,73 @@ namespace Project_127 {
                     };
                     req2.Headers.Add("Host", "prod.ros.rockstargames.com");
                     req2.Headers.TryAddWithoutValidation("ros-Challenge", btoa(challenge));
-                    req2.Headers.TryAddWithoutValidation("ros-HeadersHmac", btoa(HeadersHmac(challenge, "POST", req2.RequestUri.AbsolutePath, sk, st)));
+                    req2.Headers.TryAddWithoutValidation("ros-HeadersHmac", btoa(HeadersHmac(challenge, "POST", req2.RequestUri.AbsolutePath, session.sessionKey, session.sessionTicket)));
                     req2.Headers.TryAddWithoutValidation("ros-SecurityFlags", "239");
-                    req2.Headers.TryAddWithoutValidation("ros-SessionTicket", st);
+                    req2.Headers.TryAddWithoutValidation("ros-SessionTicket", session.sessionTicket);
                     req2.Headers.TryAddWithoutValidation("User-Agent", GetROSVersionString());
                     req2.Headers.ConnectionClose = true;
                     req2.Headers.ExpectContinue = false;
 
                     req2.Content = new ByteArrayContent(reqBody2);
-
                     req2.Content.Headers.ContentType = new MediaTypeHeaderValue("application/x-www-form-urlencoded");
-
                     res = await httpClient.SendAsync(req2);
-                    
+
                     if (!res.IsSuccessStatusCode)
                     {
-                        v.error = true;
-                        v.text = String.Format("Error {0}: {1}\r\n{2}",
+                        tgr.error = true;
+                        tgr.text = String.Format("Ownership Verification Error {0}: {1}\r\n{2}",
                             (int)res.StatusCode, res.StatusCode, res.Content.ReadAsStringAsync().Result);
-                        v.status = (int)res.StatusCode + 1000;
-                        return v;
+                        tgr.status = (int)res.StatusCode + 1000;
                     }
                     else
                     {
                         rawResp = res.Content.ReadAsByteArrayAsync().Result;
-                        string exmldoc = Encoding.UTF8.GetString(DecryptROSData(rawResp, rawResp.Length, sk));
+                        string exmldoc = Encoding.UTF8.GetString(DecryptROSData(rawResp, rawResp.Length, session.sessionKey));
                         var exml = new XPathDocument(new StringReader(exmldoc));
                         var enav = exml.CreateNavigator();
-
                         if (NavGetOrDefault(enav, "//*[local-name()='Response']/*[local-name()='Status']", 0) == 0) //you are here
                         {
-                            v.error = true;
-                            v.text = String.Format("Could not get entitlement block "
+                            tgr.error = true;
+                            tgr.text = String.Format("Ownership error: could not get entitlement block "
                                 + "from the Social Club. Error code: \n{0}/{1}",
                                 NavGetOrDefault(enav, "//*[local-name()='Response']/*[local-name()='Error']/@Code", "[unknown]"),
                                 NavGetOrDefault(enav, "//*[local-name()='Response']/*[local-name()='Error']/@CodeEx", "[unknown]")
                                 );
-                            v.status = -1001;
-                            return v;
+                            tgr.status = -1001;
+                            session.destroy();
                         }
-                        else
-                        {
-                            v.error = false;
-                            v.text = EntitlementHandler(enav);
-                            v.status = (v.text != "")? 0 : -1002;
-                            return v;
-                        }
-                    }
 
-                    return v;
+                    }
+                    return tgr;
+
                 }
             }
-            return v;
+            return tgr;
         }
 
+        /// <summary>
+        /// Returns wheter a session is valid (not expired & logged in)
+        /// </summary>
+
+        public static bool SessionValid
+        {
+            get
+            {
+                if (session == null)
+                {
+                    return false;
+                }
+                return session.isValid();
+            }
+        }
+
+        /// <summary>
+        /// Destroys/Logs out session
+        /// </summary>
+        public static void SessionDestroy()
+        {
+            session.destroy();
+        }
         private static string EntitlementHandler(XPathNavigator nav)
         {
             // PATH "Response.Result.Data"
@@ -443,7 +589,7 @@ namespace Project_127 {
             public ROSCryptoState()
             {
                 byte[] platformStr = atob(ROS_PLATFORM_KEY_LAUNCHER);
-                m_rc4Key = new ArraySegment<byte>(platformStr,1,32).ToArray();
+                m_rc4Key = new ArraySegment<byte>(platformStr, 1, 32).ToArray();
                 m_xorKey = new ArraySegment<byte>(platformStr, 33, 16).ToArray();
                 m_hashKey = new ArraySegment<byte>(platformStr, 49, 16).ToArray();
 
@@ -470,12 +616,199 @@ namespace Project_127 {
             return x.SelectSingleNode(p) != null ? int.Parse(x.SelectSingleNode(p).Value) : d;
         }
 
-
-        private class validateResponse
+        /// <summary>
+        /// Response class for the GenToken method
+        /// </summary>
+        public class tokenGenResponse
         {
             public bool error = true;
             public int status = int.MinValue;
             public string text;
         }
+
+        private class sessionContainer
+        {
+            private string tick;
+            private string sesskey;
+            private string sesstick;
+            private byte[] mhash;
+            private Int64 expiration;
+            private string nickname;
+            public sessionContainer(string t, string sk, string st, byte[] mh, Int64 ctime, string nick)
+            {
+                update(t, sk, st, mh, ctime, nick);
+                //store();
+            }
+            public void update(string t, string sk, string st, byte[] mh, Int64 ctime, string nick)
+            {
+                tick = t;
+                sesskey = sk;
+                sesstick = st;
+                mhash = mh;
+                expiration = ctime + 86399;
+                nickname = nick;
+            }
+            /*public sessionContainer()
+            {
+                load();
+            }*/
+
+            public bool isValid()
+            {
+                return (expiration > GetPosixTime());
+            }
+            public void destroy()
+            {
+                expiration = 0; //For the moment
+            }
+            /*private void load() //Possibly maybe persitence accross launches
+            {
+
+            }
+            private void store()
+            {
+                var sess = new List<byte>();
+                sess.AddRange(BitConverter.GetBytes((UInt16)tick.Length));
+                sess.AddRange(Encoding.UTF8.GetBytes(tick));
+
+                sess.AddRange(BitConverter.GetBytes((UInt16)sesskey.Length));
+                sess.AddRange(Encoding.UTF8.GetBytes(sesskey));
+
+                sess.AddRange(BitConverter.GetBytes((UInt16)sesstick.Length));
+                sess.AddRange(Encoding.UTF8.GetBytes(sesstick));
+
+                sess.AddRange(BitConverter.GetBytes((UInt16)mhash.Length));
+                sess.AddRange(mhash);
+
+                sess.AddRange(BitConverter.GetBytes((UInt16)8));
+                sess.AddRange(BitConverter.GetBytes(expiration));
+
+
+
+                using (var b = new BinaryWriter(File.Open("sess.dat", FileMode.Create)))
+                {
+                    b.Write(sess.ToArray());
+                }
+            }*/
+            public string ticket
+            {
+                get
+                {
+                    return tick;
+                }
+            }
+            public string sessionKey
+            {
+                get
+                {
+                    return sesskey;
+                }
+            }
+            public string sessionTicket
+            {
+                get
+                {
+                    return sesstick;
+                }
+            }
+            public byte[] machineHash
+            {
+                get
+                {
+                    return mhash;
+                }
+            }
+            public string Nick
+            {
+                get
+                {
+                    return nickname;
+                }
+            }
+        }
+
+        private static Int64 GetPosixTime()
+        {
+            return (Int64)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
+        }
+
+        /// <summary>
+        /// Enum defining the current Launch Attribute Flags
+        /// </summary>
+        public enum Flags
+        {
+            preorder,
+            RES1,
+            RES2,
+            RES3,
+            RES4,
+            RES5,
+            RES6,
+            RES7,
+
+        }
+        private static string launchExtensionRaw;
+
+
+        /// <summary>
+        /// Adds special launch extension parameters
+        /// </summary>
+        /// <param name="key">Parameter to set</param>
+        /// <param name="value">Value of parameter</param>
+        private static void addLaunchExtension(string key, string value)
+        {
+            if (!launchExtensionRaw.Equals(""))
+            {
+                launchExtensionRaw += "&";
+            }
+            launchExtensionRaw += String.Format("{0}={1}", key, value);
+        }
+        /// <summary>
+        /// Adds special launch extension parameters
+        /// </summary>
+        /// <param name="key">Parameter to set</param>
+        /// <param name="value">Value of parameter</param>
+        private static void addLaunchExtension(string key, byte[] value)
+        {
+            addLaunchExtension(key, btoa(value));
+        }
+        /// <summary>
+        /// Clears all launch extension parameters
+        /// </summary>
+        private void clearLaunchExtension()
+        {
+            launchExtensionRaw = "";
+        }
+
+        private static List<byte> genLaunchExtension()
+        {
+            if (launchExtensionRaw.Equals(""))
+            {
+                var ret = new List<byte>();
+                ret.Add(0);
+                ret.Add(0);
+                return ret;
+            } else
+            {
+                var lab = Encoding.UTF8.GetBytes(launchExtensionRaw);
+                var ret = new List<byte>(lab.Length + 2);
+                ret.AddRange(BitConverter.GetBytes((UInt16)lab.Length));
+                ret.AddRange(lab);
+                return ret;
+            }
+        }
+
+
+        /// <summary>
+        /// Get current logins rockstar nickname
+        /// </summary>
+        public static string sessionNickname //For future use
+        {
+            get
+            {
+                return session.Nick;
+            }
+        }
+        
     }
 }

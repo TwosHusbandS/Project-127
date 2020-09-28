@@ -227,12 +227,12 @@ style.appendChild(document.createTextNode(css));
                     });
                 }
             }
-            else if (message[0] == "signin")
+            else if (message[0] == "signin") //if this is called, we have a valid login
             {
                 //login(message[1]);
                 var json = new System.Web.Script.Serialization.JavaScriptSerializer();
                 var jsond = json.Deserialize<Dictionary<String, String>>(message[1]);
-
+                //MessageBox.Show(message[1]); //For debugging
                 var uexml = jsond["XMLResponse"];
                 var xmls = System.Net.WebUtility.UrlDecode(uexml);
                 XPathDocument xml = new XPathDocument(new StringReader(xmls));
@@ -242,19 +242,21 @@ style.appendChild(document.createTextNode(css));
                 string sessionKey = jsond["sessionKey"];
                 string sessionTicket = nav.SelectSingleNode("//*[local-name()='Response']/*[local-name()='SessionTicket']").Value;
                 var RockstarID = UInt64.Parse(nav.SelectSingleNode("//*[local-name()='Response']/*[local-name()='RockstarAccount']/*[local-name()='RockstarId']").Value);
+                var ctime = Int64.Parse(nav.SelectSingleNode("//*[local-name()='Response']/*[local-name()='PosixTime']").Value);
+                var RockstarNick = nav.SelectSingleNode("//*[local-name()='Response']/*[local-name()='RockstarAccount']/*[local-name()='Nickname']").Value; //For (future?) use
+
 
                 // Call our version of validate
-                bool valsucess = await ROSCommunicationBackend.Login(ticket, sessionKey, sessionTicket, RockstarID);
-
+                bool valsucess = await ROSCommunicationBackend.Login(ticket, sessionKey, sessionTicket, RockstarID, ctime, RockstarNick);
                 // Do somethin with valsuccess (true if ownership is valid)
 
                 if (valsucess)
                 {
-                    MessageBox.Show("Yay");
+                    //MessageBox.Show("Login Success");
                 } 
                 else
                 {
-                    MessageBox.Show("Nay");
+                    MessageBox.Show("Login Failure");
                 }
 
                 this.Dispatcher.Invoke(() =>

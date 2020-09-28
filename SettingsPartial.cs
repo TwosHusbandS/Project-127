@@ -48,6 +48,102 @@ namespace Project_127
 			}
 		}
 
+
+		/// <summary>
+		/// Initiating GTAV InstallationPath, ZIP Extraction Path and enabling Copy over Hardlinking
+		/// </summary>
+		public static void InitImportantSettings()
+		{
+			Settings.GTAVInstallationPath = "";
+
+			HelperClasses.Logger.Log("InitImportantSettings when Settings Reset or FirstLaunch or Paths wrong on Launch");
+			HelperClasses.Logger.Log("Playing the GTAV Guessing Game");
+
+			List<string> GTAVPathGuesses = new List<string>();
+
+			GTAVPathGuesses.Add(Globals.ProjectInstallationPath.TrimEnd('\\').Substring(0, Globals.ProjectInstallationPath.LastIndexOf('\\')));
+			GTAVPathGuesses.Add(Globals.ProjectInstallationPath.TrimEnd('\\'));
+			GTAVPathGuesses.Add(Settings.ZIPExtractionPath.TrimEnd('\\').Substring(0, Globals.ProjectInstallationPath.LastIndexOf('\\')));
+			GTAVPathGuesses.Add(Settings.ZIPExtractionPath);
+			GTAVPathGuesses.Add(LauncherLogic.GetGTAVPathMagicSteam());
+			GTAVPathGuesses.Add(LauncherLogic.GetGTAVPathMagicEpic());
+			GTAVPathGuesses.Add(LauncherLogic.GetGTAVPathMagicRockstar());
+
+			int i = 0;
+			foreach (string GTAVPathGuess in GTAVPathGuesses)
+			{
+				if (String.IsNullOrEmpty(Settings.GTAVInstallationPath))
+				{
+					i++;
+					HelperClasses.Logger.Log("GTAV Guess Number " + i + "is: '" + GTAVPathGuess + "'");
+					if (LauncherLogic.IsGTAVInstallationPathCorrect(GTAVPathGuess, false))
+					{
+						HelperClasses.Logger.Log("GTAV Guess Number " + i + "is theoretically valid. Asking user if he wants it");
+						Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Is: '" + GTAVPathGuess + "' your GTA V Installation Path?");
+						yesno.ShowDialog();
+						if (yesno.DialogResult == true)
+						{
+							Settings.GTAVInstallationPath = GTAVPathGuess;
+							HelperClasses.Logger.Log("GTAV Guess Number " + i + " was picked by User");
+						}
+						else
+						{
+							HelperClasses.Logger.Log("GTAV Guess Number " + i + " was NOT picked by User, moving on");
+						}
+					}
+					else
+					{
+						HelperClasses.Logger.Log("GTAV Guess Number " + i + "is theoretically invalid, moving on");
+					}
+				}
+			}
+
+			// If Setting is STILL not correct
+			if (!(LauncherLogic.IsGTAVInstallationPathCorrect(Settings.GTAVInstallationPath, false)))
+			{
+				// Log
+				HelperClasses.Logger.Log("After " + i + " guesses we still dont have the correct GTAVInstallationPath. User has to do it manually now. Fucking casual");
+
+				// Ask User for Path
+				SetGTAVPathManually(false);
+			}
+
+			HelperClasses.Logger.Log("GTA V Path set, now onto the ZIP Folder");
+			Popup yesnoconfirm = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Project 1.27 needs a Folder where it extracts the Content of the ZIP File to store all Sorts of Files and Data\nIt is recommend to do this on the same Drive / Partition as your GTAV Installation Path\nBest Case (and default Location) is your GTAV Path.\nDo you want to use your GTAV Path?");
+			yesnoconfirm.ShowDialog();
+			if (yesnoconfirm.DialogResult == true)
+			{
+				HelperClasses.Logger.Log("User wants default ZIP Folder. Setting it to GTAV InstallationPath and calling the default CopyHardlink Method");
+
+				if (!ChangeZIPExtractionPath(Settings.GTAVInstallationPath))
+				{
+					HelperClasses.Logger.Log("Changing ZIP Path did not work. Probably non existing Path or same Path as before (from Settings.InitImportantSettings())");
+					new Popup(Popup.PopupWindowTypes.PopupOk, "Changing ZIP Path did not work. Probably non existing Path or same Path as before\nIf you read this message to anyone, tell them youre in Settings.InitImportantSettings()");
+				}
+
+				Settings.SetDefaultEnableCopyingHardlinking();
+			}
+			else
+			{
+				HelperClasses.Logger.Log("User does not want the default ZIP Folder");
+				new Popup(Popup.PopupWindowTypes.PopupOk, "Okay, please pick a Folder where this Program will store most of its Files\n(For Upgrading / Downgrading / SaveFileHandling)").ShowDialog();
+				string newZIPFileLocation = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.Folder, "DiesDas", "", @"C:\");
+				HelperClasses.Logger.Log("User provided own Location: ('" + newZIPFileLocation + "'). Calling the Method to move zip File");
+				if (!ChangeZIPExtractionPath(newZIPFileLocation))
+				{
+					HelperClasses.Logger.Log("Changing ZIP Path did not work. Probably non existing Path or same Path as before (from Settings.InitImportantSettings())");
+					new Popup(Popup.PopupWindowTypes.PopupOk, "Changing ZIP Path did not work. Probably non existing Path or same Path as before\nIf you read this message to anyone, tell them youre in Settings.InitImportantSettings()");
+				}
+
+			}
+
+			HelperClasses.Logger.Log("LogInfo - GTAVInstallationPath: '" + Settings.GTAVInstallationPath + "'");
+			HelperClasses.Logger.Log("LogInfo - ZIPExtractionPath: '" + Settings.ZIPExtractionPath + "'");
+			HelperClasses.Logger.Log("LogInfo - EnableCopyOverHardlink: '" + Settings.EnableCopyFilesInsteadOfHardlinking + "'");
+			HelperClasses.Logger.Log("LogInfo - Retailer: '" + Settings.Retailer + "'");
+			HelperClasses.Logger.Log("End of InitImportantSettings");
+		}
+
 		/// <summary>
 		/// Gets a specific Setting from the Dictionary. Does not query from Registry.
 		/// </summary>
@@ -121,7 +217,7 @@ namespace Project_127
 
 
 		/// <summary>
-		/// Settings FirstLaunch. Gets from the Dictionary. NO SET.
+		/// Settings FirstLaunch. Gets from the Dictionary.
 		/// </summary>
 		public static bool FirstLaunch
 		{
@@ -132,6 +228,36 @@ namespace Project_127
 			set
 			{
 				SetSetting("FirstLaunch", value.ToString());
+			}
+		}
+
+		/// <summary>
+		/// Settings InstallationPath. Gets and Sets from Dictionary.
+		/// </summary>
+		public static string InstallationPath
+		{
+			get
+			{
+				return GetSetting("InstallationPath"); 
+			}
+			set
+			{
+				SetSetting("InstallationPath", value);
+			}
+		}
+
+		/// <summary>
+		/// Settings LastLaunchedVersion. Gets and Sets from Dictionary.
+		/// </summary>
+		public static Version LastLaunchedVersion
+		{
+			get
+			{
+				return new Version(GetSetting("LastLaunchedVersion"));
+			}
+			set
+			{
+				SetSetting("LastLaunchedVersion", value.ToString());
 			}
 		}
 
@@ -151,17 +277,17 @@ namespace Project_127
 		}
 
 		/// <summary>
-		/// Settings FileFolder. Gets and Sets from the Dictionary.
+		/// Settings ZIPExtractionPath. Gets and Sets from the Dictionary.
 		/// </summary>
-		public static string FileFolder
+		public static string ZIPExtractionPath
 		{
 			get
 			{
-				return GetSetting("FileFolder");
+				return GetSetting("ZIPExtractionPath");
 			}
 			set
 			{
-				SetSetting("FileFolder", value);
+				SetSetting("ZIPExtractionPath", value);
 			}
 		}
 
@@ -181,17 +307,17 @@ namespace Project_127
 		}
 
 		/// <summary>
-		/// Settings EnableTmpFixSteamLaunch. Gets and Sets from the Dictionary.
+		/// Settings EnableCopyFilesInsteadOfHardlinking. Gets and Sets from the Dictionary.
 		/// </summary>
-		public static bool EnableTempFixSteamLaunch
+		public static bool EnableCopyFilesInsteadOfHardlinking
 		{
 			get
 			{
-				return GetBoolFromString(GetSetting("EnableTempFixSteamLaunch"));
+				return GetBoolFromString(GetSetting("EnableCopyFilesInsteadOfHardlinking"));
 			}
 			set
 			{
-				SetSetting("EnableTempFixSteamLaunch", value.ToString());
+				SetSetting("EnableCopyFilesInsteadOfHardlinking", value.ToString());
 			}
 		}
 		
@@ -210,6 +336,34 @@ namespace Project_127
 			}
 		}
 
+		
+		/// <summary>
+		/// Enum for all Retailers
+		/// </summary>
+		public enum Retailers
+		{
+			Steam,
+			Rockstar,
+			Epic
+		}
+
+
+		/// <summary>
+		/// Settings Retailer. Gets and Sets from Dictionary.
+		/// </summary>
+		public static Retailers Retailer
+		{
+			get
+			{
+				return (Retailers)System.Enum.Parse(typeof(Retailers), GetSetting("Retailer"));
+			}
+			set
+			{
+				SetSetting("Retailer", value.ToString());
+			}
+		}
+
+
 		/// <summary>
 		/// Settings EnableAutoSetHighPriority. Gets and Sets from the Dictionary.
 		/// </summary>
@@ -224,6 +378,7 @@ namespace Project_127
 				SetSetting("EnableAutoSetHighPriority", value.ToString());
 			}
 		}
+
 
 		/// <summary>
 		/// Settings EnableAutoStartLiveSplit. Gets and Sets from the Dictionary.
