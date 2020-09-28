@@ -20,22 +20,46 @@ namespace Project_127
 {
 	/// <summary>
 	/// Interaction logic for CopyFileProgress.xaml
+	/// This is responsible for ProgressBar on File copying (etc.) and Extracting the ZIP File
 	/// </summary>
 	public partial class PopupProgress : Window
 	{
+		/// <summary>
+		/// Enum of ProgressTypes
+		/// </summary>
 		public enum ProgressTypes
 		{
 			ZIPFile,
 			FileOperation
 		}
 
+		/// <summary>
+		/// ProgressType of Instance
+		/// </summary>
 		ProgressTypes ProgressType;
 
+		/// <summary>
+		/// List of File Operations
+		/// </summary>
 		List<MyFileOperation> MyFileOperations;
+
+		/// <summary>
+		/// Name of Operation for GUI
+		/// </summary>
 		string Operation;
 
+		/// <summary>
+		/// Path of ZIP File (on disk) we are extracting
+		/// </summary>
 		string ZipFileWeWannaExtract;
 
+		/// <summary>
+		/// Constructor of PopupProgress.
+		/// String pParam1 is either the GUI Text for File Operations or the ZIP File physical location
+		/// </summary>
+		/// <param name="pProgressType"></param>
+		/// <param name="pParam1"></param>
+		/// <param name="pMyFileOperations"></param>
 		public PopupProgress(ProgressTypes pProgressType, string pParam1, List<MyFileOperation> pMyFileOperations = null)
 		{
 			InitializeComponent();

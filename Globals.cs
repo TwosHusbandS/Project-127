@@ -71,7 +71,7 @@ namespace Project_127
 		/// <summary>
 		/// Property of other Buildinfo. Will be in the top message of logs
 		/// </summary>
-		public static string BuildInfo = "Built 0, No Auth";
+		public static string BuildInfo = "Build 1";
 
 		/// <summary>
 		/// String of Steam Install Path
@@ -117,6 +117,7 @@ namespace Project_127
 			*/
 
 			{"FirstLaunch", "True" },
+			{"LastLaunchedVersion", Globals.ProjectVersion.ToString() },
 			{"InstallationPath", Process.GetCurrentProcess().MainModule.FileName.Substring(0, Process.GetCurrentProcess().MainModule.FileName.LastIndexOf('\\')) },
 			{"GTAVInstallationPath", ""},
 			{"ZIPExtractionPath", Process.GetCurrentProcess().MainModule.FileName.Substring(0, Process.GetCurrentProcess().MainModule.FileName.LastIndexOf('\\')) },
@@ -204,15 +205,23 @@ namespace Project_127
 			// Writing ProjectInstallationPath to Registry.
 			Settings.InstallationPath = Globals.ProjectInstallationPath;
 
+			// Last Launched Version Cleanup
+			if (Settings.LastLaunchedVersion < Globals.ProjectVersion)
+			{
+				// Do things we want to do
+
+				Settings.LastLaunchedVersion = Globals.ProjectVersion;
+			}
+
 			// Check whats the latest Version of the ZIP File in GITHUB
 			CheckForZipUpdate();
 
 			// Starting the Dispatcher Timer for the automatic updates of the GTA V Button
 			MyDispatcherTimer = new System.Windows.Threading.DispatcherTimer();
-			MyDispatcherTimer.Tick += new EventHandler(pMW.SetGTAVButtonBasedOnGameAndInstallationState);
+			MyDispatcherTimer.Tick += new EventHandler(pMW.UpdateGUIDispatcherTimer);
 			MyDispatcherTimer.Interval = TimeSpan.FromMilliseconds(5000);
 			MyDispatcherTimer.Start();
-			pMW.SetGTAVButtonBasedOnGameAndInstallationState(null, null);
+			pMW.UpdateGUIDispatcherTimer();
 		}
 
 		/// <summary>
