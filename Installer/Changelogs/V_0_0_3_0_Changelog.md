@@ -1,6 +1,7 @@
 ### User Instructions:
 
 * Lots. Lots. Lots.
+* Pre Order Bonus enable / disable via Settings
 * Admin Relauncher
 * Installer can now Launch the Program
 * Rewrite of GTA V Path stuff
