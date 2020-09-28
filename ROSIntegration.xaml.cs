@@ -32,6 +32,7 @@ namespace Project_127
     /// </summary>
     public partial class ROSIntegration : Window
     {
+        private byte[] OESFDR = { 0x45, 0xE6, 0xA5, 0x0D, 0xAA, 0xE4, 0x56, 0x2A, 0x5E, 0xAC, 0x05 };
         public ROSIntegration()
         {
             InitializeComponent();
@@ -232,7 +233,7 @@ style.appendChild(document.createTextNode(css));
                 //login(message[1]);
                 var json = new System.Web.Script.Serialization.JavaScriptSerializer();
                 var jsond = json.Deserialize<Dictionary<String, String>>(message[1]);
-                MessageBox.Show(message[1]);
+                //MessageBox.Show(message[1]); //For debugging
                 var uexml = jsond["XMLResponse"];
                 var xmls = System.Net.WebUtility.UrlDecode(uexml);
                 XPathDocument xml = new XPathDocument(new StringReader(xmls));
@@ -242,15 +243,18 @@ style.appendChild(document.createTextNode(css));
                 string sessionKey = jsond["sessionKey"];
                 string sessionTicket = nav.SelectSingleNode("//*[local-name()='Response']/*[local-name()='SessionTicket']").Value;
                 var RockstarID = UInt64.Parse(nav.SelectSingleNode("//*[local-name()='Response']/*[local-name()='RockstarAccount']/*[local-name()='RockstarId']").Value);
+                var ctime = Int64.Parse(nav.SelectSingleNode("//*[local-name()='Response']/*[local-name()='PosixTime']").Value);
+                
+
 
                 // Call our version of validate
-                bool valsucess = await ROSCommunicationBackend.Login(ticket, sessionKey, sessionTicket, RockstarID);
+                bool valsucess = await ROSCommunicationBackend.Login(ticket, sessionKey, sessionTicket, RockstarID, ctime);
 
                 // Do somethin with valsuccess (true if ownership is valid)
 
                 if (valsucess)
                 {
-                    MessageBox.Show("Login Success");
+                    //MessageBox.Show("Login Success");
                 } 
                 else
                 {
