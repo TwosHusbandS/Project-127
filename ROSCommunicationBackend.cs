@@ -338,6 +338,7 @@ namespace Project_127 {
             session = new sessionContainer(ticket, sessionKey, sessionTicket, machineHash, ctime, nick);
 
             var res = await GenToken();
+            
             if (!res.error)
             {
                 //string res = EntitlementDecrypt(v.text); // Not actual entitlements (yet)
@@ -479,9 +480,53 @@ namespace Project_127 {
                     tgr.error = false;
                     tgr.status = 200;
                     tgr.text = "Launcher token data written";
-                    return tgr;
 
+                    var req2 = new HttpRequestMessage
+                    {
+                        RequestUri = new Uri("http://prod.ros.rockstargames.com/launcher/11/launcherservices/entitlements.asmx/GetEntitlementBlock"),
+                        Method = HttpMethod.Post,
+                    };
+                    req2.Headers.Add("Host", "prod.ros.rockstargames.com");
+                    req2.Headers.TryAddWithoutValidation("ros-Challenge", btoa(challenge));
+                    req2.Headers.TryAddWithoutValidation("ros-HeadersHmac", btoa(HeadersHmac(challenge, "POST", req2.RequestUri.AbsolutePath, session.sessionKey, session.sessionTicket)));
+                    req2.Headers.TryAddWithoutValidation("ros-SecurityFlags", "239");
+                    req2.Headers.TryAddWithoutValidation("ros-SessionTicket", session.sessionTicket);
+                    req2.Headers.TryAddWithoutValidation("User-Agent", GetROSVersionString());
+                    req2.Headers.ConnectionClose = true;
+                    req2.Headers.ExpectContinue = false;
+
+                    req2.Content = new ByteArrayContent(reqBody2);
+                    req2.Content.Headers.ContentType = new MediaTypeHeaderValue("application/x-www-form-urlencoded");
+                    res = await httpClient.SendAsync(req2);
+
+                    if (!res.IsSuccessStatusCode)
+                    {
+                        tgr.error = true;
+                        tgr.text = String.Format("Ownership Verification Error {0}: {1}\r\n{2}",
+                            (int)res.StatusCode, res.StatusCode, res.Content.ReadAsStringAsync().Result);
+                        tgr.status = (int)res.StatusCode + 1000;
+                    }
+                    else
+                    {
+                        rawResp = res.Content.ReadAsByteArrayAsync().Result;
+                        string exmldoc = Encoding.UTF8.GetString(DecryptROSData(rawResp, rawResp.Length, session.sessionKey));
+                        var exml = new XPathDocument(new StringReader(exmldoc));
+                        var enav = exml.CreateNavigator();
+                        if (NavGetOrDefault(enav, "//*[local-name()='Response']/*[local-name()='Status']", 0) == 0) //you are here
+                        {
+                            tgr.error = true;
+                            tgr.text = String.Format("Ownership error: could not get entitlement block "
+                                + "from the Social Club. Error code: \n{0}/{1}",
+                                NavGetOrDefault(enav, "//*[local-name()='Response']/*[local-name()='Error']/@Code", "[unknown]"),
+                                NavGetOrDefault(enav, "//*[local-name()='Response']/*[local-name()='Error']/@CodeEx", "[unknown]")
+                                );
+                            tgr.status = -1001;
+                            session.destroy();
+                        }
+
+                    }
                 }
+                return tgr;
             }
             return tgr;
         }
