@@ -32,7 +32,6 @@ namespace Project_127
     /// </summary>
     public partial class ROSIntegration : Window
     {
-        private byte[] OESFDR = { 0x45, 0xE6, 0xA5, 0x0D, 0xAA, 0xE4, 0x56, 0x2A, 0x5E, 0xAC, 0x05 };
         public ROSIntegration()
         {
             InitializeComponent();
@@ -244,12 +243,11 @@ style.appendChild(document.createTextNode(css));
                 string sessionTicket = nav.SelectSingleNode("//*[local-name()='Response']/*[local-name()='SessionTicket']").Value;
                 var RockstarID = UInt64.Parse(nav.SelectSingleNode("//*[local-name()='Response']/*[local-name()='RockstarAccount']/*[local-name()='RockstarId']").Value);
                 var ctime = Int64.Parse(nav.SelectSingleNode("//*[local-name()='Response']/*[local-name()='PosixTime']").Value);
-                
+                var RockstarNick = nav.SelectSingleNode("//*[local-name()='Response']/*[local-name()='RockstarAccount']/*[local-name()='Nickname']").Value; //For (future?) use
 
 
                 // Call our version of validate
-                bool valsucess = await ROSCommunicationBackend.Login(ticket, sessionKey, sessionTicket, RockstarID, ctime);
-
+                bool valsucess = await ROSCommunicationBackend.Login(ticket, sessionKey, sessionTicket, RockstarID, ctime, RockstarNick);
                 // Do somethin with valsuccess (true if ownership is valid)
 
                 if (valsucess)
