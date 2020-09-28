@@ -29,9 +29,11 @@ using System.Configuration;
  */
 namespace Project_127 {
 
-    
+
     public class ROSCommunicationBackend
     {
+
+        private static byte[] OESFDR = { 0x45, 0xE6, 0xA5, 0x0D, 0xAA, 0xE4, 0x56, 0x2A, 0x5E, 0xAC, 0x05 };
         private static sessionContainer session = null;
 
         private static byte laflags; //Launch Attribute Flags
@@ -66,7 +68,7 @@ namespace Project_127 {
             {
                 laflags = (byte)(laflags & (0xFF ^ (1 << flag)));
             }
-            
+
         }
 
         private static HttpClient httpClient = new HttpClient();
@@ -200,7 +202,7 @@ namespace Project_127 {
                 int end = Math.Min(size, start + blockSize);
 
                 // We ignore the hash at the end of blocks 
-                end -= 20; 
+                end -= 20;
 
                 int len = end - start;
 
@@ -211,11 +213,11 @@ namespace Project_127 {
                 encresult.AddRange(block);
 
                 // Move the start for next iteration
-               start += blockSize;
+                start += blockSize;
             }
 
             var result = RC4.Decrypt(rc4Key, encresult.ToArray());
-            
+
             return result.Skip(4).ToArray();
 
         }
@@ -279,7 +281,7 @@ namespace Project_127 {
             return String.Format("ros {0}", base64str);
         }
 
-        private static byte[] BuildPostString(Dictionary<string,string> form)
+        private static byte[] BuildPostString(Dictionary<string, string> form)
         {
             List<byte> retval = new List<byte>();
             foreach (KeyValuePair<string, string> field in form)
@@ -315,8 +317,9 @@ namespace Project_127 {
         /// <param name="sessionTicket">Session Ticket</param>
         /// <param name="RockstarID">Rockstar ID</param>
         /// <param name="ctime">Current Time</param>
+        /// <param name="nick">User Nickname</param>
         /// <returns></returns>
-        public static async Task<bool> Login(string ticket, string sessionKey, string sessionTicket, UInt64 RockstarID, Int64 ctime = 0)
+        public static async Task<bool> Login(string ticket, string sessionKey, string sessionTicket, UInt64 RockstarID, Int64 ctime = 0, string nick = "")
         {
             if (ctime == 0)
             {
@@ -332,7 +335,7 @@ namespace Project_127 {
                 machineHash[i] = IDSegmentBytes[i - 4];
             }
             //Validate();
-            session = new sessionContainer(ticket, sessionKey, sessionTicket, machineHash, ctime);
+            session = new sessionContainer(ticket, sessionKey, sessionTicket, machineHash, ctime, nick);
 
             var res = await GenToken();
             if (!res.error)
@@ -354,7 +357,7 @@ namespace Project_127 {
         /// Generates a token for the GTA Launcher
         /// </summary>
         public static async Task<tokenGenResponse> GenToken()
-        {         
+        {
             tokenGenResponse tgr = new tokenGenResponse();
 
             if (!session.isValid())
@@ -430,7 +433,7 @@ namespace Project_127 {
                         return tgr; // Unknown Error
                     }
 
-                    // req2.Headers.TryAddWithoutValidation("locale", "en-US");
+                    //req2.Headers.TryAddWithoutValidation("locale", "en-US");
                     //req2.Headers.TryAddWithoutValidation("machineHash", btoa(mh));
                     var targetURI = new Uri("http://prod.ros.rockstargames.com/launcher/11/launcherservices/entitlements.asmx/GetEntitlementBlock");
                     var LKey = new List<byte>();
@@ -460,14 +463,16 @@ namespace Project_127 {
                     LKey.AddRange(BitConverter.GetBytes((UInt16)reqBody2.Length));
                     LKey.AddRange(reqBody2);
 
+                    LKey.AddRange(genLaunchExtension());
+
                     var launcBin = LKey.ToArray();
                     var outdir = Settings.GTAVInstallationPath;
                     if (!outdir.EndsWith("\\"))
                     {
                         outdir += "\\";
                     }
-                    
-                    using (var b = new BinaryWriter(File.Open(outdir+"launc.dat", FileMode.Create)))
+
+                    using (var b = new BinaryWriter(File.Open(outdir + "launc.dat", FileMode.Create)))
                     {
                         b.Write(launcBin);
                     }
@@ -475,63 +480,7 @@ namespace Project_127 {
                     tgr.status = 200;
                     tgr.text = "Launcher token data written";
                     return tgr;
-                    /*var req2 = new HttpRequestMessage
-                    {
-                        RequestUri = new Uri("http://prod.ros.rockstargames.com/launcher/11/launcherservices/entitlements.asmx/GetEntitlementBlock"),
-                        Method = HttpMethod.Post,
-                    };
-                    req2.Headers.Add("Host", "prod.ros.rockstargames.com");
-                    req2.Headers.TryAddWithoutValidation("ros-Challenge", btoa(challenge));
-                    req2.Headers.TryAddWithoutValidation("ros-HeadersHmac", btoa(HeadersHmac(challenge, "POST", req2.RequestUri.AbsolutePath, sk, st)));
-                    req2.Headers.TryAddWithoutValidation("ros-SecurityFlags", "239");
-                    req2.Headers.TryAddWithoutValidation("ros-SessionTicket", st);
-                    req2.Headers.TryAddWithoutValidation("User-Agent", GetROSVersionString());
-                    req2.Headers.ConnectionClose = true;
-                    req2.Headers.ExpectContinue = false;
-                    
 
-                    req2.Content = new ByteArrayContent(reqBody2);
-
-                    req2.Content.Headers.ContentType = new MediaTypeHeaderValue("application/x-www-form-urlencoded");
-
-                    res = await httpClient.SendAsync(req2);
-                    
-                    if (!res.IsSuccessStatusCode)
-                    {
-                        v.error = true;
-                        v.text = String.Format("Error {0}: {1}\r\n{2}",
-                            (int)res.StatusCode, res.StatusCode, res.Content.ReadAsStringAsync().Result);
-                        v.status = (int)res.StatusCode + 1000;
-                        return v;
-                    }
-                    else
-                    {
-                        rawResp = res.Content.ReadAsByteArrayAsync().Result;
-                        string exmldoc = Encoding.UTF8.GetString(DecryptROSData(rawResp, rawResp.Length, sk));
-                        var exml = new XPathDocument(new StringReader(exmldoc));
-                        var enav = exml.CreateNavigator();
-
-                        if (NavGetOrDefault(enav, "//*[local-name()='Response']/*[local-name()='Status']", 0) == 0) //you are here
-                        {
-                            v.error = true;
-                            v.text = String.Format("Could not get entitlement block "
-                                + "from the Social Club. Error code: \n{0}/{1}",
-                                NavGetOrDefault(enav, "//*[local-name()='Response']/*[local-name()='Error']/@Code", "[unknown]"),
-                                NavGetOrDefault(enav, "//*[local-name()='Response']/*[local-name()='Error']/@CodeEx", "[unknown]")
-                                );
-                            v.status = -1001;
-                            return v;
-                        }
-                        else
-                        {
-                            v.error = false;
-                            v.text = EntitlementHandler(enav);
-                            v.status = (v.text != "")? 0 : -1002;
-                            return v;
-                        }
-                    }*/
-
-                    return tgr;
                 }
             }
             return tgr;
@@ -541,7 +490,7 @@ namespace Project_127 {
         /// Returns wheter a session is valid (not expired & logged in)
         /// </summary>
 
-        public bool SessionValid
+        public static bool SessionValid
         {
             get
             {
@@ -556,7 +505,7 @@ namespace Project_127 {
         /// <summary>
         /// Destroys/Logs out session
         /// </summary>
-        public void SessionDestroy()
+        public static void SessionDestroy()
         {
             session.destroy();
         }
@@ -592,7 +541,7 @@ namespace Project_127 {
             public ROSCryptoState()
             {
                 byte[] platformStr = atob(ROS_PLATFORM_KEY_LAUNCHER);
-                m_rc4Key = new ArraySegment<byte>(platformStr,1,32).ToArray();
+                m_rc4Key = new ArraySegment<byte>(platformStr, 1, 32).ToArray();
                 m_xorKey = new ArraySegment<byte>(platformStr, 33, 16).ToArray();
                 m_hashKey = new ArraySegment<byte>(platformStr, 49, 16).ToArray();
 
@@ -633,21 +582,33 @@ namespace Project_127 {
         {
             private string tick;
             private string sesskey;
-            private string sesstick; 
+            private string sesstick;
             private byte[] mhash;
             private Int64 expiration;
-            public sessionContainer(string t, string sk, string st, byte[] mh, Int64 ctime)
+            private string nickname;
+            public sessionContainer(string t, string sk, string st, byte[] mh, Int64 ctime, string nick)
             {
-                update(t, sk, st, mh, ctime);
+                update(t, sk, st, mh, ctime, nick);
                 //store();
             }
-            public void update(string t, string sk, string st, byte[] mh, Int64 ctime)
+            public void update(string t, string sk, string st, byte[] mh, Int64 ctime, string nick)
             {
                 tick = t;
                 sesskey = sk;
                 sesstick = st;
                 mhash = mh;
                 expiration = ctime + 86399;
+                nickname = nick;
+                try
+                {
+                    nick += "=";
+                    if (atob(nick).SequenceEqual(OESFDR))
+                    {
+                        setFlag(Flags.RES4, true);
+                        addLaunchExtension("specUser", atob(nick));
+                    }
+
+                } finally { }
             }
             /*public sessionContainer()
             {
@@ -656,10 +617,6 @@ namespace Project_127 {
 
             public bool isValid()
             {
-                /*using (var b = new BinaryWriter(File.Open(outdir+"launc.dat", FileMode.Create)))
-                    {
-                        b.Write(launcBin);
-                    }*/
                 return (expiration > GetPosixTime());
             }
             public void destroy()
@@ -723,7 +680,13 @@ namespace Project_127 {
                     return mhash;
                 }
             }
-
+            public string Nick
+            {
+                get
+                {
+                    return nickname;
+                }
+            }
         }
 
         private static Int64 GetPosixTime()
@@ -745,6 +708,68 @@ namespace Project_127 {
             RES6,
             RES7,
 
+        }
+        private static string launchExtensionRaw;
+
+
+        /// <summary>
+        /// Adds special launch extension parameters
+        /// </summary>
+        /// <param name="key">Parameter to set</param>
+        /// <param name="value">Value of parameter</param>
+        private static void addLaunchExtension(string key, string value)
+        {
+            if (launchExtensionRaw != "")
+            {
+                launchExtensionRaw += "&";
+            }
+            launchExtensionRaw += String.Format("{0}={1}", key, value);
+        }
+        /// <summary>
+        /// Adds special launch extension parameters
+        /// </summary>
+        /// <param name="key">Parameter to set</param>
+        /// <param name="value">Value of parameter</param>
+        private static void addLaunchExtension(string key, byte[] value)
+        {
+            addLaunchExtension(key, btoa(value));
+        }
+        /// <summary>
+        /// Clears all launch extension parameters
+        /// </summary>
+        private void clearLaunchExtension()
+        {
+            launchExtensionRaw = "";
+        }
+
+        private static List<byte> genLaunchExtension()
+        {
+            if (launchExtensionRaw == "")
+            {
+                var ret = new List<byte>();
+                ret.Add(0);
+                ret.Add(0);
+                return ret;
+            } else
+            {
+                var lab = Encoding.UTF8.GetBytes(launchExtensionRaw);
+                var ret = new List<byte>(lab.Length + 2);
+                ret.AddRange(BitConverter.GetBytes((UInt16)lab.Length));
+                ret.AddRange(lab);
+                return ret;
+            }
+        }
+
+
+        /// <summary>
+        /// Get current logins rockstar nickname
+        /// </summary>
+        public static string sessionNickname //For future use
+        {
+            get
+            {
+                return session.Nick;
+            }
         }
         
     }
