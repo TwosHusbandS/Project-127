@@ -19,7 +19,7 @@ namespace Project_127
     {
 
         // Stub to call dll
-        [DllImport("EntitlementDecrypt.dll", CallingConvention=CallingConvention.Cdecl)]
+        [DllImport("ROSCrypto.dll", CallingConvention=CallingConvention.Cdecl)]
         private static extern bool fnEntitlementDecrypt(byte[] input, int length);
 
         public static byte[] DecryptEntitlementBlock(byte[] data)

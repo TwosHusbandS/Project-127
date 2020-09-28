@@ -192,6 +192,7 @@ namespace Project_127
 				HelperClasses.Logger.Log("FirstLaunch Procedure Ended");
 			}
 
+
 			// Just checks if the GTAVInstallationPath is empty.
 			// So we dont have to "Force" the path every startup...
 			if (String.IsNullOrEmpty(Settings.GTAVInstallationPath) || String.IsNullOrEmpty(Settings.ZIPExtractionPath))

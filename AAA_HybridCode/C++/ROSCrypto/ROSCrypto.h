@@ -4,13 +4,16 @@
 // that uses this DLL. This way any other project whose source files include this file see
 // ENTITLEMENTDECRYPT_API functions as being imported from a DLL, whereas this DLL sees symbols
 // defined with this macro as being exported.
-#ifdef ENTITLEMENTDECRYPT_EXPORTS
-#define ENTITLEMENTDECRYPT_API __declspec(dllexport)
+#ifdef ROSCRYPTO_EXPORTS
+#define ROSCRYPTO_API __declspec(dllexport)
 #else
-#define ENTITLEMENTDECRYPT_API __declspec(dllimport)
+#define ROSCRYPTO_API __declspec(dllimport)
 #endif
 
 
 //extern ENTITLEMENTDECRYPT_API int nEntitlementDecrypt;
 
-extern "C" ENTITLEMENTDECRYPT_API bool fnEntitlementDecrypt(uint8_t* in, int len);
+extern "C" ROSCRYPTO_API bool fnEntitlementDecrypt(uint8_t*, int);
+extern "C" ROSCRYPTO_API void fnDecryptROSData(char*, int, const char*, int*);
+extern "C" ROSCRYPTO_API void fnEntitlementMap(uint8_t*, uint32_t*, uint8_t**, uint32_t*);
+
