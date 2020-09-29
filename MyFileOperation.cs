@@ -6,8 +6,14 @@ using System.Threading.Tasks;
 
 namespace Project_127
 {
+	/// <summary>
+	/// Class
+	/// </summary>
 	public class MyFileOperation
 	{
+		/// <summary>
+		/// Enum FileOperations
+		/// </summary>
 		public enum FileOperations
 		{
 			Copy,
@@ -16,12 +22,39 @@ namespace Project_127
 			Delete
 		}
 
+		/// <summary>
+		/// Property of Class Instance, File Operation Type
+		/// </summary>
 		public FileOperations FileOperation { get; private set; }
+
+		/// <summary>
+		/// Property of Class Instance. Name of File
+		/// </summary>
 		public string OriginalFile { get; private set; }
+
+		/// <summary>
+		/// Property of Class Instance. New File Location (for Moving, Copying, Hardlinking)
+		/// </summary>
 		public string NewFile { get; private set; }
+
+		/// <summary>
+		/// Property of Class Instance. The Log message which should appear
+		/// </summary>
 		public string Log { get; private set; }
+
+		/// <summary>
+		/// The loglevel for the LogMessage
+		/// </summary>
 		public int LogLevel { get; private set; }
 
+		/// <summary>
+		/// Constructor, creates one MyFileOperation Object
+		/// </summary>
+		/// <param name="pFileOperation"></param>
+		/// <param name="pOriginalFile"></param>
+		/// <param name="pNewFile"></param>
+		/// <param name="pLog"></param>
+		/// <param name="pLogLevel"></param>
 		public MyFileOperation(FileOperations pFileOperation, string pOriginalFile, string pNewFile, string pLog, int pLogLevel)
 		{
 			FileOperation = pFileOperation;
@@ -31,6 +64,10 @@ namespace Project_127
 			LogLevel = pLogLevel;
 		}
 
+		/// <summary>
+		/// Executes one MyFileOperationObject
+		/// </summary>
+		/// <param name="pMyFileOperation"></param>
 		public static void Execute(MyFileOperation pMyFileOperation)
 		{
 			switch (pMyFileOperation.FileOperation)

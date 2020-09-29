@@ -127,41 +127,6 @@ namespace Project_127
 		}
 
 
-
-
-		/////////////////////////////////////////
-		//// STUFF OF PROGRESS DOWNLOAD ABOVE ///
-		/////////////////////////////////////////
-		////// STUFF OF PROGRESS COPY BELOW /////
-		/////////////////////////////////////////
-
-		BackgroundWorker Worker = new BackgroundWorker();
-
-		public object Filestream { get; private set; }
-
-
-		public PopupDownload(string pSourceFile, string pDestinationFile)
-		{
-			InitializeComponent();
-
-			Worker.WorkerSupportsCancellation = true;
-			Worker.WorkerReportsProgress = true;
-
-			Worker.ProgressChanged += Worker_ProgressChanged;
-			Worker.DoWork += Worker_DoWork;
-		}
-
-		private void Worker_DoWork(object sender, DoWorkEventArgs e)
-		{
-			throw new NotImplementedException();
-		}
-
-		private void Worker_ProgressChanged(object sender, ProgressChangedEventArgs e)
-		{
-
-			throw new NotImplementedException();
-		}
-
 		////////////////////////////////////////////////////////////////////
 		// Below are Methods we need to make the behaviour of this nice. ///
 		////////////////////////////////////////////////////////////////////

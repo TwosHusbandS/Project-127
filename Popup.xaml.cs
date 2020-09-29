@@ -37,16 +37,10 @@ namespace Project_127
 		/// <param name="pMsg"></param>
 		/// <param name="pTitle"></param>
 		/// <param name="pFontSize"></param>
-		public Popup(Popup.PopupWindowTypes pPopupWindowType, string pMsg, int pFontSize)
+		public Popup(Popup.PopupWindowTypes pPopupWindowType, string pMsg, int pFontSize = 18)
         {
 			// Initializing all WPF Elements
             InitializeComponent();
-
-			double x = (Application.Current.MainWindow.Left + Width) / 2;
-			double y = (Application.Current.MainWindow.Top + Height) / 2;
-
-			this.Left = x - (this.Width / 2);
-			this.Top = y - (this.Height / 2);
 
 			// Set the Parameters as Properties of new Popup Window
 			lbl_Main.FontSize = pFontSize;
@@ -105,17 +99,6 @@ namespace Project_127
 				myButtonYes.Focus();
 			}
 		}
-
-
-        /// <summary>
-        /// Overloaded (underloaded) Constructor of Popup Window
-        /// </summary>
-        /// <param name="pPopupWindowType"></param>
-        /// <param name="pMsg"></param>
-        public Popup(Popup.PopupWindowTypes pPopupWindowType, string pMsg) : this(pPopupWindowType, pMsg, 18)
-        {
-
-        }
 
 
         /// <summary>

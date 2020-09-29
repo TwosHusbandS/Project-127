@@ -44,6 +44,9 @@ namespace Project_127
 			NonRunning
 		}
 
+		/// <summary>
+		/// AuthState Property
+		/// </summary>
 		public static AuthStates AuthState
 		{
 			get
@@ -97,7 +100,6 @@ namespace Project_127
 				}
 			}
 		}
-
 
 		/// <summary>
 		/// Just a reference to the GameVersion we are running. GameVersion as in Retailer
@@ -287,6 +289,156 @@ namespace Project_127
 		}
 
 
+
+		/// <summary>
+		/// This actually launches the game
+		/// </summary>
+		public static async void Launch()
+		{
+			HelperClasses.Logger.Log("Trying to Launch the game.");
+
+			// If Upgraded
+			if (LauncherLogic.InstallationState == InstallationStates.Upgraded)
+			{
+				HelperClasses.Logger.Log("Installation State Upgraded Detected.", 1);
+
+				// If Steam
+				if (GameVersion == Settings.Retailers.Steam)
+				{
+					HelperClasses.Logger.Log("Trying to start Game normally through Steam.", 1);
+					Process gtav = new Process();
+					gtav.StartInfo.FileName = Globals.SteamInstallPath.TrimEnd('\\') + @"\steam.exe";
+					gtav.StartInfo.Arguments = "-applaunch 271590";
+					gtav.Start();
+				}
+
+				// If Epic Games
+				else if (GameVersion == Settings.Retailers.Epic)
+				{
+					HelperClasses.Logger.Log("Trying to start Game normally through EpicGames.", 1);
+					Process.Start(@"com.epicgames.launcher://apps/9d2d0eb64d5c44529cece33fe2a46482?action=launch&silent=true");
+				}
+
+				// If Rockstar
+				else
+				{
+					HelperClasses.Logger.Log("Trying to start Game normally through Rockstar.", 1);
+					Process.Start(Settings.GTAVInstallationPath.TrimEnd('\\') + @"\PlayGTAV.exe");
+				}
+
+				HelperClasses.Logger.Log("Upgraded Game should be launched");
+			}
+
+			// If Downgraded
+			else if (LauncherLogic.InstallationState == InstallationStates.Downgraded)
+			{
+				HelperClasses.Logger.Log("Installation State Downgraded Detected", 1);
+
+				// If already Authed
+				if (AuthState == AuthStates.Auth)
+				{
+					HelperClasses.Logger.Log("You are already Authenticated. Will Launch Game Now");
+				}
+
+				// If not Authed
+				else
+				{
+					HelperClasses.Logger.Log("You are NOT Authenticated. Throwing up Window now.");
+
+					// Trying to Auth User
+					new ROSIntegration().ShowDialog();
+
+					// If still not authed
+					if (AuthState == AuthStates.NotAuth)
+					{
+						// Throw Error and Quick
+						HelperClasses.Logger.Log("Manual User Auth on Launch click did not work. Launch method will exit");
+						new Popup(Popup.PopupWindowTypes.PopupOk, "Authentication not sucessfull. Will abort Launch Function. Please Try again");
+						return;
+					}
+				}
+
+
+				// Generates Token needed to Launch Downgraded GTAV
+				HelperClasses.Logger.Log("Letting Dragon work his magic");
+				await ROSCommunicationBackend.GenToken();
+
+				// TO DO, Clean this Up, move to ProcessHandler HelperClass
+				HelperClasses.Logger.Log("Launching Game");
+				Process p = new Process();
+				p.StartInfo.FileName = Settings.GTAVInstallationPath.TrimEnd('\\') + @"\PlayGTAV.exe";
+				p.StartInfo.WorkingDirectory = Settings.GTAVInstallationPath.TrimEnd('\\');
+				p.Start();
+			}
+		}
+
+
+
+		/// <summary>
+		/// Method to import Zip File
+		/// </summary>
+		public static void ImportZip(string pZipFileLocation, bool deleteFileAfter = false)
+		{
+			// Creating all needed Folders
+			HelperClasses.FileHandling.CreateAllZIPPaths(Settings.ZIPExtractionPath);
+
+			// Getting some Info of the current Installation
+			LauncherLogic.InstallationStates OldInstallationState = LauncherLogic.InstallationState;
+			string OldHash = HelperClasses.FileHandling.CreateDirectoryMd5(LauncherLogic.DowngradeFilePath);
+
+			HelperClasses.Logger.Log("Importing ZIP File: '" + pZipFileLocation + "'");
+			HelperClasses.Logger.Log("Old ZIP File Version: '" + Globals.ZipVersion + "'");
+			HelperClasses.Logger.Log("Old Installation State: '" + OldInstallationState + "'");
+			HelperClasses.Logger.Log("Old Hash of Downgrade Folder: '" + OldHash + "'");
+			HelperClasses.Logger.Log("Settings.ZIPPath: '" + Settings.ZIPExtractionPath + "'");
+
+
+			string[] myFiles = HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(LauncherLogic.ZIPFilePath.TrimEnd('\\') + @"\Project_127_Files");
+			foreach (string myFile in myFiles)
+			{
+				if (!myFile.Contains("UpgradeFiles"))
+				{
+					// Deleting all Files which are NOT in the UpgradeFiles Folder of the ZIP Extract Path
+					HelperClasses.FileHandling.deleteFile(myFile);
+				}
+			}
+
+			// Actually Extracting the ZIP File
+			HelperClasses.Logger.Log("Extracting ZIP File: '" + pZipFileLocation + "' to the path: '" + LauncherLogic.ZIPFilePath + "'");
+			new PopupProgress(PopupProgress.ProgressTypes.ZIPFile, pZipFileLocation).ShowDialog();
+
+			// Deleting the ZIP File
+			if (deleteFileAfter)
+			{
+				HelperClasses.Logger.Log("Deleting ZIP File: '" + pZipFileLocation + "'");
+				HelperClasses.FileHandling.deleteFile(pZipFileLocation);
+			}
+
+			LauncherLogic.InstallationStates NewInstallationState = LauncherLogic.InstallationState;
+			string NewHash = HelperClasses.FileHandling.CreateDirectoryMd5(LauncherLogic.DowngradeFilePath);
+
+			HelperClasses.Logger.Log("Done Importing ZIP File: '" + pZipFileLocation + "'");
+			HelperClasses.Logger.Log("New ZIP File Version: '" + Globals.ZipVersion + "'");
+			HelperClasses.Logger.Log("New Installation State: '" + NewInstallationState + "'");
+			HelperClasses.Logger.Log("New Hash of Downgrade Folder: '" + NewHash + "'");
+
+
+			// If the state was Downgraded before Importing ZIP-File
+			if (OldInstallationState == LauncherLogic.InstallationStates.Downgraded)
+			{
+				// If old and new Hash (of downgrade folder) dont match
+				if (OldHash != NewHash)
+				{
+					// Downgrade again
+					LauncherLogic.Downgrade();
+				}
+			}
+
+			new Popup(Popup.PopupWindowTypes.PopupOk, "ZIP File imported (Version: '" + Globals.ZipVersion + "')").ShowDialog();
+		}
+
+
+
 		/// <summary>
 		/// "Cleanest" way of getting the GTA V Path automatically
 		/// </summary>
@@ -350,6 +502,7 @@ namespace Project_127
 			return HelperClasses.RegeditHandler.GetValue(myRK2, "InstallLocation");
 		}
 
+
 		/// <summary>
 		/// "Cleanest" way of getting the GTA V Path automatically
 		/// </summary>
@@ -396,70 +549,6 @@ namespace Project_127
 			}
 			HelperClasses.Logger.Log("GTAV Path Magic by steam didnt work", 3);
 			return "";
-		}
-
-		/// <summary>
-		/// This actually launches the game
-		/// </summary>
-		public static async void Launch()
-		{
-			HelperClasses.Logger.Log("Trying to Launch the game.");
-			if (LauncherLogic.InstallationState == InstallationStates.Upgraded)
-			{
-				HelperClasses.Logger.Log("Installation State Upgraded Detected.", 1);
-
-				if (GameVersion == Settings.Retailers.Steam)
-				{
-					HelperClasses.Logger.Log("Trying to start Game normally through Steam.", 1);
-					Process gtav = new Process();
-					gtav.StartInfo.FileName = Globals.SteamInstallPath.TrimEnd('\\') + @"\steam.exe";
-					gtav.StartInfo.Arguments = "-applaunch 271590";
-					gtav.Start();
-				}
-				else if (GameVersion == Settings.Retailers.Epic)
-				{
-					HelperClasses.Logger.Log("Trying to start Game normally through EpicGames.", 1);
-					Process.Start(@"com.epicgames.launcher://apps/9d2d0eb64d5c44529cece33fe2a46482?action=launch&silent=true");
-				}
-				else
-				{
-					HelperClasses.Logger.Log("Trying to start Game normally through Rockstar.", 1);
-					Process.Start(Settings.GTAVInstallationPath.TrimEnd('\\') + @"\PlayGTAV.exe");
-				}
-
-				HelperClasses.Logger.Log("Upgraded Game should be launched");
-			}
-			else if (LauncherLogic.InstallationState == InstallationStates.Downgraded)
-			{
-				HelperClasses.Logger.Log("Installation State Downgraded Detected", 1);
-
-				if (AuthState == AuthStates.Auth)
-				{
-					HelperClasses.Logger.Log("You are already Authenticated. Will Launch Game Now");
-				}
-				else
-				{
-					HelperClasses.Logger.Log("You are NOT Authenticated. Throwing up Window now.");
-					new ROSIntegration().ShowDialog();
-					if (AuthState == AuthStates.NotAuth)
-					{
-						HelperClasses.Logger.Log("Manual User Auth on Launch click did not work. Launch method will exit");
-						new Popup(Popup.PopupWindowTypes.PopupOk, "Authentication not sucessfull. Will abort Launch Function. Please Try again");
-						return;
-					}
-				}
-
-				// Generates Token needed to Launch Downgraded GTAV
-				HelperClasses.Logger.Log("Letting Dragon work his magic");
-				await ROSCommunicationBackend.GenToken();
-
-				// TO DO, Clean this Up, move to ProcessHandler HelperClass
-				HelperClasses.Logger.Log("Launching Game");
-				Process p = new Process();
-				p.StartInfo.FileName = Settings.GTAVInstallationPath.TrimEnd('\\') + @"\PlayGTAV.exe";
-				p.StartInfo.WorkingDirectory = Settings.GTAVInstallationPath.TrimEnd('\\');
-				p.Start();
-			}
 		}
 
 
