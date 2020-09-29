@@ -64,6 +64,7 @@ namespace Project_127
 		{
 			InitializeComponent();
 
+			// Setting all Properties needed later
 			ProgressType = pProgressType;
 
 			if (ProgressType == ProgressTypes.FileOperation)
@@ -78,14 +79,17 @@ namespace Project_127
 				myLBL.Content = "Extracting ZIP...(0%)";
 			}
 
+			// Lets do some shit
 			StartWork();
 		}
 
 		[STAThread]
 		public async void StartWork()
 		{
+			// Awaiting the Task of the Actual Work
 			await Task.Run(new Action(ActualWork));
 
+			// Close this
 			this.Close();
 		}
 
@@ -93,17 +97,13 @@ namespace Project_127
 		public void ActualWork()
 		{
 			HelperClasses.Logger.Log("ProgressType: '" + ProgressType + "'");
-			
-			if (ProgressType == ProgressTypes.ZIPFile)
-			{
-				HelperClasses.Logger.Log("ZipFileWeWannaExtract: '" + ZipFileWeWannaExtract + "'");
-				HelperClasses.Logger.Log("ZIPExtractPath: '" + LauncherLogic.ZIPFilePath + "'");
-			}
 
 			if (ProgressType == ProgressTypes.FileOperation)
 			{
 				double count = MyFileOperations.Count;
 				double j = 0;
+			
+				HelperClasses.Logger.Log("Lets do some File Operation Stuff");
 				for (int i = 0; i <= MyFileOperations.Count - 1; i++)
 				{
 					MyFileOperation.Execute(MyFileOperations[i]);
@@ -114,9 +114,13 @@ namespace Project_127
 						myLBL.Content = "Doing a " + Operation + "...(" + myPB.Value + "%)";
 					});
 				}
+				HelperClasses.Logger.Log("Done with File Operation Stuff");
 			}
-			else
+			else if(ProgressType == ProgressTypes.ZIPFile)
 			{
+				HelperClasses.Logger.Log("ZipFileWeWannaExtract: '" + ZipFileWeWannaExtract + "'");
+				HelperClasses.Logger.Log("ZIPExtractPath: '" + LauncherLogic.ZIPFilePath + "'");
+
 				List<System.IO.Compression.ZipArchiveEntry> fileList = new List<System.IO.Compression.ZipArchiveEntry>();
 				var totalFiles = 0;
 				var filesExtracted = 0;
@@ -132,13 +136,12 @@ namespace Project_127
 				{
 					using (var archive = ZipFile.OpenRead(ZipFileWeWannaExtract))
 					{
+						totalFiles = archive.Entries.Count();
+
+						// Looping through all Files in the ZIPFile
 						foreach (var file in archive.Entries)
 						{
-							fileList.Add(file);
-							totalFiles++;
-						}
-						foreach (var file in fileList)
-						{
+							// If the File exists and is not a folder
 							if (!string.IsNullOrEmpty(file.Name))
 							{
 								string PathOnDisk = LauncherLogic.ZIPFilePath.TrimEnd('\\') + @"\" + file.FullName.Replace(@"/", @"\");
@@ -146,6 +149,7 @@ namespace Project_127
 								file.ExtractToFile(PathOnDisk);
 							}
 
+							// Update GUI
 							Application.Current.Dispatcher.Invoke((Action)delegate {
 								filesExtracted++;
 								long progress = (100 * filesExtracted / totalFiles);
@@ -153,6 +157,8 @@ namespace Project_127
 								myLBL.Content = "Extracting ZIP...(" + progress + "%)";
 							});
 
+
+							// // Lets hope we never need this but I want to keep this here for now
 							//this.Dispatcher.Invoke(() =>
 							//{
 							//	myPB.Value = progress;
