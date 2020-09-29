@@ -112,6 +112,8 @@
     </ApplicationDefinition>
     <Compile Include="EntitlementBlock.cs" />
     <Compile Include="EntitlementBlockCipher.cs" />
+    <Compile Include="HelperClasses\OwnOpenFolderDialog\FolderSelectDialog.cs" />
+    <Compile Include="HelperClasses\OwnOpenFolderDialog\Reflector.cs" />
     <Compile Include="MyFileOperation.cs" />
     <Compile Include="RC4.cs" />
     <Compile Include="ROSCommunicationBackend.cs" />

@@ -44,7 +44,7 @@ namespace Project_127.HelperClasses
 		/// <param name="pFilter"></param>
 		/// <param name="pStartLocation"></param>
 		/// <returns></returns>
-		public static string OpenDialogExplorer(PathDialogType pPathDialogType, string pTitle, string pFilter, string pStartLocation)
+		public static string OpenDialogExplorer(PathDialogType pPathDialogType, string pTitle, string pStartLocation, string pFilter = null)
 		{
 			if (pPathDialogType == PathDialogType.File)
 			{
@@ -60,17 +60,9 @@ namespace Project_127.HelperClasses
 			}
 			else if (pPathDialogType == PathDialogType.Folder)
 			{
-				// TODO CTRLF
-
-				// WIP, Will be the pretty version with better UX in the feature
-				FolderBrowserDialog myFolderDialog = new FolderBrowserDialog();
-				myFolderDialog.Description = pTitle;
-				myFolderDialog.ShowNewFolderButton = true;
-				// myFolderDialog.Something = pStartLocation;
-
-				myFolderDialog.ShowDialog();
-
-				return myFolderDialog.SelectedPath;
+				var fsd = new OwnOpenFolderDialog.FolderSelectDialog(pTitle, pStartLocation);
+				fsd.ShowDialog();
+				return fsd.FileName;
 			}
 			return "";
 		}
@@ -78,17 +70,6 @@ namespace Project_127.HelperClasses
 
 		// CTRLF TODO TO DO FIX, Bottom overload could be shit....
 
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="pPathDialogType"></param>
-		/// <param name="pTitle"></param>
-		/// <param name="pStartLocation"></param>
-		/// <returns></returns>
-		public static string OpenDialogExplorer(PathDialogType pPathDialogType, string pTitle, string pStartLocation)
-		{
-			return OpenDialogExplorer(pPathDialogType, pTitle, "Executable files(*.exe *) | *.exe *", pStartLocation);
-		}
 
 		/// <summary>
 		/// Gets all the Files in one Folder (and its Subfolders)

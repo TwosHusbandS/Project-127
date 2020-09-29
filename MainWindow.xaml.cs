@@ -72,25 +72,7 @@ General Comments and things one should be aware of (still finishing this list)
 
 Main To do:
 	- Things changed since last official release (not last commit)
-		-> Lots. Lots. Lots.
-		-> Admin Relauncher
-		-> Installer can now Launch the Program
-		-> Rewrite of GTA V Path stuff
-		-> BugFix for closed beta auth
-		-> Make it not not crash when github unreachable
-		-> Option to Use Copy Files instead of Hardlinks
-		-> Using Lists of MyFileOperation objects for any big file stuff we do. (backend change of file operations)
-		-> ProgressBar for File Operations, and extracting ZIP
-		-> Proper Debug Message on rightclick of auth button and a way of getting the logfile after right clicking hamburger button.
-		-> Lots of small Fixes and changes.
-		-> Should auto downgrade if needed based on hashes of downgrade folder after importing zip
-		-> You can now change location of ZIP File (where it is extracted), it will Move Files and delete Old Folder
-		-> Method for Defaulting the EnableCopyFilesInsteadOfHardlinking when something are changed
-		-> New FirstLaunch Options, Messages, and Logic
-		-> Refactured some of the GTA V Guessing Game, now guessing 7 Paths, lets hope one is correct
-		-> Checking if the GTAV Path and the ZIPFilePath are working correctly before Upgrading / Downgrading
-		-> Add Rockstar and Epic support, Frontend + Backend
-		-> Added Proper Authentication to FrontEnd of this, BackEnd of this, and the patched emu files by dr490n.
+		-> Pretty OpenFolderDialog
 
 	-REMEMBER:
 		-> Release with admin mode manifest thingy...		
@@ -98,7 +80,9 @@ Main To do:
 					
 	- TO DO:
 		-> Full Cleanup code (auto document everything and also write a few lines in important locations)
-		
+		-> CommandLineArgs bypass doesnt work...maybe remove all the beta auth code
+		-> ZIP file gets downloaded before its checked if you are allowed to run
+
 		// Release
 
 		-> SaveFileHandler, just manage our own SaveFiles, probably only need one list for datagrid, ask if we need to overwrite
@@ -189,6 +173,7 @@ namespace Project_127
 
 			// Admin Relauncher
 			AdminRelauncher();
+
 
 			//Dont run anything when we are on 32 bit...
 			//If this ever gets changed, take a second look at regedit class and path(different for 32 and 64 bit OS)
@@ -754,7 +739,7 @@ namespace Project_127
 		/// <param name="e"></param>
 		private void btn_ImportZip_Click(object sender, RoutedEventArgs e)
 		{
-			string ZipFileLocation = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.File, "Title", "", Globals.ProjectInstallationPath);
+			string ZipFileLocation = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.File, "Import ZIP File", Globals.ProjectInstallationPath, "ZIP Files(*.zip *) | *.zip * ");
 			if (HelperClasses.FileHandling.doesFileExist(ZipFileLocation))
 			{
 				Globals.ImportZip(ZipFileLocation);

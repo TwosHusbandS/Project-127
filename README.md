@@ -42,9 +42,7 @@ Not all Features are fully implemented at this point. If you can think of any ot
 
 ### Beta Instructions:
 
-The Program **currently** does not get the latest Files for Downgrading, Launching, SaveFiles etc. automatically for you. It already has the technical capabilities, but there are reasons we are distributing those files manually at this Point in the Beta. If the Program asks you to Download a ZIP File, click "No". 
-
-Get the latest ZIP Files from the Pinned Messages in the Beta Channel of the GTAV Speedrunning Discord. Download it (click the long link, not the thumbnail), save it somewhere. Open the Project 127, click "Import ZIP" and select the ZIP File you just downloaded.
+This should behave like a normal Installation. No specific Beta Instructions needed.
 
 ---
 

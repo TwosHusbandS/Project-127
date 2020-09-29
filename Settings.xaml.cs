@@ -45,13 +45,14 @@ namespace Project_127
 			HelperClasses.Logger.Log("Asking User for GTA V Installation path");
 			string GTAVInstallationPathUserChoice = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.Folder, "Pick the Folder which contains your GTAV.exe", @"C:\");
 			HelperClasses.Logger.Log("Users picked path is: '" + GTAVInstallationPathUserChoice + "'");
-			if (String.IsNullOrEmpty(GTAVInstallationPathUserChoice))
-			{
-				HelperClasses.Logger.Log("No Folder selected. Canceling User Action of Changing GTAV Installation Path");
-				return;
-			}
+
 			while (!(LauncherLogic.IsGTAVInstallationPathCorrect(GTAVInstallationPathUserChoice, false)))
 			{
+				if (String.IsNullOrWhiteSpace(GTAVInstallationPathUserChoice))
+				{
+					HelperClasses.Logger.Log("No Folder selected. Canceling User Action of Changing GTAV Installation Path");
+					return;
+				}
 				HelperClasses.Logger.Log("Users picked path detected to be faulty. Asking user to try again");
 				Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "GTA V Path detected to be not correct. Are you sure?\nForce '" + GTAVInstallationPathUserChoice + "' as your GTAV Installation Location?");
 				yesno.ShowDialog();
@@ -108,7 +109,7 @@ namespace Project_127
 		private void btn_Set_ZIPExtractionPath_Click(object sender, RoutedEventArgs e)
 		{
 			// Grabbing the new Path from FolderDialogThingy
-			string _ZIPExtractionPath = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.Folder, "Pick the Folder where the ZIP Files (Upgrade / Downgrade / Savefiles will be extracted. ", @"C:\");
+			string _ZIPExtractionPath = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.Folder, "Pick the Folder where this Program will store its Data.", Settings.ZIPExtractionPath);
 			HelperClasses.Logger.Log("Changing ZIPExtractionPath.");
 			HelperClasses.Logger.Log("Old ZIPExtractionPath: '" + Settings.ZIPExtractionPath + "'");
 			HelperClasses.Logger.Log("Potential New ZIPExtractionPath: '" + _ZIPExtractionPath + "'");
