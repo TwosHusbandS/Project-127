@@ -213,9 +213,6 @@ namespace Project_127
 				Settings.LastLaunchedVersion = Globals.ProjectVersion;
 			}
 
-			// Check whats the latest Version of the ZIP File in GITHUB
-			CheckForZipUpdate();
-
 			// Starting the Dispatcher Timer for the automatic updates of the GTA V Button
 			MyDispatcherTimer = new System.Windows.Threading.DispatcherTimer();
 			MyDispatcherTimer.Tick += new EventHandler(pMW.UpdateGUIDispatcherTimer);
@@ -233,7 +230,7 @@ namespace Project_127
 		}
 
 
-		private static void CheckForZipUpdate()
+		public static void CheckForZipUpdate()
 		{
 			// Check whats the latest Version of the ZIP File in GITHUB
 			int ZipOnlineVersion = 0;

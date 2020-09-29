@@ -73,6 +73,7 @@ General Comments and things one should be aware of (still finishing this list)
 Main To do:
 	- Things changed since last official release (not last commit)
 		-> Pretty OpenFolderDialog
+		-> ZIP File gets downloaded AFTER checking if user is allowed to run...
 
 	-REMEMBER:
 		-> Release with admin mode manifest thingy...		
@@ -81,26 +82,23 @@ Main To do:
 	- TO DO:
 		-> Full Cleanup code (auto document everything and also write a few lines in important locations)
 		-> CommandLineArgs bypass doesnt work...maybe remove all the beta auth code
-		-> ZIP file gets downloaded before its checked if you are allowed to run
 
 		// Release
 
-		-> SaveFileHandler, just manage our own SaveFiles, probably only need one list for datagrid, ask if we need to overwrite
-		-> Regedit Cleanup of everything not in default settings
+		-> Think about making a spawner to spawn processes
+		-> auto high priority
+		-> auto steam core fix
 		-> Custom ZIP File Location User Error Checks:
 			=> User might get confused with the Project_127_Files Folder. 
 				Maybe we should actually check parent folders and child folders when User is selecting a Path for ZIP File
+		-> Regedit Value "LastLaunchedVersion" is there and be used with the next Version.
+		-> SaveFileHandler, just manage our own SaveFiles, probably only need one list for datagrid, ask if we need to overwrite
+		-> Regedit Cleanup of everything not in default settings
 		-> $UpgradeFiles has downgrade files in them. Why? And how to Fix?
 			=> Cant figure out how to fix that at the moment
-		-> Think about making a spawner to spawn processes
-		-> Regedit Value "LastLaunchedVersion" is there and be used with the next Version.
-		-> auto high priority
-		-> auto steam core fix
-		-> make OpenFolderDialog pretty...I know its possible, just google more and more
-		-> Get data binding to work after everything else is Gucci (if not set a property of main window instance  being a reference to the latest settings instance
 		-> Settings dont update content
 			=> Currently it calls the Refresh Method after each click...
-
+			=> Get data binding to work after everything else is Gucci (if not set a property of main window instance  being a reference to the latest settings instance
 		// After that, release rublic built + auto upgrade
 
 	- Implemet other features 
@@ -220,6 +218,10 @@ namespace Project_127
 			SetButtonMouseOverMagic(btn_Exit, false);
 			SetButtonMouseOverMagic(btn_Auth, false);
 			SetButtonMouseOverMagic(btn_Hamburger, false);
+
+
+			// Check whats the latest Version of the ZIP File in GITHUB
+			Globals.CheckForZipUpdate();
 
 			// Auto Updater
 			CheckForUpdate();
