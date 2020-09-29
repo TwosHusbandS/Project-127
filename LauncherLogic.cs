@@ -454,6 +454,7 @@ namespace Project_127
 				await ROSCommunicationBackend.GenToken();
 
 				// TO DO, Clean this Up, move to ProcessHandler HelperClass
+				HelperClasses.Logger.Log("Launching Game");
 				Process p = new Process();
 				p.StartInfo.FileName = Settings.GTAVInstallationPath.TrimEnd('\\') + @"\PlayGTAV.exe";
 				p.StartInfo.WorkingDirectory = Settings.GTAVInstallationPath.TrimEnd('\\');
