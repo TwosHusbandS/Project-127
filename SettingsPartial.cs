@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -413,6 +414,26 @@ namespace Project_127
 			}
 		}
 
+
+		/// <summary>
+		/// Settings InGameName. Gets and Sets from the Dictionary.
+		/// </summary>
+		public static string InGameName
+		{
+			get
+			{
+				string rtrn = Regex.Replace(GetSetting("InGameName"), @"[^0-9A-Za-z_]", @"");
+				if (String.IsNullOrEmpty(rtrn)) { rtrn = "HiMomImOnYoutube"; }
+				while (rtrn.Length < 3) { rtrn = rtrn + "_"; }
+				if (rtrn.Length > 16) { rtrn = rtrn.Substring(0, 16); }
+				return rtrn;
+			}
+			set
+			{
+				// Need to do some front end checking here, so user doesnt get confused
+				SetSetting("InGameName", value);
+			}
+		}
 
 		/// <summary>
 		/// Enum for all Retailers

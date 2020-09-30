@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -26,12 +27,29 @@ namespace ProcessSpawner127
 			string WorkingDir = "";
 			bool runAsAdmin = false;
 
-			for (int i = 0; i <= args.Length - 1; i++)
+			//for (int i = 0; i <= args.Length - 1; i++)
+			//{
+			//	Console.WriteLine("Arg: {0} = '{1}'", i, args[i]);
+			//}
+			//Console.WriteLine("Done with that ");
+			//Console.ReadKey();
+
+			if (args.Length >= 2)
 			{
-				Console.WriteLine("Arg: {0} = '{1}'", i, args[i]);
+				FilePath = args[0];
+				WorkingDir = args[1];
+
+				Process p = new Process();
+				p.StartInfo.FileName = FilePath;
+				p.StartInfo.WorkingDirectory = WorkingDir;
+
+				p.Start();
+
+				Console.WriteLine("Done...");
+				Console.ReadKey();
 			}
-			Console.WriteLine("Done with that ");
-			Console.ReadKey();
+
+
 		}
 	}
 }

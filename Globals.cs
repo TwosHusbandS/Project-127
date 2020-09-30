@@ -126,6 +126,7 @@ namespace Project_127
 			{"EnablePreOrderBonus", "False"},
 			{"EnableOnlyAutoStartProgramsWhenDowngraded", "True"},
 			{"Retailer", "Steam"},
+			{"InGameName", "HiMomImOnYoutube"},
 			{"EnableAutoSetHighPriority", "True" },
 			{"EnableAutoSteamCoreFix", "True" },
 			{"EnableAutoStartLiveSplit", "True" },
