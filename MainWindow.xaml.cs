@@ -4,7 +4,7 @@ Main Documentation:
 Actual code (partially closed source) which authentificates, handles entitlement and launches the game is done by @dr490n with the help of other members of the core team like @Special For and @zCri
 Artwork, Design of GUI, GUI Behaviourehaviour, Colorchoices etc. by "@Hossel"
 Client by "@thS"
-Version: 0.0.3.0 Closed Beta
+Version: 0.0.3.1 First Open Beta Release
 
 Build Instructions:
 	Press CTRLF + F5, pray that nuget does its magic.
@@ -66,9 +66,7 @@ General Comments and things one should be aware of (still finishing this list)
 		Never built with requestedExecutionLevel administrator tho. Will fail to launch from installer
 	- Installation Path gets written to Registry on every Launch to make sure its always up to date.
 
-	#####################################################################################################
-	##### This needs some some cleanup. Just pushing now so we can get closed beta Auth testing #########
-	#####################################################################################################
+
 
 Main To do:
 	- Things changed since last official release (not last commit)
@@ -78,22 +76,21 @@ Main To do:
 		-> Set popup to "No ZIP Installed" if version is 0
 		-> Automatically detect Retailer based on Path guess
 		-> auto high priority
-		-> BugFix when deleting Folder
+		-> Fix for Bug when deleting a Folder
 		-> Fix CommandLineArgs
+		-> Added Extra Logging for Zip File Extraction
+		-> Fixed "Import ZIP Window"
 
 	-REMEMBER:
 		-> Release with admin mode manifest thingy...		
 		-> Fix Installer with everything (autolaunch app,include new files)
+		-> This requires admin the "proper" way of telling windows. Should fix zip file issues
 					
 	- TO DO:
-		-> Think about making a spawner to spawn processes
-		   (Process.Start(@"C:\Users\ingow\source\repos\ProcessSpawner127\bin\x64\Release\ProcessSpawner127.exe", "testA testB");)
-		-> Figure out which files I need to distribute
-		-> Open Twice shit may be broken...gotta investigate. Works for me.
-		-> rollback to old Admin Launch Methods. This should fix Investige zip file unzipping crashing for some.
 
 		// Release
 
+		-> Figure out which files I need to distribute
 		-> Language Select
 		-> auto steam core fix
 		-> Custom ZIP File Location User Error Checks:
@@ -101,6 +98,8 @@ Main To do:
 				Maybe we should actually check parent folders and child folders when User is selecting a Path for ZIP File
 		-> Regedit Value "LastLaunchedVersion" is there and be used with the next Version.
 		-> SaveFileHandler, just manage our own SaveFiles, probably only need one list for datagrid, ask if we need to overwrite
+		-> Think about making a spawner to spawn processes
+		   (Process.Start(@"C:\Users\ingow\source\repos\ProcessSpawner127\bin\x64\Release\ProcessSpawner127.exe", "testA testB");)
 		-> Regedit Cleanup of everything not in default settings
 		-> $UpgradeFiles has downgrade files in them. Why? And how to Fix?
 			=> Cant figure out how to fix that at the moment
@@ -124,7 +123,11 @@ Weird Beta Reportings:
 			If given Path is detected to be wrong, but user has to confirm this three times every startup...
 	- Game wasnt launching for most
 			I actually hardcoded the Path...its now fixed.
-
+	- People had to run as Admin manually even tho I have the admin relauncher.
+	- ZIP Extraction failed for 2 people when not manually running as admin
+			Added more and better logging, issue can not be reproduced now
+	- Open Twice message (and killing old process) not working for one guy
+			Works for me and on some other testers machines.
 */
 
 using System;
@@ -177,7 +180,7 @@ namespace Project_127
 			InitializeComponent();
 
 			// Admin Relauncher
-			AdminRelauncher();
+			// AdminRelauncher();
 
 			//Dont run anything when we are on 32 bit...
 			//If this ever gets changed, take a second look at regedit class and path(different for 32 and 64 bit OS)
@@ -206,12 +209,12 @@ namespace Project_127
 			Globals.Init(this);
 
 			// Checks if you are allowed to run this Beta
-			if (!CheckIfAllowedToRun())
-			{
-				HelperClasses.Logger.Log("You are not allowed to run this Beta.");
-				new Popup(Popup.PopupWindowTypes.PopupOkError, "You are not allowed to run this Beta.").ShowDialog();
-				Environment.Exit(3);
-			}
+			//if (!CheckIfAllowedToRun())
+			//{
+			//	HelperClasses.Logger.Log("You are not allowed to run this Beta.");
+			//	new Popup(Popup.PopupWindowTypes.PopupOkError, "You are not allowed to run this Beta.").ShowDialog();
+			//	Environment.Exit(3);
+			//}
 
 			// Deleting all Installer and ZIP Files from own Project Installation Path
 			DeleteOldFiles();
@@ -963,7 +966,7 @@ namespace Project_127
 		/// <param name="e"></param>
 		private void btn_ImportZip_Click(object sender, RoutedEventArgs e)
 		{
-			string ZipFileLocation = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.File, "Import ZIP File", Globals.ProjectInstallationPath, "ZIP Files(*.zip *) | *.zip * ");
+			string ZipFileLocation = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.File, "Import ZIP File", Globals.ProjectInstallationPath, "ZIP Files|*.zip*");
 			if (HelperClasses.FileHandling.doesFileExist(ZipFileLocation))
 			{
 				LauncherLogic.ImportZip(ZipFileLocation);
@@ -1013,26 +1016,22 @@ namespace Project_127
 		}
 
 		/// <summary>
-		/// Method which gets called when the Readme Button is clicked
+		/// Method which gets called when the About Button is clicked
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
-		private void btn_Readme_Click(object sender, RoutedEventArgs e)
+		private void btn_About_Click(object sender, RoutedEventArgs e)
 		{
 			new Popup(Popup.PopupWindowTypes.PopupOk,
-			"You are running Project 1.27, a tool for the GTAV Speedrunning Community.\n" +
-			"This was created for the Patch 1.27 Downgrade Problem which started in August of 2020\n" +
-			"This Tool has a few Features (apart from Downgrading, Upgrading, and Launching the Game)\n" +
-			"and I suggest you checkout the Github Link of this Project to have an overview of all Features\n" +
-			"as well as as detailed Instructions on how to use this Program, Access to the latest Installer,\n" +
-			"Uninstaller, Patchnotes, ReadMe etc.\n\n" +
-			"Special Shoutouts to @dr490n who was responsible for getting the Downgraded Game\n" +
-			"to Launch, added Patches against In Game Triggers, wrote the Authentification Backend,\n" +
-			"Decryption and got the PreOrder Entitlement to work. Thanks Mate.\n\n" +
-			"Also: whoever reads this. I hope you have a great day.\n\n" +
-			"Project 1.27 Version: '" + Globals.ProjectVersion + "', BuildInfo: '" + Globals.BuildInfo + "', ZIP Version: '" + Globals.ZipVersion + "'\n\n" +
-			"If you have any troubles with this Program or Ideas for new Features or anything,\n" +
-			"feel free to Contact me on Discord: @thS#0305"
+			"You are running Project 1.27, a tool for the GTA V Speedrunning Community.\n" +
+			"This was created for the patch 1.27 downgrade problem, which started in August of 2020\n" +
+			"This tool has a number of features, including Downgrading, Upgrading and launching the game,\n" +
+			"\nSpecial shoutouts to @dr490n who was responsible for getting the downgraded game\n" +
+			"to launch, added patches against in-game triggers, wrote the authentication backend,\n" +
+			"decryption and got the preorder entitlement to work.\n\n" +
+			"If you have any issues with this program or ideas for new features,\n" +
+			"feel free to contact me on Discord: @thS#0305\n\n" +
+			"Project 1.27 Version: '" + Globals.ProjectVersion + "', BuildInfo: '" + Globals.BuildInfo + "', ZIP Version: '" + Globals.ZipVersion + "'"
 			).ShowDialog();
 		}
 
@@ -1044,21 +1043,22 @@ namespace Project_127
 		private void btn_Credits_Click(object sender, RoutedEventArgs e)
 		{
 			new Popup(Popup.PopupWindowTypes.PopupOk,
-			"Solving the Patch 1.27 Downgrade Problem has been achieved by a month of hard work\n" +
-			"by a number of dedicated individuals. This would not have been possible without the\n" +
-			"hard work of a number of very talented individuals from all walks of life,\n" +
-			"who have contributed skills in Reverse Engineering, Programming,\n" +
-			"Decryption, Project Management, Scripting and Testing.\n" +
-			"Below is a list of some of the main contributors to the project,\n" +
-			"although our thanks go out to everyone who has helped throughout the process.\n\n" +
-			"@dr490n, @Special For, @thS, @zCri\n" +
-			"@hossel, @JakeMiester, @MOMO, @Daniel Kinau\n" +
-			"@Antibones, @Aperture, @Diamondo25, @wojtekpolska\n\n" +
-			"Shoutouts to FiveM and Goldberg, whose Source Code proved to be vital\n" +
-			"to understand and reverse engineer the GTAV Launch Process\n\n" +
-			"Special Shoutouts to @dr490n who was responsible for getting the Downgraded Game\n" +
-			"to Launch, added Patches against In Game Triggers, wrote the Authentification Backend,\n" +
-			"Decryption and got the PreOrder Entitlement to work. Thanks Mate."
+			"Solving the patch 1.27 Downgrade problem has been achieved by a month of hard work by a\n" +
+			"number of dedicated individuals. This would not have been possible without the time and\n" +
+			"effort of a number of very talented individuals from all walks of life, who have\n" +
+			"contributed skills in Reverse Engineering, Programming, Decryption, Project Management,\n" +
+			"Scripting and Testing. Below is a list of some of the main contributors to the project,\n" +
+			"although our thanks go out to EVERYONE who has helped throughout the process.\n\n" +
+			"Reverse Engineering:\n" +
+			"@dr490n, @Special For, @zCri\n\n" +
+			"Launcher / Client Programming, Documentating:\n" +
+			"@thS\n\n" +
+			"Launcher GUI Design & Artwork:\n" +
+			"@hossel\n\n" +
+			"Special thanks to:\n" +
+			"@JakeMiester, @Antibones, @Aperture, @Diamondo25, @MOMO\n\n" +
+			"Shoutout to FiveM and Goldberg, whose Source Code proved to be vital\n" +
+			"to understand and reverse engineer the GTA V Launch Process"
 			).ShowDialog();
 		}
 

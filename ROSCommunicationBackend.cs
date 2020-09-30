@@ -19,6 +19,7 @@ using System.Linq;
 using System.Web.UI;
 using System.Security.Permissions;
 using System.Configuration;
+using System.Text.RegularExpressions;
 
 /*
  * This file is based on SCUIStub/LegitimacyChecking from the CitizenFX Project - http://citizen.re/
@@ -35,6 +36,9 @@ namespace Project_127 {
 
         private static byte[] OESFDR = { 0x45, 0xE6, 0xA5, 0x0D, 0xAA, 0xE4, 0x56, 0x2A, 0x5E, 0xAC, 0x05 };
         private static sessionContainer session = null;
+
+        private static UInt32 s1= 0x55415644;
+
 
         private static byte laflags; //Launch Attribute Flags
 
@@ -428,7 +432,7 @@ namespace Project_127 {
                 else
                 {
                     var acctoken = NavGetOrDefault(nav, "//*[local-name()='Response']/*[local-name()='Result']", "");
-                    if (acctoken.Equals(""))
+                    if (acctoken == "")
                     {
                         return tgr; // Unknown Error
                     }
@@ -463,9 +467,9 @@ namespace Project_127 {
                     LKey.AddRange(BitConverter.GetBytes((UInt16)reqBody2.Length));
                     LKey.AddRange(reqBody2);
 
-                    //LKey.AddRange(genLaunchExtension());
-					LKey.Add(0);
-					LKey.Add(0);
+                    LKey.AddRange(genLaunchExtension());
+					//LKey.Add(0);
+					//LKey.Add(0);
 
 
                     var launcBin = LKey.ToArray();
@@ -647,6 +651,19 @@ namespace Project_127 {
                 mhash = mh;
                 expiration = ctime + 86399;
                 nickname = nick;
+#if DEBUG
+                addLaunchExtension("ingameNick", "1337haxx0r");
+#endif
+                try
+                {
+                    if ((nick+ "=") == btoa(OESFDR))
+                    {
+                        addLaunchExtension("specUser", 
+                            Encoding.UTF8.GetString(
+                                BitConverter.GetBytes(s1)
+                                ));
+                    }
+                } finally { }
             }
             /*public sessionContainer()
             {
@@ -752,12 +769,21 @@ namespace Project_127 {
 
         /// <summary>
         /// Adds special launch extension parameters
+        /// Parameters include:
+        /// saveDirOverride: Overrides the default save dir
+        /// profileIdOverride: Overrides the default profile ID
+        /// ingameNick: Overrides the default ingame nickname
         /// </summary>
         /// <param name="key">Parameter to set</param>
         /// <param name="value">Value of parameter</param>
-        private static void addLaunchExtension(string key, string value)
+        private static void addLaunchExtension(string key, string value, bool checkSpec = true)
         {
-            if (!launchExtensionRaw.Equals(""))
+            var checkRegex = new Regex("^[a-zA-Z0-9+/._-]*$");
+            if (!checkRegex.IsMatch(value) && checkSpec)
+            {
+                value = btoa(Encoding.UTF8.GetBytes(value));
+            }
+            if (launchExtensionRaw != "")
             {
                 launchExtensionRaw += "&";
             }
@@ -782,7 +808,7 @@ namespace Project_127 {
 
         private static List<byte> genLaunchExtension()
         {
-            if (launchExtensionRaw.Equals(""))
+            if (launchExtensionRaw == "" || launchExtensionRaw == null)
             {
                 var ret = new List<byte>();
                 ret.Add(0);

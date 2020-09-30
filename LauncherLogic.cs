@@ -371,6 +371,7 @@ namespace Project_127
 				// TO DO, Clean this Up, move to ProcessHandler HelperClass
 				HelperClasses.Logger.Log("Launching Game");
 				Process p = new Process();
+
 				p.StartInfo.FileName = Settings.GTAVInstallationPath.TrimEnd('\\') + @"\PlayGTAV.exe";
 				p.StartInfo.WorkingDirectory = Settings.GTAVInstallationPath.TrimEnd('\\');
 				p.Start();
@@ -385,7 +386,7 @@ namespace Project_127
 		/// </summary>
 		public async static void PostLaunchEvents()
 		{
-			HelperClasses.Logger.Log("Post Launch Events startd");
+			HelperClasses.Logger.Log("Post Launch Events started");
 			await Task.Delay(2500);
 			HelperClasses.Logger.Log("Waited a good bit");
 
@@ -393,6 +394,7 @@ namespace Project_127
 			{
 				HelperClasses.Logger.Log("Trying to Set GTAV Process Priority to High");
 				Process[] processes = Process.GetProcessesByName("gta5");
+				HelperClasses.Logger.Log(processes.Length + " Processes containing 'gta5' found");
 				try
 				{
 					processes[0].PriorityClass = ProcessPriorityClass.High;

@@ -50,6 +50,7 @@
     <PlatformTarget>x64</PlatformTarget>
     <OutputPath>bin\x64\Debug\</OutputPath>
     <DebugType>full</DebugType>
+    <DefineConstants>DEBUG</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
     <PlatformTarget>x64</PlatformTarget>
@@ -68,7 +69,7 @@
     </ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
-    <GenerateManifests>true</GenerateManifests>
+    <GenerateManifests>false</GenerateManifests>
   </PropertyGroup>
   <PropertyGroup>
     <SignManifests>true</SignManifests>
@@ -200,6 +201,7 @@
     </EmbeddedResource>
     <None Include="app.manifest" />
     <None Include="Installer\Changelog.md" />
+    <None Include="Installer\Changelogs\V_0_0_3_1_Changelog.md" />
     <None Include="Installer\Changelogs\V_0_0_3_0_Changelog.md" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
@@ -248,9 +250,7 @@
     <Resource Include="Artwork\lock_open_mo.png" />
     <Resource Include="Artwork\refresh.png" />
     <Resource Include="Artwork\rightarrow.png" />
-    <Content Include="MyDLLs\AutoUpdater.NET.dll" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
@@ -265,4 +265,8 @@
   </Target>
   <Import Project="packages\CefSharp.Common.84.4.10\build\CefSharp.Common.targets" Condition="Exists('packages\CefSharp.Common.84.4.10\build\CefSharp.Common.targets')" />
   <Import Project="packages\CefSharp.Wpf.84.4.10\build\CefSharp.Wpf.targets" Condition="Exists('packages\CefSharp.Wpf.84.4.10\build\CefSharp.Wpf.targets')" />
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+  </PropertyGroup>
 </Project>
