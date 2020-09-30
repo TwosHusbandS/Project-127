@@ -371,8 +371,13 @@ namespace Project_127
 				// TO DO, Clean this Up, move to ProcessHandler HelperClass
 				HelperClasses.Logger.Log("Launching Game");
 				Process p = new Process();
-				p.StartInfo.FileName = Settings.GTAVInstallationPath.TrimEnd('\\') + @"\PlayGTAV.exe";
-				p.StartInfo.WorkingDirectory = Settings.GTAVInstallationPath.TrimEnd('\\');
+
+				//p.StartInfo.FileName = Settings.GTAVInstallationPath.TrimEnd('\\') + @"\PlayGTAV.exe";
+				//p.StartInfo.WorkingDirectory = Settings.GTAVInstallationPath.TrimEnd('\\');
+
+				p.StartInfo.FileName = Settings.InstallationPath.TrimEnd('\\') + @"\ProcessSpawner127.exe";
+				p.StartInfo.Arguments = "\"" + Settings.GTAVInstallationPath.TrimEnd('\\') + @"\PlayGTAV.exe" + "\" \"" + Settings.GTAVInstallationPath.TrimEnd('\\') + "\"";
+
 				p.Start();
 
 				PostLaunchEvents();

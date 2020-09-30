@@ -66,9 +66,7 @@ General Comments and things one should be aware of (still finishing this list)
 		Never built with requestedExecutionLevel administrator tho. Will fail to launch from installer
 	- Installation Path gets written to Registry on every Launch to make sure its always up to date.
 
-	#####################################################################################################
-	##### This needs some some cleanup. Just pushing now so we can get closed beta Auth testing #########
-	#####################################################################################################
+
 
 Main To do:
 	- Things changed since last official release (not last commit)
@@ -78,8 +76,10 @@ Main To do:
 		-> Set popup to "No ZIP Installed" if version is 0
 		-> Automatically detect Retailer based on Path guess
 		-> auto high priority
-		-> BugFix when deleting Folder
+		-> Fix for Bug when deleting a Folder
 		-> Fix CommandLineArgs
+		-> Added Extra Logging for Zip File Extraction
+		-> Fixed "Import ZIP Window"
 
 	-REMEMBER:
 		-> Release with admin mode manifest thingy...		
@@ -88,12 +88,10 @@ Main To do:
 	- TO DO:
 		-> Think about making a spawner to spawn processes
 		   (Process.Start(@"C:\Users\ingow\source\repos\ProcessSpawner127\bin\x64\Release\ProcessSpawner127.exe", "testA testB");)
-		-> Figure out which files I need to distribute
-		-> Open Twice shit may be broken...gotta investigate. Works for me.
-		-> rollback to old Admin Launch Methods. This should fix Investige zip file unzipping crashing for some.
 
 		// Release
 
+		-> Figure out which files I need to distribute
 		-> Language Select
 		-> auto steam core fix
 		-> Custom ZIP File Location User Error Checks:
@@ -124,7 +122,11 @@ Weird Beta Reportings:
 			If given Path is detected to be wrong, but user has to confirm this three times every startup...
 	- Game wasnt launching for most
 			I actually hardcoded the Path...its now fixed.
-
+	- People had to run as Admin manually even tho I have the admin relauncher.
+	- ZIP Extraction failed for 2 people when not manually running as admin
+			Added more and better logging, issue can not be reproduced now
+	- Open Twice message (and killing old process) not working for one guy
+			Works for me and on some other testers machines.
 */
 
 using System;
@@ -963,7 +965,7 @@ namespace Project_127
 		/// <param name="e"></param>
 		private void btn_ImportZip_Click(object sender, RoutedEventArgs e)
 		{
-			string ZipFileLocation = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.File, "Import ZIP File", Globals.ProjectInstallationPath, "ZIP Files(*.zip *) | *.zip * ");
+			string ZipFileLocation = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.File, "Import ZIP File", Globals.ProjectInstallationPath, "ZIP Files|*.zip*");
 			if (HelperClasses.FileHandling.doesFileExist(ZipFileLocation))
 			{
 				LauncherLogic.ImportZip(ZipFileLocation);
