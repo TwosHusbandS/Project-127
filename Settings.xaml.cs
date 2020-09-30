@@ -397,7 +397,7 @@ namespace Project_127
 			cb_Set_EnablePreOrderBonus.IsChecked = Settings.EnablePreOrderBonus;
 			combox_Set_Retail.SelectedItem = Settings.Retailer;
 			cb_Set_AutoSetHighPriority.IsChecked = Settings.EnableAutoSetHighPriority;
-			cb_Set_OnlyAutoStartProgramsWhenDowngraded.IsChecked = Settings.EnableOnlyAutoStartProgramsWhenDowngraded;
+			//cb_Set_OnlyAutoStartProgramsWhenDowngraded.IsChecked = Settings.EnableOnlyAutoStartProgramsWhenDowngraded;
 			//btn_Set_PathFPSLimiter.Content = Settings.PathFPSLimiter;
 			//btn_Set_PathLiveSplit.Content = Settings.PathLiveSplit;
 			//btn_Set_PathStreamProgram.Content = Settings.PathStreamProgram;

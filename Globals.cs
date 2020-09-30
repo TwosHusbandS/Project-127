@@ -44,7 +44,7 @@ namespace Project_127
 			{
 				int _ZipVersion = 0;
 				Int32.TryParse(HelperClasses.FileHandling.ReadContentOfFile(LauncherLogic.ZIPFilePath.TrimEnd('\\') + @"\Project_127_Files\Version.txt"), out _ZipVersion);
-				return _ZipVersion;	
+				return _ZipVersion;
 			}
 		}
 
@@ -71,7 +71,7 @@ namespace Project_127
 		/// <summary>
 		/// Property of other Buildinfo. Will be in the top message of logs
 		/// </summary>
-		public static string BuildInfo = "Build 1";
+		public static string BuildInfo = "Build 2";
 
 		/// <summary>
 		/// String of Steam Install Path
@@ -103,7 +103,7 @@ namespace Project_127
 		/// <summary>
 		/// Property of the Registry Key we use for our Settings
 		/// </summary>													
-		public static RegistryKey MySettingsKey { get { return RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64).CreateSubKey("SOFTWARE").CreateSubKey(ProjectName); } } 
+		public static RegistryKey MySettingsKey { get { return RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64).CreateSubKey("SOFTWARE").CreateSubKey(ProjectName); } }
 
 		/// <summary>
 		/// Property of our default Settings
@@ -163,11 +163,10 @@ namespace Project_127
 			// then reads the Regedit Values in the Settings Dictionary
 			Settings.Init();
 
-			// Warning Message if first Launch or if we are in BetaMode
-			if (Settings.FirstLaunch || Globals.BetaMode)
+			// Checks if we are doing first Launch.
+			if (Settings.FirstLaunch)
 			{
 				new Popup(Popup.PopupWindowTypes.PopupOk,
-				"Project 1.27 got a big Update!\n" +
 				"This software is unfinished, there may be bugs and we are in no way guaranteeing\n" +
 				"that this does not break your PC or GTA V Installation.\n" +
 				"The UI too, is still very unfinished, and not all planned features are implemented at this point.\n" +
@@ -176,14 +175,10 @@ namespace Project_127
 				"An update will be pushed as soon as possible to provide more features,\n" +
 				"a more stable client, and make it not look like a \"hányadék\".\n\n" +
 				" - The Project 1.27 Team").ShowDialog();
-			}
 
-			// Checks if we are doing first Launch.
-			if (Settings.FirstLaunch)
-			{
 				// Set Own Installation Path in Regedit Settings
 				HelperClasses.Logger.Log("FirstLaunch Procedure Started");
-				HelperClasses.Logger.Log("Setting Installation Path to '" + ProjectInstallationPath + "'",1);
+				HelperClasses.Logger.Log("Setting Installation Path to '" + ProjectInstallationPath + "'", 1);
 				Settings.SetSetting("InstallationPath", ProjectInstallationPath);
 
 				// Calling this to get the Path automatically
@@ -203,7 +198,7 @@ namespace Project_127
 				// Calling this to get the Path automatically
 				Settings.InitImportantSettings();
 			}
-			
+
 			// Writing ProjectInstallationPath to Registry.
 			Settings.InstallationPath = Globals.ProjectInstallationPath;
 
@@ -211,6 +206,19 @@ namespace Project_127
 			if (Settings.LastLaunchedVersion < Globals.ProjectVersion)
 			{
 				// Do things we want to do
+				Version GiveWarningMessageVersion = new Version("0.0.3.1");
+				
+				if (Settings.LastLaunchedVersion < GiveWarningMessageVersion)
+				{
+					new Popup(Popup.PopupWindowTypes.PopupOk,
+					"Project 1.27 is finally in OPEN beta\n" +
+					"The published Product is still very much unfinished,\n" +
+					"and we very much rely on User Feedback to improve things.\n" +
+					"Please do not hesitate to contact us with ANYTHING.\n\n" +
+					"Once again:\n" +
+					"No gurantees that this will not break your GTAV in any way, shape or form.\n" +
+					" - The Project 1.27 Team").ShowDialog();
+				}
 
 				Settings.LastLaunchedVersion = Globals.ProjectVersion;
 			}
@@ -392,24 +400,24 @@ namespace Project_127
 		public static Brush IS_Background { get; private set; } = MyColorBlack;
 		public static Brush IS_BorderBrush { get; private set; } = MyColorWhite;
 		public static Brush IS_BorderBrush_Inner { get; private set; } = MyColorWhite;
-							
+
 		public static Brush IS_LabelForeground { get; private set; } = MyColorWhite;
 		public static Brush IS_LabelSetForeground { get; private set; } = MyColorWhite;
-							
+
 		public static Brush IS_ButtonBackground { get; private set; } = MyColorBlack;
 		public static Brush IS_ButtonForeground { get; private set; } = MyColorWhite;
 		public static Brush IS_ButtonBorderBrush { get; private set; } = MyColorWhite;
 		public static Brush IS_ButtonMOBackground { get; private set; } = MyColorWhite;
 		public static Brush IS_ButtonMOForeground { get; private set; } = MyColorBlack;
 		public static Brush IS_ButtonMOBorderBrush { get; private set; } = MyColorWhite;
-							
+
 		public static Brush IS_ButtonSetBackground { get; private set; } = MyColorBlack;
 		public static Brush IS_ButtonSetForeground { get; private set; } = MyColorWhite;
 		public static Brush IS_ButtonSetBorderBrush { get; private set; } = MyColorWhite;
 		public static Brush IS_ButtonSetMOBackground { get; private set; } = MyColorWhite;
 		public static Brush IS_ButtonSetMOForeground { get; private set; } = MyColorBlack;
 		public static Brush IS_ButtonSetMOBorderBrush { get; private set; } = MyColorWhite;
-							
+
 		public static Brush IS_SVBackground { get; private set; } = MyColorBlack;
 		public static Brush IS_SVForeground { get; private set; } = MyColorWhite;
 
