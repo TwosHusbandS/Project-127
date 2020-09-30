@@ -14,6 +14,14 @@ namespace Project_127
 	/// </summary>
 	public partial class Settings : Window
 	{
+
+		/*
+		Properties of all Settings Values
+		Some bigger functions needed for Settings Management
+		
+		*/
+
+
 		/// <summary>
 		/// Initial Function. Gets Called from Globals.Init which gets called from the Contructor of MainWindow
 		/// </summary>
@@ -40,109 +48,163 @@ namespace Project_127
 
 			if (Settings.EnableLogging)
 			{
-			HelperClasses.Logger.Log("Settings initiated and loaded. Will continue Logging.", true, 0);
+				HelperClasses.Logger.Log("Settings initiated and loaded. Will continue Logging.", true, 0);
 			}
 			else
 			{
-			HelperClasses.Logger.Log("Settings initiated and loaded. Will stop Logging", true, 0);
+				HelperClasses.Logger.Log("Settings initiated and loaded. Will stop Logging", true, 0);
 			}
 		}
 
 
 		/// <summary>
-		/// Initiating GTAV InstallationPath, ZIP Extraction Path and enabling Copy over Hardlinking
+		/// Button Click to change the Path of ZIPExtractionPath which we use to use for all Contents of ZIP File etc.
 		/// </summary>
-		public static void InitImportantSettings()
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void btn_Set_ZIPExtractionPath_Click(object sender, RoutedEventArgs e)
 		{
-			Settings.GTAVInstallationPath = "";
+			// Grabbing the new Path from FolderDialogThingy
+			string _ZIPExtractionPath = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.Folder, "Pick the Folder where this Program will store its Data.", Settings.ZIPExtractionPath);
+			HelperClasses.Logger.Log("Changing ZIPExtractionPath.");
+			HelperClasses.Logger.Log("Old ZIPExtractionPath: '" + Settings.ZIPExtractionPath + "'");
+			HelperClasses.Logger.Log("Potential New ZIPExtractionPath: '" + _ZIPExtractionPath + "'");
 
-			HelperClasses.Logger.Log("InitImportantSettings when Settings Reset or FirstLaunch or Paths wrong on Launch");
-			HelperClasses.Logger.Log("Playing the GTAV Guessing Game");
-
-			List<string> GTAVPathGuesses = new List<string>();
-
-			GTAVPathGuesses.Add(Globals.ProjectInstallationPath.TrimEnd('\\').Substring(0, Globals.ProjectInstallationPath.LastIndexOf('\\')));
-			GTAVPathGuesses.Add(Globals.ProjectInstallationPath.TrimEnd('\\'));
-			GTAVPathGuesses.Add(Settings.ZIPExtractionPath.TrimEnd('\\').Substring(0, Globals.ProjectInstallationPath.LastIndexOf('\\')));
-			GTAVPathGuesses.Add(Settings.ZIPExtractionPath);
-			GTAVPathGuesses.Add(LauncherLogic.GetGTAVPathMagicSteam());
-			GTAVPathGuesses.Add(LauncherLogic.GetGTAVPathMagicEpic());
-			GTAVPathGuesses.Add(LauncherLogic.GetGTAVPathMagicRockstar());
-
-			int i = 0;
-			foreach (string GTAVPathGuess in GTAVPathGuesses)
+			// If its a valid Path (no "") and if its a new Path
+			if (ChangeZIPExtractionPath(_ZIPExtractionPath))
 			{
-				if (String.IsNullOrEmpty(Settings.GTAVInstallationPath))
-				{
-					i++;
-					HelperClasses.Logger.Log("GTAV Guess Number " + i + "is: '" + GTAVPathGuess + "'");
-					if (LauncherLogic.IsGTAVInstallationPathCorrect(GTAVPathGuess, false))
-					{
-						HelperClasses.Logger.Log("GTAV Guess Number " + i + "is theoretically valid. Asking user if he wants it");
-						Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Is: '" + GTAVPathGuess + "' your GTA V Installation Path?");
-						yesno.ShowDialog();
-						if (yesno.DialogResult == true)
-						{
-							Settings.GTAVInstallationPath = GTAVPathGuess;
-							HelperClasses.Logger.Log("GTAV Guess Number " + i + " was picked by User");
-						}
-						else
-						{
-							HelperClasses.Logger.Log("GTAV Guess Number " + i + " was NOT picked by User, moving on");
-						}
-					}
-					else
-					{
-						HelperClasses.Logger.Log("GTAV Guess Number " + i + "is theoretically invalid, moving on");
-					}
-				}
-			}
-
-			// If Setting is STILL not correct
-			if (!(LauncherLogic.IsGTAVInstallationPathCorrect(Settings.GTAVInstallationPath, false)))
-			{
-				// Log
-				HelperClasses.Logger.Log("After " + i + " guesses we still dont have the correct GTAVInstallationPath. User has to do it manually now. Fucking casual");
-
-				// Ask User for Path
-				SetGTAVPathManually(false);
-			}
-
-			HelperClasses.Logger.Log("GTA V Path set, now onto the ZIP Folder");
-			Popup yesnoconfirm = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Project 1.27 needs a Folder where it extracts the Content of the ZIP File to store all Sorts of Files and Data\nIt is recommend to do this on the same Drive / Partition as your GTAV Installation Path\nBest Case (and default Location) is your GTAV Path.\nDo you want to use your GTAV Path?");
-			yesnoconfirm.ShowDialog();
-			if (yesnoconfirm.DialogResult == true)
-			{
-				HelperClasses.Logger.Log("User wants default ZIP Folder. Setting it to GTAV InstallationPath and calling the default CopyHardlink Method");
-
-				if (!ChangeZIPExtractionPath(Settings.GTAVInstallationPath))
-				{
-					HelperClasses.Logger.Log("Changing ZIP Path did not work. Probably non existing Path or same Path as before (from Settings.InitImportantSettings())");
-					new Popup(Popup.PopupWindowTypes.PopupOk, "Changing ZIP Path did not work. Probably non existing Path or same Path as before\nIf you read this message to anyone, tell them youre in Settings.InitImportantSettings()");
-				}
-
-				Settings.SetDefaultEnableCopyingHardlinking();
+				HelperClasses.Logger.Log("Changing ZIP Path worked");
 			}
 			else
 			{
-				HelperClasses.Logger.Log("User does not want the default ZIP Folder");
-				new Popup(Popup.PopupWindowTypes.PopupOk, "Okay, please pick a Folder where this Program will store most of its Files\n(For Upgrading / Downgrading / SaveFileHandling)").ShowDialog();
-				string newZIPFileLocation = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.Folder, "DiesDas", "", @"C:\");
-				HelperClasses.Logger.Log("User provided own Location: ('" + newZIPFileLocation + "'). Calling the Method to move zip File");
-				if (!ChangeZIPExtractionPath(newZIPFileLocation))
-				{
-					HelperClasses.Logger.Log("Changing ZIP Path did not work. Probably non existing Path or same Path as before (from Settings.InitImportantSettings())");
-					new Popup(Popup.PopupWindowTypes.PopupOk, "Changing ZIP Path did not work. Probably non existing Path or same Path as before\nIf you read this message to anyone, tell them youre in Settings.InitImportantSettings()");
-				}
-
+				HelperClasses.Logger.Log("Changing ZIP Path did not work. Probably non existing Path or same Path as before");
+				new Popup(Popup.PopupWindowTypes.PopupOk, "Changing ZIP Path did not work. Probably non existing Path or same Path as before");
 			}
 
-			HelperClasses.Logger.Log("LogInfo - GTAVInstallationPath: '" + Settings.GTAVInstallationPath + "'");
-			HelperClasses.Logger.Log("LogInfo - ZIPExtractionPath: '" + Settings.ZIPExtractionPath + "'");
-			HelperClasses.Logger.Log("LogInfo - EnableCopyOverHardlink: '" + Settings.EnableCopyFilesInsteadOfHardlinking + "'");
-			HelperClasses.Logger.Log("LogInfo - Retailer: '" + Settings.Retailer + "'");
-			HelperClasses.Logger.Log("End of InitImportantSettings");
+			RefreshGUI();
 		}
+
+
+		/// <summary>
+		/// Method which gets called when changing the Path of the ZIP Extraction
+		/// </summary>
+		/// <param name="pNewZIPPath"></param>
+		/// <returns></returns>
+		public static bool ChangeZIPExtractionPath(string pNewZIPPath)
+		{
+			HelperClasses.Logger.Log("Called Method to Change ZIP File Path");
+			if (HelperClasses.FileHandling.doesPathExist(pNewZIPPath) && pNewZIPPath.TrimEnd('\\') != Settings.ZIPExtractionPath.TrimEnd('\\'))
+			{
+				HelperClasses.Logger.Log("Potential New ZIPExtractionPath exists and is new, lets continue");
+
+				// List of File Operations for the ZIP Move progress
+				List<MyFileOperation> MyFileOperations = new List<MyFileOperation>();
+
+				// List of FileNames
+				string OldZipExtractionPath = Settings.ZIPExtractionPath;
+				string[] FilesInOldZIPExtractionPath = HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(Settings.ZIPExtractionPath);
+				string[] FilesInNewZIPExtractionPath = new string[FilesInOldZIPExtractionPath.Length];
+
+				// Loop through all Files there
+				for (int i = 0; i <= FilesInOldZIPExtractionPath.Length - 1; i++)
+				{
+					// Only copy the folder in the zip, not all the other stuff in the same path where ZIP was extracted
+					if (FilesInOldZIPExtractionPath[i].Contains(@"\Project_127_Files\"))
+					{
+						// Build new Path of each File
+						FilesInNewZIPExtractionPath[i] = pNewZIPPath.TrimEnd('\\') + @"\" + FilesInOldZIPExtractionPath[i].Substring((Settings.ZIPExtractionPath.TrimEnd('\\') + @"\").Length);
+
+						// Add File Operation for that new File
+						MyFileOperations.Add(new MyFileOperation(MyFileOperation.FileOperations.Move, FilesInOldZIPExtractionPath[i], FilesInNewZIPExtractionPath[i], "Moving File '" + FilesInOldZIPExtractionPath[i] + "' to Location '" + FilesInNewZIPExtractionPath[i] + "' while moving ZIP Files", 0));
+					}
+				}
+
+				// Execute all File Operations
+				HelperClasses.Logger.Log("About to move all relevant Files (" + MyFileOperations.Count + ")");
+				new PopupProgress(PopupProgress.ProgressTypes.FileOperation, "Moving ZIP File Location", MyFileOperations).ShowDialog();
+				HelperClasses.Logger.Log("Done with moving all relevant Files");
+
+				HelperClasses.Logger.Log("Creating new Folders if needed");
+				HelperClasses.FileHandling.CreateAllZIPPaths(pNewZIPPath);
+				HelperClasses.Logger.Log("Done creating new Folders we needed");
+
+				// Grabbign the current Installation State
+				LauncherLogic.InstallationStates myOldInstallationState = LauncherLogic.InstallationState;
+				HelperClasses.Logger.Log("Old Installation State = '" + myOldInstallationState + "'");
+
+				// Actually changing the Settings here
+				Settings.ZIPExtractionPath = pNewZIPPath;
+
+				// Repeating a Downgrade if it was downgraded before. We do not need an Upgrade if it was upgraded before.
+				if (myOldInstallationState == LauncherLogic.InstallationStates.Downgraded)
+				{
+					HelperClasses.Logger.Log("Since Old Installation State was Downgraded, we will apply a Downgrade again");
+					LauncherLogic.Downgrade();
+				}
+				else
+				{
+					HelperClasses.Logger.Log("Since Old Installation State was Upgraded, we do not need to apply another Upgrade for everything to work");
+				}
+
+				SetDefaultEnableCopyingHardlinking();
+
+				HelperClasses.FileHandling.DeleteFolder(OldZipExtractionPath.TrimEnd('\\') + @"\Project_127_Files");
+
+				return true;
+			}
+			else
+			{
+				HelperClasses.Logger.Log("Potential New ZIPExtractionPath does not exist or is the same as the old");
+				return false;
+			}
+		}
+
+
+		/// <summary>
+		/// Method which checks what Setting it recommends (Hardlinking or Copying) and asks user if he wants it
+		/// </summary>
+		public static void SetDefaultEnableCopyingHardlinking()
+		{
+			bool currentSetting = Settings.EnableCopyFilesInsteadOfHardlinking;
+			bool recommendSetting = !(Settings.ZIPExtractionPath[0] == Settings.GTAVInstallationPath[0]);
+
+			HelperClasses.Logger.Log("Checking to see if Settings.EnableCopyFilesInsteadOfHardlinking is on recommended value");
+			HelperClasses.Logger.Log("Settings.ZIPExtractionPath: '" + Settings.ZIPExtractionPath + "'");
+			HelperClasses.Logger.Log("Settings.GTAVInstallationPath: '" + Settings.GTAVInstallationPath + "'");
+			HelperClasses.Logger.Log("Setting: EnableCopyFilesInsteadOfHardlinking");
+			HelperClasses.Logger.Log("currentSettingsValue: '" + currentSetting + "'");
+			HelperClasses.Logger.Log("recommendSettingsValue: '" + recommendSetting + "'");
+
+			if (currentSetting == recommendSetting)
+			{
+				HelperClasses.Logger.Log("Recommend Settings Value is the Current Settings Value");
+			}
+			else
+			{
+				HelperClasses.Logger.Log("Recommend Settings Value is NOT the Current Settings Value. Asking User what he wants to do");
+				Popup yesno;
+				if (recommendSetting == true)
+				{
+					yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "It is recommended to use Copying instead of Hardlinking for File Operations.\nDo you want to do that?");
+				}
+				else
+				{
+					yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "It is recommended to use Hardlinking instead of Copying for File Operations.\nDo you want to do that?");
+				}
+				yesno.ShowDialog();
+				if (yesno.DialogResult == true)
+				{
+					HelperClasses.Logger.Log("User wants recommended Setting");
+					Settings.EnableCopyFilesInsteadOfHardlinking = recommendSetting;
+				}
+				else
+				{
+					HelperClasses.Logger.Log("User does NOT want recommended Setting");
+				}
+			}
+		}
+
+
 
 		/// <summary>
 		/// Gets a specific Setting from the Dictionary. Does not query from Registry.
@@ -169,7 +231,7 @@ namespace Project_127
 			}
 			catch
 			{
-				HelperClasses.Logger.Log("Failed to SettingsPartial.cs SetSetting(" + pKey + ", " + pValue  + ")");
+				HelperClasses.Logger.Log("Failed to SettingsPartial.cs SetSetting(" + pKey + ", " + pValue + ")");
 			}
 		}
 
@@ -238,7 +300,7 @@ namespace Project_127
 		{
 			get
 			{
-				return GetSetting("InstallationPath"); 
+				return GetSetting("InstallationPath");
 			}
 			set
 			{
@@ -292,6 +354,21 @@ namespace Project_127
 		}
 
 		/// <summary>
+		/// Settings EnableOnlyAutoStartProgramsWhenDowngraded. Gets and Sets from the Dictionary.
+		/// </summary>
+		public static bool EnableOnlyAutoStartProgramsWhenDowngraded
+		{
+			get
+			{
+				return GetBoolFromString(GetSetting("EnableOnlyAutoStartProgramsWhenDowngraded"));
+			}
+			set
+			{
+				SetSetting("EnableOnlyAutoStartProgramsWhenDowngraded", value.ToString());
+			}
+		}
+
+		/// <summary>
 		/// Settings EnableLogging. Gets and Sets from the Dictionary.
 		/// </summary>
 		public static bool EnableLogging
@@ -320,7 +397,7 @@ namespace Project_127
 				SetSetting("EnableCopyFilesInsteadOfHardlinking", value.ToString());
 			}
 		}
-		
+
 		/// <summary>
 		/// Settings EnablePreOrderBonus. Gets and Sets from the Dictionary.
 		/// </summary>
@@ -336,7 +413,7 @@ namespace Project_127
 			}
 		}
 
-		
+
 		/// <summary>
 		/// Enum for all Retailers
 		/// </summary>

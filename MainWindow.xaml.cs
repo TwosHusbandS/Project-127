@@ -27,7 +27,7 @@ Getting People into Beta:
 
 Comments like "TODO", "TO DO", "CTRLF", "CTRL-F", and "CTRL F" are just ways of finding a specific line quickly via searching
 
-Hybrid code can be found in AAA_HybridCode. // Is this still the case? 2020-09-26
+Hybrid code can be found in AAA_HybridCode.
 
 General Files / Classes:
 	Windows:
@@ -72,55 +72,44 @@ General Comments and things one should be aware of (still finishing this list)
 
 Main To do:
 	- Things changed since last official release (not last commit)
-		-> Lots. Lots. Lots.
-		-> Admin Relauncher
-		-> Installer can now Launch the Program
-		-> Rewrite of GTA V Path stuff
-		-> BugFix for closed beta auth
-		-> Make it not not crash when github unreachable
-		-> Option to Use Copy Files instead of Hardlinks
-		-> Using Lists of MyFileOperation objects for any big file stuff we do. (backend change of file operations)
-		-> ProgressBar for File Operations, and extracting ZIP
-		-> Proper Debug Message on rightclick of auth button and a way of getting the logfile after right clicking hamburger button.
-		-> Lots of small Fixes and changes.
-		-> Should auto downgrade if needed based on hashes of downgrade folder after importing zip
-		-> You can now change location of ZIP File (where it is extracted), it will Move Files and delete Old Folder
-		-> Method for Defaulting the EnableCopyFilesInsteadOfHardlinking when something are changed
-		-> New FirstLaunch Options, Messages, and Logic
-		-> Refactured some of the GTA V Guessing Game, now guessing 7 Paths, lets hope one is correct
-		-> Checking if the GTAV Path and the ZIPFilePath are working correctly before Upgrading / Downgrading
-		-> Add Rockstar and Epic support, Frontend + Backend
-		-> Added Proper Authentication to FrontEnd of this, BackEnd of this, and the patched emu files by dr490n.
+		-> Pretty OpenFolderDialog
+		-> ZIP File gets downloaded AFTER checking if user is allowed to run...
+		-> Full Cleanup code (auto document everything and also write a few lines in important locations)
+		-> Set popup to "No ZIP Installed" if version is 0
+		-> Automatically detect Retailer based on Path guess
+		-> auto high priority
+		-> BugFix when deleting Folder
+		-> Fix CommandLineArgs
 
 	-REMEMBER:
 		-> Release with admin mode manifest thingy...		
 		-> Fix Installer with everything (autolaunch app,include new files)
 					
 	- TO DO:
-		-> Full Cleanup code (auto document everything and also write a few lines in important locations)
-		
+		-> Think about making a spawner to spawn processes
+		   (Process.Start(@"C:\Users\ingow\source\repos\ProcessSpawner127\bin\x64\Release\ProcessSpawner127.exe", "testA testB");)
+		-> Figure out which files I need to distribute
+		-> Open Twice shit may be broken...gotta investigate. Works for me.
+		-> rollback to old Admin Launch Methods. This should fix Investige zip file unzipping crashing for some.
+
 		// Release
 
-		-> SaveFileHandler, just manage our own SaveFiles, probably only need one list for datagrid, ask if we need to overwrite
-		-> Regedit Cleanup of everything not in default settings
+		-> Language Select
+		-> auto steam core fix
 		-> Custom ZIP File Location User Error Checks:
 			=> User might get confused with the Project_127_Files Folder. 
 				Maybe we should actually check parent folders and child folders when User is selecting a Path for ZIP File
+		-> Regedit Value "LastLaunchedVersion" is there and be used with the next Version.
+		-> SaveFileHandler, just manage our own SaveFiles, probably only need one list for datagrid, ask if we need to overwrite
+		-> Regedit Cleanup of everything not in default settings
 		-> $UpgradeFiles has downgrade files in them. Why? And how to Fix?
 			=> Cant figure out how to fix that at the moment
-		-> Think about making a spawner to spawn processes
-		-> Regedit Value "LastLaunchedVersion" is there and be used with the next Version.
-		-> auto high priority
-		-> auto steam core fix
-		-> make OpenFolderDialog pretty...I know its possible, just google more and more
-		-> Get data binding to work after everything else is Gucci (if not set a property of main window instance  being a reference to the latest settings instance
 		-> Settings dont update content
-			=> Currently it calls the Refresh Method after each click...
+			=> Currently it calls the Refresh Method after each click...which works but is ugly
+			=> Get data binding to work after everything else is Gucci 
+		-> Implement all Other features
+			=> Just see Settings.XAML for what I need to implement
 
-		// After that, release rublic built + auto upgrade
-
-	- Implemet other features 
-		-> just see all Settings
 
     - Low Prio:
 		Convert Settings and SaveFileHandler in CustomControls
@@ -224,7 +213,6 @@ namespace Project_127
 				Environment.Exit(3);
 			}
 
-
 			// Deleting all Installer and ZIP Files from own Project Installation Path
 			DeleteOldFiles();
 
@@ -238,6 +226,9 @@ namespace Project_127
 
 			// Auto Updater
 			CheckForUpdate();
+
+			// Check whats the latest Version of the ZIP File in GITHUB
+			CheckForZipUpdate();
 
 			HelperClasses.Logger.Log("Startup procedure (Constructor of MainWindow) completed.");
 			HelperClasses.Logger.Log("--------------------------------------------------------");
@@ -301,27 +292,37 @@ namespace Project_127
 		{
 			try
 			{
+				// If we are in BetaMode
 				if (Globals.BetaMode)
 				{
-					if (Globals.CommandLineArguments.Contains("skiplogin"))
+					// If we skip the login
+					foreach (string argument in Environment.GetCommandLineArgs())
 					{
-						return true;
+						if (argument.ToLower().Contains("skiplogin"))
+						{
+							return true;
+						}
 					}
 
+					// Getting own GUID from Server
 					RegistryKey MyKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64).CreateSubKey("SOFTWARE").CreateSubKey("Microsoft").CreateSubKey("Cryptography");
 					string GUID = HelperClasses.RegeditHandler.GetValue(MyKey, "MachineGuid");
 
+					// Getting the URL of the File which has all the AuthInfo in it
 					string URL_AuthUser = HelperClasses.FileHandling.GetXMLTagContent(HelperClasses.FileHandling.GetStringFromURL(Globals.URL_AutoUpdate), "authuser");
-					string ServerUse = HelperClasses.FileHandling.GetStringFromURL(URL_AuthUser);
 
-					if (String.IsNullOrEmpty(ServerUse))
+					// Downloading the File into string
+					string AuthUserOnServer = HelperClasses.FileHandling.GetStringFromURL(URL_AuthUser);
+
+					// Letting Users in if github is down...
+					if (String.IsNullOrEmpty(AuthUserOnServer))
 					{
-						// Letting Users in if github is down...
 						new Popup(Popup.PopupWindowTypes.PopupOk, "Letting you in since Github appears to be down...").ShowDialog();
 						return true;
 					}
 
-					if (ServerUse.Contains(GUID))
+					// If own GUID is in the GUIDs on the server
+					if (AuthUserOnServer.Contains(GUID))
 					{
 						return true;
 					}
@@ -330,11 +331,14 @@ namespace Project_127
 						return false;
 					}
 				}
+
+				// If we are not in Betamode
 				return true;
 			}
 			catch
 			{
-				return false;
+				// If something shit the bed somewhere
+				return true;
 			}
 		}
 
@@ -363,6 +367,7 @@ namespace Project_127
 				}
 			}
 		}
+
 
 		/// <summary>
 		/// Method which does the UpdateCheck on Startup
@@ -420,6 +425,210 @@ namespace Project_127
 				HelperClasses.Logger.Log("Did not get most up to date Project 1.27 Version from Github. Github offline or your PC offline. Probably. Lets hope so.");
 			}
 		}
+
+
+		/// <summary>
+		/// Checks for Update of the ZIPFile and extracts it
+		/// </summary>
+		public static void CheckForZipUpdate()
+		{
+			// Check whats the latest Version of the ZIP File in GITHUB
+			int ZipOnlineVersion = 0;
+			Int32.TryParse(HelperClasses.FileHandling.GetXMLTagContent(HelperClasses.FileHandling.GetStringFromURL(Globals.URL_AutoUpdate), "zipversion"), out ZipOnlineVersion);
+
+			HelperClasses.Logger.Log("Checking for ZIP - Update");
+			HelperClasses.Logger.Log("ZipVersion = '" + Globals.ZipVersion + "', ZipOnlineVersion = '" + ZipOnlineVersion + "'");
+
+			// If Zip file from Server is newer
+			if (ZipOnlineVersion > Globals.ZipVersion)
+			{
+				HelperClasses.Logger.Log("Update for ZIP found");
+				Popup yesno;
+				if (Globals.ZipVersion > 0)
+				{
+					yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "ZIP Version: '" + ZipOnlineVersion.ToString() + "' found on the Server.\nZIP Version: '" + Globals.ZipVersion.ToString() + "' found installed.\nDo you want to upgrade?");
+				}
+				else
+				{
+					yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "ZIP Version: '" + ZipOnlineVersion.ToString() + "' found on the Server.\nNo ZIP Version found installed.\nDo you want to install the ZIP?");
+				}
+				yesno.ShowDialog();
+				if (yesno.DialogResult == true)
+				{
+					HelperClasses.Logger.Log("User wants update for ZIP");
+					string pathOfNewZip = HelperClasses.FileHandling.GetXMLTagContent(HelperClasses.FileHandling.GetStringFromURL(Globals.URL_AutoUpdate), "zip");
+
+					// Downloads ZIP, calls extraction Method after download
+					new PopupDownload(PopupDownloadTypes.ZIP, pathOfNewZip, Globals.ZipFileDownloadLocation).ShowDialog();
+					LauncherLogic.ImportZip(Globals.ZipFileDownloadLocation, true);
+				}
+				else
+				{
+					HelperClasses.Logger.Log("User does not want update for ZIP");
+				}
+			}
+			else
+			{
+				HelperClasses.Logger.Log("NO Update for ZIP found");
+			}
+		}
+
+
+		#region GUI Helper Methods
+
+		/// <summary>
+		/// Updates the GUI with relevant stuff. Gets called every 5 Seconds
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		public void UpdateGUIDispatcherTimer(object sender = null, EventArgs e = null) // Gets called every DispatcherTimer_Tick. Just starts the read function.
+		{
+			if (LauncherLogic.InstallationState == LauncherLogic.InstallationStates.Downgraded)
+			{
+				lbl_GTA.Foreground = Globals.MW_GTALabelDowngradedForeground;
+				lbl_GTA.Content = "Downgraded";
+			}
+			else
+			{
+				lbl_GTA.Foreground = Globals.MW_GTALabelUpgradedForeground;
+				lbl_GTA.Content = "Upgraded";
+			}
+			if (LauncherLogic.GameState == LauncherLogic.GameStates.Running)
+			{
+				btn_GTA.BorderBrush = Globals.MW_ButtonGTAGameRunningBorderBrush;
+				btn_GTA.Content = "Exit GTA V";
+			}
+			else
+			{
+				btn_GTA.BorderBrush = Globals.MW_ButtonGTAGameNotRunningBorderBrush;
+				btn_GTA.Content = "Launch GTA V";
+			}
+			SetButtonMouseOverMagic(btn_Auth, false);
+		}
+
+
+		/// <summary>
+		/// Method which makes the Window draggable, which moves the whole window when holding down Mouse1 on the background
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+		{
+			DragMove(); // Pre-Defined Method
+		}
+
+		/// <summary>
+		/// Gets called when MainWindow is being closed by user, task manager (not kill process), ALT+F4, or taskbar
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+		{
+			Globals.ProperExit();
+		}
+
+		/// <summary>
+		/// Sets the Backgrund of a specific Button
+		/// </summary>
+		/// <param name="myBtn"></param>
+		/// <param name="pArtpath"></param>
+		private void SetButtonBackground(Button myBtn, string pArtpath)
+		{
+			try
+			{
+				Uri resourceUri = new Uri(pArtpath, UriKind.Relative);
+				StreamResourceInfo streamInfo = Application.GetResourceStream(resourceUri);
+				BitmapFrame temp = BitmapFrame.Create(streamInfo.Stream);
+				var brush = new ImageBrush();
+				brush.ImageSource = temp;
+				myBtn.Background = brush;
+			}
+			catch
+			{
+				HelperClasses.Logger.Log("Failed to set Background Image for Button");
+			}
+		}
+
+		/// <summary>
+		/// Method we use to call SetButtonBackground with the right parameters to Update GUI
+		/// </summary>
+		/// <param name="myBtn"></param>
+		/// <param name="pMouseOver"></param>
+		private void SetButtonMouseOverMagic(Button myBtn, bool pMouseOver)
+		{
+			switch (myBtn.Name)
+			{
+				case "btn_Hamburger":
+					if (pMouseOver)
+					{
+						SetButtonBackground(myBtn, @"Artwork\hamburger_mo.png");
+					}
+					else
+					{
+						SetButtonBackground(myBtn, @"Artwork\hamburger.png");
+					}
+					break;
+				case "btn_Exit":
+					if (pMouseOver)
+					{
+						SetButtonBackground(myBtn, @"Artwork\exit_mo.png");
+					}
+					else
+					{
+						SetButtonBackground(myBtn, @"Artwork\exit.png");
+					}
+					break;
+				case "btn_Auth":
+					if (pMouseOver)
+					{
+						if (LauncherLogic.AuthState == LauncherLogic.AuthStates.Auth)
+						{
+							SetButtonBackground(myBtn, @"Artwork\lock_closed_mo.png");
+						}
+						else if (LauncherLogic.AuthState == LauncherLogic.AuthStates.NotAuth)
+						{
+							SetButtonBackground(myBtn, @"Artwork\lock_open_mo.png");
+						}
+					}
+					else
+					{
+						if (LauncherLogic.AuthState == LauncherLogic.AuthStates.Auth)
+						{
+							SetButtonBackground(myBtn, @"Artwork\lock_closed.png");
+						}
+						else if (LauncherLogic.AuthState == LauncherLogic.AuthStates.NotAuth)
+						{
+							SetButtonBackground(myBtn, @"Artwork\lock_open.png");
+						}
+					}
+					break;
+				default:
+					break;
+			}
+		}
+
+		/// <summary>
+		/// MouseEnter event for updating background image of buttons
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void btn_Small_MouseEnter(object sender, MouseEventArgs e)
+		{
+			SetButtonMouseOverMagic((Button)sender, true);
+		}
+
+		/// <summary>
+		/// MouseLeave event for updating background image of buttons
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void btn_Small_MouseLeave(object sender, MouseEventArgs e)
+		{
+			SetButtonMouseOverMagic((Button)sender, false);
+		}
+
+
+		#endregion
 
 
 		#region GUI-Clicks
@@ -754,10 +963,10 @@ namespace Project_127
 		/// <param name="e"></param>
 		private void btn_ImportZip_Click(object sender, RoutedEventArgs e)
 		{
-			string ZipFileLocation = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.File, "Title", "", Globals.ProjectInstallationPath);
+			string ZipFileLocation = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.File, "Import ZIP File", Globals.ProjectInstallationPath, "ZIP Files(*.zip *) | *.zip * ");
 			if (HelperClasses.FileHandling.doesFileExist(ZipFileLocation))
 			{
-				Globals.ImportZip(ZipFileLocation);
+				LauncherLogic.ImportZip(ZipFileLocation);
 			}
 			else
 			{
@@ -856,162 +1065,6 @@ namespace Project_127
 
 		#endregion
 
-
-		#region GUI Helper Methods
-
-		/// <summary>
-		/// Updates the GUI with relevant stuff. Gets called every 5 Seconds
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
-		public void UpdateGUIDispatcherTimer(object sender = null, EventArgs e = null) // Gets called every DispatcherTimer_Tick. Just starts the read function.
-		{
-			if (LauncherLogic.InstallationState == LauncherLogic.InstallationStates.Downgraded)
-			{
-				lbl_GTA.Foreground = Globals.MW_GTALabelDowngradedForeground;
-				lbl_GTA.Content = "Downgraded";
-			}
-			else
-			{
-				lbl_GTA.Foreground = Globals.MW_GTALabelUpgradedForeground;
-				lbl_GTA.Content = "Upgraded";
-			}
-			if (LauncherLogic.GameState == LauncherLogic.GameStates.Running)
-			{
-				btn_GTA.BorderBrush = Globals.MW_ButtonGTAGameRunningBorderBrush;
-				btn_GTA.Content = "Exit GTA V";
-			}
-			else
-			{
-				btn_GTA.BorderBrush = Globals.MW_ButtonGTAGameNotRunningBorderBrush;
-				btn_GTA.Content = "Launch GTA V";
-			}
-			SetButtonMouseOverMagic(btn_Auth, false);
-		}
-
-
-		/// <summary>
-		/// Method which makes the Window draggable, which moves the whole window when holding down Mouse1 on the background
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
-		private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-		{
-			DragMove(); // Pre-Defined Method
-		}
-
-		/// <summary>
-		/// Gets called when MainWindow is being closed by user, task manager (not kill process), ALT+F4, or taskbar
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
-		private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
-		{
-			Globals.ProperExit();
-		}
-
-		/// <summary>
-		/// Sets the Backgrund of a specific Button
-		/// </summary>
-		/// <param name="myBtn"></param>
-		/// <param name="pArtpath"></param>
-		private void SetButtonBackground(Button myBtn, string pArtpath)
-		{
-			try
-			{
-				Uri resourceUri = new Uri(pArtpath, UriKind.Relative);
-				StreamResourceInfo streamInfo = Application.GetResourceStream(resourceUri);
-				BitmapFrame temp = BitmapFrame.Create(streamInfo.Stream);
-				var brush = new ImageBrush();
-				brush.ImageSource = temp;
-				myBtn.Background = brush;
-			}
-			catch
-			{
-				HelperClasses.Logger.Log("Failed to set Background Image for Button");
-			}
-		}
-
-		/// <summary>
-		/// Method we use to call SetButtonBackground with the right parameters to Update GUI
-		/// </summary>
-		/// <param name="myBtn"></param>
-		/// <param name="pMouseOver"></param>
-		private void SetButtonMouseOverMagic(Button myBtn, bool pMouseOver)
-		{
-			switch (myBtn.Name)
-			{
-				case "btn_Hamburger":
-					if (pMouseOver)
-					{
-						SetButtonBackground(myBtn, @"Artwork\hamburger_mo.png");
-					}
-					else
-					{
-						SetButtonBackground(myBtn, @"Artwork\hamburger.png");
-					}
-					break;
-				case "btn_Exit":
-					if (pMouseOver)
-					{
-						SetButtonBackground(myBtn, @"Artwork\exit_mo.png");
-					}
-					else
-					{
-						SetButtonBackground(myBtn, @"Artwork\exit.png");
-					}
-					break;
-				case "btn_Auth":
-					if (pMouseOver)
-					{
-						if (LauncherLogic.AuthState == LauncherLogic.AuthStates.Auth)
-						{
-							SetButtonBackground(myBtn, @"Artwork\lock_closed_mo.png");
-						}
-						else if (LauncherLogic.AuthState == LauncherLogic.AuthStates.NotAuth)
-						{
-							SetButtonBackground(myBtn, @"Artwork\lock_open_mo.png");
-						}
-					}
-					else
-					{
-						if (LauncherLogic.AuthState == LauncherLogic.AuthStates.Auth)
-						{
-							SetButtonBackground(myBtn, @"Artwork\lock_closed.png");
-						}
-						else if (LauncherLogic.AuthState == LauncherLogic.AuthStates.NotAuth)
-						{
-							SetButtonBackground(myBtn, @"Artwork\lock_open.png");
-						}
-					}
-					break;
-				default:
-					break;
-			}
-		}
-
-		/// <summary>
-		/// MouseEnter event for updating background image of buttons
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
-		private void btn_Small_MouseEnter(object sender, MouseEventArgs e)
-		{
-			SetButtonMouseOverMagic((Button)sender, true);
-		}
-
-		/// <summary>
-		/// MouseLeave event for updating background image of buttons
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
-		private void btn_Small_MouseLeave(object sender, MouseEventArgs e)
-		{
-			SetButtonMouseOverMagic((Button)sender, false);
-		}
-
-
-		#endregion
 
 
 	} // End of Class
