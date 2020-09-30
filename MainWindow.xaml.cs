@@ -787,7 +787,7 @@ namespace Project_127
 				conf.ShowDialog();
 				if (conf.DialogResult == true)
 				{
-					HelperClasses.Logger.Log("User wantst to Launch", 1);
+					HelperClasses.Logger.Log("User wants to Launch", 1);
 					LauncherLogic.Launch();
 				}
 			}
