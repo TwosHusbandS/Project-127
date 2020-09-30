@@ -27,7 +27,7 @@ Getting People into Beta:
 
 Comments like "TODO", "TO DO", "CTRLF", "CTRL-F", and "CTRL F" are just ways of finding a specific line quickly via searching
 
-Hybrid code can be found in AAA_HybridCode. // Is this still the case? 2020-09-26
+Hybrid code can be found in AAA_HybridCode.
 
 General Files / Classes:
 	Windows:
@@ -75,20 +75,26 @@ Main To do:
 		-> Pretty OpenFolderDialog
 		-> ZIP File gets downloaded AFTER checking if user is allowed to run...
 		-> Full Cleanup code (auto document everything and also write a few lines in important locations)
+		-> Set popup to "No ZIP Installed" if version is 0
+		-> Automatically detect Retailer based on Path guess
+		-> auto high priority
+		-> BugFix when deleting Folder
+		-> Fix CommandLineArgs
 
 	-REMEMBER:
 		-> Release with admin mode manifest thingy...		
 		-> Fix Installer with everything (autolaunch app,include new files)
 					
 	- TO DO:
-		-> CommandLineArgs bypass doesnt work...maybe remove all the beta auth code
-		-> Automatically detect Retailer based on Path guess
 		-> Think about making a spawner to spawn processes
+		   (Process.Start(@"C:\Users\ingow\source\repos\ProcessSpawner127\bin\x64\Release\ProcessSpawner127.exe", "testA testB");)
 		-> Figure out which files I need to distribute
-		-> auto high priority
+		-> Open Twice shit may be broken...gotta investigate. Works for me.
+		-> rollback to old Admin Launch Methods. This should fix Investige zip file unzipping crashing for some.
 
 		// Release
 
+		-> Language Select
 		-> auto steam core fix
 		-> Custom ZIP File Location User Error Checks:
 			=> User might get confused with the Project_127_Files Folder. 
@@ -99,12 +105,11 @@ Main To do:
 		-> $UpgradeFiles has downgrade files in them. Why? And how to Fix?
 			=> Cant figure out how to fix that at the moment
 		-> Settings dont update content
-			=> Currently it calls the Refresh Method after each click...
-			=> Get data binding to work after everything else is Gucci (if not set a property of main window instance  being a reference to the latest settings instance
-		// After that, release rublic built + auto upgrade
+			=> Currently it calls the Refresh Method after each click...which works but is ugly
+			=> Get data binding to work after everything else is Gucci 
+		-> Implement all Other features
+			=> Just see Settings.XAML for what I need to implement
 
-	- Implemet other features 
-		-> just see all Settings
 
     - Low Prio:
 		Convert Settings and SaveFileHandler in CustomControls
@@ -291,9 +296,12 @@ namespace Project_127
 				if (Globals.BetaMode)
 				{
 					// If we skip the login
-					if (Globals.CommandLineArguments.Contains("skiplogin"))
+					foreach (string argument in Environment.GetCommandLineArgs())
 					{
-						return true;
+						if (argument.ToLower().Contains("skiplogin"))
+						{
+							return true;
+						}
 					}
 
 					// Getting own GUID from Server
@@ -302,7 +310,7 @@ namespace Project_127
 
 					// Getting the URL of the File which has all the AuthInfo in it
 					string URL_AuthUser = HelperClasses.FileHandling.GetXMLTagContent(HelperClasses.FileHandling.GetStringFromURL(Globals.URL_AutoUpdate), "authuser");
-					
+
 					// Downloading the File into string
 					string AuthUserOnServer = HelperClasses.FileHandling.GetStringFromURL(URL_AuthUser);
 
@@ -435,7 +443,15 @@ namespace Project_127
 			if (ZipOnlineVersion > Globals.ZipVersion)
 			{
 				HelperClasses.Logger.Log("Update for ZIP found");
-				Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "ZIP Version: '" + ZipOnlineVersion.ToString() + "' found on the Server.\nZIP Version: '" + Globals.ZipVersion.ToString() + "' found installed.\nDo you want to upgrade?");
+				Popup yesno;
+				if (Globals.ZipVersion > 0)
+				{
+					yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "ZIP Version: '" + ZipOnlineVersion.ToString() + "' found on the Server.\nZIP Version: '" + Globals.ZipVersion.ToString() + "' found installed.\nDo you want to upgrade?");
+				}
+				else
+				{
+					yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "ZIP Version: '" + ZipOnlineVersion.ToString() + "' found on the Server.\nNo ZIP Version found installed.\nDo you want to install the ZIP?");
+				}
 				yesno.ShowDialog();
 				if (yesno.DialogResult == true)
 				{
