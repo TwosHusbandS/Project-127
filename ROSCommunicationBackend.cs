@@ -652,7 +652,15 @@ namespace Project_127 {
                 expiration = ctime + 86399;
                 nickname = nick;
 #if DEBUG
-                addLaunchExtension("ingameNick", "1337haxx0r");
+                if (Settings.InGameName == "HiMomImOnYoutube")
+                {
+                    addLaunchExtension("ingameNick", "1337haxx0r");
+                }
+#else
+                if (Settings.InGameName != "HiMomImOnYoutube")
+                {
+                    addLaunchExtension("ingameNick", Settings.InGameName);
+                }
 #endif
                 try
                 {
