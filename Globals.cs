@@ -124,6 +124,7 @@ namespace Project_127
 			{"EnableLogging", "True"},
 			{"EnableCopyFilesInsteadOfHardlinking", "False"},
 			{"EnablePreOrderBonus", "False"},
+			{"EnableOnlyAutoStartProgramsWhenDowngraded", "True"},
 			{"Retailer", "Steam"},
 			{"EnableAutoSetHighPriority", "True" },
 			{"EnableAutoSteamCoreFix", "True" },

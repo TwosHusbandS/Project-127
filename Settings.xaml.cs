@@ -53,41 +53,83 @@ namespace Project_127
 			HelperClasses.Logger.Log("InitImportantSettings when Settings Reset or FirstLaunch or Paths wrong on Launch");
 			HelperClasses.Logger.Log("Playing the GTAV Guessing Game");
 
+			// Used to not display a popup at the end if it was set during guessing
+			bool ChangedRetailerAlready = false;
+
 			// Adding all Guesses
 			List<string> GTAVPathGuesses = new List<string>();
+			GTAVPathGuesses.Add(LauncherLogic.GetGTAVPathMagicSteam());
+			GTAVPathGuesses.Add(LauncherLogic.GetGTAVPathMagicRockstar());
+			GTAVPathGuesses.Add(LauncherLogic.GetGTAVPathMagicEpic());
 			GTAVPathGuesses.Add(Globals.ProjectInstallationPath.TrimEnd('\\').Substring(0, Globals.ProjectInstallationPath.LastIndexOf('\\')));
 			GTAVPathGuesses.Add(Globals.ProjectInstallationPath.TrimEnd('\\'));
 			GTAVPathGuesses.Add(Settings.ZIPExtractionPath.TrimEnd('\\').Substring(0, Globals.ProjectInstallationPath.LastIndexOf('\\')));
 			GTAVPathGuesses.Add(Settings.ZIPExtractionPath);
-			GTAVPathGuesses.Add(LauncherLogic.GetGTAVPathMagicSteam());
-			GTAVPathGuesses.Add(LauncherLogic.GetGTAVPathMagicEpic());
-			GTAVPathGuesses.Add(LauncherLogic.GetGTAVPathMagicRockstar());
 
 
 			// Loop for the Guesses
-			int i = 0;
-			foreach (string GTAVPathGuess in GTAVPathGuesses)
+			for (int i = 0; i <= GTAVPathGuesses.Count - 1; i++)
 			{
-				i++;
-				HelperClasses.Logger.Log("GTAV Guess Number " + i + "is: '" + GTAVPathGuess + "'");
-				if (LauncherLogic.IsGTAVInstallationPathCorrect(GTAVPathGuess, false))
+				if (!String.IsNullOrWhiteSpace(Settings.GTAVInstallationPath))
 				{
-					HelperClasses.Logger.Log("GTAV Guess Number " + i + "is theoretically valid. Asking user if he wants it");
-					Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Is: '" + GTAVPathGuess + "' your GTA V Installation Path?");
-					yesno.ShowDialog();
-					if (yesno.DialogResult == true)
+					HelperClasses.Logger.Log("GTAV Guess Number " + i + 1 + "is: '" + GTAVPathGuesses[i] + "'");
+					if (LauncherLogic.IsGTAVInstallationPathCorrect(GTAVPathGuesses[i], false))
 					{
-						Settings.GTAVInstallationPath = GTAVPathGuess;
-						HelperClasses.Logger.Log("GTAV Guess Number " + i + " was picked by User");
+						HelperClasses.Logger.Log("GTAV Guess Number " + i + 1 + "is theoretically valid. Asking user if he wants it");
+						Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Is: '" + GTAVPathGuesses[i] + "' your GTA V Installation Path?");
+						yesno.ShowDialog();
+						if (yesno.DialogResult == true)
+						{
+							Settings.GTAVInstallationPath = GTAVPathGuesses[i];
+							HelperClasses.Logger.Log("GTAV Guess Number " + i + 1 + " was picked by User");
+
+							// Guessing the Retail Version
+							string myRetailGuess = "";
+							switch (i)
+							{
+								case 0:
+									myRetailGuess = "Steam";
+									break;
+								case 1:
+									myRetailGuess = "Rockstar";
+									break;
+								case 2:
+									myRetailGuess = "Epic";
+									break;
+								default:
+									break;
+							}
+							// If a Guess was made
+							if (!string.IsNullOrWhiteSpace(myRetailGuess))
+							{
+								HelperClasses.Logger.Log("Our Retail Guess is: '" + myRetailGuess + "'");
+								// Ask user if he wants it
+								Popup RetailerGuessPopup;
+								RetailerGuessPopup = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Retailer: '" + myRetailGuess + "' detected. Is that correct?");
+								RetailerGuessPopup.ShowDialog();
+								if (RetailerGuessPopup.DialogResult == true)
+								{
+									// User does want new Retailer
+									HelperClasses.Logger.Log("User wants our Retail Guess");
+									Settings.Retailer = (Retailers)System.Enum.Parse(typeof(Retailers), myRetailGuess);
+									ChangedRetailerAlready = true;
+								}
+								else
+								{
+									HelperClasses.Logger.Log("User does not want our Retail Guess");
+									// User does not want retail Guess
+								}
+							}
+						}
+						else
+						{
+							HelperClasses.Logger.Log("GTAV Guess Number " + i + 1 + " was NOT picked by User, moving on");
+						}
 					}
 					else
 					{
-						HelperClasses.Logger.Log("GTAV Guess Number " + i + " was NOT picked by User, moving on");
+						HelperClasses.Logger.Log("GTAV Guess Number " + i + 1 + "is theoretically invalid, moving on");
 					}
-				}
-				else
-				{
-					HelperClasses.Logger.Log("GTAV Guess Number " + i + "is theoretically invalid, moving on");
 				}
 			}
 
@@ -96,7 +138,7 @@ namespace Project_127
 			while (!(LauncherLogic.IsGTAVInstallationPathCorrect(Settings.GTAVInstallationPath, false)))
 			{
 				// Log
-				HelperClasses.Logger.Log("After " + i + " guesses we still dont have the correct GTAVInstallationPath. User has to do it manually now. Fucking casual");
+				HelperClasses.Logger.Log("After " + GTAVPathGuesses.Count + " guesses we still dont have the correct GTAVInstallationPath. User has to do it manually now. Fucking casual");
 				HelperClasses.Logger.Log("If you see this more than once, user exited out of the SetGTAVPathManually()");
 
 				// Ask User for Path
@@ -136,6 +178,11 @@ namespace Project_127
 
 			// Making sure the CopyInsteadOfHardlink is correct
 			Settings.SetDefaultEnableCopyingHardlinking();
+
+			if (!ChangedRetailerAlready)
+			{
+				new Popup(Popup.PopupWindowTypes.PopupOk, "The default Retailer-Setting is Steam.\nChange this to Rockstar or Epic in the Settings if needed.").ShowDialog();
+			}
 
 			HelperClasses.Logger.Log("LogInfo - GTAVInstallationPath: '" + Settings.GTAVInstallationPath + "'");
 			HelperClasses.Logger.Log("LogInfo - ZIPExtractionPath: '" + Settings.ZIPExtractionPath + "'");
@@ -178,7 +225,7 @@ namespace Project_127
 			Settings.GTAVInstallationPath = GTAVInstallationPathUserChoice;
 			if (CheckIfDefaultForCopyHardlinkNeedsChanging)
 			{
-			SetDefaultEnableCopyingHardlinking();
+				SetDefaultEnableCopyingHardlinking();
 			}
 		}
 
@@ -349,7 +396,8 @@ namespace Project_127
 			cb_Set_CopyFilesInsteadOfHardlinking.IsChecked = Settings.EnableCopyFilesInsteadOfHardlinking;
 			cb_Set_EnablePreOrderBonus.IsChecked = Settings.EnablePreOrderBonus;
 			combox_Set_Retail.SelectedItem = Settings.Retailer;
-			//cb_Set_AutoSetHighPriority.IsChecked = Settings.EnableAutoSetHighPriority;
+			cb_Set_AutoSetHighPriority.IsChecked = Settings.EnableAutoSetHighPriority;
+			cb_Set_OnlyAutoStartProgramsWhenDowngraded.IsChecked = Settings.EnableOnlyAutoStartProgramsWhenDowngraded;
 			//btn_Set_PathFPSLimiter.Content = Settings.PathFPSLimiter;
 			//btn_Set_PathLiveSplit.Content = Settings.PathLiveSplit;
 			//btn_Set_PathStreamProgram.Content = Settings.PathStreamProgram;

@@ -180,7 +180,7 @@ namespace Project_127
 					MyFileOperations.Add(new MyFileOperation(MyFileOperation.FileOperations.Delete, CorrespondingFilePathInGTALocation[i], "", "File found in GTA V Installation Path and the Upgrade Folder. Will delete '" + CorrespondingFilePathInGTALocation[i] + "'", 1));
 				}
 
-				// Creates actual Hard Link (this will further down check if we should copy based on settings)
+				// Creates actual Hard Link (this will further down check if we should copy based on settings in MyFileOperation.Execute())
 				MyFileOperations.Add(new MyFileOperation(MyFileOperation.FileOperations.Hardlink, FilesInUpgradesFiles[i], CorrespondingFilePathInGTALocation[i], "Will create HardLink in '" + CorrespondingFilePathInGTALocation[i] + "' to the file in '" + FilesInUpgradesFiles[i] + "'", 1));
 			}
 
@@ -275,8 +275,7 @@ namespace Project_127
 					}
 				}
 
-
-				// Creates actual Hard Link (this will further down check if we should copy based on settings)
+				// Creates actual Hard Link (this will further down check if we should copy based on settings in MyFileOperation.Execute())
 				MyFileOperations.Add(new MyFileOperation(MyFileOperation.FileOperations.Hardlink, FilesInDowngradeFiles[i], CorrespondingFilePathInGTALocation[i], "Will create HardLink in '" + CorrespondingFilePathInGTALocation[i] + "' to the file in '" + FilesInDowngradeFiles[i] + "'", 1));
 			}
 
@@ -327,6 +326,8 @@ namespace Project_127
 				}
 
 				HelperClasses.Logger.Log("Upgraded Game should be launched");
+
+				PostLaunchEvents();
 			}
 
 			// If Downgraded
@@ -343,7 +344,7 @@ namespace Project_127
 				// If not Authed
 				else
 				{
-					HelperClasses.Logger.Log("You are NOT Authenticated. Throwing up Window now.");
+					HelperClasses.Logger.Log("You are NOT already Authenticated. Throwing up Window now.");
 
 					// Trying to Auth User
 					new ROSIntegration().ShowDialog();
@@ -355,6 +356,10 @@ namespace Project_127
 						HelperClasses.Logger.Log("Manual User Auth on Launch click did not work. Launch method will exit");
 						new Popup(Popup.PopupWindowTypes.PopupOk, "Authentication not sucessfull. Will abort Launch Function. Please Try again");
 						return;
+					}
+					else
+					{
+						HelperClasses.Logger.Log("Auth inside of Launch Click worked");
 					}
 				}
 
@@ -369,7 +374,51 @@ namespace Project_127
 				p.StartInfo.FileName = Settings.GTAVInstallationPath.TrimEnd('\\') + @"\PlayGTAV.exe";
 				p.StartInfo.WorkingDirectory = Settings.GTAVInstallationPath.TrimEnd('\\');
 				p.Start();
+
+				PostLaunchEvents();
 			}
+		}
+
+
+		/// <summary>
+		/// Method which gets called after Starting GTAV
+		/// </summary>
+		public async static void PostLaunchEvents()
+		{
+			HelperClasses.Logger.Log("Post Launch Events startd");
+			await Task.Delay(2500);
+			HelperClasses.Logger.Log("Waited a good bit");
+
+			if (Settings.EnableAutoSetHighPriority)
+			{
+				HelperClasses.Logger.Log("Trying to Set GTAV Process Priority to High");
+				Process[] processes = Process.GetProcessesByName("gta5");
+				try
+				{
+					processes[0].PriorityClass = ProcessPriorityClass.High;
+					HelperClasses.Logger.Log("I changed the priority of one process...");
+					if (processes[0].PriorityClass == ProcessPriorityClass.High)
+					{
+						HelperClasses.Logger.Log("Did so sucessfully.");
+					}
+					else
+					{
+						HelperClasses.Logger.Log("Failed to Set priority. This sucks.");
+					}
+				}
+				catch
+				{
+					HelperClasses.Logger.Log("Failed to get GTA5 Process...");
+				}
+			}
+
+			// If we DONT only auto start when downgraded OR if we are downgraded
+			if (Settings.EnableOnlyAutoStartProgramsWhenDowngraded == false || LauncherLogic.InstallationState == InstallationStates.Downgraded)
+			{
+				// Auto Start Programs
+			}
+
+
 		}
 
 

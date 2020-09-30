@@ -354,6 +354,21 @@ namespace Project_127
 		}
 
 		/// <summary>
+		/// Settings EnableOnlyAutoStartProgramsWhenDowngraded. Gets and Sets from the Dictionary.
+		/// </summary>
+		public static bool EnableOnlyAutoStartProgramsWhenDowngraded
+		{
+			get
+			{
+				return GetBoolFromString(GetSetting("EnableOnlyAutoStartProgramsWhenDowngraded"));
+			}
+			set
+			{
+				SetSetting("EnableOnlyAutoStartProgramsWhenDowngraded", value.ToString());
+			}
+		}
+
+		/// <summary>
 		/// Settings EnableLogging. Gets and Sets from the Dictionary.
 		/// </summary>
 		public static bool EnableLogging

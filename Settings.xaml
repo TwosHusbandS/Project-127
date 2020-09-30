@@ -316,7 +316,6 @@
                             <Label Grid.Row="0" Grid.Column="0" Content="Enable / Use 500k Pre-Order Bonus "  Style="{StaticResource lbl_Set_Info}" />
                             <CheckBox Grid.Row="0" Grid.Column="1" x:Name="cb_Set_EnablePreOrderBonus" IsChecked="{Binding Path=EnablePreOrderBonus, Mode=TwoWay}" Style="{StaticResource cb_Set}"/>
                         </Grid>
-                        <!--
                         <Grid x:Name="Grid_Set_AutoHighPriority">
                             <Grid.RowDefinitions>
                                 <RowDefinition/>
@@ -329,7 +328,19 @@
                             <Label Grid.Row="0" Grid.Column="0" Content="Automatically set Process Priority to 'HIGH'"  Style="{StaticResource lbl_Set_Info}" />
                             <CheckBox Grid.Row="0" Grid.Column="1" x:Name="cb_Set_AutoSetHighPriority" IsChecked="{Binding Path=EnableAutoSetHighPriority, Mode=TwoWay}" Style="{StaticResource cb_Set}"/>
                         </Grid>
-
+                        <Grid x:Name="Grid_Set_OnlyAutoStartProgramsWhenDowngraded">
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Row="0" Grid.Column="0" Content="Only do the 'Autostart Program XYZ' while being Downgraded"  Style="{StaticResource lbl_Set_Info}" />
+                            <CheckBox Grid.Row="0" Grid.Column="1" x:Name="cb_Set_OnlyAutoStartProgramsWhenDowngraded" IsChecked="{Binding Path=EnableOnlyAutoStartProgramsWhenDowngraded, Mode=TwoWay}" Style="{StaticResource cb_Set}"/>
+                        </Grid>
+                        <!--
                         <Grid x:Name="Grid_Set_Livesplit">
                             <Grid.RowDefinitions>
                                 <RowDefinition/>

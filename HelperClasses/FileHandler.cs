@@ -558,7 +558,10 @@ namespace Project_127.HelperClasses
 		{
 			try
 			{
+				if (doesPathExist(pPath))
+				{
 				Directory.Delete(pPath, true);
+				}
 			}
 			catch (Exception e)
 			{
