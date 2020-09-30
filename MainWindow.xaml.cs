@@ -21,10 +21,6 @@ Deploy Instructions:
 	Push Commit to github branch.
 	Merge branch into master
 
-Getting People into Beta:
-	Add their String inside the Regedit Value "MachineGuid" inside the RegeditKey: "Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Cryptography"
-	to /Installer/AuthUser.txt (on github master branch btw)
-
 Comments like "TODO", "TO DO", "CTRLF", "CTRL-F", and "CTRL F" are just ways of finding a specific line quickly via searching
 
 Hybrid code can be found in AAA_HybridCode.
@@ -90,12 +86,14 @@ Main To do:
 
 		// Release
 
+		-> File Hoster workarounds (multiple ZIP Files, Check for Filesize after downloading)
 		-> Figure out which files I need to distribute
 		-> Language Select
 		-> auto steam core fix
 		-> Custom ZIP File Location User Error Checks:
 			=> User might get confused with the Project_127_Files Folder. 
 				Maybe we should actually check parent folders and child folders when User is selecting a Path for ZIP File
+				>> The thing is. This shouldnt be needed since we delete folders on moving ZIP files and stuff
 		-> Regedit Value "LastLaunchedVersion" is there and be used with the next Version.
 		-> SaveFileHandler, just manage our own SaveFiles, probably only need one list for datagrid, ask if we need to overwrite
 		-> Think about making a spawner to spawn processes
