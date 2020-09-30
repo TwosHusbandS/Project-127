@@ -169,8 +169,8 @@ namespace Project_127
 				}
 				catch (Exception e)
 				{
-					HelperClasses.Logger.Log("TryCatch failed while extracting ZIP with progressbar." + e.Message);
-					new Popup(Popup.PopupWindowTypes.PopupOkError, "trycatch failed while extracting zip with progressbar\n" + e.Message);
+					HelperClasses.Logger.Log("TryCatch failed while extracting ZIP with progressbar." + e.ToString());
+					new Popup(Popup.PopupWindowTypes.PopupOkError, "trycatch failed while extracting zip with progressbar\n" + e.ToString());
 				}
 			}
 		}
