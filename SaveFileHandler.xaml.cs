@@ -46,6 +46,24 @@ namespace Project_127
 			// Set the ItemSource of Both Datagrids for the DataBinding
 			dg_BackupFiles.ItemsSource = BackupSaves;
 			dg_GTAFiles.ItemsSource = GTASaves;
+
+			string[] MyBackupSaveFiles = HelperClasses.FileHandling.GetFilesFromFolder(LauncherLogic.SaveFilesPath);
+			foreach (string MyBackupSaveFile in MyBackupSaveFiles)
+			{
+				if (!MyBackupSaveFile.Contains(".bak"))
+				{
+					BackupSaves.Add(new MySaveFile(MyBackupSaveFile));
+				}
+			}
+
+			string[] MyGTAVSaveFiles = HelperClasses.FileHandling.GetFilesFromFolder(LauncherLogic.SaveFilesPath);
+			foreach (string MyGTAVSaveFile in MyGTAVSaveFiles)
+			{
+				if (!MyGTAVSaveFile.Contains(".bak"))
+				{
+					GTASaves.Add(new MySaveFile(MyGTAVSaveFile));
+				}
+			}
 		}
 
 
@@ -56,12 +74,7 @@ namespace Project_127
 		/// <param name="e"></param>
 		private void btn_LeftArrow_Click(object sender, RoutedEventArgs e)
 		{
-			// Not Fully Implemented
-			BackupSaves.Add(new MySaveFile("Test1", "TestA"));
-			BackupSaves.Add(new MySaveFile("Test2", "TestB"));
-			BackupSaves.Add(new MySaveFile("Test3", "TestC"));
-			BackupSaves.Add(new MySaveFile("Test4", "TestD"));
-			BackupSaves.Add(new MySaveFile("Test5", "TestE"));
+
 		}
 
 

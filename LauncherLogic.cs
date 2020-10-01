@@ -32,7 +32,8 @@ namespace Project_127
 		public enum InstallationStates
 		{
 			Upgraded,
-			Downgraded
+			Downgraded,
+			Broken
 		}
 
 		/// <summary>
@@ -94,6 +95,10 @@ namespace Project_127
 				{
 					return InstallationStates.Downgraded;
 				}
+				else if (SizeOfGTAV == 0 || SizeOfUpdate == 0)
+				{
+					return InstallationStates.Broken;
+				}
 				else
 				{
 					return InstallationStates.Upgraded;
@@ -136,6 +141,11 @@ namespace Project_127
 		/// </summary>
 		public static string SupportFilePath { get { return LauncherLogic.ZIPFilePath.TrimEnd('\\') + @"\Project_127_Files\SupportFiles\"; } }
 
+		/// <summary>
+		/// Property of often used variable. (SupportFilePath)
+		/// </summary>
+		public static string SaveFilesPath { get { return LauncherLogic.SupportFilePath.TrimEnd('\\') + @"\SaveFiles\"; } }
+		
 		/// <summary>
 		/// Property of often used variable. (GTAVFilePath)
 		/// </summary>
@@ -305,24 +315,21 @@ namespace Project_127
 				if (GameVersion == Settings.Retailers.Steam)
 				{
 					HelperClasses.Logger.Log("Trying to start Game normally through Steam.", 1);
-					Process gtav = new Process();
-					gtav.StartInfo.FileName = Globals.SteamInstallPath.TrimEnd('\\') + @"\steam.exe";
-					gtav.StartInfo.Arguments = "-applaunch 271590";
-					gtav.Start();
+					HelperClasses.ProcessHandler.StartProcess(Globals.SteamInstallPath.TrimEnd('\\') + @"\steam.exe", pCommandLineArguments: "-applaunch 271590");
 				}
 
 				// If Epic Games
 				else if (GameVersion == Settings.Retailers.Epic)
 				{
 					HelperClasses.Logger.Log("Trying to start Game normally through EpicGames.", 1);
-					Process.Start(@"com.epicgames.launcher://apps/9d2d0eb64d5c44529cece33fe2a46482?action=launch&silent=true");
+					HelperClasses.ProcessHandler.StartProcess(@"com.epicgames.launcher://apps/9d2d0eb64d5c44529cece33fe2a46482?action=launch&silent=true");
 				}
 
 				// If Rockstar
 				else
 				{
 					HelperClasses.Logger.Log("Trying to start Game normally through Rockstar.", 1);
-					Process.Start(Settings.GTAVInstallationPath.TrimEnd('\\') + @"\PlayGTAV.exe");
+					HelperClasses.ProcessHandler.StartProcess(Settings.GTAVInstallationPath.TrimEnd('\\') + @"\PlayGTAV.exe");
 				}
 
 				HelperClasses.Logger.Log("Upgraded Game should be launched");
@@ -370,13 +377,21 @@ namespace Project_127
 
 				// TO DO, Clean this Up, move to ProcessHandler HelperClass
 				HelperClasses.Logger.Log("Launching Game");
-				Process p = new Process();
-
-				p.StartInfo.FileName = Settings.GTAVInstallationPath.TrimEnd('\\') + @"\PlayGTAV.exe";
-				p.StartInfo.WorkingDirectory = Settings.GTAVInstallationPath.TrimEnd('\\');
-				p.Start();
+				HelperClasses.ProcessHandler.StartProcess(Settings.GTAVInstallationPath.TrimEnd('\\') + @"\PlayGTAV.exe",
+															pWorkingDir: Settings.GTAVInstallationPath.TrimEnd('\\'));
+															// pCommandLineArguments: "-uilanguage german");
 
 				PostLaunchEvents();
+			}
+			else
+			{
+				HelperClasses.Logger.Log("Installation State Broken");
+				HelperClasses.Logger.Log("    Size of GTA5.exe in GTAV Installation Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\GTA5.exe"));
+				HelperClasses.Logger.Log("    Size of GTA5.exe in Downgrade Files Folder: " + LauncherLogic.SizeOfDowngradedGTAV);
+				HelperClasses.Logger.Log("    Size of update.rpf in GTAV Installation Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\update\update.rpf"));
+				HelperClasses.Logger.Log("    Size of update.rpf in Downgrade Files Folder: " + LauncherLogic.SizeOfDowngradedUPDATE);
+
+				new Popup(Popup.PopupWindowTypes.PopupOkError, "Installation State is broken for some reason. Try to repair.");
 			}
 		}
 
@@ -393,7 +408,7 @@ namespace Project_127
 			if (Settings.EnableAutoSetHighPriority)
 			{
 				HelperClasses.Logger.Log("Trying to Set GTAV Process Priority to High");
-				Process[] processes = Process.GetProcessesByName("gta5");
+				Process[] processes = HelperClasses.ProcessHandler.GetProcesses("gta5");
 				HelperClasses.Logger.Log(processes.Length + " Processes containing 'gta5' found");
 				try
 				{

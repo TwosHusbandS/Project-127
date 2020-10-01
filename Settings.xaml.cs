@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -199,7 +200,7 @@ namespace Project_127
 		public static void SetGTAVPathManually(bool CheckIfDefaultForCopyHardlinkNeedsChanging = true)
 		{
 			HelperClasses.Logger.Log("Asking User for GTA V Installation path");
-			string GTAVInstallationPathUserChoice = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.Folder, "Pick the Folder which contains your GTAV.exe", @"C:\");
+			string GTAVInstallationPathUserChoice = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.Folder, "Pick the Folder which contains your GTA5.exe", @"C:\");
 			HelperClasses.Logger.Log("Users picked path is: '" + GTAVInstallationPathUserChoice + "'");
 
 			while (!(LauncherLogic.IsGTAVInstallationPathCorrect(GTAVInstallationPathUserChoice, false)))
@@ -218,7 +219,7 @@ namespace Project_127
 					Settings.GTAVInstallationPath = GTAVInstallationPathUserChoice;
 					break;
 				}
-				GTAVInstallationPathUserChoice = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.Folder, "Pick the Folder which contains your GTAV.exe", @"C:\");
+				GTAVInstallationPathUserChoice = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.Folder, "Pick the Folder which contains your GTA5.exe", @"C:\");
 				HelperClasses.Logger.Log("New Users picked path is: '" + GTAVInstallationPathUserChoice + "'");
 			}
 			HelperClasses.Logger.Log("Picked path '" + GTAVInstallationPathUserChoice + "'´is valid and will be set as Settings.GTAVInstallationPath.");
@@ -253,7 +254,8 @@ namespace Project_127
 		/// <param name="e"></param>
 		private void btn_Set_GTAVInstallationPath_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
 		{
-			Process.Start("explorer.exe", Settings.GTAVInstallationPath);
+			HelperClasses.ProcessHandler.StartProcess("explorer.exe", pCommandLineArguments: Settings.GTAVInstallationPath);
+
 		}
 
 
@@ -367,11 +369,32 @@ namespace Project_127
 		}
 
 
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void btn_Set_ZIPExtractionPath_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
 		{
-			Process.Start("explorer.exe", Settings.ZIPExtractionPath);
+			HelperClasses.ProcessHandler.StartProcess("explorer.exe", pCommandLineArguments: Settings.ZIPExtractionPath);
 		}
 
+
+
+		/// <summary>
+		/// Called then the TextBox of Ingame looses Focus
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void tb_Set_InGameName_LostFocus(object sender, RoutedEventArgs e)
+		{
+			string txt = Regex.Replace(tb_Set_InGameName.Text, @"[^0-9A-Za-z_]", @"");
+			if (String.IsNullOrEmpty(txt)) { txt = "HiMomImOnYoutube"; }
+			while (txt.Length < 3) { txt = txt + "_"; }
+			if (txt.Length > 16) { txt = txt.Substring(0, 16); }
+			Settings.InGameName = txt;
+			tb_Set_InGameName.Text = txt;
+		}
 
 
 		/// <summary>

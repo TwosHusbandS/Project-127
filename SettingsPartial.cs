@@ -430,7 +430,6 @@ namespace Project_127
 			}
 			set
 			{
-				// Need to do some front end checking here, so user doesnt get confused
 				SetSetting("InGameName", value);
 			}
 		}

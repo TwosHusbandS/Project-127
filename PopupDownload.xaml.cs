@@ -90,7 +90,7 @@ namespace Project_127
 			catch (Exception e)
 			{
 				HelperClasses.Logger.Log("Update of '" + PopupDownloadType.ToString() + "' failed for some reason." + e.Message);
-				new Popup(Popup.PopupWindowTypes.PopupOkError, "Update of '" + PopupDownloadType.ToString() + "' failed for some reason.\nI suggest restarting the program and opting out of update");
+				// No Popup here, Popup will appear in Method which called this
 			}
 		}
 

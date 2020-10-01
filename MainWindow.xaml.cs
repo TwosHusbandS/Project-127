@@ -62,45 +62,46 @@ General Comments and things one should be aware of (still finishing this list)
 		Never built with requestedExecutionLevel administrator tho. Will fail to launch from installer
 	- Installation Path gets written to Registry on every Launch to make sure its always up to date.
 
-
-
 Main To do:
 	- Things changed since last official release (not last commit)
-		-> Pretty OpenFolderDialog
-		-> ZIP File gets downloaded AFTER checking if user is allowed to run...
-		-> Full Cleanup code (auto document everything and also write a few lines in important locations)
-		-> Set popup to "No ZIP Installed" if version is 0
-		-> Automatically detect Retailer based on Path guess
-		-> auto high priority
-		-> Fix for Bug when deleting a Folder
-		-> Fix CommandLineArgs
-		-> Added Extra Logging for Zip File Extraction
-		-> Fixed "Import ZIP Window"
+		-> Fix Typo in OpenFolderDialog of GTAV Path detection
+		-> Added Download ZIP Support for Mirrors (needs Testing)
+		-> ProcessHandler Class
+		-> Removed some popups
+		-> Implemented Internal Mode (for internal testing of autoupdater and stuff
+		-> Implemented "Broken" InstallationState
+		-> Changed Color for GTA V Label Foreground (Upgraded / Downgraded / Broken)
+		-> Fixed Bug for steam not being installed
 
 	-REMEMBER:
 		-> Release with admin mode manifest thingy...		
 		-> Fix Installer with everything (autolaunch app,include new files)
 		-> This requires admin the "proper" way of telling windows. Should fix zip file issues
+		-> TEST THE NEW DOWNLOAD ZIP SHIT
+		-> TEST THE CORE AFFINITY SHIT (commented out)
+		-> TEST NAME FRONTEND, WITH NEW DRAGON BACKEND
+		-> TEST INTERNAL RELEASE SHIT
 					
 	- TO DO:
 
-		// Release
+		-> SaveFileHandler, just manage our own SaveFiles, probably only need one list for datagrid, ask if we need to overwrite
+			=> Cant figure out how to fix that at the moment
+		-> New Deployment Concept
+		-> Using Windows Credential Manager
+		-> GTAV Language (currently commented out)
 
-		-> File Hoster workarounds (multiple ZIP Files, Check for Filesize after downloading)
+		// NEXT PUBLIC RELEASE
+
+		-> $UpgradeFiles has downgrade files in them. Why? And how to Fix?
 		-> Figure out which files I need to distribute
-		-> Language Select
-		-> auto steam core fix
 		-> Custom ZIP File Location User Error Checks:
 			=> User might get confused with the Project_127_Files Folder. 
 				Maybe we should actually check parent folders and child folders when User is selecting a Path for ZIP File
 				>> The thing is. This shouldnt be needed since we delete folders on moving ZIP files and stuff
 		-> Regedit Value "LastLaunchedVersion" is there and be used with the next Version.
-		-> SaveFileHandler, just manage our own SaveFiles, probably only need one list for datagrid, ask if we need to overwrite
 		-> Think about making a spawner to spawn processes
 		   (Process.Start(@"C:\Users\ingow\source\repos\ProcessSpawner127\bin\x64\Release\ProcessSpawner127.exe", "testA testB");)
 		-> Regedit Cleanup of everything not in default settings
-		-> $UpgradeFiles has downgrade files in them. Why? And how to Fix?
-			=> Cant figure out how to fix that at the moment
 		-> Settings dont update content
 			=> Currently it calls the Refresh Method after each click...which works but is ugly
 			=> Get data binding to work after everything else is Gucci 
@@ -123,7 +124,7 @@ Weird Beta Reportings:
 			I actually hardcoded the Path...its now fixed.
 	- People had to run as Admin manually even tho I have the admin relauncher.
 	- ZIP Extraction failed for 2 people when not manually running as admin
-			Added more and better logging, issue can not be reproduced now
+			Added more and better logging, issue can not be reproduced as of right now
 	- Open Twice message (and killing old process) not working for one guy
 			Works for me and on some other testers machines.
 */
@@ -178,7 +179,7 @@ namespace Project_127
 			InitializeComponent();
 
 			// Admin Relauncher
-			// AdminRelauncher();
+			AdminRelauncher();
 
 			//Dont run anything when we are on 32 bit...
 			//If this ever gets changed, take a second look at regedit class and path(different for 32 and 64 bit OS)
@@ -188,14 +189,15 @@ namespace Project_127
 				Environment.Exit(1);
 			}
 
+
 			// Checks if a Process with the same ProcessName is already running
-			if (Process.GetProcessesByName(Process.GetCurrentProcess().ProcessName).Length > 1)
+			if (HelperClasses.ProcessHandler.GetProcesses(Process.GetCurrentProcess().ProcessName).Length > 1)
 			{
 				Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Program is open twice. Do you want to force close the old Instance?");
 				yesno.ShowDialog();
 				if (yesno.DialogResult == true)
 				{
-					HelperClasses.ProcessHandler.KillProcessContains("Project 1.27");
+					HelperClasses.ProcessHandler.KillProcessesContains(Process.GetCurrentProcess().ProcessName);
 				}
 				else
 				{
@@ -244,19 +246,10 @@ namespace Project_127
 			// If not run as Admin
 			if (!IsRunAsAdmin())
 			{
-				// Prepare new ProcessStartInfo with all Arguments and stuff
-				ProcessStartInfo proc = new ProcessStartInfo();
-				proc.UseShellExecute = true;
-				proc.WorkingDirectory = Environment.CurrentDirectory;
-				proc.FileName = Assembly.GetEntryAssembly().CodeBase;
-				proc.Arguments = Globals.CommandLineArguments.ToString();
-
-				// Make sure its admin
-				proc.Verb = "runas";
-
 				try
 				{
-					Process.Start(proc);
+					// CTRLF TODO // THIS MIGHT BE BROKEN WITH COMMAND LINE ARGS THAT CONTAIN SPACES
+					HelperClasses.ProcessHandler.StartProcess(Assembly.GetEntryAssembly().CodeBase, Environment.CurrentDirectory, string.Join(" ", Globals.CommandLineArgs.ToString()), true, true, false);
 					Application.Current.Shutdown();
 				}
 				catch (Exception e)
@@ -282,64 +275,6 @@ namespace Project_127
 			catch (Exception)
 			{
 				return false;
-			}
-		}
-
-
-		/// <summary>
-		/// Exits when you are not supposed to run this. Its ugly. It works. Meh.
-		/// </summary>
-		private bool CheckIfAllowedToRun()
-		{
-			try
-			{
-				// If we are in BetaMode
-				if (Globals.BetaMode)
-				{
-					// If we skip the login
-					foreach (string argument in Environment.GetCommandLineArgs())
-					{
-						if (argument.ToLower().Contains("skiplogin"))
-						{
-							return true;
-						}
-					}
-
-					// Getting own GUID from Server
-					RegistryKey MyKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64).CreateSubKey("SOFTWARE").CreateSubKey("Microsoft").CreateSubKey("Cryptography");
-					string GUID = HelperClasses.RegeditHandler.GetValue(MyKey, "MachineGuid");
-
-					// Getting the URL of the File which has all the AuthInfo in it
-					string URL_AuthUser = HelperClasses.FileHandling.GetXMLTagContent(HelperClasses.FileHandling.GetStringFromURL(Globals.URL_AutoUpdate), "authuser");
-
-					// Downloading the File into string
-					string AuthUserOnServer = HelperClasses.FileHandling.GetStringFromURL(URL_AuthUser);
-
-					// Letting Users in if github is down...
-					if (String.IsNullOrEmpty(AuthUserOnServer))
-					{
-						new Popup(Popup.PopupWindowTypes.PopupOk, "Letting you in since Github appears to be down...").ShowDialog();
-						return true;
-					}
-
-					// If own GUID is in the GUIDs on the server
-					if (AuthUserOnServer.Contains(GUID))
-					{
-						return true;
-					}
-					else
-					{
-						return false;
-					}
-				}
-
-				// If we are not in Betamode
-				return true;
-			}
-			catch
-			{
-				// If something shit the bed somewhere
-				return true;
 			}
 		}
 
@@ -392,7 +327,7 @@ namespace Project_127
 				if (MyVersionOnline > Globals.ProjectVersion)
 				{
 					// Update Found.
-					HelperClasses.Logger.Log("Update found,1");
+					HelperClasses.Logger.Log("Update found", 1);
 					Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Version: '" + MyVersionOnline.ToString() + "' found on the Server.\nVersion: '" + Globals.ProjectVersion.ToString() + "' found installed.\nDo you want to upgrade?");
 					yesno.ShowDialog();
 					// Asking User if he wants update.
@@ -405,7 +340,7 @@ namespace Project_127
 						string LocalFileName = Globals.ProjectInstallationPath.TrimEnd('\\') + @"\" + DLFilename;
 
 						new PopupDownload(PopupDownloadTypes.Installer, DLPath, LocalFileName).ShowDialog();
-						HelperClasses.ProcessHandler.StartProcess(LocalFileName, "", true, false);
+						HelperClasses.ProcessHandler.StartProcess(LocalFileName);
 						Environment.Exit(0);
 					}
 					else
@@ -457,11 +392,40 @@ namespace Project_127
 				if (yesno.DialogResult == true)
 				{
 					HelperClasses.Logger.Log("User wants update for ZIP");
-					string pathOfNewZip = HelperClasses.FileHandling.GetXMLTagContent(HelperClasses.FileHandling.GetStringFromURL(Globals.URL_AutoUpdate), "zip");
 
-					// Downloads ZIP, calls extraction Method after download
-					new PopupDownload(PopupDownloadTypes.ZIP, pathOfNewZip, Globals.ZipFileDownloadLocation).ShowDialog();
-					LauncherLogic.ImportZip(Globals.ZipFileDownloadLocation, true);
+					// Getting the Hash of the new ZIPFile
+					string hashNeeded = HelperClasses.FileHandling.GetXMLTagContent(HelperClasses.FileHandling.GetStringFromURL(Globals.URL_AutoUpdate), "zipmd5");
+					HelperClasses.Logger.Log("HashNeeded: " + hashNeeded);
+
+					// Looping 0 through 5
+					for (int i = 0; i <= 5; i++)
+					{
+						// Getting DL Link of zip + i
+						string pathOfNewZip = HelperClasses.FileHandling.GetXMLTagContent(HelperClasses.FileHandling.GetStringFromURL(Globals.URL_AutoUpdate), "zip" + i.ToString());
+						HelperClasses.Logger.Log("Zip-Try: 'zip" + i.ToString() + "'");
+						HelperClasses.Logger.Log("DL Link: '" + pathOfNewZip + "'");
+
+						// Deleting old ZIPFile
+						HelperClasses.FileHandling.deleteFile(Globals.ZipFileDownloadLocation);
+
+						// Downloading the ZIP File
+						new PopupDownload(PopupDownloadTypes.ZIP, pathOfNewZip, Globals.ZipFileDownloadLocation).ShowDialog();
+
+						// Checking the hash of the Download
+						string HashOfDownload = HelperClasses.FileHandling.GetHashFromFile(Globals.ZipFileDownloadLocation);
+						HelperClasses.Logger.Log("Download Done, Hash of Downloaded File: '" + HashOfDownload + "'");
+
+						// If Hash looks good, we import it
+						if (HashOfDownload == hashNeeded)
+						{
+							HelperClasses.Logger.Log("Hashes Match, will Import");
+							LauncherLogic.ImportZip(Globals.ZipFileDownloadLocation, true);
+							return;
+						}
+						HelperClasses.Logger.Log("Hashes dont match, will move on");
+					}
+					HelperClasses.Logger.Log("Error. Could not find a suitable ZIP File from a FileHoster. Program cannot download new ZIP at the moment.");
+					new Popup(Popup.PopupWindowTypes.PopupOkError, "Update of ZIP File failed (No Suitable ZIP Files Found).\nI suggest restarting the program and opting out of update.");
 				}
 				else
 				{
@@ -489,10 +453,15 @@ namespace Project_127
 				lbl_GTA.Foreground = Globals.MW_GTALabelDowngradedForeground;
 				lbl_GTA.Content = "Downgraded";
 			}
-			else
+			else if (LauncherLogic.InstallationState == LauncherLogic.InstallationStates.Upgraded)
 			{
 				lbl_GTA.Foreground = Globals.MW_GTALabelUpgradedForeground;
 				lbl_GTA.Content = "Upgraded";
+			}
+			else
+			{
+				lbl_GTA.Foreground = Globals.MW_GTALabelBrokenForeground;
+				lbl_GTA.Content = "Broken";
 			}
 			if (LauncherLogic.GameState == LauncherLogic.GameStates.Running)
 			{
@@ -663,12 +632,13 @@ namespace Project_127
 		/// <param name="e"></param>
 		private void btn_Hamburger_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
 		{
-			if (Globals.BetaMode)
+			if (Globals.BetaMode || Globals.InternalMode)
 			{
 				// Opens the File
-				Process.Start("notepad.exe", Globals.Logfile);
+				HelperClasses.ProcessHandler.StartProcess("notepad.exe", pCommandLineArguments: Globals.Logfile);
 			}
 		}
+
 
 
 		/// <summary>
@@ -700,7 +670,7 @@ namespace Project_127
 		/// <param name="e"></param>
 		private void btn_Auth_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
 		{
-			if (Globals.BetaMode)
+			if (Globals.BetaMode || Globals.InternalMode)
 			{
 				// Debug Info users can give me easily...
 				List<string> DebugMessage = new List<string>();
@@ -732,7 +702,7 @@ namespace Project_127
 				HelperClasses.FileHandling.WriteStringToFileOverwrite(DebugFile, DebugMessage.ToArray());
 
 				// Opens the File
-				Process.Start("notepad.exe", DebugFile);
+				HelperClasses.ProcessHandler.StartProcess("notepad.exe", pCommandLineArguments: DebugFile);
 			}
 		}
 
@@ -779,16 +749,10 @@ namespace Project_127
 			}
 			else
 			{
-				string msg = "GTA V Installation is (probably) " + LauncherLogic.InstallationState.ToString() + ". The Game is (probably) " + LauncherLogic.GameState.ToString() + ".";
-
-				Popup conf = new Popup(Popup.PopupWindowTypes.PopupYesNo, msg + "\nDo you want to Launch the Game?");
-				conf.ShowDialog();
-				if (conf.DialogResult == true)
-				{
-					HelperClasses.Logger.Log("User wantst to Launch", 1);
-					LauncherLogic.Launch();
-				}
+				HelperClasses.Logger.Log("User wantst to Launch", 1);
+				LauncherLogic.Launch();
 			}
+			FocusManager.SetFocusedElement(this, null);
 			UpdateGUIDispatcherTimer();
 		}
 
@@ -806,6 +770,7 @@ namespace Project_127
 			{
 				LauncherLogic.KillRelevantProcesses();
 			}
+			FocusManager.SetFocusedElement(this, null);
 			UpdateGUIDispatcherTimer();
 		}
 
@@ -837,33 +802,35 @@ namespace Project_127
 					HelperClasses.Logger.Log("Gamestate looks OK (Downgraded). Will Proceed to try to Upgrade.", 1);
 					LauncherLogic.Upgrade();
 				}
+				else if (LauncherLogic.InstallationState == LauncherLogic.InstallationStates.Upgraded)
+				{
+					HelperClasses.Logger.Log("This program THINKS you are already Upgraded. Update procedure will be called anyways since it shouldnt break things.", 1);
+					LauncherLogic.Upgrade();
+				}
 				else
 				{
-					HelperClasses.Logger.Log("This program THINKS you are already Upgraded. Update procedure will not be called.", 1);
-					if (Globals.BetaMode)
-					{
-						Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "We are in Beta Mode. Do you want to FORCE the Upgrade?\nThe program thinks youre already Upgraded. Things might go wrong if you force this.");
-						yesno.ShowDialog();
-						if (yesno.DialogResult == true)
-						{
-							HelperClasses.Logger.Log("Gamestate looks SHIT (Upgraded). Forcing Upgrade since we are in Beta Mode.", 1);
-							LauncherLogic.Upgrade();
-						}
-						else
-						{
-							HelperClasses.Logger.Log("Gamestate looks SHIT (Upgraded). Upgrade was not forced.", 1);
-						}
-					}
+					HelperClasses.Logger.Log("Installation State Broken.", 1);
+					new Popup(Popup.PopupWindowTypes.PopupOkError, "Installation State is broken. I suggest trying to repair.").ShowDialog();
 				}
 			}
 			else
 			{
 				HelperClasses.Logger.Log("GTA V Installation Path not found or incorrect. User will get Popup");
-				Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Error: GTA V Installation Path incorrect or ZIP Version == 0.\nGTAV Installation Path: '" + LauncherLogic.GTAVFilePath + "'\nInstallationState (probably): '" + LauncherLogic.InstallationState.ToString() + "'\n. Force this Upgrade?");
-				yesno.ShowDialog();
-				if (yesno.DialogResult == true)
+
+				string msg = "Error: GTA V Installation Path incorrect or ZIP Version == 0.\nGTAV Installation Path: '" + LauncherLogic.GTAVFilePath + "'\nInstallationState (probably): '" + LauncherLogic.InstallationState.ToString() + "'\nZip Version: " + Globals.ZipVersion + ".";
+
+				if (Globals.BetaMode || Globals.InternalMode)
 				{
-					LauncherLogic.Downgrade();
+					Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, msg + "\n. Force this Upgrade?");
+					yesno.ShowDialog();
+					if (yesno.DialogResult == true)
+					{
+						LauncherLogic.Upgrade();
+					}
+				}
+				else
+				{
+					new Popup(Popup.PopupWindowTypes.PopupOkError, msg).ShowDialog();
 				}
 			}
 
@@ -888,12 +855,23 @@ namespace Project_127
 				}
 				else
 				{
+
 					HelperClasses.Logger.Log("GTA V Installation Path not found or incorrect. User will get Popup");
-					Popup conf = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Error: GTA V Installation Path incorrect or ZIP Version == 0.\nGTAV Installation Path: '" + LauncherLogic.GTAVFilePath + "'\nForce this Repair?");
-					conf.ShowDialog();
-					if (conf.DialogResult == true)
+
+					string msg = "Error: GTA V Installation Path incorrect or ZIP Version == 0.\nGTAV Installation Path: '" + LauncherLogic.GTAVFilePath + "'\nInstallationState (probably): '" + LauncherLogic.InstallationState.ToString() + "'\nZip Version: " + Globals.ZipVersion + ".";
+
+					if (Globals.BetaMode || Globals.InternalMode)
 					{
-						LauncherLogic.Repair();
+						Popup yesno2 = new Popup(Popup.PopupWindowTypes.PopupYesNo, msg + "\n. Force this Repair?");
+						yesno2.ShowDialog();
+						if (yesno2.DialogResult == true)
+						{
+							LauncherLogic.Repair();
+						}
+					}
+					else
+					{
+						new Popup(Popup.PopupWindowTypes.PopupOkError, msg).ShowDialog();
 					}
 				}
 			}
@@ -916,7 +894,7 @@ namespace Project_127
 				return;
 			}
 
-			// Actual Code behind Downgrade Button
+			// Actual Upgrade Button Code
 			HelperClasses.Logger.Log("Clicked the Downgrade Button");
 			if (LauncherLogic.IsGTAVInstallationPathCorrect() && Globals.ZipVersion != 0)
 			{
@@ -925,33 +903,35 @@ namespace Project_127
 					HelperClasses.Logger.Log("Gamestate looks OK (Upgraded). Will Proceed to try to Downgrade.", 1);
 					LauncherLogic.Downgrade();
 				}
+				else if (LauncherLogic.InstallationState == LauncherLogic.InstallationStates.Downgraded)
+				{
+					HelperClasses.Logger.Log("This program THINKS you are already Downgraded. Downgrade procedure will be called anyways since it shouldnt break things.", 1);
+					LauncherLogic.Downgrade();
+				}
 				else
 				{
-					HelperClasses.Logger.Log("This program THINKS you are already Downgraded. Upgrade procedure will not be called.", 1);
-					if (Globals.BetaMode)
-					{
-						Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "We are in Beta Mode. Do you want to FORCE the Downgrade?\nThe program thinks youre already Downgraded. Things might go wrong if you force this.");
-						yesno.ShowDialog();
-						if (yesno.DialogResult == true)
-						{
-							HelperClasses.Logger.Log("Gamestate looks SHIT (Downgraded). Forcing Downgrade since we are in Beta Mode.", 1);
-							LauncherLogic.Downgrade();
-						}
-						else
-						{
-							HelperClasses.Logger.Log("Gamestate looks SHIT (Downgraded). Downgrade was not forced.", 1);
-						}
-					}
+					HelperClasses.Logger.Log("Installation State Broken.", 1);
+					new Popup(Popup.PopupWindowTypes.PopupOkError, "Installation State is broken. I suggest trying to repair.").ShowDialog();
 				}
 			}
 			else
 			{
 				HelperClasses.Logger.Log("GTA V Installation Path not found or incorrect. User will get Popup");
-				Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Error:\nGTA V Installation Path incorrect or ZIP Version == 0.\nGTAV Installation Path: '" + LauncherLogic.GTAVFilePath + "'\nInstallationState (probably): '" + LauncherLogic.InstallationState.ToString() + "'\n. Force this Downgrade?");
-				yesno.ShowDialog();
-				if (yesno.DialogResult == true)
+
+				string msg = "Error: GTA V Installation Path incorrect or ZIP Version == 0.\nGTAV Installation Path: '" + LauncherLogic.GTAVFilePath + "'\nInstallationState (probably): '" + LauncherLogic.InstallationState.ToString() + "'\nZip Version: " + Globals.ZipVersion + ".";
+
+				if (Globals.BetaMode || Globals.InternalMode)
 				{
-					LauncherLogic.Downgrade();
+					Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, msg + "\n. Force this Downgrade?");
+					yesno.ShowDialog();
+					if (yesno.DialogResult == true)
+					{
+						LauncherLogic.Downgrade();
+					}
+				}
+				else
+				{
+					new Popup(Popup.PopupWindowTypes.PopupOkError, msg).ShowDialog();
 				}
 			}
 			UpdateGUIDispatcherTimer();
@@ -982,7 +962,8 @@ namespace Project_127
 		/// <param name="e"></param>
 		private void btn_SaveFiles_Click(object sender, RoutedEventArgs e)
 		{
-			new Popup(Popup.PopupWindowTypes.PopupOk, "SaveFileHanlder not fully implemented yet").ShowDialog();
+			//new Popup(Popup.PopupWindowTypes.PopupOk, "SaveFileHanlder not fully implemented yet").ShowDialog();
+			new SaveFileHandler().ShowDialog();
 		}
 
 		/// <summary>

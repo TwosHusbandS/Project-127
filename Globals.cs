@@ -56,12 +56,37 @@ namespace Project_127
 		/// <summary>
 		/// URL for AutoUpdaterFile
 		/// </summary>
-		public static string URL_AutoUpdate = "https://raw.githubusercontent.com/TwosHusbandS/Project-127/master/Installer/Update.xml";
+		public static string URL_AutoUpdate
+		{
+			get
+			{
+				if (InternalMode)
+				{
+					return "https://raw.githubusercontent.com/TwosHusbandS/Project-127/internal/Installer/Update.xml";
+				}
+				else
+				{
+					return "https://raw.githubusercontent.com/TwosHusbandS/Project-127/master/Installer/Update.xml";
+				}
+			}
+		}
 
 		/// <summary>
 		/// Download Location of Zip File
 		/// </summary>
 		public static string ZipFileDownloadLocation = Globals.ProjectInstallationPath + @"\NewZipFile.zip";
+
+		/// <summary>
+		/// Property if we are in Beta
+		/// </summary>
+		public static bool InternalMode
+		{
+			get
+			{
+				if (HelperClasses.FileHandling.doesFileExist(Settings.InstallationPath.TrimEnd('\\') + @"\internal.txt")) { return true; }
+				return false;
+			}
+		}
 
 		/// <summary>
 		/// Property if we are in Beta
@@ -72,6 +97,12 @@ namespace Project_127
 		/// Property of other Buildinfo. Will be in the top message of logs
 		/// </summary>
 		public static string BuildInfo = "Build 2";
+
+		/// <summary>
+		/// Returns all Command Line Args as StringArray
+		/// </summary>
+		/// <returns></returns>
+		public static string[] CommandLineArgs { get { return Environment.GetCommandLineArgs(); } }
 
 		/// <summary>
 		/// String of Steam Install Path
@@ -90,10 +121,6 @@ namespace Project_127
 		/// </summary>
 		public static DispatcherTimer MyDispatcherTimer;
 
-		/// <summary>
-		/// String[] of CommandLineArguments
-		/// </summary>
-		public static string[] CommandLineArguments;
 
 		/// <summary>
 		/// Property of LogFile Location. Will always be in in the same folder as the executable, since we want to start logging before inititng regedit and loading settings
@@ -207,7 +234,7 @@ namespace Project_127
 			{
 				// Do things we want to do
 				Version GiveWarningMessageVersion = new Version("0.0.3.1");
-				
+
 				if (Settings.LastLaunchedVersion < GiveWarningMessageVersion)
 				{
 					new Popup(Popup.PopupWindowTypes.PopupOk,
@@ -230,6 +257,8 @@ namespace Project_127
 			MyDispatcherTimer.Start();
 			pMW.UpdateGUIDispatcherTimer();
 		}
+
+
 
 		/// <summary>
 		/// Proper Exit Method. EMPTY FOR NOW. Get called when closed (user and taskmgr) and when PC is shutdown. Not when process is killed or power ist lost.
@@ -298,7 +327,8 @@ namespace Project_127
 		public static Brush MW_ButtonMOBorderBrush { get; private set; } = MyColorWhite;
 
 		public static Brush MW_GTALabelDowngradedForeground { get; private set; } = MyColorGreen;
-		public static Brush MW_GTALabelUpgradedForeground { get; private set; } = Brushes.Red;
+		public static Brush MW_GTALabelUpgradedForeground { get; private set; } = Brushes.White;
+		public static Brush MW_GTALabelBrokenForeground { get; private set; } = Brushes.Red;
 
 		// Hamburger Button and "X"
 		// These have no effect since these are all Icons now...
@@ -360,7 +390,7 @@ namespace Project_127
 		public static Brush SFH_DGBackground { get; private set; } = MyColorBlack;
 		public static Brush SFH_DGForeground { get; private set; } = MyColorWhite;
 		public static Brush SFH_DGCellBackground { get; private set; } = MyColorBlack;
-
+		public static Brush SFH_DGCellForeground { get; private set; } = MyColorWhite;
 		public static Brush SFH_DGCellSelectedBackground { get; private set; } = MyColorWhite;
 		public static Brush SFH_DGCellSelectedForeground { get; private set; } = MyColorBlack;
 

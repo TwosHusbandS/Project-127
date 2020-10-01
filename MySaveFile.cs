@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,9 +13,24 @@ namespace Project_127
     public class MySaveFile
     {
 		/// <summary>
+		/// Collection of "MyFile" which are used for the Save-Files in the Backup Folder.
+		/// </summary>
+		public static ObservableCollection<MySaveFile> BackupSaves = new ObservableCollection<MySaveFile>();
+
+		/// <summary>
 		/// FileName Property.
 		/// </summary>
-        public string Filename { private set; get; }
+		public string FilePath { private set; get; }
+
+		/// <summary>
+		/// FileName Property.
+		/// </summary>
+		public string FileName { get { return FilePath.Substring(FilePath.LastIndexOf('\\') + 1) + ""; } }
+
+		/// <summary>
+		/// Filename of the same with the .bak addon
+		/// </summary>
+		public string FilePathBak { get { return FilePath + ".bak"; } }
         
 		/// <summary>
 		/// PathName Property
@@ -24,12 +40,10 @@ namespace Project_127
 		/// <summary>
 		/// Standart Constructor. Dont need to forbid default Constructor since it wont be generated.
 		/// </summary>
-		/// <param name="pFilename"></param>
-		/// <param name="pPathname"></param>
-        public MySaveFile(string pFilename, string pPathname)
+		/// <param name="pFilePath"></param>
+		public MySaveFile(string pFilePath)
         {
-            this.Filename = pFilename;
-            this.Pathname = pPathname;
+            this.FilePath = pFilePath;
         }
 	
     } // End of Class

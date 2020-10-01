@@ -263,7 +263,7 @@ namespace Project_127.HelperClasses
 			}
 			else
 			{
-				return null;
+				return new string[0];
 			}
 		}
 
@@ -290,6 +290,37 @@ namespace Project_127.HelperClasses
 			return rtrn;
 		}
 
+
+		/// <summary>
+		/// Gets the MD5 Hash of one file
+		/// </summary>
+		/// <param name="pFilePath"></param>
+		/// <returns></returns>
+		public static string GetHashFromFile(string pFilePath)
+		{
+			string rtrn = "";
+			if (doesFileExist(pFilePath))
+			{
+				try
+				{
+					using (var md5 = MD5.Create())
+					{
+						// hash contents
+						byte[] contentBytes = File.ReadAllBytes(pFilePath);
+						md5.TransformBlock(contentBytes, 0, contentBytes.Length, contentBytes, 0);
+						md5.TransformFinalBlock(new byte[0], 0, 0);
+						return BitConverter.ToString(md5.Hash).Replace("-", "").ToLower();
+					}
+				}
+				catch (Exception e)
+				{
+					HelperClasses.Logger.Log("Hashing of a single file failed." + e.ToString());
+				}
+
+
+			}
+			return rtrn;
+		}
 
 
 		/// <summary>
@@ -560,7 +591,7 @@ namespace Project_127.HelperClasses
 			{
 				if (doesPathExist(pPath))
 				{
-				Directory.Delete(pPath, true);
+					Directory.Delete(pPath, true);
 				}
 			}
 			catch (Exception e)

@@ -202,11 +202,15 @@
                                             <Setter Property="Background" Value="{x:Static local:Globals.SFH_DGCellSelectedBackground}" />
                                             <Setter Property="Foreground" Value="{x:Static local:Globals.SFH_DGCellSelectedForeground}" />
                                         </Trigger>
+                                        <Trigger Property="DataGridCell.IsSelected" Value="False">
+                                            <Setter Property="Background" Value="{x:Static local:Globals.SFH_DGCellBackground}" />
+                                            <Setter Property="Foreground" Value="{x:Static local:Globals.SFH_DGCellForeground}" />
+                                        </Trigger>
                                     </Style.Triggers>
                                 </Style>
                             </DataGrid.Resources>
                             <DataGrid.Columns>
-                                <DataGridTextColumn Header="Filename" Binding="{Binding Filename, Mode=OneWay}" Width="*" Foreground="{x:Static local:Globals.SFH_DGForeground}" FontSize="20" />
+                                <DataGridTextColumn Header="Filename" Binding="{Binding FileName, Mode=OneWay}" Width="*" Foreground="{x:Static local:Globals.SFH_DGForeground}" FontSize="20" />
                             </DataGrid.Columns>
                         </DataGrid>
                     </ScrollViewer>
