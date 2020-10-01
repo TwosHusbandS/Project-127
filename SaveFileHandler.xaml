@@ -189,11 +189,36 @@
                     <Image Source="/Artwork/leftarrow.png"/>
                 </Button>
 
-                <Button Style="{StaticResource btn}" x:Name="btn_close" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3" Content="Close" Click="btn_close_Click"/>
+                <Button Style="{StaticResource btn}" x:Name="btn_Close" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3" Content="Close" Click="btn_Close_Click"/>
 
-                <Border Grid.Row="1" Grid.Column="0" Grid.RowSpan="3" Margin="10,5,5,5" BorderBrush="{x:Static local:Globals.SFH_BorderBrush_Inner}" BorderThickness="2">
+                <Button Grid.Row="1" Grid.Column="0" Grid.RowSpan="3" Height="30" VerticalAlignment="Bottom" Style="{StaticResource btn}" x:Name="btn_Rename" Content="Rename" Click="btn_Rename_Click"/>
+                <Border Grid.Row="1" Grid.Column="0" Grid.RowSpan="3" Margin="10,5,5,45" BorderBrush="{x:Static local:Globals.SFH_BorderBrush_Inner}" BorderThickness="2">
                     <ScrollViewer x:Name="sv_BackupFiles">
-                        <DataGrid x:Name="dg_BackupFiles" ItemsSource="{Binding BackupFile}" PreviewMouseWheel="Dg_BackupFiles_PreviewMouseWheel">
+                        <DataGrid x:Name="dg_BackupFiles" PreviewMouseWheel="Dg_BackupFiles_PreviewMouseWheel">
+                            <!--cant style this easily, since it does not derive from FrameworkElement-->
+                            <DataGrid.Resources>
+                                <Style TargetType="{x:Type DataGridCell}">
+                                    <Style.Triggers>
+                                        <Trigger Property="DataGridCell.IsSelected" Value="True">
+                                            <Setter Property="Background" Value="{x:Static local:Globals.SFH_DGCellSelectedBackground}" />
+                                            <Setter Property="Foreground" Value="{x:Static local:Globals.SFH_DGCellSelectedForeground}" />
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Resources>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Filename" Binding="{Binding FileName, Mode=OneWay}" Width="*" Foreground="{x:Static local:Globals.SFH_DGForeground}" FontSize="20" />
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </ScrollViewer>
+                </Border>
+
+
+
+                <Button Grid.Row="1" Grid.Column="2" Grid.RowSpan="3" Height="30" VerticalAlignment="Bottom" Style="{StaticResource btn}" x:Name="btn_Delete" Content="Delete" Click="btn_Delete_Click"/>
+                <Border Grid.Row="1" Grid.Column="2" Grid.RowSpan="3" Margin="10,5,5,45" BorderBrush="{x:Static local:Globals.SFH_BorderBrush_Inner}" BorderThickness="2">
+                    <ScrollViewer x:Name="sv_GTAFiles">
+                        <DataGrid x:Name="dg_GTAFiles" PreviewMouseWheel="Dg_GTAFiles_PreviewMouseWheel">
                             <!--cant style this easily, since it does not derive from FrameworkElement-->
                             <DataGrid.Resources>
                                 <Style TargetType="{x:Type DataGridCell}">
@@ -216,28 +241,7 @@
                     </ScrollViewer>
                 </Border>
 
-                <Border Grid.Row="1" Grid.Column="2" Grid.RowSpan="3" BorderBrush="{x:Static local:Globals.SFH_BorderBrush_Inner}" BorderThickness="2"  Margin="5,5,10,5">
-                    <ScrollViewer x:Name="sv_GTAFiles">
-                        <DataGrid x:Name="dg_GTAFiles" ItemsSource="{Binding GTAFiles}"  PreviewMouseWheel="Dg_GTAFiles_PreviewMouseWheel">
-                            <!--cant style this easily, since it does not derive from FrameworkElement-->
-                            <!--doing it programatically also turned out to be a pain in the ass-->
-                            <!--So hardcoded XAML will have to do-->
-                            <DataGrid.Resources>
-                                <Style TargetType="{x:Type DataGridCell}">
-                                    <Style.Triggers>
-                                        <Trigger Property="DataGridCell.IsSelected" Value="True">
-                                            <Setter Property="Background" Value="{x:Static local:Globals.SFH_DGCellSelectedBackground}" />
-                                            <Setter Property="Foreground" Value="{x:Static local:Globals.SFH_DGCellSelectedForeground}" />
-                                        </Trigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </DataGrid.Resources>
-                            <DataGrid.Columns>
-                                <DataGridTextColumn Header="Filename" Binding="{Binding Filename, Mode=OneWay}" Width="*" Foreground="{x:Static local:Globals.SFH_DGForeground}" FontSize="20" />
-                            </DataGrid.Columns>
-                        </DataGrid>
-                    </ScrollViewer>
-                </Border>
+
             </Grid>
         </Border>
     </Border>

@@ -72,6 +72,7 @@ Main To do:
 		-> Implemented "Broken" InstallationState
 		-> Changed Color for GTA V Label Foreground (Upgraded / Downgraded / Broken)
 		-> Fixed Bug for steam not being installed
+		-> Fixed Bug for Steam not showing you ingame
 
 	-REMEMBER:
 		-> Release with admin mode manifest thingy...		
@@ -84,9 +85,10 @@ Main To do:
 					
 	- TO DO:
 
-		-> SaveFileHandler, just manage our own SaveFiles, probably only need one list for datagrid, ask if we need to overwrite
-			=> Cant figure out how to fix that at the moment
+		-> SaveFileHandler
+			=> Basic functionality done. Need to do user error checks, add importing, add textbox popup
 		-> New Deployment Concept
+			=> Need a rewrite of the import ZIP, make sure not to overwrite save files I guess...but then we will have double savefiles
 		-> Using Windows Credential Manager
 		-> GTAV Language (currently commented out)
 

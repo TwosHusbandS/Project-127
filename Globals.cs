@@ -391,8 +391,8 @@ namespace Project_127
 		public static Brush SFH_DGForeground { get; private set; } = MyColorWhite;
 		public static Brush SFH_DGCellBackground { get; private set; } = MyColorBlack;
 		public static Brush SFH_DGCellForeground { get; private set; } = MyColorWhite;
-		public static Brush SFH_DGCellSelectedBackground { get; private set; } = MyColorWhite;
-		public static Brush SFH_DGCellSelectedForeground { get; private set; } = MyColorBlack;
+		public static Brush SFH_DGCellSelectedBackground { get; private set; } = MyColorOrange;
+		public static Brush SFH_DGCellSelectedForeground { get; private set; } = MyColorWhite;
 
 		public static System.Windows.Thickness SFH_ButtonBorderThickness { get; private set; } = new System.Windows.Thickness(2);
 

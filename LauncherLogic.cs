@@ -377,9 +377,17 @@ namespace Project_127
 
 				// TO DO, Clean this Up, move to ProcessHandler HelperClass
 				HelperClasses.Logger.Log("Launching Game");
+
+				if (Settings.Retailer != Settings.Retailers.Steam)
+				{
 				HelperClasses.ProcessHandler.StartProcess(Settings.GTAVInstallationPath.TrimEnd('\\') + @"\PlayGTAV.exe",
 															pWorkingDir: Settings.GTAVInstallationPath.TrimEnd('\\'));
 															// pCommandLineArguments: "-uilanguage german");
+				}
+				else
+				{
+				HelperClasses.ProcessHandler.StartProcess(Globals.SteamInstallPath.TrimEnd('\\') + @"\steam.exe", pCommandLineArguments: "-applaunch 271590");
+				}
 
 				PostLaunchEvents();
 			}

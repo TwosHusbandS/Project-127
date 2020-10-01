@@ -22,15 +22,6 @@ namespace Project_127
 	{
 		// THIS CLASS IS NOT FULLY IMPLEMENTED OR WORKING AT ALL
 
-		/// <summary>
-		/// Collection of "MyFile" which are used for the Save-Files in the Backup Folder.
-		/// </summary>
-		public static ObservableCollection<MySaveFile> BackupSaves = new ObservableCollection<MySaveFile>();
-
-		/// <summary>
-		/// Collection of "MyFile" which are used for the Save-Files in the GTA Folder.
-		/// </summary>
-		public static ObservableCollection<MySaveFile> GTASaves = new ObservableCollection<MySaveFile>();
 
 		/// <summary>
 		/// Constructor of SaveFileHandler
@@ -43,27 +34,12 @@ namespace Project_127
 			// Used for DataBinding
 			this.DataContext = this;
 
+			// Resetting the Observable Collections
+			btn_Refresh_Click();
+
 			// Set the ItemSource of Both Datagrids for the DataBinding
-			dg_BackupFiles.ItemsSource = BackupSaves;
-			dg_GTAFiles.ItemsSource = GTASaves;
-
-			string[] MyBackupSaveFiles = HelperClasses.FileHandling.GetFilesFromFolder(LauncherLogic.SaveFilesPath);
-			foreach (string MyBackupSaveFile in MyBackupSaveFiles)
-			{
-				if (!MyBackupSaveFile.Contains(".bak"))
-				{
-					BackupSaves.Add(new MySaveFile(MyBackupSaveFile));
-				}
-			}
-
-			string[] MyGTAVSaveFiles = HelperClasses.FileHandling.GetFilesFromFolder(LauncherLogic.SaveFilesPath);
-			foreach (string MyGTAVSaveFile in MyGTAVSaveFiles)
-			{
-				if (!MyGTAVSaveFile.Contains(".bak"))
-				{
-					GTASaves.Add(new MySaveFile(MyGTAVSaveFile));
-				}
-			}
+			dg_BackupFiles.ItemsSource = MySaveFile.BackupSaves;
+			dg_GTAFiles.ItemsSource = MySaveFile.GTASaves;
 		}
 
 
@@ -74,7 +50,11 @@ namespace Project_127
 		/// <param name="e"></param>
 		private void btn_LeftArrow_Click(object sender, RoutedEventArgs e)
 		{
-
+			if (dg_GTAFiles.SelectedItem != null)
+			{
+				MySaveFile tmp = (MySaveFile)dg_GTAFiles.SelectedItem;
+				tmp.MoveToBackup("NewNameInsideBackup");
+			}
 		}
 
 
@@ -85,10 +65,41 @@ namespace Project_127
 		/// <param name="e"></param>
 		private void btn_RightArrow_Click(object sender, RoutedEventArgs e)
 		{
-			// Not Fully Implemented
-			//MyFile tmp = (MyFile)dg_BackupFiles.SelectedItem; // we need to null check this XD
-			//BackupSaves.Remove(tmp);
-			//GTASaves.Add(tmp);
+			if (dg_BackupFiles.SelectedItem != null)
+			{
+				MySaveFile tmp = (MySaveFile)dg_BackupFiles.SelectedItem;
+				tmp.MoveToGTA("NewNameInsideGTA");
+			}
+		}
+
+
+
+		/// <summary>
+		/// Rename Button for the Files in the "our" Folder
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void btn_Rename_Click(object sender, RoutedEventArgs e)
+		{
+			if (dg_BackupFiles.SelectedItem != null)
+			{
+				MySaveFile tmp = (MySaveFile)dg_BackupFiles.SelectedItem;
+				tmp.Rename("newName");
+			}
+		}
+
+		/// <summary>
+		/// Delete Button for the files in the GTAV Location
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void btn_Delete_Click(object sender, RoutedEventArgs e)
+		{
+			if (dg_GTAFiles.SelectedItem != null)
+			{
+				MySaveFile tmp = (MySaveFile)dg_GTAFiles.SelectedItem;
+				tmp.Delete();
+			}
 		}
 
 
@@ -97,9 +108,31 @@ namespace Project_127
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
-		private void btn_Refresh_Click(object sender, RoutedEventArgs e)
+		private void btn_Refresh_Click(object sender = null, RoutedEventArgs e = null)
 		{
+			// Resetting the Obvservable Collections:
+			MySaveFile.BackupSaves = new ObservableCollection<MySaveFile>();
+			MySaveFile.GTASaves = new ObservableCollection<MySaveFile>();
 
+			// Files in BackupSaves (own File Path)
+			string[] MyBackupSaveFiles = HelperClasses.FileHandling.GetFilesFromFolder(MySaveFile.BackupSavesPath);
+			foreach (string MyBackupSaveFile in MyBackupSaveFiles)
+			{
+				if (!MyBackupSaveFile.Contains(".bak"))
+				{
+					MySaveFile.BackupSaves.Add(new MySaveFile(MyBackupSaveFile));
+				}
+			}
+
+			// Files in actual GTAV Save File Locations
+			string[] MyGTAVSaveFiles = HelperClasses.FileHandling.GetFilesFromFolder(MySaveFile.GTAVSavesPath);
+			foreach (string MyGTAVSaveFile in MyGTAVSaveFiles)
+			{
+				if (!MyGTAVSaveFile.Contains(".bak") && MyGTAVSaveFile.Contains("SGTA500"))
+				{
+					MySaveFile.GTASaves.Add(new MySaveFile(MyGTAVSaveFile));
+				}
+			}
 		}
 
 
@@ -108,7 +141,7 @@ namespace Project_127
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
-		private void btn_close_Click(object sender, RoutedEventArgs e)
+		private void btn_Close_Click(object sender, RoutedEventArgs e)
 		{
 			this.Close();
 		}
@@ -144,7 +177,7 @@ namespace Project_127
 		/// <param name="e"></param>
 		private void Dg_GTAFiles_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
 		{
-			sv_BackupFiles.ScrollToVerticalOffset(sv_BackupFiles.VerticalOffset - e.Delta / 3);
+			sv_GTAFiles.ScrollToVerticalOffset(sv_BackupFiles.VerticalOffset - e.Delta / 3);
 		}
 
 	} // End of Class
