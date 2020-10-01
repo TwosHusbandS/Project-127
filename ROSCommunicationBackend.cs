@@ -22,11 +22,11 @@ using System.Configuration;
 using System.Text.RegularExpressions;
 
 /*
- * This file is based on SCUIStub/LegitimacyChecking from the CitizenFX Project - http://citizen.re/
+ * This file is based on partially on SCUIStub/LegitimacyChecking from the CitizenFX Project - http://citizen.re/
  * 
  * See the included licenses for licensing information on this code
  * 
- * Rewritten in C# by @dr490n/@jaredtb  
+ * Rewritten in C# for project by @dr490n/@jaredtb  
  */
 namespace Project_127 {
 
@@ -652,7 +652,15 @@ namespace Project_127 {
                 expiration = ctime + 86399;
                 nickname = nick;
 #if DEBUG
-                addLaunchExtension("ingameNick", "1337haxx0r");
+                if (Settings.InGameName == "HiMomImOnYoutube")
+                {
+                    addLaunchExtension("ingameNick", "1337haxx0r");
+                }
+#else
+                if (Settings.InGameName != "HiMomImOnYoutube")
+                {
+                    addLaunchExtension("ingameNick", Settings.InGameName);
+                }
 #endif
                 try
                 {
