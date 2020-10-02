@@ -82,7 +82,7 @@ namespace Project_127
             browser.BrowserSettings.BackgroundColor = 0x13 << 16 | 0x15 << 8 | 0x18;
             if (Settings.EnableRememberMe)
             {
-                //fetchStoredCredentials
+                fetchStoredCredentials();
             }
             //browser.BrowserSettings.ApplicationCache = CefState.Enabled;
         }
@@ -323,7 +323,7 @@ initDragClick();
 
 document.addEventListener('input', rememberMeHandler);
 ";
-        private const string credSenderJS = "setTimeout(rememberMeState, 500, true); setTimeout(setEmail, 500, {0}); setTimeout(setPass, 750, {1})";
+        private const string credSenderJS = "setTimeout(rememberMeState, 500, true); setTimeout(setEmail, 500, '{0}'); setTimeout(setPass, 750, '{1}')";
         private void LoadingStateChange(object sender, LoadingStateChangedEventArgs args)
         {
             if (!args.IsLoading)
@@ -335,7 +335,8 @@ document.addEventListener('input', rememberMeHandler);
                 {
                     var pass = System.Net.WebUtility.UrlEncode(passField);
                     var email = System.Net.WebUtility.UrlEncode(emField);
-                    frame.ExecuteJavaScriptAsync(string.Format(credSenderJS, email, pass), "https://rgl.rockstargames.com/temp2.js", 0);
+                    var csender = String.Format(credSenderJS, email, pass);
+                    frame.ExecuteJavaScriptAsync(csender, "https://rgl.rockstargames.com/temp2.js", 0);
                 }
                 else
                 {
@@ -409,6 +410,11 @@ document.addEventListener('input', rememberMeHandler);
                 if (valsucess)
                 {
                     //MessageBox.Show("Login Success");
+                    if (Settings.EnableRememberMe)
+                    {
+                        storeCredentials();
+                    }
+
                 } 
                 else
                 {
