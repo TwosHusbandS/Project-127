@@ -75,7 +75,14 @@ namespace Project_127
             //CefSettings s = new CefSettings();
             //s.CachePath = "B:\\test";
             //Cef.Initialize(s);
+            var s = new CefSettings();
+            s.CachePath = System.IO.Path.GetFullPath(".\\");
+            s.BackgroundColor = 0x13 << 16 | 0x15 << 8 | 0x18;
+            s.DisableGpuAcceleration();
+            Cef.Initialize(s);
+
             InitializeComponent();
+            browser.BrowserSettings.ApplicationCache = CefState.Disabled;
             var dragHandler = new DragHandler();
             dragHandler.RegionsChanged += OnDragHandlerRegionsChanged;
             browser.DragHandler = dragHandler;
@@ -323,7 +330,7 @@ initDragClick();
 
 document.addEventListener('input', rememberMeHandler);
 ";
-        private const string credSenderJS = "setTimeout(rememberMeState, 500, true); setTimeout(setEmail, 500, '{0}'); setTimeout(setPass, 750, '{1}')";
+        private const string credSenderJS = "setTimeout(rememberMeState, 1000, true); setTimeout(setEmail, 1200, '{0}'); setTimeout(setPass, 1500, '{1}')";
         private void LoadingStateChange(object sender, LoadingStateChangedEventArgs args)
         {
             if (!args.IsLoading)
@@ -340,7 +347,7 @@ document.addEventListener('input', rememberMeHandler);
                 }
                 else
                 {
-                    frame.ExecuteJavaScriptAsync("setTimeout(rememberMeState, 500, false);", "https://rgl.rockstargames.com/temp2.js", 0);
+                    frame.ExecuteJavaScriptAsync("setTimeout(rememberMeState, 1000, false);", "https://rgl.rockstargames.com/temp2.js", 0);
                 }
 
                 
