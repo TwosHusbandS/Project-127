@@ -85,8 +85,12 @@
     </AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="CredentialManagement, Version=1.0.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\CredentialManagement.1.0.2\lib\net35\CredentialManagement.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Text.Json, Version=4.0.1.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL" />
     <Reference Include="System.Web.Extensions" />
     <Reference Include="System.IO.Compression" />
@@ -111,6 +115,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="DragHandler.cs" />
     <Compile Include="EntitlementBlock.cs" />
     <Compile Include="EntitlementBlockCipher.cs" />
     <Compile Include="HelperClasses\OwnOpenFolderDialog\FolderSelectDialog.cs" />

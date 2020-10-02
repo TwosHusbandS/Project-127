@@ -673,5 +673,7 @@ namespace Project_127
 			}
 		}
 
+		public static bool EnableRememberMe = false;
+
 	} // End of partial Class
 } // End of Namespace
