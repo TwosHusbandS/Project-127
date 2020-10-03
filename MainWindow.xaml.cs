@@ -97,8 +97,11 @@ Main To do:
 		-> Re-Write Deployment Concept and document that
 		-> Implement code snipped dragon sent me to launch Rockstar
 			=> It launches GAME, doesnt take command line args, but that might be me fucking up
-			=> Not tested if its because of 
-		
+			=> Not tested if it fixes the admin shit
+		-> Settings.RememebrMe get re-written a lot, just check the setter method of settingsPartial property
+		-> Auth Window popup crashes for Hossel in some circumstances.
+		-> Investigate oneDrive shit
+
 			-> Internal Testing
 		
 		-> fix for onedrive shit
@@ -124,6 +127,7 @@ Main To do:
 			=> Get data binding to work after everything else is Gucci 
 		-> Implement all Other features
 			=> Just see Settings.XAML for what I need to implement
+		-> Implement note thingy from reloes suggestion (https://discordapp.com/channels/758296338222940211/758296338806341684/762023004183461888)
 
 
     - Low Prio:
