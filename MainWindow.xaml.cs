@@ -96,6 +96,8 @@ Main To do:
 
 		-> Re-Write Deployment Concept and document that
 		-> Implement code snipped dragon sent me to launch Rockstar
+			=> It launches GAME, doesnt take command line args, but that might be me fucking up
+			=> Not tested if its because of 
 		
 			-> Internal Testing
 		

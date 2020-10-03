@@ -379,7 +379,8 @@ namespace Project_127
 			else
 			{
 				HelperClasses.Logger.Log("Trying to start Game normally through Rockstar. Im calling the exe like a fucking pleb...", 1);
-				HelperClasses.ProcessHandler.StartProcess(Settings.GTAVInstallationPath.TrimEnd('\\') + @"\PlayGTAV.exe");
+				HelperClasses.ProcessHandler.StartProcess(Settings.GTAVInstallationPath.TrimEnd('\\') + @"\PlayGTAV.exe", pCommandLineArguments: "-uilanguage " + Settings.ToMyLanguageString(Settings.LanguageSelected).ToLower());
+				//HelperClasses.ProcessHandler.RunAsDesktopUser(Settings.GTAVInstallationPath.TrimEnd('\\') + @"\PlayGTAV.exe", "-uilanguage " + Settings.ToMyLanguageString(Settings.LanguageSelected).ToLower());
 			}
 
 			HelperClasses.Logger.Log("Game should be launched");
