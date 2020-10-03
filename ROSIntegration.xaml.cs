@@ -43,6 +43,7 @@ namespace Project_127
     public partial class ROSIntegration : Window
     {
         private static bool CEFInited = false;
+        private bool signinInProgress = false;
         private Region region;
 
         private void OnBrowserMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -342,7 +343,10 @@ document.addEventListener('input', rememberMeHandler);
             if (!args.IsLoading) //On load complete...
             {
                 IFrame frame = browser.GetMainFrame();
-
+                if (signinInProgress)
+                {
+                    return;
+                }
                 frame.ExecuteJavaScriptAsync(jsf, "https://rgl.rockstargames.com/temp.js", 0);
                 if (Settings.EnableRememberMe) //If remember me is enabled, send over the credentials
                 {
@@ -400,6 +404,7 @@ document.addEventListener('input', rememberMeHandler);
             }
             else if (message[0] == "signin") //if this is called, we have a valid login
             {
+                signinInProgress = true;
                 //login(message[1]);
                 var jsond = json.Deserialize<Dictionary<String, String>>(message[1]);
                 //MessageBox.Show(message[1]); //For debugging
