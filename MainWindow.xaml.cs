@@ -78,6 +78,8 @@ Main To do:
 		-> Retail and Language Popup on InitImportantSettings
 		-> SaveFileHandler
 		-> Fixed the "everything else requirng admin rights" issue for some retailers
+		-> Login Window Fix Spinning thing
+		-> Remember Credentials
 
 	-REMEMBER:
 		-> Release with admin mode manifest thingy...		
@@ -92,9 +94,8 @@ Main To do:
 					
 	- TO DO:
 
-		-> Merge Dragons stuff
-		-> Re-Write Deployment Concept and document
-		-> Implement new Launch Method on all 3 Platforms in all States (calling URLs)
+		-> Re-Write Deployment Concept and document that
+		-> Implement code snipped dragon sent me to launch Rockstar
 		
 			-> Internal Testing
 		

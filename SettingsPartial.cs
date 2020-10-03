@@ -720,6 +720,9 @@ namespace Project_127
 			}
 		}
 
+		/// <summary>
+		/// Enabling the "Remember me" for the user when logging in. User cant change this
+		/// </summary>
 		public static bool EnableRememberMe
 		{
 			get
