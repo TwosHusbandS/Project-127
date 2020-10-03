@@ -76,6 +76,8 @@ Main To do:
 		-> GTAV Language Setting
 		-> Popup for TextBox and ComboBox
 		-> Retail and Language Popup on InitImportantSettings
+		-> SaveFileHandler
+		-> Fixed the "everything else requirng admin rights" issue for some retailers
 
 	-REMEMBER:
 		-> Release with admin mode manifest thingy...		
@@ -90,12 +92,15 @@ Main To do:
 					
 	- TO DO:
 
-		-> Import Original GTAV Settings + Import SaveFiles
-		-> Document and Log the SaveFileHandler
-		-> New Deployment Concept
-			=> Need a rewrite of the import ZIP, make sure not to overwrite save files I guess...but then we will have double savefiles
-		-> Launching all 3 Combinations downgraded check commandlinearguments and steam launch url, epic launch url
-
+		-> Merge Dragons stuff
+		-> Re-Write Deployment Concept and document
+		-> Implement new Launch Method on all 3 Platforms in all States (calling URLs)
+		
+			-> Internal Testing
+		
+		-> fix for onedrive shit
+		-> Import Original GTAV Settings + Import SaveFiles in Settings.xaml and maybe in SaveFileHandler.xaml
+		
 
 		// NEXT PUBLIC RELEASE
 
@@ -658,7 +663,7 @@ namespace Project_127
 			if (Globals.BetaMode || Globals.InternalMode)
 			{
 				// Opens the File
-				HelperClasses.ProcessHandler.StartProcess("notepad.exe", pCommandLineArguments: Globals.Logfile);
+				HelperClasses.ProcessHandler.StartProcess(@"C:\Windows\System32\notepad.exe", pCommandLineArguments: Globals.Logfile);
 			}
 		}
 
@@ -728,7 +733,7 @@ namespace Project_127
 				HelperClasses.FileHandling.WriteStringToFileOverwrite(DebugFile, DebugMessage.ToArray());
 
 				// Opens the File
-				HelperClasses.ProcessHandler.StartProcess("notepad.exe", pCommandLineArguments: DebugFile);
+				HelperClasses.ProcessHandler.StartProcess(@"C:\Windows\System32\notepad.exe", pCommandLineArguments: DebugFile);
 			}
 		}
 

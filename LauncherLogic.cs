@@ -145,7 +145,7 @@ namespace Project_127
 		/// Property of often used variable. (SupportFilePath)
 		/// </summary>
 		public static string SaveFilesPath { get { return LauncherLogic.SupportFilePath.TrimEnd('\\') + @"\SaveFiles\"; } }
-		
+
 		/// <summary>
 		/// Property of often used variable. (GTAVFilePath)
 		/// </summary>
@@ -310,37 +310,10 @@ namespace Project_127
 			if (LauncherLogic.InstallationState == InstallationStates.Upgraded)
 			{
 				HelperClasses.Logger.Log("Installation State Upgraded Detected.", 1);
-
-				// If Steam
-				if (GameVersion == Settings.Retailers.Steam)
-				{
-					HelperClasses.Logger.Log("Trying to start Game normally through Steam.", 1);
-					HelperClasses.ProcessHandler.StartProcess(Globals.SteamInstallPath.TrimEnd('\\') + @"\steam.exe", pCommandLineArguments: "-applaunch 271590");
-				}
-
-				// If Epic Games
-				else if (GameVersion == Settings.Retailers.Epic)
-				{
-					HelperClasses.Logger.Log("Trying to start Game normally through EpicGames.", 1);
-					HelperClasses.ProcessHandler.StartProcess(@"com.epicgames.launcher://apps/9d2d0eb64d5c44529cece33fe2a46482?action=launch&silent=true");
-				}
-
-				// If Rockstar
-				else
-				{
-					HelperClasses.Logger.Log("Trying to start Game normally through Rockstar.", 1);
-					HelperClasses.ProcessHandler.StartProcess(Settings.GTAVInstallationPath.TrimEnd('\\') + @"\PlayGTAV.exe");
-				}
-
-				HelperClasses.Logger.Log("Upgraded Game should be launched");
-
-				PostLaunchEvents();
 			}
-
-			// If Downgraded
 			else if (LauncherLogic.InstallationState == InstallationStates.Downgraded)
 			{
-				HelperClasses.Logger.Log("Installation State Downgraded Detected", 1);
+				HelperClasses.Logger.Log("Installation State Downgraded Detected.", 1);
 
 				// If already Authed
 				if (AuthState == AuthStates.Auth)
@@ -374,25 +347,6 @@ namespace Project_127
 				// Generates Token needed to Launch Downgraded GTAV
 				HelperClasses.Logger.Log("Letting Dragon work his magic");
 				await ROSCommunicationBackend.GenToken();
-
-				// TO DO, Clean this Up, move to ProcessHandler HelperClass
-				HelperClasses.Logger.Log("Launching Game");
-
-				//if (Settings.Retailer != Settings.Retailers.Steam)
-				//{
-				HelperClasses.ProcessHandler.StartProcess(Settings.GTAVInstallationPath.TrimEnd('\\') + @"\PlayGTAV.exe",
-															pWorkingDir: Settings.GTAVInstallationPath.TrimEnd('\\'),
-															pCommandLineArguments: "-uilanguage " + Settings.ToMyLanguageString(Settings.LanguageSelected).ToLower());
-				//}
-				//else
-				//{
-				//HelperClasses.ProcessHandler.StartProcess(Globals.SteamInstallPath.TrimEnd('\\') + @"\steam.exe", 
-				//											pCommandLineArguments: "-applaunch 271590" + " " + 
-				//											"-uilanguage " + Settings.ToMyLanguageString(Settings.LanguageSelected).ToLower());
-
-				//}
-
-				PostLaunchEvents();
 			}
 			else
 			{
@@ -403,7 +357,34 @@ namespace Project_127
 				HelperClasses.Logger.Log("    Size of update.rpf in Downgrade Files Folder: " + LauncherLogic.SizeOfDowngradedUPDATE);
 
 				new Popup(Popup.PopupWindowTypes.PopupOkError, "Installation State is broken for some reason. Try to repair.");
+				return;
 			}
+
+
+			// If Steam
+			if (GameVersion == Settings.Retailers.Steam)
+			{
+				HelperClasses.Logger.Log("Trying to start Game normally through Steam.", 1);
+				HelperClasses.ProcessHandler.StartProcess(@"steam://rungameid/271590", pCommandLineArguments: "-uilanguage " + Settings.ToMyLanguageString(Settings.LanguageSelected).ToLower());
+			}
+
+			// If Epic Games
+			else if (GameVersion == Settings.Retailers.Epic)
+			{
+				HelperClasses.Logger.Log("Trying to start Game normally through EpicGames.", 1);
+				HelperClasses.ProcessHandler.StartProcess(@"com.epicgames.launcher://apps/9d2d0eb64d5c44529cece33fe2a46482?action=launch&silent=true", pCommandLineArguments: "-uilanguage " + Settings.ToMyLanguageString(Settings.LanguageSelected).ToLower());
+			}
+
+			// If Rockstar
+			else
+			{
+				HelperClasses.Logger.Log("Trying to start Game normally through Rockstar. Im calling the exe like a fucking pleb...", 1);
+				HelperClasses.ProcessHandler.StartProcess(Settings.GTAVInstallationPath.TrimEnd('\\') + @"\PlayGTAV.exe");
+			}
+
+			HelperClasses.Logger.Log("Game should be launched");
+
+			PostLaunchEvents();
 		}
 
 

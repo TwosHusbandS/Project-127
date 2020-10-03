@@ -181,22 +181,28 @@ namespace Project_127
 		/// <param name="e"></param>
 		private void btn_Rename_Click(object sender, RoutedEventArgs e)
 		{
+			// Getting the Selecting SaveFile, checking if it aint null
 			MySaveFile tmp = GetSelectedSaveFile();
 			if (tmp != null)
 			{
+				// If its inside GTA Save directory
 				if (tmp.SaveFileKind == MySaveFile.SaveFileKinds.GTAV)
 				{
+					// Asking user if he really wants to rename since its fucked...
 					Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Re-Naming something inside the GTA V Saves Location makes no sense,\nsince it wont get recognized by the game.\nStill want to continue?");
 					yesno.ShowDialog();
 					if (yesno.DialogResult == false)
 					{
+						// If user decides against renaming, return and end function
 						return;
 					}
 				}
+
+				// Popup for new name of File
 				string newName = GetNewFileName(tmp, tmp.Path);
 				if (!string.IsNullOrWhiteSpace(newName))
 				{
-
+					// Rename File, Sort Datagrid
 					tmp.Rename(newName);
 					if (tmp.SaveFileKind == MySaveFile.SaveFileKinds.GTAV)
 					{
@@ -219,13 +225,16 @@ namespace Project_127
 		/// <param name="e"></param>
 		private void btn_Delete_Click(object sender, RoutedEventArgs e)
 		{
+			// Gets selected File, checks if its not null
 			MySaveFile tmp = GetSelectedSaveFile();
 			if (tmp != null)
 			{
+				// Ask user if he wants to remove it
 				Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Are you sure you want to delete this SaveFile?");
 				yesno.ShowDialog();
 				if (yesno.DialogResult == true)
 				{
+					// Deleting it and sorting them
 					tmp.Delete();
 					if (tmp.SaveFileKind == MySaveFile.SaveFileKinds.GTAV)
 					{
@@ -245,6 +254,7 @@ namespace Project_127
 		/// <returns></returns>
 		private MySaveFile GetSelectedSaveFile()
 		{
+			// Returns the Selected SaveFile (since it is only one), else returns null
 			if (dg_BackupFiles.SelectedItem != null)
 			{
 				return (MySaveFile)dg_BackupFiles.SelectedItem;
@@ -267,7 +277,7 @@ namespace Project_127
 			string newName = "";
 
 			// Asking for Name 
-			Popup newNamePU = new Popup(Popup.PopupWindowTypes.PopupOkTextBox, "Enter new Name for the SaveFile: ", pDefaultTBText: pMySaveFile.FileName);
+			Popup newNamePU = new Popup(Popup.PopupWindowTypes.PopupOkTextBox, "Enter new Name for the SaveFile: ",																pDefaultTBText: pMySaveFile.FileName);
 			newNamePU.ShowDialog();
 			if (newNamePU.DialogResult == true)
 			{
@@ -356,6 +366,7 @@ namespace Project_127
 		/// <param name="e"></param>
 		private void dg_GTAFiles_GotFocus(object sender, RoutedEventArgs e)
 		{
+			// if GTA Datagrid got Focus, we are removing selection from Backup Datagrid
 			dg_BackupFiles.SelectedItem = null;
 		}
 
@@ -366,12 +377,19 @@ namespace Project_127
 		/// <param name="e"></param>
 		private void dg_BackupFiles_GotFocus(object sender, RoutedEventArgs e)
 		{
+			// if got Backup Datagrid Focus, we are removing selection from GTA Datagrid 
 			dg_GTAFiles.SelectedItem = null;
 		}
 
+		/// <summary>
+		/// KeyDown Method
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void dg_KeyDown(object sender, KeyEventArgs e)
 		{
-			DataGrid asdf = (DataGrid)sender;
+			// This should now just be easy and useable with keyboard only.
+			// KeyDown and KeyUp are already implemented basic DataGrid behaviour
 			if (e.Key == Key.Delete)
 			{
 				btn_Delete_Click(null, null);
@@ -379,6 +397,18 @@ namespace Project_127
 			else if (e.Key == Key.F2)
 			{
 				btn_Rename_Click(null, null);
+			}
+			else if (e.Key == Key.Right)
+			{
+				btn_RightArrow_Click(null, null);
+			}
+			else if (e.Key == Key.Left)
+			{
+				btn_LeftArrow_Click(null, null);
+			}
+			else if (e.Key == Key.F5)
+			{
+				btn_Refresh_Click(null, null);
 			}
 		}
 

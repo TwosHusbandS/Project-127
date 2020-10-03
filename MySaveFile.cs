@@ -115,9 +115,22 @@ namespace Project_127
 		{
 			get
 			{
-				return this.FilePath.Substring(this.FilePath.LastIndexOf('\\') + 1) + "";
+				string _FileName = this.FilePath.Substring(this.FilePath.LastIndexOf('\\') + 1);
+				if (!String.IsNullOrEmpty(this.FileNameAddition))
+				{
+					return _FileName + " (" + FileNameAddition + ")";
+				}
+				else
+				{
+					return _FileName;
+				}
 			}
 		}
+
+		/// <summary>
+		/// FileNameAddition Property
+		/// </summary>
+		public string FileNameAddition = "";
 
 		/// <summary>
 		/// Filename of the same with the .bak addon
@@ -130,70 +143,94 @@ namespace Project_127
 		public string Path { get { return this.FilePath.Substring(0,this.FilePath.LastIndexOf('\\')); } }
 
 		/// <summary>
+		/// Hash of Content. Currently we get it once on Constructur
+		/// Think getting it on getter would hog resources
+		/// </summary>
+		public string Hash;
+
+		/// <summary>
 		/// Standart Constructor. Dont need to forbid default Constructor since it wont be generated.
 		/// </summary>
 		/// <param name="pFilePath"></param>
 		public MySaveFile(string pFilePath)
 		{
+			// Setting the FilePath
 			this.FilePath = pFilePath;
+
+			// Generating the Hash of it
+			this.Hash = HelperClasses.FileHandling.GetHashFromFile(pFilePath);
+
+			// If this is a GTA SaveFileKind
+			if (this.SaveFileKind == SaveFileKinds.GTAV)
+			{
+				// Loop through all Backup Files
+				foreach (MySaveFile MSV in MySaveFile.BackupSaves)
+				{
+					// If it matches a Hash
+					if (MSV.Hash == this.Hash)
+					{
+						// Set the FileNameAddition
+						this.FileNameAddition = MSV.FileName;
+					}
+				}
+			}
 		}
 
-
+		/// <summary>
+		/// Copying one SaveFile to Backup Save File Folder, all User error checks already done before
+		/// </summary>
+		/// <param name="pNewName"></param>
 		public void CopyToBackup(string pNewName)
 		{
-			HelperClasses.Logger.Log("CopyToBackup():", 2);
+			HelperClasses.Logger.Log("Copying SaveFiles '" + this.FileName + "' to Backup Folder under Name '"  + pNewName + "'");
+			
 			string newFilePath = MySaveFile.BackupSavesPath.TrimEnd('\\') + @"\" + pNewName;
-			HelperClasses.Logger.Log("newFilePath: '" + newFilePath + "'", 3);
-			HelperClasses.Logger.Log("Copying '" + this.FilePath + "' to '" + newFilePath + "'", 3);
 			HelperClasses.FileHandling.copyFile(this.FilePath, newFilePath);
-			HelperClasses.Logger.Log("Copying '" + this.FilePathBak + "' to '" + newFilePath + ".bak" + "'", 3);
 			HelperClasses.FileHandling.copyFile(this.FilePathBak, newFilePath + ".bak");
-			HelperClasses.Logger.Log("Adding it to BackUpSaves Collection", 3);
 			BackupSaves.Add(new MySaveFile(newFilePath));
 		}
 
-
+		/// <summary>
+		/// Copying one SaveFile to GTA Save File Folder, all User error checks already done before
+		/// </summary>
+		/// <param name="pNewName"></param>
 		public void CopyToGTA(string pNewName)
 		{
-			HelperClasses.Logger.Log("CopyToBackup():", 2);
+			HelperClasses.Logger.Log("Copying SaveFiles '" + this.FileName + "' to GTA Folder under Name '" + pNewName + "'");
+
 			string newFilePath = MySaveFile.GTAVSavesPath.TrimEnd('\\') + @"\" + pNewName;
-			HelperClasses.Logger.Log("newFilePath: '" + newFilePath + "'", 3);
-			HelperClasses.Logger.Log("Copying '" + this.FilePath + "' to '" + newFilePath + "'", 3);
 			HelperClasses.FileHandling.copyFile(this.FilePath, newFilePath);
-			HelperClasses.Logger.Log("Copying '" + this.FilePathBak + "' to '" + newFilePath + ".bak" + "'", 3);
 			HelperClasses.FileHandling.copyFile(this.FilePathBak, newFilePath + ".bak");
-			HelperClasses.Logger.Log("Adding it to GTASaves Collection", 3);
 			GTASaves.Add(new MySaveFile(newFilePath));
 		}
 
 
-
+		/// <summary>
+		/// Renaming one MySaveFile, all User error checks already done before
+		/// </summary>
+		/// <param name="pNewName"></param>
 		public void Rename(string pNewName)
 		{
-			HelperClasses.Logger.Log("Rename():", 2);
+			HelperClasses.Logger.Log("Renaming SaveFiles '" + this.FileName + "' to Name '" + pNewName + "'");
+
 			string oldFileName = this.FileName;
-			HelperClasses.Logger.Log("oldFileName: '" + oldFileName + "'", 3);
 			string newFilePath = this.FilePath.Replace(oldFileName, pNewName);
-			HelperClasses.Logger.Log("newFilePath: '" + newFilePath + "'", 3);
-			HelperClasses.Logger.Log("Moving '" + this.FilePath + "' to '" + newFilePath + "'", 3);
 			HelperClasses.FileHandling.moveFile(this.FilePath, newFilePath);
-			HelperClasses.Logger.Log("Moving '" + this.FilePathBak + "' to '" + newFilePath + ".bak" + "'", 3);
 			HelperClasses.FileHandling.moveFile(this.FilePathBak, newFilePath + ".bak");
-			HelperClasses.Logger.Log("Removing ourselfes from our Own collection", 3);
 			this.MyCollection.Remove(this);
-			HelperClasses.Logger.Log("Adding new MySaveFile('" + newFilePath +"') to our Collection", 3);
 			this.MyCollection.Add(new MySaveFile(newFilePath));
 		}
 
 
+		/// <summary>
+		/// Method to delete one MySaveFile, all its physical files and removing it from its own collection
+		/// </summary>
 		public void Delete()
 		{
-			HelperClasses.Logger.Log("Delete():", 2);
-			HelperClasses.Logger.Log("Deleting '" + this.FilePath + "'", 3);
+			HelperClasses.Logger.Log("Deleting SaveFiles '" + this.FileName + "'");
+
 			HelperClasses.FileHandling.deleteFile(this.FilePath);
-			HelperClasses.Logger.Log("Deleting '" + this.FilePathBak + "'", 3);
 			HelperClasses.FileHandling.deleteFile(this.FilePathBak);
-			HelperClasses.Logger.Log("Removing ourselfes from our Own collection", 3);
 			this.MyCollection.Remove(this);
 		}
 

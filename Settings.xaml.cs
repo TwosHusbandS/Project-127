@@ -284,8 +284,7 @@ namespace Project_127
 		/// <param name="e"></param>
 		private void btn_Set_GTAVInstallationPath_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
 		{
-			HelperClasses.ProcessHandler.StartProcess("explorer.exe", pCommandLineArguments: Settings.GTAVInstallationPath);
-
+			HelperClasses.ProcessHandler.StartProcess(@"C:\Windows\explorer.exe", pCommandLineArguments: Settings.GTAVInstallationPath);
 		}
 
 
@@ -417,7 +416,7 @@ namespace Project_127
 		/// <param name="e"></param>
 		private void btn_Set_ZIPExtractionPath_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
 		{
-			HelperClasses.ProcessHandler.StartProcess("explorer.exe", pCommandLineArguments: Settings.ZIPExtractionPath);
+			HelperClasses.ProcessHandler.StartProcess(@"C:\Windows\explorer.exe", pCommandLineArguments: Settings.ZIPExtractionPath);
 		}
 
 
