@@ -279,6 +279,18 @@
                             <ComboBox Grid.Row="0" Grid.Column="1" x:Name="combox_Set_Retail" SelectionChanged="combox_Set_Retail_SelectionChanged"/>
                         </Grid>
 
+                        <Grid x:Name="Grid_Set_LanguageSelected">
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Row="0" Grid.Column="0" Content="Language:"  Style="{StaticResource lbl_Set_Info}" />
+                            <ComboBox Grid.Row="0" Grid.Column="1" x:Name="combox_Set_LanguageSelected" SelectionChanged="combox_Set_LanguageSelected_SelectionChanged"/>
+                        </Grid>
+
                         <Grid x:Name="Grid_Set_Logging">
                             <Grid.RowDefinitions>
                                 <RowDefinition/>

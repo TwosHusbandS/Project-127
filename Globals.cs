@@ -96,7 +96,7 @@ namespace Project_127
 		/// <summary>
 		/// Property of other Buildinfo. Will be in the top message of logs
 		/// </summary>
-		public static string BuildInfo = "Build 2";
+		public static string BuildInfo = "Build TWO to test Language and SaveFileHandler";
 
 		/// <summary>
 		/// Returns all Command Line Args as StringArray
@@ -153,6 +153,7 @@ namespace Project_127
 			{"EnablePreOrderBonus", "False"},
 			{"EnableOnlyAutoStartProgramsWhenDowngraded", "True"},
 			{"Retailer", "Steam"},
+			{"LanguageSelected", "English"},
 			{"InGameName", "HiMomImOnYoutube"},
 			{"EnableAutoSetHighPriority", "True" },
 			{"EnableAutoSteamCoreFix", "True" },

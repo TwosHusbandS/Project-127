@@ -73,28 +73,35 @@ Main To do:
 		-> Changed Color for GTA V Label Foreground (Upgraded / Downgraded / Broken)
 		-> Fixed Bug for steam not being installed
 		-> Fixed Bug for Steam not showing you ingame
+		-> GTAV Language Setting
+		-> Popup for TextBox and ComboBox
+		-> Retail and Language Popup on InitImportantSettings
 
 	-REMEMBER:
 		-> Release with admin mode manifest thingy...		
 		-> Fix Installer with everything (autolaunch app,include new files)
 		-> This requires admin the "proper" way of telling windows. Should fix zip file issues
 		-> TEST THE NEW DOWNLOAD ZIP SHIT
-		-> TEST THE CORE AFFINITY SHIT (commented out)
 		-> TEST NAME FRONTEND, WITH NEW DRAGON BACKEND
 		-> TEST INTERNAL RELEASE SHIT
+		-> TEST LANGUAGE SELECT
+		-> TEST NEW LAUNCH METHODS ON EPIC, ROCKSTAR, STEAM ON DOWNGRADED
+		-> TEST SAVEFILEHANDLER
 					
 	- TO DO:
 
-		-> SaveFileHandler
-			=> Basic functionality done. Need to do user error checks, add importing, add textbox popup
+		-> Import Original GTAV Settings + Import SaveFiles
+		-> Document and Log the SaveFileHandler
 		-> New Deployment Concept
 			=> Need a rewrite of the import ZIP, make sure not to overwrite save files I guess...but then we will have double savefiles
-		-> Using Windows Credential Manager
-		-> GTAV Language (currently commented out)
+		-> Launching all 3 Combinations downgraded check commandlinearguments and steam launch url, epic launch url
+
 
 		// NEXT PUBLIC RELEASE
 
+		-> Using Windows Credential Manager
 		-> $UpgradeFiles has downgrade files in them. Why? And how to Fix?
+		-> Core Affinity Shit
 		-> Figure out which files I need to distribute
 		-> Custom ZIP File Location User Error Checks:
 			=> User might get confused with the Project_127_Files Folder. 
@@ -234,6 +241,20 @@ namespace Project_127
 
 			// Check whats the latest Version of the ZIP File in GITHUB
 			CheckForZipUpdate();
+
+			if (Globals.InternalMode)
+			{
+				string msg = "We are in internal mode. I need testing on:\n" +
+					"" + "\n" +
+					"" + "\n" +
+					"" + "\n" +
+					"" + "\n" +
+					"" + "\n" +
+					"" + "\n" +
+					"\nThanks. Appreciated. Have a great day : )";
+
+				new Popup(Popup.PopupWindowTypes.PopupOk, msg).ShowDialog();
+			}
 
 			HelperClasses.Logger.Log("Startup procedure (Constructor of MainWindow) completed.");
 			HelperClasses.Logger.Log("--------------------------------------------------------");
@@ -679,12 +700,15 @@ namespace Project_127
 
 				DebugMessage.Add("Project 1.27 Version: '" + Globals.ProjectVersion + "'");
 				DebugMessage.Add("ZIP Version: '" + Globals.ZipVersion + "'");
+				DebugMessage.Add("BetaMode: '" + Globals.BetaMode + "'");
+				DebugMessage.Add("InternalMode: '" + Globals.InternalMode + "'");
 				DebugMessage.Add("Project 1.27 Installation Path '" + Globals.ProjectInstallationPath + "'");
 				DebugMessage.Add("ZIP Extraction Path '" + LauncherLogic.ZIPFilePath + "'");
 				DebugMessage.Add("LauncherLogic.GTAVFilePath: '" + LauncherLogic.GTAVFilePath + "'");
 				DebugMessage.Add("LauncherLogic.UpgradeFilePath: '" + LauncherLogic.UpgradeFilePath + "'");
 				DebugMessage.Add("LauncherLogic.DowngradeFilePath: '" + LauncherLogic.DowngradeFilePath + "'");
 				DebugMessage.Add("LauncherLogic.SupportFilePath: '" + LauncherLogic.SupportFilePath + "'");
+				DebugMessage.Add("Detected AuthState: '" + LauncherLogic.AuthState + "'");
 				DebugMessage.Add("Detected GameState: '" + LauncherLogic.GameState + "'");
 				DebugMessage.Add("Detected InstallationState: '" + LauncherLogic.InstallationState + "'");
 				DebugMessage.Add("    Size of GTA5.exe in GTAV Installation Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\GTA5.exe"));
