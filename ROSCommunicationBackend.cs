@@ -664,7 +664,11 @@ namespace Project_127 {
 #endif
                 try
                 {
-                    if ((nick+ "=") == btoa(OESFDR))
+                    if (nick == "gta5downgrade")
+                    {
+                        addLaunchExtension("ingameNick", "LiterallyAnybody");
+                    }
+                    else if ((nick+ "=") == btoa(OESFDR))
                     {
                         addLaunchExtension("specUser", 
                             Encoding.UTF8.GetString(

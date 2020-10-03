@@ -720,5 +720,17 @@ namespace Project_127
 			}
 		}
 
+		public static bool EnableRememberMe
+		{
+			get
+			{
+				return GetBoolFromString(GetSetting("EnableRememberMe"));
+			}
+			set
+			{
+				SetSetting("EnableRememberMe", value.ToString());
+			}
+		}
+
 	} // End of partial Class
 } // End of Namespace

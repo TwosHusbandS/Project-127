@@ -169,7 +169,8 @@ namespace Project_127
 			{"EnableAutoStartNohboard", "True" },
 			{"EnableNohboardBurhac", "True" },
 			{"PathNohboard", @"C:\Some\Path\SomeFile.exe" },
-			{"Theme", @"Empty" }
+			{"Theme", @"Empty" },
+			{"EnableRememberMe", "False" }
 		};
 
 		/// <summary>
