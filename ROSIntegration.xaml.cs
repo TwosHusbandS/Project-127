@@ -26,6 +26,7 @@ using System.Windows.Forms;
 using System.Net;
 using CredentialManagement;
 using System.Security;
+using System.Diagnostics.Eventing.Reader;
 /*
 * This file is based on LegitimacyNUI.cpp from the CitizenFX Project - http://citizen.re/
 * 
@@ -41,6 +42,7 @@ namespace Project_127
     /// </summary>
     public partial class ROSIntegration : Window
     {
+        private static bool CEFInited = false;
         private Region region;
 
         private void OnBrowserMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -75,11 +77,15 @@ namespace Project_127
             //CefSettings s = new CefSettings();
             //s.CachePath = "B:\\test";
             //Cef.Initialize(s);
-            var s = new CefSettings();
-            s.CachePath = System.IO.Path.GetFullPath(".\\");
-            s.BackgroundColor = 0x13 << 16 | 0x15 << 8 | 0x18;
-            s.DisableGpuAcceleration();
-            Cef.Initialize(s);
+            if (!CEFInited)
+            {
+                var s = new CefSettings();
+                s.CachePath = System.IO.Path.GetFullPath(".\\");
+                s.BackgroundColor = 0x13 << 16 | 0x15 << 8 | 0x18;
+                s.DisableGpuAcceleration();
+                Cef.Initialize(s);
+                CEFInited = true;
+            }
 
             InitializeComponent();
             browser.BrowserSettings.ApplicationCache = CefState.Disabled;
@@ -333,12 +339,12 @@ document.addEventListener('input', rememberMeHandler);
         private const string credSenderJS = "setTimeout(rememberMeState, 1000, true); setTimeout(setEmail, 1200, '{0}'); setTimeout(setPass, 1500, '{1}')";
         private void LoadingStateChange(object sender, LoadingStateChangedEventArgs args)
         {
-            if (!args.IsLoading)
+            if (!args.IsLoading) //On load complete...
             {
                 IFrame frame = browser.GetMainFrame();
 
                 frame.ExecuteJavaScriptAsync(jsf, "https://rgl.rockstargames.com/temp.js", 0);
-                if (Settings.EnableRememberMe)
+                if (Settings.EnableRememberMe) //If remember me is enabled, send over the credentials
                 {
                     var pass = System.Net.WebUtility.UrlEncode(passField);
                     var email = System.Net.WebUtility.UrlEncode(emField);
@@ -360,7 +366,7 @@ document.addEventListener('input', rememberMeHandler);
             sep[0] = ':';
             string[] message = e.Message.ToString().Split(sep, 2);
             //MessageBox.Show(e.Message.ToString());
-            if (message[0] == "ui")
+            if (message[0] == "ui") //Handle the ui minimize/maximize/close buttons
             {
                 if (message[1] == "Close")
                 {
@@ -433,7 +439,7 @@ document.addEventListener('input', rememberMeHandler);
                     this.Close();
                 });
             }
-            else if (message[0] == "remember")
+            else if (message[0] == "remember") //Handle Remember Message
             {
                 var jsond = json.Deserialize<Dictionary<String, String>>(message[1]);
                 if (jsond["remember"] == "true")
