@@ -96,7 +96,7 @@ namespace Project_127
 		/// <summary>
 		/// Property of other Buildinfo. Will be in the top message of logs
 		/// </summary>
-		public static string BuildInfo = "Build THREE to test Language and SaveFileHandler AND admin required for livesplit";
+		public static string BuildInfo = "Built 5, Ugly way of importing ZIP";
 
 		/// <summary>
 		/// Returns all Command Line Args as StringArray
@@ -249,13 +249,12 @@ namespace Project_127
 					" - The Project 1.27 Team").ShowDialog();
 				}
 
-				if (Settings.LastLaunchedVersion < new Version("0.1.0.0"))
+				if (Settings.LastLaunchedVersion < new Version("0.0.4.0"))
 				{
 					new Popup(Popup.PopupWindowTypes.PopupOk,
-					"Just saying...our way of remembering your login credentials,\n" +
-					"automatically typing them in the auth window,\n" +
-					"is not the most secure in this world.\n\n" +
-					"Youre using it on your own risk.\n" +
+					"The 'Remember' Me function, is storing credentials\n" + 
+					"using the Windows Credential Manager.\n" +
+					"You are using the it on your own risk.\n\n" +
 					" - The Project 1.27 Team").ShowDialog();
 				}
 

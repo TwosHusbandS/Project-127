@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -367,10 +368,19 @@ namespace Project_127
 			// If Steam
 			if (GameVersion == Settings.Retailers.Steam)
 			{
-				Globals.DebugPopup("Got here");
 				HelperClasses.Logger.Log("Trying to start Game normally through Steam.", 1);
-				Process.Start(@"steam://rungameid/271590", "-uilanguage " + Settings.ToMyLanguageString(Settings.LanguageSelected).ToLower());
+
+				//Process.Start(@"steam://rungameid/271590/-uilanguage/french");
+
+				//Process.Start(@"steam://rungameid/271590 -uilanguage french", "-uilanguage " + Settings.ToMyLanguageString(Settings.LanguageSelected).ToLower());
+
 				//HelperClasses.ProcessHandler.StartProcess(@"steam://rungameid/271590", pCommandLineArguments: "-uilanguage " + Settings.ToMyLanguageString(Settings.LanguageSelected).ToLower());
+
+
+				Process gtav = new Process();
+				gtav.StartInfo.FileName = Globals.SteamInstallPath.TrimEnd('\\')+@"\steam.exe";
+				gtav.StartInfo.Arguments = "-applaunch 271590 -uilanguage french";
+				gtav.Start();
 			}
 
 			// If Epic Games
@@ -460,6 +470,7 @@ namespace Project_127
 			string[] myFiles = HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(LauncherLogic.ZIPFilePath.TrimEnd('\\') + @"\Project_127_Files");
 
 
+
 			// Dont need this for now, lets keep it in case its needed again
 			//foreach (string myFile in myFiles)
 			//{
@@ -473,6 +484,7 @@ namespace Project_127
 			// Actually Extracting the ZIP File
 			HelperClasses.Logger.Log("Extracting ZIP File: '" + pZipFileLocation + "' to the path: '" + LauncherLogic.ZIPFilePath + "'");
 			new PopupProgress(PopupProgress.ProgressTypes.ZIPFile, pZipFileLocation).ShowDialog();
+
 
 			// Deleting the ZIP File
 			if (deleteFileAfter)

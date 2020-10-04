@@ -4,7 +4,7 @@ Main Documentation:
 Actual code (partially closed source) which authentificates, handles entitlement and launches the game is done by @dr490n with the help of other members of the core team like @Special For and @zCri
 Artwork, Design of GUI, GUI Behaviourehaviour, Colorchoices etc. by "@Hossel"
 Client by "@thS"
-Version: 0.0.3.1 First Open Beta Release
+Version: 0.0.3.9
 
 Build Instructions:
 	Press CTRLF + F5, pray that nuget does its magic.
@@ -100,7 +100,11 @@ Main To do:
 		-> TEST NEW LAUNCH METHODS ON EPIC, ROCKSTAR, STEAM ON DOWNGRADED
 					
 	- TO DO:
-		-> Check Launch Methods for GTA V on all 3 Retailrs without admin and command line fix (language) 
+		-> Launching for steam is done and works. (other programs dont require admin, command line args, shows steam as ingame) 
+		-> Need to do the same for epic and rockstar. For rockstar check out the links below.
+		-> For epic try around a bit. Should be similar to steam. If not we have the choice of supporting ingame displaying or language
+
+		-> Give user settings if they want to be shown in game or not and respect their decision
 
 		https://stackoverflow.com/questions/11169431/how-to-start-a-new-process-without-administrator-privileges-from-a-process-with/47705108#47705108
 		https://docs.microsoft.com/en-us/dotnet/api/system.diagnostics.process.start?redirectedfrom=MSDN&view=netcore-3.1#System_Diagnostics_Process_Start_System_String_System_String_System_Security_SecureString_System_String_
@@ -151,6 +155,12 @@ Weird Beta Reportings:
 			Works for me and on some other testers machines.
 	- Auth Window popup crashed for Hossel in some circumstances. (CredentialManager dll missing)
 	- Investigate oneDrive shit (turned out to be crypto char in document path [or path variable??])
+	- Dragons NAS machine was just doing weird stuff with importing zip.
+		-> Simple stuff like (If Path doesnt exist, create it) crashed for no reason
+		-> Added logging to extract zip didnt work and failed in weird places
+		-> Complained about STATHread even its there
+		-> "Old" no progressbar zip extracting also failed
+		-> Probably due to NAS
 
 */
 
@@ -440,18 +450,13 @@ namespace Project_127
 				new PopupDownload(DLLinkX, LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\x64a.rpf", "Needed Files (x64a.rpf, 2/3)").ShowDialog();
 			}
 
-
-
-			Globals.DebugPopup("A");
 			HelperClasses.Logger.Log(@"Checking if update\update.rpf exists locally", 1);
 			if (HelperClasses.FileHandling.doesFileExist(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\update\update.rpf"))
 			{
-				Globals.DebugPopup("B");
 				HelperClasses.Logger.Log("It does and we dont need to download anything", 2);
 			}
 			else
 			{
-				Globals.DebugPopup("C");
 				HelperClasses.Logger.Log("It does NOT and we DO need to download something", 2);
 				new PopupDownload(DLLinkU, LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\update\update.rpf", "Needed Files (Update.rpf, 3/3)").ShowDialog();
 			}
