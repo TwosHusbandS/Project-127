@@ -234,5 +234,19 @@ namespace Project_127
 			this.MyCollection.Remove(this);
 		}
 
+		/// <summary>
+		/// Importing a pair of SaveFiles
+		/// </summary>
+		/// <param name="pFilePath"></param>
+		public static void Import(string pOriginalFilePath, string pFileName)
+		{
+			HelperClasses.Logger.Log("Importing SaveFiles '" + pOriginalFilePath + "'");
+
+			string newFilePath = MySaveFile.BackupSavesPath.TrimEnd('\\') + @"\" + pFileName;
+			HelperClasses.FileHandling.copyFile(pOriginalFilePath, newFilePath);
+			HelperClasses.FileHandling.copyFile(pOriginalFilePath + ".bak", newFilePath + ".bak");
+			MySaveFile.BackupSaves.Add(new MySaveFile(newFilePath));
+		}
+
 	} // End of Class
 } // End of Namespace

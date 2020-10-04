@@ -33,7 +33,7 @@ namespace Project_127
 		{
 			Upgraded,
 			Downgraded,
-			Broken
+			Unsure
 		}
 
 		/// <summary>
@@ -95,13 +95,16 @@ namespace Project_127
 				{
 					return InstallationStates.Downgraded;
 				}
-				else if (SizeOfGTAV == 0 || SizeOfUpdate == 0)
-				{
-					return InstallationStates.Broken;
-				}
 				else
 				{
-					return InstallationStates.Upgraded;
+					if (SizeOfDowngradedGTAV > 0 && SizeOfDowngradedUPDATE > 0)
+					{
+						if (SizeOfGTAV != SizeOfDowngradedGTAV && SizeOfUpdate != SizeOfDowngradedUPDATE)
+						{
+							return InstallationStates.Upgraded;
+						}
+					}
+					return InstallationStates.Unsure;
 				}
 			}
 		}
@@ -364,8 +367,10 @@ namespace Project_127
 			// If Steam
 			if (GameVersion == Settings.Retailers.Steam)
 			{
+				Globals.DebugPopup("Got here");
 				HelperClasses.Logger.Log("Trying to start Game normally through Steam.", 1);
-				HelperClasses.ProcessHandler.StartProcess(@"steam://rungameid/271590", pCommandLineArguments: "-uilanguage " + Settings.ToMyLanguageString(Settings.LanguageSelected).ToLower());
+				Process.Start(@"steam://rungameid/271590", "-uilanguage " + Settings.ToMyLanguageString(Settings.LanguageSelected).ToLower());
+				//HelperClasses.ProcessHandler.StartProcess(@"steam://rungameid/271590", pCommandLineArguments: "-uilanguage " + Settings.ToMyLanguageString(Settings.LanguageSelected).ToLower());
 			}
 
 			// If Epic Games
@@ -453,14 +458,17 @@ namespace Project_127
 
 
 			string[] myFiles = HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(LauncherLogic.ZIPFilePath.TrimEnd('\\') + @"\Project_127_Files");
-			foreach (string myFile in myFiles)
-			{
-				if (!myFile.Contains("UpgradeFiles"))
-				{
-					// Deleting all Files which are NOT in the UpgradeFiles Folder of the ZIP Extract Path
-					HelperClasses.FileHandling.deleteFile(myFile);
-				}
-			}
+
+
+			// Dont need this for now, lets keep it in case its needed again
+			//foreach (string myFile in myFiles)
+			//{
+			//	if (!myFile.Contains("UpgradeFiles"))
+			//	{
+			//		// Deleting all Files which are NOT in the UpgradeFiles Folder of the ZIP Extract Path
+			//		HelperClasses.FileHandling.deleteFile(myFile);
+			//	}
+			//}
 
 			// Actually Extracting the ZIP File
 			HelperClasses.Logger.Log("Extracting ZIP File: '" + pZipFileLocation + "' to the path: '" + LauncherLogic.ZIPFilePath + "'");

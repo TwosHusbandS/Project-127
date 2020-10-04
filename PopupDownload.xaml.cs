@@ -17,23 +17,14 @@ using System.Windows.Shapes;
 namespace Project_127
 {
 	/// <summary>
-	/// Enum for Download Types
-	/// </summary>
-	public enum PopupDownloadTypes
-	{
-		ZIP,
-		Installer
-	}
-
-	/// <summary>
 	/// Interaction logic for PopupDownload.xaml
 	/// </summary>
 	public partial class PopupDownload : Window
 	{
 		/// <summary>
-		/// PopupDownloadType Propertie of this object (PopupDownload Window)
+		/// DownloadName Property of this Object
 		/// </summary>
-		public PopupDownloadTypes PopupDownloadType;
+		public string DownloadName;
 
 		/// <summary>
 		/// DownloadURL Propertie of this object (PopupDownload Window)
@@ -48,33 +39,26 @@ namespace Project_127
 		/// <summary>
 		/// Constructor of our Popup download
 		/// </summary>
-		/// <param name="pPopupDownloadType"></param>
 		/// <param name="pDownloadURL"></param>
 		/// <param name="pDownloadLocation"></param>
-		public PopupDownload(PopupDownloadTypes pPopupDownloadType, string pDownloadURL, string pDownloadLocation)
+		/// <param name="pMessage"></param>
+		public PopupDownload(string pDownloadURL, string pDownloadLocation, string pMessage)
 		{
 			InitializeComponent();
 
 			// Setting Properties of our Object (Popup Window)
-			PopupDownloadType = pPopupDownloadType;
 			DownloadURL = pDownloadURL;
 			DownloadLocation = pDownloadLocation;
+			DownloadName = pMessage;
 
 			// Logging
-			HelperClasses.Logger.Log("Download Popup: DownloadType: '" + pPopupDownloadType.ToString() + "'");
 			HelperClasses.Logger.Log("Download Popup: DownloadURL: '" + pDownloadURL.ToString() + "'");
 			HelperClasses.Logger.Log("Download Popup: DownloadLocation: '" + pDownloadLocation.ToString() + "'");
+			HelperClasses.Logger.Log("Download Popup: pMessage: '" + pMessage.ToString() + "'");
 
-			// If we have a ZIP
-			if (this.PopupDownloadType == PopupDownloadTypes.ZIP)
-			{
-				lbl_Main.Content = "Downloading ZIP File...";
-			}
-			// If we have an Installer
-			else if (this.PopupDownloadType == PopupDownloadTypes.Installer)
-			{
-				lbl_Main.Content = "Downloading Installer...";
-			}
+			HelperClasses.FileHandling.createPathOfFile(pDownloadLocation);
+
+			lbl_Main.Content = "Downloading " + DownloadName + "...";
 
 			// Setting up some Webclient stuff. 
 			WebClient webClient = new WebClient();
@@ -89,7 +73,7 @@ namespace Project_127
 			}
 			catch (Exception e)
 			{
-				HelperClasses.Logger.Log("Update of '" + PopupDownloadType.ToString() + "' failed for some reason." + e.Message);
+				HelperClasses.Logger.Log("Download of '" + pMessage.ToString() + "' failed for some reason." + e.Message);
 				// No Popup here, Popup will appear in Method which called this
 			}
 		}
@@ -116,14 +100,7 @@ namespace Project_127
 		private void DownloadProgressed(object sender, DownloadProgressChangedEventArgs e)
 		{
 			pb_Main.Value = (double)e.ProgressPercentage;
-			if (this.PopupDownloadType == PopupDownloadTypes.ZIP)
-			{
-				lbl_Main.Content = "Downloading ZIP File...(" + pb_Main.Value + "%)";
-			}
-			else if (this.PopupDownloadType == PopupDownloadTypes.Installer)
-			{
-				lbl_Main.Content = "Downloading Installer...(" + pb_Main.Value + "%)";
-			}
+			lbl_Main.Content = "Downloading " + DownloadName + "...(" + pb_Main.Value + "%)";
 		}
 
 

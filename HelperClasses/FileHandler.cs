@@ -44,7 +44,7 @@ namespace Project_127.HelperClasses
 		/// <param name="pFilter"></param>
 		/// <param name="pStartLocation"></param>
 		/// <returns></returns>
-		public static string OpenDialogExplorer(PathDialogType pPathDialogType, string pTitle, string pStartLocation, string pFilter = null)
+		public static string OpenDialogExplorer(PathDialogType pPathDialogType, string pTitle, string pStartLocation, bool pMultiSelect = false, string pFilter = null)
 		{
 			if (pPathDialogType == PathDialogType.File)
 			{
@@ -52,11 +52,11 @@ namespace Project_127.HelperClasses
 				myFileDialog.Filter = pFilter;
 				myFileDialog.InitialDirectory = pStartLocation;
 				myFileDialog.Title = pTitle;
-				myFileDialog.Multiselect = false;
+				myFileDialog.Multiselect = pMultiSelect;
 
 				myFileDialog.ShowDialog();
 
-				return myFileDialog.FileName;
+				return string.Join(",", myFileDialog.FileNames);
 			}
 			else if (pPathDialogType == PathDialogType.Folder)
 			{

@@ -351,6 +351,17 @@
                             <Label Grid.Row="0" Grid.Column="0" Content="Set InGameName"  Style="{StaticResource lbl_Set_Info}" />
                             <TextBox Grid.Row="0" Grid.Column="1" x:Name="tb_Set_InGameName" LostFocus="tb_Set_InGameName_LostFocus" />
                         </Grid>
+                        <Grid x:Name="Grid_Set_ImportGTAVSettings">
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Row="0" Grid.Column="0" Content="Import GTA V Settings"  Style="{StaticResource lbl_Set_Info}" />
+                            <Button Grid.Row="0" Grid.Column="1" Style="{StaticResource btn_Set}" Content="Import GTA V Settings" x:Name="btn_Set_ImportGTAVSettings" Click="btn_Set_ImportGTAVSettings_Click" />
+                        </Grid>
                         <!--
                         <Grid x:Name="Grid_Set_OnlyAutoStartProgramsWhenDowngraded">
                             <Grid.RowDefinitions>

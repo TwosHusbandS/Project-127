@@ -731,7 +731,10 @@ namespace Project_127
 			}
 			set
 			{
+				if (GetBoolFromString(GetSetting("EnableRememberMe")) != value)
+				{
 				SetSetting("EnableRememberMe", value.ToString());
+				}
 			}
 		}
 

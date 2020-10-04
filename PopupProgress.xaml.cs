@@ -144,9 +144,29 @@ namespace Project_127
 							// If the File exists and is not a folder
 							if (!string.IsNullOrEmpty(file.Name))
 							{
+								bool doExtract = true;
 								string PathOnDisk = LauncherLogic.ZIPFilePath.TrimEnd('\\') + @"\" + file.FullName.Replace(@"/", @"\");
-								HelperClasses.FileHandling.createPathOfFile(PathOnDisk);
+								HelperClasses.FileHandling.createPathOfFile(PathOnDisk); // 99% Chance I fixed this with the createZipPaths Method. Lets keep this to make sure...
+								if (HelperClasses.FileHandling.doesFileExist(PathOnDisk))
+								{
+									if (PathOnDisk.Contains("UpgradeFiles") || 
+										PathOnDisk.Contains("SaveFiles") || 
+										PathOnDisk.Contains(@"DowngradeFiles\GTA5.exe") ||
+										PathOnDisk.Contains(@"DowngradeFiles\x64a.rpf") ||
+										PathOnDisk.Contains(@"DowngradeFiles\update\update.rpf"))
+									{
+										doExtract = false;
+									}
+									else
+									{
+									HelperClasses.FileHandling.deleteFile(PathOnDisk);
+									}
+								}
+
+								if (doExtract)
+								{
 								file.ExtractToFile(PathOnDisk);
+								}
 							}
 
 							// Update GUI
@@ -158,7 +178,7 @@ namespace Project_127
 							});
 
 
-							// // Lets hope we never need this but I want to keep this here for now
+							// // Lets hope we never need this but I want to keep this here for now, in case that code snipped becomes useful
 							//this.Dispatcher.Invoke(() =>
 							//{
 							//	myPB.Value = progress;

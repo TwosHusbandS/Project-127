@@ -65,10 +65,10 @@ General Comments and things one should be aware of (still finishing this list)
 Main To do:
 	- Things changed since last official release (not last commit)
 		-> Fix Typo in OpenFolderDialog of GTAV Path detection
-		-> Added Download ZIP Support for Mirrors (needs Testing)
+		-> Added Download ZIP Support for Mirrors
 		-> ProcessHandler Class
 		-> Removed some popups
-		-> Implemented Internal Mode (for internal testing of autoupdater and stuff
+		-> Implemented Internal Mode (for internal testing of autoupdater and stuff)
 		-> Implemented "Broken" InstallationState
 		-> Changed Color for GTA V Label Foreground (Upgraded / Downgraded / Broken)
 		-> Fixed Bug for steam not being installed
@@ -77,40 +77,42 @@ Main To do:
 		-> Popup for TextBox and ComboBox
 		-> Retail and Language Popup on InitImportantSettings
 		-> SaveFileHandler
-		-> Fixed the "everything else requirng admin rights" issue for some retailers
 		-> Login Window Fix Spinning thing
 		-> Remember Credentials
+		-> Fix for Remember Me Setting
+		-> Import SaveFiles from original GTAV
+		-> Importing Settings from original GTAV
+		-> "OneDrive" / Crylic Char (fixed inside emu code by dragon)
+		-> Fixed the "everything else requirng admin rights" issue for some retailers
+		-> GTAV InGameNameChanger
 
 	-REMEMBER:
 		-> Release with admin mode manifest thingy...		
 		-> Fix Installer with everything (autolaunch app,include new files)
 		-> This requires admin the "proper" way of telling windows. Should fix zip file issues
-		-> TEST THE NEW DOWNLOAD ZIP SHIT
-		-> TEST NAME FRONTEND, WITH NEW DRAGON BACKEND
+		-> TEST NEW DEPLOYMENT CONCEPT
 		-> TEST INTERNAL RELEASE SHIT
+		-> TEST NAME CHANGER, WITH NEW DRAGON BACKEND
+		-> TEST REMEMBER ME FUNCTION FROM DRAGON
 		-> TEST LANGUAGE SELECT
-		-> TEST NEW LAUNCH METHODS ON EPIC, ROCKSTAR, STEAM ON DOWNGRADED
 		-> TEST SAVEFILEHANDLER
+		-> TEST IMPORTING SAVEFILES AND IMPORTING GTAV SETTINGS
+		-> TEST NEW LAUNCH METHODS ON EPIC, ROCKSTAR, STEAM ON DOWNGRADED
 					
 	- TO DO:
+		-> Check Launch Methods for GTA V on all 3 Retailrs without admin and command line fix (language) 
 
-		-> Re-Write Deployment Concept and document that
-		-> Implement code snipped dragon sent me to launch Rockstar
-			=> It launches GAME, doesnt take command line args, but that might be me fucking up
-			=> Not tested if it fixes the admin shit
-		-> Settings.RememebrMe get re-written a lot, just check the setter method of settingsPartial property
-		-> Auth Window popup crashes for Hossel in some circumstances.
-		-> Investigate oneDrive shit
-
+		https://stackoverflow.com/questions/11169431/how-to-start-a-new-process-without-administrator-privileges-from-a-process-with/47705108#47705108
+		https://docs.microsoft.com/en-us/dotnet/api/system.diagnostics.process.start?redirectedfrom=MSDN&view=netcore-3.1#System_Diagnostics_Process_Start_System_String_System_String_System_Security_SecureString_System_String_
+			(username)
+		https://stackoverflow.com/questions/2313553/process-start-with-different-credentials-with-uac-on
+		https://stackoverflow.com/questions/11169431/how-to-start-a-new-process-without-administrator-privileges-from-a-process-with/40501607#40501607
+		https://archive.codeplex.com/?p=uachelpers
+		https://docs.microsoft.com/en-us/dotnet/standard/io/how-to-use-named-pipes-for-network-interprocess-communication?redirectedfrom=MSDN
+		
 			-> Internal Testing
-		
-		-> fix for onedrive shit
-		-> Import Original GTAV Settings + Import SaveFiles in Settings.xaml and maybe in SaveFileHandler.xaml
-		
 
-		// NEXT PUBLIC RELEASE
-
-		-> Using Windows Credential Manager
+	// NEXT PUBLIC RELEASE
 		-> $UpgradeFiles has downgrade files in them. Why? And how to Fix?
 		-> Core Affinity Shit
 		-> Figure out which files I need to distribute
@@ -129,9 +131,8 @@ Main To do:
 			=> Just see Settings.XAML for what I need to implement
 		-> Implement note thingy from reloes suggestion (https://discordapp.com/channels/758296338222940211/758296338806341684/762023004183461888)
 
-
     - Low Prio:
-		Convert Settings and SaveFileHandler in CustomControls
+		Convert Settings and SaveFileHandler and ROSIntegration in CustomControls
 		Add Audio Effects
 		Popup start in middle of window, instead of CenterScreen
 		Fix Code signing so we dont get anti virus error
@@ -148,6 +149,9 @@ Weird Beta Reportings:
 			Added more and better logging, issue can not be reproduced as of right now
 	- Open Twice message (and killing old process) not working for one guy
 			Works for me and on some other testers machines.
+	- Auth Window popup crashed for Hossel in some circumstances. (CredentialManager dll missing)
+	- Investigate oneDrive shit (turned out to be crypto char in document path [or path variable??])
+
 */
 
 using System;
@@ -251,6 +255,9 @@ namespace Project_127
 			// Auto Updater
 			CheckForUpdate();
 
+			// Downloads the "big 3" gamefiles from github release
+			CheckForBigThree();
+
 			// Check whats the latest Version of the ZIP File in GITHUB
 			CheckForZipUpdate();
 
@@ -270,6 +277,8 @@ namespace Project_127
 
 			HelperClasses.Logger.Log("Startup procedure (Constructor of MainWindow) completed.");
 			HelperClasses.Logger.Log("--------------------------------------------------------");
+
+			HelperClasses.Logger.Log("#" + HelperClasses.FileHandling.GetHashFromFile(@"C:\Users\ingow\Desktop\New folder\Project_127_Files_V9 - Copy\Project_127_Files_V11_Small.zip") + "#");
 		}
 
 
@@ -374,7 +383,7 @@ namespace Project_127
 						string DLFilename = DLPath.Substring(DLPath.LastIndexOf('/') + 1);
 						string LocalFileName = Globals.ProjectInstallationPath.TrimEnd('\\') + @"\" + DLFilename;
 
-						new PopupDownload(PopupDownloadTypes.Installer, DLPath, LocalFileName).ShowDialog();
+						new PopupDownload(DLPath, LocalFileName, "Installer").ShowDialog();
 						HelperClasses.ProcessHandler.StartProcess(LocalFileName);
 						Environment.Exit(0);
 					}
@@ -394,6 +403,57 @@ namespace Project_127
 			{
 				// String return is fucked
 				HelperClasses.Logger.Log("Did not get most up to date Project 1.27 Version from Github. Github offline or your PC offline. Probably. Lets hope so.");
+			}
+		}
+
+
+		/// <summary>
+		/// Checks Github for the big 3 files we need
+		/// </summary>
+		public static void CheckForBigThree()
+		{
+			HelperClasses.Logger.Log("Downloading the 'big three' files");
+
+			string DLLinkG = @"https://github.com/TwosHusbandS/Project-127/releases/download/V_Final/file.g";
+			string DLLinkU = @"https://github.com/TwosHusbandS/Project-127/releases/download/V_Final/file.u";
+			string DLLinkX = @"https://github.com/TwosHusbandS/Project-127/releases/download/V_Final/file.x";
+
+			HelperClasses.Logger.Log("Checking if gta5.exe exists locally",1);
+			if (HelperClasses.FileHandling.doesFileExist(LauncherLogic.DowngradeFilePath.TrimEnd('\\')  + @"\GTA5.exe"))
+			{
+				HelperClasses.Logger.Log("It does and we dont need to download anything", 2);
+			}
+			else
+			{
+				HelperClasses.Logger.Log("It does NOT and we DO need to download something", 2);
+				new PopupDownload(DLLinkG, LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\GTA5.exe", "Needed Files (gta5.exe 1/3)").ShowDialog();
+			}
+
+			HelperClasses.Logger.Log("Checking if x64a.rpf exists locally", 1);
+			if (HelperClasses.FileHandling.doesFileExist(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\x64a.rpf"))
+			{
+				HelperClasses.Logger.Log("It does and we dont need to download anything", 2);
+			}
+			else
+			{
+				HelperClasses.Logger.Log("It does NOT and we DO need to download something", 2);
+				new PopupDownload(DLLinkX, LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\x64a.rpf", "Needed Files (x64a.rpf, 2/3)").ShowDialog();
+			}
+
+
+
+			Globals.DebugPopup("A");
+			HelperClasses.Logger.Log(@"Checking if update\update.rpf exists locally", 1);
+			if (HelperClasses.FileHandling.doesFileExist(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\update\update.rpf"))
+			{
+				Globals.DebugPopup("B");
+				HelperClasses.Logger.Log("It does and we dont need to download anything", 2);
+			}
+			else
+			{
+				Globals.DebugPopup("C");
+				HelperClasses.Logger.Log("It does NOT and we DO need to download something", 2);
+				new PopupDownload(DLLinkU, LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\update\update.rpf", "Needed Files (Update.rpf, 3/3)").ShowDialog();
 			}
 		}
 
@@ -444,7 +504,7 @@ namespace Project_127
 						HelperClasses.FileHandling.deleteFile(Globals.ZipFileDownloadLocation);
 
 						// Downloading the ZIP File
-						new PopupDownload(PopupDownloadTypes.ZIP, pathOfNewZip, Globals.ZipFileDownloadLocation).ShowDialog();
+						new PopupDownload(pathOfNewZip, Globals.ZipFileDownloadLocation, "ZIP-File").ShowDialog();
 
 						// Checking the hash of the Download
 						string HashOfDownload = HelperClasses.FileHandling.GetHashFromFile(Globals.ZipFileDownloadLocation);
@@ -982,7 +1042,7 @@ namespace Project_127
 		/// <param name="e"></param>
 		private void btn_ImportZip_Click(object sender, RoutedEventArgs e)
 		{
-			string ZipFileLocation = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.File, "Import ZIP File", Globals.ProjectInstallationPath, "ZIP Files|*.zip*");
+			string ZipFileLocation = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.File, "Import ZIP File", Globals.ProjectInstallationPath, pFilter: "ZIP Files|*.zip*");
 			if (HelperClasses.FileHandling.doesFileExist(ZipFileLocation))
 			{
 				LauncherLogic.ImportZip(ZipFileLocation);

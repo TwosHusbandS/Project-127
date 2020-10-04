@@ -436,6 +436,43 @@ namespace Project_127
 			tb_Set_InGameName.Text = txt;
 		}
 
+		/// <summary>
+		/// Called when user wants to import settings
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void btn_Set_ImportGTAVSettings_Click(object sender, RoutedEventArgs e)
+		{
+			string MyFolderReturn = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.Folder, "Pick your profile folder you want to copy all settings from", Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) +
+								@"\Rockstar Games\GTA V\Profiles");
+
+			// Close this if return is empty or ""
+			if (String.IsNullOrEmpty(MyFolderReturn))
+			{
+				return;
+			}
+
+			string ExistingPCSettingsBinPath = MyFolderReturn.TrimEnd('\\') + @"\pc_settings.bin";
+			string correctPCSettingsBinPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) +
+											@"\Rockstar Games\GTA V\Profiles\Project127\GTA V\0F74F4C4\pc_settings.bin";
+			string ExistingControlUserXmlPath = MyFolderReturn.TrimEnd('\\') + @"\control\user.xml";
+			string correctControlUserXmlPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) +
+											@"\Rockstar Games\GTA V\Profiles\Project127\GTA V\0F74F4C4\control\user.xml";
+
+			if (HelperClasses.FileHandling.doesFileExist(ExistingPCSettingsBinPath))
+			{
+				HelperClasses.FileHandling.deleteFile(correctPCSettingsBinPath);
+				HelperClasses.FileHandling.copyFile(ExistingPCSettingsBinPath, correctPCSettingsBinPath);
+			}
+
+			if (HelperClasses.FileHandling.doesFileExist(ExistingControlUserXmlPath))
+			{
+				HelperClasses.FileHandling.deleteFile(correctControlUserXmlPath);
+				HelperClasses.FileHandling.copyFile(ExistingControlUserXmlPath, correctControlUserXmlPath);
+			}
+		}
+
+
 
 		/// <summary>
 		/// 
@@ -489,7 +526,6 @@ namespace Project_127
 		{
 			DragMove(); // Pre-Defined Method
 		}
-
 
 	} // End of Class
 } // End of Namespace

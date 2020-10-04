@@ -117,7 +117,7 @@ namespace Project_127
 				MySaveFile tmp = (MySaveFile)dg_GTAFiles.SelectedItem;
 
 				// Get the Name for it
-				string newName = GetNewFileName(tmp, MySaveFile.BackupSavesPath);
+				string newName = GetNewFileName(tmp.FileName, MySaveFile.BackupSavesPath);
 				if (!string.IsNullOrWhiteSpace(newName))
 				{
 					// Only do if it the name is not "" or null
@@ -199,7 +199,7 @@ namespace Project_127
 				}
 
 				// Popup for new name of File
-				string newName = GetNewFileName(tmp, tmp.Path);
+				string newName = GetNewFileName(tmp.FileName, tmp.Path);
 				if (!string.IsNullOrWhiteSpace(newName))
 				{
 					// Rename File, Sort Datagrid
@@ -272,12 +272,12 @@ namespace Project_127
 		/// <param name="pMySaveFile"></param>
 		/// <param name="pDestination"></param>
 		/// <returns></returns>
-		private string GetNewFileName(MySaveFile pMySaveFile, string pPathToCheck)
+		private string GetNewFileName(string pMySaveFileName, string pPathToCheck)
 		{
 			string newName = "";
 
 			// Asking for Name 
-			Popup newNamePU = new Popup(Popup.PopupWindowTypes.PopupOkTextBox, "Enter new Name for the SaveFile: ",																pDefaultTBText: pMySaveFile.FileName);
+			Popup newNamePU = new Popup(Popup.PopupWindowTypes.PopupOkTextBox, "Enter new Name for the SaveFile: ", pDefaultTBText: pMySaveFileName);
 			newNamePU.ShowDialog();
 			if (newNamePU.DialogResult == true)
 			{
@@ -288,7 +288,6 @@ namespace Project_127
 				while (String.IsNullOrWhiteSpace(newName) || HelperClasses.FileHandling.doesFileExist(pPathToCheck.TrimEnd('\\') + @"\" + newName))
 				{
 					// Not a Valid FilePath
-					Globals.DebugPopup("File: '" + pPathToCheck.TrimEnd('\\') + @"\" + newName + "'\ndoes it exist: '" + HelperClasses.FileHandling.doesFileExist(pPathToCheck.TrimEnd('\\') + @"\" + newName) + "'");
 					Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "File does already exists or is not a valid FileName.\n" +
 																					"Click yes if you want to try again.");
 					yesno.ShowDialog();
@@ -300,7 +299,7 @@ namespace Project_127
 					else
 					{
 						// When you wanna stay in while loop
-						newNamePU = new Popup(Popup.PopupWindowTypes.PopupOkTextBox, "Enter new Name for the SaveFile: ", pDefaultTBText: pMySaveFile.FileName);
+						newNamePU = new Popup(Popup.PopupWindowTypes.PopupOkTextBox, "Enter new Name for the SaveFile: ", pDefaultTBText: pMySaveFileName);
 						newNamePU.ShowDialog();
 						if (newNamePU.DialogResult == true)
 						{
@@ -413,5 +412,68 @@ namespace Project_127
 		}
 
 
+		/// <summary>
+		/// Importing multiple savefiles
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void btn_Import_Click(object sender, RoutedEventArgs e)
+		{
+			string MySelectedFilesRtrn = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.File, "Pick the SaveFiles you want to import", Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) +
+											@"\Rockstar Games\GTA V\Profiles", true);
+
+			// Close this if return is empty or ""
+			if (String.IsNullOrEmpty(MySelectedFilesRtrn))
+			{
+				return;
+			}
+
+			// List of all Selected Files
+			List<string> MySelectedFiles = MySelectedFilesRtrn.Split(',').ToList();
+			List<string> MySelectedFilesUnique = new List<string>();
+
+			// Looping through all Selected Files
+			for (int i = 0; i <= MySelectedFiles.Count - 1; i++)
+			{
+				// if is .bak
+				if (MySelectedFiles[i].Substring(MySelectedFiles[i].Length - 4) == ".bak")
+				{
+					string correspondingNonBakFile = MySelectedFiles[i].Substring(0, MySelectedFiles[i].Length - 4);
+					if (!HelperClasses.FileHandling.doesFileExist(correspondingNonBakFile))
+					{
+						// Create correspondingNonBakFile if it doesnt exist
+						HelperClasses.FileHandling.copyFile(MySelectedFiles[i], correspondingNonBakFile);
+					}
+				}
+				// Non .bak
+				else
+				{
+					string correspondingBakFile = MySelectedFiles[i] + ".bak";
+					if (!HelperClasses.FileHandling.doesFileExist(correspondingBakFile))
+					{
+						// Create correspondingBakFile if it doesnt exist
+						HelperClasses.FileHandling.copyFile(MySelectedFiles[i], correspondingBakFile);
+					}
+				}
+
+				// Making the FileName non Bak
+				MySelectedFiles[i] = HelperClasses.FileHandling.TrimEnd(MySelectedFiles[i], ".bak");
+
+				// Adding it to new list if it doesnt contain it yet
+				if (!MySelectedFilesUnique.Contains(MySelectedFiles[i]))
+				{
+					string FileName = MySelectedFiles[i].Substring(MySelectedFiles[i].LastIndexOf('\\') + 1);
+					if (HelperClasses.FileHandling.doesFileExist(MySaveFile.GTAVSavesPath.TrimEnd('\\') + @"\" + FileName))
+					{
+						FileName = GetNewFileName(FileName, MySaveFile.BackupSavesPath);
+					}
+					MySaveFile.Import(MySelectedFiles[i], FileName);
+
+					MySelectedFilesUnique.Add(MySelectedFiles[i]);
+				}
+			}
+
+			Sort(dg_BackupFiles);
+		}
 	} // End of Class
 } // End of Namespace

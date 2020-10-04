@@ -144,7 +144,7 @@ namespace Project_127
 			*/
 
 			{"FirstLaunch", "True" },
-			{"LastLaunchedVersion", Globals.ProjectVersion.ToString() },
+			{"LastLaunchedVersion", "0.0.0.1" },
 			{"InstallationPath", Process.GetCurrentProcess().MainModule.FileName.Substring(0, Process.GetCurrentProcess().MainModule.FileName.LastIndexOf('\\')) },
 			{"GTAVInstallationPath", ""},
 			{"ZIPExtractionPath", Process.GetCurrentProcess().MainModule.FileName.Substring(0, Process.GetCurrentProcess().MainModule.FileName.LastIndexOf('\\')) },
@@ -237,7 +237,7 @@ namespace Project_127
 				// Do things we want to do
 				Version GiveWarningMessageVersion = new Version("0.0.3.1");
 
-				if (Settings.LastLaunchedVersion < GiveWarningMessageVersion)
+				if (Settings.LastLaunchedVersion < new Version("0.0.3.1"))
 				{
 					new Popup(Popup.PopupWindowTypes.PopupOk,
 					"Project 1.27 is finally in OPEN beta\n" +
@@ -246,6 +246,16 @@ namespace Project_127
 					"Please do not hesitate to contact us with ANYTHING.\n\n" +
 					"Once again:\n" +
 					"No gurantees that this will not break your GTAV in any way, shape or form.\n" +
+					" - The Project 1.27 Team").ShowDialog();
+				}
+
+				if (Settings.LastLaunchedVersion < new Version("0.1.0.0"))
+				{
+					new Popup(Popup.PopupWindowTypes.PopupOk,
+					"Just saying...our way of remembering your login credentials,\n" +
+					"automatically typing them in the auth window,\n" +
+					"is not the most secure in this world.\n\n" +
+					"Youre using it on your own risk.\n" +
 					" - The Project 1.27 Team").ShowDialog();
 				}
 
