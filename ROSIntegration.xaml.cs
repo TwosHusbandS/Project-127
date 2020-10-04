@@ -461,11 +461,18 @@ document.addEventListener('input', rememberMeHandler);
                 {
                     passField = jsond["pass"];
                     emField = jsond["email"];
-                    Settings.EnableRememberMe = true;
+                    if (!Settings.EnableRememberMe)
+                    {
+                        Settings.EnableRememberMe = true;
+                    }
+
                 }
                 else
                 {
-                    Settings.EnableRememberMe = false;
+                    if (Settings.EnableRememberMe)
+                    {
+                        Settings.EnableRememberMe = false;
+                    }
                 }
             }
             else
