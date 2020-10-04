@@ -341,7 +341,7 @@ initDragClick();
 
 document.addEventListener('input', rememberMeHandler);
 ";
-        private const string credSenderJS = "setTimeout(rememberMeState, 1000, true); setTimeout(setEmail, 1200, '{0}'); setTimeout(setPass, 1500, '{1}')";
+        private const string credSenderJS = "setTimeout(rememberMeState, 1000, true); setTimeout(setEmail, 1200, '{0}'); setTimeout(setPass, 1500, '{1}');";
         private void LoadingStateChange(object sender, LoadingStateChangedEventArgs args)
         {
             if (!args.IsLoading) //On load complete...
@@ -358,11 +358,11 @@ document.addEventListener('input', rememberMeHandler);
                     var pass = System.Net.WebUtility.UrlEncode(passField);
                     var email = System.Net.WebUtility.UrlEncode(emField);
                     var csender = String.Format(credSenderJS, email, pass);
-                    frame.ExecuteJavaScriptAsync(csender, "https://rgl.rockstargames.com/temp2.js", 0);
+                    frame.ExecuteJavaScriptAsync(csender);
                 }
                 else
                 {
-                    frame.ExecuteJavaScriptAsync("setTimeout(rememberMeState, 1000, false);", "https://rgl.rockstargames.com/temp2.js", 0);
+                    frame.ExecuteJavaScriptAsync("setTimeout(rememberMeState, 1000, false);");
                 }
                 HelperClasses.Logger.Log("Done");
 
@@ -465,7 +465,6 @@ document.addEventListener('input', rememberMeHandler);
                     {
                         Settings.EnableRememberMe = true;
                     }
-
                 }
                 else
                 {
@@ -486,6 +485,11 @@ document.addEventListener('input', rememberMeHandler);
             using (var creds = new Credential())
             {
                 creds.Target = "Project127Login";
+                if (!creds.Exists())
+                {
+                    passField = "";
+                    emField = "";
+                }
                 creds.Load();
                 passField = creds.Password;
                 emField = creds.Username;

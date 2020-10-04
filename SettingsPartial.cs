@@ -673,6 +673,9 @@ namespace Project_127
 			}
 		}
 
+		/// <summary>
+		/// Settings EnableRememberMe. Gets and Sets from the Dictionary.
+		/// </summary>
 		public static bool EnableRememberMe
 		{
 			get
@@ -682,6 +685,19 @@ namespace Project_127
 			set
 			{
 				SetSetting("EnableRememberMe", value.ToString());
+				if (!value)
+                {
+					using (var creds = new CredentialManagement.Credential())
+					{
+						creds.Target = "Project127Login";
+						if (!creds.Exists())
+						{
+							return;
+						}
+						creds.Load();
+						creds.Delete();
+					}
+				}
 			}
 		}
 
