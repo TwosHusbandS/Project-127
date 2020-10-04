@@ -393,8 +393,26 @@ namespace Project_127
 			// If Rockstar
 			else
 			{
-				HelperClasses.Logger.Log("Trying to start Game normally through Rockstar. Im calling the exe like a fucking pleb...", 1);
-				HelperClasses.ProcessHandler.StartProcess(Settings.GTAVInstallationPath.TrimEnd('\\') + @"\PlayGTAV.exe", pCommandLineArguments: "-uilanguage " + Settings.ToMyLanguageString(Settings.LanguageSelected).ToLower());
+				var proc = new Process
+				{
+					StartInfo = new ProcessStartInfo
+					{
+						FileName = "explorer.exe",
+						Arguments = @"F:\SteamLibrary\steamapps\common\Grand Theft Auto V\DirtFix.bat",
+						WorkingDirectory = @"F:\SteamLibrary\steamapps\common\Grand Theft Auto V",
+						UseShellExecute = true,
+						Verb = "runas",
+						WindowStyle = ProcessWindowStyle.Hidden
+					}
+				};
+				proc.Start();
+
+
+				//HelperClasses.Logger.Log("Trying to start Game normally through Rockstar. Im calling the exe like a fucking pleb...", 1);
+				//HelperClasses.ProcessHandler.StartProcess(Settings.GTAVInstallationPath.TrimEnd('\\') + @"\PlayGTAV.exe", pCommandLineArguments: "-uilanguage " + Settings.ToMyLanguageString(Settings.LanguageSelected).ToLower());
+				
+				
+				
 				//HelperClasses.ProcessHandler.RunAsDesktopUser(Settings.GTAVInstallationPath.TrimEnd('\\') + @"\PlayGTAV.exe", "-uilanguage " + Settings.ToMyLanguageString(Settings.LanguageSelected).ToLower());
 			}
 

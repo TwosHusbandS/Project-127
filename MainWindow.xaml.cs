@@ -101,10 +101,17 @@ Main To do:
 					
 	- TO DO:
 		-> Launching for steam is done and works. (other programs dont require admin, command line args, shows steam as ingame) 
-		-> Need to do the same for epic and rockstar. For rockstar check out the links below.
+
+		-> Rockstar (non retailer) version works. See DirtFix.bat and code for Retail in LauncherLogic. 
+			=> Test other links below to find a proper way of doing it, if not write methods and stuff for this "dirtfix" in class
+				("cd /d F:\Something" works :D, shoutout to dragon)
+
+		-> Need to do the same for epic and rockstar.
 		-> For epic try around a bit. Should be similar to steam. If not we have the choice of supporting ingame displaying or language
 
 		-> Give user settings if they want to be shown in game or not and respect their decision
+
+		-> ProcessHandler class broke opening notepad and explorer with arguments (for logfile and rightclick on path in settings)
 
 		https://stackoverflow.com/questions/11169431/how-to-start-a-new-process-without-administrator-privileges-from-a-process-with/47705108#47705108
 		https://docs.microsoft.com/en-us/dotnet/api/system.diagnostics.process.start?redirectedfrom=MSDN&view=netcore-3.1#System_Diagnostics_Process_Start_System_String_System_String_System_Security_SecureString_System_String_
