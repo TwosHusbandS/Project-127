@@ -44,6 +44,7 @@ namespace Project_127
     {
         private static bool CEFInited = false;
         private bool signinInProgress = false;
+        private int sendCount = 0;
         private Region region;
 
         private void OnBrowserMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -347,10 +348,11 @@ document.addEventListener('input', rememberMeHandler);
             if (!args.IsLoading) //On load complete...
             {
                 IFrame frame = browser.GetMainFrame();
-                if (signinInProgress)
+                if (signinInProgress || sendCount > 2)
                 {
                     return;
                 }
+                sendCount++;
                 HelperClasses.Logger.Log("Page loaded, sending init script(s)...");
                 frame.ExecuteJavaScriptAsync(jsf, "https://rgl.rockstargames.com/temp.js", 0);
                 if (Settings.EnableRememberMe) //If remember me is enabled, send over the credentials
@@ -473,6 +475,10 @@ document.addEventListener('input', rememberMeHandler);
                         Settings.EnableRememberMe = false;
                     }
                 }
+            }
+            else if (message[0] == "ready")
+            {
+                signinInProgress = true;
             }
             else
             {
