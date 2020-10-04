@@ -424,16 +424,63 @@ namespace Project_127
 			{
 				string rtrn = Regex.Replace(GetSetting("InGameName"), @"[^0-9A-Za-z_]", @"");
 				if (String.IsNullOrEmpty(rtrn)) { rtrn = "HiMomImOnYoutube"; }
-				while (rtrn.Length < 3) { rtrn = rtrn + "_"; }
+				if (rtrn.Length < 3) { rtrn = "HiMomImOnYoutube"; }
 				if (rtrn.Length > 16) { rtrn = rtrn.Substring(0, 16); }
 				return rtrn;
 			}
 			set
 			{
-				// Need to do some front end checking here, so user doesnt get confused
 				SetSetting("InGameName", value);
 			}
 		}
+
+
+
+		public static string ToMyLanguageString(Languages pLanguage)
+		{
+			if (pLanguage == Languages.English)
+			{
+				return "american";
+			}
+			return pLanguage.ToString();
+		}
+
+
+		/// <summary>
+		/// Enum for all Languages
+		/// </summary>
+		public enum Languages
+		{
+			English,
+			Chinese,
+			French,
+			German,
+			Italian,
+			Japanese,
+			Korean,
+			Mexican,
+			Polish,
+			Portuguese,
+			Russian,
+			Spanish
+		}
+
+
+		/// <summary>
+		/// Settings Retailer. Gets and Sets from Dictionary.
+		/// </summary>
+		public static Languages LanguageSelected
+		{
+			get
+			{
+				return (Languages)System.Enum.Parse(typeof(Languages), GetSetting("LanguageSelected"));
+			}
+			set
+			{
+				SetSetting("LanguageSelected", value.ToString());
+			}
+		}
+
 
 		/// <summary>
 		/// Enum for all Retailers
@@ -673,9 +720,16 @@ namespace Project_127
 			}
 		}
 
+
+
 		/// <summary>
 		/// Settings EnableRememberMe. Gets and Sets from the Dictionary.
-		/// </summary>
+		/// <summary>
+		/// Enabling the "Remember me" for the user when logging in. User cant change this
+		/// <summary>
+		/// Settings EnableRememberMe. Gets and Sets from the Dictionary.
+		/// <summary>
+		/// Enabling the "Remember me" for the user when logging in. User cant change this
 		public static bool EnableRememberMe
 		{
 			get
@@ -684,18 +738,21 @@ namespace Project_127
 			}
 			set
 			{
-				SetSetting("EnableRememberMe", value.ToString());
-				if (!value)
-                {
-					using (var creds = new CredentialManagement.Credential())
+				if (GetBoolFromString(GetSetting("EnableRememberMe")) != value)
+				{
+					SetSetting("EnableRememberMe", value.ToString());
+					if (!value)
 					{
-						creds.Target = "Project127Login";
-						if (!creds.Exists())
+						using (var creds = new CredentialManagement.Credential())
 						{
-							return;
+							creds.Target = "Project127Login";
+							if (!creds.Exists())
+							{
+								return;
+							}
+							creds.Load();
+							creds.Delete();
 						}
-						creds.Load();
-						creds.Delete();
 					}
 				}
 			}
