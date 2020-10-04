@@ -44,6 +44,7 @@ namespace Project_127
     {
         private static bool CEFInited = false;
         private bool signinInProgress = false;
+        private int sendCount = 0;
         private Region region;
 
         private void OnBrowserMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -78,8 +79,10 @@ namespace Project_127
             //CefSettings s = new CefSettings();
             //s.CachePath = "B:\\test";
             //Cef.Initialize(s);
+            HelperClasses.Logger.Log("Hello from dr490n's auth");
             if (!CEFInited)
             {
+                HelperClasses.Logger.Log("Detected first launch, initializing...");
                 var s = new CefSettings();
                 s.CachePath = System.IO.Path.GetFullPath(".\\");
                 s.BackgroundColor = 0x13 << 16 | 0x15 << 8 | 0x18;
@@ -94,8 +97,10 @@ namespace Project_127
             dragHandler.RegionsChanged += OnDragHandlerRegionsChanged;
             browser.DragHandler = dragHandler;
             browser.BrowserSettings.BackgroundColor = 0x13 << 16 | 0x15 << 8 | 0x18;
+            HelperClasses.Logger.Log("Initialization complete");
             if (Settings.EnableRememberMe)
             {
+                HelperClasses.Logger.Log("Remember Me enabled: fetching credentials...");
                 fetchStoredCredentials();
             }
             //browser.BrowserSettings.ApplicationCache = CefState.Enabled;
@@ -337,30 +342,32 @@ initDragClick();
 
 document.addEventListener('input', rememberMeHandler);
 ";
-        private const string credSenderJS = "setTimeout(rememberMeState, 1000, true); setTimeout(setEmail, 1200, '{0}'); setTimeout(setPass, 1500, '{1}')";
+        private const string credSenderJS = "setTimeout(rememberMeState, 1000, true); setTimeout(setEmail, 1200, '{0}'); setTimeout(setPass, 1500, '{1}');";
         private void LoadingStateChange(object sender, LoadingStateChangedEventArgs args)
         {
             if (!args.IsLoading) //On load complete...
             {
                 IFrame frame = browser.GetMainFrame();
-                if (signinInProgress)
+                if (signinInProgress || sendCount > 2)
                 {
                     return;
                 }
+                sendCount++;
+                HelperClasses.Logger.Log("Page loaded, sending init script(s)...");
                 frame.ExecuteJavaScriptAsync(jsf, "https://rgl.rockstargames.com/temp.js", 0);
                 if (Settings.EnableRememberMe) //If remember me is enabled, send over the credentials
                 {
                     var pass = System.Net.WebUtility.UrlEncode(passField);
                     var email = System.Net.WebUtility.UrlEncode(emField);
                     var csender = String.Format(credSenderJS, email, pass);
-                    frame.ExecuteJavaScriptAsync(csender, "https://rgl.rockstargames.com/temp2.js", 0);
+                    frame.ExecuteJavaScriptAsync(csender);
                 }
                 else
                 {
-                    frame.ExecuteJavaScriptAsync("setTimeout(rememberMeState, 1000, false);", "https://rgl.rockstargames.com/temp2.js", 0);
+                    frame.ExecuteJavaScriptAsync("setTimeout(rememberMeState, 1000, false);");
                 }
+                HelperClasses.Logger.Log("Done");
 
-                
             }
         }
 
@@ -404,6 +411,7 @@ document.addEventListener('input', rememberMeHandler);
             }
             else if (message[0] == "signin") //if this is called, we have a valid login
             {
+                HelperClasses.Logger.Log("Signin Called...");
                 signinInProgress = true;
                 //login(message[1]);
                 var jsond = json.Deserialize<Dictionary<String, String>>(message[1]);
@@ -428,14 +436,18 @@ document.addEventListener('input', rememberMeHandler);
                 if (valsucess)
                 {
                     //MessageBox.Show("Login Success");
+                    HelperClasses.Logger.Log("Login success");
                     if (Settings.EnableRememberMe)
                     {
+                        HelperClasses.Logger.Log("Storing credentials...");
                         storeCredentials();
+                        HelperClasses.Logger.Log("Stored credentials");
                     }
 
                 } 
                 else
                 {
+                    HelperClasses.Logger.Log("Login Failure");
                     System.Windows.Forms.MessageBox.Show("Login Failure");
                 }
 
@@ -451,12 +463,22 @@ document.addEventListener('input', rememberMeHandler);
                 {
                     passField = jsond["pass"];
                     emField = jsond["email"];
-                    Settings.EnableRememberMe = true;
+                    if (!Settings.EnableRememberMe)
+                    {
+                        Settings.EnableRememberMe = true;
+                    }
                 }
                 else
                 {
-                    Settings.EnableRememberMe = false;
+                    if (Settings.EnableRememberMe)
+                    {
+                        Settings.EnableRememberMe = false;
+                    }
                 }
+            }
+            else if (message[0] == "ready")
+            {
+                signinInProgress = true;
             }
             else
             {
@@ -469,6 +491,11 @@ document.addEventListener('input', rememberMeHandler);
             using (var creds = new Credential())
             {
                 creds.Target = "Project127Login";
+                if (!creds.Exists())
+                {
+                    passField = "";
+                    emField = "";
+                }
                 creds.Load();
                 passField = creds.Password;
                 emField = creds.Username;
