@@ -1,2 +1,0 @@
-#define ENTITLEMENTDECRYPT_API __declspec(dllexport)
-#define ENTITLEMENTDECRYPT_API __declspec(dllimport)

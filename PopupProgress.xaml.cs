@@ -149,7 +149,7 @@ namespace Project_127
 								HelperClasses.FileHandling.createPathOfFile(PathOnDisk); // 99% Chance I fixed this with the createZipPaths Method. Lets keep this to make sure...
 								if (HelperClasses.FileHandling.doesFileExist(PathOnDisk))
 								{
-									if (PathOnDisk.Contains("UpgradeFiles") ||
+									if (PathOnDisk.Contains("UpgradeFiles") || 
 										PathOnDisk.Contains("SaveFiles") || 
 										PathOnDisk.Contains(@"DowngradeFiles\GTA5.exe") ||
 										PathOnDisk.Contains(@"DowngradeFiles\x64a.rpf") ||
@@ -159,7 +159,7 @@ namespace Project_127
 									}
 									else
 									{
-										HelperClasses.FileHandling.deleteFile(PathOnDisk);
+									HelperClasses.FileHandling.deleteFile(PathOnDisk);
 									}
 								}
 

@@ -124,7 +124,7 @@
                     <Button x:Name="btn_SaveFiles" Grid.Row="4" Style="{StaticResource btn_hamburgeritem}" Content="Save File Manager" Click="btn_SaveFiles_Click"/>
                     <Button x:Name="btn_Settings" Grid.Row="5" Style="{StaticResource btn_hamburgeritem}" Content="Settings" Click="btn_Settings_Click"/>
                     <Button x:Name="btn_Speedrun" Grid.Row="6" Style="{StaticResource btn_hamburgeritem}" Content="Speedrun Info" Click="btn_Speedrun_Click"/>
-                    <Button x:Name="btn_Readme" Grid.Row="7" Style="{StaticResource btn_hamburgeritem}" Content="ReadMe" Click="btn_Readme_Click"/>
+                    <Button x:Name="btn_About" Grid.Row="7" Style="{StaticResource btn_hamburgeritem}" Content="About" Click="btn_About_Click"/>
                     <Button x:Name="btn_Credits" Grid.Row="8" Style="{StaticResource btn_hamburgeritem}" Content="Credits" Click="btn_Credits_Click"/>
                 </Grid>
                 <!-- GridHamburgerInner -->
