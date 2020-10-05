@@ -168,7 +168,7 @@ namespace Project_127.HelperClasses
 		/// <param name="pCommandLineArguments"></param>
 		/// <param name="runAsAdmin"></param>
 		/// <param name="waitForExit"></param>
-		public static void StartProcess(string pFilepath, string pWorkingDir = null, string pCommandLineArguments = null, bool runAsAdmin = false, bool pUseShellExecute = false, bool waitForExit = false)
+		public static void StartProcess(string pFilepath, string pWorkingDir = null, string pCommandLineArguments = null, bool useShellExecute = false, bool runAsAdmin = false, bool waitForExit = false)
 		{
 			// TO DO...THIS MIGHT BE BROKEN WITH CMDL ARGS WITH CONTAIN SPACES...NEED TO DO THIS MANUALLY IN THE METHOD WHICH CALLS IT FOR NOW
 			if (FileHandling.doesFileExist(pFilepath))
@@ -188,8 +188,7 @@ namespace Project_127.HelperClasses
 					proc.StartInfo.Verb = "runas";
 				}
 
-				proc.StartInfo.UseShellExecute = pUseShellExecute;
-
+				proc.StartInfo.UseShellExecute = useShellExecute;
 				// Lets see if this works
 				//proc.ProcessorAffinity = (IntPtr)0xFFFFFFFF;
 

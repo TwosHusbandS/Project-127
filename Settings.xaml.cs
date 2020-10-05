@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -60,6 +61,11 @@ namespace Project_127
 			HelperClasses.Logger.Log("InitImportantSettings when Settings Reset or FirstLaunch or Paths wrong on Launch");
 			HelperClasses.Logger.Log("Playing the GTAV Guessing Game");
 
+
+			RegistryKey myRKTemp1 = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64).OpenSubKey(@"SOFTWARE\WOW6432Node\Rockstar Games\GTAV");
+			RegistryKey myRKTemp2 = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64).OpenSubKey(@"SOFTWARE\Rockstar Games\Grand Theft Auto V");
+			RegistryKey myRKTemp3 = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64).OpenSubKey(@"SOFTWARE\WOW6432Node\Rockstar Games\Grand Theft Auto V");
+
 			// Used to not display a popup at the end if it was set during guessing
 			bool ChangedRetailerAlready = false;
 
@@ -67,7 +73,10 @@ namespace Project_127
 			List<string> GTAVPathGuesses = new List<string>();
 			GTAVPathGuesses.Add(LauncherLogic.GetGTAVPathMagicSteam());
 			GTAVPathGuesses.Add(LauncherLogic.GetGTAVPathMagicRockstar());
-			GTAVPathGuesses.Add(LauncherLogic.GetGTAVPathMagicEpic());
+			GTAVPathGuesses.Add(LauncherLogic.GetGTAVPathMagicEpic());			
+			GTAVPathGuesses.Add(HelperClasses.RegeditHandler.GetValue(myRKTemp1,"InstallFolderSteam"));
+			GTAVPathGuesses.Add(HelperClasses.RegeditHandler.GetValue(myRKTemp2,"InstallFolderEpic"));
+			GTAVPathGuesses.Add(HelperClasses.RegeditHandler.GetValue(myRKTemp3,"InstallFolder"));
 			GTAVPathGuesses.Add(Globals.ProjectInstallationPath.TrimEnd('\\').Substring(0, Globals.ProjectInstallationPath.LastIndexOf('\\')));
 			GTAVPathGuesses.Add(Globals.ProjectInstallationPath.TrimEnd('\\'));
 			GTAVPathGuesses.Add(Settings.ZIPExtractionPath.TrimEnd('\\').Substring(0, Globals.ProjectInstallationPath.LastIndexOf('\\')));
