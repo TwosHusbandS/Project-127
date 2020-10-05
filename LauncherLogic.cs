@@ -392,7 +392,9 @@ namespace Project_127
 				if (InstallationState == InstallationStates.Upgraded)
 				{
 					HelperClasses.Logger.Log("Trying to start Game normally through EpicGames.", 1);
-					HelperClasses.ProcessHandler.StartProcess(@"com.epicgames.launcher://apps/9d2d0eb64d5c44529cece33fe2a46482?action=launch&silent=true", pCommandLineArguments: "-uilanguage " + Settings.ToMyLanguageString(Settings.LanguageSelected).ToLower());
+
+					// This does not work with custom wrapper StartProcess in ProcessHandler...i guess this is fine
+					Process.Start(@"com.epicgames.launcher://apps/9d2d0eb64d5c44529cece33fe2a46482?action=launch&silent=true");
 				}
 				// If downgraded launch through non retail
 				else
@@ -404,7 +406,7 @@ namespace Project_127
 			// If Rockstar
 			else
 			{
-				// Launch through Non Retail regardless of anything
+				// Launch through Non Retail re
 				HelperClasses.ProcessHandler.StartGameNonRetail();
 			}
 
