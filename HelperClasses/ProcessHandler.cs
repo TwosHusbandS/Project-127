@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -185,6 +187,7 @@ namespace Project_127.HelperClasses
 				{
 					proc.StartInfo.Verb = "runas";
 				}
+
 				proc.StartInfo.UseShellExecute = pUseShellExecute;
 
 				// Lets see if this works
@@ -199,6 +202,17 @@ namespace Project_127.HelperClasses
 		}
 
 
+		/// <summary>
+		/// Starting Game as Non Retail
+		/// </summary>
+		public static void StartGameNonRetail()
+		{
+
+		string cmdLineArgs = @"/c cd /d " + "\"" + LauncherLogic.GTAVFilePath + "\"" + @" && start playgtav.exe -uilanguage " + Settings.ToMyLanguageString(Settings.LanguageSelected).ToLower() + " && exit";
+
+		//cmdLineArgs = @"/c cd / d "F:\SteamLibrary\steamapps\common\Grand Theft Auto V" && playgtav.exe -uilanguage french && exit";
+		Process tmp = GSF.Identity.UserAccountControl.CreateProcessAsStandardUser(@"cmd.exe", cmdLineArgs);
+		}
 
 	} // End of Class
 } // End of Namespace

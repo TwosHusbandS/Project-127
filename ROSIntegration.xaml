@@ -8,10 +8,11 @@
         xmlns:local="clr-namespace:Project_127"
         mc:Ignorable="d"
         Title="ROSIntegration" Height="600" Width="800"
-        WindowStyle="ToolWindow"
+        WindowStyle="None"
         BorderBrush="Black"
         BorderThickness="0"
         WindowStartupLocation="CenterScreen"
+        AllowsTransparency="True"
         Background="#131518">
     <Grid>
         <cefSharp:ChromiumWebBrowser x:Name="browser" Grid.Row="0" Address="https://rgl.rockstargames.com/launcher" LoadingStateChanged="LoadingStateChange" JavascriptMessageReceived="browser_JavascriptMessageReceived">

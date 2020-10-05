@@ -38,6 +38,12 @@ namespace Project_127
 			// Needed for GUI Shit
 			combox_Set_Retail.ItemsSource = Enum.GetValues(typeof(Retailers)).Cast<Retailers>();
 			combox_Set_Retail.SelectedItem = Settings.Retailer;
+
+			combox_Set_LanguageSelected.ItemsSource = Enum.GetValues(typeof(Languages)).Cast<Languages>();
+			combox_Set_LanguageSelected.SelectedItem = Settings.LanguageSelected;
+
+			tb_Set_InGameName.Text = Settings.InGameName;
+
 			this.DataContext = this;
 		}
 
@@ -182,7 +188,31 @@ namespace Project_127
 
 			if (!ChangedRetailerAlready)
 			{
-				new Popup(Popup.PopupWindowTypes.PopupOk, "The default Retailer-Setting is Steam.\nChange this to Rockstar or Epic in the Settings if needed.").ShowDialog();
+				HelperClasses.Logger.Log("Have not changed Retailer already, will throw Popup");
+				Popup myPopupRetailer = new Popup(Popup.PopupWindowTypes.PopupOkComboBox, "Retailer of your GTA V Installation?", pEnum: Retailer);
+				myPopupRetailer.ShowDialog();
+				if (myPopupRetailer.DialogResult == true)
+				{
+					HelperClasses.Logger.Log("User picked '" + myPopupRetailer.MyReturnString + "' as their Retailer");
+					Retailer = (Retailers)System.Enum.Parse(typeof(Retailers), myPopupRetailer.MyReturnString);
+				}
+				else
+				{
+					HelperClasses.Logger.Log("Dialog Result is false.");
+				}
+			}
+
+			HelperClasses.Logger.Log("Throwing Popup for Language Selection");
+			Popup myPopup = new Popup(Popup.PopupWindowTypes.PopupOkComboBox, "Language you want as your downgraded GTA V Language?", pEnum: LanguageSelected);
+			myPopup.ShowDialog();
+			if (myPopup.DialogResult == true)
+			{
+				HelperClasses.Logger.Log("User picked '" + myPopup.MyReturnString + "' as their Language");
+				LanguageSelected = (Languages)System.Enum.Parse(typeof(Languages), myPopup.MyReturnString);
+			}
+			else
+			{
+				HelperClasses.Logger.Log("Dialog Result is false.");
 			}
 
 			HelperClasses.Logger.Log("LogInfo - GTAVInstallationPath: '" + Settings.GTAVInstallationPath + "'");
@@ -254,8 +284,7 @@ namespace Project_127
 		/// <param name="e"></param>
 		private void btn_Set_GTAVInstallationPath_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
 		{
-			HelperClasses.ProcessHandler.StartProcess("explorer.exe", pCommandLineArguments: Settings.GTAVInstallationPath);
-
+			HelperClasses.ProcessHandler.StartProcess(@"C:\Windows\explorer.exe", pCommandLineArguments: Settings.GTAVInstallationPath);
 		}
 
 
@@ -267,6 +296,17 @@ namespace Project_127
 		private void combox_Set_Retail_SelectionChanged(object sender, SelectionChangedEventArgs e)
 		{
 			Retailer = (Retailers)System.Enum.Parse(typeof(Retailers), combox_Set_Retail.SelectedItem.ToString());
+		}
+
+
+		/// <summary>
+		/// Event that gets triggered when the ComboBox of Languages changed.
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void combox_Set_LanguageSelected_SelectionChanged(object sender, SelectionChangedEventArgs e)
+		{
+			LanguageSelected = (Languages)System.Enum.Parse(typeof(Languages), combox_Set_LanguageSelected.SelectedItem.ToString());
 		}
 
 
@@ -376,7 +416,7 @@ namespace Project_127
 		/// <param name="e"></param>
 		private void btn_Set_ZIPExtractionPath_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
 		{
-			HelperClasses.ProcessHandler.StartProcess("explorer.exe", pCommandLineArguments: Settings.ZIPExtractionPath);
+			HelperClasses.ProcessHandler.StartProcess(@"C:\Windows\explorer.exe", pCommandLineArguments: Settings.ZIPExtractionPath);
 		}
 
 
@@ -390,11 +430,48 @@ namespace Project_127
 		{
 			string txt = Regex.Replace(tb_Set_InGameName.Text, @"[^0-9A-Za-z_]", @"");
 			if (String.IsNullOrEmpty(txt)) { txt = "HiMomImOnYoutube"; }
-			while (txt.Length < 3) { txt = txt + "_"; }
+			if (txt.Length < 3) { txt = "HiMomImOnYoutube"; }
 			if (txt.Length > 16) { txt = txt.Substring(0, 16); }
 			Settings.InGameName = txt;
 			tb_Set_InGameName.Text = txt;
 		}
+
+		/// <summary>
+		/// Called when user wants to import settings
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void btn_Set_ImportGTAVSettings_Click(object sender, RoutedEventArgs e)
+		{
+			string MyFolderReturn = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.Folder, "Pick your profile folder you want to copy all settings from", Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) +
+								@"\Rockstar Games\GTA V\Profiles");
+
+			// Close this if return is empty or ""
+			if (String.IsNullOrEmpty(MyFolderReturn))
+			{
+				return;
+			}
+
+			string ExistingPCSettingsBinPath = MyFolderReturn.TrimEnd('\\') + @"\pc_settings.bin";
+			string correctPCSettingsBinPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) +
+											@"\Rockstar Games\GTA V\Profiles\Project127\GTA V\0F74F4C4\pc_settings.bin";
+			string ExistingControlUserXmlPath = MyFolderReturn.TrimEnd('\\') + @"\control\user.xml";
+			string correctControlUserXmlPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) +
+											@"\Rockstar Games\GTA V\Profiles\Project127\GTA V\0F74F4C4\control\user.xml";
+
+			if (HelperClasses.FileHandling.doesFileExist(ExistingPCSettingsBinPath))
+			{
+				HelperClasses.FileHandling.deleteFile(correctPCSettingsBinPath);
+				HelperClasses.FileHandling.copyFile(ExistingPCSettingsBinPath, correctPCSettingsBinPath);
+			}
+
+			if (HelperClasses.FileHandling.doesFileExist(ExistingControlUserXmlPath))
+			{
+				HelperClasses.FileHandling.deleteFile(correctControlUserXmlPath);
+				HelperClasses.FileHandling.copyFile(ExistingControlUserXmlPath, correctControlUserXmlPath);
+			}
+		}
+
 
 
 		/// <summary>
@@ -419,6 +496,8 @@ namespace Project_127
 			cb_Set_CopyFilesInsteadOfHardlinking.IsChecked = Settings.EnableCopyFilesInsteadOfHardlinking;
 			cb_Set_EnablePreOrderBonus.IsChecked = Settings.EnablePreOrderBonus;
 			combox_Set_Retail.SelectedItem = Settings.Retailer;
+			combox_Set_LanguageSelected.SelectedItem = Settings.LanguageSelected;
+			tb_Set_InGameName.Text = Settings.InGameName;
 			cb_Set_AutoSetHighPriority.IsChecked = Settings.EnableAutoSetHighPriority;
 			//cb_Set_OnlyAutoStartProgramsWhenDowngraded.IsChecked = Settings.EnableOnlyAutoStartProgramsWhenDowngraded;
 			//btn_Set_PathFPSLimiter.Content = Settings.PathFPSLimiter;
@@ -447,7 +526,6 @@ namespace Project_127
 		{
 			DragMove(); // Pre-Defined Method
 		}
-
 
 	} // End of Class
 } // End of Namespace

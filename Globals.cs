@@ -96,7 +96,7 @@ namespace Project_127
 		/// <summary>
 		/// Property of other Buildinfo. Will be in the top message of logs
 		/// </summary>
-		public static string BuildInfo = "Build 2";
+		public static string BuildInfo = "Built 1, needs Internal Testing";
 
 		/// <summary>
 		/// Returns all Command Line Args as StringArray
@@ -144,7 +144,7 @@ namespace Project_127
 			*/
 
 			{"FirstLaunch", "True" },
-			{"LastLaunchedVersion", Globals.ProjectVersion.ToString() },
+			{"LastLaunchedVersion", "0.0.0.1" },
 			{"InstallationPath", Process.GetCurrentProcess().MainModule.FileName.Substring(0, Process.GetCurrentProcess().MainModule.FileName.LastIndexOf('\\')) },
 			{"GTAVInstallationPath", ""},
 			{"ZIPExtractionPath", Process.GetCurrentProcess().MainModule.FileName.Substring(0, Process.GetCurrentProcess().MainModule.FileName.LastIndexOf('\\')) },
@@ -153,6 +153,8 @@ namespace Project_127
 			{"EnablePreOrderBonus", "False"},
 			{"EnableOnlyAutoStartProgramsWhenDowngraded", "True"},
 			{"Retailer", "Steam"},
+			{"LanguageSelected", "English"},
+			{"EnableDontLaunchThroughSteam", "false"},
 			{"InGameName", "HiMomImOnYoutube"},
 			{"EnableAutoSetHighPriority", "True" },
 			{"EnableAutoSteamCoreFix", "True" },
@@ -168,7 +170,8 @@ namespace Project_127
 			{"EnableAutoStartNohboard", "True" },
 			{"EnableNohboardBurhac", "True" },
 			{"PathNohboard", @"C:\Some\Path\SomeFile.exe" },
-			{"Theme", @"Empty" }
+			{"Theme", @"Empty" },
+			{"EnableRememberMe", "False" }
 		};
 
 		/// <summary>
@@ -235,7 +238,7 @@ namespace Project_127
 				// Do things we want to do
 				Version GiveWarningMessageVersion = new Version("0.0.3.1");
 
-				if (Settings.LastLaunchedVersion < GiveWarningMessageVersion)
+				if (Settings.LastLaunchedVersion < new Version("0.0.3.1"))
 				{
 					new Popup(Popup.PopupWindowTypes.PopupOk,
 					"Project 1.27 is finally in OPEN beta\n" +
@@ -244,6 +247,15 @@ namespace Project_127
 					"Please do not hesitate to contact us with ANYTHING.\n\n" +
 					"Once again:\n" +
 					"No gurantees that this will not break your GTAV in any way, shape or form.\n" +
+					" - The Project 1.27 Team").ShowDialog();
+				}
+
+				if (Settings.LastLaunchedVersion < new Version("0.0.4.0"))
+				{
+					new Popup(Popup.PopupWindowTypes.PopupOk,
+					"The 'Remember' Me function, is storing credentials\n" + 
+					"using the Windows Credential Manager.\n" +
+					"You are using the it on your own risk.\n\n" +
 					" - The Project 1.27 Team").ShowDialog();
 				}
 
@@ -391,8 +403,8 @@ namespace Project_127
 		public static Brush SFH_DGForeground { get; private set; } = MyColorWhite;
 		public static Brush SFH_DGCellBackground { get; private set; } = MyColorBlack;
 		public static Brush SFH_DGCellForeground { get; private set; } = MyColorWhite;
-		public static Brush SFH_DGCellSelectedBackground { get; private set; } = MyColorWhite;
-		public static Brush SFH_DGCellSelectedForeground { get; private set; } = MyColorBlack;
+		public static Brush SFH_DGCellSelectedBackground { get; private set; } = MyColorOrange;
+		public static Brush SFH_DGCellSelectedForeground { get; private set; } = MyColorWhite;
 
 		public static System.Windows.Thickness SFH_ButtonBorderThickness { get; private set; } = new System.Windows.Thickness(2);
 

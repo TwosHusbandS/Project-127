@@ -424,7 +424,7 @@ namespace Project_127
 			{
 				string rtrn = Regex.Replace(GetSetting("InGameName"), @"[^0-9A-Za-z_]", @"");
 				if (String.IsNullOrEmpty(rtrn)) { rtrn = "HiMomImOnYoutube"; }
-				while (rtrn.Length < 3) { rtrn = rtrn + "_"; }
+				if (rtrn.Length < 3) { rtrn = "HiMomImOnYoutube"; }
 				if (rtrn.Length > 16) { rtrn = rtrn.Substring(0, 16); }
 				return rtrn;
 			}
@@ -433,6 +433,54 @@ namespace Project_127
 				SetSetting("InGameName", value);
 			}
 		}
+
+
+
+		public static string ToMyLanguageString(Languages pLanguage)
+		{
+			if (pLanguage == Languages.English)
+			{
+				return "american";
+			}
+			return pLanguage.ToString();
+		}
+
+
+		/// <summary>
+		/// Enum for all Languages
+		/// </summary>
+		public enum Languages
+		{
+			English,
+			Chinese,
+			French,
+			German,
+			Italian,
+			Japanese,
+			Korean,
+			Mexican,
+			Polish,
+			Portuguese,
+			Russian,
+			Spanish
+		}
+
+
+		/// <summary>
+		/// Settings Retailer. Gets and Sets from Dictionary.
+		/// </summary>
+		public static Languages LanguageSelected
+		{
+			get
+			{
+				return (Languages)System.Enum.Parse(typeof(Languages), GetSetting("LanguageSelected"));
+			}
+			set
+			{
+				SetSetting("LanguageSelected", value.ToString());
+			}
+		}
+
 
 		/// <summary>
 		/// Enum for all Retailers
@@ -642,6 +690,22 @@ namespace Project_127
 			}
 		}
 
+
+		/// <summary>
+		/// Settings EnableDontLaunchThroughSteam. Gets and Sets from the Dictionary.
+		/// </summary>
+		public static bool EnableDontLaunchThroughSteam
+		{
+			get
+			{
+				return GetBoolFromString(GetSetting("EnableDontLaunchThroughSteam"));
+			}
+			set
+			{
+				SetSetting("EnableDontLaunchThroughSteam", value.ToString());
+			}
+		}
+
 		/// <summary>
 		/// Settings PathNohboard. Gets and Sets from the Dictionary.
 		/// </summary>
@@ -669,6 +733,39 @@ namespace Project_127
 			set
 			{
 				SetSetting("Theme", value);
+			}
+		}
+
+
+
+		/// <summary>
+		/// Settings EnableRememberMe. Gets and Sets from the Dictionary.
+		/// <summary>
+		public static bool EnableRememberMe
+		{
+			get
+			{
+				return GetBoolFromString(GetSetting("EnableRememberMe"));
+			}
+			set
+			{
+				if (GetBoolFromString(GetSetting("EnableRememberMe")) != value)
+				{
+					SetSetting("EnableRememberMe", value.ToString());
+					if (!value)
+					{
+						using (var creds = new CredentialManagement.Credential())
+						{
+							creds.Target = "Project127Login";
+							if (!creds.Exists())
+							{
+								return;
+							}
+							creds.Load();
+							creds.Delete();
+						}
+					}
+				}
 			}
 		}
 

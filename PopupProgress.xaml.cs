@@ -102,7 +102,7 @@ namespace Project_127
 			{
 				double count = MyFileOperations.Count;
 				double j = 0;
-			
+
 				HelperClasses.Logger.Log("Lets do some File Operation Stuff");
 				for (int i = 0; i <= MyFileOperations.Count - 1; i++)
 				{
@@ -116,7 +116,7 @@ namespace Project_127
 				}
 				HelperClasses.Logger.Log("Done with File Operation Stuff");
 			}
-			else if(ProgressType == ProgressTypes.ZIPFile)
+			else if (ProgressType == ProgressTypes.ZIPFile)
 			{
 				HelperClasses.Logger.Log("ZipFileWeWannaExtract: '" + ZipFileWeWannaExtract + "'");
 				HelperClasses.Logger.Log("ZIPExtractPath: '" + LauncherLogic.ZIPFilePath + "'");
@@ -144,13 +144,34 @@ namespace Project_127
 							// If the File exists and is not a folder
 							if (!string.IsNullOrEmpty(file.Name))
 							{
+								bool doExtract = true;
 								string PathOnDisk = LauncherLogic.ZIPFilePath.TrimEnd('\\') + @"\" + file.FullName.Replace(@"/", @"\");
-								HelperClasses.FileHandling.createPathOfFile(PathOnDisk);
-								file.ExtractToFile(PathOnDisk);
+								HelperClasses.FileHandling.createPathOfFile(PathOnDisk); // 99% Chance I fixed this with the createZipPaths Method. Lets keep this to make sure...
+								if (HelperClasses.FileHandling.doesFileExist(PathOnDisk))
+								{
+									if (PathOnDisk.Contains("UpgradeFiles") ||
+										PathOnDisk.Contains("SaveFiles") ||
+										PathOnDisk.Contains(@"DowngradeFiles\GTA5.exe") ||
+										PathOnDisk.Contains(@"DowngradeFiles\x64a.rpf") ||
+										PathOnDisk.Contains(@"DowngradeFiles\update\update.rpf"))
+									{
+										doExtract = false;
+									}
+									else
+									{
+										HelperClasses.FileHandling.deleteFile(PathOnDisk);
+									}
+								}
+
+								if (doExtract)
+								{
+									file.ExtractToFile(PathOnDisk);
+								}
 							}
 
 							// Update GUI
-							Application.Current.Dispatcher.Invoke((Action)delegate {
+							Application.Current.Dispatcher.Invoke((Action)delegate
+							{
 								filesExtracted++;
 								long progress = (100 * filesExtracted / totalFiles);
 								myPB.Value = progress;
@@ -158,7 +179,7 @@ namespace Project_127
 							});
 
 
-							// // Lets hope we never need this but I want to keep this here for now
+							// // Lets hope we never need this but I want to keep this here for now, in case that code snipped becomes useful
 							//this.Dispatcher.Invoke(() =>
 							//{
 							//	myPB.Value = progress;
