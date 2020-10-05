@@ -10,6 +10,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
+using GSF;
 
 namespace Project_127
 {
@@ -370,50 +371,41 @@ namespace Project_127
 			{
 				HelperClasses.Logger.Log("Trying to start Game normally through Steam.", 1);
 
-				//Process.Start(@"steam://rungameid/271590/-uilanguage/french");
+				// If we dont want to launch through Steam
+				if (Settings.EnableDontLaunchThroughSteam)
+				{
+					// Launch through non retail
+					HelperClasses.ProcessHandler.StartGameNonRetail();
+				}
+				else
+				{
+					// Launch through steam
+					HelperClasses.ProcessHandler.StartProcess(Globals.SteamInstallPath.TrimEnd('\\') + @"\steam.exe", pCommandLineArguments: "-applaunch 271590 -uilanguage " + Settings.ToMyLanguageString(Settings.LanguageSelected).ToLower());
+				}
 
-				//Process.Start(@"steam://rungameid/271590 -uilanguage french", "-uilanguage " + Settings.ToMyLanguageString(Settings.LanguageSelected).ToLower());
-
-				//HelperClasses.ProcessHandler.StartProcess(@"steam://rungameid/271590", pCommandLineArguments: "-uilanguage " + Settings.ToMyLanguageString(Settings.LanguageSelected).ToLower());
-
-
-				Process gtav = new Process();
-				gtav.StartInfo.FileName = Globals.SteamInstallPath.TrimEnd('\\')+@"\steam.exe";
-				gtav.StartInfo.Arguments = "-applaunch 271590 -uilanguage french";
-				gtav.Start();
 			}
 
 			// If Epic Games
 			else if (GameVersion == Settings.Retailers.Epic)
 			{
-				HelperClasses.Logger.Log("Trying to start Game normally through EpicGames.", 1);
-				HelperClasses.ProcessHandler.StartProcess(@"com.epicgames.launcher://apps/9d2d0eb64d5c44529cece33fe2a46482?action=launch&silent=true", pCommandLineArguments: "-uilanguage " + Settings.ToMyLanguageString(Settings.LanguageSelected).ToLower());
+				// If upgraded, launch through epic
+				if (InstallationState == InstallationStates.Upgraded)
+				{
+					HelperClasses.Logger.Log("Trying to start Game normally through EpicGames.", 1);
+					HelperClasses.ProcessHandler.StartProcess(@"com.epicgames.launcher://apps/9d2d0eb64d5c44529cece33fe2a46482?action=launch&silent=true", pCommandLineArguments: "-uilanguage " + Settings.ToMyLanguageString(Settings.LanguageSelected).ToLower());
+				}
+				// If downgraded launch through non retail
+				else
+				{
+					HelperClasses.ProcessHandler.StartGameNonRetail();
+				}
 			}
 
 			// If Rockstar
 			else
 			{
-				var proc = new Process
-				{
-					StartInfo = new ProcessStartInfo
-					{
-						FileName = "explorer.exe",
-						Arguments = @"F:\SteamLibrary\steamapps\common\Grand Theft Auto V\DirtFix.bat",
-						WorkingDirectory = @"F:\SteamLibrary\steamapps\common\Grand Theft Auto V",
-						UseShellExecute = true,
-						Verb = "runas",
-						WindowStyle = ProcessWindowStyle.Hidden
-					}
-				};
-				proc.Start();
-
-
-				//HelperClasses.Logger.Log("Trying to start Game normally through Rockstar. Im calling the exe like a fucking pleb...", 1);
-				//HelperClasses.ProcessHandler.StartProcess(Settings.GTAVInstallationPath.TrimEnd('\\') + @"\PlayGTAV.exe", pCommandLineArguments: "-uilanguage " + Settings.ToMyLanguageString(Settings.LanguageSelected).ToLower());
-				
-				
-				
-				//HelperClasses.ProcessHandler.RunAsDesktopUser(Settings.GTAVInstallationPath.TrimEnd('\\') + @"\PlayGTAV.exe", "-uilanguage " + Settings.ToMyLanguageString(Settings.LanguageSelected).ToLower());
+				// Launch through Non Retail regardless of anything
+				HelperClasses.ProcessHandler.StartGameNonRetail();
 			}
 
 			HelperClasses.Logger.Log("Game should be launched");

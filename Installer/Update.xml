@@ -1,21 +1,20 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <item>
-  <version>0.0.3.1</version>
-  <url>https://raw.githubusercontent.com/TwosHusbandS/Project-127/master/Installer/Project_127_Installer_V_0_0_3_1.exe</url>
-  <authuser>https://raw.githubusercontent.com/TwosHusbandS/Project-127/master/Installer/AuthUser.txt</authuser>
-  <zip></zip>
-  <zipversion>9</zipversion>
+  <comment>Remember to change this "internal" to "master"</comment>
+  <version>0.0.4.0</version>
+  <url>https://raw.githubusercontent.com/TwosHusbandS/Project-127/internal/Installer/Project_127_Installer_V_0_0_4_0.exe</url>
+  <authuser>https://raw.githubusercontent.com/TwosHusbandS/Project-127/internal/Installer/AuthUser.txt</authuser>
+  <DLLinkG>https://github.com/TwosHusbandS/Project-127/releases/download/V_Final/file.g</DLLinkG>
+  <DLLinkU>https://github.com/TwosHusbandS/Project-127/releases/download/V_Final/file.u</DLLinkU>
+  <DLLinkX>https://github.com/TwosHusbandS/Project-127/releases/download/V_Final/file.x</DLLinkX>
+  <zip>https://www.dl.dropboxusercontent.com/s/kfrh7zq5twya9b5/Project_127_Files_V11_Big.zip</zip>
+  <zipversion>11</zipversion>
   <comment>We need a "complete" ZIP above in a "zip" Tag, for old Versions. Atleast for now.</comment>
-  <zipmd5>e407b66755fb72a1e16519b911a83c86</zipmd5>
-  <zip0>https://www.dl.dropboxusercontent.com/s/t4tooiyqs1qwayu/Project_127_Files_V9.zip</zip0>
-  <zip1>https://www.dl.dropboxusercontent.com/s/t4tooiyqs1qwayu/Project_127_Files_V9.zip</zip1>
-  <zip2>https://www.dl.dropboxusercontent.com/s/t4tooiyqs1qwayu/Project_127_Files_V9.zip</zip2>
-  <zip3>https://www.dl.dropboxusercontent.com/s/t4tooiyqs1qwayu/Project_127_Files_V9.zip</zip3>
-  <zip4>https://www.dl.dropboxusercontent.com/s/t4tooiyqs1qwayu/Project_127_Files_V9.zip</zip4>
-  <zip5>https://www.dl.dropboxusercontent.com/s/t4tooiyqs1qwayu/Project_127_Files_V9.zip</zip5>
+  <zipmd5>adae10a44e5873244060177611da4b23</zipmd5>
+  <zip0>https://www.dl.dropboxusercontent.com/s/j64p0x2ioqhsr9n/Project_127_Files_V11_Small.zip</zip0>
+  <zip1>https://www.dl.dropboxusercontent.com/s/z4f44mztufrb02h/Project_127_Files_V11_Small.zip</zip1>
+  <zip2>https://www.dl.dropboxusercontent.com/s/tcd46pr87h49n0u/Project_127_Files_V11_Small.zip</zip2>
+  <zip3>https://www.dl.dropboxusercontent.com/s/7j3q09jdmhsx7rp/Project_127_Files_V11_Small.zip</zip3>
+  <zip4>https://www.dl.dropboxusercontent.com/s/yihmackyyov5xv0/Project_127_Files_V11_Small.zip</zip4>
+  <zip5>https://www.dl.dropboxusercontent.com/s/0zz3i462n1uff77/Project_127_Files_V11_Small.zip</zip5>
 </item>
-
-
-adae10a44e5873244060177611da4b23
-
-Hash of 11 Small

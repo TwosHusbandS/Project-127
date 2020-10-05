@@ -4,17 +4,17 @@ Main Documentation:
 Actual code (partially closed source) which authentificates, handles entitlement and launches the game is done by @dr490n with the help of other members of the core team like @Special For and @zCri
 Artwork, Design of GUI, GUI Behaviourehaviour, Colorchoices etc. by "@Hossel"
 Client by "@thS"
-Version: 0.0.3.9
+Version: 0.0.4.0
 
 Build Instructions:
 	Press CTRLF + F5, pray that nuget does its magic.
 
 Deploy Instructions:
 	Change Version Number a few Lines Above.
-	Change Version Numbner in both of the last lines in AssemblyInfo.cs
+	Change Version Number in both of the last lines in AssemblyInfo.cs
 	Check if BetaMode in Globals.cs is correct
 	Check if BuildInfo in Globals.cs is correct
-	Make sure app manifest is set to NOT require admin
+	Make sure app manifest is set TO require admin
 	Build this program in release
 	Build installer via Innosetup (Script is in \Installer\) [Change Version in Version and OutputName]
 	Change Version number and Installer Location in "\Installer\Update.xml"
@@ -30,7 +30,7 @@ General Files / Classes:
 		MainWindow.xaml.cs
 		Settings.xaml.cs
 			SettingsPartial.cs
-		SaveFileModder.xaml.cs
+		SaveFileHandler.xaml.cs
 		Popup.xaml.cs // Normal Popup (OK & OKERROR & YES/NO)
 		PopupDownload.xaml.cs // Popup for Downloading Files
 		PopupProgress.xaml.cs // Popup for large file operation with semi-optinal loading bar
@@ -64,66 +64,16 @@ General Comments and things one should be aware of (still finishing this list)
 
 Main To do:
 	- Things changed since last official release (not last commit)
-		-> Fix Typo in OpenFolderDialog of GTAV Path detection
-		-> Added Download ZIP Support for Mirrors
-		-> ProcessHandler Class
-		-> Removed some popups
-		-> Implemented Internal Mode (for internal testing of autoupdater and stuff)
-		-> Implemented "Broken" InstallationState
-		-> Changed Color for GTA V Label Foreground (Upgraded / Downgraded / Broken)
-		-> Fixed Bug for steam not being installed
-		-> Fixed Bug for Steam not showing you ingame
-		-> GTAV Language Setting
-		-> Popup for TextBox and ComboBox
-		-> Retail and Language Popup on InitImportantSettings
-		-> SaveFileHandler
-		-> Login Window Fix Spinning thing
-		-> Remember Credentials
-		-> Fix for Remember Me Setting
-		-> Import SaveFiles from original GTAV
-		-> Importing Settings from original GTAV
-		-> "OneDrive" / Crylic Char (fixed inside emu code by dragon)
-		-> Fixed the "everything else requirng admin rights" issue for some retailers
-		-> GTAV InGameNameChanger
 
 	-REMEMBER:
 		-> Release with admin mode manifest thingy...		
 		-> Fix Installer with everything (autolaunch app,include new files)
 		-> This requires admin the "proper" way of telling windows. Should fix zip file issues
-		-> TEST NEW DEPLOYMENT CONCEPT
-		-> TEST INTERNAL RELEASE SHIT
-		-> TEST NAME CHANGER, WITH NEW DRAGON BACKEND
-		-> TEST REMEMBER ME FUNCTION FROM DRAGON
-		-> TEST LANGUAGE SELECT
-		-> TEST SAVEFILEHANDLER
-		-> TEST IMPORTING SAVEFILES AND IMPORTING GTAV SETTINGS
-		-> TEST NEW LAUNCH METHODS ON EPIC, ROCKSTAR, STEAM ON DOWNGRADED
 					
 	- TO DO:
-		-> Launching for steam is done and works. (other programs dont require admin, command line args, shows steam as ingame) 
-
-		-> Rockstar (non retailer) version works. See DirtFix.bat and code for Retail in LauncherLogic. 
-			=> Test other links below to find a proper way of doing it, if not write methods and stuff for this "dirtfix" in class
-				("cd /d F:\Something" works :D, shoutout to dragon)
-
-		-> Need to do the same for epic and rockstar.
-		-> For epic try around a bit. Should be similar to steam. If not we have the choice of supporting ingame displaying or language
-
-		-> Give user settings if they want to be shown in game or not and respect their decision
-
-		-> ProcessHandler class broke opening notepad and explorer with arguments (for logfile and rightclick on path in settings)
-
-		https://stackoverflow.com/questions/11169431/how-to-start-a-new-process-without-administrator-privileges-from-a-process-with/47705108#47705108
-		https://docs.microsoft.com/en-us/dotnet/api/system.diagnostics.process.start?redirectedfrom=MSDN&view=netcore-3.1#System_Diagnostics_Process_Start_System_String_System_String_System_Security_SecureString_System_String_
-			(username)
-		https://stackoverflow.com/questions/2313553/process-start-with-different-credentials-with-uac-on
-		https://stackoverflow.com/questions/11169431/how-to-start-a-new-process-without-administrator-privileges-from-a-process-with/40501607#40501607
-		https://archive.codeplex.com/?p=uachelpers
-		https://docs.microsoft.com/en-us/dotnet/standard/io/how-to-use-named-pipes-for-network-interprocess-communication?redirectedfrom=MSDN
-		
-			-> Internal Testing
 
 	// NEXT PUBLIC RELEASE
+
 		-> $UpgradeFiles has downgrade files in them. Why? And how to Fix?
 		-> Core Affinity Shit
 		-> Figure out which files I need to distribute
@@ -281,12 +231,15 @@ namespace Project_127
 			if (Globals.InternalMode)
 			{
 				string msg = "We are in internal mode. I need testing on:\n" +
-					"" + "\n" +
-					"" + "\n" +
-					"" + "\n" +
-					"" + "\n" +
-					"" + "\n" +
-					"" + "\n" +
+					"NEW DEPLOYMENT CONCEPT" + "\n" +
+					"INTERNAL RELEASE SHIT" + "\n" +
+					"NAME CHANGER, WITH NEW DRAGON BACKEND" + "\n" +
+					"REMEMBER ME FUNCTION FROM DRAGON" + "\n" +
+					"LANGUAGE SELECT" + "\n" +
+					"AUTO HIGH PRIORITY" + "\n" +
+					"SAVEFILEHANDLER" + "\n" +
+					"IMPORTING SAVEFILES AND IMPORTING GTAV SETTINGS" + "\n" +
+					"NEW LAUNCH METHOD FOR ALL 6 COMBINATIONS (3 RETAILRS. UPGRADED / DOWNGRADED)" + "\n\n" +
 					"\nThanks. Appreciated. Have a great day : )";
 
 				new Popup(Popup.PopupWindowTypes.PopupOk, msg).ShowDialog();
@@ -294,8 +247,6 @@ namespace Project_127
 
 			HelperClasses.Logger.Log("Startup procedure (Constructor of MainWindow) completed.");
 			HelperClasses.Logger.Log("--------------------------------------------------------");
-
-			HelperClasses.Logger.Log("#" + HelperClasses.FileHandling.GetHashFromFile(@"C:\Users\ingow\Desktop\New folder\Project_127_Files_V9 - Copy\Project_127_Files_V11_Small.zip") + "#");
 		}
 
 
@@ -431,12 +382,12 @@ namespace Project_127
 		{
 			HelperClasses.Logger.Log("Downloading the 'big three' files");
 
-			string DLLinkG = @"https://github.com/TwosHusbandS/Project-127/releases/download/V_Final/file.g";
-			string DLLinkU = @"https://github.com/TwosHusbandS/Project-127/releases/download/V_Final/file.u";
-			string DLLinkX = @"https://github.com/TwosHusbandS/Project-127/releases/download/V_Final/file.x";
+			string DLLinkG = HelperClasses.FileHandling.GetXMLTagContent(HelperClasses.FileHandling.GetStringFromURL(Globals.URL_AutoUpdate), "DLLinkG");
+			string DLLinkU = HelperClasses.FileHandling.GetXMLTagContent(HelperClasses.FileHandling.GetStringFromURL(Globals.URL_AutoUpdate), "DLLinkU");
+			string DLLinkX = HelperClasses.FileHandling.GetXMLTagContent(HelperClasses.FileHandling.GetStringFromURL(Globals.URL_AutoUpdate), "DLLinkX");
 
-			HelperClasses.Logger.Log("Checking if gta5.exe exists locally",1);
-			if (HelperClasses.FileHandling.doesFileExist(LauncherLogic.DowngradeFilePath.TrimEnd('\\')  + @"\GTA5.exe"))
+			HelperClasses.Logger.Log("Checking if gta5.exe exists locally", 1);
+			if (HelperClasses.FileHandling.doesFileExist(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\GTA5.exe"))
 			{
 				HelperClasses.Logger.Log("It does and we dont need to download anything", 2);
 			}

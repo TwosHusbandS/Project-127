@@ -96,7 +96,7 @@ namespace Project_127
 		/// <summary>
 		/// Property of other Buildinfo. Will be in the top message of logs
 		/// </summary>
-		public static string BuildInfo = "Built 5, Ugly way of importing ZIP";
+		public static string BuildInfo = "Built 1, needs Internal Testing";
 
 		/// <summary>
 		/// Returns all Command Line Args as StringArray
@@ -154,6 +154,7 @@ namespace Project_127
 			{"EnableOnlyAutoStartProgramsWhenDowngraded", "True"},
 			{"Retailer", "Steam"},
 			{"LanguageSelected", "English"},
+			{"EnableDontLaunchThroughSteam", "false"},
 			{"InGameName", "HiMomImOnYoutube"},
 			{"EnableAutoSetHighPriority", "True" },
 			{"EnableAutoSteamCoreFix", "True" },
