@@ -44,7 +44,7 @@ namespace Project_127.HelperClasses
 		/// <param name="pFilter"></param>
 		/// <param name="pStartLocation"></param>
 		/// <returns></returns>
-		public static string OpenDialogExplorer(PathDialogType pPathDialogType, string pTitle, string pStartLocation, string pFilter = null)
+		public static string OpenDialogExplorer(PathDialogType pPathDialogType, string pTitle, string pStartLocation, bool pMultiSelect = false, string pFilter = null)
 		{
 			if (pPathDialogType == PathDialogType.File)
 			{
@@ -52,11 +52,11 @@ namespace Project_127.HelperClasses
 				myFileDialog.Filter = pFilter;
 				myFileDialog.InitialDirectory = pStartLocation;
 				myFileDialog.Title = pTitle;
-				myFileDialog.Multiselect = false;
+				myFileDialog.Multiselect = pMultiSelect;
 
 				myFileDialog.ShowDialog();
 
-				return myFileDialog.FileName;
+				return string.Join(",", myFileDialog.FileNames);
 			}
 			else if (pPathDialogType == PathDialogType.Folder)
 			{
@@ -263,7 +263,7 @@ namespace Project_127.HelperClasses
 			}
 			else
 			{
-				return null;
+				return new string[0];
 			}
 		}
 
@@ -290,6 +290,37 @@ namespace Project_127.HelperClasses
 			return rtrn;
 		}
 
+
+		/// <summary>
+		/// Gets the MD5 Hash of one file
+		/// </summary>
+		/// <param name="pFilePath"></param>
+		/// <returns></returns>
+		public static string GetHashFromFile(string pFilePath)
+		{
+			string rtrn = "";
+			if (doesFileExist(pFilePath))
+			{
+				try
+				{
+					using (var md5 = MD5.Create())
+					{
+						// hash contents
+						byte[] contentBytes = File.ReadAllBytes(pFilePath);
+						md5.TransformBlock(contentBytes, 0, contentBytes.Length, contentBytes, 0);
+						md5.TransformFinalBlock(new byte[0], 0, 0);
+						return BitConverter.ToString(md5.Hash).Replace("-", "").ToLower();
+					}
+				}
+				catch (Exception e)
+				{
+					HelperClasses.Logger.Log("Hashing of a single file failed." + e.ToString());
+				}
+
+
+			}
+			return rtrn;
+		}
 
 
 		/// <summary>
@@ -443,17 +474,19 @@ namespace Project_127.HelperClasses
 		/// <param name="pFilePath"></param>
 		public static void deleteFile(string pFilePath)
 		{
-			if (doesFileExist(pFilePath))
+			try
 			{
-				try
+
+				if (doesFileExist(pFilePath))
 				{
 					File.Delete(pFilePath);
+
 				}
-				catch (Exception e)
-				{
-					new Popup(Popup.PopupWindowTypes.PopupOkError, "Deleting File failed ('" + pFilePath + "').\nI suggest you restart the Program and contact me if it happens again.\n\nErrorMessage:\n" + e.ToString()).ShowDialog();
-					HelperClasses.Logger.Log("Deleting File failed ('" + pFilePath + "').", true, 0);
-				}
+			}
+			catch (Exception e)
+			{
+				new Popup(Popup.PopupWindowTypes.PopupOkError, "Deleting File failed ('" + pFilePath + "').\nI suggest you restart the Program and contact me if it happens again.\n\nErrorMessage:\n" + e.ToString()).ShowDialog();
+				HelperClasses.Logger.Log("Deleting File failed ('" + pFilePath + "').", true, 0);
 			}
 		}
 
@@ -560,7 +593,7 @@ namespace Project_127.HelperClasses
 			{
 				if (doesPathExist(pPath))
 				{
-				Directory.Delete(pPath, true);
+					Directory.Delete(pPath, true);
 				}
 			}
 			catch (Exception e)
@@ -575,9 +608,16 @@ namespace Project_127.HelperClasses
 		/// <param name="pFolderPath"></param>
 		public static void createPath(string pFolderPath)
 		{
-			if (!doesPathExist(pFolderPath))
+			try
 			{
-				Directory.CreateDirectory(pFolderPath);
+				if (!doesPathExist(pFolderPath))
+				{
+					Directory.CreateDirectory(pFolderPath);
+				}
+			}
+			catch (Exception e)
+			{
+				HelperClasses.Logger.Log("The code looked good to me. #SadFace. Crashing while creating Path ('" + pFolderPath + "'): " + e.ToString());
 			}
 		}
 

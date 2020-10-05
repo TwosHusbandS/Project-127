@@ -3,12 +3,14 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
+using GSF;
 
 namespace Project_127
 {
@@ -32,7 +34,8 @@ namespace Project_127
 		public enum InstallationStates
 		{
 			Upgraded,
-			Downgraded
+			Downgraded,
+			Unsure
 		}
 
 		/// <summary>
@@ -96,7 +99,14 @@ namespace Project_127
 				}
 				else
 				{
-					return InstallationStates.Upgraded;
+					if (SizeOfDowngradedGTAV > 0 && SizeOfDowngradedUPDATE > 0)
+					{
+						if (SizeOfGTAV != SizeOfDowngradedGTAV && SizeOfUpdate != SizeOfDowngradedUPDATE)
+						{
+							return InstallationStates.Upgraded;
+						}
+					}
+					return InstallationStates.Unsure;
 				}
 			}
 		}
@@ -135,6 +145,11 @@ namespace Project_127
 		/// Property of often used variable. (SupportFilePath)
 		/// </summary>
 		public static string SupportFilePath { get { return LauncherLogic.ZIPFilePath.TrimEnd('\\') + @"\Project_127_Files\SupportFiles\"; } }
+
+		/// <summary>
+		/// Property of often used variable. (SupportFilePath)
+		/// </summary>
+		public static string SaveFilesPath { get { return LauncherLogic.SupportFilePath.TrimEnd('\\') + @"\SaveFiles\"; } }
 
 		/// <summary>
 		/// Property of often used variable. (GTAVFilePath)
@@ -300,40 +315,10 @@ namespace Project_127
 			if (LauncherLogic.InstallationState == InstallationStates.Upgraded)
 			{
 				HelperClasses.Logger.Log("Installation State Upgraded Detected.", 1);
-
-				// If Steam
-				if (GameVersion == Settings.Retailers.Steam)
-				{
-					HelperClasses.Logger.Log("Trying to start Game normally through Steam.", 1);
-					Process gtav = new Process();
-					gtav.StartInfo.FileName = Globals.SteamInstallPath.TrimEnd('\\') + @"\steam.exe";
-					gtav.StartInfo.Arguments = "-applaunch 271590";
-					gtav.Start();
-				}
-
-				// If Epic Games
-				else if (GameVersion == Settings.Retailers.Epic)
-				{
-					HelperClasses.Logger.Log("Trying to start Game normally through EpicGames.", 1);
-					Process.Start(@"com.epicgames.launcher://apps/9d2d0eb64d5c44529cece33fe2a46482?action=launch&silent=true");
-				}
-
-				// If Rockstar
-				else
-				{
-					HelperClasses.Logger.Log("Trying to start Game normally through Rockstar.", 1);
-					Process.Start(Settings.GTAVInstallationPath.TrimEnd('\\') + @"\PlayGTAV.exe");
-				}
-
-				HelperClasses.Logger.Log("Upgraded Game should be launched");
-
-				PostLaunchEvents();
 			}
-
-			// If Downgraded
 			else if (LauncherLogic.InstallationState == InstallationStates.Downgraded)
 			{
-				HelperClasses.Logger.Log("Installation State Downgraded Detected", 1);
+				HelperClasses.Logger.Log("Installation State Downgraded Detected.", 1);
 
 				// If already Authed
 				if (AuthState == AuthStates.Auth)
@@ -367,17 +352,67 @@ namespace Project_127
 				// Generates Token needed to Launch Downgraded GTAV
 				HelperClasses.Logger.Log("Letting Dragon work his magic");
 				await ROSCommunicationBackend.GenToken();
-
-				// TO DO, Clean this Up, move to ProcessHandler HelperClass
-				HelperClasses.Logger.Log("Launching Game");
-				Process p = new Process();
-
-				p.StartInfo.FileName = Settings.GTAVInstallationPath.TrimEnd('\\') + @"\PlayGTAV.exe";
-				p.StartInfo.WorkingDirectory = Settings.GTAVInstallationPath.TrimEnd('\\');
-				p.Start();
-
-				PostLaunchEvents();
 			}
+			else
+			{
+				HelperClasses.Logger.Log("Installation State Broken");
+				HelperClasses.Logger.Log("    Size of GTA5.exe in GTAV Installation Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\GTA5.exe"));
+				HelperClasses.Logger.Log("    Size of GTA5.exe in Downgrade Files Folder: " + LauncherLogic.SizeOfDowngradedGTAV);
+				HelperClasses.Logger.Log("    Size of update.rpf in GTAV Installation Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\update\update.rpf"));
+				HelperClasses.Logger.Log("    Size of update.rpf in Downgrade Files Folder: " + LauncherLogic.SizeOfDowngradedUPDATE);
+
+				new Popup(Popup.PopupWindowTypes.PopupOkError, "Installation State is broken for some reason. Try to repair.");
+				return;
+			}
+
+
+			// If Steam
+			if (GameVersion == Settings.Retailers.Steam)
+			{
+				HelperClasses.Logger.Log("Trying to start Game normally through Steam.", 1);
+
+				// If we dont want to launch through Steam
+				if (Settings.EnableDontLaunchThroughSteam)
+				{
+					// Launch through non retail
+					HelperClasses.ProcessHandler.StartGameNonRetail();
+				}
+				else
+				{
+					// Launch through steam
+					HelperClasses.ProcessHandler.StartProcess(Globals.SteamInstallPath.TrimEnd('\\') + @"\steam.exe", pCommandLineArguments: "-applaunch 271590 -uilanguage " + Settings.ToMyLanguageString(Settings.LanguageSelected).ToLower());
+				}
+
+			}
+
+			// If Epic Games
+			else if (GameVersion == Settings.Retailers.Epic)
+			{
+				// If upgraded, launch through epic
+				if (InstallationState == InstallationStates.Upgraded)
+				{
+					HelperClasses.Logger.Log("Trying to start Game normally through EpicGames.", 1);
+
+					// This does not work with custom wrapper StartProcess in ProcessHandler...i guess this is fine
+					Process.Start(@"com.epicgames.launcher://apps/9d2d0eb64d5c44529cece33fe2a46482?action=launch&silent=true");
+				}
+				// If downgraded launch through non retail
+				else
+				{
+					HelperClasses.ProcessHandler.StartGameNonRetail();
+				}
+			}
+
+			// If Rockstar
+			else
+			{
+				// Launch through Non Retail re
+				HelperClasses.ProcessHandler.StartGameNonRetail();
+			}
+
+			HelperClasses.Logger.Log("Game should be launched");
+
+			PostLaunchEvents();
 		}
 
 
@@ -393,7 +428,7 @@ namespace Project_127
 			if (Settings.EnableAutoSetHighPriority)
 			{
 				HelperClasses.Logger.Log("Trying to Set GTAV Process Priority to High");
-				Process[] processes = Process.GetProcessesByName("gta5");
+				Process[] processes = HelperClasses.ProcessHandler.GetProcesses("gta5");
 				HelperClasses.Logger.Log(processes.Length + " Processes containing 'gta5' found");
 				try
 				{
@@ -445,18 +480,23 @@ namespace Project_127
 
 
 			string[] myFiles = HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(LauncherLogic.ZIPFilePath.TrimEnd('\\') + @"\Project_127_Files");
-			foreach (string myFile in myFiles)
-			{
-				if (!myFile.Contains("UpgradeFiles"))
-				{
-					// Deleting all Files which are NOT in the UpgradeFiles Folder of the ZIP Extract Path
-					HelperClasses.FileHandling.deleteFile(myFile);
-				}
-			}
+
+
+
+			// Dont need this for now, lets keep it in case its needed again
+			//foreach (string myFile in myFiles)
+			//{
+			//	if (!myFile.Contains("UpgradeFiles"))
+			//	{
+			//		// Deleting all Files which are NOT in the UpgradeFiles Folder of the ZIP Extract Path
+			//		HelperClasses.FileHandling.deleteFile(myFile);
+			//	}
+			//}
 
 			// Actually Extracting the ZIP File
 			HelperClasses.Logger.Log("Extracting ZIP File: '" + pZipFileLocation + "' to the path: '" + LauncherLogic.ZIPFilePath + "'");
 			new PopupProgress(PopupProgress.ProgressTypes.ZIPFile, pZipFileLocation).ShowDialog();
+
 
 			// Deleting the ZIP File
 			if (deleteFileAfter)

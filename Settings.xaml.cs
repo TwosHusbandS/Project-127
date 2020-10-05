@@ -1,8 +1,10 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -37,6 +39,12 @@ namespace Project_127
 			// Needed for GUI Shit
 			combox_Set_Retail.ItemsSource = Enum.GetValues(typeof(Retailers)).Cast<Retailers>();
 			combox_Set_Retail.SelectedItem = Settings.Retailer;
+
+			combox_Set_LanguageSelected.ItemsSource = Enum.GetValues(typeof(Languages)).Cast<Languages>();
+			combox_Set_LanguageSelected.SelectedItem = Settings.LanguageSelected;
+
+			tb_Set_InGameName.Text = Settings.InGameName;
+
 			this.DataContext = this;
 		}
 
@@ -53,6 +61,11 @@ namespace Project_127
 			HelperClasses.Logger.Log("InitImportantSettings when Settings Reset or FirstLaunch or Paths wrong on Launch");
 			HelperClasses.Logger.Log("Playing the GTAV Guessing Game");
 
+
+			RegistryKey myRKTemp1 = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64).OpenSubKey(@"SOFTWARE\WOW6432Node\Rockstar Games\GTAV");
+			RegistryKey myRKTemp2 = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64).OpenSubKey(@"SOFTWARE\Rockstar Games\Grand Theft Auto V");
+			RegistryKey myRKTemp3 = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64).OpenSubKey(@"SOFTWARE\WOW6432Node\Rockstar Games\Grand Theft Auto V");
+
 			// Used to not display a popup at the end if it was set during guessing
 			bool ChangedRetailerAlready = false;
 
@@ -60,7 +73,10 @@ namespace Project_127
 			List<string> GTAVPathGuesses = new List<string>();
 			GTAVPathGuesses.Add(LauncherLogic.GetGTAVPathMagicSteam());
 			GTAVPathGuesses.Add(LauncherLogic.GetGTAVPathMagicRockstar());
-			GTAVPathGuesses.Add(LauncherLogic.GetGTAVPathMagicEpic());
+			GTAVPathGuesses.Add(LauncherLogic.GetGTAVPathMagicEpic());			
+			GTAVPathGuesses.Add(HelperClasses.RegeditHandler.GetValue(myRKTemp1,"InstallFolderSteam"));
+			GTAVPathGuesses.Add(HelperClasses.RegeditHandler.GetValue(myRKTemp2,"InstallFolderEpic"));
+			GTAVPathGuesses.Add(HelperClasses.RegeditHandler.GetValue(myRKTemp3,"InstallFolder"));
 			GTAVPathGuesses.Add(Globals.ProjectInstallationPath.TrimEnd('\\').Substring(0, Globals.ProjectInstallationPath.LastIndexOf('\\')));
 			GTAVPathGuesses.Add(Globals.ProjectInstallationPath.TrimEnd('\\'));
 			GTAVPathGuesses.Add(Settings.ZIPExtractionPath.TrimEnd('\\').Substring(0, Globals.ProjectInstallationPath.LastIndexOf('\\')));
@@ -181,7 +197,31 @@ namespace Project_127
 
 			if (!ChangedRetailerAlready)
 			{
-				new Popup(Popup.PopupWindowTypes.PopupOk, "The default Retailer-Setting is Steam.\nChange this to Rockstar or Epic in the Settings if needed.").ShowDialog();
+				HelperClasses.Logger.Log("Have not changed Retailer already, will throw Popup");
+				Popup myPopupRetailer = new Popup(Popup.PopupWindowTypes.PopupOkComboBox, "Retailer of your GTA V Installation?", pEnum: Retailer);
+				myPopupRetailer.ShowDialog();
+				if (myPopupRetailer.DialogResult == true)
+				{
+					HelperClasses.Logger.Log("User picked '" + myPopupRetailer.MyReturnString + "' as their Retailer");
+					Retailer = (Retailers)System.Enum.Parse(typeof(Retailers), myPopupRetailer.MyReturnString);
+				}
+				else
+				{
+					HelperClasses.Logger.Log("Dialog Result is false.");
+				}
+			}
+
+			HelperClasses.Logger.Log("Throwing Popup for Language Selection");
+			Popup myPopup = new Popup(Popup.PopupWindowTypes.PopupOkComboBox, "Language you want as your downgraded GTA V Language?", pEnum: LanguageSelected);
+			myPopup.ShowDialog();
+			if (myPopup.DialogResult == true)
+			{
+				HelperClasses.Logger.Log("User picked '" + myPopup.MyReturnString + "' as their Language");
+				LanguageSelected = (Languages)System.Enum.Parse(typeof(Languages), myPopup.MyReturnString);
+			}
+			else
+			{
+				HelperClasses.Logger.Log("Dialog Result is false.");
 			}
 
 			HelperClasses.Logger.Log("LogInfo - GTAVInstallationPath: '" + Settings.GTAVInstallationPath + "'");
@@ -199,7 +239,7 @@ namespace Project_127
 		public static void SetGTAVPathManually(bool CheckIfDefaultForCopyHardlinkNeedsChanging = true)
 		{
 			HelperClasses.Logger.Log("Asking User for GTA V Installation path");
-			string GTAVInstallationPathUserChoice = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.Folder, "Pick the Folder which contains your GTAV.exe", @"C:\");
+			string GTAVInstallationPathUserChoice = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.Folder, "Pick the Folder which contains your GTA5.exe", @"C:\");
 			HelperClasses.Logger.Log("Users picked path is: '" + GTAVInstallationPathUserChoice + "'");
 
 			while (!(LauncherLogic.IsGTAVInstallationPathCorrect(GTAVInstallationPathUserChoice, false)))
@@ -218,7 +258,7 @@ namespace Project_127
 					Settings.GTAVInstallationPath = GTAVInstallationPathUserChoice;
 					break;
 				}
-				GTAVInstallationPathUserChoice = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.Folder, "Pick the Folder which contains your GTAV.exe", @"C:\");
+				GTAVInstallationPathUserChoice = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.Folder, "Pick the Folder which contains your GTA5.exe", @"C:\");
 				HelperClasses.Logger.Log("New Users picked path is: '" + GTAVInstallationPathUserChoice + "'");
 			}
 			HelperClasses.Logger.Log("Picked path '" + GTAVInstallationPathUserChoice + "'´is valid and will be set as Settings.GTAVInstallationPath.");
@@ -253,7 +293,7 @@ namespace Project_127
 		/// <param name="e"></param>
 		private void btn_Set_GTAVInstallationPath_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
 		{
-			Process.Start("explorer.exe", Settings.GTAVInstallationPath);
+			HelperClasses.ProcessHandler.StartProcess(@"C:\Windows\explorer.exe", pCommandLineArguments: Settings.GTAVInstallationPath);
 		}
 
 
@@ -265,6 +305,17 @@ namespace Project_127
 		private void combox_Set_Retail_SelectionChanged(object sender, SelectionChangedEventArgs e)
 		{
 			Retailer = (Retailers)System.Enum.Parse(typeof(Retailers), combox_Set_Retail.SelectedItem.ToString());
+		}
+
+
+		/// <summary>
+		/// Event that gets triggered when the ComboBox of Languages changed.
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void combox_Set_LanguageSelected_SelectionChanged(object sender, SelectionChangedEventArgs e)
+		{
+			LanguageSelected = (Languages)System.Enum.Parse(typeof(Languages), combox_Set_LanguageSelected.SelectedItem.ToString());
 		}
 
 
@@ -367,9 +418,67 @@ namespace Project_127
 		}
 
 
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void btn_Set_ZIPExtractionPath_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
 		{
-			Process.Start("explorer.exe", Settings.ZIPExtractionPath);
+			HelperClasses.ProcessHandler.StartProcess(@"C:\Windows\explorer.exe", pCommandLineArguments: Settings.ZIPExtractionPath);
+		}
+
+
+
+		/// <summary>
+		/// Called then the TextBox of Ingame looses Focus
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void tb_Set_InGameName_LostFocus(object sender, RoutedEventArgs e)
+		{
+			string txt = Regex.Replace(tb_Set_InGameName.Text, @"[^0-9A-Za-z_]", @"");
+			if (String.IsNullOrEmpty(txt)) { txt = "HiMomImOnYoutube"; }
+			if (txt.Length < 3) { txt = "HiMomImOnYoutube"; }
+			if (txt.Length > 16) { txt = txt.Substring(0, 16); }
+			Settings.InGameName = txt;
+			tb_Set_InGameName.Text = txt;
+		}
+
+		/// <summary>
+		/// Called when user wants to import settings
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void btn_Set_ImportGTAVSettings_Click(object sender, RoutedEventArgs e)
+		{
+			string MyFolderReturn = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.Folder, "Pick your profile folder you want to copy all settings from", Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) +
+								@"\Rockstar Games\GTA V\Profiles");
+
+			// Close this if return is empty or ""
+			if (String.IsNullOrEmpty(MyFolderReturn))
+			{
+				return;
+			}
+
+			string ExistingPCSettingsBinPath = MyFolderReturn.TrimEnd('\\') + @"\pc_settings.bin";
+			string correctPCSettingsBinPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) +
+											@"\Rockstar Games\GTA V\Profiles\Project127\GTA V\0F74F4C4\pc_settings.bin";
+			string ExistingControlUserXmlPath = MyFolderReturn.TrimEnd('\\') + @"\control\user.xml";
+			string correctControlUserXmlPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) +
+											@"\Rockstar Games\GTA V\Profiles\Project127\GTA V\0F74F4C4\control\user.xml";
+
+			if (HelperClasses.FileHandling.doesFileExist(ExistingPCSettingsBinPath))
+			{
+				HelperClasses.FileHandling.deleteFile(correctPCSettingsBinPath);
+				HelperClasses.FileHandling.copyFile(ExistingPCSettingsBinPath, correctPCSettingsBinPath);
+			}
+
+			if (HelperClasses.FileHandling.doesFileExist(ExistingControlUserXmlPath))
+			{
+				HelperClasses.FileHandling.deleteFile(correctControlUserXmlPath);
+				HelperClasses.FileHandling.copyFile(ExistingControlUserXmlPath, correctControlUserXmlPath);
+			}
 		}
 
 
@@ -396,6 +505,8 @@ namespace Project_127
 			cb_Set_CopyFilesInsteadOfHardlinking.IsChecked = Settings.EnableCopyFilesInsteadOfHardlinking;
 			cb_Set_EnablePreOrderBonus.IsChecked = Settings.EnablePreOrderBonus;
 			combox_Set_Retail.SelectedItem = Settings.Retailer;
+			combox_Set_LanguageSelected.SelectedItem = Settings.LanguageSelected;
+			tb_Set_InGameName.Text = Settings.InGameName;
 			cb_Set_AutoSetHighPriority.IsChecked = Settings.EnableAutoSetHighPriority;
 			//cb_Set_OnlyAutoStartProgramsWhenDowngraded.IsChecked = Settings.EnableOnlyAutoStartProgramsWhenDowngraded;
 			//btn_Set_PathFPSLimiter.Content = Settings.PathFPSLimiter;
@@ -424,7 +535,6 @@ namespace Project_127
 		{
 			DragMove(); // Pre-Defined Method
 		}
-
 
 	} // End of Class
 } // End of Namespace

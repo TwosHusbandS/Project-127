@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Project 1.27"
-#define MyAppVersion "0.0.3.1"
+#define MyAppVersion "0.0.4.1"
 #define MyAppPublisher "Project 1.27 Inc."
 #define MyAppURL "https://github.com/TwosHusbandS/Project-127/blob/master/README.md"
 #define MyAppExeName "Project 1.27.exe"
@@ -25,7 +25,7 @@ AllowNoIcons=yes
 ;PrivilegesRequired=lowest
 PrivilegesRequiredOverridesAllowed=dialog
 OutputDir=C:\Users\ingow\source\repos\Project-127\Installer
-OutputBaseFilename=Project_127_Installer_V_0_0_3_1
+OutputBaseFilename=Project_127_Installer_V_0_0_4_1
 SetupIconFile=C:\Users\ingow\source\repos\Project-127\Artwork\icon.ico
 Compression=lzma
 SolidCompression=yes
@@ -57,9 +57,12 @@ Source: "C:\Users\ingow\source\repos\Project-127\bin\x64\Release\CefSharp.Wpf.pd
 Source: "C:\Users\ingow\source\repos\Project-127\bin\x64\Release\CefSharp.Wpf.XML"; DestDir: "{app}"; Flags: ignoreversion
 Source: "C:\Users\ingow\source\repos\Project-127\bin\x64\Release\CefSharp.XML"; DestDir: "{app}"; Flags: ignoreversion
 Source: "C:\Users\ingow\source\repos\Project-127\bin\x64\Release\chrome_elf.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\Users\ingow\source\repos\Project-127\bin\x64\Release\CredentialManagement.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "C:\Users\ingow\source\repos\Project-127\bin\x64\Release\d3dcompiler_47.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "C:\Users\ingow\source\repos\Project-127\bin\x64\Release\debug.log"; DestDir: "{app}"; Flags: ignoreversion
 Source: "C:\Users\ingow\source\repos\Project-127\bin\x64\Release\devtools_resources.pak"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\Users\ingow\source\repos\Project-127\bin\x64\Release\GSF.Core.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\Users\ingow\source\repos\Project-127\bin\x64\Release\GSF.Core.xml"; DestDir: "{app}"; Flags: ignoreversion
 Source: "C:\Users\ingow\source\repos\Project-127\bin\x64\Release\icudtl.dat"; DestDir: "{app}"; Flags: ignoreversion
 Source: "C:\Users\ingow\source\repos\Project-127\bin\x64\Release\libcef.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "C:\Users\ingow\source\repos\Project-127\bin\x64\Release\libEGL.dll"; DestDir: "{app}"; Flags: ignoreversion

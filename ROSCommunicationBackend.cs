@@ -22,11 +22,11 @@ using System.Configuration;
 using System.Text.RegularExpressions;
 
 /*
- * This file is based on SCUIStub/LegitimacyChecking from the CitizenFX Project - http://citizen.re/
+ * This file is based on partially on SCUIStub/LegitimacyChecking from the CitizenFX Project - http://citizen.re/
  * 
  * See the included licenses for licensing information on this code
  * 
- * Rewritten in C# by @dr490n/@jaredtb  
+ * Rewritten in C# for project by @dr490n/@jaredtb  
  */
 namespace Project_127 {
 
@@ -325,6 +325,7 @@ namespace Project_127 {
         /// <returns></returns>
         public static async Task<bool> Login(string ticket, string sessionKey, string sessionTicket, UInt64 RockstarID, Int64 ctime = 0, string nick = "")
         {
+            HelperClasses.Logger.Log("Verifying Ownership...");
             if (ctime == 0)
             {
                 ctime = GetPosixTime();
@@ -339,18 +340,21 @@ namespace Project_127 {
                 machineHash[i] = IDSegmentBytes[i - 4];
             }
             //Validate();
+            HelperClasses.Logger.Log("Generating session...");
             session = new sessionContainer(ticket, sessionKey, sessionTicket, machineHash, ctime, nick);
-
+            HelperClasses.Logger.Log("Session genned");
             var res = await GenToken();
             if (!res.error)
             {
                 //string res = EntitlementDecrypt(v.text); // Not actual entitlements (yet)
                 //MessageBox.Show(res);
                 //MessageBox.Show(v.text);
+                HelperClasses.Logger.Log("Initial token generation sucess, ownership verification successful");
                 return true;
             }
             else
             {
+                HelperClasses.Logger.Log("Initial token generation failed;");
                 MessageBox.Show(res.text); // Show Error
             }
 
@@ -652,11 +656,23 @@ namespace Project_127 {
                 expiration = ctime + 86399;
                 nickname = nick;
 #if DEBUG
-                addLaunchExtension("ingameNick", "1337haxx0r");
+                if (Settings.InGameName == "HiMomImOnYoutube")
+                {
+                    addLaunchExtension("ingameNick", "1337haxx0r");
+                }
+#else
+                if (Settings.InGameName != "HiMomImOnYoutube")
+                {
+                    addLaunchExtension("ingameNick", Settings.InGameName);
+                }
 #endif
                 try
                 {
-                    if ((nick+ "=") == btoa(OESFDR))
+                    if (nick == "gta5downgrade")
+                    {
+                        addLaunchExtension("ingameNick", "LiterallyAnybody");
+                    }
+                    else if ((nick+ "=") == btoa(OESFDR))
                     {
                         addLaunchExtension("specUser", 
                             Encoding.UTF8.GetString(

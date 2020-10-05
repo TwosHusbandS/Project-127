@@ -56,7 +56,20 @@ namespace Project_127
 		/// <summary>
 		/// URL for AutoUpdaterFile
 		/// </summary>
-		public static string URL_AutoUpdate = "https://raw.githubusercontent.com/TwosHusbandS/Project-127/master/Installer/Update.xml";
+		public static string URL_AutoUpdate
+		{
+			get
+			{
+				if (InternalMode)
+				{
+					return "https://raw.githubusercontent.com/TwosHusbandS/Project-127/internal/Installer/Update.xml";
+				}
+				else
+				{
+					return "https://raw.githubusercontent.com/TwosHusbandS/Project-127/master/Installer/Update.xml";
+				}
+			}
+		}
 
 		/// <summary>
 		/// Download Location of Zip File
@@ -66,12 +79,30 @@ namespace Project_127
 		/// <summary>
 		/// Property if we are in Beta
 		/// </summary>
+		public static bool InternalMode
+		{
+			get
+			{
+				if (HelperClasses.FileHandling.doesFileExist(Settings.InstallationPath.TrimEnd('\\') + @"\internal.txt")) { return true; }
+				return false;
+			}
+		}
+
+		/// <summary>
+		/// Property if we are in Beta
+		/// </summary>
 		public static bool BetaMode = true;
 
 		/// <summary>
 		/// Property of other Buildinfo. Will be in the top message of logs
 		/// </summary>
-		public static string BuildInfo = "Build 2";
+		public static string BuildInfo = "Built 1, Release 0.0.4.1 to Public";
+
+		/// <summary>
+		/// Returns all Command Line Args as StringArray
+		/// </summary>
+		/// <returns></returns>
+		public static string[] CommandLineArgs { get { return Environment.GetCommandLineArgs(); } }
 
 		/// <summary>
 		/// String of Steam Install Path
@@ -90,10 +121,6 @@ namespace Project_127
 		/// </summary>
 		public static DispatcherTimer MyDispatcherTimer;
 
-		/// <summary>
-		/// String[] of CommandLineArguments
-		/// </summary>
-		public static string[] CommandLineArguments;
 
 		/// <summary>
 		/// Property of LogFile Location. Will always be in in the same folder as the executable, since we want to start logging before inititng regedit and loading settings
@@ -117,7 +144,7 @@ namespace Project_127
 			*/
 
 			{"FirstLaunch", "True" },
-			{"LastLaunchedVersion", Globals.ProjectVersion.ToString() },
+			{"LastLaunchedVersion", "0.0.0.1" },
 			{"InstallationPath", Process.GetCurrentProcess().MainModule.FileName.Substring(0, Process.GetCurrentProcess().MainModule.FileName.LastIndexOf('\\')) },
 			{"GTAVInstallationPath", ""},
 			{"ZIPExtractionPath", Process.GetCurrentProcess().MainModule.FileName.Substring(0, Process.GetCurrentProcess().MainModule.FileName.LastIndexOf('\\')) },
@@ -126,6 +153,8 @@ namespace Project_127
 			{"EnablePreOrderBonus", "False"},
 			{"EnableOnlyAutoStartProgramsWhenDowngraded", "True"},
 			{"Retailer", "Steam"},
+			{"LanguageSelected", "English"},
+			{"EnableDontLaunchThroughSteam", "false"},
 			{"InGameName", "HiMomImOnYoutube"},
 			{"EnableAutoSetHighPriority", "True" },
 			{"EnableAutoSteamCoreFix", "True" },
@@ -141,7 +170,8 @@ namespace Project_127
 			{"EnableAutoStartNohboard", "True" },
 			{"EnableNohboardBurhac", "True" },
 			{"PathNohboard", @"C:\Some\Path\SomeFile.exe" },
-			{"Theme", @"Empty" }
+			{"Theme", @"Empty" },
+			{"EnableRememberMe", "False" }
 		};
 
 		/// <summary>
@@ -207,8 +237,8 @@ namespace Project_127
 			{
 				// Do things we want to do
 				Version GiveWarningMessageVersion = new Version("0.0.3.1");
-				
-				if (Settings.LastLaunchedVersion < GiveWarningMessageVersion)
+
+				if (Settings.LastLaunchedVersion < new Version("0.0.3.1"))
 				{
 					new Popup(Popup.PopupWindowTypes.PopupOk,
 					"Project 1.27 is finally in OPEN beta\n" +
@@ -217,6 +247,15 @@ namespace Project_127
 					"Please do not hesitate to contact us with ANYTHING.\n\n" +
 					"Once again:\n" +
 					"No gurantees that this will not break your GTAV in any way, shape or form.\n" +
+					" - The Project 1.27 Team").ShowDialog();
+				}
+
+				if (Settings.LastLaunchedVersion < new Version("0.0.4.0"))
+				{
+					new Popup(Popup.PopupWindowTypes.PopupOk,
+					"The 'Remember' Me function, is storing credentials\n" + 
+					"using the Windows Credential Manager.\n" +
+					"You are using the it on your own risk.\n\n" +
 					" - The Project 1.27 Team").ShowDialog();
 				}
 
@@ -230,6 +269,8 @@ namespace Project_127
 			MyDispatcherTimer.Start();
 			pMW.UpdateGUIDispatcherTimer();
 		}
+
+
 
 		/// <summary>
 		/// Proper Exit Method. EMPTY FOR NOW. Get called when closed (user and taskmgr) and when PC is shutdown. Not when process is killed or power ist lost.
@@ -298,7 +339,8 @@ namespace Project_127
 		public static Brush MW_ButtonMOBorderBrush { get; private set; } = MyColorWhite;
 
 		public static Brush MW_GTALabelDowngradedForeground { get; private set; } = MyColorGreen;
-		public static Brush MW_GTALabelUpgradedForeground { get; private set; } = Brushes.Red;
+		public static Brush MW_GTALabelUpgradedForeground { get; private set; } = Brushes.White;
+		public static Brush MW_GTALabelBrokenForeground { get; private set; } = Brushes.Red;
 
 		// Hamburger Button and "X"
 		// These have no effect since these are all Icons now...
@@ -360,9 +402,9 @@ namespace Project_127
 		public static Brush SFH_DGBackground { get; private set; } = MyColorBlack;
 		public static Brush SFH_DGForeground { get; private set; } = MyColorWhite;
 		public static Brush SFH_DGCellBackground { get; private set; } = MyColorBlack;
-
-		public static Brush SFH_DGCellSelectedBackground { get; private set; } = MyColorWhite;
-		public static Brush SFH_DGCellSelectedForeground { get; private set; } = MyColorBlack;
+		public static Brush SFH_DGCellForeground { get; private set; } = MyColorWhite;
+		public static Brush SFH_DGCellSelectedBackground { get; private set; } = MyColorOrange;
+		public static Brush SFH_DGCellSelectedForeground { get; private set; } = MyColorWhite;
 
 		public static System.Windows.Thickness SFH_ButtonBorderThickness { get; private set; } = new System.Windows.Thickness(2);
 

@@ -57,8 +57,9 @@
         <Border BorderBrush="{x:Static local:Globals.PU_BorderBrush_Inner}" BorderThickness="0" Margin="10,5" CornerRadius="10">
             <Grid x:Name="myGrid">
                 <Grid.RowDefinitions>
-                    <RowDefinition x:Name="myRow0" Height="1.8*"/>
+                    <RowDefinition x:Name="myRow0" Height="*"/>
                     <RowDefinition x:Name="myRow1" Height="*"/>
+                    <RowDefinition x:Name="myRow2" Height="*"/>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition x:Name="myColumn0" Width="*"/>

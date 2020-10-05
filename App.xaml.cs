@@ -26,7 +26,7 @@ namespace Project_127
 
 		private void Application_Startup(object sender, StartupEventArgs e)
 		{
-			Globals.CommandLineArguments = e.Args;
+			
 		}
 	}
 }
