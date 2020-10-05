@@ -15,9 +15,9 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Web;
 using System.Windows.Documents.Serialization;
+//using System.Text.Json;
 using System.Xml.XPath;
 using System.IO;
-using System.Text.Json;
 using System.Web.Script.Serialization;
 using System.Drawing;
 using CefSharp.Wpf.Example.Handlers;
@@ -461,6 +461,10 @@ document.addEventListener('input', rememberMeHandler);
                 var jsond = json.Deserialize<Dictionary<String, String>>(message[1]);
                 if (jsond["remember"] == "true")
                 {
+                    if (jsond["pass"] == "")
+                    {
+                        return;
+                    }
                     passField = jsond["pass"];
                     emField = jsond["email"];
                     if (!Settings.EnableRememberMe)
