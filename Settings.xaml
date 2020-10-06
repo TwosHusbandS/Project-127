@@ -8,7 +8,7 @@
         mc:Ignorable="d"
         Title="Settings" Height="600" Width="620"        
         WindowStyle="None" 
-        AllowsTransparency="True" 
+        AllowsTransparency="False" 
         MouseLeftButtonDown="Window_MouseLeftButtonDown" 
         WindowStartupLocation="CenterScreen"
         ResizeMode="CanMinimize"
