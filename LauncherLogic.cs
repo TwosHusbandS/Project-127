@@ -3,12 +3,14 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
+using GSF;
 
 namespace Project_127
 {
@@ -367,25 +369,45 @@ namespace Project_127
 			// If Steam
 			if (GameVersion == Settings.Retailers.Steam)
 			{
-				Globals.DebugPopup("Got here");
 				HelperClasses.Logger.Log("Trying to start Game normally through Steam.", 1);
-				Process.Start(@"steam://rungameid/271590", "-uilanguage " + Settings.ToMyLanguageString(Settings.LanguageSelected).ToLower());
-				//HelperClasses.ProcessHandler.StartProcess(@"steam://rungameid/271590", pCommandLineArguments: "-uilanguage " + Settings.ToMyLanguageString(Settings.LanguageSelected).ToLower());
+
+				// If we dont want to launch through Steam
+				if (Settings.EnableDontLaunchThroughSteam)
+				{
+					// Launch through non retail
+					HelperClasses.ProcessHandler.StartGameNonRetail();
+				}
+				else
+				{
+					// Launch through steam
+					HelperClasses.ProcessHandler.StartProcess(Globals.SteamInstallPath.TrimEnd('\\') + @"\steam.exe", pCommandLineArguments: "-applaunch 271590 -uilanguage " + Settings.ToMyLanguageString(Settings.LanguageSelected).ToLower());
+				}
+
 			}
 
 			// If Epic Games
 			else if (GameVersion == Settings.Retailers.Epic)
 			{
-				HelperClasses.Logger.Log("Trying to start Game normally through EpicGames.", 1);
-				HelperClasses.ProcessHandler.StartProcess(@"com.epicgames.launcher://apps/9d2d0eb64d5c44529cece33fe2a46482?action=launch&silent=true", pCommandLineArguments: "-uilanguage " + Settings.ToMyLanguageString(Settings.LanguageSelected).ToLower());
+				// If upgraded, launch through epic
+				if (InstallationState == InstallationStates.Upgraded)
+				{
+					HelperClasses.Logger.Log("Trying to start Game normally through EpicGames.", 1);
+
+					// This does not work with custom wrapper StartProcess in ProcessHandler...i guess this is fine
+					Process.Start(@"com.epicgames.launcher://apps/9d2d0eb64d5c44529cece33fe2a46482?action=launch&silent=true");
+				}
+				// If downgraded launch through non retail
+				else
+				{
+					HelperClasses.ProcessHandler.StartGameNonRetail();
+				}
 			}
 
 			// If Rockstar
 			else
 			{
-				HelperClasses.Logger.Log("Trying to start Game normally through Rockstar. Im calling the exe like a fucking pleb...", 1);
-				HelperClasses.ProcessHandler.StartProcess(Settings.GTAVInstallationPath.TrimEnd('\\') + @"\PlayGTAV.exe", pCommandLineArguments: "-uilanguage " + Settings.ToMyLanguageString(Settings.LanguageSelected).ToLower());
-				//HelperClasses.ProcessHandler.RunAsDesktopUser(Settings.GTAVInstallationPath.TrimEnd('\\') + @"\PlayGTAV.exe", "-uilanguage " + Settings.ToMyLanguageString(Settings.LanguageSelected).ToLower());
+				// Launch through Non Retail re
+				HelperClasses.ProcessHandler.StartGameNonRetail();
 			}
 
 			HelperClasses.Logger.Log("Game should be launched");
@@ -460,6 +482,7 @@ namespace Project_127
 			string[] myFiles = HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(LauncherLogic.ZIPFilePath.TrimEnd('\\') + @"\Project_127_Files");
 
 
+
 			// Dont need this for now, lets keep it in case its needed again
 			//foreach (string myFile in myFiles)
 			//{
@@ -473,6 +496,7 @@ namespace Project_127
 			// Actually Extracting the ZIP File
 			HelperClasses.Logger.Log("Extracting ZIP File: '" + pZipFileLocation + "' to the path: '" + LauncherLogic.ZIPFilePath + "'");
 			new PopupProgress(PopupProgress.ProgressTypes.ZIPFile, pZipFileLocation).ShowDialog();
+
 
 			// Deleting the ZIP File
 			if (deleteFileAfter)

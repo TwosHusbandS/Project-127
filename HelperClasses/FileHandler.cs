@@ -474,17 +474,19 @@ namespace Project_127.HelperClasses
 		/// <param name="pFilePath"></param>
 		public static void deleteFile(string pFilePath)
 		{
-			if (doesFileExist(pFilePath))
+			try
 			{
-				try
+
+				if (doesFileExist(pFilePath))
 				{
 					File.Delete(pFilePath);
+
 				}
-				catch (Exception e)
-				{
-					new Popup(Popup.PopupWindowTypes.PopupOkError, "Deleting File failed ('" + pFilePath + "').\nI suggest you restart the Program and contact me if it happens again.\n\nErrorMessage:\n" + e.ToString()).ShowDialog();
-					HelperClasses.Logger.Log("Deleting File failed ('" + pFilePath + "').", true, 0);
-				}
+			}
+			catch (Exception e)
+			{
+				new Popup(Popup.PopupWindowTypes.PopupOkError, "Deleting File failed ('" + pFilePath + "').\nI suggest you restart the Program and contact me if it happens again.\n\nErrorMessage:\n" + e.ToString()).ShowDialog();
+				HelperClasses.Logger.Log("Deleting File failed ('" + pFilePath + "').", true, 0);
 			}
 		}
 
@@ -606,9 +608,16 @@ namespace Project_127.HelperClasses
 		/// <param name="pFolderPath"></param>
 		public static void createPath(string pFolderPath)
 		{
-			if (!doesPathExist(pFolderPath))
+			try
 			{
-				Directory.CreateDirectory(pFolderPath);
+				if (!doesPathExist(pFolderPath))
+				{
+					Directory.CreateDirectory(pFolderPath);
+				}
+			}
+			catch (Exception e)
+			{
+				HelperClasses.Logger.Log("The code looked good to me. #SadFace. Crashing while creating Path ('" + pFolderPath + "'): " + e.ToString());
 			}
 		}
 

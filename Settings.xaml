@@ -315,7 +315,7 @@
                             <CheckBox Grid.Row="0" Grid.Column="1" x:Name="cb_Set_CopyFilesInsteadOfHardlinking" IsChecked="{Binding Path=EnableCopyFilesInsteadOfHardlinking, Mode=TwoWay}" Style="{StaticResource cb_Set}"/>
                         </Grid>
 
-                    
+                        
                         <Grid x:Name="Grid_Set_Preorder">
                             <Grid.RowDefinitions>
                                 <RowDefinition/>
@@ -327,6 +327,18 @@
                             </Grid.ColumnDefinitions>
                             <Label Grid.Row="0" Grid.Column="0" Content="Enable / Use 500k Pre-Order Bonus "  Style="{StaticResource lbl_Set_Info}" />
                             <CheckBox Grid.Row="0" Grid.Column="1" x:Name="cb_Set_EnablePreOrderBonus" IsChecked="{Binding Path=EnablePreOrderBonus, Mode=TwoWay}" Style="{StaticResource cb_Set}"/>
+                        </Grid>
+                        <Grid x:Name="Grid_Set_EnableDontLaunchThroughSteam">
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Row="0" Grid.Column="0" Content="DontLaunchThroughSteam"  Style="{StaticResource lbl_Set_Info}" />
+                            <CheckBox Grid.Row="0" Grid.Column="1" x:Name="cb_Set_EnableDontLaunchThroughSteam" IsChecked="{Binding Path=EnableDontLaunchThroughSteam, Mode=TwoWay}" Style="{StaticResource cb_Set}"/>
                         </Grid>
                         <Grid x:Name="Grid_Set_AutoHighPriority">
                             <Grid.RowDefinitions>

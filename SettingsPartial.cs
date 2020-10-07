@@ -690,6 +690,22 @@ namespace Project_127
 			}
 		}
 
+
+		/// <summary>
+		/// Settings EnableDontLaunchThroughSteam. Gets and Sets from the Dictionary.
+		/// </summary>
+		public static bool EnableDontLaunchThroughSteam
+		{
+			get
+			{
+				return GetBoolFromString(GetSetting("EnableDontLaunchThroughSteam"));
+			}
+			set
+			{
+				SetSetting("EnableDontLaunchThroughSteam", value.ToString());
+			}
+		}
+
 		/// <summary>
 		/// Settings PathNohboard. Gets and Sets from the Dictionary.
 		/// </summary>
@@ -725,11 +741,6 @@ namespace Project_127
 		/// <summary>
 		/// Settings EnableRememberMe. Gets and Sets from the Dictionary.
 		/// <summary>
-		/// Enabling the "Remember me" for the user when logging in. User cant change this
-		/// <summary>
-		/// Settings EnableRememberMe. Gets and Sets from the Dictionary.
-		/// <summary>
-		/// Enabling the "Remember me" for the user when logging in. User cant change this
 		public static bool EnableRememberMe
 		{
 			get
