@@ -71,6 +71,23 @@ Main To do:
 		-> This requires admin the "proper" way of telling windows. Should fix zip file issues
 					
 	- TO DO:
+		-> Include latest Fixes from Dragon
+		-> Add Loading Bar for that. Check onloadcomplete event and code Dragon sent on discord
+		-> Make SaveFileHandler, Settings usable
+		
+		-> Page stuff:
+			=>  I added some to some MouseOver stuff for the buttons with images,
+					to make the Button of the loaded Page work as we want it to
+			=>  I also wrote the enum and Setter for it regarding Page stuff.
+			=>  WPF Styles / Templates are fucking us over since default Behaviour of Mouse over still exists
+					And if I do WPF Style and MouseOverStuff from above, it doesnt have any mouse over effects
+
+		-> Add Categories (Tags) to SaveFiles,
+				make user able to just display certain ones
+				make user able to change Categories of a File.
+				make user able to select multiple files at once.
+
+		-> Popup - Notepad with Hotkeys and Overlay as per Reloe
 
 	// NEXT PUBLIC RELEASE
 
@@ -718,6 +735,76 @@ namespace Project_127
 						}
 					}
 					break;
+				case "btn_Settings":
+					if (PageState == PageStates.Settings)
+					{
+						if (pMouseOver)
+						{
+							myBtn.Background = Globals.MW_ButtonBackground;
+							myBtn.Foreground = Globals.MW_ButtonForeground;
+							myBtn.BorderBrush = Globals.MW_ButtonBorderBrush;
+						}
+						else
+						{
+							myBtn.Background = Globals.MW_ButtonMOBackground;
+							myBtn.Foreground = Globals.MW_ButtonMOForeground;
+							myBtn.BorderBrush = Globals.MW_ButtonMOBorderBrush;
+						}
+					}
+					else
+					{
+						if (pMouseOver)
+						{
+							myBtn.Background = Globals.MW_ButtonMOBackground;
+							myBtn.Foreground = Globals.MW_ButtonMOForeground;
+							myBtn.BorderBrush = Globals.MW_ButtonMOBorderBrush;
+							myBtn.Background = Globals.MW_ButtonBackground;
+							myBtn.Foreground = Globals.MW_ButtonForeground;
+							myBtn.BorderBrush = Globals.MW_ButtonBorderBrush;
+						}
+						else
+						{
+							myBtn.Background = Globals.MW_ButtonBackground;
+							myBtn.Foreground = Globals.MW_ButtonForeground;
+							myBtn.BorderBrush = Globals.MW_ButtonBorderBrush;
+						}
+					}
+					break;
+				case "btn_SaveFiles":
+					if (PageState == PageStates.SaveFileHandler)
+					{
+						if (pMouseOver)
+						{
+							myBtn.Background = Globals.MW_ButtonBackground;
+							myBtn.Foreground = Globals.MW_ButtonForeground;
+							myBtn.BorderBrush = Globals.MW_ButtonBorderBrush;
+						}
+						else
+						{
+							myBtn.Background = Globals.MW_ButtonMOBackground;
+							myBtn.Foreground = Globals.MW_ButtonMOForeground;
+							myBtn.BorderBrush = Globals.MW_ButtonMOBorderBrush;
+						}
+					}
+					else
+					{
+						if (pMouseOver)
+						{
+							myBtn.Background = Globals.MW_ButtonMOBackground;
+							myBtn.Foreground = Globals.MW_ButtonMOForeground;
+							myBtn.BorderBrush = Globals.MW_ButtonMOBorderBrush;
+							myBtn.Background = Globals.MW_ButtonBackground;
+							myBtn.Foreground = Globals.MW_ButtonForeground;
+							myBtn.BorderBrush = Globals.MW_ButtonBorderBrush;
+						}
+						else
+						{
+							myBtn.Background = Globals.MW_ButtonBackground;
+							myBtn.Foreground = Globals.MW_ButtonForeground;
+							myBtn.BorderBrush = Globals.MW_ButtonBorderBrush;
+						}
+					}
+					break;
 				default:
 					break;
 			}
@@ -728,7 +815,7 @@ namespace Project_127
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
-		private void btn_Small_MouseEnter(object sender, MouseEventArgs e)
+		private void btn_MouseEnter(object sender, MouseEventArgs e)
 		{
 			SetButtonMouseOverMagic((Button)sender, true);
 		}
@@ -738,10 +825,11 @@ namespace Project_127
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
-		private void btn_Small_MouseLeave(object sender, MouseEventArgs e)
+		private void btn_MouseLeave(object sender, MouseEventArgs e)
 		{
 			SetButtonMouseOverMagic((Button)sender, false);
 		}
+
 
 
 		#endregion
