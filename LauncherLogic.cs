@@ -93,17 +93,24 @@ namespace Project_127
 				long SizeOfGTAV = HelperClasses.FileHandling.GetSizeOfFile(GTAVFilePath.TrimEnd('\\') + @"\GTA5.exe");
 				long SizeOfUpdate = HelperClasses.FileHandling.GetSizeOfFile(GTAVFilePath.TrimEnd('\\') + @"\update\update.rpf");
 
+				// if Sizes in GTA V Installation Path match what files we use from ZIP for downgrading
 				if (SizeOfGTAV == SizeOfDowngradedGTAV && SizeOfUpdate == SizeOfDowngradedUPDATE)
 				{
 					return InstallationStates.Downgraded;
 				}
 				else
 				{
-					if (SizeOfDowngradedGTAV > 0 && SizeOfDowngradedUPDATE > 0)
+					// if both Files in the GTA V Install Path exist
+					if (SizeOfGTAV > 0 && SizeOfUpdate > 0)
 					{
+						// If both are NOT downgrad
 						if (SizeOfGTAV != SizeOfDowngradedGTAV && SizeOfUpdate != SizeOfDowngradedUPDATE)
 						{
 							return InstallationStates.Upgraded;
+						}
+						else
+						{
+							return InstallationStates.Unsure;
 						}
 					}
 					return InstallationStates.Unsure;
@@ -332,7 +339,7 @@ namespace Project_127
 					HelperClasses.Logger.Log("You are NOT already Authenticated. Throwing up Window now.");
 
 					// Trying to Auth User
-					new ROSIntegration().ShowDialog();
+					MainWindow.MW.PageState = MainWindow.PageStates.Auth;
 
 					// If still not authed
 					if (AuthState == AuthStates.NotAuth)

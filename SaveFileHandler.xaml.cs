@@ -19,7 +19,7 @@ namespace Project_127
 	/// <summary>
 	/// Class SaveFileHandler.xaml
 	/// </summary>
-	public partial class SaveFileHandler : Window
+	public partial class SaveFileHandler : Page
 	{
 		/// <summary>
 		/// Constructor of SaveFileHandler
@@ -321,7 +321,7 @@ namespace Project_127
 		/// <param name="e"></param>
 		private void btn_Close_Click(object sender, RoutedEventArgs e)
 		{
-			this.Close();
+			//this.Close();
 		}
 
 
@@ -335,7 +335,7 @@ namespace Project_127
 		/// <param name="e"></param>
 		private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
 		{
-			DragMove(); // Pre-Defined Method
+			//DragMove(); // Pre-Defined Method
 		}
 
 		/// <summary>

@@ -96,7 +96,7 @@ namespace Project_127
 		/// <summary>
 		/// Property of other Buildinfo. Will be in the top message of logs
 		/// </summary>
-		public static string BuildInfo = "Built 1, Release 0.0.4.1 to Public";
+		public static string BuildInfo = "You should not see this at all...ever";
 
 		/// <summary>
 		/// Returns all Command Line Args as StringArray
@@ -384,7 +384,7 @@ namespace Project_127
 		public static Brush PU_LabelForeground { get; private set; } = MyColorWhite;
 
 		// SaveFilerHandler Window
-		public static Brush SFH_Background { get; private set; } = MyColorBlack;
+		public static Brush SFH_Background { get; private set; } = SetOpacity(MyColorBlack, 50);
 		public static Brush SFH_BorderBrush { get; private set; } = MyColorWhite;
 		public static Brush SFH_BorderBrush_Inner { get; private set; } = MyColorWhite;
 		public static Brush SFH_LabelForeground { get; private set; } = MyColorWhite;
@@ -410,7 +410,7 @@ namespace Project_127
 
 
 		// Settings Window
-		public static Brush SE_Background { get; private set; } = MyColorBlack;
+		public static Brush SE_Background { get; private set; } = SetOpacity(MyColorBlack, 50);
 		public static Brush SE_BorderBrush { get; private set; } = MyColorWhite;
 		public static Brush SE_BorderBrush_Inner { get; private set; } = MyColorWhite;
 

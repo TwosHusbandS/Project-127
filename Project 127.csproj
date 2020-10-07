@@ -155,6 +155,9 @@
     <Compile Include="DragHandler.cs" />
     <Compile Include="EntitlementBlock.cs" />
     <Compile Include="EntitlementBlockCipher.cs" />
+    <Compile Include="GTA_Page.xaml.cs">
+      <DependentUpon>GTA_Page.xaml</DependentUpon>
+    </Compile>
     <Compile Include="HelperClasses\OwnOpenFolderDialog\FolderSelectDialog.cs" />
     <Compile Include="HelperClasses\OwnOpenFolderDialog\Reflector.cs" />
     <Compile Include="MyFileOperation.cs" />
@@ -185,6 +188,10 @@
     <Compile Include="Settings.xaml.cs">
       <DependentUpon>Settings.xaml</DependentUpon>
     </Compile>
+    <Page Include="GTA_Page.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="PopupProgress.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -293,6 +300,9 @@
     <Resource Include="Artwork\lock_open_mo.png" />
     <Resource Include="Artwork\refresh.png" />
     <Resource Include="Artwork\rightarrow.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Artwork\bg_right.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

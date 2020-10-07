@@ -174,6 +174,7 @@ namespace Project_127
 			lbl_Main.Content = pMsg;
 		}
 
+
 		private void MyTextBox_KeyDown(object sender, KeyEventArgs e)
 		{
 			if (e.Key == Key.Enter)

@@ -1,19 +1,20 @@
-﻿<Window x:Class="Project_127.SaveFileHandler"
+﻿<Page x:Class="Project_127.SaveFileHandler"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Project_127"
         mc:Ignorable="d"
-        Title="Save File Manager" Height="450" Width="700"        
-        WindowStyle="None" 
+        Title="Save File Manager" d:DesignHeight="540" d:DesignWidth="625"        
+        Background="{x:Static local:Globals.SFH_Background}">
+    <!--Background="{x:Static local:Globals.SFH_Background}">-->
+    <!--WindowStyle="None" 
         AllowsTransparency="True" 
         MouseLeftButtonDown="Window_MouseLeftButtonDown" 
         WindowStartupLocation="CenterScreen"
         ResizeMode="CanMinimize"
-        Background="{x:Static local:Globals.SFH_Background}"
-        Icon="/Artwork/icon.png">
-    <Window.Resources>
+        Icon="/Artwork/icon.png"-->
+    <Page.Resources>
 
 
         <!--#region Scroll Viewer Style-->
@@ -159,97 +160,95 @@
 
         </Style>
 
-    </Window.Resources>
-    <Border BorderBrush="{x:Static local:Globals.SFH_BorderBrush}" BorderThickness="2">
-        <Border BorderBrush="{x:Static local:Globals.SFH_BorderBrush_Inner}" BorderThickness="0" Margin="10" CornerRadius="10">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="1.5*"/>
-                    <RowDefinition Height="1.5*"/>
-                    <RowDefinition Height="1.5*"/>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="3*"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="3*"/>
-                </Grid.ColumnDefinitions>
+    </Page.Resources>
 
-                <Label Style="{StaticResource lbl}" Grid.Row="0" Grid.Column="0" Content="Backup Savefiles"/>
-                <Label Style="{StaticResource lbl}" Grid.Row="0" Grid.Column="2" Content="GTA V Savefiles"/>
+    <Border BorderBrush="{x:Static local:Globals.SFH_BorderBrush}" BorderThickness="0" MinHeight="540" >
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="1.5*"/>
+                <RowDefinition Height="1.5*"/>
+                <RowDefinition Height="1.5*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="3*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="3*"/>
+            </Grid.ColumnDefinitions>
 
-                <Button Style="{StaticResource btn}" x:Name="btn_RightArrow" ToolTip="Move File to GTA Saves Folder" Grid.Row="1" Grid.Column="1" Height="64" Width="64" Click="btn_RightArrow_Click">
-                    <Image Source="/Artwork/rightarrow.png"/>
-                </Button>
-                <Button Style="{StaticResource btn}" x:Name="btn_Refresh"  ToolTip="Refresh (detect new Files)" Grid.Row="2" Grid.Column="1" Height="64" Width="64" Click="btn_Refresh_Click">
-                    <Image Source="/Artwork/refresh.png"/>
-                </Button>
-                <Button Style="{StaticResource btn}" x:Name="btn_LeftArrow" ToolTip="Move File to Backup Folder" Grid.Row="3" Grid.Column="1" Height="64" Width="64" Click="btn_LeftArrow_Click">
-                    <Image Source="/Artwork/leftarrow.png"/>
-                </Button>
+            <Label Style="{StaticResource lbl}" Grid.Row="0" Grid.Column="0" Content="Backup Savefiles"/>
+            <Label Style="{StaticResource lbl}" Grid.Row="0" Grid.Column="2" Content="GTA V Savefiles"/>
 
-
-                <Button Grid.Row="4" Grid.Column="0" Margin="10" Style="{StaticResource btn}" x:Name="btn_Rename" Content="Rename" Click="btn_Rename_Click"/>
-                <Button Grid.Row="4" Grid.Column="1" Margin="10" Style="{StaticResource btn}" x:Name="btn_Import" Content="Import" Click="btn_Import_Click"/>
-                <Button Grid.Row="4" Grid.Column="2" Margin="10" Style="{StaticResource btn}" x:Name="btn_Delete" Content="Delete" Click="btn_Delete_Click"/>
-
-                <Button Style="{StaticResource btn}" x:Name="btn_Close" Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="3" Content="Close" Click="btn_Close_Click"/>
-                
-                <Border Grid.Row="1" Grid.Column="0" Grid.RowSpan="3" Margin="10,5,5,5" BorderBrush="{x:Static local:Globals.SFH_BorderBrush_Inner}" BorderThickness="2">
-                    <ScrollViewer x:Name="sv_BackupFiles">
-                        <DataGrid x:Name="dg_BackupFiles" PreviewMouseWheel="dg_BackupFiles_PreviewMouseWheel" GotFocus="dg_BackupFiles_GotFocus"  PreviewKeyDown="dg_KeyDown"  CanUserDeleteRows="False">
-                            <!--cant style this easily, since it does not derive from FrameworkElement-->
-                            <DataGrid.Resources>
-                                <Style TargetType="{x:Type DataGridCell}">
-                                    <Style.Triggers>
-                                        <Trigger Property="DataGridCell.IsSelected" Value="True">
-                                            <Setter Property="Background" Value="{x:Static local:Globals.SFH_DGCellSelectedBackground}" />
-                                            <Setter Property="Foreground" Value="{x:Static local:Globals.SFH_DGCellSelectedForeground}" />
-                                        </Trigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </DataGrid.Resources>
-                            <DataGrid.BindingGroup>
-                                <BindingGroup NotifyOnValidationError="True"/>
-                            </DataGrid.BindingGroup>
-                            <DataGrid.Columns>
-                                <DataGridTextColumn Header="Filename" Binding="{Binding FileName, Mode=OneWay}" Width="*" Foreground="{x:Static local:Globals.SFH_DGForeground}" FontSize="20" />
-                            </DataGrid.Columns>
-                        </DataGrid>
-                    </ScrollViewer>
-                </Border>
+            <Button Style="{StaticResource btn}" x:Name="btn_RightArrow" ToolTip="Move File to GTA Saves Folder" Grid.Row="1" Grid.Column="1" Height="64" Width="64" Click="btn_RightArrow_Click">
+                <Image Source="/Artwork/rightarrow.png"/>
+            </Button>
+            <Button Style="{StaticResource btn}" x:Name="btn_Refresh"  ToolTip="Refresh (detect new Files)" Grid.Row="2" Grid.Column="1" Height="64" Width="64" Click="btn_Refresh_Click">
+                <Image Source="/Artwork/refresh.png"/>
+            </Button>
+            <Button Style="{StaticResource btn}" x:Name="btn_LeftArrow" ToolTip="Move File to Backup Folder" Grid.Row="3" Grid.Column="1" Height="64" Width="64" Click="btn_LeftArrow_Click">
+                <Image Source="/Artwork/leftarrow.png"/>
+            </Button>
 
 
+            <Button Grid.Row="4" Grid.Column="0" Margin="10" Style="{StaticResource btn}" x:Name="btn_Rename" Content="Rename" Click="btn_Rename_Click"/>
+            <Button Grid.Row="4" Grid.Column="1" Margin="10" Style="{StaticResource btn}" x:Name="btn_Import" Content="Import" Click="btn_Import_Click"/>
+            <Button Grid.Row="4" Grid.Column="2" Margin="10" Style="{StaticResource btn}" x:Name="btn_Delete" Content="Delete" Click="btn_Delete_Click"/>
 
-                <Border Grid.Row="1" Grid.Column="2" Grid.RowSpan="3" Margin="10,5,5,5" BorderBrush="{x:Static local:Globals.SFH_BorderBrush_Inner}" BorderThickness="2">
-                    <ScrollViewer x:Name="sv_GTAFiles">
-                        <DataGrid x:Name="dg_GTAFiles" PreviewMouseWheel="dg_GTAFiles_PreviewMouseWheel" GotFocus="dg_GTAFiles_GotFocus" PreviewKeyDown="dg_KeyDown" CanUserDeleteRows="False">
-                            <!--cant style this easily, since it does not derive from FrameworkElement-->
-                            <DataGrid.Resources>
-                                <Style TargetType="{x:Type DataGridCell}">
-                                    <Style.Triggers>
-                                        <Trigger Property="DataGridCell.IsSelected" Value="True">
-                                            <Setter Property="Background" Value="{x:Static local:Globals.SFH_DGCellSelectedBackground}" />
-                                            <Setter Property="Foreground" Value="{x:Static local:Globals.SFH_DGCellSelectedForeground}" />
-                                        </Trigger>
-                                        <Trigger Property="DataGridCell.IsSelected" Value="False">
-                                            <Setter Property="Background" Value="{x:Static local:Globals.SFH_DGCellBackground}" />
-                                            <Setter Property="Foreground" Value="{x:Static local:Globals.SFH_DGCellForeground}" />
-                                        </Trigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </DataGrid.Resources>
-                            <DataGrid.Columns>
-                                <DataGridTextColumn Header="Filename" Binding="{Binding FileName, Mode=OneWay}" Width="*" Foreground="{x:Static local:Globals.SFH_DGForeground}" FontSize="20" />
-                            </DataGrid.Columns>
-                        </DataGrid>
-                    </ScrollViewer>
-                </Border>
+            <Button Style="{StaticResource btn}" x:Name="btn_Close" Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="3" Content="Close" Click="btn_Close_Click"/>
+
+            <Border Grid.Row="1" Grid.Column="0" Grid.RowSpan="3" Margin="10,5,5,5" BorderBrush="{x:Static local:Globals.SFH_BorderBrush_Inner}" BorderThickness="2">
+                <ScrollViewer x:Name="sv_BackupFiles">
+                    <DataGrid x:Name="dg_BackupFiles" PreviewMouseWheel="dg_BackupFiles_PreviewMouseWheel" GotFocus="dg_BackupFiles_GotFocus"  PreviewKeyDown="dg_KeyDown"  CanUserDeleteRows="False">
+                        <!--cant style this easily, since it does not derive from FrameworkElement-->
+                        <DataGrid.Resources>
+                            <Style TargetType="{x:Type DataGridCell}">
+                                <Style.Triggers>
+                                    <Trigger Property="DataGridCell.IsSelected" Value="True">
+                                        <Setter Property="Background" Value="{x:Static local:Globals.SFH_DGCellSelectedBackground}" />
+                                        <Setter Property="Foreground" Value="{x:Static local:Globals.SFH_DGCellSelectedForeground}" />
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </DataGrid.Resources>
+                        <DataGrid.BindingGroup>
+                            <BindingGroup NotifyOnValidationError="True"/>
+                        </DataGrid.BindingGroup>
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Filename" Binding="{Binding FileName, Mode=OneWay}" Width="*" Foreground="{x:Static local:Globals.SFH_DGForeground}" FontSize="20" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </ScrollViewer>
+            </Border>
 
 
-            </Grid>
-        </Border>
+
+            <Border Grid.Row="1" Grid.Column="2" Grid.RowSpan="3" Margin="10,5,5,5" BorderBrush="{x:Static local:Globals.SFH_BorderBrush_Inner}" BorderThickness="2">
+                <ScrollViewer x:Name="sv_GTAFiles">
+                    <DataGrid x:Name="dg_GTAFiles" PreviewMouseWheel="dg_GTAFiles_PreviewMouseWheel" GotFocus="dg_GTAFiles_GotFocus" PreviewKeyDown="dg_KeyDown" CanUserDeleteRows="False">
+                        <!--cant style this easily, since it does not derive from FrameworkElement-->
+                        <DataGrid.Resources>
+                            <Style TargetType="{x:Type DataGridCell}">
+                                <Style.Triggers>
+                                    <Trigger Property="DataGridCell.IsSelected" Value="True">
+                                        <Setter Property="Background" Value="{x:Static local:Globals.SFH_DGCellSelectedBackground}" />
+                                        <Setter Property="Foreground" Value="{x:Static local:Globals.SFH_DGCellSelectedForeground}" />
+                                    </Trigger>
+                                    <Trigger Property="DataGridCell.IsSelected" Value="False">
+                                        <Setter Property="Background" Value="{x:Static local:Globals.SFH_DGCellBackground}" />
+                                        <Setter Property="Foreground" Value="{x:Static local:Globals.SFH_DGCellForeground}" />
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </DataGrid.Resources>
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Filename" Binding="{Binding FileName, Mode=OneWay}" Width="*" Foreground="{x:Static local:Globals.SFH_DGForeground}" FontSize="20" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </ScrollViewer>
+            </Border>
+
+        </Grid>
     </Border>
-</Window>
+</Page>

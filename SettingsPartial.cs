@@ -13,7 +13,7 @@ namespace Project_127
 	/// Partial Class for Settings Window. 
 	/// Also Creates Properties for all Settings, which are easier to interact with than the Dictionary
 	/// </summary>
-	public partial class Settings : Window
+	public partial class Settings : Page
 	{
 
 		/*

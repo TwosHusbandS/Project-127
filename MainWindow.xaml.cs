@@ -74,6 +74,8 @@ Main To do:
 
 	// NEXT PUBLIC RELEASE
 
+		-> Think about checking file hashes in UpgradeFolder as well as GTAV Installation Path
+			=> We could solve the need for the RepairFunction, but this would mean CPU Intensive task while Downgrading
 		-> $UpgradeFiles has downgrade files in them. Why? And how to Fix?
 		-> Core Affinity Shit
 		-> Figure out which files I need to distribute
@@ -118,6 +120,10 @@ Weird Beta Reportings:
 		-> Complained about STATHread even its there
 		-> "Old" no progressbar zip extracting also failed
 		-> Probably due to NAS
+	- Investigate Specials worry about user getting "Already auth" even when session expired.
+		=> Took a quick look at the code, this should not happen, but special said it happened before...
+															also Software doing Software things...
+		=> Bottom Line: INVESTIGATE
 
 */
 
@@ -162,6 +168,14 @@ namespace Project_127
 		- a few Methods we need on Starting like AutoUpdating or Re-Launching with Admin
 		*/
 
+		// This is a static property pointing to the only instance of MainWindow...
+		// This ugly like yo mama, but shit happerino, you know?
+
+		/// <summary>
+		/// Static Property to access Children (mainly Controls) of MainWindow Instance
+		/// </summary>
+		public static MainWindow MW;
+
 		/// <summary>
 		/// Constructor of Main Window
 		/// </summary>
@@ -169,6 +183,9 @@ namespace Project_127
 		{
 			// Initializing all WPF Elements
 			InitializeComponent();
+
+			// Setting this for use in other classes later
+			MainWindow.MW = this;
 
 			// Admin Relauncher
 			AdminRelauncher();
@@ -213,6 +230,8 @@ namespace Project_127
 
 			// Make sure Hamburger Menu is invisible when opening window
 			this.GridHamburgerOuter.Visibility = Visibility.Hidden;
+			this.GridHamburgerOuterSeperator.Visibility = Visibility.Hidden;
+			PageState = PageStates.GTA;
 
 			// Set Image of Buttons
 			SetButtonMouseOverMagic(btn_Exit, false);
@@ -245,9 +264,78 @@ namespace Project_127
 				new Popup(Popup.PopupWindowTypes.PopupOk, msg).ShowDialog();
 			}
 
+
 			HelperClasses.Logger.Log("Startup procedure (Constructor of MainWindow) completed.");
 			HelperClasses.Logger.Log("--------------------------------------------------------");
 		}
+
+
+		public enum PageStates
+		{
+			Settings,
+			SaveFileHandler,
+			Auth,
+			GTA
+		}
+
+
+		private PageStates _PageState;
+
+
+		public PageStates PageState
+		{
+			get
+			{
+				return _PageState;
+			}
+			set
+			{
+				_PageState = value;
+				if (value == PageStates.Settings)
+				{
+					Frame_Main.Content = new Settings();
+					btn_Settings.Background = Globals.MW_ButtonMOBackground;
+					btn_Settings.Foreground = Globals.MW_ButtonMOForeground;
+
+					btn_SaveFiles.Background = Globals.MW_ButtonBackground;
+					btn_SaveFiles.Foreground = Globals.MW_ButtonForeground;
+				}
+				else if (value == PageStates.SaveFileHandler)
+				{
+					Frame_Main.Content = new SaveFileHandler();
+					btn_SaveFiles.Background = Globals.MW_ButtonMOBackground;
+					btn_SaveFiles.Foreground = Globals.MW_ButtonMOForeground;
+
+					btn_Settings.Background = Globals.MW_ButtonBackground;
+					btn_Settings.Foreground = Globals.MW_ButtonForeground;
+				}
+				else if (value == PageStates.Auth)
+				{
+					Frame_Main.Content = new ROSIntegration();
+
+					btn_SaveFiles.Background = Globals.MW_ButtonBackground;
+					btn_SaveFiles.Foreground = Globals.MW_ButtonForeground;
+
+					btn_Settings.Background = Globals.MW_ButtonBackground;
+					btn_Settings.Foreground = Globals.MW_ButtonForeground;
+				}
+				else if (value == PageStates.GTA)
+				{
+					Frame_Main.Content = new GTA_Page();
+
+					btn_SaveFiles.Background = Globals.MW_ButtonBackground;
+					btn_SaveFiles.Foreground = Globals.MW_ButtonForeground;
+
+					btn_Settings.Background = Globals.MW_ButtonBackground;
+					btn_Settings.Foreground = Globals.MW_ButtonForeground;
+				}
+				else
+				{
+					// This should never happen
+				}
+			}
+		}
+
 
 
 		/// <summary>
@@ -261,7 +349,7 @@ namespace Project_127
 				try
 				{
 					// CTRLF TODO // THIS MIGHT BE BROKEN WITH COMMAND LINE ARGS THAT CONTAIN SPACES
-					HelperClasses.ProcessHandler.StartProcess(Assembly.GetEntryAssembly().CodeBase, Environment.CurrentDirectory, string.Join(" ", Globals.CommandLineArgs.ToString()),true, true, false);
+					HelperClasses.ProcessHandler.StartProcess(Assembly.GetEntryAssembly().CodeBase, Environment.CurrentDirectory, string.Join(" ", Globals.CommandLineArgs.ToString()), true, true, false);
 					Application.Current.Shutdown();
 				}
 				catch (Exception e)
@@ -523,13 +611,13 @@ namespace Project_127
 			}
 			if (LauncherLogic.GameState == LauncherLogic.GameStates.Running)
 			{
-				btn_GTA.BorderBrush = Globals.MW_ButtonGTAGameRunningBorderBrush;
-				btn_GTA.Content = "Exit GTA V";
+				GTA_Page.btn_GTA_static.BorderBrush = Globals.MW_ButtonGTAGameRunningBorderBrush;
+				GTA_Page.btn_GTA_static.Content = "Exit GTA V";
 			}
 			else
 			{
-				btn_GTA.BorderBrush = Globals.MW_ButtonGTAGameNotRunningBorderBrush;
-				btn_GTA.Content = "Launch GTA V";
+				GTA_Page.btn_GTA_static.BorderBrush = Globals.MW_ButtonGTAGameNotRunningBorderBrush;
+				GTA_Page.btn_GTA_static.Content = "Launch GTA V";
 			}
 			SetButtonMouseOverMagic(btn_Auth, false);
 		}
@@ -674,12 +762,15 @@ namespace Project_127
 			{
 				// Make invisible
 				this.GridHamburgerOuter.Visibility = Visibility.Hidden;
+				this.GridHamburgerOuterSeperator.Visibility = Visibility.Hidden;
+				PageState = PageStates.GTA;
 			}
 			// If is not visible
 			else
 			{
 				// Make visible
 				this.GridHamburgerOuter.Visibility = Visibility.Visible;
+				this.GridHamburgerOuterSeperator.Visibility = Visibility.Visible;
 			}
 		}
 
@@ -708,8 +799,7 @@ namespace Project_127
 		{
 			if (LauncherLogic.AuthState == LauncherLogic.AuthStates.NotAuth)
 			{
-				ROSIntegration myROSIntegration = new ROSIntegration();
-				myROSIntegration.ShowDialog();
+				PageState = PageStates.Auth;
 			}
 			else
 			{
@@ -775,65 +865,25 @@ namespace Project_127
 		/// <param name="e"></param>
 		private void btn_Exit_Click(object sender, RoutedEventArgs e)
 		{
-			Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Do you really want to quit?");
-			yesno.ShowDialog();
-			if (yesno.DialogResult == true)
+			if (PageState == PageStates.GTA)
 			{
-				this.Close();
-				Environment.Exit(0);
-			}
-		}
-
-
-		/// <summary>
-		/// Method which gets called when the Launch GTA Button is clicked
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
-		private void btn_GTA_Click(object sender, RoutedEventArgs e)
-		{
-			if (LauncherLogic.GameState == LauncherLogic.GameStates.Running)
-			{
-				HelperClasses.Logger.Log("Game deteced running.", 1);
-				Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Game is detected as running.\nDo you want to close it\nand run it again?");
+				Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Do you really want to quit?");
 				yesno.ShowDialog();
 				if (yesno.DialogResult == true)
 				{
-					HelperClasses.Logger.Log("Killing all Processes.", 1);
-					LauncherLogic.KillRelevantProcesses();
-				}
-				else
-				{
-					HelperClasses.Logger.Log("Not wanting to kill all Processes, im aborting Launch function", 1);
-					return;
+					this.Close();
+					Environment.Exit(0);
 				}
 			}
 			else
 			{
-				HelperClasses.Logger.Log("User wantst to Launch", 1);
-				LauncherLogic.Launch();
+				PageState = PageStates.GTA;
 			}
-			FocusManager.SetFocusedElement(this, null);
-			UpdateGUIDispatcherTimer();
 		}
 
 
-		/// <summary>
-		/// Method which gets called when the Launch GTA Button is RIGHT - clicked
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
-		private void btn_GTA_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
-		{
-			Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Do you want to close GTAV?");
-			yesno.ShowDialog();
-			if (yesno.DialogResult == true)
-			{
-				LauncherLogic.KillRelevantProcesses();
-			}
-			FocusManager.SetFocusedElement(this, null);
-			UpdateGUIDispatcherTimer();
-		}
+		// Methods of the GTA Clicks are in GTA_Page
+
 
 
 		// Hamburger Button Items Below:
@@ -906,7 +956,7 @@ namespace Project_127
 		/// <param name="e"></param>
 		private void btn_Repair_Click(object sender, RoutedEventArgs e)
 		{
-			Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "This Method is supposed to be called when there was a Game Update.\nOr you verified Files through Steam.\nIs that the case?\nGTAV Installation Path is: '" + Settings.GTAVInstallationPath + "'");
+			Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "This Method is supposed to be called when there was a Game Update.\nOr you verified Files through Steam.\nIs that the case?\nGTAV Installation ath is: '" + Settings.GTAVInstallationPath + "'");
 			yesno.ShowDialog();
 			if (yesno.DialogResult == true)
 			{
@@ -1023,8 +1073,7 @@ namespace Project_127
 		/// <param name="e"></param>
 		private void btn_SaveFiles_Click(object sender, RoutedEventArgs e)
 		{
-			//new Popup(Popup.PopupWindowTypes.PopupOk, "SaveFileHanlder not fully implemented yet").ShowDialog();
-			new SaveFileHandler().ShowDialog();
+			PageState = PageStates.SaveFileHandler;
 		}
 
 		/// <summary>
@@ -1034,7 +1083,7 @@ namespace Project_127
 		/// <param name="e"></param>
 		private void btn_Settings_Click(object sender, RoutedEventArgs e)
 		{
-			(new Settings()).Show();
+			PageState = PageStates.Settings;
 		}
 
 		/// <summary>

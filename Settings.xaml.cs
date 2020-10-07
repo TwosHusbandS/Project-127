@@ -20,7 +20,7 @@ namespace Project_127
 	/// <summary>
 	/// Class Settings.xaml (Partical class is in SettingsPartial.cs)
 	/// </summary>
-	public partial class Settings : Window
+	public partial class Settings : Page
 	{
 
 		/*
@@ -389,15 +389,6 @@ namespace Project_127
 
 		}
 
-		/// <summary>
-		/// Button Click on Close.
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
-		private void btn_Close_Click(object sender, RoutedEventArgs e)
-		{
-			this.Close();
-		}
 
 		/// <summary>
 		/// Button Click on Reset.
@@ -533,7 +524,7 @@ namespace Project_127
 		/// <param name="e"></param>
 		private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
 		{
-			DragMove(); // Pre-Defined Method
+			//DragMove(); // Pre-Defined Method
 		}
 
 	} // End of Class
