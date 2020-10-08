@@ -170,7 +170,6 @@
                 <RowDefinition Height="1.5*"/>
                 <RowDefinition Height="1.5*"/>
                 <RowDefinition Height="*"/>
-                <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="3*"/>
@@ -195,8 +194,6 @@
             <Button Grid.Row="4" Grid.Column="0" Margin="10" Style="{StaticResource btn}" x:Name="btn_Rename" Content="Rename" Click="btn_Rename_Click"/>
             <Button Grid.Row="4" Grid.Column="1" Margin="10" Style="{StaticResource btn}" x:Name="btn_Import" Content="Import" Click="btn_Import_Click"/>
             <Button Grid.Row="4" Grid.Column="2" Margin="10" Style="{StaticResource btn}" x:Name="btn_Delete" Content="Delete" Click="btn_Delete_Click"/>
-
-            <Button Style="{StaticResource btn}" x:Name="btn_Close" Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="3" Content="Close" Click="btn_Close_Click"/>
 
             <Border Grid.Row="1" Grid.Column="0" Grid.RowSpan="3" Margin="10,5,5,5" BorderBrush="{x:Static local:Globals.SFH_BorderBrush_Inner}" BorderThickness="2">
                 <ScrollViewer x:Name="sv_BackupFiles">

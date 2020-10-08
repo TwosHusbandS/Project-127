@@ -515,17 +515,6 @@ namespace Project_127
 			//cb_Set_EnableNohboardBurhac.IsChecked = Settings.EnableNohboardBurhac;
 		}
 
-		// Below are Methods we need to make the behaviour of this nice.
-
-		/// <summary>
-		/// Method which makes the Window draggable, which moves the whole window when holding down Mouse1 on the background
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
-		private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-		{
-			//DragMove(); // Pre-Defined Method
-		}
 
 	} // End of Class
 } // End of Namespace

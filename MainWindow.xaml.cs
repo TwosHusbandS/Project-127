@@ -64,56 +64,65 @@ General Comments and things one should be aware of (still finishing this list)
 
 Main To do:
 	- Things changed since last official release (not last commit)
+		- BugFixes, BugFixes, BugFixes,
+		- Implementing most Popup Windows as their own Page inside Main Window
+		- Implementing Properties with proper Setters (it affecting UI) for PageState, HamburgerMenuState, BackgroundImages
+			=> Made new blurry shit easily possible + loading and unloading pages + mouse over color changing on loaded page
 
 	-REMEMBER:
 		-> Release with admin mode manifest thingy...		
 		-> Fix Installer with everything (autolaunch app,include new files)
 		-> This requires admin the "proper" way of telling windows. Should fix zip file issues
-					
+
 	- TO DO:
-		-> DispatcherTimer checks (among other things) if you are auth or not and sets the appropiate Lock-Icon
+		-> (1) Command Line Args for making one show + command line args in general
+
+		-> Properly Code and Document new Page called ReadMe
+
+		-> (2) DispatcherTimer checks (among other things) if you are auth or not and sets the appropiate Lock-Icon
 			=> This fucks with the MouseOver Method for the button image, since I just capture MouseLeave and MouseEnter events.
 			=> Reproduce: Mouse Over on Lock-Icon. Dont Move Mouse. Wait 5 seconds
 
-		-> Include latest Fixes from Dragon
-		-> Add Loading Bar for that. Check onloadcomplete event and code Dragon sent on discord
-		-> Make SaveFileHandler, Settings usable
-		
-		-> Page stuff:
-			=>  I added some to some MouseOver stuff for the buttons with images,
-					to make the Button of the loaded Page work as we want it to
-			=>  I also wrote the enum and Setter for it regarding Page stuff.
-			=>  WPF Styles / Templates are fucking us over since default Behaviour of Mouse over still exists
-					And if I do WPF Style and MouseOverStuff from above, it doesnt have any mouse over effects
+			=> Can probably use a bool to keep updating if that specific button is currently mouse over or not, which would fix that
 
-		-> Add Categories (Tags) to SaveFiles,
+		-> (2) Develop Concept with makes Repair Button unneeded and check how much time and CPU this needs
+
+		-> (4) Catch KeyBoard Events for the Pages because it does dumb stuff (Mouse4 + Mouse5 + BackSpace)
+
+		-> (2) Include latest Fixes from Dragon, Check how this exists...and if the loading thing and red popup appear
+			=> (2) Add Loading Bar for that. Check onloadcomplete event and code Dragon sent on discord
+		
+		-> (4) Make SaveFileHandler usable
+
+		-> (6) Make Settings usable
+
+		-> (6) Add Categories (Tags) to SaveFiles,
 				make user able to just display certain ones
 				make user able to change Categories of a File.
 				make user able to select multiple files at once.
 
-		-> Popup - Notepad with Hotkeys and Overlay as per Reloe
+		-> Implement all Other features
+			=> Just see Settings.XAML for what I need to implement
+			=> See Core Affinity Fix...
+
+		-> Tell Karsten about Birthday Present Thingy and show him this for work
 
 	// NEXT PUBLIC RELEASE
 
+		-> Implement note thingy from reloes suggestion (https://discordapp.com/channels/758296338222940211/758296338806341684/762023004183461888)
+		-> Popup - Notepad with Hotkeys and Overlay as per Reloe
 		-> Think about checking file hashes in UpgradeFolder as well as GTAV Installation Path
 			=> We could solve the need for the RepairFunction, but this would mean CPU Intensive task while Downgrading
 		-> $UpgradeFiles has downgrade files in them. Why? And how to Fix?
-		-> Core Affinity Shit
 		-> Figure out which files I need to distribute
 		-> Custom ZIP File Location User Error Checks:
 			=> User might get confused with the Project_127_Files Folder. 
 				Maybe we should actually check parent folders and child folders when User is selecting a Path for ZIP File
 				>> The thing is. This shouldnt be needed since we delete folders on moving ZIP files and stuff
-		-> Regedit Value "LastLaunchedVersion" is there and be used with the next Version.
-		-> Think about making a spawner to spawn processes
-		   (Process.Start(@"C:\Users\ingow\source\repos\ProcessSpawner127\bin\x64\Release\ProcessSpawner127.exe", "testA testB");)
 		-> Regedit Cleanup of everything not in default settings
 		-> Settings dont update content
 			=> Currently it calls the Refresh Method after each click...which works but is ugly
 			=> Get data binding to work after everything else is Gucci 
-		-> Implement all Other features
-			=> Just see Settings.XAML for what I need to implement
-		-> Implement note thingy from reloes suggestion (https://discordapp.com/channels/758296338222940211/758296338806341684/762023004183461888)
 
     - Low Prio:
 		Convert Settings and SaveFileHandler and ROSIntegration in CustomControls
@@ -249,11 +258,6 @@ namespace Project_127
 			// Deleting all Installer and ZIP Files from own Project Installation Path
 			DeleteOldFiles();
 
-			// Make sure Hamburger Menu is invisible when opening window
-			this.GridHamburgerOuter.Visibility = Visibility.Hidden;
-			this.GridHamburgerOuterSeperator.Visibility = Visibility.Hidden;
-			PageState = PageStates.GTA;
-
 			// Set Image of Buttons
 			SetButtonMouseOverMagic(btn_Exit, false);
 			SetButtonMouseOverMagic(btn_Auth, false);
@@ -286,85 +290,12 @@ namespace Project_127
 			}
 
 
+			Globals.HamburgerMenuState = Globals.HamburgerMenuStates.Hidden;
+
 			HelperClasses.Logger.Log("Startup procedure (Constructor of MainWindow) completed.");
 			HelperClasses.Logger.Log("--------------------------------------------------------");
 		}
 
-
-		/// <summary>
-		/// Enum for potential Loaded Pages
-		/// </summary>
-		public enum PageStates
-		{
-			Settings,
-			SaveFileHandler,
-			Auth,
-			ReadMe,
-			GTA
-		}
-
-		/// <summary>
-		/// Internal Value for PageState
-		/// </summary>
-		private PageStates _PageState;
-
-
-		/// <summary>
-		/// Value we use for PageState
-		/// </summary>
-		public PageStates PageState
-		{
-			get
-			{
-				return _PageState;
-			}
-			set
-			{
-				// Setting actual Enum to the correct Value
-				_PageState = value;
-
-				// Switch Value
-				switch (value)
-				{
-					// In Case: Settings
-					case PageStates.Settings:
-
-						// Set actual Frame_Main Content to the correct Page
-						Frame_Main.Content = new Settings();
-
-						// Call Mouse_Over false on other Buttons where a page is behind
-						SetButtonMouseOverMagic(btn_Auth, false);
-						SetButtonMouseOverMagic(btn_SaveFiles, false);
-						SetButtonMouseOverMagic(btn_ReadMe, false);
-						break;
-					case PageStates.SaveFileHandler:
-						Frame_Main.Content = new SaveFileHandler();
-						SetButtonMouseOverMagic(btn_Auth, false);
-						SetButtonMouseOverMagic(btn_Settings, false);
-						SetButtonMouseOverMagic(btn_ReadMe, false);
-						break;
-					case PageStates.ReadMe:
-						Frame_Main.Content = new ReadMe();
-						SetButtonMouseOverMagic(btn_Auth, false);
-						SetButtonMouseOverMagic(btn_Settings, false);
-						SetButtonMouseOverMagic(btn_SaveFiles, false);
-						break;
-					case PageStates.Auth:
-						Frame_Main.Content = new ROSIntegration();
-						SetButtonMouseOverMagic(btn_ReadMe, false);
-						SetButtonMouseOverMagic(btn_Settings, false);
-						SetButtonMouseOverMagic(btn_SaveFiles, false);
-						break;
-					case PageStates.GTA:
-						Frame_Main.Content = new GTA_Page();
-						SetButtonMouseOverMagic(btn_Settings, false);
-						SetButtonMouseOverMagic(btn_SaveFiles, false);
-						SetButtonMouseOverMagic(btn_Auth, false);
-						SetButtonMouseOverMagic(btn_ReadMe, false);
-						break;
-				}
-			}
-		}
 
 
 		/// <summary>
@@ -675,9 +606,9 @@ namespace Project_127
 		/// <summary>
 		/// Sets the Backgrund of a specific Button
 		/// </summary>
-		/// <param name="myBtn"></param>
+		/// <param name="myCtrl"></param>
 		/// <param name="pArtpath"></param>
-		private void SetButtonBackground(Button myBtn, string pArtpath)
+		public void SetControlBackground(Control myCtrl, string pArtpath)
 		{
 			try
 			{
@@ -686,7 +617,7 @@ namespace Project_127
 				BitmapFrame temp = BitmapFrame.Create(streamInfo.Stream);
 				var brush = new ImageBrush();
 				brush.ImageSource = temp;
-				myBtn.Background = brush;
+				myCtrl.Background = brush;
 			}
 			catch
 			{
@@ -699,28 +630,28 @@ namespace Project_127
 		/// </summary>
 		/// <param name="myBtn"></param>
 		/// <param name="pMouseOver"></param>
-		private void SetButtonMouseOverMagic(Button myBtn, bool pMouseOver)
+		public void SetButtonMouseOverMagic(Button myBtn, bool pMouseOver)
 		{
 			switch (myBtn.Name)
 			{
 				case "btn_Hamburger":
 					if (pMouseOver)
 					{
-						SetButtonBackground(myBtn, @"Artwork\hamburger_mo.png");
+						SetControlBackground(myBtn, @"Artwork\hamburger_mo.png");
 					}
 					else
 					{
-						SetButtonBackground(myBtn, @"Artwork\hamburger.png");
+						SetControlBackground(myBtn, @"Artwork\hamburger.png");
 					}
 					break;
 				case "btn_Exit":
 					if (pMouseOver)
 					{
-						SetButtonBackground(myBtn, @"Artwork\exit_mo.png");
+						SetControlBackground(myBtn, @"Artwork\exit_mo.png");
 					}
 					else
 					{
-						SetButtonBackground(myBtn, @"Artwork\exit.png");
+						SetControlBackground(myBtn, @"Artwork\exit.png");
 					}
 					break;
 				case "btn_Auth":
@@ -735,29 +666,29 @@ namespace Project_127
 					}
 					if (pMouseOver)
 					{
-						if (PageState == PageStates.Auth)
+						if (Globals.PageState == Globals.PageStates.Auth)
 						{
-							SetButtonBackground(myBtn, BaseArtworkPath + ".png");
+							SetControlBackground(myBtn, BaseArtworkPath + ".png");
 						}
 						else
 						{
-							SetButtonBackground(myBtn, BaseArtworkPath + "_mo.png");
+							SetControlBackground(myBtn, BaseArtworkPath + "_mo.png");
 						}
 					}
 					else
 					{
-						if (PageState == PageStates.Auth)
+						if (Globals.PageState == Globals.PageStates.Auth)
 						{
-							SetButtonBackground(myBtn, BaseArtworkPath + "_mo.png");
+							SetControlBackground(myBtn, BaseArtworkPath + "_mo.png");
 						}
 						else
 						{
-							SetButtonBackground(myBtn, BaseArtworkPath + ".png");
+							SetControlBackground(myBtn, BaseArtworkPath + ".png");
 						}
 					}
 					break;
 				case "btn_Settings":
-					if (PageState == PageStates.Settings)
+					if (Globals.PageState == Globals.PageStates.Settings)
 					{
 						if (pMouseOver)
 						{
@@ -789,7 +720,7 @@ namespace Project_127
 					}
 					break;
 				case "btn_SaveFiles":
-					if (PageState == PageStates.SaveFileHandler)
+					if (Globals.PageState == Globals.PageStates.SaveFileHandler)
 					{
 						if (pMouseOver)
 						{
@@ -821,7 +752,7 @@ namespace Project_127
 					}
 					break;
 				case "btn_ReadMe":
-					if (PageState == PageStates.ReadMe)
+					if (Globals.PageState == Globals.PageStates.ReadMe)
 					{
 						if (pMouseOver)
 						{
@@ -893,25 +824,20 @@ namespace Project_127
 		private void btn_Hamburger_Click(object sender, RoutedEventArgs e)
 		{
 			// If is visible
-			if (this.GridHamburgerOuter.Visibility == Visibility.Visible)
+			if (Globals.HamburgerMenuState == Globals.HamburgerMenuStates.Visible)
 			{
-				// Make invisible
-				this.GridHamburgerOuter.Visibility = Visibility.Hidden;
-				this.GridHamburgerOuterSeperator.Visibility = Visibility.Hidden;
-				PageState = PageStates.GTA;
+				Globals.HamburgerMenuState = Globals.HamburgerMenuStates.Hidden;
 			}
 			// If is not visible
 			else
 			{
-				// Make visible
-				this.GridHamburgerOuter.Visibility = Visibility.Visible;
-				this.GridHamburgerOuterSeperator.Visibility = Visibility.Visible;
+				Globals.HamburgerMenuState = Globals.HamburgerMenuStates.Visible;
 			}
 		}
 
 		/// <summary>
 		/// Rightclick on Hamburger Button
-		/// </summary>
+		/// </summary> 
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
 		private void btn_Hamburger_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
@@ -932,11 +858,11 @@ namespace Project_127
 		/// <param name="e"></param>
 		private void btn_Auth_Click(object sender, RoutedEventArgs e)
 		{
-			if (PageState != PageStates.Auth)
+			if (Globals.PageState != Globals.PageStates.Auth)
 			{
 				if (LauncherLogic.AuthState == LauncherLogic.AuthStates.NotAuth)
 				{
-					PageState = PageStates.Auth;
+					Globals.PageState = Globals.PageStates.Auth;
 				}
 				else
 				{
@@ -945,7 +871,7 @@ namespace Project_127
 			}
 			else
 			{
-				PageState = PageStates.GTA;
+				Globals.PageState = Globals.PageStates.GTA;
 			}
 
 			// Yes this is correct
@@ -1007,7 +933,7 @@ namespace Project_127
 		/// <param name="e"></param>
 		private void btn_Exit_Click(object sender, RoutedEventArgs e)
 		{
-			if (PageState == PageStates.GTA)
+			if (Globals.PageState == Globals.PageStates.GTA)
 			{
 				Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Do you really want to quit?");
 				yesno.ShowDialog();
@@ -1019,7 +945,7 @@ namespace Project_127
 			}
 			else
 			{
-				PageState = PageStates.GTA;
+				Globals.PageState = Globals.PageStates.GTA;
 			}
 		}
 
@@ -1215,13 +1141,13 @@ namespace Project_127
 		/// <param name="e"></param>
 		private void btn_SaveFiles_Click(object sender, RoutedEventArgs e)
 		{
-			if (PageState == PageStates.SaveFileHandler)
+			if (Globals.PageState == Globals.PageStates.SaveFileHandler)
 			{
-				PageState = PageStates.GTA;
+				Globals.PageState = Globals.PageStates.GTA;
 			}
 			else
 			{
-				PageState = PageStates.SaveFileHandler;
+				Globals.PageState = Globals.PageStates.SaveFileHandler;
 			}
 		}
 
@@ -1232,13 +1158,13 @@ namespace Project_127
 		/// <param name="e"></param>
 		private void btn_Settings_Click(object sender, RoutedEventArgs e)
 		{
-			if (PageState == PageStates.Settings)
+			if (Globals.PageState == Globals.PageStates.Settings)
 			{
-				PageState = PageStates.GTA;
+				Globals.PageState = Globals.PageStates.GTA;
 			}
 			else
 			{
-				PageState = PageStates.Settings;
+				Globals.PageState = Globals.PageStates.Settings;
 			}
 		}
 
@@ -1249,20 +1175,20 @@ namespace Project_127
 		/// <param name="e"></param>
 		private void btn_ReadMe_Click(object sender, RoutedEventArgs e)
 		{
-			if (PageState == PageStates.ReadMe)
+			if (Globals.PageState == Globals.PageStates.ReadMe)
 			{
-				PageState = PageStates.GTA;
+				Globals.PageState = Globals.PageStates.GTA;
 			}
 			else
 			{
-				PageState = PageStates.ReadMe;
+				Globals.PageState = Globals.PageStates.ReadMe;
 			}
 		}
 
 
+
+
 		#endregion
-
-
 
 	} // End of Class
 } // End of Namespace

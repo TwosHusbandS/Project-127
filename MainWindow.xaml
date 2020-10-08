@@ -15,7 +15,7 @@
         ResizeMode="CanMinimize"
         Icon="/Artwork/icon.png">
     <Window.Background>
-        <ImageBrush ImageSource="/Artwork/bg.png"/>
+        <ImageBrush ImageSource="/Artwork/bg_main.png"/>
     </Window.Background>
     <Window.Resources>
         <Style TargetType="{x:Type Button}" x:Key="btn">
@@ -139,7 +139,7 @@
 
             <Rectangle x:Name="GridHamburgerOuterSeperator" Width="2" Height="9999" Fill="White" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="275,0,0,0"/>
 
-            <Button x:Name="btn_Hamburger" Style="{StaticResource btn_Small}" MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave" MouseRightButtonDown="btn_Hamburger_MouseRightButtonDown" VerticalAlignment="Top" HorizontalAlignment="Left" Click="btn_Hamburger_Click" />
+            <Button x:Name="btn_Hamburger"  Style="{StaticResource btn_Small}" MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave" MouseRightButtonDown="btn_Hamburger_MouseRightButtonDown" VerticalAlignment="Top" HorizontalAlignment="Left" Click="btn_Hamburger_Click" />
 
             <Frame x:Name="Frame_Main" NavigationUIVisibility="Hidden" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0" Width="619"/>
 

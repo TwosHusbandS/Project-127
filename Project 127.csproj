@@ -292,8 +292,6 @@
     <Resource Include="Installer\AuthUser.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Artwork\bg.png" />
-    <Resource Include="Artwork\bg_blur.png" />
     <Resource Include="Artwork\exit.png" />
     <Resource Include="Artwork\exit_mo.png" />
     <Resource Include="Artwork\hamburger.png" />
@@ -309,7 +307,18 @@
     <Resource Include="Artwork\rightarrow.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Artwork\bg_right.png" />
+    <Resource Include="Artwork\bg_420.png" />
+    <Resource Include="Artwork\bg_420_blur.png" />
+    <Resource Include="Artwork\bg_420_hb.png" />
+    <Resource Include="Artwork\bg_main.png" />
+    <Resource Include="Artwork\bg_main_blur.png" />
+    <Resource Include="Artwork\bg_main_hb.png" />
+    <Resource Include="Artwork\bg_spooky.png" />
+    <Resource Include="Artwork\bg_spooky_blur.png" />
+    <Resource Include="Artwork\bg_spooky_hb.png" />
+    <Resource Include="Artwork\bg_xmas.png" />
+    <Resource Include="Artwork\bg_xmas_blur.png" />
+    <Resource Include="Artwork\bg_xmas_hb.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

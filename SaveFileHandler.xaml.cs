@@ -311,33 +311,6 @@ namespace Project_127
 			return newName;
 		}
 
-
-
-
-		/// <summary>
-		/// Close Button
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
-		private void btn_Close_Click(object sender, RoutedEventArgs e)
-		{
-			//this.Close();
-		}
-
-
-		// Below are Methods we need to make the behaviour of this nice.
-
-
-		/// <summary>
-		/// Method which makes the Window draggable, which moves the whole window when holding down Mouse1 on the background
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
-		private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-		{
-			//DragMove(); // Pre-Defined Method
-		}
-
 		/// <summary>
 		/// Enables the scrolling behaviour of the DataGrid for Backup Save-Files
 		/// </summary>

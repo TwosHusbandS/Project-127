@@ -10,6 +10,7 @@ using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Media;
 using System.Windows.Threading;
 
@@ -253,7 +254,7 @@ namespace Project_127
 				if (Settings.LastLaunchedVersion < new Version("0.0.4.0"))
 				{
 					new Popup(Popup.PopupWindowTypes.PopupOk,
-					"The 'Remember' Me function, is storing credentials\n" + 
+					"The 'Remember' Me function, is storing credentials\n" +
 					"using the Windows Credential Manager.\n" +
 					"You are using the it on your own risk.\n\n" +
 					" - The Project 1.27 Team").ShowDialog();
@@ -293,7 +294,186 @@ namespace Project_127
 		}
 
 
+		/// <summary>
+		/// Enum for potential Loaded Pages
+		/// </summary>
+		public enum PageStates
+		{
+			Settings,
+			SaveFileHandler,
+			Auth,
+			ReadMe,
+			GTA
+		}
 
+		/// <summary>
+		/// Internal Value for PageState
+		/// </summary>
+		private static PageStates _PageState = PageStates.GTA;
+
+
+		/// <summary>
+		/// Value we use for PageState
+		/// </summary>
+		public static PageStates PageState
+		{
+			get
+			{
+				return _PageState;
+			}
+			set
+			{
+				// Setting actual Enum to the correct Value
+				_PageState = value;
+				MainWindow.MW.SetControlBackground(MainWindow.MW, GetBackGroundPath());
+
+				// Switch Value
+				switch (value)
+				{
+					// In Case: Settings
+					case PageStates.Settings:
+
+						// Set actual Frame_Main Content to the correct Page
+						MainWindow.MW.Frame_Main.Content = new Settings();
+
+						// Call Mouse_Over false on other Buttons where a page is behind
+						MainWindow.MW.SetButtonMouseOverMagic(MainWindow.MW.btn_Auth, false);
+						MainWindow.MW.SetButtonMouseOverMagic(MainWindow.MW.btn_SaveFiles, false);
+						MainWindow.MW.SetButtonMouseOverMagic(MainWindow.MW.btn_ReadMe, false);
+						break;
+					case PageStates.SaveFileHandler:
+						MainWindow.MW.Frame_Main.Content = new SaveFileHandler();
+
+						MainWindow.MW.SetButtonMouseOverMagic(MainWindow.MW.btn_Auth, false);
+						MainWindow.MW.SetButtonMouseOverMagic(MainWindow.MW.btn_Settings, false);
+						MainWindow.MW.SetButtonMouseOverMagic(MainWindow.MW.btn_ReadMe, false);
+						break;
+					case PageStates.ReadMe:
+						MainWindow.MW.Frame_Main.Content = new ReadMe();
+
+						MainWindow.MW.SetButtonMouseOverMagic(MainWindow.MW.btn_Auth, false);
+						MainWindow.MW.SetButtonMouseOverMagic(MainWindow.MW.btn_Settings, false);
+						MainWindow.MW.SetButtonMouseOverMagic(MainWindow.MW.btn_SaveFiles, false);
+						break;
+					case PageStates.Auth:
+						MainWindow.MW.Frame_Main.Content = new ROSIntegration();
+
+						MainWindow.MW.SetButtonMouseOverMagic(MainWindow.MW.btn_ReadMe, false);
+						MainWindow.MW.SetButtonMouseOverMagic(MainWindow.MW.btn_Settings, false);
+						MainWindow.MW.SetButtonMouseOverMagic(MainWindow.MW.btn_SaveFiles, false);
+						break;
+					case PageStates.GTA:
+						MainWindow.MW.Frame_Main.Content = new GTA_Page();
+
+						MainWindow.MW.SetButtonMouseOverMagic(MainWindow.MW.btn_Settings, false);
+						MainWindow.MW.SetButtonMouseOverMagic(MainWindow.MW.btn_SaveFiles, false);
+						MainWindow.MW.SetButtonMouseOverMagic(MainWindow.MW.btn_Auth, false);
+						MainWindow.MW.SetButtonMouseOverMagic(MainWindow.MW.btn_ReadMe, false);
+						break;
+				}
+			}
+		}
+
+
+		public enum BackgroundImages
+		{
+			Main,
+			FourTwenty,
+			XMas,
+			Spooky
+		}
+
+		private static BackgroundImages _BackgroundImage = BackgroundImages.Main;
+
+		public static BackgroundImages BackgroundImage
+		{
+			get
+			{
+				return _BackgroundImage;
+			}
+			set
+			{
+				_BackgroundImage = value;
+				MainWindow.MW.SetControlBackground(MainWindow.MW, GetBackGroundPath());
+			}
+		}
+
+		public enum HamburgerMenuStates
+		{
+			Visible,
+			Hidden
+		}
+
+		private static HamburgerMenuStates _HamburgerMenuState = HamburgerMenuStates.Hidden;
+
+		public static HamburgerMenuStates HamburgerMenuState
+		{
+			get
+			{
+				return _HamburgerMenuState;
+			}
+			set
+			{
+				_HamburgerMenuState = value;
+				MainWindow.MW.SetControlBackground(MainWindow.MW, GetBackGroundPath());
+
+				if (value == HamburgerMenuStates.Visible)
+				{
+					// Make invisible
+					MainWindow.MW.GridHamburgerOuter.Visibility = Visibility.Visible;
+					MainWindow.MW.GridHamburgerOuterSeperator.Visibility = Visibility.Visible;
+				}
+				// If is not visible
+				else
+				{
+					// Make visible
+					MainWindow.MW.GridHamburgerOuter.Visibility = Visibility.Hidden;
+					MainWindow.MW.GridHamburgerOuterSeperator.Visibility = Visibility.Hidden;
+					PageState = PageStates.GTA;
+				}
+			}
+		}
+		
+
+		public static string GetBackGroundPath()
+		{
+			string URL_Path = @"Artwork\bg_";
+
+			switch (BackgroundImage)
+			{
+				case BackgroundImages.Main:
+					URL_Path += "main";
+					break;
+				case BackgroundImages.FourTwenty:
+					URL_Path += "420";
+					break;
+				case BackgroundImages.XMas:
+					URL_Path += "xmas";
+					break;
+				case BackgroundImages.Spooky:
+					URL_Path += "spooky";
+					break;
+			}
+
+			if (HamburgerMenuState == HamburgerMenuStates.Hidden)
+			{
+				URL_Path += ".png";
+			}
+			else if (HamburgerMenuState == HamburgerMenuStates.Visible)
+			{
+				if (PageState == PageStates.GTA)
+				{
+					URL_Path += "_hb.png";
+				}
+				else
+				{
+					URL_Path += "_blur.png";
+				}
+			}
+			// HamburgerMenuState and also PageState
+
+			return URL_Path;
+		}
 
 		/// COLOR STUFF
 

@@ -7,7 +7,8 @@
         xmlns:control = "clr-namespace:Project_127" 
         mc:Ignorable="d"
         Title="Settings" d:DesignHeight="570" d:DesignWidth="619"
-        Background="{x:Static local:Globals.SE_Background}">
+        Background="{x:Static local:Globals.SE_Background}"
+        >
     <!-- WindowStyle="None" 
         AllowsTransparency="False" 
         MouseLeftButtonDown="Window_MouseLeftButtonDown" 

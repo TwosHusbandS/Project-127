@@ -339,7 +339,7 @@ namespace Project_127
 					HelperClasses.Logger.Log("You are NOT already Authenticated. Throwing up Window now.");
 
 					// Trying to Auth User
-					MainWindow.MW.PageState = MainWindow.PageStates.Auth;
+					Globals.PageState = Globals.PageStates.Auth;
 
 					// If still not authed
 					if (AuthState == AuthStates.NotAuth)
