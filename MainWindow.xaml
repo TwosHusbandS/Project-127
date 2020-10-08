@@ -98,6 +98,9 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
+        
+
+
     </Window.Resources>
     <!-- Styles and Window Resources above -->
     <!--////////////////////////////////////////-->
@@ -114,18 +117,19 @@
                         <RowDefinition/>
                         <RowDefinition/>
                         <RowDefinition/>
-                        <RowDefinition/>
-                        <RowDefinition/>
+                        <!--<RowDefinition/>
+                        <RowDefinition/>-->
                     </Grid.RowDefinitions>
                     <Button x:Name="btn_Upgrade" Grid.Row="0" Style="{StaticResource btn_hamburgeritem}" Content="Upgrade" Click="btn_Upgrade_Click"/>
                     <Button x:Name="btn_Repair" Grid.Row="1" Style="{StaticResource btn_hamburgeritem}" Content="Repair Installation" Click="btn_Repair_Click"/>
                     <Button x:Name="btn_Downgrade" Grid.Row="2" Style="{StaticResource btn_hamburgeritem}" Content="Downgrade" Click="btn_Downgrade_Click"/>
                     <Button x:Name="btn_ImportZip" Grid.Row="3" Style="{StaticResource btn_hamburgeritem}" Content="Import ZIP" Click="btn_ImportZip_Click"/>
-                    <Button x:Name="btn_SaveFiles" Grid.Row="4" Style="{StaticResource btn_hamburgeritem}" Content="Save File Manager" Click="btn_SaveFiles_Click" MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
-                    <Button x:Name="btn_Settings" Grid.Row="5" BorderThickness="0" Content="Settings" Click="btn_Settings_Click" MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
-                    <Button x:Name="btn_Speedrun" Grid.Row="6" Style="{StaticResource btn_hamburgeritem}" Content="Speedrun Info" Click="btn_Speedrun_Click"/>
+                    <Button x:Name="btn_SaveFiles" Grid.Row="4" Style="{StaticResource btn_hamburgeritem}" BorderThickness="0" Content="Save File Manager" Click="btn_SaveFiles_Click" MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
+                    <Button x:Name="btn_Settings" Grid.Row="5" Style="{StaticResource btn_hamburgeritem}" BorderThickness="0" Content="Settings" Click="btn_Settings_Click" MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
+                    <Button x:Name="btn_ReadMe" Grid.Row="6" Style="{StaticResource btn_hamburgeritem}" BorderThickness="0" Content="ReadMe" Click="btn_ReadMe_Click" MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
+                    <!--<Button x:Name="btn_Speedrun" Grid.Row="6" Style="{StaticResource btn_hamburgeritem}" Content="Speedrun Info" Click="btn_Speedrun_Click"/>
                     <Button x:Name="btn_About" Grid.Row="7" Style="{StaticResource btn_hamburgeritem}" Content="About" Click="btn_About_Click"/>
-                    <Button x:Name="btn_Credits" Grid.Row="8" Style="{StaticResource btn_hamburgeritem}" Content="Credits" Click="btn_Credits_Click"/>
+                    <Button x:Name="btn_Credits" Grid.Row="8" Style="{StaticResource btn_hamburgeritem}" Content="Credits" Click="btn_Credits_Click"/>-->
                 </Grid>
                 <!-- GridHamburgerInner -->
                 <Label x:Name="lbl_GTA" Style="{StaticResource lbl}" Content="ASDF" VerticalAlignment="Top" VerticalContentAlignment="Bottom" Margin="98,25,0,0" Width="160"/>

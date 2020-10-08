@@ -162,6 +162,9 @@
     <Compile Include="HelperClasses\OwnOpenFolderDialog\Reflector.cs" />
     <Compile Include="MyFileOperation.cs" />
     <Compile Include="RC4.cs" />
+    <Compile Include="ReadMe.xaml.cs">
+      <DependentUpon>ReadMe.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ROSCommunicationBackend.cs" />
     <Compile Include="PopupProgress.xaml.cs">
       <DependentUpon>PopupProgress.xaml</DependentUpon>
@@ -214,6 +217,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="PopupDownload.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ReadMe.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -71,6 +71,10 @@ Main To do:
 		-> This requires admin the "proper" way of telling windows. Should fix zip file issues
 					
 	- TO DO:
+		-> DispatcherTimer checks (among other things) if you are auth or not and sets the appropiate Lock-Icon
+			=> This fucks with the MouseOver Method for the button image, since I just capture MouseLeave and MouseEnter events.
+			=> Reproduce: Mouse Over on Lock-Icon. Dont Move Mouse. Wait 5 seconds
+
 		-> Include latest Fixes from Dragon
 		-> Add Loading Bar for that. Check onloadcomplete event and code Dragon sent on discord
 		-> Make SaveFileHandler, Settings usable
@@ -287,18 +291,27 @@ namespace Project_127
 		}
 
 
+		/// <summary>
+		/// Enum for potential Loaded Pages
+		/// </summary>
 		public enum PageStates
 		{
 			Settings,
 			SaveFileHandler,
 			Auth,
+			ReadMe,
 			GTA
 		}
 
-
+		/// <summary>
+		/// Internal Value for PageState
+		/// </summary>
 		private PageStates _PageState;
 
 
+		/// <summary>
+		/// Value we use for PageState
+		/// </summary>
 		public PageStates PageState
 		{
 			get
@@ -307,52 +320,51 @@ namespace Project_127
 			}
 			set
 			{
+				// Setting actual Enum to the correct Value
 				_PageState = value;
-				if (value == PageStates.Settings)
+
+				// Switch Value
+				switch (value)
 				{
-					Frame_Main.Content = new Settings();
-					btn_Settings.Background = Globals.MW_ButtonMOBackground;
-					btn_Settings.Foreground = Globals.MW_ButtonMOForeground;
+					// In Case: Settings
+					case PageStates.Settings:
 
-					btn_SaveFiles.Background = Globals.MW_ButtonBackground;
-					btn_SaveFiles.Foreground = Globals.MW_ButtonForeground;
-				}
-				else if (value == PageStates.SaveFileHandler)
-				{
-					Frame_Main.Content = new SaveFileHandler();
-					btn_SaveFiles.Background = Globals.MW_ButtonMOBackground;
-					btn_SaveFiles.Foreground = Globals.MW_ButtonMOForeground;
+						// Set actual Frame_Main Content to the correct Page
+						Frame_Main.Content = new Settings();
 
-					btn_Settings.Background = Globals.MW_ButtonBackground;
-					btn_Settings.Foreground = Globals.MW_ButtonForeground;
-				}
-				else if (value == PageStates.Auth)
-				{
-					Frame_Main.Content = new ROSIntegration();
-
-					btn_SaveFiles.Background = Globals.MW_ButtonBackground;
-					btn_SaveFiles.Foreground = Globals.MW_ButtonForeground;
-
-					btn_Settings.Background = Globals.MW_ButtonBackground;
-					btn_Settings.Foreground = Globals.MW_ButtonForeground;
-				}
-				else if (value == PageStates.GTA)
-				{
-					Frame_Main.Content = new GTA_Page();
-
-					btn_SaveFiles.Background = Globals.MW_ButtonBackground;
-					btn_SaveFiles.Foreground = Globals.MW_ButtonForeground;
-
-					btn_Settings.Background = Globals.MW_ButtonBackground;
-					btn_Settings.Foreground = Globals.MW_ButtonForeground;
-				}
-				else
-				{
-					// This should never happen
+						// Call Mouse_Over false on other Buttons where a page is behind
+						SetButtonMouseOverMagic(btn_Auth, false);
+						SetButtonMouseOverMagic(btn_SaveFiles, false);
+						SetButtonMouseOverMagic(btn_ReadMe, false);
+						break;
+					case PageStates.SaveFileHandler:
+						Frame_Main.Content = new SaveFileHandler();
+						SetButtonMouseOverMagic(btn_Auth, false);
+						SetButtonMouseOverMagic(btn_Settings, false);
+						SetButtonMouseOverMagic(btn_ReadMe, false);
+						break;
+					case PageStates.ReadMe:
+						Frame_Main.Content = new ReadMe();
+						SetButtonMouseOverMagic(btn_Auth, false);
+						SetButtonMouseOverMagic(btn_Settings, false);
+						SetButtonMouseOverMagic(btn_SaveFiles, false);
+						break;
+					case PageStates.Auth:
+						Frame_Main.Content = new ROSIntegration();
+						SetButtonMouseOverMagic(btn_ReadMe, false);
+						SetButtonMouseOverMagic(btn_Settings, false);
+						SetButtonMouseOverMagic(btn_SaveFiles, false);
+						break;
+					case PageStates.GTA:
+						Frame_Main.Content = new GTA_Page();
+						SetButtonMouseOverMagic(btn_Settings, false);
+						SetButtonMouseOverMagic(btn_SaveFiles, false);
+						SetButtonMouseOverMagic(btn_Auth, false);
+						SetButtonMouseOverMagic(btn_ReadMe, false);
+						break;
 				}
 			}
 		}
-
 
 
 		/// <summary>
@@ -712,26 +724,35 @@ namespace Project_127
 					}
 					break;
 				case "btn_Auth":
+					string BaseArtworkPath = "";
+					if (LauncherLogic.AuthState == LauncherLogic.AuthStates.Auth)
+					{
+						BaseArtworkPath = @"Artwork\lock_closed";
+					}
+					else
+					{
+						BaseArtworkPath = @"Artwork\lock_open";
+					}
 					if (pMouseOver)
 					{
-						if (LauncherLogic.AuthState == LauncherLogic.AuthStates.Auth)
+						if (PageState == PageStates.Auth)
 						{
-							SetButtonBackground(myBtn, @"Artwork\lock_closed_mo.png");
+							SetButtonBackground(myBtn, BaseArtworkPath + ".png");
 						}
-						else if (LauncherLogic.AuthState == LauncherLogic.AuthStates.NotAuth)
+						else
 						{
-							SetButtonBackground(myBtn, @"Artwork\lock_open_mo.png");
+							SetButtonBackground(myBtn, BaseArtworkPath + "_mo.png");
 						}
 					}
 					else
 					{
-						if (LauncherLogic.AuthState == LauncherLogic.AuthStates.Auth)
+						if (PageState == PageStates.Auth)
 						{
-							SetButtonBackground(myBtn, @"Artwork\lock_closed.png");
+							SetButtonBackground(myBtn, BaseArtworkPath + "_mo.png");
 						}
-						else if (LauncherLogic.AuthState == LauncherLogic.AuthStates.NotAuth)
+						else
 						{
-							SetButtonBackground(myBtn, @"Artwork\lock_open.png");
+							SetButtonBackground(myBtn, BaseArtworkPath + ".png");
 						}
 					}
 					break;
@@ -758,9 +779,6 @@ namespace Project_127
 							myBtn.Background = Globals.MW_ButtonMOBackground;
 							myBtn.Foreground = Globals.MW_ButtonMOForeground;
 							myBtn.BorderBrush = Globals.MW_ButtonMOBorderBrush;
-							myBtn.Background = Globals.MW_ButtonBackground;
-							myBtn.Foreground = Globals.MW_ButtonForeground;
-							myBtn.BorderBrush = Globals.MW_ButtonBorderBrush;
 						}
 						else
 						{
@@ -793,9 +811,38 @@ namespace Project_127
 							myBtn.Background = Globals.MW_ButtonMOBackground;
 							myBtn.Foreground = Globals.MW_ButtonMOForeground;
 							myBtn.BorderBrush = Globals.MW_ButtonMOBorderBrush;
+						}
+						else
+						{
 							myBtn.Background = Globals.MW_ButtonBackground;
 							myBtn.Foreground = Globals.MW_ButtonForeground;
 							myBtn.BorderBrush = Globals.MW_ButtonBorderBrush;
+						}
+					}
+					break;
+				case "btn_ReadMe":
+					if (PageState == PageStates.ReadMe)
+					{
+						if (pMouseOver)
+						{
+							myBtn.Background = Globals.MW_ButtonBackground;
+							myBtn.Foreground = Globals.MW_ButtonForeground;
+							myBtn.BorderBrush = Globals.MW_ButtonBorderBrush;
+						}
+						else
+						{
+							myBtn.Background = Globals.MW_ButtonMOBackground;
+							myBtn.Foreground = Globals.MW_ButtonMOForeground;
+							myBtn.BorderBrush = Globals.MW_ButtonMOBorderBrush;
+						}
+					}
+					else
+					{
+						if (pMouseOver)
+						{
+							myBtn.Background = Globals.MW_ButtonMOBackground;
+							myBtn.Foreground = Globals.MW_ButtonMOForeground;
+							myBtn.BorderBrush = Globals.MW_ButtonMOBorderBrush;
 						}
 						else
 						{
@@ -885,13 +932,20 @@ namespace Project_127
 		/// <param name="e"></param>
 		private void btn_Auth_Click(object sender, RoutedEventArgs e)
 		{
-			if (LauncherLogic.AuthState == LauncherLogic.AuthStates.NotAuth)
+			if (PageState != PageStates.Auth)
 			{
-				PageState = PageStates.Auth;
+				if (LauncherLogic.AuthState == LauncherLogic.AuthStates.NotAuth)
+				{
+					PageState = PageStates.Auth;
+				}
+				else
+				{
+					new Popup(Popup.PopupWindowTypes.PopupOk, "You are already authenticated.").ShowDialog();
+				}
 			}
 			else
 			{
-				new Popup(Popup.PopupWindowTypes.PopupOk, "You are already authenticated.").ShowDialog();
+				PageState = PageStates.GTA;
 			}
 
 			// Yes this is correct
@@ -1161,7 +1215,14 @@ namespace Project_127
 		/// <param name="e"></param>
 		private void btn_SaveFiles_Click(object sender, RoutedEventArgs e)
 		{
-			PageState = PageStates.SaveFileHandler;
+			if (PageState == PageStates.SaveFileHandler)
+			{
+				PageState = PageStates.GTA;
+			}
+			else
+			{
+				PageState = PageStates.SaveFileHandler;
+			}
 		}
 
 		/// <summary>
@@ -1171,72 +1232,31 @@ namespace Project_127
 		/// <param name="e"></param>
 		private void btn_Settings_Click(object sender, RoutedEventArgs e)
 		{
-			PageState = PageStates.Settings;
+			if (PageState == PageStates.Settings)
+			{
+				PageState = PageStates.GTA;
+			}
+			else
+			{
+				PageState = PageStates.Settings;
+			}
 		}
 
 		/// <summary>
-		/// Method which gets called when you click on the SpeedRun Button
+		/// Method which gets called when you click on the ReadMe Button
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
-		private void btn_Speedrun_Click(object sender, RoutedEventArgs e)
+		private void btn_ReadMe_Click(object sender, RoutedEventArgs e)
 		{
-			new Popup(Popup.PopupWindowTypes.PopupOk,
-			"This Popup will contain Information about GTAV Speedrunning.\n" +
-			"Paragraphs explaining the basics, rules, categories etc.\n" +
-			"And some link to resources like the Leaderboard, Guides\n" +
-			"Useful Programs, Maps, and whatever else is useful\n\n" +
-			"I am not a speedrunner or very involved with the GTA V Community,\n" +
-			"if you read this, and could shoot me a PM on Discord with stuff\n" +
-			"you want to Read here, that would be great."
-			).ShowDialog();
-		}
-
-		/// <summary>
-		/// Method which gets called when the About Button is clicked
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
-		private void btn_About_Click(object sender, RoutedEventArgs e)
-		{
-			new Popup(Popup.PopupWindowTypes.PopupOk,
-			"You are running Project 1.27, a tool for the GTA V Speedrunning Community.\n" +
-			"This was created for the patch 1.27 downgrade problem, which started in August of 2020\n" +
-			"This tool has a number of features, including Downgrading, Upgrading and launching the game,\n" +
-			"\nSpecial shoutouts to @dr490n who was responsible for getting the downgraded game\n" +
-			"to launch, added patches against in-game triggers, wrote the authentication backend,\n" +
-			"decryption and got the preorder entitlement to work.\n\n" +
-			"If you have any issues with this program or ideas for new features,\n" +
-			"feel free to contact me on Discord: @thS#0305\n\n" +
-			"Project 1.27 Version: '" + Globals.ProjectVersion + "', BuildInfo: '" + Globals.BuildInfo + "', ZIP Version: '" + Globals.ZipVersion + "'"
-			).ShowDialog();
-		}
-
-		/// <summary>
-		/// Method which gets called when the Readme Button is clicked
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
-		private void btn_Credits_Click(object sender, RoutedEventArgs e)
-		{
-			new Popup(Popup.PopupWindowTypes.PopupOk,
-			"Solving the patch 1.27 Downgrade problem has been achieved by a month of hard work by a\n" +
-			"number of dedicated individuals. This would not have been possible without the time and\n" +
-			"effort of a number of very talented individuals from all walks of life, who have\n" +
-			"contributed skills in Reverse Engineering, Programming, Decryption, Project Management,\n" +
-			"Scripting and Testing. Below is a list of some of the main contributors to the project,\n" +
-			"although our thanks go out to EVERYONE who has helped throughout the process.\n\n" +
-			"Reverse Engineering:\n" +
-			"@dr490n, @Special For, @zCri\n\n" +
-			"Launcher / Client Programming, Documentating:\n" +
-			"@thS\n\n" +
-			"Launcher GUI Design & Artwork:\n" +
-			"@hossel\n\n" +
-			"Special thanks to:\n" +
-			"@JakeMiester, @Antibones, @Aperture, @Diamondo25, @MOMO\n\n" +
-			"Shoutout to FiveM and Goldberg, whose Source Code proved to be vital\n" +
-			"to understand and reverse engineer the GTA V Launch Process"
-			).ShowDialog();
+			if (PageState == PageStates.ReadMe)
+			{
+				PageState = PageStates.GTA;
+			}
+			else
+			{
+				PageState = PageStates.ReadMe;
+			}
 		}
 
 
