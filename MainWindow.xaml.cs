@@ -71,6 +71,7 @@ Main To do:
 		- Command Line Args Base Written
 		- ReadMe Page written and documented (semi)
 		- BugFix for AuthState MouseOver 5 second limit
+		- Dragons Magic on ROSIntegration.xaml.cs to make it look nice
 
 	-REMEMBER:
 		-> Release with admin mode manifest thingy...		
@@ -78,25 +79,24 @@ Main To do:
 		-> This requires admin the "proper" way of telling windows. Should fix zip file issues
 
 	- TO DO:
-		-> (2) Include latest Fixes from Dragon, Check how this exists...and if the loading thing and red popup appear
-			=> (2) Add Loading Bar for that. Check onloadcomplete event and code Dragon sent on discord
-
-		-> (2) Develop Concept with makes Repair Button unneeded and check how much time and CPU this needs
-			=> Already see if we can make this to keep "States" of Installation with different Upgraded Versions
-		-> (4) Catch KeyBoard Events for the Pages because it does dumb stuff (Mouse4 + Mouse5 + BackSpace)
-		-> (4) Fix SaveFileHandler GUI
-		-> (6) Fix Settings GUI
-		-> (6) Fix ReadMe GUI
-		-> (6) Add Categories (Tags) to SaveFiles,
+		-> Think about Loading Gif for LoginWindow, although I think its fine as it is
+		-> Spinning Logging Button when re-opening Auth (first time seems to work fine)
+		-> Fix SaveFileHandler GUI (make it not look like shit)
+		-> Fix Settings GUI (make it not look like shit)
+		-> Fix ReadMe GUI (make it not look like shit)
+		-> Add Categories (Tags) to SaveFiles,
 				make user able to just display certain ones
 				make user able to change Categories of a File.
 				make user able to select multiple files at once.
-
+		-> Develop Concept with makes Repair Button unneeded and check how much time and CPU this needs
+			=> Already see if we can make this to keep "States" of Installation with different Upgraded Versions
+		-> Catch KeyBoard Events for the Pages because it does dumb stuff (Mouse4 + Mouse5 + BackSpace)
 		-> Implement all Other features
 			=> Just see Settings.XAML for what I need to implement
 			=> See Core Affinity Fix...
-
 		-> Re-Write ALL XML Styles in one Place
+
+
 
 		-> Tell Karsten about Birthday Present Thingy and show him this for work
 
@@ -215,6 +215,7 @@ namespace Project_127
 
 			// Setting this for use in other classes later
 			MainWindow.MW = this;
+
 
 			// Admin Relauncher
 			AdminRelauncher();

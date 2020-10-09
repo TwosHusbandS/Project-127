@@ -8,7 +8,7 @@
         xmlns:local="clr-namespace:Project_127"
         mc:Ignorable="d"
       
-        Background="{x:Static local:Globals.AU_Background}"
+        Background="{x:Static local:Globals.SE_Background}"
         Title="ROSIntegration" d:DesignHeight="540" d:DesignWidth="625"    >
     <!--WindowStyle="None"
         BorderBrush="Black"

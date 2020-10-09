@@ -495,7 +495,7 @@ document.addEventListener('input', rememberMeHandler);
 					var ctime = Int64.Parse(nav.SelectSingleNode("//*[local-name()='Response']/*[local-name()='PosixTime']").Value);
 					var RockstarNick = nav.SelectSingleNode("//*[local-name()='Response']/*[local-name()='RockstarAccount']/*[local-name()='Nickname']").Value; //For (future?) use
 					this.Dispatcher.Invoke(() => this.Visibility = Visibility.Hidden);
-					MainWindow.MW.Dispatcher.Invoke(()=>MainWindow.MW.PageState = MainWindow.PageStates.GTA);
+					MainWindow.MW.Dispatcher.Invoke(()=>Globals.PageState = Globals.PageStates.GTA);
 					// Call our version of validate
 					bool valsucess = await ROSCommunicationBackend.Login(ticket, sessionKey, sessionTicket, RockstarID, ctime, RockstarNick);
 					// Do something with valsuccess (true if ownership is valid)
@@ -507,9 +507,9 @@ document.addEventListener('input', rememberMeHandler);
 					{
 						//System.Windows.Forms.MessageBox.Show("Login Success");
 						HelperClasses.Logger.Log("Login success");
-						//MainWindow.MW.Dispatcher.Invoke(()=>
-						//	MainWindow.MW.SetButtonMouseOverMagic(MainWindow.MW.btn_Auth, MainWindow.MW.btn_Auth.IsMouseOver)
-						//	);
+						MainWindow.MW.Dispatcher.Invoke(()=>
+							MainWindow.MW.SetButtonMouseOverMagic(MainWindow.MW.btn_Auth, MainWindow.MW.btn_Auth.IsMouseOver)
+							);
 						
 						if (Settings.EnableRememberMe)
 						{
