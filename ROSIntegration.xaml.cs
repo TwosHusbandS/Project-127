@@ -20,7 +20,6 @@ using System.Xml.XPath;
 using System.IO;
 using System.Web.Script.Serialization;
 using System.Drawing;
-using CefSharp.Wpf.Example.Handlers;
 using System.Data.SqlTypes;
 using System.Windows.Forms;
 using System.Net;
@@ -45,34 +44,6 @@ namespace Project_127
 		private static bool CEFInited = false;
 		private bool signinInProgress = false;
 		private int sendCount = 0;
-		private Region region;
-
-		private void OnBrowserMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-		{
-			var point = e.GetPosition(browser);
-
-			if (region.IsVisible((float)point.X, (float)point.Y))
-			{
-				var window = Window.GetWindow(this);
-				window.DragMove();
-
-				e.Handled = true;
-			}
-		}
-
-		private void OnDragHandlerRegionsChanged(Region region)
-		{
-			if (region != null)
-			{
-				//Only wire up event handler once
-				if (this.region == null)
-				{
-					browser.PreviewMouseLeftButtonDown += OnBrowserMouseLeftButtonDown;
-				}
-
-				this.region = region;
-			}
-		}
 
 		public ROSIntegration()
 		{
@@ -85,19 +56,19 @@ namespace Project_127
 				HelperClasses.Logger.Log("Detected first launch, initializing...");
 				var s = new CefSettings();
 				s.CachePath = System.IO.Path.GetFullPath(".\\");
-				s.BackgroundColor = 0x13 << 16 | 0x15 << 8 | 0x18;
+				s.BackgroundColor = 0;//0x13 << 16 | 0x15 << 8 | 0x18;
 				s.DisableGpuAcceleration();
+				s.CefCommandLineArgs["autoplay-policy"] = "no-user-gesture-required";
 				Cef.Initialize(s);
 				CEFInited = true;
 			}
-
+			NavigationCommands.BrowseBack.InputGestures.Clear();
 			InitializeComponent();
+			this.Dispatcher.Invoke(() => this.Visibility = Visibility.Hidden);
 			browser.BrowserSettings.ApplicationCache = CefState.Disabled;
-			var dragHandler = new DragHandler();
-			dragHandler.RegionsChanged += OnDragHandlerRegionsChanged;
-			browser.DragHandler = dragHandler;
-			browser.BrowserSettings.BackgroundColor = 0x13 << 16 | 0x15 << 8 | 0x18;
+			//browser.BrowserSettings.BackgroundColor = 0x13 << 16 | 0x15 << 8 | 0x18 | 0xFF << 24;
 			HelperClasses.Logger.Log("Initialization complete");
+
 			if (Settings.EnableRememberMe)
 			{
 				HelperClasses.Logger.Log("Remember Me enabled: fetching credentials...");
@@ -251,7 +222,7 @@ location.reload();
 }, 500);
 }
 
-var css = '.autoSignIn, .SaveCredentials__tooltip, p.Header__signUp { display: none; } .SignInForm__descriptionText .Alert__text { display: none; } .Alert__content:after { content: \'A Rockstar Games Social Club account owning Grand Theft Auto V is required to use Project 1.27.\'; max-width: 600px; display: inline-block; }',
+var css = '.SignInForm__forgotPassword, .autoSignIn, .SaveCredentials__tooltip, p.Header__signUp { display: none; } .SignInForm__descriptionText .Alert__text { display: none; } .Alert__info>.Alert__content:after { content: \'A Rockstar Games Social Club account owning Grand Theft Auto V is required to use Project 1.27.\'; max-width: 600px; display: inline-block; color: black; } body {background: rgba(0, 0, 0, 0) !important;} #root {background: rgba(0, 0, 0, 0) !important;} .Alert__danger {background-color: rgba(189,08,08,0.7)} .Alert__info {background-color: rgba(193,206,209,1); margin-bottom: 50px;} .TextInput-mtl__field {background: rgba(0,0,0,.7)} .Button-mtl__primary {background: #c1ced1;} .SignInForm__wrapper {margin-top: 20px;}',
     head = document.head || document.getElementsByTagName('head')[0],
     style = document.createElement('style');
 
@@ -326,20 +297,6 @@ function rememberMeHandler() {
     invokeNative('remember', JSON.stringify(creds));
 }
 
-function initDragClick(){
-    var e = document.querySelector('#drag');
-    if (!e){
-        setTimeout(initDragClick, 500);
-        return;
-    }
-    e.setAttribute('style','-webkit-app-region: drag;');
-    for (const elem of document.querySelectorAll('.AppControls__windowControls')) {
-        elem.setAttribute('style','-webkit-app-region: no-drag;')
-    }
-}
-
-initDragClick();
-
 document.addEventListener('input', rememberMeHandler);
 
 
@@ -361,14 +318,15 @@ document.addEventListener('input', rememberMeHandler);
 			    document.querySelector('.AppControls__appControls').outerHTML = '';
 			    document.querySelector('.Footer__container').outerHTML = '';
 				document.querySelector('.HeaderLayout__header').outerHTML = '';
+                setTimeout(invokeNative, 200, 'ready','');
 			}
 
-			setTimeout(modHtml, 100);
+			setTimeout(modHtml, 1000);
 ";
 
 
 		/*
-		Versio 2: Edited
+		Version 2: Edited
 
 		function modHtml(){
 			 if (!document.querySelector('.SignInForm__signInButton')){
@@ -428,11 +386,26 @@ document.addEventListener('input', rememberMeHandler);
 
 
 		private const string credSenderJS = "setTimeout(rememberMeState, 1000, true); setTimeout(setEmail, 1200, '{0}'); setTimeout(setPass, 1500, '{1}');";
-		private void LoadingStateChange(object sender, LoadingStateChangedEventArgs args)
+		private async void LoadingStateChange(object sender, LoadingStateChangedEventArgs args)
 		{
 			if (!args.IsLoading) //On load complete...
 			{
 				IFrame frame = browser.GetMainFrame();
+				if (frame.Url.Contains("apple") && sendCount != 5)
+                {
+					switch (frame.Url.Split('/')[3])
+                    {
+						case "AU":
+							frame.ExecuteJavaScriptAsync("document.body.innerHTML = atob('PGlmcmFtZSB3aWR0aD0iNDIwIiBoZWlnaHQ9IjMxNSIKc3JjPSJodHRwczovL3d3dy55b3V0dWJlLmNvbS9lbWJlZC9oZm14Ty1IUTVyVT8mYXV0b3BsYXk9MSIgIGFsbG93PSJhdXRvcGxheTsiPgo8L2lmcmFtZT4=')");
+							break;
+						default:
+							frame.ExecuteJavaScriptAsync("document.body.innerHTML = atob('PGlmcmFtZSB3aWR0aD0iNDIwIiBoZWlnaHQ9IjMxNSIKc3JjPSJodHRwczovL3d3dy55b3V0dWJlLmNvbS9lbWJlZC9kUXc0dzlXZ1hjUT8mYXV0b3BsYXk9MSIgIGFsbG93PSJhdXRvcGxheTsiPgo8L2lmcmFtZT4K')");
+							break;
+					}
+					
+					sendCount = 5;
+					return;
+				}
 				if (signinInProgress || sendCount > 2)
 				{
 					return;
@@ -456,125 +429,149 @@ document.addEventListener('input', rememberMeHandler);
 			}
 		}
 
+
+		/// <summary>
+		/// JS Message Handler
+		/// </summary>
 		private async void browser_JavascriptMessageReceived(object sender, JavascriptMessageReceivedEventArgs e)
 		{
 			char[] sep = new char[1];
 			sep[0] = ':';
 			string[] message = e.Message.ToString().Split(sep, 2);
+			Dictionary<string, string> jsond;
 			//MessageBox.Show(e.Message.ToString());
-			if (message[0] == "ui") //Handle the ui minimize/maximize/close buttons
-			{
-				//if (message[1] == "Close")
-				//{
-				//	this.Dispatcher.Invoke(() =>
-				//	{
-				//		//this.Close();
-				//	});
-				//}
-				//else if (message[1] == "Maximize")
-				//{
-				//	this.Dispatcher.Invoke(() =>
-				//	{
-				//		if (this.WindowState != WindowState.Maximized)
-				//		{
-				//			this.WindowState = WindowState.Maximized;
-				//		}
-				//		else
-				//		{
-				//			this.WindowState = WindowState.Normal;
-				//		}
-				//	});
-
-				//}
-				//else if (message[1] == "Minimize")
-				//{
-				//	this.Dispatcher.Invoke(() =>
-				//	{
-				//		this.WindowState = WindowState.Minimized;
-				//	});
-				//}
-			}
-			else if (message[0] == "signin") //if this is called, we have a valid login
-			{
-				HelperClasses.Logger.Log("Signin Called...");
-				signinInProgress = true;
-				//login(message[1]);
-				var jsond = json.Deserialize<Dictionary<String, String>>(message[1]);
-				//MessageBox.Show(message[1]); //For debugging
-				var uexml = jsond["XMLResponse"];
-				var xmls = System.Net.WebUtility.UrlDecode(uexml);
-				XPathDocument xml = new XPathDocument(new StringReader(xmls));
-				XPathNavigator nav = xml.CreateNavigator();
-
-				string ticket = jsond["ticket"];
-				string sessionKey = jsond["sessionKey"];
-				string sessionTicket = nav.SelectSingleNode("//*[local-name()='Response']/*[local-name()='SessionTicket']").Value;
-				var RockstarID = UInt64.Parse(nav.SelectSingleNode("//*[local-name()='Response']/*[local-name()='RockstarAccount']/*[local-name()='RockstarId']").Value);
-				var ctime = Int64.Parse(nav.SelectSingleNode("//*[local-name()='Response']/*[local-name()='PosixTime']").Value);
-				var RockstarNick = nav.SelectSingleNode("//*[local-name()='Response']/*[local-name()='RockstarAccount']/*[local-name()='Nickname']").Value; //For (future?) use
+			switch (message[0])
+            {
 
 
-				// Call our version of validate
-				bool valsucess = await ROSCommunicationBackend.Login(ticket, sessionKey, sessionTicket, RockstarID, ctime, RockstarNick);
-				// Do somethin with valsuccess (true if ownership is valid)
+				/*case "ui": //Handle the ui minimize/maximize/close buttons //No Longer Necessary
+					//if (message[1] == "Close")
+					//{
+					//	this.Dispatcher.Invoke(() =>
+					//	{
+					//		//this.Close();
+					//	});
+					//}
+					//else if (message[1] == "Maximize")
+					//{
+					//	this.Dispatcher.Invoke(() =>
+					//	{
+					//		if (this.WindowState != WindowState.Maximized)
+					//		{
+					//			this.WindowState = WindowState.Maximized;
+					//		}
+					//		else
+					//		{
+					//			this.WindowState = WindowState.Normal;
+					//		}
+					//	});
 
-				if (valsucess)
-				{
-					//MessageBox.Show("Login Success");
-					HelperClasses.Logger.Log("Login success");
-					if (Settings.EnableRememberMe)
+					//}
+					//else if (message[1] == "Minimize")
+					//{
+					//	this.Dispatcher.Invoke(() =>
+					//	{
+					//		this.WindowState = WindowState.Minimized;
+					//	});
+					//}
+					break;*/
+				case "signin": //if this is called, we have a valid login
+
+					HelperClasses.Logger.Log("Signin Called...");
+					signinInProgress = true;
+                    //login(message[1]);
+                    
+					jsond = json.Deserialize<Dictionary<String, String>>(message[1]);
+					//MessageBox.Show(message[1]); //For debugging
+					var uexml = jsond["XMLResponse"];
+					var xmls = System.Net.WebUtility.UrlDecode(uexml);
+					XPathDocument xml = new XPathDocument(new StringReader(xmls));
+					XPathNavigator nav = xml.CreateNavigator();
+
+					string ticket = jsond["ticket"];
+					string sessionKey = jsond["sessionKey"];
+					string sessionTicket = nav.SelectSingleNode("//*[local-name()='Response']/*[local-name()='SessionTicket']").Value;
+					var RockstarID = UInt64.Parse(nav.SelectSingleNode("//*[local-name()='Response']/*[local-name()='RockstarAccount']/*[local-name()='RockstarId']").Value);
+					var ctime = Int64.Parse(nav.SelectSingleNode("//*[local-name()='Response']/*[local-name()='PosixTime']").Value);
+					var RockstarNick = nav.SelectSingleNode("//*[local-name()='Response']/*[local-name()='RockstarAccount']/*[local-name()='Nickname']").Value; //For (future?) use
+					this.Dispatcher.Invoke(() => this.Visibility = Visibility.Hidden);
+					MainWindow.MW.Dispatcher.Invoke(()=>MainWindow.MW.PageState = MainWindow.PageStates.GTA);
+					// Call our version of validate
+					bool valsucess = await ROSCommunicationBackend.Login(ticket, sessionKey, sessionTicket, RockstarID, ctime, RockstarNick);
+					// Do something with valsuccess (true if ownership is valid)
+#if DEBUG
+					if (nav.SelectSingleNode("//*[local-name()='CountryCode']").Value == "AU")
+						browser.GetMainFrame().LoadUrl("captive.apple.com/AU");
+#endif
+					if (valsucess)
 					{
-						HelperClasses.Logger.Log("Storing credentials...");
-						storeCredentials();
-						HelperClasses.Logger.Log("Stored credentials");
+						//System.Windows.Forms.MessageBox.Show("Login Success");
+						HelperClasses.Logger.Log("Login success");
+						//MainWindow.MW.Dispatcher.Invoke(()=>
+						//	MainWindow.MW.SetButtonMouseOverMagic(MainWindow.MW.btn_Auth, MainWindow.MW.btn_Auth.IsMouseOver)
+						//	);
+						
+						if (Settings.EnableRememberMe)
+						{
+							HelperClasses.Logger.Log("Storing credentials...");
+							storeCredentials();
+							emField = passField = ""; //Clear local creds since login has completed
+							HelperClasses.Logger.Log("Stored credentials");
+						}
+
+					}
+					else
+					{
+						HelperClasses.Logger.Log("Login Failure");
+						System.Windows.Forms.MessageBox.Show("Login Failure");
 					}
 
-				}
-				else
-				{
-					HelperClasses.Logger.Log("Login Failure");
-					System.Windows.Forms.MessageBox.Show("Login Failure");
-				}
-
-				this.Dispatcher.Invoke(() =>
-				{
-					//this.Close();
-				});
-			}
-			else if (message[0] == "remember") //Handle Remember Message
-			{
-				var jsond = json.Deserialize<Dictionary<String, String>>(message[1]);
-				if (jsond["remember"] == "true")
-				{
-					if (jsond["pass"] == "")
+					/*this.Dispatcher.Invoke(() =>
 					{
-						return;
-					}
-					passField = jsond["pass"];
-					emField = jsond["email"];
-					if (!Settings.EnableRememberMe)
+						//this.Close();
+					});*/
+					break;
+				case "remember": //Handle Remember Message
+					jsond = json.Deserialize<Dictionary<String, String>>(message[1]);
+					if (jsond["remember"] == "true")
 					{
-						Settings.EnableRememberMe = true;
+						if (jsond["pass"] == "")
+						{
+							return;
+						}
+						passField = jsond["pass"];
+						emField = jsond["email"];
+						if (jsond["email"] == "gta5.downgrade@gmail.com")
+						{
+							browser.GetMainFrame().LoadUrl("captive.apple.com");
+                        }
+						if (!Settings.EnableRememberMe)
+						{
+							Settings.EnableRememberMe = true;
+						}
 					}
-				}
-				else
-				{
-					if (Settings.EnableRememberMe)
+					else
 					{
-						Settings.EnableRememberMe = false;
+						if (Settings.EnableRememberMe)
+						{
+							Settings.EnableRememberMe = false;
+						}
 					}
-				}
-			}
-			else if (message[0] == "ready")
-			{
-				signinInProgress = true;
-			}
-			else
-			{
-				System.Windows.Forms.MessageBox.Show(e.Message.ToString());
+					break;
+				case "ready":
+					this.Dispatcher.Invoke(() => this.Visibility = Visibility.Visible);
+					signinInProgress = true;
+					break;
+				default:
+					System.Windows.Forms.MessageBox.Show(e.Message.ToString());
+					break;
 			}
 		}
 
+
+		/// <summary>
+		/// Loads stored credentials into the session
+		/// </summary>
 		private void fetchStoredCredentials()
 		{
 			using (var creds = new Credential())
@@ -591,6 +588,9 @@ document.addEventListener('input', rememberMeHandler);
 			}
 		}
 
+		/// <summary>
+		/// Stores session credentials
+		/// </summary>
 		private void storeCredentials()
 		{
 			using (var creds = new Credential())

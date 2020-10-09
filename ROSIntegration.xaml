@@ -7,7 +7,8 @@
         xmlns:cefSharpCore="clr-namespace:CefSharp;assembly=CefSharp.Core"
         xmlns:local="clr-namespace:Project_127"
         mc:Ignorable="d"
-        Background="{x:Static local:Globals.SE_Background}"
+      
+        Background="{x:Static local:Globals.AU_Background}"
         Title="ROSIntegration" d:DesignHeight="540" d:DesignWidth="625"    >
     <!--WindowStyle="None"
         BorderBrush="Black"
@@ -16,11 +17,8 @@
         AllowsTransparency="True"
         Background="#131518">-->
     <Grid Height="540" Width="625" HorizontalAlignment="Left" VerticalAlignment="Top">
-        <cefSharp:ChromiumWebBrowser x:Name="browser" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="480" Height="450" Margin="0,0,60,40" Address="https://rgl.rockstargames.com/launcher" LoadingStateChanged="LoadingStateChange" JavascriptMessageReceived="browser_JavascriptMessageReceived">
-                                     <!--Margin="0,0,100,80"--> 
-            <cefSharp:ChromiumWebBrowser.BrowserSettings>
-                <cefSharpCore:BrowserSettings BackgroundColor="#131518"/>
-            </cefSharp:ChromiumWebBrowser.BrowserSettings>
+        <cefSharp:ChromiumWebBrowser x:Name="browser" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="480" Height="460" Margin="0,0,60,10" Address="https://rgl.rockstargames.com/launcher" LoadingStateChanged="LoadingStateChange" JavascriptMessageReceived="browser_JavascriptMessageReceived">
+                                     <!--Margin="0,0,100,80"-->
         </cefSharp:ChromiumWebBrowser>
         <!--<Rectangle Width="135" Fill="Green" HorizontalAlignment="Left"/>
         <Rectangle Height="120"  Fill="Green" VerticalAlignment="Top" Margin="0,0,0,0"/>-->
