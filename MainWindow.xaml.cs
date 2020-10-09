@@ -68,6 +68,9 @@ Main To do:
 		- Implementing most Popup Windows as their own Page inside Main Window
 		- Implementing Properties with proper Setters (it affecting UI) for PageState, HamburgerMenuState, BackgroundImages
 			=> Made new blurry shit easily possible + loading and unloading pages + mouse over color changing on loaded page
+		- Command Line Args Base Written
+		- ReadMe Page written and documented (semi)
+		- BugFix for AuthState MouseOver 5 second limit
 
 	-REMEMBER:
 		-> Release with admin mode manifest thingy...		
@@ -75,27 +78,15 @@ Main To do:
 		-> This requires admin the "proper" way of telling windows. Should fix zip file issues
 
 	- TO DO:
-		-> (1) Command Line Args for making one show + command line args in general
-
-		-> Properly Code and Document new Page called ReadMe
-
-		-> (2) DispatcherTimer checks (among other things) if you are auth or not and sets the appropiate Lock-Icon
-			=> This fucks with the MouseOver Method for the button image, since I just capture MouseLeave and MouseEnter events.
-			=> Reproduce: Mouse Over on Lock-Icon. Dont Move Mouse. Wait 5 seconds
-
-			=> Can probably use a bool to keep updating if that specific button is currently mouse over or not, which would fix that
-
-		-> (2) Develop Concept with makes Repair Button unneeded and check how much time and CPU this needs
-
-		-> (4) Catch KeyBoard Events for the Pages because it does dumb stuff (Mouse4 + Mouse5 + BackSpace)
-
 		-> (2) Include latest Fixes from Dragon, Check how this exists...and if the loading thing and red popup appear
 			=> (2) Add Loading Bar for that. Check onloadcomplete event and code Dragon sent on discord
-		
-		-> (4) Make SaveFileHandler usable
 
-		-> (6) Make Settings usable
-
+		-> (2) Develop Concept with makes Repair Button unneeded and check how much time and CPU this needs
+			=> Already see if we can make this to keep "States" of Installation with different Upgraded Versions
+		-> (4) Catch KeyBoard Events for the Pages because it does dumb stuff (Mouse4 + Mouse5 + BackSpace)
+		-> (4) Fix SaveFileHandler GUI
+		-> (6) Fix Settings GUI
+		-> (6) Fix ReadMe GUI
 		-> (6) Add Categories (Tags) to SaveFiles,
 				make user able to just display certain ones
 				make user able to change Categories of a File.
@@ -104,6 +95,8 @@ Main To do:
 		-> Implement all Other features
 			=> Just see Settings.XAML for what I need to implement
 			=> See Core Affinity Fix...
+
+		-> Re-Write ALL XML Styles in one Place
 
 		-> Tell Karsten about Birthday Present Thingy and show him this for work
 
@@ -207,6 +200,12 @@ namespace Project_127
 		public static MainWindow MW;
 
 		/// <summary>
+		/// Bool we use to keep track of AuthButton States
+		/// </summary>
+		private bool AuthButtonMouseOver = false;
+
+
+		/// <summary>
 		/// Constructor of Main Window
 		/// </summary>
 		public MainWindow()
@@ -275,15 +274,14 @@ namespace Project_127
 			if (Globals.InternalMode)
 			{
 				string msg = "We are in internal mode. I need testing on:\n" +
-					"NEW DEPLOYMENT CONCEPT" + "\n" +
-					"INTERNAL RELEASE SHIT" + "\n" +
-					"NAME CHANGER, WITH NEW DRAGON BACKEND" + "\n" +
-					"REMEMBER ME FUNCTION FROM DRAGON" + "\n" +
-					"LANGUAGE SELECT" + "\n" +
-					"AUTO HIGH PRIORITY" + "\n" +
-					"SAVEFILEHANDLER" + "\n" +
-					"IMPORTING SAVEFILES AND IMPORTING GTAV SETTINGS" + "\n" +
-					"NEW LAUNCH METHOD FOR ALL 6 COMBINATIONS (3 RETAILRS. UPGRADED / DOWNGRADED)" + "\n\n" +
+					"" + "\n" +
+					"" + "\n" +
+					"" + "\n" +
+					"" + "\n" +
+					"" + "\n" +
+					"" + "\n" +
+					"" + "\n" +
+					"" + "\n" +
 					"\nThanks. Appreciated. Have a great day : )";
 
 				new Popup(Popup.PopupWindowTypes.PopupOk, msg).ShowDialog();
@@ -291,6 +289,27 @@ namespace Project_127
 
 
 			Globals.HamburgerMenuState = Globals.HamburgerMenuStates.Hidden;
+
+			// Need to be in following Format
+			// "-CommandLineArg:Value"
+			foreach (string CommandLineArg in Globals.CommandLineArgs)
+			{
+				string Argument = CommandLineArg.Substring(0, CommandLineArg.IndexOf(':'));
+				string Value = CommandLineArg.Substring(CommandLineArg.IndexOf(':') + 1);
+
+				if (Argument == "-Background")
+				{
+					Globals.BackgroundImages Tmp = Globals.BackgroundImages.Main;
+					try
+					{
+						Tmp = (Globals.BackgroundImages)System.Enum.Parse(typeof(Globals.BackgroundImages), Value);
+						Globals.BackgroundImage = Tmp;
+						SetControlBackground(this, Globals.GetBackGroundPath());
+					} catch { }
+				}
+			}
+
+			AuthButtonMouseOver = false;
 
 			HelperClasses.Logger.Log("Startup procedure (Constructor of MainWindow) completed.");
 			HelperClasses.Logger.Log("--------------------------------------------------------");
@@ -567,7 +586,7 @@ namespace Project_127
 			else
 			{
 				lbl_GTA.Foreground = Globals.MW_GTALabelBrokenForeground;
-				lbl_GTA.Content = "Broken";
+				lbl_GTA.Content = "Unsure";
 			}
 			if (LauncherLogic.GameState == LauncherLogic.GameStates.Running)
 			{
@@ -630,7 +649,7 @@ namespace Project_127
 		/// </summary>
 		/// <param name="myBtn"></param>
 		/// <param name="pMouseOver"></param>
-		public void SetButtonMouseOverMagic(Button myBtn, bool pMouseOver)
+		public void SetButtonMouseOverMagic(Button myBtn, bool pMouseOver = false)
 		{
 			switch (myBtn.Name)
 			{
@@ -664,7 +683,7 @@ namespace Project_127
 					{
 						BaseArtworkPath = @"Artwork\lock_open";
 					}
-					if (pMouseOver)
+					if (AuthButtonMouseOver)
 					{
 						if (Globals.PageState == Globals.PageStates.Auth)
 						{
@@ -795,6 +814,10 @@ namespace Project_127
 		/// <param name="e"></param>
 		private void btn_MouseEnter(object sender, MouseEventArgs e)
 		{
+			if (((Button)sender).Name == "btn_Auth")
+			{
+				AuthButtonMouseOver = true;
+			}
 			SetButtonMouseOverMagic((Button)sender, true);
 		}
 
@@ -805,6 +828,10 @@ namespace Project_127
 		/// <param name="e"></param>
 		private void btn_MouseLeave(object sender, MouseEventArgs e)
 		{
+			if (((Button)sender).Name == "btn_Auth")
+			{
+				AuthButtonMouseOver = false;
+			}
 			SetButtonMouseOverMagic((Button)sender, false);
 		}
 

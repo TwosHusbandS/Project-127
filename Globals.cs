@@ -313,7 +313,7 @@ namespace Project_127
 
 
 		/// <summary>
-		/// Value we use for PageState
+		/// Value we use for PageState. Setter is Gucci :*
 		/// </summary>
 		public static PageStates PageState
 		{
@@ -374,7 +374,9 @@ namespace Project_127
 			}
 		}
 
-
+		/// <summary>
+		/// Enum for all BackgroundImages
+		/// </summary>
 		public enum BackgroundImages
 		{
 			Main,
@@ -383,8 +385,14 @@ namespace Project_127
 			Spooky
 		}
 
+		/// <summary>
+		/// Internal Value for BackgroundImage
+		/// </summary>
 		private static BackgroundImages _BackgroundImage = BackgroundImages.Main;
 
+		/// <summary>
+		/// Value we use for BackgroundImage. Setter is Gucci :*
+		/// </summary>
 		public static BackgroundImages BackgroundImage
 		{
 			get
@@ -398,14 +406,23 @@ namespace Project_127
 			}
 		}
 
+		/// <summary>
+		/// Enum for all HamburgerMenuStates
+		/// </summary>
 		public enum HamburgerMenuStates
 		{
 			Visible,
 			Hidden
 		}
 
+		/// <summary>
+		/// Internal Value for HamburgerMenuState
+		/// </summary>
 		private static HamburgerMenuStates _HamburgerMenuState = HamburgerMenuStates.Hidden;
 
+		/// <summary>
+		/// Value we use for HamburgerMenuState. Setter is Gucci :*
+		/// </summary>
 		public static HamburgerMenuStates HamburgerMenuState
 		{
 			get
@@ -435,6 +452,10 @@ namespace Project_127
 		}
 		
 
+		/// <summary>
+		/// Gets Path to correct Background URI, based on the 3 States above
+		/// </summary>
+		/// <returns></returns>
 		public static string GetBackGroundPath()
 		{
 			string URL_Path = @"Artwork\bg_";
@@ -470,7 +491,6 @@ namespace Project_127
 					URL_Path += "_blur.png";
 				}
 			}
-			// HamburgerMenuState and also PageState
 
 			return URL_Path;
 		}

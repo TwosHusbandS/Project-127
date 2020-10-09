@@ -12,6 +12,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
+using System.Windows.Resources;
 using System.Windows.Shapes;
 
 namespace Project_127
@@ -21,22 +22,26 @@ namespace Project_127
 	/// </summary>
 	public partial class ReadMe : Page
 	{
-		// /////////////////////////////////////////////////////////////
-		// CLASS FOR PAGE READ_ME, CONTAINING INFO FOR: "SPEEDRUN"; "ABOUT"; "CREDITS"
-		// WORKS BY TOGGLING VISIBILITY OF GRIDS FOR EACH POSSIBLE STATE
-		// MOSTLY UNDOCUMENTED AND IM-PERFECT IMPLEMENTATIONS
-		// WORKING POC THO
-		// /////////////////////////////////////////////////////////////
-
-
-
+		/// <summary>
+		/// Last ReadMeState saved to load it up correctly
+		/// </summary>
 		public static ReadMeStates LastReadMeState = ReadMeStates.About;
 
+		/// <summary>
+		/// Constructor
+		/// </summary>
 		public ReadMe()
 		{
+			// WPF Shit
 			InitializeComponent();
 
+			// Setting ReadMeState to the LastReadMeState
 			ReadMeState = ReadMe.LastReadMeState;
+
+			// Setting all mouse over to the right colors and shit
+			SetButtonMouseOverMagic(btn_About, false);
+			SetButtonMouseOverMagic(btn_Credits, false);
+			SetButtonMouseOverMagic(btn_SpeedRun, false);
 
 			string msg1 = "" +
 				"This Popup will contain Information about GTAV Speedrunning.\n" +
@@ -80,15 +85,24 @@ namespace Project_127
 			Grid_Credits_Lbl.Content = msg3;
 		}
 
+		/// <summary>
+		/// Enum for all ReadMeStates
+		/// </summary>
 		public enum ReadMeStates
 		{
-			Speedrun,
+			SpeedRun,
 			About,
 			Credits
 		}
 
+		/// <summary>
+		/// Internal Value
+		/// </summary>
 		private ReadMeStates _ReadMeState = ReadMeStates.About;
 
+		/// <summary>
+		/// Value we get and set. Setters are gucci. 
+		/// </summary>
 		public ReadMeStates ReadMeState
 		{
 			get
@@ -98,165 +112,44 @@ namespace Project_127
 			set
 			{
 				_ReadMeState = value;
+
+				// Saving it in LastReadMeState
 				ReadMe.LastReadMeState = value;
-				if (value == ReadMeStates.Speedrun)
+
+				if (value == ReadMeStates.SpeedRun)
 				{
 					Grid_SpeedRun.Visibility = Visibility.Visible;
+					SetButtonMouseOverMagic(btn_SpeedRun, true);
+
 					Grid_About.Visibility = Visibility.Hidden;
+					SetButtonMouseOverMagic(btn_About, false);
+
 					Grid_Credits.Visibility = Visibility.Hidden;
-
-					btn_SpeedRun.Background = Globals.MW_ButtonMOBackground;
-					btn_SpeedRun.Foreground = Globals.MW_ButtonMOForeground;
-
-					btn_About.Background = Globals.MW_ButtonBackground;
-					btn_About.Foreground = Globals.MW_ButtonForeground;
-					btn_Credits.Background = Globals.MW_ButtonBackground;
-					btn_Credits.Foreground = Globals.MW_ButtonForeground;
+					SetButtonMouseOverMagic(btn_Credits, false);
 				}
 				else if (value == ReadMeStates.About)
 				{
 					Grid_About.Visibility = Visibility.Visible;
+					SetButtonMouseOverMagic(btn_About, true);
+
 					Grid_SpeedRun.Visibility = Visibility.Hidden;
+					SetButtonMouseOverMagic(btn_SpeedRun, false);
+
 					Grid_Credits.Visibility = Visibility.Hidden;
-
-					btn_About.Background = Globals.MW_ButtonMOBackground;
-					btn_About.Foreground = Globals.MW_ButtonMOForeground;
-
-					btn_SpeedRun.Background = Globals.MW_ButtonBackground;
-					btn_SpeedRun.Foreground = Globals.MW_ButtonForeground;
-					btn_Credits.Background = Globals.MW_ButtonBackground;
-					btn_Credits.Foreground = Globals.MW_ButtonForeground;
+					SetButtonMouseOverMagic(btn_Credits, false);
 				}
 				else if (value == ReadMeStates.Credits)
 				{
 					Grid_Credits.Visibility = Visibility.Visible;
+					SetButtonMouseOverMagic(btn_Credits, true);
+
 					Grid_SpeedRun.Visibility = Visibility.Hidden;
+					SetButtonMouseOverMagic(btn_SpeedRun, false);
+
 					Grid_About.Visibility = Visibility.Hidden;
-
-					btn_Credits.Background = Globals.MW_ButtonMOBackground;
-					btn_Credits.Foreground = Globals.MW_ButtonMOForeground;
-
-					btn_About.Background = Globals.MW_ButtonBackground;
-					btn_About.Foreground = Globals.MW_ButtonForeground;
-					btn_SpeedRun.Background = Globals.MW_ButtonBackground;
-					btn_SpeedRun.Foreground = Globals.MW_ButtonForeground;
-				}
-				else
-				{
-					// This should never happen
+					SetButtonMouseOverMagic(btn_About, false);
 				}
 			}
-		}
-
-
-
-
-		private void btn_SpeedRun_Click(object sender, RoutedEventArgs e)
-		{
-			ReadMeState = ReadMeStates.Speedrun;
-		}
-
-		private void btn_About_Click(object sender, RoutedEventArgs e)
-		{
-			ReadMeState = ReadMeStates.About;
-		}
-
-		private void btn_Credits_Click(object sender, RoutedEventArgs e)
-		{
-			ReadMeState = ReadMeStates.Credits;
-		}
-
-		private void btn_MouseEnter(object sender, MouseEventArgs e)
-		{
-			Button myBtn = (Button)sender;
-			switch (myBtn.Name)
-			{
-				case "btn_Speedrun":
-					if (ReadMeState == ReadMeStates.Speedrun)
-					{
-						myBtn.Background = Globals.MW_ButtonBackground;
-						myBtn.Foreground = Globals.MW_ButtonForeground;
-					}
-					else
-					{
-						myBtn.Background = Globals.MW_ButtonMOBackground;
-						myBtn.Foreground = Globals.MW_ButtonMOForeground;
-					}
-					break;
-				case "btn_About":
-					if (ReadMeState == ReadMeStates.About)
-					{
-						myBtn.Background = Globals.MW_ButtonBackground;
-						myBtn.Foreground = Globals.MW_ButtonForeground;
-					}
-					else
-					{
-						myBtn.Background = Globals.MW_ButtonMOBackground;
-						myBtn.Foreground = Globals.MW_ButtonMOForeground;
-					}
-					break;
-				case "btn_Credits":
-					if (ReadMeState == ReadMeStates.Credits)
-					{
-						myBtn.Background = Globals.MW_ButtonBackground;
-						myBtn.Foreground = Globals.MW_ButtonForeground;
-					}
-					else
-					{
-						myBtn.Background = Globals.MW_ButtonMOBackground;
-						myBtn.Foreground = Globals.MW_ButtonMOForeground;
-					}
-					break;
-			}
-		}
-
-		private void btn_MouseLeave(object sender, MouseEventArgs e)
-		{
-			Button myBtn = (Button)sender;
-			switch (myBtn.Name)
-			{
-				case "btn_Speedrun":
-					if (ReadMeState == ReadMeStates.Speedrun)
-					{
-						myBtn.Background = Globals.MW_ButtonMOBackground;
-						myBtn.Foreground = Globals.MW_ButtonMOForeground;
-					}
-					else
-					{
-						myBtn.Background = Globals.MW_ButtonBackground;
-						myBtn.Foreground = Globals.MW_ButtonForeground;
-					}
-					break;
-				case "btn_About":
-					if (ReadMeState == ReadMeStates.About)
-					{
-						myBtn.Background = Globals.MW_ButtonMOBackground;
-						myBtn.Foreground = Globals.MW_ButtonMOForeground;
-					}
-					else
-					{
-						myBtn.Background = Globals.MW_ButtonBackground;
-						myBtn.Foreground = Globals.MW_ButtonForeground;
-					}
-					break;
-				case "btn_Credits":
-					if (ReadMeState == ReadMeStates.Credits)
-					{
-						myBtn.Background = Globals.MW_ButtonMOBackground;
-						myBtn.Foreground = Globals.MW_ButtonMOForeground;
-					}
-					else
-					{
-						myBtn.Background = Globals.MW_ButtonBackground;
-						myBtn.Foreground = Globals.MW_ButtonForeground;
-					}
-					break;
-			}
-		}
-
-		private void UpdateText()
-		{
-			
 		}
 
 
@@ -274,6 +167,83 @@ namespace Project_127
 		{
 
 		}
+
+
+		private void btn_SpeedRun_Click(object sender, RoutedEventArgs e)
+		{
+			ReadMeState = ReadMeStates.SpeedRun;
+		}
+
+		private void btn_About_Click(object sender, RoutedEventArgs e)
+		{
+			ReadMeState = ReadMeStates.About;
+		}
+
+		private void btn_Credits_Click(object sender, RoutedEventArgs e)
+		{
+			ReadMeState = ReadMeStates.Credits;
+		}
+
+
+		/// <summary>
+		/// Method we use to set Mouse Over Colors and stuff
+		/// </summary>
+		/// <param name="myBtn"></param>
+		/// <param name="pMouseOver"></param>
+		public void SetButtonMouseOverMagic(Button myBtn, bool pMouseOver)
+		{
+			if (myBtn.Name.Substring(myBtn.Name.IndexOf('_') + 1) == ReadMeState.ToString())
+			{
+				if (pMouseOver)
+				{
+					myBtn.Background = Globals.MW_ButtonBackground;
+					myBtn.Foreground = Globals.MW_ButtonForeground;
+					myBtn.BorderBrush = Globals.MW_ButtonBorderBrush;
+				}
+				else
+				{
+					myBtn.Background = Globals.MW_ButtonMOBackground;
+					myBtn.Foreground = Globals.MW_ButtonMOForeground;
+					myBtn.BorderBrush = Globals.MW_ButtonMOBorderBrush;
+				}
+			}
+			else
+			{
+				if (pMouseOver)
+				{
+					myBtn.Background = Globals.MW_ButtonMOBackground;
+					myBtn.Foreground = Globals.MW_ButtonMOForeground;
+					myBtn.BorderBrush = Globals.MW_ButtonMOBorderBrush;
+				}
+				else
+				{
+					myBtn.Background = Globals.MW_ButtonBackground;
+					myBtn.Foreground = Globals.MW_ButtonForeground;
+					myBtn.BorderBrush = Globals.MW_ButtonBorderBrush;
+				}
+			}
+		}
+
+		/// <summary>
+		/// MouseEnter event for updating background image of buttons
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void btn_MouseEnter(object sender, MouseEventArgs e)
+		{
+			SetButtonMouseOverMagic((Button)sender, true);
+		}
+
+		/// <summary>
+		/// MouseLeave event for updating background image of buttons
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void btn_MouseLeave(object sender, MouseEventArgs e)
+		{
+			SetButtonMouseOverMagic((Button)sender, false);
+		}
+
 	}
 }
 
