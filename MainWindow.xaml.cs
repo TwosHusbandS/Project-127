@@ -78,7 +78,12 @@ Main To do:
 		-> Fix Installer with everything (autolaunch app,include new files)
 		-> This requires admin the "proper" way of telling windows. Should fix zip file issues
 
+		-> Im currently 100% Trusting the myBtn.IsMouseOver Property even tho i have had bad experiences with it in the past
+			=> The bool parameter has 0 effect right now
+
 	- TO DO:
+		-> Re-Organize Colors && XML Styles && Include Dr490ns ideas of creating proper styles for the highlighting
+
 		-> Think about Loading Gif for LoginWindow, although I think its fine as it is
 		-> Spinning Logging Button when re-opening Auth (first time seems to work fine)
 		-> Fix SaveFileHandler GUI (make it not look like shit)
@@ -94,8 +99,6 @@ Main To do:
 		-> Implement all Other features
 			=> Just see Settings.XAML for what I need to implement
 			=> See Core Affinity Fix...
-		-> Re-Write ALL XML Styles in one Place
-
 
 
 		-> Tell Karsten about Birthday Present Thingy and show him this for work
@@ -199,11 +202,6 @@ namespace Project_127
 		/// </summary>
 		public static MainWindow MW;
 
-		/// <summary>
-		/// Bool we use to keep track of AuthButton States
-		/// </summary>
-		private bool AuthButtonMouseOver = false;
-
 
 		/// <summary>
 		/// Constructor of Main Window
@@ -306,11 +304,10 @@ namespace Project_127
 						Tmp = (Globals.BackgroundImages)System.Enum.Parse(typeof(Globals.BackgroundImages), Value);
 						Globals.BackgroundImage = Tmp;
 						SetControlBackground(this, Globals.GetBackGroundPath());
-					} catch { }
+					}
+					catch { }
 				}
 			}
-
-			AuthButtonMouseOver = false;
 
 			HelperClasses.Logger.Log("Startup procedure (Constructor of MainWindow) completed.");
 			HelperClasses.Logger.Log("--------------------------------------------------------");
@@ -655,7 +652,8 @@ namespace Project_127
 			switch (myBtn.Name)
 			{
 				case "btn_Hamburger":
-					if (pMouseOver)
+					//if (pMouseOver)
+					if (myBtn.IsMouseOver)
 					{
 						SetControlBackground(myBtn, @"Artwork\hamburger_mo.png");
 					}
@@ -665,7 +663,8 @@ namespace Project_127
 					}
 					break;
 				case "btn_Exit":
-					if (pMouseOver)
+					//if (pMouseOver)
+					if (myBtn.IsMouseOver)
 					{
 						SetControlBackground(myBtn, @"Artwork\exit_mo.png");
 					}
@@ -684,7 +683,8 @@ namespace Project_127
 					{
 						BaseArtworkPath = @"Artwork\lock_open";
 					}
-					if (AuthButtonMouseOver)
+					//if (AuthButtonMouseOver)
+					if (myBtn.IsMouseOver)
 					{
 						if (Globals.PageState == Globals.PageStates.Auth)
 						{
@@ -710,7 +710,8 @@ namespace Project_127
 				case "btn_Settings":
 					if (Globals.PageState == Globals.PageStates.Settings)
 					{
-						if (pMouseOver)
+						//if (pMouseOver)
+						if (myBtn.IsMouseOver)
 						{
 							myBtn.Background = Globals.MW_ButtonBackground;
 							myBtn.Foreground = Globals.MW_ButtonForeground;
@@ -725,7 +726,8 @@ namespace Project_127
 					}
 					else
 					{
-						if (pMouseOver)
+						//if (pMouseOver)
+						if (myBtn.IsMouseOver)
 						{
 							myBtn.Background = Globals.MW_ButtonMOBackground;
 							myBtn.Foreground = Globals.MW_ButtonMOForeground;
@@ -742,7 +744,8 @@ namespace Project_127
 				case "btn_SaveFiles":
 					if (Globals.PageState == Globals.PageStates.SaveFileHandler)
 					{
-						if (pMouseOver)
+						//if (pMouseOver)
+						if (myBtn.IsMouseOver)
 						{
 							myBtn.Background = Globals.MW_ButtonBackground;
 							myBtn.Foreground = Globals.MW_ButtonForeground;
@@ -757,7 +760,8 @@ namespace Project_127
 					}
 					else
 					{
-						if (pMouseOver)
+						//if (pMouseOver)
+						if (myBtn.IsMouseOver)
 						{
 							myBtn.Background = Globals.MW_ButtonMOBackground;
 							myBtn.Foreground = Globals.MW_ButtonMOForeground;
@@ -774,7 +778,8 @@ namespace Project_127
 				case "btn_ReadMe":
 					if (Globals.PageState == Globals.PageStates.ReadMe)
 					{
-						if (pMouseOver)
+						//if (pMouseOver)
+						if (myBtn.IsMouseOver)
 						{
 							myBtn.Background = Globals.MW_ButtonBackground;
 							myBtn.Foreground = Globals.MW_ButtonForeground;
@@ -789,7 +794,8 @@ namespace Project_127
 					}
 					else
 					{
-						if (pMouseOver)
+						//if (pMouseOver)
+						if (myBtn.IsMouseOver)
 						{
 							myBtn.Background = Globals.MW_ButtonMOBackground;
 							myBtn.Foreground = Globals.MW_ButtonMOForeground;
@@ -815,10 +821,6 @@ namespace Project_127
 		/// <param name="e"></param>
 		private void btn_MouseEnter(object sender, MouseEventArgs e)
 		{
-			if (((Button)sender).Name == "btn_Auth")
-			{
-				AuthButtonMouseOver = true;
-			}
 			SetButtonMouseOverMagic((Button)sender, true);
 		}
 
@@ -829,10 +831,6 @@ namespace Project_127
 		/// <param name="e"></param>
 		private void btn_MouseLeave(object sender, MouseEventArgs e)
 		{
-			if (((Button)sender).Name == "btn_Auth")
-			{
-				AuthButtonMouseOver = false;
-			}
 			SetButtonMouseOverMagic((Button)sender, false);
 		}
 

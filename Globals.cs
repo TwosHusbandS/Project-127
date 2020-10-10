@@ -325,6 +325,12 @@ namespace Project_127
 			{
 				// Setting actual Enum to the correct Value
 				_PageState = value;
+
+				if (value != PageStates.GTA)
+				{
+					HamburgerMenuState = HamburgerMenuStates.Visible;
+				}
+
 				MainWindow.MW.SetControlBackground(MainWindow.MW, GetBackGroundPath());
 
 				// Switch Value

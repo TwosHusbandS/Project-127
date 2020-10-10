@@ -64,7 +64,12 @@ namespace Project_127
 			}
 			NavigationCommands.BrowseBack.InputGestures.Clear();
 			InitializeComponent();
-			this.Dispatcher.Invoke(() => this.Visibility = Visibility.Hidden);
+			this.Dispatcher.Invoke(() =>
+			{
+				this.myGridContent.Visibility = Visibility.Hidden;
+				this.myGridLoading.Visibility = Visibility.Visible;
+			});
+
 			browser.BrowserSettings.ApplicationCache = CefState.Disabled;
 			//browser.BrowserSettings.BackgroundColor = 0x13 << 16 | 0x15 << 8 | 0x18 | 0xFF << 24;
 			HelperClasses.Logger.Log("Initialization complete");
@@ -559,7 +564,11 @@ document.addEventListener('input', rememberMeHandler);
 					}
 					break;
 				case "ready":
-					this.Dispatcher.Invoke(() => this.Visibility = Visibility.Visible);
+					this.Dispatcher.Invoke(() =>
+					{
+						this.myGridContent.Visibility = Visibility.Visible;
+						this.myGridLoading.Visibility = Visibility.Hidden;
+					});
 					signinInProgress = true;
 					break;
 				default:
@@ -604,6 +613,11 @@ document.addEventListener('input', rememberMeHandler);
 			}
 		}
 
+		private void myGif_MediaEnded(object sender, RoutedEventArgs e)
+		{
+			//myGif.Position = new TimeSpan(0, 0, 1);
+			//myGif.Play();
+		}
 	}
 }
 
