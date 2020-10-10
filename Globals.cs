@@ -519,6 +519,7 @@ namespace Project_127
 
 		/// <summary>
 		/// All other colors:
+		/// App = App_Wide styles
 		/// MW = MainWindow
 		/// PU = Pop Up
 		/// SE = Settings
@@ -533,20 +534,49 @@ namespace Project_127
 		// Some of thickness, corner radius, margins are semi-hardcoded in XAML Styles.
 
 		// Border of MainWindow
-		public static Brush MW_Border { get; private set; } = MyColorWhite;
-		// All the HamburgerButton Items, Backgrounds, etc.
-		public static System.Windows.Thickness MW_ButtonBorderThickness { get; private set; } = new System.Windows.Thickness(0);
-		public static Brush MW_HamburgerMenuGridBackground { get; private set; } = SetOpacity(MyColorBlack, 50);
-		public static Brush MW_ButtonBackground { get; private set; } = SetOpacity(MyColorBlack, 70);
-		public static Brush MW_ButtonForeground { get; private set; } = MyColorWhite;
-		public static Brush MW_ButtonBorderBrush { get; private set; } = MyColorWhite;
-		public static Brush MW_ButtonMOBackground { get; private set; } = MyColorOffWhite;
-		public static Brush MW_ButtonMOForeground { get; private set; } = MyColorBlack;
-		public static Brush MW_ButtonMOBorderBrush { get; private set; } = MyColorWhite;
+		public static Brush MW_BorderBrush { get; private set; } = MyColorWhite;
+		public static Thickness MW_BorderThickness { get; private set; } = new System.Windows.Thickness(2);
 
+		public static Brush App_LabelForeground { get; private set; } = MyColorWhite;
+
+
+		// All the HamburgerButton Items, Backgrounds, etc.
+		public static Thickness App_ButtonBorderThickness { get; private set; } = new Thickness(0);
+		public static Brush App_ButtonBorderBrush { get; private set; } = MyColorWhite;
+		public static Brush App_ButtonBackground { get; private set; } = SetOpacity(MyColorBlack, 70);
+		public static Brush App_ButtonForeground { get; private set; } = MyColorWhite;
+		public static Brush App_ButtonMOBackground { get; private set; } = MyColorOffWhite;
+		public static Brush App_ButtonMOForeground { get; private set; } = MyColorBlack;
+		public static Brush App_ButtonMOBorderBrush { get; private set; } = MyColorWhite;
+
+		public static Thickness MW_ButtonHamburgerMenuBorderThickness { get; private set; } = new Thickness(0);
+		public static Brush MW_ButtonHamburgerMenuBorderBrush { get; private set; } = MyColorWhite;
+		public static Brush MW_ButtonHamburgerMenuBackground { get; private set; } = SetOpacity(MyColorBlack, 70);
+		public static Brush MW_ButtonHamburgerMenuForeground { get; private set; } = MyColorWhite;
+		public static Brush MW_ButtonHamburgerMenuMOBackground { get; private set; } = MyColorOffWhite;
+		public static Brush MW_ButtonHamburgerMenuMOForeground { get; private set; } = MyColorBlack;
+		public static Brush MW_ButtonHamburgerMenuMOBorderBrush { get; private set; } = MyColorWhite;
+
+		public static Brush MW_HamburgerMenuSeperatorBrush { get; private set; } = MyColorWhite;
+
+
+		public static Thickness App_ButtonSmallBorderThickness { get; private set; } = new Thickness(2);
+		public static Brush App_ButtonSmallBorderBrush { get; private set; } = MyColorWhite;
+
+		public static Brush MW_HamburgerMenuGridBackground { get; private set; } = SetOpacity(MyColorBlack, 50);
 		public static Brush MW_GTALabelDowngradedForeground { get; private set; } = MyColorGreen;
 		public static Brush MW_GTALabelUpgradedForeground { get; private set; } = Brushes.White;
 		public static Brush MW_GTALabelBrokenForeground { get; private set; } = Brushes.Red;
+
+		public static Thickness MW_ButtonBorderThickness { get; private set; } = new Thickness(0);
+		public static Brush MW_ButtonBorderBrush { get; private set; } = MyColorWhite;
+
+
+		public static Brush MW_ButtonBackground { get; private set; } = SetOpacity(MyColorBlack, 70);
+		public static Brush MW_ButtonForeground { get; private set; } = MyColorWhite;
+		public static Brush MW_ButtonMOBackground { get; private set; } = MyColorOffWhite;
+		public static Brush MW_ButtonMOForeground { get; private set; } = MyColorBlack;
+		public static Brush MW_ButtonMOBorderBrush { get; private set; } = MyColorWhite;
 
 		// Hamburger Button and "X"
 		// These have no effect since these are all Icons now...

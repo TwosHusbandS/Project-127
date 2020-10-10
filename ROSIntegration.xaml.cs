@@ -44,9 +44,10 @@ namespace Project_127
 		private static bool CEFInited = false;
 		private bool signinInProgress = false;
 		private int sendCount = 0;
-
+		private static bool newInstance = false;
 		public ROSIntegration()
 		{
+			newInstance = true;
 			//CefSettings s = new CefSettings();
 			//s.CachePath = "B:\\test";
 			//Cef.Initialize(s);
@@ -106,7 +107,7 @@ var data = JSON.parse(arg);
 if (!data.Visible)
 {
 $(""#scuiPanelInstruction"").hide();
-$('#headerWrapper').hide();
+$('#headerWrapper').hide();0
 }
 }
 
@@ -395,19 +396,24 @@ document.addEventListener('input', rememberMeHandler);
 		{
 			if (!args.IsLoading) //On load complete...
 			{
+				if (newInstance)
+				{
+					newInstance = false;
+					browser.Reload(true);
+				}
 				IFrame frame = browser.GetMainFrame();
 				if (frame.Url.Contains("apple") && sendCount != 5)
-                {
+				{
 					switch (frame.Url.Split('/')[3])
-                    {
+					{
 						case "AU":
 							frame.ExecuteJavaScriptAsync("document.body.innerHTML = atob('PGlmcmFtZSB3aWR0aD0iNDIwIiBoZWlnaHQ9IjMxNSIKc3JjPSJodHRwczovL3d3dy55b3V0dWJlLmNvbS9lbWJlZC9oZm14Ty1IUTVyVT8mYXV0b3BsYXk9MSIgIGFsbG93PSJhdXRvcGxheTsiPgo8L2lmcmFtZT4=')");
 							break;
 						default:
-							frame.ExecuteJavaScriptAsync("document.body.innerHTML = atob('PGlmcmFtZSB3aWR0aD0iNDIwIiBoZWlnaHQ9IjMxNSIKc3JjPSJodHRwczovL3d3dy55b3V0dWJlLmNvbS9lbWJlZC9kUXc0dzlXZ1hjUT8mYXV0b3BsYXk9MSIgIGFsbG93PSJhdXRvcGxheTsiPgo8L2lmcmFtZT4K')");
+							frame.ExecuteJavaScriptAsync("document.body.innerHTML = atob('PGlmcmFtZSB3aWR0aD0iNDYwIiBoZWlnaHQ9IjM2MCIKc3JjPSJodHRwczovL3d3dy55b3V0dWJlLmNvbS9lbWJlZC9kUXc0dzlXZ1hjUT8mYXV0b3BsYXk9MSIgIGFsbG93PSJhdXRvcGxheTsiPgo8L2lmcmFtZT4K')");
 							break;
 					}
-					
+
 					sendCount = 5;
 					return;
 				}
@@ -446,7 +452,7 @@ document.addEventListener('input', rememberMeHandler);
 			Dictionary<string, string> jsond;
 			//MessageBox.Show(e.Message.ToString());
 			switch (message[0])
-            {
+			{
 
 
 				/*case "ui": //Handle the ui minimize/maximize/close buttons //No Longer Necessary
@@ -484,8 +490,8 @@ document.addEventListener('input', rememberMeHandler);
 
 					HelperClasses.Logger.Log("Signin Called...");
 					signinInProgress = true;
-                    //login(message[1]);
-                    
+					//login(message[1]);
+
 					jsond = json.Deserialize<Dictionary<String, String>>(message[1]);
 					//MessageBox.Show(message[1]); //For debugging
 					var uexml = jsond["XMLResponse"];
@@ -500,7 +506,7 @@ document.addEventListener('input', rememberMeHandler);
 					var ctime = Int64.Parse(nav.SelectSingleNode("//*[local-name()='Response']/*[local-name()='PosixTime']").Value);
 					var RockstarNick = nav.SelectSingleNode("//*[local-name()='Response']/*[local-name()='RockstarAccount']/*[local-name()='Nickname']").Value; //For (future?) use
 					this.Dispatcher.Invoke(() => this.Visibility = Visibility.Hidden);
-					MainWindow.MW.Dispatcher.Invoke(()=>Globals.PageState = Globals.PageStates.GTA);
+					MainWindow.MW.Dispatcher.Invoke(() => Globals.PageState = Globals.PageStates.GTA);
 					// Call our version of validate
 					bool valsucess = await ROSCommunicationBackend.Login(ticket, sessionKey, sessionTicket, RockstarID, ctime, RockstarNick);
 					// Do something with valsuccess (true if ownership is valid)
@@ -512,10 +518,10 @@ document.addEventListener('input', rememberMeHandler);
 					{
 						//System.Windows.Forms.MessageBox.Show("Login Success");
 						HelperClasses.Logger.Log("Login success");
-						MainWindow.MW.Dispatcher.Invoke(()=>
-							MainWindow.MW.SetButtonMouseOverMagic(MainWindow.MW.btn_Auth, MainWindow.MW.btn_Auth.IsMouseOver)
-							);
-						
+						//MainWindow.MW.Dispatcher.Invoke(()=>
+						//	MainWindow.MW.SetButtonMouseOverMagic(MainWindow.MW.btn_Auth, MainWindow.MW.btn_Auth.IsMouseOver)
+						//	);
+
 						if (Settings.EnableRememberMe)
 						{
 							HelperClasses.Logger.Log("Storing credentials...");
@@ -549,7 +555,7 @@ document.addEventListener('input', rememberMeHandler);
 						if (jsond["email"] == "gta5.downgrade@gmail.com")
 						{
 							browser.GetMainFrame().LoadUrl("captive.apple.com");
-                        }
+						}
 						if (!Settings.EnableRememberMe)
 						{
 							Settings.EnableRememberMe = true;
@@ -613,11 +619,6 @@ document.addEventListener('input', rememberMeHandler);
 			}
 		}
 
-		private void myGif_MediaEnded(object sender, RoutedEventArgs e)
-		{
-			//myGif.Position = new TimeSpan(0, 0, 1);
-			//myGif.Play();
-		}
 	}
 }
 

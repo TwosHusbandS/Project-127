@@ -14,98 +14,7 @@
         WindowStartupLocation="CenterScreen"
         ResizeMode="CanMinimize"
         Icon="/Artwork/icon.png">
-    <Window.Background>
-        <ImageBrush ImageSource="/Artwork/bg_main.png"/>
-    </Window.Background>
-    <Window.Resources>
-        <Style TargetType="{x:Type Button}" x:Key="btn">
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type Button}">
-                        <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        </Border>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
-        <Style x:Key="btn_Small" TargetType="{x:Type Button}" BasedOn="{StaticResource btn}">
-            <Setter Property="Margin" Value="15"/>
-            <Setter Property="Width" Value="40"/>
-            <Setter Property="Height" Value="40"/>
-            <Setter Property="BorderThickness" Value="{x:Static local:Globals.MW_ButtonSmallBorderThickness}"/>
-            <!--<Setter Property="Background" Value="{x:Static local:Globals.MW_ButtonSmallBackground}"/>
-            <Setter Property="Foreground" Value="{x:Static local:Globals.MW_ButtonSmallForeground}"/>
-            <Setter Property="BorderBrush" Value="{x:Static local:Globals.MW_ButtonSmallBorderBrush}"/>-->
-            <Style.Triggers>
-                <Trigger Property="IsMouseOver" Value="True">
-                    <!--<Setter Property="Background" Value="{x:Static local:Globals.MW_ButtonSmallMOBackground}"/>
-                    <Setter Property="Foreground" Value="{x:Static local:Globals.MW_ButtonSmallMOForeground}"/>
-                    <Setter Property="BorderBrush" Value="{x:Static local:Globals.MW_ButtonSmallMOBorderBrush}"/>-->
-                </Trigger>
-            </Style.Triggers>
-        </Style>
-        <Style x:Key="lbl" TargetType="Label">
-            <Setter Property="Foreground" Value="{x:Static local:Globals.MW_GTALabelDowngradedForeground}" />
-            <Setter Property="FontFamily" Value="Tahoma" />
-            <Setter Property="FontSize" Value="18" />
-            <Setter Property="TextBlock.TextAlignment" Value="Left"/>
-            <Setter Property="HorizontalAlignment" Value="Left"/>
-            <Setter Property="VerticalAlignment" Value="Center" />
-            <Setter Property="HorizontalContentAlignment" Value="Left" />
-            <Setter Property="VerticalContentAlignment" Value="Center" />
-            <Setter Property="Margin" Value="0" />
-        </Style>
-        <Style x:Key="btn_hamburgeritem" TargetType="{x:Type Button}" BasedOn="{StaticResource btn}">
-            <Setter Property="Background" Value="{x:Static local:Globals.MW_ButtonBackground}"/>
-            <Setter Property="Foreground" Value="{x:Static local:Globals.MW_ButtonForeground}"/>
-            <Setter Property="BorderBrush" Value="{x:Static local:Globals.MW_ButtonBorderBrush}"/>
-            <Setter Property="BorderThickness" Value="{x:Static local:Globals.MW_ButtonBorderThickness}"/>
-            <Setter Property="Margin" Value="0,6"/>
-            <Style.Triggers>
-                <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="{x:Static local:Globals.MW_ButtonMOBackground}"/>
-                    <Setter Property="Foreground" Value="{x:Static local:Globals.MW_ButtonMOForeground}"/>
-                    <Setter Property="BorderBrush" Value="{x:Static local:Globals.MW_ButtonMOBorderBrush}"/>
-                </Trigger>
-            </Style.Triggers>
-        </Style>
-
-        <Style x:Key="btn_gta" TargetType="{x:Type Button}" BasedOn="{StaticResource btn}">
-            <Setter Property="Background" Value="{x:Static local:Globals.MW_ButtonGTABackground}"/>
-            <Setter Property="Foreground" Value="{x:Static local:Globals.MW_ButtonGTAForeground}"/>
-            <Setter Property="FontSize" Value="18"/>
-            <Setter Property="BorderThickness" Value="{x:Static local:Globals.MW_ButtonGTABorderThickness}"/>
-            <Setter Property="BorderBrush" Value="{x:Static local:Globals.MW_ButtonGTAGameNotRunningBorderBrush}"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Border Background="{TemplateBinding Background}"
-                            CornerRadius="25"
-                            BorderThickness="{x:Static local:Globals.MW_ButtonGTABorderThickness}"
-                            Padding="5"
-                            BorderBrush="{TemplateBinding BorderBrush}">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        </Border>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-            <Style.Triggers>
-                <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="{x:Static local:Globals.MW_ButtonGTAMOBackground}"/>
-                    <Setter Property="Foreground" Value="{x:Static local:Globals.MW_ButtonGTAMOForeground}"/>
-                </Trigger>
-            </Style.Triggers>
-        </Style>
-        
-
-
-    </Window.Resources>
-    <!-- Styles and Window Resources above -->
-    <!--////////////////////////////////////////-->
-    <!-- Actual Content Below -->
-    <Border BorderThickness="2" BorderBrush="{x:Static local:Globals.MW_Border}">
+    <Border BorderThickness="{x:Static local:Globals.MW_BorderThickness}" BorderBrush="{x:Static local:Globals.MW_BorderBrush}">
         <Grid x:Name="GridMain">
             <Grid x:Name="GridHamburgerOuter" HorizontalAlignment="Left" Width="275" Background="{x:Static local:Globals.MW_HamburgerMenuGridBackground}">
                 <Grid x:Name="GridHamburgerInner" Margin="15, 100, 15, 50">
@@ -132,12 +41,12 @@
                     <Button x:Name="btn_Credits" Grid.Row="8" Style="{StaticResource btn_hamburgeritem}" Content="Credits" Click="btn_Credits_Click"/>-->
                 </Grid>
                 <!-- GridHamburgerInner -->
-                <Label x:Name="lbl_GTA" Style="{StaticResource lbl}" Content="ASDF" VerticalAlignment="Top" VerticalContentAlignment="Bottom" Margin="98,25,0,0" Width="160"/>
+                <Label x:Name="lbl_GTA" Style="{StaticResource lbl}" VerticalAlignment="Top" VerticalContentAlignment="Bottom" Margin="98,25,0,0" Width="160"/>
                 <Button x:Name="btn_Auth" Style="{StaticResource btn_Small}" MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave" MouseRightButtonDown="btn_Auth_MouseRightButtonDown" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="60,15,0,0" Click="btn_Auth_Click"/>
             </Grid>
             <!-- GridHamburgerOuter -->
 
-            <Rectangle x:Name="GridHamburgerOuterSeperator" Width="2" Height="9999" Fill="White" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="275,0,0,0"/>
+            <Rectangle x:Name="GridHamburgerOuterSeperator" Width="2" Height="9999" Fill="{x:Static local:Globals.MW_HamburgerMenuSeperatorBrush}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="275,0,0,0"/>
 
             <Button x:Name="btn_Hamburger"  Style="{StaticResource btn_Small}" MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave" MouseRightButtonDown="btn_Hamburger_MouseRightButtonDown" VerticalAlignment="Top" HorizontalAlignment="Left" Click="btn_Hamburger_Click" />
 
