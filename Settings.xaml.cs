@@ -86,7 +86,7 @@ namespace Project_127
 			// Loop for the Guesses
 			for (int i = 0; i <= GTAVPathGuesses.Count - 1; i++)
 			{
-				if (!String.IsNullOrWhiteSpace(Settings.GTAVInstallationPath))
+				if (String.IsNullOrWhiteSpace(Settings.GTAVInstallationPath))
 				{
 					HelperClasses.Logger.Log("GTAV Guess Number " + i + 1 + "is: '" + GTAVPathGuesses[i] + "'");
 					if (LauncherLogic.IsGTAVInstallationPathCorrect(GTAVPathGuesses[i], false))

@@ -97,7 +97,7 @@ namespace Project_127
 		/// <summary>
 		/// Property of other Buildinfo. Will be in the top message of logs
 		/// </summary>
-		public static string BuildInfo = "You should not see this at all...ever";
+		public static string BuildInfo = "Hi Jake! Hope you have a great Day and great bread";
 
 		/// <summary>
 		/// Returns all Command Line Args as StringArray
@@ -197,16 +197,6 @@ namespace Project_127
 			// Checks if we are doing first Launch.
 			if (Settings.FirstLaunch)
 			{
-				new Popup(Popup.PopupWindowTypes.PopupOk,
-				"This software is unfinished, there may be bugs and we are in no way guaranteeing\n" +
-				"that this does not break your PC or GTA V Installation.\n" +
-				"The UI too, is still very unfinished, and not all planned features are implemented at this point.\n" +
-				"We thought it would be a better choice to release this now, even with the potential Issues,\n" +
-				"unimplemented features, and ugly UI, so that people can actually play.\n" +
-				"An update will be pushed as soon as possible to provide more features,\n" +
-				"a more stable client, and make it not look like a \"hányadék\".\n\n" +
-				" - The Project 1.27 Team").ShowDialog();
-
 				// Set Own Installation Path in Regedit Settings
 				HelperClasses.Logger.Log("FirstLaunch Procedure Started");
 				HelperClasses.Logger.Log("Setting Installation Path to '" + ProjectInstallationPath + "'", 1);
@@ -341,40 +331,44 @@ namespace Project_127
 
 						// Set actual Frame_Main Content to the correct Page
 						MainWindow.MW.Frame_Main.Content = new Settings();
+						MainWindow.MW.btn_Settings.Style = Application.Current.FindResource("btn_hamburgeritem_selected") as Style;
 
 						// Call Mouse_Over false on other Buttons where a page is behind
-						MainWindow.MW.SetButtonMouseOverMagic(MainWindow.MW.btn_Auth, false);
-						MainWindow.MW.SetButtonMouseOverMagic(MainWindow.MW.btn_SaveFiles, false);
-						MainWindow.MW.SetButtonMouseOverMagic(MainWindow.MW.btn_ReadMe, false);
+						MainWindow.MW.btn_Auth.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
+						MainWindow.MW.btn_SaveFiles.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
+						MainWindow.MW.btn_ReadMe.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
 						break;
 					case PageStates.SaveFileHandler:
 						MainWindow.MW.Frame_Main.Content = new SaveFileHandler();
+						MainWindow.MW.btn_SaveFiles.Style = Application.Current.FindResource("btn_hamburgeritem_selected") as Style;
 
-						MainWindow.MW.SetButtonMouseOverMagic(MainWindow.MW.btn_Auth, false);
-						MainWindow.MW.SetButtonMouseOverMagic(MainWindow.MW.btn_Settings, false);
-						MainWindow.MW.SetButtonMouseOverMagic(MainWindow.MW.btn_ReadMe, false);
+						MainWindow.MW.btn_Auth.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
+						MainWindow.MW.btn_Settings.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
+						MainWindow.MW.btn_ReadMe.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
 						break;
 					case PageStates.ReadMe:
 						MainWindow.MW.Frame_Main.Content = new ReadMe();
+						MainWindow.MW.btn_ReadMe.Style = Application.Current.FindResource("btn_hamburgeritem_selected") as Style;
 
-						MainWindow.MW.SetButtonMouseOverMagic(MainWindow.MW.btn_Auth, false);
-						MainWindow.MW.SetButtonMouseOverMagic(MainWindow.MW.btn_Settings, false);
-						MainWindow.MW.SetButtonMouseOverMagic(MainWindow.MW.btn_SaveFiles, false);
+						MainWindow.MW.btn_Auth.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
+						MainWindow.MW.btn_Settings.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
+						MainWindow.MW.btn_SaveFiles.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
 						break;
 					case PageStates.Auth:
 						MainWindow.MW.Frame_Main.Content = new ROSIntegration();
+						MainWindow.MW.btn_Auth.Style = Application.Current.FindResource("btn_hamburgeritem_selected") as Style;
 
-						MainWindow.MW.SetButtonMouseOverMagic(MainWindow.MW.btn_ReadMe, false);
-						MainWindow.MW.SetButtonMouseOverMagic(MainWindow.MW.btn_Settings, false);
-						MainWindow.MW.SetButtonMouseOverMagic(MainWindow.MW.btn_SaveFiles, false);
+						MainWindow.MW.btn_ReadMe.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
+						MainWindow.MW.btn_Settings.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
+						MainWindow.MW.btn_SaveFiles.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
 						break;
 					case PageStates.GTA:
 						MainWindow.MW.Frame_Main.Content = new GTA_Page();
 
-						MainWindow.MW.SetButtonMouseOverMagic(MainWindow.MW.btn_Settings, false);
-						MainWindow.MW.SetButtonMouseOverMagic(MainWindow.MW.btn_SaveFiles, false);
-						MainWindow.MW.SetButtonMouseOverMagic(MainWindow.MW.btn_Auth, false);
-						MainWindow.MW.SetButtonMouseOverMagic(MainWindow.MW.btn_ReadMe, false);
+						MainWindow.MW.btn_Auth.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
+						MainWindow.MW.btn_ReadMe.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
+						MainWindow.MW.btn_Settings.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
+						MainWindow.MW.btn_SaveFiles.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
 						break;
 				}
 			}
@@ -528,20 +522,11 @@ namespace Project_127
 		/// DG = Data Grid
 		/// </summary>
 
-
-		// Colors and stuff which is referenced in all of the XAML. 
-		// AFAIK, no Color is hardcoded.
-		// Some of thickness, corner radius, margins are semi-hardcoded in XAML Styles.
-
-		// Border of MainWindow
-		public static Brush MW_BorderBrush { get; private set; } = MyColorWhite;
-		public static Thickness MW_BorderThickness { get; private set; } = new System.Windows.Thickness(2);
-
+		// App - Wide stuff
 		public static Brush App_LabelForeground { get; private set; } = MyColorWhite;
 
-
-		// All the HamburgerButton Items, Backgrounds, etc.
 		public static Thickness App_ButtonBorderThickness { get; private set; } = new Thickness(0);
+
 		public static Brush App_ButtonBorderBrush { get; private set; } = MyColorWhite;
 		public static Brush App_ButtonBackground { get; private set; } = SetOpacity(MyColorBlack, 70);
 		public static Brush App_ButtonForeground { get; private set; } = MyColorWhite;
@@ -549,56 +534,63 @@ namespace Project_127
 		public static Brush App_ButtonMOForeground { get; private set; } = MyColorBlack;
 		public static Brush App_ButtonMOBorderBrush { get; private set; } = MyColorWhite;
 
-		public static Thickness MW_ButtonHamburgerMenuBorderThickness { get; private set; } = new Thickness(0);
-		public static Brush MW_ButtonHamburgerMenuBorderBrush { get; private set; } = MyColorWhite;
-		public static Brush MW_ButtonHamburgerMenuBackground { get; private set; } = SetOpacity(MyColorBlack, 70);
-		public static Brush MW_ButtonHamburgerMenuForeground { get; private set; } = MyColorWhite;
-		public static Brush MW_ButtonHamburgerMenuMOBackground { get; private set; } = MyColorOffWhite;
-		public static Brush MW_ButtonHamburgerMenuMOForeground { get; private set; } = MyColorBlack;
-		public static Brush MW_ButtonHamburgerMenuMOBorderBrush { get; private set; } = MyColorWhite;
-
-		public static Brush MW_HamburgerMenuSeperatorBrush { get; private set; } = MyColorWhite;
-
-
-		public static Thickness App_ButtonSmallBorderThickness { get; private set; } = new Thickness(2);
+		public static Thickness App_ButtonSmallBorderThickness { get; private set; } = new Thickness(0);
 		public static Brush App_ButtonSmallBorderBrush { get; private set; } = MyColorWhite;
 
+
+		// MainWindow
+		public static Thickness MW_BorderThickness { get; private set; } = new System.Windows.Thickness(2);
+		public static Brush MW_BorderBrush { get; private set; } = MyColorWhite;
 		public static Brush MW_HamburgerMenuGridBackground { get; private set; } = SetOpacity(MyColorBlack, 50);
-		public static Brush MW_GTALabelDowngradedForeground { get; private set; } = MyColorGreen;
-		public static Brush MW_GTALabelUpgradedForeground { get; private set; } = Brushes.White;
-		public static Brush MW_GTALabelBrokenForeground { get; private set; } = Brushes.Red;
+		public static Brush MW_HamburgerMenuSeperatorBrush { get; private set; } = MyColorWhite;
 
-		public static Thickness MW_ButtonBorderThickness { get; private set; } = new Thickness(0);
-		public static Brush MW_ButtonBorderBrush { get; private set; } = MyColorWhite;
+		public static Thickness MW_ButtonHamburgerMenuBorderThickness { get; private set; } = new Thickness(0);
+		public static Brush MW_ButtonHamburgerMenuBorderBrush { get; private set; } = App_ButtonBorderBrush;
+		public static Brush MW_ButtonHamburgerMenuBackground { get; private set; } = App_ButtonBackground;
+		public static Brush MW_ButtonHamburgerMenuForeground { get; private set; } = App_ButtonForeground;
+		public static Brush MW_ButtonHamburgerMenuMOBackground { get; private set; } = App_ButtonMOBackground;
+		public static Brush MW_ButtonHamburgerMenuMOForeground { get; private set; } = App_ButtonMOForeground;
+		public static Brush MW_ButtonHamburgerMenuMOBorderBrush { get; private set; } = App_ButtonMOBorderBrush;
 
-
-		public static Brush MW_ButtonBackground { get; private set; } = SetOpacity(MyColorBlack, 70);
-		public static Brush MW_ButtonForeground { get; private set; } = MyColorWhite;
-		public static Brush MW_ButtonMOBackground { get; private set; } = MyColorOffWhite;
-		public static Brush MW_ButtonMOForeground { get; private set; } = MyColorBlack;
-		public static Brush MW_ButtonMOBorderBrush { get; private set; } = MyColorWhite;
-
-		// Hamburger Button and "X"
-		// These have no effect since these are all Icons now...
-		//public static Brush MW_ButtonSmallBackground { get; private set; } = SetOpacity(MyColorBlack, 70);
-		//public static Brush MW_ButtonSmallForeground { get; private set; } = MyColorWhite;
-		//public static Brush MW_ButtonSmallBorderBrush { get; private set; } = MyColorWhite;
-		//public static Brush MW_ButtonSmallMOBackground { get; private set; } = SetOpacity(MyColorWhite, 70);
-		//public static Brush MW_ButtonSmallMOForeground { get; private set; } = MyColorBlack;
-		//public static Brush MW_ButtonSmallMOBorderBrush { get; private set; } = MyColorWhite;
-		public static System.Windows.Thickness MW_ButtonSmallBorderThickness { get; private set; } = new System.Windows.Thickness(0);
 
 		// GTA Launch Button
 		// Border Color will depend on game running or not running, so we will not set this here. I guess. 
+		public static System.Windows.Thickness MW_ButtonGTABorderThickness { get; private set; } = new System.Windows.Thickness(5);
 		public static Brush MW_ButtonGTAGameNotRunningBorderBrush { get; private set; } = MyColorWhite;
 		public static Brush MW_ButtonGTAGameRunningBorderBrush { get; private set; } = MyColorGreen;
-
 		public static Brush MW_ButtonGTABackground { get; private set; } = SetOpacity(MyColorBlack, 70);
 		public static Brush MW_ButtonGTAForeground { get; private set; } = MyColorWhite;
 		public static Brush MW_ButtonGTAMOBackground { get; private set; } = SetOpacity(MyColorOffWhite, 100);
 		public static Brush MW_ButtonGTAMOForeground { get; private set; } = MyColorBlack;
 
-		public static System.Windows.Thickness MW_ButtonGTABorderThickness { get; private set; } = new System.Windows.Thickness(5);
+		// GTA Label (Upgraded, Downgrad, Unsure etc.
+		public static Brush MW_GTALabelDowngradedForeground { get; private set; } = MyColorGreen;
+		public static Brush MW_GTALabelUpgradedForeground { get; private set; } = Brushes.White;
+		public static Brush MW_GTALabelUnsureForeground { get; private set; } = Brushes.Red;
+
+
+
+
+
+
+
+
+
+
+		//public static Thickness MW_ButtonBorderThickness { get; private set; } = new Thickness(0);
+		//public static Brush MW_ButtonBorderBrush { get; private set; } = MyColorWhite;
+
+
+		//public static Brush MW_ButtonBackground { get; private set; } = SetOpacity(MyColorBlack, 70);
+		//public static Brush MW_ButtonForeground { get; private set; } = MyColorWhite;
+		//public static Brush MW_ButtonMOBackground { get; private set; } = MyColorOffWhite;
+		//public static Brush MW_ButtonMOForeground { get; private set; } = MyColorBlack;
+		//public static Brush MW_ButtonMOBorderBrush { get; private set; } = MyColorWhite;
+
+
+
+
+
 
 		// POPUP Window
 		public static Brush PU_Background { get; private set; } = MyColorOffBlack;

@@ -26,6 +26,7 @@ using System.Net;
 using CredentialManagement;
 using System.Security;
 using System.Diagnostics.Eventing.Reader;
+using WpfAnimatedGif;
 /*
 * This file is based on LegitimacyNUI.cpp from the CitizenFX Project - http://citizen.re/
 * 
@@ -228,7 +229,7 @@ location.reload();
 }, 500);
 }
 
-var css = '.SignInForm__forgotPassword, .autoSignIn, .SaveCredentials__tooltip, p.Header__signUp { display: none; } .SignInForm__descriptionText .Alert__text { display: none; } .Alert__info>.Alert__content:after { content: \'A Rockstar Games Social Club account owning Grand Theft Auto V is required to use Project 1.27.\'; max-width: 600px; display: inline-block; color: black; } body {background: rgba(0, 0, 0, 0) !important;} #root {background: rgba(0, 0, 0, 0) !important;} .Alert__danger {background-color: rgba(189,08,08,0.7)} .Alert__info {background-color: rgba(193,206,209,1); margin-bottom: 50px;} .TextInput-mtl__field {background: rgba(0,0,0,.7)} .Button-mtl__primary {background: #c1ced1;} .SignInForm__wrapper {margin-top: 20px;}',
+var css = '.SignInForm__forgotPassword, .autoSignIn, .SaveCredentials__tooltip, p.Header__signUp { display: none; } .SignInForm__descriptionText .Alert__text { display: none; } .Alert__info>.Alert__content:after { content: \'A Social Club account owning Grand Theft Auto V is required to use Project 1.27.\'; max-width: 600px; display: inline-block; color: black; } body {background: rgba(0, 0, 0, 0) !important;} #root {background: rgba(0, 0, 0, 0) !important;} .Alert__danger {background-color: rgba(189,08,08,0.7)} .Alert__info {background-color: rgba(193,206,209,1); margin-bottom: 50px;} .TextInput-mtl__field {background: rgba(0,0,0,.7)} .Button-mtl__primary {background: #c1ced1;} .SignInForm__wrapper {margin-top: 20px;}',
     head = document.head || document.getElementsByTagName('head')[0],
     style = document.createElement('style');
 
@@ -305,29 +306,34 @@ function rememberMeHandler() {
 
 document.addEventListener('input', rememberMeHandler);
 
+var mhRTCounter = 0;
+var mhSRTCounter = 0;
 
 
 
-// Custom Code below here
-// I did not comment out the initDragClick() above
-
-
-
-//		Version 2: Non Edited
 		
-			function modHtml(){
-			    if (!document.querySelector('.AppControls__appControls')){
-			        setTimeout(modHtml, 100);
-			        return;
-			    }
-			    document.querySelector('div[style=\'display: initial;\']').outerHTML = '';
-			    document.querySelector('.AppControls__appControls').outerHTML = '';
-			    document.querySelector('.Footer__container').outerHTML = '';
-				document.querySelector('.HeaderLayout__header').outerHTML = '';
-                setTimeout(invokeNative, 200, 'ready','');
-			}
+function modHtml(){
+	if (!document.querySelector('.AppControls__appControls')){
+		setTimeout(modHtml, 100);
+        mhRTCounter++;
+		return;
+	
+	} else if (!document.querySelector('.SignInForm__signInButton').innerText) {
+        if ((mhSRTCounter - mhRTCounter) > 10) {
+			invokeNative('HardReload','');
+        }
+        mhSRTCounter++;
+		setTimeout(modHtml, 100);
+        return;
+    }
+	document.querySelector('div[style=\'display: initial;\']').outerHTML = '';
+	document.querySelector('.AppControls__appControls').outerHTML = '';
+	document.querySelector('.Footer__container').outerHTML = '';
+	document.querySelector('.HeaderLayout__header').outerHTML = '';
+    setTimeout(invokeNative, 200, 'ready','');
+}
 
-			setTimeout(modHtml, 1000);
+setTimeout(modHtml, 1000);
 ";
 
 
@@ -574,8 +580,14 @@ document.addEventListener('input', rememberMeHandler);
 					{
 						this.myGridContent.Visibility = Visibility.Visible;
 						this.myGridLoading.Visibility = Visibility.Hidden;
+						var controller = ImageBehavior.GetAnimationController(Image_Loading);
+						controller.Pause();
 					});
 					signinInProgress = true;
+					break;
+				case "HardReload":
+					sendCount = 0;
+					browser.Reload(true);
 					break;
 				default:
 					System.Windows.Forms.MessageBox.Show(e.Message.ToString());

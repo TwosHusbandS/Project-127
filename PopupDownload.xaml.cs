@@ -44,6 +44,8 @@ namespace Project_127
 		/// <param name="pMessage"></param>
 		public PopupDownload(string pDownloadURL, string pDownloadLocation, string pMessage)
 		{
+			this.Owner = MainWindow.MW;
+
 			InitializeComponent();
 
 			// Setting Properties of our Object (Popup Window)

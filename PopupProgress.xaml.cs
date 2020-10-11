@@ -62,6 +62,8 @@ namespace Project_127
 		/// <param name="pMyFileOperations"></param>
 		public PopupProgress(ProgressTypes pProgressType, string pParam1, List<MyFileOperation> pMyFileOperations = null)
 		{
+			this.Owner = MainWindow.MW;
+
 			InitializeComponent();
 
 			// Setting all Properties needed later

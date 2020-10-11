@@ -49,7 +49,7 @@
         </Style>
 
 
-        <Style x:Key="btn_Small" TargetType="{x:Type Button}" BasedOn="{StaticResource btn_Main}">
+        <Style x:Key="btn_SmallIcon" TargetType="{x:Type Button}" BasedOn="{StaticResource btn_Main}">
             <Setter Property="Margin" Value="15"/>
             <Setter Property="Width" Value="40"/>
             <Setter Property="Height" Value="40"/>
@@ -72,16 +72,16 @@
             </Style.Triggers>
         </Style>
 
-        <Style x:Key="btn_hamburgeritem_selected" TargetType="{x:Type Button}" BasedOn="{StaticResource btn_Main}">
+        <Style x:Key="btn_hamburgeritem_selected" TargetType="{x:Type Button}" BasedOn="{StaticResource btn_hamburgeritem}">
             <Setter Property="Background" Value="{x:Static local:Globals.MW_ButtonHamburgerMenuMOBackground}"/>
             <Setter Property="Foreground" Value="{x:Static local:Globals.MW_ButtonHamburgerMenuMOForeground}"/>
             <Setter Property="BorderBrush" Value="{x:Static local:Globals.MW_ButtonHamburgerMenuMOBorderBrush}"/>
             <Setter Property="BorderThickness" Value="{x:Static local:Globals.MW_ButtonHamburgerMenuBorderThickness}"/>
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="{x:Static local:Globals.MW_ButtonHamburgerMenuBackground}"/>
+                    <!--<Setter Property="Background" Value="{x:Static local:Globals.MW_ButtonHamburgerMenuBackground}"/>
                     <Setter Property="Foreground" Value="{x:Static local:Globals.MW_ButtonHamburgerMenuForeground}"/>
-                    <Setter Property="BorderBrush" Value="{x:Static local:Globals.MW_ButtonHamburgerMenuBorderBrush}"/>
+                    <Setter Property="BorderBrush" Value="{x:Static local:Globals.MW_ButtonHamburgerMenuBorderBrush}"/>-->
                 </Trigger>
             </Style.Triggers>
         </Style>

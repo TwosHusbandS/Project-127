@@ -44,6 +44,7 @@ namespace Project_127
 		/// <param name="pFontSize"></param>
 		public Popup(Popup.PopupWindowTypes pPopupWindowType, string pMsg, int pFontSize = 18, string pDefaultTBText = "", Enum pEnum = null)
 		{
+			this.Owner = MainWindow.MW;
 			// Initializing all WPF Elements
 			InitializeComponent();
 
@@ -86,18 +87,28 @@ namespace Project_127
 			// If its a "OK" Window:
 			else
 			{
-				// Creates Button
-				Button myButtonOk = new Button();
-				myButtonOk.Content = "Ok";
-				myButtonOk.Style = Resources["btn"] as Style;
-				myButtonOk.Click += btn_Ok_Click;
+				// Creating the "Yes" Button
+				Button myButtonYes = new Button();
+				myButtonYes.Content = "Ok";
+				myButtonYes.Style = Resources["btn"] as Style;
+				myButtonYes.Click += btn_Yes_Click;
 
-				// Adds it to the Grid
-				myGrid.Children.Add(myButtonOk);
-				Grid.SetColumn(myButtonOk, 0);
-				Grid.SetColumnSpan(myButtonOk, 2);
-				Grid.SetRow(myButtonOk, 2);
-				myButtonOk.Focus();
+				// Adding it to the Grid
+				myGrid.Children.Add(myButtonYes);
+				Grid.SetColumn(myButtonYes, 0);
+				Grid.SetRow(myButtonYes, 2);
+
+				// Creating the "No" Button
+				Button myButtonNo = new Button();
+				myButtonNo.Content = "Cancel";
+				myButtonNo.Style = Resources["btn"] as Style;
+				myButtonNo.Click += btn_No_Click;
+
+				// Adding it to the Grid
+				myGrid.Children.Add(myButtonNo);
+				Grid.SetColumn(myButtonNo, 1);
+				Grid.SetRow(myButtonNo, 2);
+				Grid.SetRowSpan(lbl_Main, 2);
 
 				if (pPopupWindowType == PopupWindowTypes.PopupOk)
 				{

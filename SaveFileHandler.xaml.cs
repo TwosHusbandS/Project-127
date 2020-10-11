@@ -277,7 +277,7 @@ namespace Project_127
 			string newName = "";
 
 			// Asking for Name 
-			Popup newNamePU = new Popup(Popup.PopupWindowTypes.PopupOkTextBox, "Enter new Name for the SaveFile: ", pDefaultTBText: pMySaveFileName);
+			Popup newNamePU = new Popup(Popup.PopupWindowTypes.PopupOkTextBox, "Enter new Name for the SaveFile:\n'" + pMySaveFileName + "'\n", pDefaultTBText: pMySaveFileName);
 			newNamePU.ShowDialog();
 			if (newNamePU.DialogResult == true)
 			{
@@ -299,7 +299,7 @@ namespace Project_127
 					else
 					{
 						// When you wanna stay in while loop
-						newNamePU = new Popup(Popup.PopupWindowTypes.PopupOkTextBox, "Enter new Name for the SaveFile: ", pDefaultTBText: pMySaveFileName);
+						newNamePU = new Popup(Popup.PopupWindowTypes.PopupOkTextBox, "Enter new Name for the SaveFile:\n'" + pMySaveFileName + "'\n", pDefaultTBText: pMySaveFileName);
 						newNamePU.ShowDialog();
 						if (newNamePU.DialogResult == true)
 						{
@@ -447,6 +447,28 @@ namespace Project_127
 			}
 
 			Sort(dg_BackupFiles);
+		}
+
+		private void MenuItem_Click(object sender, RoutedEventArgs e)
+		{
+			Globals.DebugPopup("A");
+		}
+
+		private void MenuItem_Click_1(object sender, RoutedEventArgs e)
+		{
+			Globals.DebugPopup("B");
+		}
+
+		private void MenuItem_Click_2(object sender, RoutedEventArgs e)
+		{
+			Globals.DebugPopup("B");
+
+		}
+
+		private void MenuItem_Click2(object sender, RoutedEventArgs e)
+		{
+			Globals.DebugPopup("BB");
+
 		}
 	} // End of Class
 } // End of Namespace

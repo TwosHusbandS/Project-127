@@ -6,18 +6,24 @@
         xmlns:cefSharp="clr-namespace:CefSharp.Wpf;assembly=CefSharp.Wpf"
         xmlns:cefSharpCore="clr-namespace:CefSharp;assembly=CefSharp.Core"
         xmlns:local="clr-namespace:Project_127"
+        xmlns:gif="http://wpfanimatedgif.codeplex.com"
         mc:Ignorable="d"
+      
         Background="{x:Static local:Globals.SE_Background}"
         Title="ROSIntegration" d:DesignHeight="540" d:DesignWidth="625"    >
+    <!--WindowStyle="None"
+        BorderBrush="Black"
+        BorderThickness="0"
+        WindowStartupLocation="CenterScreen"
+        AllowsTransparency="True"
+        Background="#131518">-->
     <Grid Height="540" Width="625" HorizontalAlignment="Left" VerticalAlignment="Top">
-        <Grid x:Name="myGridContent" Height="Auto" Width="Auto">
+        <Grid x:Name="myGridContent">
             <cefSharp:ChromiumWebBrowser x:Name="browser" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="480" Height="460" Margin="0,0,60,10" Address="https://rgl.rockstargames.com/launcher" LoadingStateChanged="LoadingStateChange" JavascriptMessageReceived="browser_JavascriptMessageReceived"/>
         </Grid>
-        <Grid x:Name="myGridLoading" Height="Auto" Width="Auto">
-            <Button Margin="200" Content="PlaceHolderGif"/>
-            <!--<MediaElement Height="128" Width="128" x:Name="myGif" MediaEnded="myGif_MediaEnded" UnloadedBehavior="Manual" Source="loading.gif" LoadedBehavior="Play" Stretch="None">
-            </MediaElement>-->
+        <Grid x:Name="myGridLoading">
+            <!--<Button Margin="200" Content="PlaceHolder Loading GIF"/>-->
+            <Image x:Name="Image_Loading" gif:ImageBehavior.AnimatedSource="Artwork/loading.gif" VerticalAlignment="Center" HorizontalAlignment="Center" Height="48" Width="48" />
         </Grid>
-
     </Grid>
 </Page>

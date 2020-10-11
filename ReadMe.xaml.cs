@@ -192,36 +192,36 @@ namespace Project_127
 		/// <param name="pMouseOver"></param>
 		public void SetButtonMouseOverMagic(Button myBtn, bool pMouseOver)
 		{
-			if (myBtn.Name.Substring(myBtn.Name.IndexOf('_') + 1) == ReadMeState.ToString())
-			{
-				if (pMouseOver)
-				{
-					myBtn.Background = Globals.MW_ButtonBackground;
-					myBtn.Foreground = Globals.MW_ButtonForeground;
-					myBtn.BorderBrush = Globals.MW_ButtonBorderBrush;
-				}
-				else
-				{
-					myBtn.Background = Globals.MW_ButtonMOBackground;
-					myBtn.Foreground = Globals.MW_ButtonMOForeground;
-					myBtn.BorderBrush = Globals.MW_ButtonMOBorderBrush;
-				}
-			}
-			else
-			{
-				if (pMouseOver)
-				{
-					myBtn.Background = Globals.MW_ButtonMOBackground;
-					myBtn.Foreground = Globals.MW_ButtonMOForeground;
-					myBtn.BorderBrush = Globals.MW_ButtonMOBorderBrush;
-				}
-				else
-				{
-					myBtn.Background = Globals.MW_ButtonBackground;
-					myBtn.Foreground = Globals.MW_ButtonForeground;
-					myBtn.BorderBrush = Globals.MW_ButtonBorderBrush;
-				}
-			}
+			//if (myBtn.Name.Substring(myBtn.Name.IndexOf('_') + 1) == ReadMeState.ToString())
+			//{
+			//	if (pMouseOver)
+			//	{
+			//		myBtn.Background = Globals.MW_ButtonBackground;
+			//		myBtn.Foreground = Globals.MW_ButtonForeground;
+			//		myBtn.BorderBrush = Globals.MW_ButtonBorderBrush;
+			//	}
+			//	else
+			//	{
+			//		myBtn.Background = Globals.MW_ButtonMOBackground;
+			//		myBtn.Foreground = Globals.MW_ButtonMOForeground;
+			//		myBtn.BorderBrush = Globals.MW_ButtonMOBorderBrush;
+			//	}
+			//}
+			//else
+			//{
+			//	if (pMouseOver)
+			//	{
+			//		myBtn.Background = Globals.MW_ButtonMOBackground;
+			//		myBtn.Foreground = Globals.MW_ButtonMOForeground;
+			//		myBtn.BorderBrush = Globals.MW_ButtonMOBorderBrush;
+			//	}
+			//	else
+			//	{
+			//		myBtn.Background = Globals.MW_ButtonBackground;
+			//		myBtn.Foreground = Globals.MW_ButtonForeground;
+			//		myBtn.BorderBrush = Globals.MW_ButtonBorderBrush;
+			//	}
+			//}
 		}
 
 		/// <summary>

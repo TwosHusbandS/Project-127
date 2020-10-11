@@ -31,21 +31,7 @@
             <Setter Property="VerticalContentAlignment" Value="Center" />
             <Setter Property="Margin" Value="0" />
         </Style>
-        <Style x:Key="btn_main" TargetType="{x:Type Button}" BasedOn="{StaticResource btn}">
-            <Setter Property="Height" Value="40"/>
-            <Setter Property="Margin" Value="20,0"/>
-            <Setter Property="Background" Value="{x:Static local:Globals.MW_ButtonBackground}"/>
-            <Setter Property="Foreground" Value="{x:Static local:Globals.MW_ButtonForeground}"/>
-            <Setter Property="BorderBrush" Value="{x:Static local:Globals.MW_ButtonBorderBrush}"/>
-            <Setter Property="BorderThickness" Value="{x:Static local:Globals.MW_ButtonBorderThickness}"/>
-            <Style.Triggers>
-                <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="{x:Static local:Globals.MW_ButtonMOBackground}"/>
-                    <Setter Property="Foreground" Value="{x:Static local:Globals.MW_ButtonMOForeground}"/>
-                    <Setter Property="BorderBrush" Value="{x:Static local:Globals.MW_ButtonMOBorderBrush}"/>
-                </Trigger>
-            </Style.Triggers>
-        </Style>
+
     </Page.Resources>
     <Grid Height="540">
         <Grid.RowDefinitions>
@@ -58,13 +44,13 @@
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-
+        
         <Label x:Name="lbl_Header" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Content="ReadMe" Style="{StaticResource lbl}"/>
-        <Button x:Name="btn_SpeedRun" Content="SpeedRun" Grid.Row="1" Grid.Column="0" Click="btn_SpeedRun_Click" Style="{StaticResource btn_main}" MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
-        <Button x:Name="btn_About" Content="About" Grid.Row="1" Grid.Column="1" Click="btn_About_Click" Style="{StaticResource btn_main}" MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
-        <Button x:Name="btn_Credits" Content="Credits" Grid.Row="1" Grid.Column="2" Click="btn_Credits_Click" Style="{StaticResource btn_main}" MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
+        <Button x:Name="btn_SpeedRun" Content="SpeedRun" Grid.Row="1" Grid.Column="0" Click="btn_SpeedRun_Click" Style="{StaticResource btn_hamburgeritem}" MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
+        <Button x:Name="btn_About" Content="About" Grid.Row="1" Grid.Column="1" Click="btn_About_Click" Style="{StaticResource btn_hamburgeritem}" MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
+        <Button x:Name="btn_Credits" Content="Credits" Grid.Row="1" Grid.Column="2" Click="btn_Credits_Click" Style="{StaticResource btn_hamburgeritem}" MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
 
-        <Grid x:Name="Grid_SpeedRun" Margin="40" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" Background="{x:Static local:Globals.MW_ButtonBackground}">
+        <Grid x:Name="Grid_SpeedRun" Margin="40" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3">
             <Grid.RowDefinitions>
                 <RowDefinition Height="4*"/>
                 <RowDefinition Height="*"/>
@@ -72,7 +58,7 @@
             <Label x:Name="Grid_SpeedRun_Lbl" Style="{StaticResource lbl}" Grid.Row="0"/>
             <Button x:Name="Grid_SpeedRun_Btn" Style="{StaticResource btn}" Grid.Row="1" Margin="100,10" Content="Link" Click="Grid_SpeedRun_Btn_Click"/>
         </Grid>
-        <Grid x:Name="Grid_About" Margin="40" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" Background="{x:Static local:Globals.MW_ButtonBackground}">
+        <Grid x:Name="Grid_About" Margin="40" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" >
             <Grid.RowDefinitions>
                 <RowDefinition Height="4*"/>
                 <RowDefinition Height="*"/>
@@ -80,7 +66,7 @@
             <Label x:Name="Grid_About_Lbl" Style="{StaticResource lbl}" Grid.Row="0"/>
             <Button x:Name="Grid_About_Btn" Style="{StaticResource btn}" Grid.Row="1" Margin="100,10" Content="Link" Click="Grid_About_Btn_Click"/>
         </Grid>
-        <Grid x:Name="Grid_Credits" Margin="40" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" Background="{x:Static local:Globals.MW_ButtonBackground}">
+        <Grid x:Name="Grid_Credits" Margin="40" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" >
             <Grid.RowDefinitions>
                 <RowDefinition Height="4*"/>
                 <RowDefinition Height="*"/>

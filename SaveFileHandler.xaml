@@ -157,9 +157,11 @@
             <Setter Property="SelectionMode" Value="Single"/>
         </Style>
         <Style TargetType="ColumnDefinition">
-
         </Style>
 
+        <ContextMenu x:Key="ContextMenuKey">
+            <MenuItem Header="Header" Click="MenuItem_Click2"/>
+        </ContextMenu>
     </Page.Resources>
 
     <Border BorderBrush="{x:Static local:Globals.SFH_BorderBrush}" BorderThickness="0" MinHeight="540" >
@@ -199,21 +201,28 @@
                 <ScrollViewer x:Name="sv_BackupFiles">
                     <DataGrid x:Name="dg_BackupFiles" PreviewMouseWheel="dg_BackupFiles_PreviewMouseWheel" GotFocus="dg_BackupFiles_GotFocus"  PreviewKeyDown="dg_KeyDown"  CanUserDeleteRows="False">
                         <!--cant style this easily, since it does not derive from FrameworkElement-->
-                        <DataGrid.Resources>
-                            <Style TargetType="{x:Type DataGridCell}">
-                                <Style.Triggers>
-                                    <Trigger Property="DataGridCell.IsSelected" Value="True">
-                                        <Setter Property="Background" Value="{x:Static local:Globals.SFH_DGCellSelectedBackground}" />
-                                        <Setter Property="Foreground" Value="{x:Static local:Globals.SFH_DGCellSelectedForeground}" />
-                                    </Trigger>
-                                </Style.Triggers>
-                            </Style>
-                        </DataGrid.Resources>
                         <DataGrid.BindingGroup>
                             <BindingGroup NotifyOnValidationError="True"/>
                         </DataGrid.BindingGroup>
+                        <DataGrid.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Header="Click Me" Click="MenuItem_Click" />
+                            </ContextMenu>
+                        </DataGrid.ContextMenu>
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="Filename" Binding="{Binding FileName, Mode=OneWay}" Width="*" Foreground="{x:Static local:Globals.SFH_DGForeground}" FontSize="20" />
+                            <DataGridTextColumn Header="Filename" Binding="{Binding FileName, Mode=OneWay}" Width="*" Foreground="{x:Static local:Globals.SFH_DGForeground}" FontSize="20" >
+                                <DataGridTextColumn.CellStyle>
+                                    <Style TargetType="DataGridCell">
+                                        <Style.Triggers>
+                                            <Trigger Property="IsSelected" Value="True">
+                                                <Setter Property="Background" Value="Red" />
+                                                <Setter Property="Foreground" Value="Green" />
+                                            </Trigger>
+                                        </Style.Triggers>
+                                        <Setter Property="ContextMenu" Value="{StaticResource ContextMenuKey}"/>
+                                    </Style>
+                                </DataGridTextColumn.CellStyle>
+                            </DataGridTextColumn>
                         </DataGrid.Columns>
                     </DataGrid>
                 </ScrollViewer>

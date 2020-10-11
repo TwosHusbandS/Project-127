@@ -75,42 +75,44 @@ Main To do:
 
 	-REMEMBER:
 		-> Release with admin mode manifest thingy...		
-		-> Fix Installer with everything (autolaunch app,include new files)
 		-> This requires admin the "proper" way of telling windows. Should fix zip file issues
 
-		-> Im currently 100% Trusting the myBtn.IsMouseOver Property even tho i have had bad experiences with it in the past
-			=> The bool parameter has 0 effect right now
+	- TO TEST:
+		Loading spinning button fix
+		Installer + Uninstaller on fresh system.
 
 	- TO DO:
-		-> Re-Organize Colors && XML Styles && Include Dr490ns ideas of creating proper styles for the highlighting
+		-> Fix ALL popups (rename and retail)
+		-> Finish ReWriting XML for Popups (like I did with MainWindow)
 
-		-> Think about Loading Gif for LoginWindow, although I think its fine as it is
-		-> Spinning Logging Button when re-opening Auth (first time seems to work fine)
 		-> Fix SaveFileHandler GUI (make it not look like shit)
 		-> Fix Settings GUI (make it not look like shit)
 		-> Fix ReadMe GUI (make it not look like shit)
-		-> Add Categories (Tags) to SaveFiles,
-				make user able to just display certain ones
-				make user able to change Categories of a File.
-				make user able to select multiple files at once.
-		-> Develop Concept with makes Repair Button unneeded and check how much time and CPU this needs
-			=> Already see if we can make this to keep "States" of Installation with different Upgraded Versions
-		-> Catch KeyBoard Events for the Pages because it does dumb stuff (Mouse4 + Mouse5 + BackSpace)
+
 		-> Implement all Other features
 			=> Just see Settings.XAML for what I need to implement
 			=> See Core Affinity Fix...
 
-
+		-> Figure out which files I need to distribute
+		
 		-> Tell Karsten about Birthday Present Thingy and show him this for work
 
-	// NEXT PUBLIC RELEASE
-
+	// PUBLIC RELEASE 1.0
+		
 		-> Implement note thingy from reloes suggestion (https://discordapp.com/channels/758296338222940211/758296338806341684/762023004183461888)
-		-> Popup - Notepad with Hotkeys and Overlay as per Reloe
-		-> Think about checking file hashes in UpgradeFolder as well as GTAV Installation Path
-			=> We could solve the need for the RepairFunction, but this would mean CPU Intensive task while Downgrading
+		-> Save File Handler
+			-ReWrite of SaveFileHandler class with enum for File or Folder
+				=> Add Support for Copy & Move (in Ram) and Paste.
+			- Add Folder Support
+				=> Folders as clickable items in list at the very top with a "[FolderName]
+				=> Top Folder being "[..]" like in WinRar
+			- Multiselect
+			- RightClick on File (Copy, Rename, Delete)
+			- RightClick on Files (Copy, Delete, Delete)
+			- RightClick on Background (new Folder, Paste)
+		-> Develop Concept with makes Repair Button unneeded and check how much time and CPU this needs
+			=> Already see if we can make this to keep "States" of Installation with different Upgraded Versions
 		-> $UpgradeFiles has downgrade files in them. Why? And how to Fix?
-		-> Figure out which files I need to distribute
 		-> Custom ZIP File Location User Error Checks:
 			=> User might get confused with the Project_127_Files Folder. 
 				Maybe we should actually check parent folders and child folders when User is selecting a Path for ZIP File
@@ -121,11 +123,8 @@ Main To do:
 			=> Get data binding to work after everything else is Gucci 
 
     - Low Prio:
-		Convert Settings and SaveFileHandler and ROSIntegration in CustomControls
 		Add Audio Effects
-		Popup start in middle of window, instead of CenterScreen
 		Fix Code signing so we dont get anti virus error
-		Theming
 
 Weird Beta Reportings:
 	- Reloe and JakeMiester and dr490n had some issues with the GTA V Path Settings
@@ -257,9 +256,9 @@ namespace Project_127
 			DeleteOldFiles();
 
 			// Set Image of Buttons
-			SetButtonMouseOverMagic(btn_Exit, false);
-			SetButtonMouseOverMagic(btn_Auth, false);
-			SetButtonMouseOverMagic(btn_Hamburger, false);
+			SetButtonMouseOverMagic(btn_Exit);
+			SetButtonMouseOverMagic(btn_Auth);
+			SetButtonMouseOverMagic(btn_Hamburger);
 
 			// Auto Updater
 			CheckForUpdate();
@@ -311,6 +310,8 @@ namespace Project_127
 
 			HelperClasses.Logger.Log("Startup procedure (Constructor of MainWindow) completed.");
 			HelperClasses.Logger.Log("--------------------------------------------------------");
+
+
 		}
 
 
@@ -448,8 +449,11 @@ namespace Project_127
 			HelperClasses.Logger.Log("Downloading the 'big three' files");
 
 			string DLLinkG = HelperClasses.FileHandling.GetXMLTagContent(HelperClasses.FileHandling.GetStringFromURL(Globals.URL_AutoUpdate), "DLLinkG");
+			string DLLinkGHash = HelperClasses.FileHandling.GetXMLTagContent(HelperClasses.FileHandling.GetStringFromURL(Globals.URL_AutoUpdate), "DLLinkGHash");
 			string DLLinkU = HelperClasses.FileHandling.GetXMLTagContent(HelperClasses.FileHandling.GetStringFromURL(Globals.URL_AutoUpdate), "DLLinkU");
+			string DLLinkUHash = HelperClasses.FileHandling.GetXMLTagContent(HelperClasses.FileHandling.GetStringFromURL(Globals.URL_AutoUpdate), "DLLinkUHash");
 			string DLLinkX = HelperClasses.FileHandling.GetXMLTagContent(HelperClasses.FileHandling.GetStringFromURL(Globals.URL_AutoUpdate), "DLLinkX");
+			string DLLinkXHash = HelperClasses.FileHandling.GetXMLTagContent(HelperClasses.FileHandling.GetStringFromURL(Globals.URL_AutoUpdate), "DLLinkXHash");
 
 			HelperClasses.Logger.Log("Checking if gta5.exe exists locally", 1);
 			if (HelperClasses.FileHandling.doesFileExist(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\GTA5.exe"))
@@ -460,6 +464,21 @@ namespace Project_127
 			{
 				HelperClasses.Logger.Log("It does NOT and we DO need to download something", 2);
 				new PopupDownload(DLLinkG, LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\GTA5.exe", "Needed Files (gta5.exe 1/3)").ShowDialog();
+
+				if (!string.IsNullOrWhiteSpace(DLLinkGHash))
+				{
+					HelperClasses.Logger.Log("We do have a Hash for that file. Lets compare it:",2);
+					HelperClasses.Logger.Log("Hash we want: '" + DLLinkGHash + "'",3);
+					HelperClasses.Logger.Log("Hash we have: '" + HelperClasses.FileHandling.GetHashFromFile(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\GTA5.exe") + "'",3);
+					while (HelperClasses.FileHandling.GetHashFromFile(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\GTA5.exe") != DLLinkGHash)
+					{
+						HelperClasses.Logger.Log("Well..hashes dont match shit. Lets try again",2);
+						HelperClasses.FileHandling.deleteFile(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\GTA5.exe");
+						new PopupDownload(DLLinkG, LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\GTA5.exe", "Needed Files (gta5.exe 1/3)").ShowDialog();
+						HelperClasses.Logger.Log("Hash we want: '" + DLLinkGHash + "'", 3);
+						HelperClasses.Logger.Log("Hash we have: '" + HelperClasses.FileHandling.GetHashFromFile(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\GTA5.exe") + "'", 3);
+					}
+				}
 			}
 
 			HelperClasses.Logger.Log("Checking if x64a.rpf exists locally", 1);
@@ -471,6 +490,21 @@ namespace Project_127
 			{
 				HelperClasses.Logger.Log("It does NOT and we DO need to download something", 2);
 				new PopupDownload(DLLinkX, LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\x64a.rpf", "Needed Files (x64a.rpf, 2/3)").ShowDialog();
+
+				if (!string.IsNullOrWhiteSpace(DLLinkXHash))
+				{
+					HelperClasses.Logger.Log("We do have a Hash for that file. Lets compare it:", 2);
+					HelperClasses.Logger.Log("Hash we want: '" + DLLinkXHash + "'", 3);
+					HelperClasses.Logger.Log("Hash we have: '" + HelperClasses.FileHandling.GetHashFromFile(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\x64a.rpf") + "'", 3);
+					while (HelperClasses.FileHandling.GetHashFromFile(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\x64a.rpf") != DLLinkXHash)
+					{
+						HelperClasses.Logger.Log("Well..hashes dont match shit. Lets try again", 2);
+						HelperClasses.FileHandling.deleteFile(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\x64a.rpf");
+						new PopupDownload(DLLinkX, LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\x64a.rpf", "Needed Files (x64a.rpf, 2/3)").ShowDialog();
+						HelperClasses.Logger.Log("Hash we want: '" + DLLinkXHash + "'", 3);
+						HelperClasses.Logger.Log("Hash we have: '" + HelperClasses.FileHandling.GetHashFromFile(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\x64a.rpf") + "'", 3);
+					}
+				}
 			}
 
 			HelperClasses.Logger.Log(@"Checking if update\update.rpf exists locally", 1);
@@ -482,6 +516,21 @@ namespace Project_127
 			{
 				HelperClasses.Logger.Log("It does NOT and we DO need to download something", 2);
 				new PopupDownload(DLLinkU, LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\update\update.rpf", "Needed Files (Update.rpf, 3/3)").ShowDialog();
+
+				if (!string.IsNullOrWhiteSpace(DLLinkUHash))
+				{
+					HelperClasses.Logger.Log("We do have a Hash for that file. Lets compare it:", 2);
+					HelperClasses.Logger.Log("Hash we want: '" + DLLinkUHash + "'", 3);
+					HelperClasses.Logger.Log("Hash we have: '" + HelperClasses.FileHandling.GetHashFromFile(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\update\update.rpf") + "'", 3);
+					while (HelperClasses.FileHandling.GetHashFromFile(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\update\update.rpf") != DLLinkUHash)
+					{
+						HelperClasses.Logger.Log("Well..hashes dont match shit. Lets try again", 2);
+						HelperClasses.FileHandling.deleteFile(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\update\update.rpf");
+						new PopupDownload(DLLinkU, LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\update\update.rpf", "Needed Files (update.rpf, 3/3)").ShowDialog();
+						HelperClasses.Logger.Log("Hash we want: '" + DLLinkUHash + "'", 3);
+						HelperClasses.Logger.Log("Hash we have: '" + HelperClasses.FileHandling.GetHashFromFile(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\update\update.rpf") + "'", 3);
+					}
+				}
 			}
 		}
 
@@ -583,7 +632,7 @@ namespace Project_127
 			}
 			else
 			{
-				lbl_GTA.Foreground = Globals.MW_GTALabelBrokenForeground;
+				lbl_GTA.Foreground = Globals.MW_GTALabelUnsureForeground;
 				lbl_GTA.Content = "Unsure";
 			}
 			if (LauncherLogic.GameState == LauncherLogic.GameStates.Running)
@@ -596,7 +645,7 @@ namespace Project_127
 				GTA_Page.btn_GTA_static.BorderBrush = Globals.MW_ButtonGTAGameNotRunningBorderBrush;
 				GTA_Page.btn_GTA_static.Content = "Launch GTA V";
 			}
-			SetButtonMouseOverMagic(btn_Auth, false);
+			SetButtonMouseOverMagic(btn_Auth);
 		}
 
 
@@ -608,6 +657,20 @@ namespace Project_127
 		private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
 		{
 			DragMove(); // Pre-Defined Method
+		}
+
+
+		/// <summary>
+		/// WPF Magic to stop the Frame from doing dumb shit to its pages.
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void Frame_Main_Navigating(object sender, NavigatingCancelEventArgs e)
+		{
+			if (e.NavigationMode == NavigationMode.Back || e.NavigationMode == NavigationMode.Forward)
+			{
+				e.Cancel = true;
+			}
 		}
 
 		/// <summary>
@@ -646,13 +709,11 @@ namespace Project_127
 		/// Method we use to call SetButtonBackground with the right parameters to Update GUI
 		/// </summary>
 		/// <param name="myBtn"></param>
-		/// <param name="pMouseOver"></param>
-		public void SetButtonMouseOverMagic(Button myBtn, bool pMouseOver = false)
+		public void SetButtonMouseOverMagic(Button myBtn)
 		{
 			switch (myBtn.Name)
 			{
 				case "btn_Hamburger":
-					//if (pMouseOver)
 					if (myBtn.IsMouseOver)
 					{
 						SetControlBackground(myBtn, @"Artwork\hamburger_mo.png");
@@ -663,7 +724,6 @@ namespace Project_127
 					}
 					break;
 				case "btn_Exit":
-					//if (pMouseOver)
 					if (myBtn.IsMouseOver)
 					{
 						SetControlBackground(myBtn, @"Artwork\exit_mo.png");
@@ -683,7 +743,6 @@ namespace Project_127
 					{
 						BaseArtworkPath = @"Artwork\lock_open";
 					}
-					//if (AuthButtonMouseOver)
 					if (myBtn.IsMouseOver)
 					{
 						if (Globals.PageState == Globals.PageStates.Auth)
@@ -707,110 +766,6 @@ namespace Project_127
 						}
 					}
 					break;
-				case "btn_Settings":
-					if (Globals.PageState == Globals.PageStates.Settings)
-					{
-						//if (pMouseOver)
-						if (myBtn.IsMouseOver)
-						{
-							myBtn.Background = Globals.MW_ButtonBackground;
-							myBtn.Foreground = Globals.MW_ButtonForeground;
-							myBtn.BorderBrush = Globals.MW_ButtonBorderBrush;
-						}
-						else
-						{
-							myBtn.Background = Globals.MW_ButtonMOBackground;
-							myBtn.Foreground = Globals.MW_ButtonMOForeground;
-							myBtn.BorderBrush = Globals.MW_ButtonMOBorderBrush;
-						}
-					}
-					else
-					{
-						//if (pMouseOver)
-						if (myBtn.IsMouseOver)
-						{
-							myBtn.Background = Globals.MW_ButtonMOBackground;
-							myBtn.Foreground = Globals.MW_ButtonMOForeground;
-							myBtn.BorderBrush = Globals.MW_ButtonMOBorderBrush;
-						}
-						else
-						{
-							myBtn.Background = Globals.MW_ButtonBackground;
-							myBtn.Foreground = Globals.MW_ButtonForeground;
-							myBtn.BorderBrush = Globals.MW_ButtonBorderBrush;
-						}
-					}
-					break;
-				case "btn_SaveFiles":
-					if (Globals.PageState == Globals.PageStates.SaveFileHandler)
-					{
-						//if (pMouseOver)
-						if (myBtn.IsMouseOver)
-						{
-							myBtn.Background = Globals.MW_ButtonBackground;
-							myBtn.Foreground = Globals.MW_ButtonForeground;
-							myBtn.BorderBrush = Globals.MW_ButtonBorderBrush;
-						}
-						else
-						{
-							myBtn.Background = Globals.MW_ButtonMOBackground;
-							myBtn.Foreground = Globals.MW_ButtonMOForeground;
-							myBtn.BorderBrush = Globals.MW_ButtonMOBorderBrush;
-						}
-					}
-					else
-					{
-						//if (pMouseOver)
-						if (myBtn.IsMouseOver)
-						{
-							myBtn.Background = Globals.MW_ButtonMOBackground;
-							myBtn.Foreground = Globals.MW_ButtonMOForeground;
-							myBtn.BorderBrush = Globals.MW_ButtonMOBorderBrush;
-						}
-						else
-						{
-							myBtn.Background = Globals.MW_ButtonBackground;
-							myBtn.Foreground = Globals.MW_ButtonForeground;
-							myBtn.BorderBrush = Globals.MW_ButtonBorderBrush;
-						}
-					}
-					break;
-				case "btn_ReadMe":
-					if (Globals.PageState == Globals.PageStates.ReadMe)
-					{
-						//if (pMouseOver)
-						if (myBtn.IsMouseOver)
-						{
-							myBtn.Background = Globals.MW_ButtonBackground;
-							myBtn.Foreground = Globals.MW_ButtonForeground;
-							myBtn.BorderBrush = Globals.MW_ButtonBorderBrush;
-						}
-						else
-						{
-							myBtn.Background = Globals.MW_ButtonMOBackground;
-							myBtn.Foreground = Globals.MW_ButtonMOForeground;
-							myBtn.BorderBrush = Globals.MW_ButtonMOBorderBrush;
-						}
-					}
-					else
-					{
-						//if (pMouseOver)
-						if (myBtn.IsMouseOver)
-						{
-							myBtn.Background = Globals.MW_ButtonMOBackground;
-							myBtn.Foreground = Globals.MW_ButtonMOForeground;
-							myBtn.BorderBrush = Globals.MW_ButtonMOBorderBrush;
-						}
-						else
-						{
-							myBtn.Background = Globals.MW_ButtonBackground;
-							myBtn.Foreground = Globals.MW_ButtonForeground;
-							myBtn.BorderBrush = Globals.MW_ButtonBorderBrush;
-						}
-					}
-					break;
-				default:
-					break;
 			}
 		}
 
@@ -821,7 +776,7 @@ namespace Project_127
 		/// <param name="e"></param>
 		private void btn_MouseEnter(object sender, MouseEventArgs e)
 		{
-			SetButtonMouseOverMagic((Button)sender, true);
+			SetButtonMouseOverMagic((Button)sender);
 		}
 
 		/// <summary>
@@ -831,8 +786,11 @@ namespace Project_127
 		/// <param name="e"></param>
 		private void btn_MouseLeave(object sender, MouseEventArgs e)
 		{
-			SetButtonMouseOverMagic((Button)sender, false);
+			SetButtonMouseOverMagic((Button)sender);
 		}
+
+
+
 
 
 
@@ -901,7 +859,7 @@ namespace Project_127
 			}
 
 			// Yes this is correct
-			SetButtonMouseOverMagic(btn_Auth, false);
+			SetButtonMouseOverMagic(btn_Auth);
 		}
 
 
@@ -975,6 +933,16 @@ namespace Project_127
 			}
 		}
 
+		/// <summary>
+		/// Right Mouse Button Down on Exit forces Close instantly
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void btn_Exit_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+		{
+			this.Close();
+			Environment.Exit(0);
+		}
 
 		// Methods of the GTA Clicks are in GTA_Page
 
@@ -1216,5 +1184,6 @@ namespace Project_127
 
 		#endregion
 
+	
 	} // End of Class
 } // End of Namespace

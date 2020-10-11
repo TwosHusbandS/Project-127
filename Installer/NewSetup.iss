@@ -58,8 +58,8 @@ Source: "C:\Users\ingow\source\repos\Project-127\bin\x64\Release\CefSharp.Wpf.XM
 Source: "C:\Users\ingow\source\repos\Project-127\bin\x64\Release\CefSharp.XML"; DestDir: "{app}"; Flags: ignoreversion
 Source: "C:\Users\ingow\source\repos\Project-127\bin\x64\Release\chrome_elf.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "C:\Users\ingow\source\repos\Project-127\bin\x64\Release\CredentialManagement.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\Users\ingow\source\repos\Project-127\bin\x64\Release\Custom_Uninstaller.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "C:\Users\ingow\source\repos\Project-127\bin\x64\Release\d3dcompiler_47.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\ingow\source\repos\Project-127\bin\x64\Release\debug.log"; DestDir: "{app}"; Flags: ignoreversion
 Source: "C:\Users\ingow\source\repos\Project-127\bin\x64\Release\devtools_resources.pak"; DestDir: "{app}"; Flags: ignoreversion
 Source: "C:\Users\ingow\source\repos\Project-127\bin\x64\Release\GSF.Core.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "C:\Users\ingow\source\repos\Project-127\bin\x64\Release\GSF.Core.xml"; DestDir: "{app}"; Flags: ignoreversion
@@ -70,6 +70,17 @@ Source: "C:\Users\ingow\source\repos\Project-127\bin\x64\Release\libGLESv2.dll";
 Source: "C:\Users\ingow\source\repos\Project-127\bin\x64\Release\Project 1.27.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "C:\Users\ingow\source\repos\Project-127\bin\x64\Release\snapshot_blob.bin"; DestDir: "{app}"; Flags: ignoreversion
 Source: "C:\Users\ingow\source\repos\Project-127\bin\x64\Release\v8_context_snapshot.bin"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\Users\ingow\source\repos\Project-127\bin\x64\Release\WpfAnimatedGif.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\Users\ingow\source\repos\Project-127\bin\x64\Release\WpfAnimatedGif.pdb"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\Users\ingow\source\repos\Project-127\bin\x64\Release\WpfAnimatedGif.xml"; DestDir: "{app}"; Flags: ignoreversion
+
+
+[UninstallRun]
+Filename: "{app}\Custom_Uninstaller.exe"; Parameters: ""
+
+[UninstallDelete]
+Type: filesandordirs; Name: "{app}"
+
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]

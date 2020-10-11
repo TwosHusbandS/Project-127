@@ -185,7 +185,8 @@ namespace Project_127
 
 			// Those are WITH the "\" at the end
 			string[] FilesInUpgradesFiles = HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(UpgradeFilePath);
-			string[] CorrespondingFilePathInGTALocation = new string[DowngradeFilePath.Length];
+			string[] CorrespondingFilePathInGTALocation = new string[FilesInUpgradesFiles.Length];
+			string[] CorrespondingFilePathInDowngradeFiles = new string[FilesInUpgradesFiles.Length];
 
 			HelperClasses.Logger.Log("Found " + FilesInUpgradesFiles.Length.ToString() + " Files in Upgrade Folder.");
 
@@ -194,6 +195,7 @@ namespace Project_127
 			{
 				// Build the Corresponding theoretical Filenames for Upgrade Folder and GTA V Installation Folder
 				CorrespondingFilePathInGTALocation[i] = GTAVFilePath + FilesInUpgradesFiles[i].Substring(UpgradeFilePath.Length);
+				CorrespondingFilePathInDowngradeFiles[i] = UpgradeFilePath + FilesInUpgradesFiles[i].Substring(DowngradeFilePath.Length);
 
 				// If the File exists in GTA V Installation Path
 				if (HelperClasses.FileHandling.doesFileExist(CorrespondingFilePathInGTALocation[i]))
@@ -269,8 +271,8 @@ namespace Project_127
 
 			// Those are WITH the "\" at the end
 			string[] FilesInDowngradeFiles = HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(DowngradeFilePath);
-			string[] CorrespondingFilePathInGTALocation = new string[DowngradeFilePath.Length];
-			string[] CorrespondingFilePathInUpgradeFiles = new string[DowngradeFilePath.Length];
+			string[] CorrespondingFilePathInGTALocation = new string[FilesInDowngradeFiles.Length];
+			string[] CorrespondingFilePathInUpgradeFiles = new string[FilesInDowngradeFiles.Length];
 
 			HelperClasses.Logger.Log("Found " + FilesInDowngradeFiles.Length.ToString() + " Files in Downgrade Folder.");
 
@@ -292,8 +294,13 @@ namespace Project_127
 					}
 					else
 					{
-						// Move File from GTA V Installation Path to Upgrade Folder
-						MyFileOperations.Add(new MyFileOperation(MyFileOperation.FileOperations.Move, CorrespondingFilePathInGTALocation[i], CorrespondingFilePathInUpgradeFiles[i], "Found '" + CorrespondingFilePathInGTALocation[i] + "' in GTA V Installation Path and NOT in $UpgradeFiles. Will move it from GTA V Installation to $UpgradeFiles", 1));
+						// If its not the same file as in DownGradeFiles
+						if (HelperClasses.FileHandling.GetHashFromFile(CorrespondingFilePathInGTALocation[i]) !=
+							HelperClasses.FileHandling.GetHashFromFile(FilesInDowngradeFiles[i]))
+						{
+							// Move File from GTA V Installation Path to Upgrade Folder
+							MyFileOperations.Add(new MyFileOperation(MyFileOperation.FileOperations.Move, CorrespondingFilePathInGTALocation[i], CorrespondingFilePathInUpgradeFiles[i], "Found '" + CorrespondingFilePathInGTALocation[i] + "' in GTA V Installation Path and NOT in $UpgradeFiles. Will move it from GTA V Installation to $UpgradeFiles", 1));
+						}
 					}
 				}
 
