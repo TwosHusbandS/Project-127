@@ -33,6 +33,51 @@ namespace Project_127
 			this.DataContext = this;
 
 			btn_Refresh_Click(null, null);
+			MouseOverMagic(btn_LeftArrow);
+			MouseOverMagic(btn_RightArrow);
+			MouseOverMagic(btn_Refresh);
+		}
+
+
+		/// <summary>
+		/// Mouse Over Magic
+		/// </summary>
+		/// <param name="myBtn"></param>
+		public static void MouseOverMagic(Button myBtn)
+		{
+			switch (myBtn.Name)
+			{
+				case "btn_LeftArrow":
+					if (myBtn.IsMouseOver)
+					{
+						MainWindow.MW.SetControlBackground(myBtn,@"Artwork/arrowleft_mo.png");
+					}
+					else
+					{
+						MainWindow.MW.SetControlBackground(myBtn, @"Artwork/arrowleft.png");
+					}
+					break;
+				case "btn_RightArrow":
+					if (myBtn.IsMouseOver)
+					{
+						MainWindow.MW.SetControlBackground(myBtn, @"Artwork/arrowright_mo.png");
+					}
+					else
+					{
+						MainWindow.MW.SetControlBackground(myBtn, @"Artwork/arrowright.png");
+					}
+					break;
+				case "btn_Refresh":
+					if (myBtn.IsMouseOver)
+					{
+						MainWindow.MW.SetControlBackground(myBtn, @"Artwork/refresh_mo.png");
+					}
+					else
+					{
+						MainWindow.MW.SetControlBackground(myBtn, @"Artwork/refresh.png");
+					}
+					break;
+			}
 		}
 
 
@@ -266,6 +311,27 @@ namespace Project_127
 			return null;
 		}
 
+
+		/// <summary>
+		/// Mouse Enter Event
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void btn_MouseEnter(object sender, MouseEventArgs e)
+		{
+			MouseOverMagic((Button)sender);
+		}
+
+		/// <summary>
+		/// Mouse Leave Event
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void btn_MouseLeave(object sender, MouseEventArgs e)
+		{
+			MouseOverMagic((Button)sender);
+		}
+
 		/// <summary>
 		/// New Name Popup Logic
 		/// </summary>
@@ -277,7 +343,7 @@ namespace Project_127
 			string newName = "";
 
 			// Asking for Name 
-			Popup newNamePU = new Popup(Popup.PopupWindowTypes.PopupOkTextBox, "Enter new Name for the SaveFile:\n'" + pMySaveFileName + "'\n", pDefaultTBText: pMySaveFileName);
+			PopupTextbox newNamePU = new PopupTextbox("Enter new Name for the SaveFile:\n'" + pMySaveFileName + "'", pMySaveFileName);
 			newNamePU.ShowDialog();
 			if (newNamePU.DialogResult == true)
 			{
@@ -299,11 +365,11 @@ namespace Project_127
 					else
 					{
 						// When you wanna stay in while loop
-						newNamePU = new Popup(Popup.PopupWindowTypes.PopupOkTextBox, "Enter new Name for the SaveFile:\n'" + pMySaveFileName + "'\n", pDefaultTBText: pMySaveFileName);
-						newNamePU.ShowDialog();
-						if (newNamePU.DialogResult == true)
+						PopupTextbox newNamePU2 = new PopupTextbox("Enter new Name for the SaveFile:\n'" + pMySaveFileName + "'", pMySaveFileName);
+						newNamePU2.ShowDialog();
+						if (newNamePU2.DialogResult == true)
 						{
-							newName = newNamePU.MyReturnString;
+							newName = newNamePU2.MyReturnString;
 						}
 					}
 				}
@@ -449,26 +515,6 @@ namespace Project_127
 			Sort(dg_BackupFiles);
 		}
 
-		private void MenuItem_Click(object sender, RoutedEventArgs e)
-		{
-			Globals.DebugPopup("A");
-		}
 
-		private void MenuItem_Click_1(object sender, RoutedEventArgs e)
-		{
-			Globals.DebugPopup("B");
-		}
-
-		private void MenuItem_Click_2(object sender, RoutedEventArgs e)
-		{
-			Globals.DebugPopup("B");
-
-		}
-
-		private void MenuItem_Click2(object sender, RoutedEventArgs e)
-		{
-			Globals.DebugPopup("BB");
-
-		}
 	} // End of Class
 } // End of Namespace

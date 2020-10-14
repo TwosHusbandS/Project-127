@@ -26,8 +26,6 @@
                         <RowDefinition/>
                         <RowDefinition/>
                         <RowDefinition/>
-                        <!--<RowDefinition/>
-                        <RowDefinition/>-->
                     </Grid.RowDefinitions>
                     <Button x:Name="btn_Upgrade" Grid.Row="0" Style="{StaticResource btn_hamburgeritem}" Content="Upgrade" Click="btn_Upgrade_Click"/>
                     <Button x:Name="btn_Repair" Grid.Row="1" Style="{StaticResource btn_hamburgeritem}" Content="Repair Installation" Click="btn_Repair_Click"/>
@@ -38,7 +36,7 @@
                     <Button x:Name="btn_ReadMe" Grid.Row="6" Style="{StaticResource btn_hamburgeritem}" BorderThickness="0" Content="ReadMe" Click="btn_ReadMe_Click" MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
                 </Grid>
                 <!-- GridHamburgerInner -->
-                <Label x:Name="lbl_GTA" Style="{StaticResource lbl}" VerticalAlignment="Top" VerticalContentAlignment="Bottom" Margin="98,25,0,0" Width="160"/>
+                <Label x:Name="lbl_GTA" Style="{StaticResource lbl}" VerticalAlignment="Top" VerticalContentAlignment="Bottom" Margin="105,25,0,0" Width="160" HorizontalContentAlignment="Left" HorizontalAlignment="Left"/>
                 <Button x:Name="btn_Auth" Style="{StaticResource btn_SmallIcon}" Height="40" Width="40" MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave" MouseRightButtonDown="btn_Auth_MouseRightButtonDown" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="60,15,0,0" Click="btn_Auth_Click"/>
             </Grid>
             <!-- GridHamburgerOuter -->

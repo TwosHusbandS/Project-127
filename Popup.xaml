@@ -7,67 +7,25 @@
         mc:Ignorable="d"
         Title="Popup" 
         Background="{x:Static local:Globals.PU_Background}"
-        WindowStyle="None" ResizeMode="CanMinimize" WindowStartupLocation="CenterOwner" MouseLeftButtonDown="Window_MouseLeftButtonDown"
+        WindowStyle="None" ResizeMode="NoResize" WindowStartupLocation="CenterOwner" MouseLeftButtonDown="Window_MouseLeftButtonDown"
         Height="Auto"
         Width="Auto"
         SizeToContent="WidthAndHeight"
         Icon="/Artwork/icon.png">
-    <Window.Resources>
-        <Style TargetType="Button" x:Key="btn">
-            <Setter Property="Background" Value="{x:Static local:Globals.PU_ButtonBackground}"/>
-            <Setter Property="Foreground" Value="{x:Static local:Globals.PU_ButtonForeground}"/>
-            <Setter Property="BorderBrush" Value="{x:Static local:Globals.PU_ButtonBorderBrush}"/>
-            <Setter Property="FontSize" Value="18"/>
-            <Setter Property="FontFamily" Value="Tahoma"/>
-            <Setter Property="Margin" Value="15"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Border Background="{TemplateBinding Background}"
-                            CornerRadius="4"
-                            BorderThickness="{x:Static local:Globals.PU_ButtonBorderThickness}"
-                            Padding="5"
-                            BorderBrush="{TemplateBinding BorderBrush}">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        </Border>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-            <Style.Triggers>
-                <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="{x:Static local:Globals.PU_ButtonMOBackground}"/>
-                    <Setter Property="Foreground" Value="{x:Static local:Globals.PU_ButtonMOForeground}"/>
-                    <Setter Property="BorderBrush" Value="{x:Static local:Globals.PU_ButtonMOBorderBrush}"/>
-                </Trigger>
-            </Style.Triggers>
-        </Style>
-        <Style x:Key="lbl" TargetType="Label">
-            <Setter Property="Foreground" Value="{x:Static local:Globals.PU_LabelForeground}" />
-            <Setter Property="FontFamily" Value="Tahoma" />
-            <Setter Property="FontSize" Value="18" />
-            <Setter Property="TextBlock.TextAlignment" Value="Center"/>
-            <Setter Property="HorizontalAlignment" Value="Center"/>
-            <Setter Property="VerticalAlignment" Value="Center" />
-            <Setter Property="HorizontalContentAlignment" Value="Center" />
-            <Setter Property="VerticalContentAlignment" Value="Center" />
-            <Setter Property="Margin" Value="10" />
-        </Style>
-    </Window.Resources>
-    <Border BorderBrush="{x:Static local:Globals.PU_BorderBrush}" BorderThickness="2">
-        <Border BorderBrush="{x:Static local:Globals.PU_BorderBrush_Inner}" BorderThickness="0" Margin="10,5" CornerRadius="10">
-            <Grid x:Name="myGrid">
-                <Grid.RowDefinitions>
-                    <RowDefinition x:Name="myRow0" Height="*"/>
-                    <RowDefinition x:Name="myRow1" Height="*"/>
-                    <RowDefinition x:Name="myRow2" Height="*"/>
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition x:Name="myColumn0" Width="*"/>
-                    <ColumnDefinition x:Name="myColumn1" Width="*"/>
-                </Grid.ColumnDefinitions>
+    <Border BorderBrush="{x:Static local:Globals.PU_BorderBrush}" BorderThickness="2" >
+        <Grid x:Name="myGrid" Margin="10,5">
+            <Grid.RowDefinitions>
+                <RowDefinition x:Name="myRow0" Height="1.8*"/>
+                <RowDefinition x:Name="myRow1" Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition x:Name="myColumn0" Width="*"/>
+                <ColumnDefinition x:Name="myColumn1" Width="*"/>
+            </Grid.ColumnDefinitions>
 
-                <Label x:Name="lbl_Main" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource lbl}"/>
-            </Grid>
-        </Border>
+            <Label x:Name="lbl_Main" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource lbl}"/>
+
+        </Grid>
+
     </Border>
 </Window>

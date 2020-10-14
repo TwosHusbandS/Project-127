@@ -466,7 +466,95 @@ namespace Project_127
 			// If we DONT only auto start when downgraded OR if we are downgraded
 			if (Settings.EnableOnlyAutoStartProgramsWhenDowngraded == false || LauncherLogic.InstallationState == InstallationStates.Downgraded)
 			{
-				// Auto Start Programs
+				HelperClasses.Logger.Log("Either we are Downgraded or EnableOnlyAutoStartProgramsWhenDowngraded is set to false");
+				if (Settings.EnableAutoStartFPSLimiter)
+				{
+					HelperClasses.Logger.Log("We are trying to auto Start FPS Limiter");
+					string ProcessName = HelperClasses.FileHandling.PathSplitUp(Settings.PathFPSLimiter)[1];
+					if (!HelperClasses.ProcessHandler.IsProcessRunning(ProcessName))
+					{
+						HelperClasses.Logger.Log("Process is not already running...", 1);
+						if (HelperClasses.FileHandling.doesFileExist(Settings.PathFPSLimiter))
+						{
+							HelperClasses.Logger.Log("File does exist, lets start it...",1);
+							HelperClasses.ProcessHandler.StartProcess(Settings.PathFPSLimiter);
+						}
+						else
+						{
+							HelperClasses.Logger.Log("Path (File) seems to not exist.", 1);
+						}
+					}
+					else
+					{
+						HelperClasses.Logger.Log("Seems to be running already", 1);
+					}
+				}
+				if (Settings.EnableAutoStartLiveSplit)
+				{
+					HelperClasses.Logger.Log("We are trying to auto Start LiveSplit");
+					string ProcessName = HelperClasses.FileHandling.PathSplitUp(Settings.PathLiveSplit)[1];
+					if (!HelperClasses.ProcessHandler.IsProcessRunning(ProcessName))
+					{
+						HelperClasses.Logger.Log("Process is not already running...", 1);
+						if (HelperClasses.FileHandling.doesFileExist(Settings.PathLiveSplit))
+						{
+							HelperClasses.Logger.Log("File does exist, lets start it...", 1);
+							HelperClasses.ProcessHandler.StartProcess(Settings.PathLiveSplit);
+						}
+						else
+						{
+							HelperClasses.Logger.Log("Path (File) seems to not exist.", 1);
+						}
+					}
+					else
+					{
+						HelperClasses.Logger.Log("Seems to be running already", 1);
+					}
+				}
+				if (Settings.EnableAutoStartStreamProgram)
+				{
+					HelperClasses.Logger.Log("We are trying to auto Start Stream Program");
+					string ProcessName = HelperClasses.FileHandling.PathSplitUp(Settings.PathStreamProgram)[1];
+					if (!HelperClasses.ProcessHandler.IsProcessRunning(ProcessName))
+					{
+						HelperClasses.Logger.Log("Process is not already running...", 1);
+						if (HelperClasses.FileHandling.doesFileExist(Settings.PathStreamProgram))
+						{
+							HelperClasses.Logger.Log("File does exist, lets start it...", 1);
+							HelperClasses.ProcessHandler.StartProcess(Settings.PathStreamProgram);
+						}
+						else
+						{
+							HelperClasses.Logger.Log("Path (File) seems to not exist.", 1);
+						}
+					}
+					else
+					{
+						HelperClasses.Logger.Log("Seems to be running already", 1);
+					}
+				}
+				if (Settings.EnableAutoStartNohboard)
+				{
+					HelperClasses.Logger.Log("We are trying to auto Start Nohboard");
+					string ProcessName = HelperClasses.FileHandling.PathSplitUp(Settings.PathNohboard)[1];
+					if (!HelperClasses.ProcessHandler.IsProcessRunning(ProcessName))
+					{
+						HelperClasses.Logger.Log("Process is not already running...", 1);
+						if (HelperClasses.FileHandling.doesFileExist(Settings.PathNohboard))
+						{
+							HelperClasses.Logger.Log("File does exist, lets start it...", 1);
+							HelperClasses.ProcessHandler.StartProcess(Settings.PathNohboard);
+						}
+						else
+						{
+							HelperClasses.Logger.Log("Path (File) seems to not exist.", 1);
+						}
+					}
+					else
+					{
+						HelperClasses.Logger.Log("Seems to be running already", 1);
+					}
+				}
 			}
 
 

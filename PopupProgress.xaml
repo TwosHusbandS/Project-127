@@ -11,67 +11,14 @@
         Height="160"
         Width="420"
         Icon="/Artwork/icon.png">
-    <Window.Resources>
-        <Style TargetType="Button" x:Key="btn">
-            <Setter Property="Background" Value="{x:Static local:Globals.PU_ButtonBackground}"/>
-            <Setter Property="Foreground" Value="{x:Static local:Globals.PU_ButtonForeground}"/>
-            <Setter Property="BorderBrush" Value="{x:Static local:Globals.PU_ButtonBorderBrush}"/>
-            <Setter Property="FontSize" Value="18"/>
-            <Setter Property="FontFamily" Value="Tahoma"/>
-            <Setter Property="Margin" Value="15"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Border Background="{TemplateBinding Background}"
-                            CornerRadius="4"
-                            BorderThickness="{x:Static local:Globals.PU_ButtonBorderThickness}"
-                            Padding="5"
-                            BorderBrush="{TemplateBinding BorderBrush}">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        </Border>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-            <Style.Triggers>
-                <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="{x:Static local:Globals.PU_ButtonMOBackground}"/>
-                    <Setter Property="Foreground" Value="{x:Static local:Globals.PU_ButtonMOForeground}"/>
-                    <Setter Property="BorderBrush" Value="{x:Static local:Globals.PU_ButtonMOBorderBrush}"/>
-                </Trigger>
-            </Style.Triggers>
-        </Style>
-        <Style x:Key="lbl" TargetType="Label">
-            <Setter Property="Foreground" Value="{x:Static local:Globals.PU_LabelForeground}" />
-            <Setter Property="FontFamily" Value="Tahoma" />
-            <Setter Property="FontSize" Value="18" />
-            <Setter Property="TextBlock.TextAlignment" Value="Center"/>
-            <Setter Property="HorizontalAlignment" Value="Center"/>
-            <Setter Property="VerticalAlignment" Value="Center" />
-            <Setter Property="HorizontalContentAlignment" Value="Center" />
-            <Setter Property="VerticalContentAlignment" Value="Center" />
-            <Setter Property="Margin" Value="10" />
-        </Style>
-        <Style x:Key="pb" TargetType="ProgressBar">
-            <Setter Property="Background" Value="{x:Static local:Globals.PU_ProgressBarBackground}"/>
-            <Setter Property="Foreground" Value="{x:Static local:Globals.PU_ProgressBarForeground}"/>
-            <Setter Property="BorderBrush" Value="{x:Static local:Globals.PU_ProgressBarBorderBrush}"/>
-            <Setter Property="BorderThickness" Value="2"/>
-            <Setter Property="Minimum" Value="0"/>
-            <Setter Property="Value" Value="0"/>
-            <Setter Property="Maximum" Value="100"/>
-            <Setter Property="Margin" Value="20" />
-        </Style>
-    </Window.Resources>
-    <Border BorderBrush="{x:Static local:Globals.PU_BorderBrush}" BorderThickness="2">
 
+    <Border BorderBrush="{x:Static local:Globals.PU_BorderBrush}" BorderThickness="2">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
-            <!--<ProgressBar Grid.Row="0" Margin="20" x:Name="myPB" Maximum="100" Minimum="0" Value="10"/>
-        <Button Grid.Row="1" Margin="20" Content="ASDF" Click="Button_Click"/>-->
-            <Label Grid.Row="0" Margin="20" Style="{StaticResource lbl}" x:Name="myLBL" FontSize="20"/>
+            <Label Grid.Row="0" Margin="20" Style="{StaticResource lbl}" x:Name="myLBL" FontSize="18"/>
             <ProgressBar Grid.Row="1" Margin="20" Style="{StaticResource pb}" x:Name="myPB"/>
         </Grid>
     </Border>

@@ -73,10 +73,10 @@ namespace Project_127
 			List<string> GTAVPathGuesses = new List<string>();
 			GTAVPathGuesses.Add(LauncherLogic.GetGTAVPathMagicSteam());
 			GTAVPathGuesses.Add(LauncherLogic.GetGTAVPathMagicRockstar());
-			GTAVPathGuesses.Add(LauncherLogic.GetGTAVPathMagicEpic());			
-			GTAVPathGuesses.Add(HelperClasses.RegeditHandler.GetValue(myRKTemp1,"InstallFolderSteam"));
-			GTAVPathGuesses.Add(HelperClasses.RegeditHandler.GetValue(myRKTemp2,"InstallFolderEpic"));
-			GTAVPathGuesses.Add(HelperClasses.RegeditHandler.GetValue(myRKTemp3,"InstallFolder"));
+			GTAVPathGuesses.Add(LauncherLogic.GetGTAVPathMagicEpic());
+			GTAVPathGuesses.Add(HelperClasses.RegeditHandler.GetValue(myRKTemp1, "InstallFolderSteam"));
+			GTAVPathGuesses.Add(HelperClasses.RegeditHandler.GetValue(myRKTemp2, "InstallFolderEpic"));
+			GTAVPathGuesses.Add(HelperClasses.RegeditHandler.GetValue(myRKTemp3, "InstallFolder"));
 			GTAVPathGuesses.Add(Globals.ProjectInstallationPath.TrimEnd('\\').Substring(0, Globals.ProjectInstallationPath.LastIndexOf('\\')));
 			GTAVPathGuesses.Add(Globals.ProjectInstallationPath.TrimEnd('\\'));
 			GTAVPathGuesses.Add(Settings.ZIPExtractionPath.TrimEnd('\\').Substring(0, Globals.ProjectInstallationPath.LastIndexOf('\\')));
@@ -151,7 +151,7 @@ namespace Project_127
 
 			// If Setting is STILL not correct
 			// Needs to be while since you can exit out of SetGTAVPathManually
-			while (!(LauncherLogic.IsGTAVInstallationPathCorrect(Settings.GTAVInstallationPath, false)))
+			while ((String.IsNullOrWhiteSpace(Settings.GTAVInstallationPath)))
 			{
 				// Log
 				HelperClasses.Logger.Log("After " + GTAVPathGuesses.Count + " guesses we still dont have the correct GTAVInstallationPath. User has to do it manually now. Fucking casual");
@@ -198,7 +198,7 @@ namespace Project_127
 			if (!ChangedRetailerAlready)
 			{
 				HelperClasses.Logger.Log("Have not changed Retailer already, will throw Popup");
-				Popup myPopupRetailer = new Popup(Popup.PopupWindowTypes.PopupOkComboBox, "Retailer of your GTA V Installation?", pEnum: Retailer);
+				PopupCombobox myPopupRetailer = new PopupCombobox("Retailer of your GTA V Installation?", Retailer);
 				myPopupRetailer.ShowDialog();
 				if (myPopupRetailer.DialogResult == true)
 				{
@@ -212,7 +212,7 @@ namespace Project_127
 			}
 
 			HelperClasses.Logger.Log("Throwing Popup for Language Selection");
-			Popup myPopup = new Popup(Popup.PopupWindowTypes.PopupOkComboBox, "Language you want as your downgraded GTA V Language?", pEnum: LanguageSelected);
+			PopupCombobox myPopup = new PopupCombobox("Language you want as your downgraded GTA V Language?", LanguageSelected);
 			myPopup.ShowDialog();
 			if (myPopup.DialogResult == true)
 			{
@@ -239,7 +239,16 @@ namespace Project_127
 		public static void SetGTAVPathManually(bool CheckIfDefaultForCopyHardlinkNeedsChanging = true)
 		{
 			HelperClasses.Logger.Log("Asking User for GTA V Installation path");
-			string GTAVInstallationPathUserChoice = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.Folder, "Pick the Folder which contains your GTA5.exe", @"C:\");
+			string StartUpPath = Settings.GTAVInstallationPath;
+			if (String.IsNullOrWhiteSpace(StartUpPath))
+			{
+				StartUpPath = @"C:\";
+			}
+			else
+			{
+				StartUpPath = HelperClasses.FileHandling.PathSplitUp(StartUpPath.TrimEnd('\\'))[0];
+			}
+			string GTAVInstallationPathUserChoice = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.Folder, "Pick the Folder which contains your GTA5.exe", StartUpPath);
 			HelperClasses.Logger.Log("Users picked path is: '" + GTAVInstallationPathUserChoice + "'");
 
 			while (!(LauncherLogic.IsGTAVInstallationPathCorrect(GTAVInstallationPathUserChoice, false)))
@@ -261,7 +270,7 @@ namespace Project_127
 				GTAVInstallationPathUserChoice = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.Folder, "Pick the Folder which contains your GTA5.exe", @"C:\");
 				HelperClasses.Logger.Log("New Users picked path is: '" + GTAVInstallationPathUserChoice + "'");
 			}
-			HelperClasses.Logger.Log("Picked path '" + GTAVInstallationPathUserChoice + "'´is valid and will be set as Settings.GTAVInstallationPath.");
+			HelperClasses.Logger.Log("Picked path '" + GTAVInstallationPathUserChoice + "' is valid and will be set as Settings.GTAVInstallationPath.");
 			Settings.GTAVInstallationPath = GTAVInstallationPathUserChoice;
 			if (CheckIfDefaultForCopyHardlinkNeedsChanging)
 			{
@@ -326,7 +335,23 @@ namespace Project_127
 		/// <param name="e"></param>
 		private void btn_Set_PathLiveSplit_Click(object sender, RoutedEventArgs e)
 		{
+			string StartUpPath = Settings.PathLiveSplit;
+			if (String.IsNullOrWhiteSpace(StartUpPath))
+			{
+				StartUpPath = @"C:\";
+			}
+			else
+			{
+				StartUpPath = HelperClasses.FileHandling.PathSplitUp(StartUpPath.TrimEnd('\\'))[0];
+			}
 
+			string UserChoice = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.File, "Pick your LiveSplit Executable", StartUpPath);
+
+			if (!String.IsNullOrWhiteSpace(UserChoice))
+			{
+				Settings.PathLiveSplit = UserChoice;
+				RefreshGUI();
+			}
 		}
 
 		/// <summary>
@@ -336,7 +361,23 @@ namespace Project_127
 		/// <param name="e"></param>
 		private void btn_Set_PathStreamProgram_Click(object sender, RoutedEventArgs e)
 		{
+			string StartUpPath = Settings.PathStreamProgram;
+			if (String.IsNullOrWhiteSpace(StartUpPath))
+			{
+				StartUpPath = @"C:\";
+			}
+			else
+			{
+				StartUpPath = HelperClasses.FileHandling.PathSplitUp(StartUpPath.TrimEnd('\\'))[0];
+			}
 
+			string UserChoice = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.File, "Pick your Stream Program Executable", StartUpPath);
+
+			if (!String.IsNullOrWhiteSpace(UserChoice))
+			{
+				Settings.PathStreamProgram = UserChoice;
+				RefreshGUI();
+			}
 		}
 
 		/// <summary>
@@ -346,7 +387,23 @@ namespace Project_127
 		/// <param name="e"></param>
 		private void btn_Set_PathFPSLimiter_Click(object sender, RoutedEventArgs e)
 		{
+			string StartUpPath = Settings.PathFPSLimiter;
+			if (String.IsNullOrWhiteSpace(StartUpPath))
+			{
+				StartUpPath = @"C:\";
+			}
+			else
+			{
+				StartUpPath = HelperClasses.FileHandling.PathSplitUp(StartUpPath.TrimEnd('\\'))[0];
+			}
 
+			string UserChoice = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.File, "Pick your FPS Limiter Executable", StartUpPath);
+
+			if (!String.IsNullOrWhiteSpace(UserChoice))
+			{
+				Settings.PathFPSLimiter = UserChoice;
+				RefreshGUI();
+			}
 		}
 
 		/// <summary>
@@ -376,17 +433,23 @@ namespace Project_127
 		/// <param name="e"></param>
 		private void btn_Set_PathNohboard_Click(object sender, RoutedEventArgs e)
 		{
+			string StartUpPath = Settings.PathNohboard;
+			if (String.IsNullOrWhiteSpace(StartUpPath))
+			{
+				StartUpPath = @"C:\";
+			}
+			else
+			{
+				StartUpPath = HelperClasses.FileHandling.PathSplitUp(StartUpPath.TrimEnd('\\'))[0];
+			}
 
-		}
+			string UserChoice = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.File, "Pick your Nohboard Executable", StartUpPath);
 
-		/// <summary>
-		/// Button Click to select the Folder for the Theme
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
-		private void btn_Set_Theme_Click(object sender, RoutedEventArgs e)
-		{
-
+			if (!String.IsNullOrWhiteSpace(UserChoice))
+			{
+				Settings.PathNohboard = UserChoice;
+				RefreshGUI();
+			}
 		}
 
 
@@ -499,20 +562,19 @@ namespace Project_127
 			combox_Set_LanguageSelected.SelectedItem = Settings.LanguageSelected;
 			tb_Set_InGameName.Text = Settings.InGameName;
 			cb_Set_AutoSetHighPriority.IsChecked = Settings.EnableAutoSetHighPriority;
-			//cb_Set_OnlyAutoStartProgramsWhenDowngraded.IsChecked = Settings.EnableOnlyAutoStartProgramsWhenDowngraded;
-			//btn_Set_PathFPSLimiter.Content = Settings.PathFPSLimiter;
-			//btn_Set_PathLiveSplit.Content = Settings.PathLiveSplit;
-			//btn_Set_PathStreamProgram.Content = Settings.PathStreamProgram;
-			//btn_Set_PathNohboard.Content = Settings.PathNohboard;
+			cb_Set_OnlyAutoStartProgramsWhenDowngraded.IsChecked = Settings.EnableOnlyAutoStartProgramsWhenDowngraded;
+			btn_Set_PathFPSLimiter.Content = Settings.PathFPSLimiter;
+			btn_Set_PathLiveSplit.Content = Settings.PathLiveSplit;
+			btn_Set_PathStreamProgram.Content = Settings.PathStreamProgram;
+			btn_Set_PathNohboard.Content = Settings.PathNohboard;
 			//btn_Set_JumpScriptKey1.Content = Settings.JumpScriptKey1;
 			//btn_Set_JumpScriptKey2.Content = Settings.JumpScriptKey2;
-			//btn_Set_Theme.Content = Settings.Theme;
-			//cb_Set_EnableAutoStartFPSLimiter.IsChecked = Settings.EnableAutoStartFPSLimiter;
 			//cb_Set_EnableAutoStartJumpScript.IsChecked = Settings.EnableAutoStartJumpScript;
-			//cb_Set_EnableAutoStartLiveSplit.IsChecked = Settings.EnableAutoStartLiveSplit;
-			//cb_Set_EnableAutoStartNohboard.IsChecked = Settings.EnableAutoStartNohboard;
-			//cb_Set_EnableAutoStartStreamProgram.IsChecked = Settings.EnableAutoStartStreamProgram;
 			//cb_Set_EnableNohboardBurhac.IsChecked = Settings.EnableNohboardBurhac;
+			cb_Set_EnableAutoStartFPSLimiter.IsChecked = Settings.EnableAutoStartFPSLimiter;
+			cb_Set_EnableAutoStartLiveSplit.IsChecked = Settings.EnableAutoStartLiveSplit;
+			cb_Set_EnableAutoStartNohboard.IsChecked = Settings.EnableAutoStartNohboard;
+			cb_Set_EnableAutoStartStreamProgram.IsChecked = Settings.EnableAutoStartStreamProgram;
 		}
 
 

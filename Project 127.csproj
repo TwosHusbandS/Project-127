@@ -164,6 +164,12 @@
     <Compile Include="HelperClasses\OwnOpenFolderDialog\FolderSelectDialog.cs" />
     <Compile Include="HelperClasses\OwnOpenFolderDialog\Reflector.cs" />
     <Compile Include="MyFileOperation.cs" />
+    <Compile Include="PopupCombobox.xaml.cs">
+      <DependentUpon>PopupCombobox.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="PopupTextbox.xaml.cs">
+      <DependentUpon>PopupTextbox.xaml</DependentUpon>
+    </Compile>
     <Compile Include="RC4.cs" />
     <Compile Include="ReadMe.xaml.cs">
       <DependentUpon>ReadMe.xaml</DependentUpon>
@@ -198,6 +204,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="PopupCombobox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="PopupProgress.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -220,6 +230,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="PopupDownload.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="PopupTextbox.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -301,13 +315,10 @@
     <Resource Include="Artwork\hamburger_mo.png" />
     <Resource Include="Artwork\icon.ico" />
     <Resource Include="Artwork\icon.png" />
-    <Resource Include="Artwork\leftarrow.png" />
     <Resource Include="Artwork\lock_closed.png" />
     <Resource Include="Artwork\lock_closed_mo.png" />
     <Resource Include="Artwork\lock_open.png" />
     <Resource Include="Artwork\lock_open_mo.png" />
-    <Resource Include="Artwork\refresh.png" />
-    <Resource Include="Artwork\rightarrow.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Artwork\bg_420.png" />
@@ -325,6 +336,16 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Artwork\loading.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Artwork\refresh.png" />
+    <Resource Include="Artwork\refresh_mo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Artwork\arrowleft.png" />
+    <Resource Include="Artwork\arrowleft_mo.png" />
+    <Resource Include="Artwork\arrowright.png" />
+    <Resource Include="Artwork\arrowright_mo.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

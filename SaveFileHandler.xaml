@@ -6,255 +6,85 @@
         xmlns:local="clr-namespace:Project_127"
         mc:Ignorable="d"
         Title="Save File Manager" d:DesignHeight="540" d:DesignWidth="625"        
-        Background="{x:Static local:Globals.SFH_Background}">
-    <!--Background="{x:Static local:Globals.SFH_Background}">-->
-    <!--WindowStyle="None" 
-        AllowsTransparency="True" 
-        MouseLeftButtonDown="Window_MouseLeftButtonDown" 
-        WindowStartupLocation="CenterScreen"
-        ResizeMode="CanMinimize"
-        Icon="/Artwork/icon.png"-->
+        Background="{x:Static local:Globals.App_Submenu_Background}">
     <Page.Resources>
 
 
-        <!--#region Scroll Viewer Style-->
-        <!--this is stolen from another project of mine, where it was stolen from another old project where it was probably stolen off stack overflow...-->
 
-
-        <Style x:Key="{x:Type ScrollBar}" TargetType="{x:Type ScrollBar}">
-            <Setter Property="Stylus.IsFlicksEnabled" Value="false" />
-            <Setter Property="Foreground" Value="{x:Static local:Globals.SFH_SVForeground}" />
-            <Setter Property="Background" Value="{x:Static local:Globals.SFH_SVBackground}" />
-            <Setter Property="Width" Value="0" />
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type ScrollBar}">
-                        <Grid x:Name="GridRoot" Width="16" Background="{TemplateBinding Background}">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="0.00001*" />
-                            </Grid.RowDefinitions>
-
-                            <Track x:Name="PART_Track" Grid.Row="0" IsDirectionReversed="true" Focusable="false">
-                                <Track.Thumb>
-                                    <Thumb x:Name="Thumb" Background="{TemplateBinding Foreground}" Style="{DynamicResource ScrollThumbs}" />
-                                </Track.Thumb>
-                                <Track.IncreaseRepeatButton>
-                                    <RepeatButton x:Name="PageUp" Command="ScrollBar.PageDownCommand" Opacity="0" Focusable="false" />
-                                </Track.IncreaseRepeatButton>
-                                <Track.DecreaseRepeatButton>
-                                    <RepeatButton x:Name="PageDown" Command="ScrollBar.PageUpCommand" Opacity="0" Focusable="false" />
-                                </Track.DecreaseRepeatButton>
-                            </Track>
-                        </Grid>
-                        <ControlTemplate.Triggers>
-                            <Trigger SourceName="Thumb" Property="IsMouseOver" Value="true">
-                            </Trigger>
-                            <Trigger SourceName="Thumb" Property="IsDragging" Value="true">
-                            </Trigger>
-                            <Trigger Property="IsEnabled" Value="false">
-                                <Setter TargetName="Thumb" Property="Visibility" Value="Collapsed" />
-                            </Trigger>
-                            <Trigger Property="Orientation" Value="Horizontal">
-                                <Setter TargetName="GridRoot" Property="LayoutTransform">
-                                    <Setter.Value>
-                                        <RotateTransform Angle="-90" />
-                                    </Setter.Value>
-                                </Setter>
-                                <Setter TargetName="PART_Track" Property="LayoutTransform">
-                                    <Setter.Value>
-                                        <RotateTransform Angle="-90" />
-                                    </Setter.Value>
-                                </Setter>
-                                <Setter Property="Width" Value="Auto" />
-                                <Setter Property="Height" Value="12" />
-                                <Setter TargetName="Thumb" Property="Tag" Value="Horizontal" />
-                                <Setter TargetName="PageDown" Property="Command" Value="ScrollBar.PageLeftCommand" />
-                                <Setter TargetName="PageUp" Property="Command" Value="ScrollBar.PageRightCommand" />
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
-        <Style x:Key="ScrollThumbs" TargetType="{x:Type Thumb}">
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type Thumb}">
-                        <Grid x:Name="Grid">
-                            <Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="Auto" Height="Auto" Fill="Transparent" />
-                            <Border x:Name="Rectangle1" CornerRadius="5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="12.5" Height="Auto"  Background="{TemplateBinding Background}" />
-                        </Grid>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="Tag" Value="Horizontal">
-                                <Setter TargetName="Rectangle1" Property="Width" Value="Auto" />
-                                <Setter TargetName="Rectangle1" Property="Height" Value="7" />
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
-        <Style x:Key="sv" TargetType="ScrollViewer">
-            <Setter Property="HorizontalAlignment" Value="Stretch"/>
-            <Setter Property="VerticalAlignment" Value="Stretch"/>
-            <Setter Property="VerticalScrollBarVisibility" Value="Auto"/>
-        </Style>
-
-
-
-        <!--#endregion-->
-
-
-        <Style TargetType="Button" x:Key="btn">
-            <Setter Property="Background" Value="{x:Static local:Globals.SFH_ButtonBackground}"/>
-            <Setter Property="Foreground" Value="{x:Static local:Globals.SFH_ButtonForeground}"/>
-            <Setter Property="BorderBrush" Value="{x:Static local:Globals.SFH_ButtonBorderBrush}"/>
-            <Setter Property="FontSize" Value="18"/>
-            <Setter Property="FontFamily" Value="Tahoma"/>
-            <Setter Property="Margin" Value="10"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Border Background="{TemplateBinding Background}"
-                            CornerRadius="5"
-                            BorderThickness="{x:Static local:Globals.SFH_ButtonBorderThickness}"
-                            Padding="5"
-                            BorderBrush="{TemplateBinding BorderBrush}">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        </Border>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-            <Style.Triggers>
-                <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="{x:Static local:Globals.SFH_ButtonMOBackground}"/>
-                    <Setter Property="Foreground" Value="{x:Static local:Globals.SFH_ButtonMOForeground}"/>
-                    <Setter Property="BorderBrush" Value="{x:Static local:Globals.SFH_ButtonMOBorderBrush}"/>
-                </Trigger>
-            </Style.Triggers>
-        </Style>
-
-        <Style x:Key="lbl" TargetType="Label">
-            <Setter Property="Foreground" Value="{x:Static local:Globals.SFH_LabelForeground}" />
-            <Setter Property="FontFamily" Value="Tahoma" />
-            <Setter Property="FontSize" Value="18" />
-            <Setter Property="HorizontalAlignment" Value="Stretch"/>
-            <Setter Property="VerticalAlignment" Value="Stretch" />
-            <Setter Property="HorizontalContentAlignment" Value="Center" />
-            <Setter Property="VerticalContentAlignment" Value="Center" />
-            <Setter Property="Margin" Value="15" />
-        </Style>
-        <Style TargetType="DataGrid">
-            <Setter Property="RowHeight" Value="30"/>
-            <Setter Property="CanUserResizeColumns" Value="False"/>
-            <Setter Property="BorderThickness" Value="0"/>
-            <Setter Property="RowBackground" Value="{x:Static local:Globals.SFH_DGCellBackground}"/>
-            <Setter Property="Background" Value="{x:Static local:Globals.SFH_DGBackground}"/>
-            <Setter Property="HeadersVisibility" Value="None"/>
-            <Setter Property="AutoGenerateColumns" Value="False"/>
-            <Setter Property="SelectionMode" Value="Single"/>
-        </Style>
-        <Style TargetType="ColumnDefinition">
-        </Style>
-
-        <ContextMenu x:Key="ContextMenuKey">
-            <MenuItem Header="Header" Click="MenuItem_Click2"/>
-        </ContextMenu>
     </Page.Resources>
 
-    <Border BorderBrush="{x:Static local:Globals.SFH_BorderBrush}" BorderThickness="0" MinHeight="540" >
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="1.5*"/>
-                <RowDefinition Height="1.5*"/>
-                <RowDefinition Height="1.5*"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
+    <Grid x:Name="Grid_Main" Margin="15,0,15,0" Height="540">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1.5*"/>
+            <RowDefinition Height="6*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+
+        <Label Style="{StaticResource lbl}" Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left" FontSize="24" Height="60" Margin="0" Content="Save File Handler"/>
+
+        <Button Style="{StaticResource btn_SmallIcon}"  MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"  Grid.Row="0" Grid.Column="2" Margin="0,15,55,0" VerticalAlignment="Top" HorizontalAlignment="Right" x:Name="btn_Refresh"  ToolTip="Refresh (detect new Files)"  Height="40" Width="40" Click="btn_Refresh_Click"/>
+
+        <Grid x:Name="Grid_Inner" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Margin="0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="3*"/>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="3*"/>
             </Grid.ColumnDefinitions>
 
-            <Label Style="{StaticResource lbl}" Grid.Row="0" Grid.Column="0" Content="Backup Savefiles"/>
-            <Label Style="{StaticResource lbl}" Grid.Row="0" Grid.Column="2" Content="GTA V Savefiles"/>
+            <Border Grid.Column="0"  Margin="0" BorderBrush="{x:Static local:Globals.SFH_DGBorderBrush}" BorderThickness="{x:Static local:Globals.SFH_DGBorderThickness}" Background="{x:Static local:Globals.SFH_DGBackground}">
+                <Grid x:Name="Grid_Inner_Left" >
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="8*"/>
+                    </Grid.RowDefinitions>
 
-            <Button Style="{StaticResource btn}" x:Name="btn_RightArrow" ToolTip="Move File to GTA Saves Folder" Grid.Row="1" Grid.Column="1" Height="64" Width="64" Click="btn_RightArrow_Click">
-                <Image Source="/Artwork/rightarrow.png"/>
-            </Button>
-            <Button Style="{StaticResource btn}" x:Name="btn_Refresh"  ToolTip="Refresh (detect new Files)" Grid.Row="2" Grid.Column="1" Height="64" Width="64" Click="btn_Refresh_Click">
-                <Image Source="/Artwork/refresh.png"/>
-            </Button>
-            <Button Style="{StaticResource btn}" x:Name="btn_LeftArrow" ToolTip="Move File to Backup Folder" Grid.Row="3" Grid.Column="1" Height="64" Width="64" Click="btn_LeftArrow_Click">
-                <Image Source="/Artwork/leftarrow.png"/>
-            </Button>
+                    <Label Grid.Row="0"  FontSize="20" Content="Backup Save Files" Style="{StaticResource lbl}" Margin="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Foreground="{x:Static local:Globals.SFH_DGHeaderForeground}" Background="{x:Static local:Globals.SFH_DGHeaderBackground}"/>
 
+                    <ScrollViewer x:Name="sv_BackupFiles" Grid.Row="1">
+                        <DataGrid x:Name="dg_BackupFiles" Style="{StaticResource dg}" PreviewMouseWheel="dg_BackupFiles_PreviewMouseWheel" GotFocus="dg_BackupFiles_GotFocus" PreviewKeyDown="dg_KeyDown">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Filename" Binding="{Binding FileName, Mode=OneWay}" Width="*" FontSize="20" />
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </ScrollViewer>
 
-            <Button Grid.Row="4" Grid.Column="0" Margin="10" Style="{StaticResource btn}" x:Name="btn_Rename" Content="Rename" Click="btn_Rename_Click"/>
-            <Button Grid.Row="4" Grid.Column="1" Margin="10" Style="{StaticResource btn}" x:Name="btn_Import" Content="Import" Click="btn_Import_Click"/>
-            <Button Grid.Row="4" Grid.Column="2" Margin="10" Style="{StaticResource btn}" x:Name="btn_Delete" Content="Delete" Click="btn_Delete_Click"/>
-
-            <Border Grid.Row="1" Grid.Column="0" Grid.RowSpan="3" Margin="10,5,5,5" BorderBrush="{x:Static local:Globals.SFH_BorderBrush_Inner}" BorderThickness="2">
-                <ScrollViewer x:Name="sv_BackupFiles">
-                    <DataGrid x:Name="dg_BackupFiles" PreviewMouseWheel="dg_BackupFiles_PreviewMouseWheel" GotFocus="dg_BackupFiles_GotFocus"  PreviewKeyDown="dg_KeyDown"  CanUserDeleteRows="False">
-                        <!--cant style this easily, since it does not derive from FrameworkElement-->
-                        <DataGrid.BindingGroup>
-                            <BindingGroup NotifyOnValidationError="True"/>
-                        </DataGrid.BindingGroup>
-                        <DataGrid.ContextMenu>
-                            <ContextMenu>
-                                <MenuItem Header="Click Me" Click="MenuItem_Click" />
-                            </ContextMenu>
-                        </DataGrid.ContextMenu>
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Header="Filename" Binding="{Binding FileName, Mode=OneWay}" Width="*" Foreground="{x:Static local:Globals.SFH_DGForeground}" FontSize="20" >
-                                <DataGridTextColumn.CellStyle>
-                                    <Style TargetType="DataGridCell">
-                                        <Style.Triggers>
-                                            <Trigger Property="IsSelected" Value="True">
-                                                <Setter Property="Background" Value="Red" />
-                                                <Setter Property="Foreground" Value="Green" />
-                                            </Trigger>
-                                        </Style.Triggers>
-                                        <Setter Property="ContextMenu" Value="{StaticResource ContextMenuKey}"/>
-                                    </Style>
-                                </DataGridTextColumn.CellStyle>
-                            </DataGridTextColumn>
-                        </DataGrid.Columns>
-                    </DataGrid>
-                </ScrollViewer>
+                </Grid>
             </Border>
 
+            <Button Style="{StaticResource btn}" Grid.Column="1" x:Name="btn_RightArrow" MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave" ToolTip="Move File to GTA Saves Folder" Margin="0,0,0,160" Height="40" Width="40" Click="btn_RightArrow_Click"/>
 
+            <Button Style="{StaticResource btn}" Grid.Column="1" x:Name="btn_LeftArrow" MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave" ToolTip="Move File to Backup Folder" Margin="0,200,0,0" Height="40" Width="40" Click="btn_LeftArrow_Click"/>
 
-            <Border Grid.Row="1" Grid.Column="2" Grid.RowSpan="3" Margin="10,5,5,5" BorderBrush="{x:Static local:Globals.SFH_BorderBrush_Inner}" BorderThickness="2">
-                <ScrollViewer x:Name="sv_GTAFiles">
-                    <DataGrid x:Name="dg_GTAFiles" PreviewMouseWheel="dg_GTAFiles_PreviewMouseWheel" GotFocus="dg_GTAFiles_GotFocus" PreviewKeyDown="dg_KeyDown" CanUserDeleteRows="False">
-                        <!--cant style this easily, since it does not derive from FrameworkElement-->
-                        <DataGrid.Resources>
-                            <Style TargetType="{x:Type DataGridCell}">
-                                <Style.Triggers>
-                                    <Trigger Property="DataGridCell.IsSelected" Value="True">
-                                        <Setter Property="Background" Value="{x:Static local:Globals.SFH_DGCellSelectedBackground}" />
-                                        <Setter Property="Foreground" Value="{x:Static local:Globals.SFH_DGCellSelectedForeground}" />
-                                    </Trigger>
-                                    <Trigger Property="DataGridCell.IsSelected" Value="False">
-                                        <Setter Property="Background" Value="{x:Static local:Globals.SFH_DGCellBackground}" />
-                                        <Setter Property="Foreground" Value="{x:Static local:Globals.SFH_DGCellForeground}" />
-                                    </Trigger>
-                                </Style.Triggers>
-                            </Style>
-                        </DataGrid.Resources>
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Header="Filename" Binding="{Binding FileName, Mode=OneWay}" Width="*" Foreground="{x:Static local:Globals.SFH_DGForeground}" FontSize="20" />
-                        </DataGrid.Columns>
-                    </DataGrid>
-                </ScrollViewer>
+            <Border Grid.Column="2"  Margin="0" BorderBrush="{x:Static local:Globals.SFH_DGBorderBrush}" BorderThickness="{x:Static local:Globals.SFH_DGBorderThickness}" Background="{x:Static local:Globals.SFH_DGBackground}">
+                <Grid x:Name="Grid_Inner_Right" >
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="8*"/>
+                    </Grid.RowDefinitions>
+
+                    <Label Grid.Row="0"  FontSize="20" Content="GTA V Save Files" Style="{StaticResource lbl}" Margin="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Foreground="{x:Static local:Globals.SFH_DGHeaderForeground}" Background="{x:Static local:Globals.SFH_DGHeaderBackground}"/>
+
+                    <ScrollViewer x:Name="sv_GTAFiles" Grid.Row="1">
+                        <DataGrid x:Name="dg_GTAFiles" Style="{StaticResource dg}" PreviewMouseWheel="dg_GTAFiles_PreviewMouseWheel" GotFocus="dg_GTAFiles_GotFocus" PreviewKeyDown="dg_KeyDown">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Filename" Binding="{Binding FileName, Mode=OneWay}" Width="*" FontSize="20" />
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </ScrollViewer>
+
+                </Grid>
             </Border>
 
         </Grid>
-    </Border>
+
+        <Button Grid.Row="2" Grid.Column="0" Margin="0,15,15,15" Style="{StaticResource btn_SVH}" FontSize="16" x:Name="btn_Import" Content="Import" Click="btn_Import_Click"/>
+        <Button Grid.Row="2" Grid.Column="1" Margin="15,15,15,15" Style="{StaticResource btn_SVH}" FontSize="16" x:Name="btn_Rename" Content="Rename" Click="btn_Rename_Click"/>
+        <Button Grid.Row="2" Grid.Column="2" Margin="15,15,0,15" Style="{StaticResource btn_SVH}" FontSize="16" x:Name="btn_Delete" Content="Delete" Click="btn_Delete_Click"/>
+
+    </Grid>
 </Page>

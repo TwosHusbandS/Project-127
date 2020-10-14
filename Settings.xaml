@@ -7,7 +7,7 @@
         xmlns:control = "clr-namespace:Project_127" 
         mc:Ignorable="d"
         Title="Settings" d:DesignHeight="570" d:DesignWidth="619"
-        Background="{x:Static local:Globals.SE_Background}"
+        Background="{x:Static local:Globals.App_Submenu_Background}"
         >
     <!-- WindowStyle="None" 
         AllowsTransparency="False" 
@@ -375,7 +375,6 @@
                             <Label Grid.Row="0" Grid.Column="0" Content="Import GTA V Settings"  Style="{StaticResource lbl_Set_Info}" />
                             <Button Grid.Row="0" Grid.Column="1" Style="{StaticResource btn_Set}" Content="Import GTA V Settings" x:Name="btn_Set_ImportGTAVSettings" Click="btn_Set_ImportGTAVSettings_Click" />
                         </Grid>
-                        <!--
                         <Grid x:Name="Grid_Set_OnlyAutoStartProgramsWhenDowngraded">
                             <Grid.RowDefinitions>
                                 <RowDefinition/>
@@ -434,7 +433,7 @@
                             <Button Grid.Row="1" Grid.Column="1" x:Name="btn_Set_PathFPSLimiter" Click="btn_Set_PathFPSLimiter_Click" Content="{Binding Path=PathFPSLimiter, Mode=TwoWay}" Style="{StaticResource btn_Set}"/>
                         </Grid>
 
-                        <Grid x:Name="Grid_Set_JumpScript">
+                        <!--<Grid x:Name="Grid_Set_JumpScript">
                             <Grid.RowDefinitions>
                                 <RowDefinition/>
                                 <RowDefinition/>
@@ -447,7 +446,7 @@
                             <CheckBox Grid.Row="0" Grid.Column="1" x:Name="cb_Set_EnableAutoStartJumpScript" IsChecked="{Binding Path=EnableAutoStartJumpScript, Mode=TwoWay}" Style="{StaticResource cb_Set}"/>
                             <Button Grid.Row="1" Grid.Column="0" x:Name="btn_Set_JumpScriptKey1" Click="btn_Set_JumpScriptKey1_Click" Content="{Binding Path=JumpScriptKey1, Mode=TwoWay}" Style="{StaticResource btn_Set}" HorizontalAlignment="Right"/>
                             <Button Grid.Row="1" Grid.Column="1" x:Name="btn_Set_JumpScriptKey2" Click="btn_Set_JumpScriptKey2_Click" Content="{Binding Path=JumpScriptKey2, Mode=TwoWay}" Style="{StaticResource btn_Set}"/>
-                        </Grid>
+                        </Grid>-->
 
                         <Grid x:Name="Grid_Set_Nohboard">
                             <Grid.RowDefinitions>
@@ -462,26 +461,13 @@
                             </Grid.ColumnDefinitions>
                             <Label Grid.Row="0" Grid.Column="0" Content="Start Nohboard on Game Launch"  Style="{StaticResource lbl_Set_Info}" />
                             <CheckBox Grid.Row="0" Grid.Column="1" x:Name="cb_Set_EnableAutoStartNohboard" IsChecked="{Binding Path=EnableAutoStartNohboard, Mode=TwoWay}" Style="{StaticResource cb_Set}"/>
-                            <Label Grid.Row="0" Grid.Column="2" Content="Use Burhac Setup"  Style="{StaticResource lbl_Set_Info}" />
-                            <CheckBox Grid.Row="0" Grid.Column="3" x:Name="cb_Set_EnableNohboardBurhac" IsChecked="{Binding Path=EnableNohboardBurhac, Mode=TwoWay}" Style="{StaticResource cb_Set}"/>
+                            <!--<Label Grid.Row="0" Grid.Column="2" Content="Use Burhac Setup"  Style="{StaticResource lbl_Set_Info}" />
+                            <CheckBox Grid.Row="0" Grid.Column="3" x:Name="cb_Set_EnableNohboardBurhac" IsChecked="{Binding Path=EnableNohboardBurhac, Mode=TwoWay}" Style="{StaticResource cb_Set}"/>-->
 
                             <Label Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Content="Current Path: "  Style="{StaticResource lbl_Set_Info}" />
                             <Button Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="2" x:Name="btn_Set_PathNohboard" Click="btn_Set_PathNohboard_Click" Content="{Binding Path=PathNohboard, Mode=TwoWay}" Style="{StaticResource btn_Set}"/>
                         </Grid>
 
-                        <Grid x:Name="Grid_Set_Theme">
-                            <Grid.RowDefinitions>
-                                <RowDefinition/>
-                                <RowDefinition/>
-                            </Grid.RowDefinitions>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition/>
-                                <ColumnDefinition/>
-                            </Grid.ColumnDefinitions>
-                            <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Content="Theming:"  Style="{StaticResource lbl_Set_Head}" />
-                            <Label Grid.Row="1" Grid.Column="0" Content="Current Theme: "  Style="{StaticResource lbl_Set_Info}" />
-                            <Button Grid.Row="1" Grid.Column="1" x:Name="btn_Set_Theme" Click="btn_Set_Theme_Click" Content="{Binding Path=Theme, Mode=TwoWay}" Style="{StaticResource btn_Set}"/>
-                        </Grid>-->
 
                     </StackPanel>
                 </ScrollViewer>

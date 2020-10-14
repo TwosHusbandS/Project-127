@@ -641,9 +641,9 @@ namespace Project_127.HelperClasses
 		/// <param name="pFilePath"></param>
 		public static void deletePath(string pFilePath)
 		{
-			if (doesFileExist(pFilePath))
+			if (doesPathExist(pFilePath))
 			{
-				File.Delete(pFilePath);
+				Directory.Delete(pFilePath, true);
 			}
 		}
 

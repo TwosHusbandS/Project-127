@@ -49,18 +49,7 @@ namespace Project_127
 			if (LauncherLogic.GameState == LauncherLogic.GameStates.Running)
 			{
 				HelperClasses.Logger.Log("Game deteced running.", 1);
-				Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Game is detected as running.\nDo you want to close it\nand run it again?");
-				yesno.ShowDialog();
-				if (yesno.DialogResult == true)
-				{
-					HelperClasses.Logger.Log("Killing all Processes.", 1);
-					LauncherLogic.KillRelevantProcesses();
-				}
-				else
-				{
-					HelperClasses.Logger.Log("Not wanting to kill all Processes, im aborting Launch function", 1);
-					return;
-				}
+				btn_GTA_MouseRightButtonDown(null, null);
 			}
 			else
 			{

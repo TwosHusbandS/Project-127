@@ -66,7 +66,16 @@ namespace Project_127
 		private void btn_Set_ZIPExtractionPath_Click(object sender, RoutedEventArgs e)
 		{
 			// Grabbing the new Path from FolderDialogThingy
-			string _ZIPExtractionPath = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.Folder, "Pick the Folder where this Program will store its Data.", Settings.ZIPExtractionPath);
+			string StartUpPath = Settings.ZIPExtractionPath;
+			if (String.IsNullOrWhiteSpace(StartUpPath))
+			{
+				StartUpPath = @"C:\";
+			}
+			else
+			{
+				StartUpPath = HelperClasses.FileHandling.PathSplitUp(StartUpPath.TrimEnd('\\'))[0];
+			}
+			string _ZIPExtractionPath = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.Folder, "Pick the Folder where this Program will store its Data.", StartUpPath);
 			HelperClasses.Logger.Log("Changing ZIPExtractionPath.");
 			HelperClasses.Logger.Log("Old ZIPExtractionPath: '" + Settings.ZIPExtractionPath + "'");
 			HelperClasses.Logger.Log("Potential New ZIPExtractionPath: '" + _ZIPExtractionPath + "'");

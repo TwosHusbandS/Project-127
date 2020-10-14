@@ -26,12 +26,13 @@ namespace Project_127
 		{
 			PopupYesNo,
 			PopupOk,
-			PopupOkError,
-			PopupOkTextBox,
-			PopupOkComboBox,
+			PopupOkError
 		}
 
 
+		/// <summary>
+		/// Public Property of stuff we return
+		/// </summary>
 		public string MyReturnString = "";
 
 
@@ -40,175 +41,64 @@ namespace Project_127
 		/// </summary>
 		/// <param name="pPopupWindowType"></param>
 		/// <param name="pMsg"></param>
-		/// <param name="pTitle"></param>
 		/// <param name="pFontSize"></param>
-		public Popup(Popup.PopupWindowTypes pPopupWindowType, string pMsg, int pFontSize = 18, string pDefaultTBText = "", Enum pEnum = null)
+		public Popup(Popup.PopupWindowTypes pPopupWindowType, string pMsg, int pFontSize = 18)
 		{
-			this.Owner = MainWindow.MW;
-			// Initializing all WPF Elements
-			InitializeComponent();
-
-			// Add "Support Text" to bottom if error
-			if (pPopupWindowType == PopupWindowTypes.PopupOkError)
+			if (MainWindow.MW.IsVisible)
 			{
-				pMsg = pMsg + "\n\nIf this happens a lot,\nContact me on Discord:\n@thS#0305";
-				pPopupWindowType = PopupWindowTypes.PopupOk;
+				this.Owner = MainWindow.MW;
 			}
-
-			// If its a "Yes/No" Window:
-			if (pPopupWindowType == Popup.PopupWindowTypes.PopupYesNo)
-			{
-				// Creating the "Yes" Button
-				Button myButtonYes = new Button();
-				myButtonYes.Content = "Yes";
-				myButtonYes.Style = Resources["btn"] as Style;
-				myButtonYes.Click += btn_Yes_Click;
-
-				// Adding it to the Grid
-				myGrid.Children.Add(myButtonYes);
-				Grid.SetColumn(myButtonYes, 0);
-				Grid.SetRow(myButtonYes, 2);
-
-				// Creating the "No" Button
-				Button myButtonNo = new Button();
-				myButtonNo.Content = "No";
-				myButtonNo.Style = Resources["btn"] as Style;
-				myButtonNo.Click += btn_No_Click;
-
-				// Adding it to the Grid
-				myGrid.Children.Add(myButtonNo);
-				Grid.SetColumn(myButtonNo, 1);
-				Grid.SetRow(myButtonNo, 2);
-				Grid.SetRowSpan(lbl_Main, 2);
-
-				// Focusing the "Yes" Button so you can just hit "Space" or "Enter" to trigger the Click event
-				myButtonYes.Focus();
-			}
-			// If its a "OK" Window:
 			else
 			{
-				// Creating the "Yes" Button
-				Button myButtonYes = new Button();
-				myButtonYes.Content = "Ok";
-				myButtonYes.Style = Resources["btn"] as Style;
-				myButtonYes.Click += btn_Yes_Click;
-
-				// Adding it to the Grid
-				myGrid.Children.Add(myButtonYes);
-				Grid.SetColumn(myButtonYes, 0);
-				Grid.SetRow(myButtonYes, 2);
-
-				// Creating the "No" Button
-				Button myButtonNo = new Button();
-				myButtonNo.Content = "Cancel";
-				myButtonNo.Style = Resources["btn"] as Style;
-				myButtonNo.Click += btn_No_Click;
-
-				// Adding it to the Grid
-				myGrid.Children.Add(myButtonNo);
-				Grid.SetColumn(myButtonNo, 1);
-				Grid.SetRow(myButtonNo, 2);
-				Grid.SetRowSpan(lbl_Main, 2);
-
-				if (pPopupWindowType == PopupWindowTypes.PopupOk)
-				{
-					Grid.SetRowSpan(lbl_Main, 2);
-				}
-				else
-				{
-					if (pPopupWindowType == PopupWindowTypes.PopupOkTextBox)
-					{
-						// Creates Button
-						TextBox myTextBox = new TextBox();
-						myTextBox.Text = pDefaultTBText;
-						MyReturnString = myTextBox.Text;
-						myTextBox.Style = Resources["tb"] as Style;
-						myTextBox.TextChanged += MyTextBox_TextChanged;
-						myTextBox.KeyDown += MyTextBox_KeyDown;
-
-						// Adds it to the Grid
-						myGrid.Children.Add(myTextBox);
-						Grid.SetColumn(myTextBox, 0);
-						Grid.SetColumnSpan(myTextBox, 2);
-						Grid.SetRow(myTextBox, 1);
-
-						myTextBox.Focus();
-					}
-					else if (pPopupWindowType == PopupWindowTypes.PopupOkComboBox)
-					{
-						if (pEnum != null)
-						{
-							// Creates Button
-							ComboBox MyComboBox = new ComboBox();
-							MyComboBox.SelectionChanged += MyComboBox_SelectionChanged;
-
-							// Adds it to the Grid
-							myGrid.Children.Add(MyComboBox);
-							Grid.SetColumn(MyComboBox, 0);
-							Grid.SetColumnSpan(MyComboBox, 2);
-							Grid.SetRow(MyComboBox, 1);
-
-							MyComboBox.Focus();
-
-							List<string> myEnumValues = new List<string>();
-							foreach (string myString in pEnum.GetType().GetEnumNames())
-							{
-								myEnumValues.Add(myString);
-							}
-
-							string enumname = pEnum.GetType().ToString();
-
-							MyComboBox.ItemsSource = myEnumValues;
-
-							if (enumname.Contains("Retailer"))
-							{
-								MyComboBox.SelectedItem = Settings.Retailer.ToString();
-							}
-							else if (enumname.Contains("Language"))
-							{
-								MyComboBox.SelectedItem = Settings.LanguageSelected.ToString();
-							}
-
-							MyReturnString = MyComboBox.SelectedItem.ToString();
-						}
-						else
-						{
-							HelperClasses.Logger.Log("pEnum is Null, this should not have happened");
-							new Popup(PopupWindowTypes.PopupOkError, "pEnum is Null, this should not have happened").ShowDialog();
-						}
-					}
-				}
+				this.WindowStartupLocation = WindowStartupLocation.CenterScreen;
 			}
+
+			// Initializing all WPF Elements
+			InitializeComponent();
 
 			// Set the Parameters as Properties of new Popup Window
 			lbl_Main.FontSize = pFontSize;
 			lbl_Main.Content = pMsg;
-		}
 
-
-		private void MyTextBox_KeyDown(object sender, KeyEventArgs e)
-		{
-			if (e.Key == Key.Enter)
+			// Add "Support Text" to bottom if error
+			if (pPopupWindowType == PopupWindowTypes.PopupOkError)
 			{
-				btn_Ok_Click(null, null);
+				lbl_Main.Content = pMsg + "\n\nIf this happens a lot,\nContact me on Discord:\n@thS#0305";
 			}
-		}
 
-		private void MyComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-		{
-			ComboBox tmp = (ComboBox)sender;
-			if (tmp != null)
+			// If its a "OK" Window:
+			if (pPopupWindowType.ToString().Contains("PopupOk"))
 			{
-				MyReturnString = tmp.SelectedItem.ToString();
+				Button myButtonOk = new Button();
+				myButtonOk.Content = "Ok";
+
+				myButtonOk.Style = Application.Current.FindResource("PU_btn") as Style;
+				myButtonOk.Click += btn_Ok_Click;
+				myGrid.Children.Add(myButtonOk);
+				Grid.SetColumn(myButtonOk, 0);
+				Grid.SetColumnSpan(myButtonOk, 2);
+				Grid.SetRow(myButtonOk, 1);
+				myButtonOk.Focus();
 			}
-		}
-
-		private void MyTextBox_TextChanged(object sender, TextChangedEventArgs e)
-		{
-			TextBox tmp = (TextBox)sender;
-			if (tmp != null)
+			// If its a "Yes/No" Window:
+			else if (pPopupWindowType == Popup.PopupWindowTypes.PopupYesNo)
 			{
-				MyReturnString = tmp.Text;
+				Button myButtonYes = new Button();
+				myButtonYes.Content = "Yes";
+				myButtonYes.Style = Application.Current.FindResource("PU_btn") as Style;
+				myButtonYes.Click += btn_Yes_Click;
+				myGrid.Children.Add(myButtonYes);
+				Grid.SetColumn(myButtonYes, 0);
+				Grid.SetRow(myButtonYes, 1);
+				myButtonYes.Focus();
+
+				Button myButtonNo = new Button();
+				myButtonNo.Content = "No";
+				myButtonNo.Style = Application.Current.FindResource("PU_btn") as Style;
+				myButtonNo.Click += btn_No_Click;
+				myGrid.Children.Add(myButtonNo);
+				Grid.SetColumn(myButtonNo, 1);
+				Grid.SetRow(myButtonNo, 1);
 			}
 		}
 

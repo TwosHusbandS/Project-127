@@ -8,32 +8,7 @@
       d:DesignHeight="570" d:DesignWidth="740"
       Title="GTA_Page">
     <Page.Resources>
-    <Style x:Key="btn_gta" TargetType="{x:Type Button}">
-        <Setter Property="Background" Value="{x:Static local:Globals.MW_ButtonGTABackground}"/>
-        <Setter Property="Foreground" Value="{x:Static local:Globals.MW_ButtonGTAForeground}"/>
-        <Setter Property="FontSize" Value="18"/>
-        <Setter Property="BorderThickness" Value="{x:Static local:Globals.MW_ButtonGTABorderThickness}"/>
-        <Setter Property="BorderBrush" Value="{x:Static local:Globals.MW_ButtonGTAGameNotRunningBorderBrush}"/>
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="Button">
-                    <Border Background="{TemplateBinding Background}"
-                            CornerRadius="25"
-                            BorderThickness="{x:Static local:Globals.MW_ButtonGTABorderThickness}"
-                            Padding="5"
-                            BorderBrush="{TemplateBinding BorderBrush}">
-                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                    </Border>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-        <Style.Triggers>
-            <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Background" Value="{x:Static local:Globals.MW_ButtonGTAMOBackground}"/>
-                <Setter Property="Foreground" Value="{x:Static local:Globals.MW_ButtonGTAMOForeground}"/>
-            </Trigger>
-        </Style.Triggers>
-    </Style>
+   
     </Page.Resources>
     <Grid>
         <Button x:Name="btn_GTA" Style="{StaticResource btn_gta}" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,60,65" Height="75" Width="215"  Content="Launch GTA V" Click="btn_GTA_Click" MouseRightButtonDown="btn_GTA_MouseRightButtonDown"/>

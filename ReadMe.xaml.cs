@@ -38,11 +38,6 @@ namespace Project_127
 			// Setting ReadMeState to the LastReadMeState
 			ReadMeState = ReadMe.LastReadMeState;
 
-			// Setting all mouse over to the right colors and shit
-			SetButtonMouseOverMagic(btn_About, false);
-			SetButtonMouseOverMagic(btn_Credits, false);
-			SetButtonMouseOverMagic(btn_SpeedRun, false);
-
 			string msg1 = "" +
 				"This Popup will contain Information about GTAV Speedrunning.\n" +
 				"Paragraphs explaining the basics, rules, categories etc.\n" +
@@ -52,18 +47,23 @@ namespace Project_127
 				"if you read this, and could shoot me a PM on Discord with stuff\n" +
 				"you want to Read here, that would be great.";
 			Grid_SpeedRun_Lbl.Content = msg1;
+			Grid_SpeedRun_Lbl.FontSize = 16;
 
 			string msg2 = "" +
-				 "You are running Project 1.27, a tool for the GTA V Speedrunning Community.\n" +
-				 "This was created for the patch 1.27 downgrade problem, which started in August of 2020\n" +
-				 "This tool has a number of features, including Downgrading, Upgrading and launching the game,\n" +
+				 "You are running Project 1.27, a tool for the GTA V Speedrunning\n" +
+				 "Community. This was created for the patch 1.27 downgrade problem,\n" +
+				 "which started in August of 2020. This tool has a number of features,\n" +
+				 "including Downgrading, Upgrading and launching the game.\n" +
 				 "\nSpecial shoutouts to @dr490n who was responsible for getting the downgraded game\n" +
-				 "to launch, added patches against in-game triggers, wrote the authentication backend,\n" +
+				 "to launch, adding patches against in-game triggers, the authentication backend,\n" +
 				 "decryption and got the preorder entitlement to work.\n\n" +
 				 "If you have any issues with this program or ideas for new features,\n" +
 				 "feel free to contact me on Discord: @thS#0305\n\n" +
-				 "Project 1.27 Version: '" + Globals.ProjectVersion + "', BuildInfo: '" + Globals.BuildInfo + "', ZIP Version: '" + Globals.ZipVersion + "'";
+				 "Project 1.27 Version: '" + Globals.ProjectVersion + "'\n" + 
+				 "BuildInfo: '" + Globals.BuildInfo + "'\n" +
+				 "ZIP Version: '" + Globals.ZipVersion + "'";
 			Grid_About_Lbl.Content = msg2;
+			Grid_About_Lbl.FontSize = 14;
 
 			string msg3 = "" +
 				"Solving the patch 1.27 Downgrade problem has been achieved by a month of hard work by a\n" +
@@ -83,6 +83,7 @@ namespace Project_127
 				"Shoutout to FiveM and Goldberg, whose Source Code proved to be vital\n" +
 				"to understand and reverse engineer the GTA V Launch Process";
 			Grid_Credits_Lbl.Content = msg3;
+			Grid_Credits_Lbl.FontSize = 12;
 		}
 
 		/// <summary>
@@ -119,35 +120,35 @@ namespace Project_127
 				if (value == ReadMeStates.SpeedRun)
 				{
 					Grid_SpeedRun.Visibility = Visibility.Visible;
-					SetButtonMouseOverMagic(btn_SpeedRun, true);
+					btn_SpeedRun.Style = Application.Current.FindResource("btn_hamburgeritem_selected") as Style;
 
 					Grid_About.Visibility = Visibility.Hidden;
-					SetButtonMouseOverMagic(btn_About, false);
+					btn_About.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
 
 					Grid_Credits.Visibility = Visibility.Hidden;
-					SetButtonMouseOverMagic(btn_Credits, false);
+					btn_Credits.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
 				}
 				else if (value == ReadMeStates.About)
 				{
 					Grid_About.Visibility = Visibility.Visible;
-					SetButtonMouseOverMagic(btn_About, true);
+					btn_About.Style = Application.Current.FindResource("btn_hamburgeritem_selected") as Style;
 
 					Grid_SpeedRun.Visibility = Visibility.Hidden;
-					SetButtonMouseOverMagic(btn_SpeedRun, false);
+					btn_SpeedRun.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
 
 					Grid_Credits.Visibility = Visibility.Hidden;
-					SetButtonMouseOverMagic(btn_Credits, false);
+					btn_Credits.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
 				}
 				else if (value == ReadMeStates.Credits)
 				{
 					Grid_Credits.Visibility = Visibility.Visible;
-					SetButtonMouseOverMagic(btn_Credits, true);
+					btn_Credits.Style = Application.Current.FindResource("btn_hamburgeritem_selected") as Style;
 
 					Grid_SpeedRun.Visibility = Visibility.Hidden;
-					SetButtonMouseOverMagic(btn_SpeedRun, false);
+					btn_SpeedRun.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
 
 					Grid_About.Visibility = Visibility.Hidden;
-					SetButtonMouseOverMagic(btn_About, false);
+					btn_About.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
 				}
 			}
 		}
@@ -155,17 +156,7 @@ namespace Project_127
 
 		private void Grid_SpeedRun_Btn_Click(object sender, RoutedEventArgs e)
 		{
-			Process.Start(@"https://www.speedrun.com/Why/Has/Nobody/Written/A/Text/For/This/The/Community/Wanted/This/Feature/FFS");
-		}
-
-		private void Grid_About_Btn_Click(object sender, RoutedEventArgs e)
-		{
-
-		}
-
-		private void Grid_Credits_Btn_Click(object sender, RoutedEventArgs e)
-		{
-
+			Process.Start(@"https://www.speedrun.com/WhyHasNobodyWrittenATextForThisTheCommunityWantedThisFeatureFFS");
 		}
 
 
@@ -185,64 +176,6 @@ namespace Project_127
 		}
 
 
-		/// <summary>
-		/// Method we use to set Mouse Over Colors and stuff
-		/// </summary>
-		/// <param name="myBtn"></param>
-		/// <param name="pMouseOver"></param>
-		public void SetButtonMouseOverMagic(Button myBtn, bool pMouseOver)
-		{
-			//if (myBtn.Name.Substring(myBtn.Name.IndexOf('_') + 1) == ReadMeState.ToString())
-			//{
-			//	if (pMouseOver)
-			//	{
-			//		myBtn.Background = Globals.MW_ButtonBackground;
-			//		myBtn.Foreground = Globals.MW_ButtonForeground;
-			//		myBtn.BorderBrush = Globals.MW_ButtonBorderBrush;
-			//	}
-			//	else
-			//	{
-			//		myBtn.Background = Globals.MW_ButtonMOBackground;
-			//		myBtn.Foreground = Globals.MW_ButtonMOForeground;
-			//		myBtn.BorderBrush = Globals.MW_ButtonMOBorderBrush;
-			//	}
-			//}
-			//else
-			//{
-			//	if (pMouseOver)
-			//	{
-			//		myBtn.Background = Globals.MW_ButtonMOBackground;
-			//		myBtn.Foreground = Globals.MW_ButtonMOForeground;
-			//		myBtn.BorderBrush = Globals.MW_ButtonMOBorderBrush;
-			//	}
-			//	else
-			//	{
-			//		myBtn.Background = Globals.MW_ButtonBackground;
-			//		myBtn.Foreground = Globals.MW_ButtonForeground;
-			//		myBtn.BorderBrush = Globals.MW_ButtonBorderBrush;
-			//	}
-			//}
-		}
-
-		/// <summary>
-		/// MouseEnter event for updating background image of buttons
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
-		private void btn_MouseEnter(object sender, MouseEventArgs e)
-		{
-			SetButtonMouseOverMagic((Button)sender, true);
-		}
-
-		/// <summary>
-		/// MouseLeave event for updating background image of buttons
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
-		private void btn_MouseLeave(object sender, MouseEventArgs e)
-		{
-			SetButtonMouseOverMagic((Button)sender, false);
-		}
 
 	}
 }

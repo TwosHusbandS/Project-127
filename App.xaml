@@ -6,21 +6,21 @@
              SessionEnding="Application_SessionEnding"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-        
+
         <Style x:Key="lbl" TargetType="Label">
             <Setter Property="Foreground" Value="{x:Static local:Globals.App_LabelForeground}" />
             <Setter Property="FontFamily" Value="Tahoma" />
             <Setter Property="FontSize" Value="18" />
-            <Setter Property="TextBlock.TextAlignment" Value="Left"/>
-            <Setter Property="HorizontalAlignment" Value="Left"/>
+            <Setter Property="TextBlock.TextAlignment" Value="Center"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
             <Setter Property="VerticalAlignment" Value="Center" />
-            <Setter Property="HorizontalContentAlignment" Value="Left" />
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
             <Setter Property="VerticalContentAlignment" Value="Center" />
             <Setter Property="Margin" Value="0" />
         </Style>
-        
+
         <!--#region Buttons-->
-        
+
         <Style TargetType="{x:Type Button}" x:Key="btn">
             <Setter Property="Template">
                 <Setter.Value>
@@ -32,6 +32,39 @@
                 </Setter.Value>
             </Setter>
         </Style>
+
+
+
+        <Style TargetType="Button" x:Key="btn_SVH">
+            <Setter Property="Background" Value="{x:Static local:Globals.SFH_ButtonBackground}"/>
+            <Setter Property="Foreground" Value="{x:Static local:Globals.SFH_ButtonForeground}"/>
+            <Setter Property="BorderBrush" Value="{x:Static local:Globals.SFH_ButtonBorderBrush}"/>
+            <Setter Property="FontSize" Value="18"/>
+            <Setter Property="FontFamily" Value="Tahoma"/>
+            <Setter Property="Margin" Value="10"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                            CornerRadius="5"
+                            BorderThickness="{x:Static local:Globals.SFH_ButtonBorderThickness}"
+                            Padding="5"
+                            BorderBrush="{TemplateBinding BorderBrush}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="{x:Static local:Globals.SFH_ButtonMOBackground}"/>
+                    <Setter Property="Foreground" Value="{x:Static local:Globals.SFH_ButtonMOForeground}"/>
+                    <Setter Property="BorderBrush" Value="{x:Static local:Globals.SFH_ButtonMOBorderBrush}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+
 
         <Style x:Key="btn_Main" TargetType="{x:Type Button}" BasedOn="{StaticResource btn}">
             <Setter Property="Margin" Value="20"/>
@@ -47,6 +80,7 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
+        
 
 
         <Style x:Key="btn_SmallIcon" TargetType="{x:Type Button}" BasedOn="{StaticResource btn_Main}">
@@ -62,7 +96,7 @@
             <Setter Property="Foreground" Value="{x:Static local:Globals.MW_ButtonHamburgerMenuForeground}"/>
             <Setter Property="BorderBrush" Value="{x:Static local:Globals.MW_ButtonHamburgerMenuBorderBrush}"/>
             <Setter Property="BorderThickness" Value="{x:Static local:Globals.MW_ButtonHamburgerMenuBorderThickness}"/>
-            <Setter Property="Margin" Value="0,6"/>                           
+            <Setter Property="Margin" Value="0,6"/>
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
                     <Setter Property="Background" Value="{x:Static local:Globals.MW_ButtonHamburgerMenuMOBackground}"/>
@@ -114,8 +148,220 @@
         </Style>
 
         <!--#endregion-->
-        
-        
-        
+
+        <Style TargetType="Button" x:Key="PU_btn">
+            <Setter Property="Background" Value="{x:Static local:Globals.PU_ButtonBackground}"/>
+            <Setter Property="Foreground" Value="{x:Static local:Globals.PU_ButtonForeground}"/>
+            <Setter Property="BorderBrush" Value="{x:Static local:Globals.PU_ButtonBorderBrush}"/>
+            <Setter Property="FontSize" Value="18"/>
+            <Setter Property="FontFamily" Value="Tahoma"/>
+            <Setter Property="Margin" Value="10"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                            CornerRadius="4"
+                            BorderThickness="{x:Static local:Globals.PU_ButtonBorderThickness}"
+                            Padding="5"
+                            BorderBrush="{TemplateBinding BorderBrush}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="{x:Static local:Globals.PU_ButtonMOBackground}"/>
+                    <Setter Property="Foreground" Value="{x:Static local:Globals.PU_ButtonMOForeground}"/>
+                    <Setter Property="BorderBrush" Value="{x:Static local:Globals.PU_ButtonMOBorderBrush}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style TargetType="TextBox" x:Key="tb">
+            <Setter Property="Margin" Value="10,10,10,10"/>
+            <Setter Property="Background" Value="{x:Static local:Globals.MyColorOffWhite}"/>
+            <Setter Property="Foreground" Value="{x:Static local:Globals.MyColorOffBlack}"/>
+            <Setter Property="MinHeight" Value="25"/>
+            <Setter Property="MaxHeight" Value="25"/>
+            <Setter Property="BorderThickness" Value="0"/>
+        </Style>
+
+        <Style x:Key="pb" TargetType="ProgressBar">
+            <Setter Property="Background" Value="{x:Static local:Globals.ProgressBarBackground}"/>
+            <Setter Property="Foreground" Value="{x:Static local:Globals.ProgressBarForeground}"/>
+            <Setter Property="BorderBrush" Value="{x:Static local:Globals.ProgressBarBorderBrush}"/>
+            <Setter Property="BorderThickness" Value="2"/>
+            <Setter Property="Minimum" Value="0"/>
+            <Setter Property="Value" Value="0"/>
+            <Setter Property="Maximum" Value="100"/>
+            <Setter Property="Margin" Value="20" />
+        </Style>
+
+
+        <ControlTemplate x:Key="ComboBoxToggleButton" TargetType="ToggleButton">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="0" />
+                </Grid.ColumnDefinitions>
+                <Border Grid.Column="0" CornerRadius="2" Margin="1" Background="{x:Static local:Globals.DropDownBackground}" BorderThickness="1" />
+                <Path x:Name="Arrow" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Data="M 0 0 L 4 4 L 8 0 Z"/>
+            </Grid>
+        </ControlTemplate>
+
+        <ControlTemplate x:Key="ComboBoxTextBox" TargetType="TextBox">
+            <Border x:Name="PART_ContentHost" Focusable="False" Background="{TemplateBinding Background}" />
+        </ControlTemplate>
+
+        <Style x:Key="cb" TargetType="ComboBox">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ComboBox">
+                        <Border BorderThickness="1" BorderBrush="{x:Static local:Globals.DropDownBorderBrush}">
+                            <Grid>
+                                <ToggleButton Name="ToggleButton" Template="{StaticResource ComboBoxToggleButton}" Grid.Column="2" Focusable="false" IsChecked="{Binding Path=IsDropDownOpen,Mode=TwoWay,RelativeSource={RelativeSource TemplatedParent}}" ClickMode="Press"/>
+                                <ContentPresenter Name="ContentSite" IsHitTestVisible="False" Margin="3,3,23,3" VerticalAlignment="Center" Content="{TemplateBinding ComboBox.SelectionBoxItem}" ContentTemplate="{TemplateBinding ComboBox.SelectionBoxItemTemplate}" ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}" HorizontalAlignment="Left"/>
+                                <TextBox x:Name="PART_EditableTextBox" Style="{x:Null}" Template="{StaticResource ComboBoxTextBox}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="3,3,23,3" Focusable="True" Visibility="Hidden" IsReadOnly="{TemplateBinding IsReadOnly}"/>
+                                <Popup Name="Popup" Placement="Bottom" IsOpen="{TemplateBinding IsDropDownOpen}" AllowsTransparency="True" Focusable="False" PopupAnimation="Slide">
+                                    <Grid Name="DropDown" SnapsToDevicePixels="True" MinWidth="{TemplateBinding ActualWidth}" MaxHeight="{TemplateBinding MaxDropDownHeight}">
+                                        <Border x:Name="DropDownBorder" Background="{x:Static local:Globals.DropDownPopDownBackground}" BorderThickness="1" CornerRadius="2" Margin="1" />
+                                        <ScrollViewer Margin="4,6,4,6" SnapsToDevicePixels="True">
+                                            <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Contained"/>
+                                        </ScrollViewer>
+                                    </Grid>
+                                </Popup>
+                            </Grid>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Foreground" Value="{x:Static local:Globals.DropDownForeground}"/>
+            <Style.Triggers>
+            </Style.Triggers>
+        </Style>
+
+
+
+        <ContextMenu x:Key="ContextMenuKeyDataGrid">
+            <MenuItem Header="HeaderDataGrid"/>
+        </ContextMenu>
+
+        <ContextMenu x:Key="ContextMenuKeyDataGridCell">
+            <MenuItem Header="HeaderDataGridCell"/>
+        </ContextMenu>
+
+        <Style x:Key="dg" TargetType="DataGrid">
+            <!--<Setter Property="ContextMenu" Value="{StaticResource ContextMenuKeyDataGrid}"/>-->
+            <Setter Property="RowHeight" Value="35"/>
+            <Setter Property="CanUserResizeColumns" Value="False"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="HeadersVisibility" Value="None"/>
+            <Setter Property="AutoGenerateColumns" Value="False"/>
+            <Setter Property="SelectionMode" Value="Single"/>
+            <Setter Property="CanUserDeleteRows" Value="False"/>
+            <Setter Property="AlternationCount" Value="2"/>
+            <Setter Property="AlternatingRowBackground" Value="{x:Static local:Globals.SFH_DGAlternateRowBackground}"/>
+            <Setter Property="RowBackground" Value="{x:Static local:Globals.SFH_DGRowBackground}"/>
+            <Setter Property="Foreground" Value="{x:Static local:Globals.SFH_DGForeground}"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Style.Resources>
+                <Style TargetType="{x:Type DataGridCell}">
+                    <Style.Triggers>
+                        <Trigger Property="DataGridCell.IsSelected" Value="True">
+                            <Setter Property="Background" Value="{x:Static local:Globals.SFH_DGSelectedBackground}" />
+                            <Setter Property="Foreground" Value="{x:Static local:Globals.SFH_DGSelectedForeground}" />
+                            <Setter Property="BorderBrush" Value="{x:Static local:Globals.SFH_DGSelectedBorderBrush}" />
+                            <Setter Property="BorderThickness" Value="{x:Static local:Globals.SFH_DGSelectedBorderThickness}" />
+                        </Trigger>
+                    </Style.Triggers>
+                    <!--<Setter Property="ContextMenu" Value="{StaticResource ContextMenuKeyDataGridCell}"/>-->
+                </Style>
+            </Style.Resources>
+        </Style>
+
+
+        <!--Scrollbar Thumbs-->
+        <Style x:Key="ScrollThumbs" TargetType="{x:Type Thumb}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Thumb}">
+                        <Grid x:Name="Grid">
+                            <Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="Auto" Height="Auto" Fill="Transparent" />
+                            <Border x:Name="Rectangle1" CornerRadius="4" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="Auto" Height="Auto"  Background="{TemplateBinding Background}" />
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="Tag" Value="Horizontal">
+                                <Setter TargetName="Rectangle1" Property="Width" Value="Auto" />
+                                <Setter TargetName="Rectangle1" Property="Height" Value="7" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!--ScrollBars-->
+        <Style x:Key="{x:Type ScrollBar}" TargetType="{x:Type ScrollBar}">
+            <Setter Property="Stylus.IsFlicksEnabled" Value="false" />
+            <Setter Property="Foreground" Value="{x:Static local:Globals.App_ScrollViewerForeground}" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Width" Value="12" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ScrollBar}">
+                        <Grid x:Name="GridRoot" Width="12" Background="{TemplateBinding Background}">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="0.00001*" />
+                            </Grid.RowDefinitions>
+
+                            <Track x:Name="PART_Track" Grid.Row="0" IsDirectionReversed="true" Focusable="false">
+                                <Track.Thumb>
+                                    <Thumb x:Name="Thumb" Background="{TemplateBinding Foreground}" Style="{DynamicResource ScrollThumbs}" />
+                                </Track.Thumb>
+                                <Track.IncreaseRepeatButton>
+                                    <RepeatButton x:Name="PageUp" Command="ScrollBar.PageDownCommand" Opacity="0" Focusable="false" />
+                                </Track.IncreaseRepeatButton>
+                                <Track.DecreaseRepeatButton>
+                                    <RepeatButton x:Name="PageDown" Command="ScrollBar.PageUpCommand" Opacity="0" Focusable="false" />
+                                </Track.DecreaseRepeatButton>
+                            </Track>
+                        </Grid>
+
+                        <ControlTemplate.Triggers>
+                            <Trigger SourceName="Thumb" Property="IsMouseOver" Value="true">
+                                <Setter Value="{DynamicResource ButtonSelectBrush}" TargetName="Thumb" Property="Background" />
+                            </Trigger>
+                            <Trigger SourceName="Thumb" Property="IsDragging" Value="true">
+                                <Setter Value="{DynamicResource DarkBrush}" TargetName="Thumb" Property="Background" />
+                            </Trigger>
+
+                            <Trigger Property="IsEnabled" Value="false">
+                                <Setter TargetName="Thumb" Property="Visibility" Value="Collapsed" />
+                            </Trigger>
+                            <Trigger Property="Orientation" Value="Horizontal">
+                                <Setter TargetName="GridRoot" Property="LayoutTransform">
+                                    <Setter.Value>
+                                        <RotateTransform Angle="-90" />
+                                    </Setter.Value>
+                                </Setter>
+                                <Setter TargetName="PART_Track" Property="LayoutTransform">
+                                    <Setter.Value>
+                                        <RotateTransform Angle="-90" />
+                                    </Setter.Value>
+                                </Setter>
+                                <Setter Property="Width" Value="Auto" />
+                                <Setter Property="Height" Value="8" />
+                                <Setter TargetName="Thumb" Property="Tag" Value="Horizontal" />
+                                <Setter TargetName="PageDown" Property="Command" Value="ScrollBar.PageLeftCommand" />
+                                <Setter TargetName="PageUp" Property="Command" Value="ScrollBar.PageRightCommand" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+
     </Application.Resources>
 </Application>

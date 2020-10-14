@@ -62,7 +62,14 @@ namespace Project_127
 		/// <param name="pMyFileOperations"></param>
 		public PopupProgress(ProgressTypes pProgressType, string pParam1, List<MyFileOperation> pMyFileOperations = null)
 		{
-			this.Owner = MainWindow.MW;
+			if (MainWindow.MW.IsVisible)
+			{
+				this.Owner = MainWindow.MW;
+			}
+			else
+			{
+				this.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+			}
 
 			InitializeComponent();
 

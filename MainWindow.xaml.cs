@@ -4,7 +4,7 @@ Main Documentation:
 Actual code (partially closed source) which authentificates, handles entitlement and launches the game is done by @dr490n with the help of other members of the core team like @Special For and @zCri
 Artwork, Design of GUI, GUI Behaviourehaviour, Colorchoices etc. by "@Hossel"
 Client by "@thS"
-Version: 0.0.4.0
+Version: 0.9.0.0
 
 Build Instructions:
 	Press CTRLF + F5, pray that nuget does its magic.
@@ -57,14 +57,13 @@ General Comments and things one should be aware of (still finishing this list)
 		DataBinding the ButtonContext is hard for some reason. Works which the checkbox tho, which is kinda weird
 	- BetaMode is hardcoded in Globals.cs
 	- Importing ZIP currently overwrites all files (including version.txt) apart from "UpgradeFiles" Folder
-	- We are doing some funky AdminRelauncher() stuff. This means debugger wont work tho.
-		To actually debug this we need to change the requestedExecutionLevel in App Manifest.
-		Never built with requestedExecutionLevel administrator tho. Will fail to launch from installer
 	- Installation Path gets written to Registry on every Launch to make sure its always up to date.
 
 Main To do:
 	- Things changed since last official release (not last commit)
 		- BugFixes, BugFixes, BugFixes,
+		- Lots of minor Quality of Life Improvements
+		- Actually call new Ways to guess GTA V Installation Path
 		- Implementing most Popup Windows as their own Page inside Main Window
 		- Implementing Properties with proper Setters (it affecting UI) for PageState, HamburgerMenuState, BackgroundImages
 			=> Made new blurry shit easily possible + loading and unloading pages + mouse over color changing on loaded page
@@ -72,6 +71,8 @@ Main To do:
 		- ReadMe Page written and documented (semi)
 		- BugFix for AuthState MouseOver 5 second limit
 		- Dragons Magic on ROSIntegration.xaml.cs to make it look nice
+		- ReDesigned SaveFileHandler
+		- Added Uninstalling Capabilities
 
 	-REMEMBER:
 		-> Release with admin mode manifest thingy...		
@@ -82,18 +83,12 @@ Main To do:
 		Installer + Uninstaller on fresh system.
 
 	- TO DO:
-		-> Fix ALL popups (rename and retail)
-		-> Finish ReWriting XML for Popups (like I did with MainWindow)
-
-		-> Fix SaveFileHandler GUI (make it not look like shit)
 		-> Fix Settings GUI (make it not look like shit)
-		-> Fix ReadMe GUI (make it not look like shit)
+		-> Make Uninstaller actually call our uninstall Program...for some reason this does not happen...
 
 		-> Implement all Other features
-			=> Just see Settings.XAML for what I need to implement
+			=> JumpscriptStuff
 			=> See Core Affinity Fix...
-
-		-> Figure out which files I need to distribute
 		
 		-> Tell Karsten about Birthday Present Thingy and show him this for work
 
@@ -269,6 +264,12 @@ namespace Project_127
 			// Check whats the latest Version of the ZIP File in GITHUB
 			CheckForZipUpdate();
 
+			// Some Background Change based on Date
+			ChangeBackgroundBasedOnSeason();
+
+			// Intepreting all Command Line shit
+			CommandLineArgumentIntepretation();
+
 			if (Globals.InternalMode)
 			{
 				string msg = "We are in internal mode. I need testing on:\n" +
@@ -286,7 +287,50 @@ namespace Project_127
 			}
 
 
+
+
+
 			Globals.HamburgerMenuState = Globals.HamburgerMenuStates.Hidden;
+
+			HelperClasses.Logger.Log("Startup procedure (Constructor of MainWindow) completed.");
+			HelperClasses.Logger.Log("--------------------------------------------------------");
+
+		}
+
+		/// <summary>
+		/// Changing Background based on current Date
+		/// </summary>
+		private void ChangeBackgroundBasedOnSeason()
+		{
+			DateTime Now = DateTime.Now;
+
+			if (Now.Month == 4 && Now.Day == 20)
+			{
+				Globals.BackgroundImage = Globals.BackgroundImages.FourTwenty;
+			}
+			else if ((Now.Month == 10 && Now.Day >= 29) ||
+					(Now.Month == 11 && Now.Day == 1))
+			{
+				Globals.BackgroundImage = Globals.BackgroundImages.Spooky;
+			}
+			else if ((Now.Month == 12 && Now.Day >= 6) ||
+					(Now.Month == 1 && Now.Day <= 6))
+			{
+				Globals.BackgroundImage = Globals.BackgroundImages.XMas;
+			}
+			else
+			{
+				Globals.BackgroundImage = Globals.BackgroundImages.Main;
+			}
+		}
+
+
+		/// <summary>
+		/// CommandLineArgumentIntepretation(), currently used for Background Image
+		/// </summary>
+		private void CommandLineArgumentIntepretation()
+		{
+			// Code for internal mode is in Globals.Internalmode Getter
 
 			// Need to be in following Format
 			// "-CommandLineArg:Value"
@@ -307,13 +351,7 @@ namespace Project_127
 					catch { }
 				}
 			}
-
-			HelperClasses.Logger.Log("Startup procedure (Constructor of MainWindow) completed.");
-			HelperClasses.Logger.Log("--------------------------------------------------------");
-
-
 		}
-
 
 
 		/// <summary>
@@ -467,12 +505,12 @@ namespace Project_127
 
 				if (!string.IsNullOrWhiteSpace(DLLinkGHash))
 				{
-					HelperClasses.Logger.Log("We do have a Hash for that file. Lets compare it:",2);
-					HelperClasses.Logger.Log("Hash we want: '" + DLLinkGHash + "'",3);
-					HelperClasses.Logger.Log("Hash we have: '" + HelperClasses.FileHandling.GetHashFromFile(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\GTA5.exe") + "'",3);
+					HelperClasses.Logger.Log("We do have a Hash for that file. Lets compare it:", 2);
+					HelperClasses.Logger.Log("Hash we want: '" + DLLinkGHash + "'", 3);
+					HelperClasses.Logger.Log("Hash we have: '" + HelperClasses.FileHandling.GetHashFromFile(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\GTA5.exe") + "'", 3);
 					while (HelperClasses.FileHandling.GetHashFromFile(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\GTA5.exe") != DLLinkGHash)
 					{
-						HelperClasses.Logger.Log("Well..hashes dont match shit. Lets try again",2);
+						HelperClasses.Logger.Log("Well..hashes dont match shit. Lets try again", 2);
 						HelperClasses.FileHandling.deleteFile(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\GTA5.exe");
 						new PopupDownload(DLLinkG, LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\GTA5.exe", "Needed Files (gta5.exe 1/3)").ShowDialog();
 						HelperClasses.Logger.Log("Hash we want: '" + DLLinkGHash + "'", 3);
@@ -870,40 +908,41 @@ namespace Project_127
 		/// <param name="e"></param>
 		private void btn_Auth_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
 		{
+
+			// Debug Info users can give me easily...
+			List<string> DebugMessage = new List<string>();
+
+			DebugMessage.Add("Project 1.27 Version: '" + Globals.ProjectVersion + "'");
+			DebugMessage.Add("ZIP Version: '" + Globals.ZipVersion + "'");
+			DebugMessage.Add("BetaMode: '" + Globals.BetaMode + "'");
+			DebugMessage.Add("InternalMode: '" + Globals.InternalMode + "'");
+			DebugMessage.Add("Project 1.27 Installation Path '" + Globals.ProjectInstallationPath + "'");
+			DebugMessage.Add("ZIP Extraction Path '" + LauncherLogic.ZIPFilePath + "'");
+			DebugMessage.Add("LauncherLogic.GTAVFilePath: '" + LauncherLogic.GTAVFilePath + "'");
+			DebugMessage.Add("LauncherLogic.UpgradeFilePath: '" + LauncherLogic.UpgradeFilePath + "'");
+			DebugMessage.Add("LauncherLogic.DowngradeFilePath: '" + LauncherLogic.DowngradeFilePath + "'");
+			DebugMessage.Add("LauncherLogic.SupportFilePath: '" + LauncherLogic.SupportFilePath + "'");
+			DebugMessage.Add("Detected AuthState: '" + LauncherLogic.AuthState + "'");
+			DebugMessage.Add("Detected GameState: '" + LauncherLogic.GameState + "'");
+			DebugMessage.Add("Detected InstallationState: '" + LauncherLogic.InstallationState + "'");
+			DebugMessage.Add("    Size of GTA5.exe in GTAV Installation Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\GTA5.exe"));
+			DebugMessage.Add("    Size of GTA5.exe in Downgrade Files Folder: " + LauncherLogic.SizeOfDowngradedGTAV);
+			DebugMessage.Add("    Size of update.rpf in GTAV Installation Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\update\update.rpf"));
+			DebugMessage.Add("    Size of update.rpf in Downgrade Files Folder: " + LauncherLogic.SizeOfDowngradedUPDATE);
+			DebugMessage.Add("Settings: ");
+			foreach (KeyValuePair<string, string> KVP in Globals.MySettings)
+			{
+				DebugMessage.Add("    " + KVP.Key + ": '" + KVP.Value + "'");
+			}
+
+			// Building DebugPath
+			string DebugFile = Globals.ProjectInstallationPath.TrimEnd('\\') + @"\AAA - DEBUG.txt";
+
+			// Deletes File, Creates File, Adds to it
+			HelperClasses.FileHandling.WriteStringToFileOverwrite(DebugFile, DebugMessage.ToArray());
+
 			if (Globals.BetaMode || Globals.InternalMode)
 			{
-				// Debug Info users can give me easily...
-				List<string> DebugMessage = new List<string>();
-
-				DebugMessage.Add("Project 1.27 Version: '" + Globals.ProjectVersion + "'");
-				DebugMessage.Add("ZIP Version: '" + Globals.ZipVersion + "'");
-				DebugMessage.Add("BetaMode: '" + Globals.BetaMode + "'");
-				DebugMessage.Add("InternalMode: '" + Globals.InternalMode + "'");
-				DebugMessage.Add("Project 1.27 Installation Path '" + Globals.ProjectInstallationPath + "'");
-				DebugMessage.Add("ZIP Extraction Path '" + LauncherLogic.ZIPFilePath + "'");
-				DebugMessage.Add("LauncherLogic.GTAVFilePath: '" + LauncherLogic.GTAVFilePath + "'");
-				DebugMessage.Add("LauncherLogic.UpgradeFilePath: '" + LauncherLogic.UpgradeFilePath + "'");
-				DebugMessage.Add("LauncherLogic.DowngradeFilePath: '" + LauncherLogic.DowngradeFilePath + "'");
-				DebugMessage.Add("LauncherLogic.SupportFilePath: '" + LauncherLogic.SupportFilePath + "'");
-				DebugMessage.Add("Detected AuthState: '" + LauncherLogic.AuthState + "'");
-				DebugMessage.Add("Detected GameState: '" + LauncherLogic.GameState + "'");
-				DebugMessage.Add("Detected InstallationState: '" + LauncherLogic.InstallationState + "'");
-				DebugMessage.Add("    Size of GTA5.exe in GTAV Installation Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\GTA5.exe"));
-				DebugMessage.Add("    Size of GTA5.exe in Downgrade Files Folder: " + LauncherLogic.SizeOfDowngradedGTAV);
-				DebugMessage.Add("    Size of update.rpf in GTAV Installation Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\update\update.rpf"));
-				DebugMessage.Add("    Size of update.rpf in Downgrade Files Folder: " + LauncherLogic.SizeOfDowngradedUPDATE);
-				DebugMessage.Add("Settings: ");
-				foreach (KeyValuePair<string, string> KVP in Globals.MySettings)
-				{
-					DebugMessage.Add("    " + KVP.Key + ": '" + KVP.Value + "'");
-				}
-
-				// Building DebugPath
-				string DebugFile = Globals.ProjectInstallationPath.TrimEnd('\\') + @"\AAA - DEBUG.txt";
-
-				// Deletes File, Creates File, Adds to it
-				HelperClasses.FileHandling.WriteStringToFileOverwrite(DebugFile, DebugMessage.ToArray());
-
 				// Opens the File
 				HelperClasses.ProcessHandler.StartProcess(@"C:\Windows\System32\notepad.exe", pCommandLineArguments: DebugFile);
 			}
@@ -1184,6 +1223,6 @@ namespace Project_127
 
 		#endregion
 
-	
+
 	} // End of Class
 } // End of Namespace
