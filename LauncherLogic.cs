@@ -93,17 +93,24 @@ namespace Project_127
 				long SizeOfGTAV = HelperClasses.FileHandling.GetSizeOfFile(GTAVFilePath.TrimEnd('\\') + @"\GTA5.exe");
 				long SizeOfUpdate = HelperClasses.FileHandling.GetSizeOfFile(GTAVFilePath.TrimEnd('\\') + @"\update\update.rpf");
 
+				// if Sizes in GTA V Installation Path match what files we use from ZIP for downgrading
 				if (SizeOfGTAV == SizeOfDowngradedGTAV && SizeOfUpdate == SizeOfDowngradedUPDATE)
 				{
 					return InstallationStates.Downgraded;
 				}
 				else
 				{
-					if (SizeOfDowngradedGTAV > 0 && SizeOfDowngradedUPDATE > 0)
+					// if both Files in the GTA V Install Path exist
+					if (SizeOfGTAV > 0 && SizeOfUpdate > 0)
 					{
+						// If both are NOT downgrad
 						if (SizeOfGTAV != SizeOfDowngradedGTAV && SizeOfUpdate != SizeOfDowngradedUPDATE)
 						{
 							return InstallationStates.Upgraded;
+						}
+						else
+						{
+							return InstallationStates.Unsure;
 						}
 					}
 					return InstallationStates.Unsure;
@@ -178,7 +185,8 @@ namespace Project_127
 
 			// Those are WITH the "\" at the end
 			string[] FilesInUpgradesFiles = HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(UpgradeFilePath);
-			string[] CorrespondingFilePathInGTALocation = new string[DowngradeFilePath.Length];
+			string[] CorrespondingFilePathInGTALocation = new string[FilesInUpgradesFiles.Length];
+			string[] CorrespondingFilePathInDowngradeFiles = new string[FilesInUpgradesFiles.Length];
 
 			HelperClasses.Logger.Log("Found " + FilesInUpgradesFiles.Length.ToString() + " Files in Upgrade Folder.");
 
@@ -187,6 +195,7 @@ namespace Project_127
 			{
 				// Build the Corresponding theoretical Filenames for Upgrade Folder and GTA V Installation Folder
 				CorrespondingFilePathInGTALocation[i] = GTAVFilePath + FilesInUpgradesFiles[i].Substring(UpgradeFilePath.Length);
+				CorrespondingFilePathInDowngradeFiles[i] = UpgradeFilePath + FilesInUpgradesFiles[i].Substring(DowngradeFilePath.Length);
 
 				// If the File exists in GTA V Installation Path
 				if (HelperClasses.FileHandling.doesFileExist(CorrespondingFilePathInGTALocation[i]))
@@ -262,8 +271,8 @@ namespace Project_127
 
 			// Those are WITH the "\" at the end
 			string[] FilesInDowngradeFiles = HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(DowngradeFilePath);
-			string[] CorrespondingFilePathInGTALocation = new string[DowngradeFilePath.Length];
-			string[] CorrespondingFilePathInUpgradeFiles = new string[DowngradeFilePath.Length];
+			string[] CorrespondingFilePathInGTALocation = new string[FilesInDowngradeFiles.Length];
+			string[] CorrespondingFilePathInUpgradeFiles = new string[FilesInDowngradeFiles.Length];
 
 			HelperClasses.Logger.Log("Found " + FilesInDowngradeFiles.Length.ToString() + " Files in Downgrade Folder.");
 
@@ -285,8 +294,13 @@ namespace Project_127
 					}
 					else
 					{
-						// Move File from GTA V Installation Path to Upgrade Folder
-						MyFileOperations.Add(new MyFileOperation(MyFileOperation.FileOperations.Move, CorrespondingFilePathInGTALocation[i], CorrespondingFilePathInUpgradeFiles[i], "Found '" + CorrespondingFilePathInGTALocation[i] + "' in GTA V Installation Path and NOT in $UpgradeFiles. Will move it from GTA V Installation to $UpgradeFiles", 1));
+						// If its not the same file as in DownGradeFiles
+						if (HelperClasses.FileHandling.GetHashFromFile(CorrespondingFilePathInGTALocation[i]) !=
+							HelperClasses.FileHandling.GetHashFromFile(FilesInDowngradeFiles[i]))
+						{
+							// Move File from GTA V Installation Path to Upgrade Folder
+							MyFileOperations.Add(new MyFileOperation(MyFileOperation.FileOperations.Move, CorrespondingFilePathInGTALocation[i], CorrespondingFilePathInUpgradeFiles[i], "Found '" + CorrespondingFilePathInGTALocation[i] + "' in GTA V Installation Path and NOT in $UpgradeFiles. Will move it from GTA V Installation to $UpgradeFiles", 1));
+						}
 					}
 				}
 
@@ -332,7 +346,7 @@ namespace Project_127
 					HelperClasses.Logger.Log("You are NOT already Authenticated. Throwing up Window now.");
 
 					// Trying to Auth User
-					new ROSIntegration().ShowDialog();
+					Globals.PageState = Globals.PageStates.Auth;
 
 					// If still not authed
 					if (AuthState == AuthStates.NotAuth)
@@ -452,7 +466,95 @@ namespace Project_127
 			// If we DONT only auto start when downgraded OR if we are downgraded
 			if (Settings.EnableOnlyAutoStartProgramsWhenDowngraded == false || LauncherLogic.InstallationState == InstallationStates.Downgraded)
 			{
-				// Auto Start Programs
+				HelperClasses.Logger.Log("Either we are Downgraded or EnableOnlyAutoStartProgramsWhenDowngraded is set to false");
+				if (Settings.EnableAutoStartFPSLimiter)
+				{
+					HelperClasses.Logger.Log("We are trying to auto Start FPS Limiter");
+					string ProcessName = HelperClasses.FileHandling.PathSplitUp(Settings.PathFPSLimiter)[1];
+					if (!HelperClasses.ProcessHandler.IsProcessRunning(ProcessName))
+					{
+						HelperClasses.Logger.Log("Process is not already running...", 1);
+						if (HelperClasses.FileHandling.doesFileExist(Settings.PathFPSLimiter))
+						{
+							HelperClasses.Logger.Log("File does exist, lets start it...",1);
+							HelperClasses.ProcessHandler.StartProcess(Settings.PathFPSLimiter);
+						}
+						else
+						{
+							HelperClasses.Logger.Log("Path (File) seems to not exist.", 1);
+						}
+					}
+					else
+					{
+						HelperClasses.Logger.Log("Seems to be running already", 1);
+					}
+				}
+				if (Settings.EnableAutoStartLiveSplit)
+				{
+					HelperClasses.Logger.Log("We are trying to auto Start LiveSplit");
+					string ProcessName = HelperClasses.FileHandling.PathSplitUp(Settings.PathLiveSplit)[1];
+					if (!HelperClasses.ProcessHandler.IsProcessRunning(ProcessName))
+					{
+						HelperClasses.Logger.Log("Process is not already running...", 1);
+						if (HelperClasses.FileHandling.doesFileExist(Settings.PathLiveSplit))
+						{
+							HelperClasses.Logger.Log("File does exist, lets start it...", 1);
+							HelperClasses.ProcessHandler.StartProcess(Settings.PathLiveSplit);
+						}
+						else
+						{
+							HelperClasses.Logger.Log("Path (File) seems to not exist.", 1);
+						}
+					}
+					else
+					{
+						HelperClasses.Logger.Log("Seems to be running already", 1);
+					}
+				}
+				if (Settings.EnableAutoStartStreamProgram)
+				{
+					HelperClasses.Logger.Log("We are trying to auto Start Stream Program");
+					string ProcessName = HelperClasses.FileHandling.PathSplitUp(Settings.PathStreamProgram)[1];
+					if (!HelperClasses.ProcessHandler.IsProcessRunning(ProcessName))
+					{
+						HelperClasses.Logger.Log("Process is not already running...", 1);
+						if (HelperClasses.FileHandling.doesFileExist(Settings.PathStreamProgram))
+						{
+							HelperClasses.Logger.Log("File does exist, lets start it...", 1);
+							HelperClasses.ProcessHandler.StartProcess(Settings.PathStreamProgram);
+						}
+						else
+						{
+							HelperClasses.Logger.Log("Path (File) seems to not exist.", 1);
+						}
+					}
+					else
+					{
+						HelperClasses.Logger.Log("Seems to be running already", 1);
+					}
+				}
+				if (Settings.EnableAutoStartNohboard)
+				{
+					HelperClasses.Logger.Log("We are trying to auto Start Nohboard");
+					string ProcessName = HelperClasses.FileHandling.PathSplitUp(Settings.PathNohboard)[1];
+					if (!HelperClasses.ProcessHandler.IsProcessRunning(ProcessName))
+					{
+						HelperClasses.Logger.Log("Process is not already running...", 1);
+						if (HelperClasses.FileHandling.doesFileExist(Settings.PathNohboard))
+						{
+							HelperClasses.Logger.Log("File does exist, lets start it...", 1);
+							HelperClasses.ProcessHandler.StartProcess(Settings.PathNohboard);
+						}
+						else
+						{
+							HelperClasses.Logger.Log("Path (File) seems to not exist.", 1);
+						}
+					}
+					else
+					{
+						HelperClasses.Logger.Log("Seems to be running already", 1);
+					}
+				}
 			}
 
 

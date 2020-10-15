@@ -44,6 +44,15 @@ namespace Project_127
 		/// <param name="pMessage"></param>
 		public PopupDownload(string pDownloadURL, string pDownloadLocation, string pMessage)
 		{
+			if (MainWindow.MW.IsVisible)
+			{
+				this.Owner = MainWindow.MW;
+			}
+			else
+			{
+				this.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+			}
+
 			InitializeComponent();
 
 			// Setting Properties of our Object (Popup Window)
