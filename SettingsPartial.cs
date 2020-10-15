@@ -13,7 +13,7 @@ namespace Project_127
 	/// Partial Class for Settings Window. 
 	/// Also Creates Properties for all Settings, which are easier to interact with than the Dictionary
 	/// </summary>
-	public partial class Settings : Window
+	public partial class Settings : Page
 	{
 
 		/*
@@ -58,32 +58,6 @@ namespace Project_127
 		}
 
 
-		/// <summary>
-		/// Button Click to change the Path of ZIPExtractionPath which we use to use for all Contents of ZIP File etc.
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
-		private void btn_Set_ZIPExtractionPath_Click(object sender, RoutedEventArgs e)
-		{
-			// Grabbing the new Path from FolderDialogThingy
-			string _ZIPExtractionPath = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.Folder, "Pick the Folder where this Program will store its Data.", Settings.ZIPExtractionPath);
-			HelperClasses.Logger.Log("Changing ZIPExtractionPath.");
-			HelperClasses.Logger.Log("Old ZIPExtractionPath: '" + Settings.ZIPExtractionPath + "'");
-			HelperClasses.Logger.Log("Potential New ZIPExtractionPath: '" + _ZIPExtractionPath + "'");
-
-			// If its a valid Path (no "") and if its a new Path
-			if (ChangeZIPExtractionPath(_ZIPExtractionPath))
-			{
-				HelperClasses.Logger.Log("Changing ZIP Path worked");
-			}
-			else
-			{
-				HelperClasses.Logger.Log("Changing ZIP Path did not work. Probably non existing Path or same Path as before");
-				new Popup(Popup.PopupWindowTypes.PopupOk, "Changing ZIP Path did not work. Probably non existing Path or same Path as before");
-			}
-
-			RefreshGUI();
-		}
 
 
 		/// <summary>
