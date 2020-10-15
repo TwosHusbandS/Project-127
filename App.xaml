@@ -35,10 +35,10 @@
 
 
 
-        <Style TargetType="Button" x:Key="btn_SVH">
-            <Setter Property="Background" Value="{x:Static local:Globals.SFH_ButtonBackground}"/>
-            <Setter Property="Foreground" Value="{x:Static local:Globals.SFH_ButtonForeground}"/>
-            <Setter Property="BorderBrush" Value="{x:Static local:Globals.SFH_ButtonBorderBrush}"/>
+        <Style TargetType="Button" x:Key="btn_SM">
+            <Setter Property="Background" Value="{x:Static local:Globals.SM_ButtonBackground}"/>
+            <Setter Property="Foreground" Value="{x:Static local:Globals.SM_ButtonForeground}"/>
+            <Setter Property="BorderBrush" Value="{x:Static local:Globals.SM_ButtonBorderBrush}"/>
             <Setter Property="FontSize" Value="18"/>
             <Setter Property="FontFamily" Value="Tahoma"/>
             <Setter Property="Margin" Value="10"/>
@@ -47,7 +47,7 @@
                     <ControlTemplate TargetType="Button">
                         <Border Background="{TemplateBinding Background}"
                             CornerRadius="5"
-                            BorderThickness="{x:Static local:Globals.SFH_ButtonBorderThickness}"
+                            BorderThickness="{x:Static local:Globals.SM_ButtonBorderThickness}"
                             Padding="5"
                             BorderBrush="{TemplateBinding BorderBrush}">
                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
@@ -57,9 +57,9 @@
             </Setter>
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="{x:Static local:Globals.SFH_ButtonMOBackground}"/>
-                    <Setter Property="Foreground" Value="{x:Static local:Globals.SFH_ButtonMOForeground}"/>
-                    <Setter Property="BorderBrush" Value="{x:Static local:Globals.SFH_ButtonMOBorderBrush}"/>
+                    <Setter Property="Background" Value="{x:Static local:Globals.SM_ButtonMOBackground}"/>
+                    <Setter Property="Foreground" Value="{x:Static local:Globals.SM_ButtonMOForeground}"/>
+                    <Setter Property="BorderBrush" Value="{x:Static local:Globals.SM_ButtonMOBorderBrush}"/>
                 </Trigger>
             </Style.Triggers>
         </Style>
@@ -214,7 +214,7 @@
             <Border x:Name="PART_ContentHost" Focusable="False" Background="{TemplateBinding Background}" />
         </ControlTemplate>
 
-        <Style x:Key="cb" TargetType="ComboBox">
+        <Style x:Key="cobo" TargetType="ComboBox">
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="ComboBox">
@@ -267,6 +267,8 @@
             <Setter Property="Background" Value="Transparent"/>
             <Style.Resources>
                 <Style TargetType="{x:Type DataGridCell}">
+                    <Setter Property="BorderBrush" Value="{x:Static local:Globals.SFH_DGCellBorderBrush}"/>
+                    <Setter Property="BorderThickness" Value="{x:Static local:Globals.SFH_DGCellBorderThickness}"/>
                     <Style.Triggers>
                         <Trigger Property="DataGridCell.IsSelected" Value="True">
                             <Setter Property="Background" Value="{x:Static local:Globals.SFH_DGSelectedBackground}" />
@@ -362,6 +364,35 @@
             </Setter>
         </Style>
 
+        <Style x:Key="lbl_Set_Header" TargetType="Label" BasedOn="{StaticResource lbl}">
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="VerticalAlignment" Value="Stretch"/>
+            <Setter Property="Margin" Value="0"/>
+            <Setter Property="Background" Value="{x:Static local:Globals.SE_Lbl_Header_Background}"/>
+            <Setter Property="Foreground" Value="{x:Static local:Globals.SE_Lbl_Header_Foreground}"/>
+            <Setter Property="FontSize" Value="20"/>
+        </Style>
+
+        <Style x:Key="lbl_Set_Info" TargetType="Label" BasedOn="{StaticResource lbl}">
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+            <Setter Property="VerticalAlignment" Value="Stretch"/>
+            <Setter Property="Margin" Value="5,0,0,0"/>
+            <Setter Property="FontSize" Value="16"/>
+        </Style>
+
+        <Style x:Key="btn_SE_Path" TargetType="Button" BasedOn="{StaticResource btn_SM}">
+            <Setter Property="Margin" Value="10,5"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Background" Value="Transparent"/>
+        </Style>
+
+        <Style x:Key="btn_cb" TargetType="Button" BasedOn="{StaticResource btn}">
+            <Setter Property="Height" Value="28"/>
+            <Setter Property="Width" Value="28"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="BorderThickness" Value="0"/>
+        </Style>
 
     </Application.Resources>
 </Application>

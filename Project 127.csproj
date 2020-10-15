@@ -347,6 +347,12 @@
     <Resource Include="Artwork\arrowright.png" />
     <Resource Include="Artwork\arrowright_mo.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Artwork\checkbox_false.png" />
+    <Resource Include="Artwork\checkbox_false_mo.png" />
+    <Resource Include="Artwork\checkbox_true.png" />
+    <Resource Include="Artwork\checkbox_true_mo.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

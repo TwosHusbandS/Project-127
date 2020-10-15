@@ -398,7 +398,7 @@ setTimeout(modHtml, 1000);
 
 
 		private const string credSenderJS = "setTimeout(rememberMeState, 1000, true); setTimeout(setEmail, 1200, '{0}'); setTimeout(setPass, 1500, '{1}');";
-		private async void LoadingStateChange(object sender, LoadingStateChangedEventArgs args)
+		private void LoadingStateChange(object sender, LoadingStateChangedEventArgs args)
 		{
 			if (!args.IsLoading) //On load complete...
 			{

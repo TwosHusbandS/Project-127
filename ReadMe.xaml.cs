@@ -47,23 +47,24 @@ namespace Project_127
 				"if you read this, and could shoot me a PM on Discord with stuff\n" +
 				"you want to Read here, that would be great.";
 			Grid_SpeedRun_Lbl.Content = msg1;
-			Grid_SpeedRun_Lbl.FontSize = 16;
+			Grid_SpeedRun_Lbl.FontSize = 18;
 
 			string msg2 = "" +
 				 "You are running Project 1.27, a tool for the GTA V Speedrunning\n" +
 				 "Community. This was created for the patch 1.27 downgrade problem,\n" +
 				 "which started in August of 2020. This tool has a number of features,\n" +
 				 "including Downgrading, Upgrading and launching the game.\n" +
-				 "\nSpecial shoutouts to @dr490n who was responsible for getting the downgraded game\n" +
-				 "to launch, adding patches against in-game triggers, the authentication backend,\n" +
-				 "decryption and got the preorder entitlement to work.\n\n" +
+				 "\nSpecial shoutouts to @dr490n who was responsible for getting the\n" +
+				 "downgraded game to launch, adding patches against in-game triggers,\n" +
+				 "the authentication backend, decryption and managed to get\n" +
+				 "the preorder entitlement to work.\n\n" +
 				 "If you have any issues with this program or ideas for new features,\n" +
 				 "feel free to contact me on Discord: @thS#0305\n\n" +
 				 "Project 1.27 Version: '" + Globals.ProjectVersion + "'\n" + 
 				 "BuildInfo: '" + Globals.BuildInfo + "'\n" +
 				 "ZIP Version: '" + Globals.ZipVersion + "'";
 			Grid_About_Lbl.Content = msg2;
-			Grid_About_Lbl.FontSize = 14;
+			Grid_About_Lbl.FontSize = 16;
 
 			string msg3 = "" +
 				"Solving the patch 1.27 Downgrade problem has been achieved by a month of hard work by a\n" +
@@ -83,7 +84,7 @@ namespace Project_127
 				"Shoutout to FiveM and Goldberg, whose Source Code proved to be vital\n" +
 				"to understand and reverse engineer the GTA V Launch Process";
 			Grid_Credits_Lbl.Content = msg3;
-			Grid_Credits_Lbl.FontSize = 12;
+			Grid_Credits_Lbl.FontSize = 14;
 		}
 
 		/// <summary>
@@ -119,35 +120,35 @@ namespace Project_127
 
 				if (value == ReadMeStates.SpeedRun)
 				{
-					Grid_SpeedRun.Visibility = Visibility.Visible;
+					Border_SpeedRun.Visibility = Visibility.Visible;
 					btn_SpeedRun.Style = Application.Current.FindResource("btn_hamburgeritem_selected") as Style;
 
-					Grid_About.Visibility = Visibility.Hidden;
+					Border_About.Visibility = Visibility.Hidden;
 					btn_About.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
 
-					Grid_Credits.Visibility = Visibility.Hidden;
+					Border_Credits.Visibility = Visibility.Hidden;
 					btn_Credits.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
 				}
 				else if (value == ReadMeStates.About)
 				{
-					Grid_About.Visibility = Visibility.Visible;
+					Border_About.Visibility = Visibility.Visible;
 					btn_About.Style = Application.Current.FindResource("btn_hamburgeritem_selected") as Style;
 
-					Grid_SpeedRun.Visibility = Visibility.Hidden;
+					Border_SpeedRun.Visibility = Visibility.Hidden;
 					btn_SpeedRun.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
 
-					Grid_Credits.Visibility = Visibility.Hidden;
+					Border_Credits.Visibility = Visibility.Hidden;
 					btn_Credits.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
 				}
 				else if (value == ReadMeStates.Credits)
 				{
-					Grid_Credits.Visibility = Visibility.Visible;
+					Border_Credits.Visibility = Visibility.Visible;
 					btn_Credits.Style = Application.Current.FindResource("btn_hamburgeritem_selected") as Style;
 
-					Grid_SpeedRun.Visibility = Visibility.Hidden;
+					Border_SpeedRun.Visibility = Visibility.Hidden;
 					btn_SpeedRun.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
 
-					Grid_About.Visibility = Visibility.Hidden;
+					Border_About.Visibility = Visibility.Hidden;
 					btn_About.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
 				}
 			}

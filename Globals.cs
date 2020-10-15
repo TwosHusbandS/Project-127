@@ -539,6 +539,15 @@ namespace Project_127
 
 		public static Brush App_Submenu_Background { get; private set; } = SetOpacity(MyColorBlack, 65);
 
+		public static Brush SM_ButtonBackground { get; private set; } = MyColorOffBlack;
+		public static Brush SM_ButtonForeground { get; private set; } = MyColorWhite;
+		public static Brush SM_ButtonBorderBrush { get; private set; } = MyColorWhite;
+		public static Brush SM_ButtonMOBackground { get; private set; } = MyColorOffWhite;
+		public static Brush SM_ButtonMOForeground { get; private set; } = MyColorOffBlack;
+		public static Brush SM_ButtonMOBorderBrush { get; private set; } = Brushes.Transparent;
+		public static System.Windows.Thickness SM_ButtonBorderThickness { get; private set; } = new System.Windows.Thickness(2);
+
+
 		public static Brush App_ScrollViewerForeground { get; private set; } = MyColorOffWhite;
 
 
@@ -606,58 +615,67 @@ namespace Project_127
 
 		// SaveFilerHandler Window
 
-		public static Brush SFH_ButtonBackground { get; private set; } = MyColorBlack;
-		public static Brush SFH_ButtonForeground { get; private set; } = MyColorWhite;
-		public static Brush SFH_ButtonBorderBrush { get; private set; } = MyColorWhite;
-		public static Brush SFH_ButtonMOBackground { get; private set; } = MyColorWhite;
-		public static Brush SFH_ButtonMOForeground { get; private set; } = MyColorBlack;
-		public static Brush SFH_ButtonMOBorderBrush { get; private set; } = MyColorWhite;
-		public static System.Windows.Thickness SFH_ButtonBorderThickness { get; private set; } = new System.Windows.Thickness(2);
-
-		public static Brush SFH_SVBackground { get; private set; } = MyColorBlack;
-		public static Brush SFH_SVForeground { get; private set; } = MyColorWhite;
 
 		public static Brush SFH_DGBorderBrush { get; private set; } = MyColorWhite;
 		public static Thickness SFH_DGBorderThickness { get; private set; } = new Thickness(2);
-		public static Brush SFH_DGHeaderBackground { get; private set; } = MyColorWhite;
+		public static Brush SFH_DGHeaderBackground { get; private set; } = MyColorOffWhite;
 		public static Brush SFH_DGHeaderForeground { get; private set; } = MyColorBlack;
-		public static Brush SFH_DGBackground { get; private set; } = MyColorBlack;
-		public static Brush SFH_DGRowBackground { get; private set; } = MyColorBlack;
-		public static Brush SFH_DGAlternateRowBackground { get; private set; } = SetOpacity(MyColorOffWhite,40);
+		public static Brush SFH_DGBackground { get; private set; } = SetOpacity(MyColorBlack, 50);
+		public static Brush SFH_DGRowBackground { get; private set; } = Brushes.Transparent;
+		public static Brush SFH_DGAlternateRowBackground { get; private set; } = SetOpacity(MyColorOffWhite,20);
 		public static Brush SFH_DGForeground { get; private set; } = MyColorOffWhite;
-		public static Brush SFH_DGSelectedBackground { get; private set; } = MyColorWhite;
+		public static Brush SFH_DGCellBorderBrush { get; private set; } = Brushes.Transparent;
+		public static Thickness SFH_DGCellBorderThickness { get; private set; } = new Thickness(0);
+		//public static Brush SFH_DGSelectedBackground { get; private set; } = Brushes.Transparent;
+		//public static Brush SFH_DGSelectedForeground { get; private set; } = GetBrushHex("#76e412");
+		//public static Brush SFH_DGSelectedBorderBrush { get; private set; } = GetBrushHex("#76e412");
+		public static Brush SFH_DGSelectedBackground { get; private set; } = SetOpacity(MyColorWhite, 80);
 		public static Brush SFH_DGSelectedForeground { get; private set; } = MyColorOffBlack;
 		public static Brush SFH_DGSelectedBorderBrush { get; private set; } = MyColorOffWhite;
 		public static Thickness SFH_DGSelectedBorderThickness { get; private set; } = new Thickness(2);
 
-
+		//GetBrushRGB(226, 0, 116);
 
 		// Settings Window
-		public static Brush SE_Background { get; private set; } = SetOpacity(MyColorBlack, 50);
-		public static Brush SE_BorderBrush { get; private set; } = MyColorWhite;
+
+		public static Brush SE_RowBackground { get; private set; } = SetOpacity(MyColorBlack,50);
+		public static Brush SE_AlternateRowBackground { get; private set; } = SetOpacity(MyColorOffWhite, 20);
 		public static Brush SE_BorderBrush_Inner { get; private set; } = MyColorWhite;
 
-		public static Brush SE_LabelForeground { get; private set; } = MyColorWhite;
-		public static Brush SE_LabelSetForeground { get; private set; } = MyColorWhite;
+		public static Brush SE_Lbl_Header_Background { get; private set; } = MyColorOffWhite;
+		public static Brush SE_Lbl_Header_Foreground { get; private set; } = MyColorOffBlack;
 
-		public static Brush SE_ButtonBackground { get; private set; } = MyColorBlack;
-		public static Brush SE_ButtonForeground { get; private set; } = MyColorWhite;
-		public static Brush SE_ButtonBorderBrush { get; private set; } = MyColorWhite;
-		public static Brush SE_ButtonMOBackground { get; private set; } = MyColorWhite;
-		public static Brush SE_ButtonMOForeground { get; private set; } = MyColorBlack;
-		public static Brush SE_ButtonMOBorderBrush { get; private set; } = MyColorWhite;
 
-		public static Brush SE_ButtonSetBackground { get; private set; } = MyColorBlack;
-		public static Brush SE_ButtonSetForeground { get; private set; } = MyColorWhite;
-		public static Brush SE_ButtonSetBorderBrush { get; private set; } = MyColorWhite;
-		public static Brush SE_ButtonSetMOBackground { get; private set; } = MyColorWhite;
-		public static Brush SE_ButtonSetMOForeground { get; private set; } = MyColorBlack;
-		public static Brush SE_ButtonSetMOBorderBrush { get; private set; } = MyColorWhite;
+		// ReadMe Window
 
-		public static Brush SE_SVBackground { get; private set; } = MyColorBlack;
-		public static Brush SE_SVForeground { get; private set; } = MyColorWhite;
+		public static Brush ReadME_Inner_Background { get; private set; } = SetOpacity(MyColorBlack, 50);
+		public static Brush ReadME_Inner_BorderBrush { get; private set; } = MyColorOffWhite;
+		public static Thickness ReadME_Inner_BorderThickness { get; private set; } = new Thickness(2);
+		public static CornerRadius ReadME_Inner_CornerRadius { get; private set; } = new CornerRadius(10);
 
-		public static System.Windows.Thickness SE_ButtonBorderThickness { get; private set; } = new System.Windows.Thickness(2);
+		
+
+		//public static Brush SE_LabelForeground { get; private set; } = MyColorWhite;
+		//public static Brush SE_LabelSetForeground { get; private set; } = MyColorWhite;
+
+		//public static Brush SE_ButtonBackground { get; private set; } = MyColorBlack;
+		//public static Brush SE_ButtonForeground { get; private set; } = MyColorWhite;
+		//public static Brush SE_ButtonBorderBrush { get; private set; } = MyColorWhite;
+		//public static Brush SE_ButtonMOBackground { get; private set; } = MyColorWhite;
+		//public static Brush SE_ButtonMOForeground { get; private set; } = MyColorBlack;
+		//public static Brush SE_ButtonMOBorderBrush { get; private set; } = MyColorWhite;
+
+		//public static Brush SE_ButtonSetBackground { get; private set; } = MyColorBlack;
+		//public static Brush SE_ButtonSetForeground { get; private set; } = MyColorWhite;
+		//public static Brush SE_ButtonSetBorderBrush { get; private set; } = MyColorWhite;
+		//public static Brush SE_ButtonSetMOBackground { get; private set; } = MyColorWhite;
+		//public static Brush SE_ButtonSetMOForeground { get; private set; } = MyColorBlack;
+		//public static Brush SE_ButtonSetMOBorderBrush { get; private set; } = MyColorWhite;
+
+		//public static Brush SE_SVBackground { get; private set; } = MyColorBlack;
+		//public static Brush SE_SVForeground { get; private set; } = MyColorWhite;
+
+		//public static System.Windows.Thickness SE_ButtonBorderThickness { get; private set; } = new System.Windows.Thickness(2);
 
 
 

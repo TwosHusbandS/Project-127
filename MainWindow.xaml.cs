@@ -4,7 +4,7 @@ Main Documentation:
 Actual code (partially closed source) which authentificates, handles entitlement and launches the game is done by @dr490n with the help of other members of the core team like @Special For and @zCri
 Artwork, Design of GUI, GUI Behaviourehaviour, Colorchoices etc. by "@Hossel"
 Client by "@thS"
-Version: 0.9.0.0
+Version: 0.9.1.0
 
 Build Instructions:
 	Press CTRLF + F5, pray that nuget does its magic.
@@ -31,7 +31,10 @@ General Files / Classes:
 		Settings.xaml.cs
 			SettingsPartial.cs
 		SaveFileHandler.xaml.cs
+		ReadMe.xaml.cs
 		Popup.xaml.cs // Normal Popup (OK & OKERROR & YES/NO)
+		PopupComboBox.xaml.cs // Normal Popup (OK & OKERROR & YES/NO)
+		PopupTextBox.xaml.cs // Normal Popup (OK & OKERROR & YES/NO)
 		PopupDownload.xaml.cs // Popup for Downloading Files
 		PopupProgress.xaml.cs // Popup for large file operation with semi-optinal loading bar
 		ROSIntegration.xaml.cs // Auth window fo @dr490n
@@ -50,15 +53,6 @@ General Files / Classes:
 		RC4.cs // Backend by @d490n
 		ROSCommunicationBackend.cs // Backend by @d490n
 
-General Comments and things one should be aware of (still finishing this list)
-	- Window Icons are set in the Window part of the XAML. Can use resources and relative Paths this way
-		This doesnt change the icon when right clicking task bar btw.
-	- My Other ideas of creating Settings (CustomControl or Programtically) didnt work because
-		DataBinding the ButtonContext is hard for some reason. Works which the checkbox tho, which is kinda weird
-	- BetaMode is hardcoded in Globals.cs
-	- Importing ZIP currently overwrites all files (including version.txt) apart from "UpgradeFiles" Folder
-	- Installation Path gets written to Registry on every Launch to make sure its always up to date.
-
 Main To do:
 	- Things changed since last official release (not last commit)
 		- BugFixes, BugFixes, BugFixes,
@@ -74,28 +68,18 @@ Main To do:
 		- ReDesigned SaveFileHandler
 		- ReDesigned Settings
 		- Added Uninstalling Capabilities
-		- Auto Start XYZ Progrm
+		- Auto Start XYZ Program on Game Launch
 
-	-REMEMBER:
-		-> Release with admin mode manifest thingy...		
-		-> This requires admin the "proper" way of telling windows. Should fix zip file issues
-
-	- TO TEST:
-		Loading spinning button fix
-		Installer + Uninstaller on fresh system.
-
-	- TO DO:
-		-> Fix Settings GUI (make it not look like shit)
-		-> Make Uninstaller actually call our uninstall Program...for some reason this does not happen...
-
-		-> Implement all Other features
-			=> JumpscriptStuff
-			=> See Core Affinity Fix...
+	- Could Always Use some Re-Writing, Re-Facturing, and Documenting...
 		
-		-> Tell Karsten about Birthday Present Thingy and show him this for work
+	- Tell Karsten about Birthday Present Thingy and show him this for work
 
 	// PUBLIC RELEASE 1.0
 		
+		-> Make Uninstaller actually call our uninstall Program...for some reason this does not happen...
+		-> Implement all Other features
+			=> JumpscriptStuff
+			=> Core Affinity Fix...
 		-> Implement note thingy from reloes suggestion (https://discordapp.com/channels/758296338222940211/758296338806341684/762023004183461888)
 		-> Save File Handler
 			-ReWrite of SaveFileHandler class with enum for File or Folder
@@ -115,9 +99,6 @@ Main To do:
 				Maybe we should actually check parent folders and child folders when User is selecting a Path for ZIP File
 				>> The thing is. This shouldnt be needed since we delete folders on moving ZIP files and stuff
 		-> Regedit Cleanup of everything not in default settings
-		-> Settings dont update content
-			=> Currently it calls the Refresh Method after each click...which works but is ugly
-			=> Get data binding to work after everything else is Gucci 
 
     - Low Prio:
 		Add Audio Effects
@@ -210,7 +191,6 @@ namespace Project_127
 			// Setting this for use in other classes later
 			MainWindow.MW = this;
 
-
 			// Admin Relauncher
 			AdminRelauncher();
 
@@ -248,6 +228,7 @@ namespace Project_127
 			//	new Popup(Popup.PopupWindowTypes.PopupOkError, "You are not allowed to run this Beta.").ShowDialog();
 			//	Environment.Exit(3);
 			//}
+
 
 			// Deleting all Installer and ZIP Files from own Project Installation Path
 			DeleteOldFiles();
@@ -370,7 +351,7 @@ namespace Project_127
 					HelperClasses.ProcessHandler.StartProcess(Assembly.GetEntryAssembly().CodeBase, Environment.CurrentDirectory, string.Join(" ", Globals.CommandLineArgs.ToString()), true, true, false);
 					Application.Current.Shutdown();
 				}
-				catch (Exception e)
+				catch (Exception)
 				{
 					Globals.DebugPopup("This program must be run as an administrator!");
 				}
@@ -1151,23 +1132,6 @@ namespace Project_127
 			UpdateGUIDispatcherTimer();
 		}
 
-		/// <summary>
-		/// Method which gets called when the "Import ZIP" Button is clicked
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
-		private void btn_ImportZip_Click(object sender, RoutedEventArgs e)
-		{
-			string ZipFileLocation = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.File, "Import ZIP File", Globals.ProjectInstallationPath, pFilter: "ZIP Files|*.zip*");
-			if (HelperClasses.FileHandling.doesFileExist(ZipFileLocation))
-			{
-				LauncherLogic.ImportZip(ZipFileLocation);
-			}
-			else
-			{
-				new Popup(Popup.PopupWindowTypes.PopupOk, "No ZIP File selected").ShowDialog();
-			}
-		}
 
 		/// <summary>
 		/// Method which gets called when the SaveFileHandler Button is clicked

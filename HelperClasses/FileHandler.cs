@@ -68,7 +68,6 @@ namespace Project_127.HelperClasses
 		}
 
 
-		// CTRLF TODO TO DO FIX, Bottom overload could be shit....
 
 
 		/// <summary>
@@ -330,6 +329,13 @@ namespace Project_127.HelperClasses
 		/// <returns></returns>
 		public static string CreateDirectoryMd5(string srcPath)
 		{
+			if (!doesPathExist(srcPath))
+			{
+				Logger.Log("ZIP Extraction Path is not a valid Filepath...wut");
+				Globals.DebugPopup("Yeah shit broke...You gotta uninstall\nvia Uninstaller from Github, bro...");
+				Environment.Exit(5);
+			}
+
 			var myFiles = Directory.GetFiles(srcPath, "*", SearchOption.AllDirectories).OrderBy(p => p).ToArray();
 
 			using (var md5 = MD5.Create())
@@ -352,319 +358,320 @@ namespace Project_127.HelperClasses
 				return BitConverter.ToString(md5.Hash).Replace("-", "").ToLower();
 			}
 		}
+	
 
 
-		/// <summary>
-		/// Gets String from URL
-		/// </summary>
-		/// <param name="pURL"></param>
-		/// <returns></returns>
-		public static string GetStringFromURL(string pURL)
+	/// <summary>
+	/// Gets String from URL
+	/// </summary>
+	/// <param name="pURL"></param>
+	/// <returns></returns>
+	public static string GetStringFromURL(string pURL)
+	{
+		string rtrn = "";
+
+		try
 		{
-			string rtrn = "";
+			rtrn = new System.Net.Http.HttpClient().GetStringAsync(pURL).GetAwaiter().GetResult();
+		}
+		catch (Exception e)
+		{
+			new Popup(Popup.PopupWindowTypes.PopupOkError, "GetStringFromURL failed. Probably Network related. URL = '" + pURL + "'.\nI suggest you restart the Program and contact me if it happens again.\n\nErrorMessage:\n" + e.ToString()).ShowDialog();
+			HelperClasses.Logger.Log("GetStringFromURL failed. Probably Network related. URL = '" + pURL + "'", true, 0);
+		}
 
-			try
+		return rtrn;
+	}
+
+
+
+	/// <summary>
+	/// Makes "C:\Some\Path(\)" and "Somefile.txt" into "C:\Some\Path\Somefile.txt". Doesnt check for errors.
+	/// </summary>
+	/// <param name="pPath"></param>
+	/// <param name="pFile"></param>
+	/// <returns></returns>
+	public static string PathCombine(string pPath, string pFile)
+	{
+		return pPath.TrimEnd('\\') + @"\" + pFile;
+	}
+
+	/// <summary>
+	/// Makes "C:\Some\Path\Somefile.txt" into "C:\Some\Path" and "Somefile.txt". The last "\" disappears. Doesnt check for errors.
+	/// </summary>
+	/// <param name="pFilePath"></param>
+	/// <returns></returns>
+	public static string[] PathSplitUp(string pFilePath)
+	{
+		string[] rtrn = new string[2];
+		rtrn[0] = pFilePath.Substring(0, pFilePath.LastIndexOf('\\'));
+		rtrn[1] = pFilePath.Substring(pFilePath.LastIndexOf('\\') + 1);
+		return rtrn;
+	}
+
+	/// <summary>
+	/// Gets the Size of one File in Bytes as Long
+	/// </summary>
+	/// <param name="pFilePath"></param>
+	/// <returns></returns>
+	public static long GetSizeOfFile(string pFilePath)
+	{
+		long mySize = 0;
+		if (doesFileExist(pFilePath))
+		{
+			FileInfo myFileInfo = new FileInfo(pFilePath);
+			mySize = myFileInfo.Length;
+		}
+		return mySize;
+	}
+
+	/// <summary>
+	/// read File
+	/// </summary>
+	/// <param name="pPath"></param>
+	/// <param name="pFile"></param>
+	/// <returns></returns>
+	public static List<string> ReadFile(string pPath, string pFile)
+	{
+		return ReadFile(PathCombine(pPath, pFile));
+	}
+
+	/// <summary>
+	/// readFile
+	/// </summary>
+	/// <param name="pFilePath"></param>
+	/// <returns></returns>
+	public static List<string> ReadFile(string pFilePath)
+	{
+		List<string> rtrnList = new List<string>();
+		StreamReader sr;
+		string currentLine;
+		bool doesLineExist = true;
+		if (doesFileExist(pFilePath))
+		{
+			sr = new StreamReader(pFilePath);
+			while (doesLineExist)
 			{
-				rtrn = new System.Net.Http.HttpClient().GetStringAsync(pURL).GetAwaiter().GetResult();
+				doesLineExist = false;
+				currentLine = sr.ReadLine();
+				if (currentLine != null && currentLine != "")
+				{
+					rtrnList.Add(currentLine);
+					doesLineExist = true;
+				}
 			}
-			catch (Exception e)
-			{
-				new Popup(Popup.PopupWindowTypes.PopupOkError, "GetStringFromURL failed. Probably Network related. URL = '" + pURL + "'.\nI suggest you restart the Program and contact me if it happens again.\n\nErrorMessage:\n" + e.ToString()).ShowDialog();
-				HelperClasses.Logger.Log("GetStringFromURL failed. Probably Network related. URL = '" + pURL + "'", true, 0);
-			}
-
-			return rtrn;
+			sr.Close();
 		}
+		return rtrnList;
+	}
 
+	/// <summary>
+	/// deleteFile
+	/// </summary>
+	/// <param name="pPath"></param>
+	/// <param name="pFile"></param>
+	public static void deleteFile(string pPath, string pFile)
+	{
+		deleteFile(PathCombine(pPath, pFile));
+	}
 
-
-		/// <summary>
-		/// Makes "C:\Some\Path(\)" and "Somefile.txt" into "C:\Some\Path\Somefile.txt". Doesnt check for errors.
-		/// </summary>
-		/// <param name="pPath"></param>
-		/// <param name="pFile"></param>
-		/// <returns></returns>
-		public static string PathCombine(string pPath, string pFile)
+	/// <summary>
+	/// deleteFile
+	/// </summary>
+	/// <param name="pFilePath"></param>
+	public static void deleteFile(string pFilePath)
+	{
+		try
 		{
-			return pPath.TrimEnd('\\') + @"\" + pFile;
-		}
 
-		/// <summary>
-		/// Makes "C:\Some\Path\Somefile.txt" into "C:\Some\Path" and "Somefile.txt". The last "\" disappears. Doesnt check for errors.
-		/// </summary>
-		/// <param name="pFilePath"></param>
-		/// <returns></returns>
-		public static string[] PathSplitUp(string pFilePath)
-		{
-			string[] rtrn = new string[2];
-			rtrn[0] = pFilePath.Substring(0, pFilePath.LastIndexOf('\\'));
-			rtrn[1] = pFilePath.Substring(pFilePath.LastIndexOf('\\') + 1);
-			return rtrn;
-		}
-
-		/// <summary>
-		/// Gets the Size of one File in Bytes as Long
-		/// </summary>
-		/// <param name="pFilePath"></param>
-		/// <returns></returns>
-		public static long GetSizeOfFile(string pFilePath)
-		{
-			long mySize = 0;
 			if (doesFileExist(pFilePath))
 			{
-				FileInfo myFileInfo = new FileInfo(pFilePath);
-				mySize = myFileInfo.Length;
-			}
-			return mySize;
-		}
+				File.Delete(pFilePath);
 
-		/// <summary>
-		/// read File
-		/// </summary>
-		/// <param name="pPath"></param>
-		/// <param name="pFile"></param>
-		/// <returns></returns>
-		public static List<string> ReadFile(string pPath, string pFile)
+			}
+		}
+		catch (Exception e)
 		{
-			return ReadFile(PathCombine(pPath, pFile));
+			new Popup(Popup.PopupWindowTypes.PopupOkError, "Deleting File failed ('" + pFilePath + "').\nI suggest you restart the Program and contact me if it happens again.\n\nErrorMessage:\n" + e.ToString()).ShowDialog();
+			HelperClasses.Logger.Log("Deleting File failed ('" + pFilePath + "').", true, 0);
 		}
+	}
 
-		/// <summary>
-		/// readFile
-		/// </summary>
-		/// <param name="pFilePath"></param>
-		/// <returns></returns>
-		public static List<string> ReadFile(string pFilePath)
+
+	/// <summary>
+	/// Copy File A to file B. Does not overwrite
+	/// </summary>
+	/// <param name="pSource"></param>
+	/// <param name="pDestination"></param>
+	public static void copyFile(string pSource, string pDestination)
+	{
+		if (!File.Exists(pSource))
 		{
-			List<string> rtrnList = new List<string>();
-			StreamReader sr;
-			string currentLine;
-			bool doesLineExist = true;
-			if (doesFileExist(pFilePath))
-			{
-				sr = new StreamReader(pFilePath);
-				while (doesLineExist)
-				{
-					doesLineExist = false;
-					currentLine = sr.ReadLine();
-					if (currentLine != null && currentLine != "")
-					{
-						rtrnList.Add(currentLine);
-						doesLineExist = true;
-					}
-				}
-				sr.Close();
-			}
-			return rtrnList;
+			HelperClasses.Logger.Log("Copying File ['" + pSource + "' to '" + pDestination + "'] failed since SourceFile ('" + pSource + "') does NOT exist.", true, 0);
+			return;
 		}
-
-		/// <summary>
-		/// deleteFile
-		/// </summary>
-		/// <param name="pPath"></param>
-		/// <param name="pFile"></param>
-		public static void deleteFile(string pPath, string pFile)
+		if (File.Exists(pDestination))
 		{
-			deleteFile(PathCombine(pPath, pFile));
+			HelperClasses.Logger.Log("Copying File ['" + pSource + "' to '" + pDestination + "'] failed since DestinationFile ('" + pDestination + "') DOES exist.", true, 0);
+			return;
 		}
-
-		/// <summary>
-		/// deleteFile
-		/// </summary>
-		/// <param name="pFilePath"></param>
-		public static void deleteFile(string pFilePath)
+		try
 		{
-			try
-			{
-
-				if (doesFileExist(pFilePath))
-				{
-					File.Delete(pFilePath);
-
-				}
-			}
-			catch (Exception e)
-			{
-				new Popup(Popup.PopupWindowTypes.PopupOkError, "Deleting File failed ('" + pFilePath + "').\nI suggest you restart the Program and contact me if it happens again.\n\nErrorMessage:\n" + e.ToString()).ShowDialog();
-				HelperClasses.Logger.Log("Deleting File failed ('" + pFilePath + "').", true, 0);
-			}
+			File.Copy(pSource, pDestination);
 		}
-
-
-		/// <summary>
-		/// Copy File A to file B. Does not overwrite
-		/// </summary>
-		/// <param name="pSource"></param>
-		/// <param name="pDestination"></param>
-		public static void copyFile(string pSource, string pDestination)
+		catch (Exception e)
 		{
-			if (!File.Exists(pSource))
-			{
-				HelperClasses.Logger.Log("Copying File ['" + pSource + "' to '" + pDestination + "'] failed since SourceFile ('" + pSource + "') does NOT exist.", true, 0);
-				return;
-			}
-			if (File.Exists(pDestination))
-			{
-				HelperClasses.Logger.Log("Copying File ['" + pSource + "' to '" + pDestination + "'] failed since DestinationFile ('" + pDestination + "') DOES exist.", true, 0);
-				return;
-			}
-			try
-			{
-				File.Copy(pSource, pDestination);
-			}
-			catch (Exception e)
-			{
-				HelperClasses.Logger.Log("Copying File ['" + pSource + "' to '" + pDestination + "'] failed since trycatch failed." + e.Message.ToString(), true, 0);
-			}
+			HelperClasses.Logger.Log("Copying File ['" + pSource + "' to '" + pDestination + "'] failed since trycatch failed." + e.Message.ToString(), true, 0);
 		}
+	}
 
 
-		/// <summary>
-		/// Creates File (and Folder(s). Overrides existing file.
-		/// </summary>
-		/// <param name="pPath"></param>
-		/// <param name="pFile"></param>
-		public static void createFile(string pPath, string pFile)
+	/// <summary>
+	/// Creates File (and Folder(s). Overrides existing file.
+	/// </summary>
+	/// <param name="pPath"></param>
+	/// <param name="pFile"></param>
+	public static void createFile(string pPath, string pFile)
+	{
+		if (!doesPathExist(pPath))
 		{
-			if (!doesPathExist(pPath))
-			{
-				createPath(pPath);
-			}
-			else if (doesFileExist(pPath, pFile))
-			{
-				deleteFile(pPath, pFile);
-			}
-
-			try
-			{
-				File.CreateText(PathCombine(pPath, pFile)).Close();
-			}
-			catch (Exception e)
-			{
-				new Popup(Popup.PopupWindowTypes.PopupOkError, "Create File failed ('" + PathCombine(pPath, pFile) + "').\nI suggest you restart the Program and contact me if it happens again.\n\nErrorMessage:\n" + e.ToString()).ShowDialog();
-				HelperClasses.Logger.Log("Create File failed ('" + PathCombine(pPath, pFile) + "').", true, 0);
-			}
+			createPath(pPath);
 		}
-
-		/// <summary>
-		/// Creates File (and Folder(s)). Overrides existing file.
-		/// </summary>
-		/// <param name="pFilePath"></param>
-		public static void createFile(string pFilePath)
+		else if (doesFileExist(pPath, pFile))
 		{
-			string[] paths = PathSplitUp(pFilePath);
-			createFile(paths[0], paths[1]);
+			deleteFile(pPath, pFile);
 		}
 
-		/// <summary>
-		/// Checks if a File exists.
-		/// </summary>
-		/// <param name="pFilePath"></param>
-		/// <returns></returns>
-		public static bool doesFileExist(string pFilePath)
+		try
 		{
-			return File.Exists(pFilePath);
+			File.CreateText(PathCombine(pPath, pFile)).Close();
 		}
-
-		/// <summary>
-		/// Checks if a File exists.
-		/// </summary>
-		/// <param name="pFilePath"></param>
-		/// <returns></returns>
-		public static bool doesFileExist(string pPath, string pFile)
+		catch (Exception e)
 		{
-			return doesFileExist(PathCombine(pPath, pFile));
+			new Popup(Popup.PopupWindowTypes.PopupOkError, "Create File failed ('" + PathCombine(pPath, pFile) + "').\nI suggest you restart the Program and contact me if it happens again.\n\nErrorMessage:\n" + e.ToString()).ShowDialog();
+			HelperClasses.Logger.Log("Create File failed ('" + PathCombine(pPath, pFile) + "').", true, 0);
 		}
+	}
 
-		/// <summary>
-		/// Checks if a path exists.
-		/// </summary>
-		/// <param name="pFolderPath"></param>
-		/// <returns></returns>
-		public static bool doesPathExist(string pFolderPath)
+	/// <summary>
+	/// Creates File (and Folder(s)). Overrides existing file.
+	/// </summary>
+	/// <param name="pFilePath"></param>
+	public static void createFile(string pFilePath)
+	{
+		string[] paths = PathSplitUp(pFilePath);
+		createFile(paths[0], paths[1]);
+	}
+
+	/// <summary>
+	/// Checks if a File exists.
+	/// </summary>
+	/// <param name="pFilePath"></param>
+	/// <returns></returns>
+	public static bool doesFileExist(string pFilePath)
+	{
+		return File.Exists(pFilePath);
+	}
+
+	/// <summary>
+	/// Checks if a File exists.
+	/// </summary>
+	/// <param name="pFilePath"></param>
+	/// <returns></returns>
+	public static bool doesFileExist(string pPath, string pFile)
+	{
+		return doesFileExist(PathCombine(pPath, pFile));
+	}
+
+	/// <summary>
+	/// Checks if a path exists.
+	/// </summary>
+	/// <param name="pFolderPath"></param>
+	/// <returns></returns>
+	public static bool doesPathExist(string pFolderPath)
+	{
+		return Directory.Exists(pFolderPath);
+	}
+
+
+	public static void DeleteFolder(string pPath)
+	{
+		try
 		{
-			return Directory.Exists(pFolderPath);
-		}
-
-
-		public static void DeleteFolder(string pPath)
-		{
-			try
+			if (doesPathExist(pPath))
 			{
-				if (doesPathExist(pPath))
-				{
-					Directory.Delete(pPath, true);
-				}
-			}
-			catch (Exception e)
-			{
-				HelperClasses.Logger.Log("Failed to delete Folder for some reason. " + e.ToString());
-			}
-		}
-
-		/// <summary>
-		/// Creates a Path. Works for SubSubPaths.
-		/// </summary>
-		/// <param name="pFolderPath"></param>
-		public static void createPath(string pFolderPath)
-		{
-			try
-			{
-				if (!doesPathExist(pFolderPath))
-				{
-					Directory.CreateDirectory(pFolderPath);
-				}
-			}
-			catch (Exception e)
-			{
-				HelperClasses.Logger.Log("The code looked good to me. #SadFace. Crashing while creating Path ('" + pFolderPath + "'): " + e.ToString());
+				Directory.Delete(pPath, true);
 			}
 		}
-
-
-		public static void CreateAllZIPPaths(string pZIPFileExtractLocation)
+		catch (Exception e)
 		{
-			// TODO, CTRLF FIX THIS MESS. OTHERWISE ZIP EXTRACTING SHIT WILL BREAK BECAUSE ITS A PIECE OF SHIT
-			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files");
-			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\DowngradeFiles");
-			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\DowngradeFiles\update");
-			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\UpgradeFiles");
-			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\UpgradeFiles\update");
-			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\SupportFiles\");
-			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\SupportFiles\Installer");
-			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\SupportFiles\SaveFiles");
+			HelperClasses.Logger.Log("Failed to delete Folder for some reason. " + e.ToString());
 		}
+	}
 
-		/// <summary>
-		/// Deletes a File
-		/// </summary>
-		/// <param name="pFilePath"></param>
-		public static void deletePath(string pFilePath)
+	/// <summary>
+	/// Creates a Path. Works for SubSubPaths.
+	/// </summary>
+	/// <param name="pFolderPath"></param>
+	public static void createPath(string pFolderPath)
+	{
+		try
 		{
-			if (doesPathExist(pFilePath))
+			if (!doesPathExist(pFolderPath))
 			{
-				Directory.Delete(pFilePath, true);
+				Directory.CreateDirectory(pFolderPath);
 			}
 		}
-
-		// ALL SORTS OF RANDOM METHODS
-
-		/// <summary>
-		/// String.TrimEnd() now works with a string as well with chars
-		/// </summary>
-		/// <param name="input"></param>
-		/// <param name="suffixToRemove"></param>
-		/// <param name="comparisonType"></param>
-		/// <returns></returns>
-		public static string TrimEnd(this string input, string suffixToRemove, StringComparison comparisonType = StringComparison.CurrentCulture)
+		catch (Exception e)
 		{
-			if (suffixToRemove != null && input.EndsWith(suffixToRemove, comparisonType))
-			{
-				return input.Substring(0, input.Length - suffixToRemove.Length);
-			}
+			HelperClasses.Logger.Log("The code looked good to me. #SadFace. Crashing while creating Path ('" + pFolderPath + "'): " + e.ToString());
+		}
+	}
 
-			return input;
+
+	public static void CreateAllZIPPaths(string pZIPFileExtractLocation)
+	{
+		// TODO, CTRLF FIX THIS MESS. OTHERWISE ZIP EXTRACTING SHIT WILL BREAK BECAUSE ITS A PIECE OF SHIT
+		HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files");
+		HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\DowngradeFiles");
+		HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\DowngradeFiles\update");
+		HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\UpgradeFiles");
+		HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\UpgradeFiles\update");
+		HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\SupportFiles\");
+		HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\SupportFiles\Installer");
+		HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\SupportFiles\SaveFiles");
+	}
+
+	/// <summary>
+	/// Deletes a File
+	/// </summary>
+	/// <param name="pFilePath"></param>
+	public static void deletePath(string pFilePath)
+	{
+		if (doesPathExist(pFilePath))
+		{
+			Directory.Delete(pFilePath, true);
+		}
+	}
+
+	// ALL SORTS OF RANDOM METHODS
+
+	/// <summary>
+	/// String.TrimEnd() now works with a string as well with chars
+	/// </summary>
+	/// <param name="input"></param>
+	/// <param name="suffixToRemove"></param>
+	/// <param name="comparisonType"></param>
+	/// <returns></returns>
+	public static string TrimEnd(this string input, string suffixToRemove, StringComparison comparisonType = StringComparison.CurrentCulture)
+	{
+		if (suffixToRemove != null && input.EndsWith(suffixToRemove, comparisonType))
+		{
+			return input.Substring(0, input.Length - suffixToRemove.Length);
 		}
 
-	} // End of Class
+		return input;
+	}
+
+} // End of Class
 } // End of NameSpace

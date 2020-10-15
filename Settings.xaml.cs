@@ -38,12 +38,10 @@ namespace Project_127
 
 			// Needed for GUI Shit
 			combox_Set_Retail.ItemsSource = Enum.GetValues(typeof(Retailers)).Cast<Retailers>();
-			combox_Set_Retail.SelectedItem = Settings.Retailer;
 
 			combox_Set_LanguageSelected.ItemsSource = Enum.GetValues(typeof(Languages)).Cast<Languages>();
-			combox_Set_LanguageSelected.SelectedItem = Settings.LanguageSelected;
 
-			tb_Set_InGameName.Text = Settings.InGameName;
+			RefreshGUI();
 
 			this.DataContext = this;
 		}
@@ -279,32 +277,6 @@ namespace Project_127
 		}
 
 
-		// There are only Button Clicks and GUI Functions here. Some of the Functionality is in SettingsPartial.cs
-
-
-
-		/// <summary>
-		/// Button Click to change the Path of GTA V Installation Path
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
-		private void btn_Set_GTAVInstallationPath_Click(object sender, RoutedEventArgs e)
-		{
-			SetGTAVPathManually();
-			RefreshGUI();
-		}
-
-
-		/// <summary>
-		/// RightClick on the GTA V Path Button
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
-		private void btn_Set_GTAVInstallationPath_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
-		{
-			HelperClasses.ProcessHandler.StartProcess(@"C:\Windows\explorer.exe", pCommandLineArguments: Settings.GTAVInstallationPath);
-		}
-
 
 		/// <summary>
 		/// Event that gets triggered when the ComboBox of Retailers changed.
@@ -328,82 +300,186 @@ namespace Project_127
 		}
 
 
+
+
 		/// <summary>
-		/// Button Click to change the Path of LiveSplit Executable
+		/// Event for LeftClick on any Button which handles a Path
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
-		private void btn_Set_PathLiveSplit_Click(object sender, RoutedEventArgs e)
+		private void btn_Path_Click(object sender, RoutedEventArgs e)
 		{
-			string StartUpPath = Settings.PathLiveSplit;
-			if (String.IsNullOrWhiteSpace(StartUpPath))
-			{
-				StartUpPath = @"C:\";
-			}
-			else
-			{
-				StartUpPath = HelperClasses.FileHandling.PathSplitUp(StartUpPath.TrimEnd('\\'))[0];
-			}
-
-			string UserChoice = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.File, "Pick your LiveSplit Executable", StartUpPath);
-
-			if (!String.IsNullOrWhiteSpace(UserChoice))
-			{
-				Settings.PathLiveSplit = UserChoice;
-				RefreshGUI();
-			}
+			btn_Path_Magic((Button)sender);
 		}
 
+
 		/// <summary>
-		/// Button Click to change the Path of StreamProgram Executable
+		/// Event for RightClick on any Button which handles a Path
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
-		private void btn_Set_PathStreamProgram_Click(object sender, RoutedEventArgs e)
+		private void btn_Path_RightClick(object sender, MouseButtonEventArgs e)
 		{
-			string StartUpPath = Settings.PathStreamProgram;
-			if (String.IsNullOrWhiteSpace(StartUpPath))
-			{
-				StartUpPath = @"C:\";
-			}
-			else
-			{
-				StartUpPath = HelperClasses.FileHandling.PathSplitUp(StartUpPath.TrimEnd('\\'))[0];
-			}
-
-			string UserChoice = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.File, "Pick your Stream Program Executable", StartUpPath);
-
-			if (!String.IsNullOrWhiteSpace(UserChoice))
-			{
-				Settings.PathStreamProgram = UserChoice;
-				RefreshGUI();
-			}
+			btn_Path_Magic((Button)sender, true);
 		}
 
+
 		/// <summary>
-		/// Button Click to change the Path of FPS Limiter Executable
+		/// Method which handles all LeftClick and RightClick for all Path Related Buttons
 		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
-		private void btn_Set_PathFPSLimiter_Click(object sender, RoutedEventArgs e)
+		/// <param name="myBtn"></param>
+		/// <param name="IsRightClick"></param>
+		private void btn_Path_Magic(Button myBtn, bool IsRightClick = false)
 		{
-			string StartUpPath = Settings.PathFPSLimiter;
-			if (String.IsNullOrWhiteSpace(StartUpPath))
+			switch (myBtn.Name)
 			{
-				StartUpPath = @"C:\";
-			}
-			else
-			{
-				StartUpPath = HelperClasses.FileHandling.PathSplitUp(StartUpPath.TrimEnd('\\'))[0];
-			}
+				case "btn_Set_GTAVInstallationPath":
+					if (IsRightClick)
+					{
+						HelperClasses.ProcessHandler.StartProcess(@"C:\Windows\explorer.exe", pCommandLineArguments: HelperClasses.FileHandling.PathSplitUp(Settings.GTAVInstallationPath.TrimEnd('\\'))[0]);
+					}
+					else
+					{
+						SetGTAVPathManually();
+					}
+					break;
+				case "btn_Set_ZIPExtractionPath":
+					if (IsRightClick)
+					{
+						HelperClasses.ProcessHandler.StartProcess(@"C:\Windows\explorer.exe", pCommandLineArguments: HelperClasses.FileHandling.PathSplitUp(Settings.ZIPExtractionPath.TrimEnd('\\'))[0]);
+					}
+					else
+					{
+						// Grabbing the new Path from FolderDialogThingy
+						string StartUpPath = Settings.ZIPExtractionPath;
+						if (String.IsNullOrWhiteSpace(StartUpPath))
+						{
+							StartUpPath = @"C:\";
+						}
+						else
+						{
+							StartUpPath = HelperClasses.FileHandling.PathSplitUp(StartUpPath.TrimEnd('\\'))[0];
+						}
+						string _ZIPExtractionPath = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.Folder, "Pick the Folder where this Program will store its Data.", StartUpPath);
+						HelperClasses.Logger.Log("Changing ZIPExtractionPath.");
+						HelperClasses.Logger.Log("Old ZIPExtractionPath: '" + Settings.ZIPExtractionPath + "'");
+						HelperClasses.Logger.Log("Potential New ZIPExtractionPath: '" + _ZIPExtractionPath + "'");
 
-			string UserChoice = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.File, "Pick your FPS Limiter Executable", StartUpPath);
+						// If its a valid Path (no "") and if its a new Path
+						if (ChangeZIPExtractionPath(_ZIPExtractionPath))
+						{
+							HelperClasses.Logger.Log("Changing ZIP Path worked");
+						}
+						else
+						{
+							HelperClasses.Logger.Log("Changing ZIP Path did not work. Probably non existing Path or same Path as before");
+							new Popup(Popup.PopupWindowTypes.PopupOk, "Changing ZIP Path did not work. Probably non existing Path or same Path as before");
+						}
+					}
+					break;
+				case "btn_Set_PathLiveSplit":
+					if (IsRightClick)
+					{
+						HelperClasses.ProcessHandler.StartProcess(@"C:\Windows\explorer.exe", pCommandLineArguments: HelperClasses.FileHandling.PathSplitUp(Settings.PathLiveSplit.TrimEnd('\\'))[0]);
+					}
+					else
+					{
+						string StartUpPath = Settings.PathLiveSplit;
+						if (String.IsNullOrWhiteSpace(StartUpPath))
+						{
+							StartUpPath = @"C:\";
+						}
+						else
+						{
+							StartUpPath = HelperClasses.FileHandling.PathSplitUp(StartUpPath.TrimEnd('\\'))[0];
+						}
 
-			if (!String.IsNullOrWhiteSpace(UserChoice))
-			{
-				Settings.PathFPSLimiter = UserChoice;
-				RefreshGUI();
+						string UserChoice = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.File, "Pick your LiveSplit Executable", StartUpPath);
+
+						if (!String.IsNullOrWhiteSpace(UserChoice))
+						{
+							Settings.PathLiveSplit = UserChoice;
+						}
+					}
+					break;
+				case "btn_Set_PathStreamProgram":
+					if (IsRightClick)
+					{
+						HelperClasses.ProcessHandler.StartProcess(@"C:\Windows\explorer.exe", pCommandLineArguments: HelperClasses.FileHandling.PathSplitUp(Settings.PathStreamProgram.TrimEnd('\\'))[0]);
+					}
+					else
+					{
+						string StartUpPath = Settings.PathStreamProgram;
+						if (String.IsNullOrWhiteSpace(StartUpPath))
+						{
+							StartUpPath = @"C:\";
+						}
+						else
+						{
+							StartUpPath = HelperClasses.FileHandling.PathSplitUp(StartUpPath.TrimEnd('\\'))[0];
+						}
+
+						string UserChoice = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.File, "Pick your Stream Program Executable", StartUpPath);
+
+						if (!String.IsNullOrWhiteSpace(UserChoice))
+						{
+							Settings.PathStreamProgram = UserChoice;
+							RefreshGUI();
+						}
+					}
+					break;
+				case "btn_Set_PathNohboard":
+					if (IsRightClick)
+					{
+						HelperClasses.ProcessHandler.StartProcess(@"C:\Windows\explorer.exe", pCommandLineArguments: HelperClasses.FileHandling.PathSplitUp(Settings.PathNohboard.TrimEnd('\\'))[0]);
+					}
+					else
+					{
+						string StartUpPath = Settings.PathNohboard;
+						if (String.IsNullOrWhiteSpace(StartUpPath))
+						{
+							StartUpPath = @"C:\";
+						}
+						else
+						{
+							StartUpPath = HelperClasses.FileHandling.PathSplitUp(StartUpPath.TrimEnd('\\'))[0];
+						}
+
+						string UserChoice = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.File, "Pick your Nohboard Executable", StartUpPath);
+
+						if (!String.IsNullOrWhiteSpace(UserChoice))
+						{
+							Settings.PathNohboard = UserChoice;
+						}
+					}
+					break;
+				case "btn_Set_PathFPSLimiter":
+					if (IsRightClick)
+					{
+						HelperClasses.ProcessHandler.StartProcess(@"C:\Windows\explorer.exe", pCommandLineArguments: HelperClasses.FileHandling.PathSplitUp(Settings.PathFPSLimiter.TrimEnd('\\'))[0]);
+					}
+					else
+					{
+						string StartUpPath = Settings.PathFPSLimiter;
+						if (String.IsNullOrWhiteSpace(StartUpPath))
+						{
+							StartUpPath = @"C:\";
+						}
+						else
+						{
+							StartUpPath = HelperClasses.FileHandling.PathSplitUp(StartUpPath.TrimEnd('\\'))[0];
+						}
+
+						string UserChoice = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.File, "Pick your FPS Limiter Executable", StartUpPath);
+
+						if (!String.IsNullOrWhiteSpace(UserChoice))
+						{
+							Settings.PathFPSLimiter = UserChoice;
+						}
+					}
+					break;
 			}
+			RefreshGUI();
 		}
 
 		/// <summary>
@@ -426,31 +502,27 @@ namespace Project_127
 
 		}
 
+
 		/// <summary>
-		/// Button Click to change the Path of Nohboard executable
+		/// Method which gets called when the "Import ZIP" Button is clicked
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
-		private void btn_Set_PathNohboard_Click(object sender, RoutedEventArgs e)
+		private void btn_Import_Zip_Click(object sender, RoutedEventArgs e)
 		{
-			string StartUpPath = Settings.PathNohboard;
-			if (String.IsNullOrWhiteSpace(StartUpPath))
+			string ZipFileLocation = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.File, "Import ZIP File", Globals.ProjectInstallationPath, pFilter: "ZIP Files|*.zip*");
+			if (HelperClasses.FileHandling.doesFileExist(ZipFileLocation))
 			{
-				StartUpPath = @"C:\";
+				LauncherLogic.ImportZip(ZipFileLocation);
 			}
 			else
 			{
-				StartUpPath = HelperClasses.FileHandling.PathSplitUp(StartUpPath.TrimEnd('\\'))[0];
+				new Popup(Popup.PopupWindowTypes.PopupOk, "No ZIP File selected").ShowDialog();
 			}
-
-			string UserChoice = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.File, "Pick your Nohboard Executable", StartUpPath);
-
-			if (!String.IsNullOrWhiteSpace(UserChoice))
-			{
-				Settings.PathNohboard = UserChoice;
-				RefreshGUI();
-			}
+			btn_Import_Zip.Content = "Click Me! (Current Version: " + Globals.ZipVersion +")";
 		}
+
+
 
 
 		/// <summary>
@@ -472,15 +544,6 @@ namespace Project_127
 		}
 
 
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
-		private void btn_Set_ZIPExtractionPath_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
-		{
-			HelperClasses.ProcessHandler.StartProcess(@"C:\Windows\explorer.exe", pCommandLineArguments: Settings.ZIPExtractionPath);
-		}
 
 
 
@@ -498,6 +561,7 @@ namespace Project_127
 			Settings.InGameName = txt;
 			tb_Set_InGameName.Text = txt;
 		}
+
 
 		/// <summary>
 		/// Called when user wants to import settings
@@ -551,30 +615,193 @@ namespace Project_127
 		/// <summary>
 		/// Refresh GUI Method...
 		/// </summary>
-		private void RefreshGUI()
+		private void RefreshGUI(bool FromRegedit = false)
 		{
-			btn_Set_GTAVInstallationPath.Content = Settings.GTAVInstallationPath;
-			btn_Set_ZIPExtractionPath.Content = Settings.ZIPExtractionPath;
-			cb_Set_EnableLogging.IsChecked = Settings.EnableLogging;
-			cb_Set_CopyFilesInsteadOfHardlinking.IsChecked = Settings.EnableCopyFilesInsteadOfHardlinking;
-			cb_Set_EnablePreOrderBonus.IsChecked = Settings.EnablePreOrderBonus;
+			if (FromRegedit)
+			{
+				Settings.LoadSettings();
+			}
+			btn_Set_GTAVInstallationPath.Content = "GTA V Installation Path: " + Settings.GTAVInstallationPath;
+			btn_Set_ZIPExtractionPath.Content = "ZIP Extraction Path: " + Settings.ZIPExtractionPath;
+			btn_Set_PathFPSLimiter.Content = "FPS Limiter Path: " + Settings.PathFPSLimiter;
+			btn_Set_PathLiveSplit.Content = "LiveSplit Path: " + Settings.PathLiveSplit;
+			btn_Set_PathStreamProgram.Content = "Stream Program Path: " + Settings.PathStreamProgram;
+			btn_Set_PathNohboard.Content = "Nohboard Path: " + Settings.PathNohboard;
+
+			btn_Import_Zip.Content = "Import ZIP Manually (Current Version: " + Globals.ZipVersion + ")";
+
 			combox_Set_Retail.SelectedItem = Settings.Retailer;
 			combox_Set_LanguageSelected.SelectedItem = Settings.LanguageSelected;
+			
 			tb_Set_InGameName.Text = Settings.InGameName;
-			cb_Set_AutoSetHighPriority.IsChecked = Settings.EnableAutoSetHighPriority;
-			cb_Set_OnlyAutoStartProgramsWhenDowngraded.IsChecked = Settings.EnableOnlyAutoStartProgramsWhenDowngraded;
-			btn_Set_PathFPSLimiter.Content = Settings.PathFPSLimiter;
-			btn_Set_PathLiveSplit.Content = Settings.PathLiveSplit;
-			btn_Set_PathStreamProgram.Content = Settings.PathStreamProgram;
-			btn_Set_PathNohboard.Content = Settings.PathNohboard;
+
+			ButtonMouseOverMagic(btn_Refresh);
+
+			ButtonMouseOverMagic(btn_cb_Set_EnableLogging);
+			ButtonMouseOverMagic(btn_cb_Set_CopyFilesInsteadOfHardlinking);
+			ButtonMouseOverMagic(btn_cb_Set_EnablePreOrderBonus);
+			ButtonMouseOverMagic(btn_cb_Set_EnableAutoStartFPSLimiter);
+			ButtonMouseOverMagic(btn_cb_Set_EnableAutoStartLiveSplit);
+			ButtonMouseOverMagic(btn_cb_Set_EnableAutoStartNohboard);
+			ButtonMouseOverMagic(btn_cb_Set_EnableAutoStartStreamProgram);
+			ButtonMouseOverMagic(btn_cb_Set_AutoSetHighPriority);
+			ButtonMouseOverMagic(btn_cb_Set_OnlyAutoStartProgramsWhenDowngraded);
+
 			//btn_Set_JumpScriptKey1.Content = Settings.JumpScriptKey1;
 			//btn_Set_JumpScriptKey2.Content = Settings.JumpScriptKey2;
 			//cb_Set_EnableAutoStartJumpScript.IsChecked = Settings.EnableAutoStartJumpScript;
 			//cb_Set_EnableNohboardBurhac.IsChecked = Settings.EnableNohboardBurhac;
-			cb_Set_EnableAutoStartFPSLimiter.IsChecked = Settings.EnableAutoStartFPSLimiter;
-			cb_Set_EnableAutoStartLiveSplit.IsChecked = Settings.EnableAutoStartLiveSplit;
-			cb_Set_EnableAutoStartNohboard.IsChecked = Settings.EnableAutoStartNohboard;
-			cb_Set_EnableAutoStartStreamProgram.IsChecked = Settings.EnableAutoStartStreamProgram;
+		}
+
+
+		/// <summary>
+		/// MouseEnter event for all Buttons which use Images (Refresh and Checkboxes)
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void btn_MouseEnter(object sender, MouseEventArgs e)
+		{
+			Button myBtn = (Button)sender;
+			ButtonMouseOverMagic(myBtn);
+		}
+
+		/// <summary>
+		/// MouseLeave event for all Buttons which use Images (Refresh and Checkboxes)
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void btn_MouseLeave(object sender, MouseEventArgs e)
+		{
+			Button myBtn = (Button)sender;
+			ButtonMouseOverMagic(myBtn);
+		}
+
+		/// <summary>
+		/// Sets the Background for one specific CheckboxButton. Needs the second property to know if it should be checked or not
+		/// </summary>
+		/// <param name="myBtn"></param>
+		/// <param name="pChecked"></param>
+		private void SetCheckBoxBackground(Button myBtn, bool pChecked)
+		{
+			string BaseURL = @"Artwork/checkbox";
+			if (pChecked)
+			{
+				BaseURL += "_true";
+			}
+			else
+			{
+				BaseURL += "_false";
+			}
+			if (myBtn.IsMouseOver)
+			{
+				BaseURL += "_mo.png";
+			}
+			else
+			{
+				BaseURL += ".png";
+			}
+			MainWindow.MW.SetControlBackground(myBtn, BaseURL);
+		}
+
+		/// <summary>
+		/// Logic behind all MouseOver Stuff. Checkboxes and Refresh Button
+		/// </summary>
+		/// <param name="myBtn"></param>
+		private void ButtonMouseOverMagic(Button myBtn)
+		{
+			switch (myBtn.Name)
+			{
+				case "btn_Refresh":
+					if (myBtn.IsMouseOver)
+					{
+						MainWindow.MW.SetControlBackground(btn_Refresh, "Artwork/refresh_mo.png");
+					}
+					else
+					{
+						MainWindow.MW.SetControlBackground(btn_Refresh, "Artwork/refresh.png");
+					}
+					break;
+				case "btn_cb_Set_EnableLogging":
+					SetCheckBoxBackground(myBtn, Settings.EnableLogging);
+					break;
+				case "btn_cb_Set_CopyFilesInsteadOfHardlinking":
+					SetCheckBoxBackground(myBtn, Settings.EnableCopyFilesInsteadOfHardlinking);
+					break;
+				case "btn_cb_Set_EnablePreOrderBonus":
+					SetCheckBoxBackground(myBtn, Settings.EnablePreOrderBonus);
+					break;
+				case "btn_cb_Set_AutoSetHighPriority":
+					SetCheckBoxBackground(myBtn, Settings.EnableAutoSetHighPriority);
+					break;
+				case "btn_cb_Set_OnlyAutoStartProgramsWhenDowngraded":
+					SetCheckBoxBackground(myBtn, Settings.EnableOnlyAutoStartProgramsWhenDowngraded);
+					break;
+				case "btn_cb_Set_EnableAutoStartLiveSplit":
+					SetCheckBoxBackground(myBtn, Settings.EnableAutoStartLiveSplit);
+					break;
+				case "btn_cb_Set_EnableAutoStartFPSLimiter":
+					SetCheckBoxBackground(myBtn, Settings.EnableAutoStartFPSLimiter);
+					break;
+				case "btn_cb_Set_EnableAutoStartStreamProgram":
+					SetCheckBoxBackground(myBtn, Settings.EnableAutoStartStreamProgram);
+					break;
+				case "btn_cb_Set_EnableAutoStartNohboard":
+					SetCheckBoxBackground(myBtn, Settings.EnableAutoStartNohboard);
+					break;
+			}
+		}
+
+		/// <summary>
+		/// Click behind the Refresh Button
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void btn_Refresh_Click(object sender, RoutedEventArgs e)
+		{
+			RefreshGUI(true);
+		}
+
+
+		/// <summary>
+		/// Click on ANY checkbox
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void btn_cb_Click(object sender, RoutedEventArgs e)
+		{
+			Button myBtn = (Button)sender;
+
+			switch (myBtn.Name)
+			{
+				case "btn_cb_Set_EnableLogging":
+					Settings.EnableLogging = !Settings.EnableLogging;
+					break;
+				case "btn_cb_Set_CopyFilesInsteadOfHardlinking":
+					Settings.EnableCopyFilesInsteadOfHardlinking = !Settings.EnableCopyFilesInsteadOfHardlinking;
+					break;
+				case "btn_cb_Set_EnablePreOrderBonus":
+					Settings.EnablePreOrderBonus = !Settings.EnablePreOrderBonus;
+					break;
+				case "btn_cb_Set_AutoSetHighPriority":
+					Settings.EnableAutoSetHighPriority = !Settings.EnableAutoSetHighPriority;
+					break;
+				case "btn_cb_Set_OnlyAutoStartProgramsWhenDowngraded":
+					Settings.EnableOnlyAutoStartProgramsWhenDowngraded = !Settings.EnableOnlyAutoStartProgramsWhenDowngraded;
+					break;
+				case "btn_cb_Set_EnableAutoStartLiveSplit":
+					Settings.EnableAutoStartLiveSplit = !Settings.EnableAutoStartLiveSplit;
+					break;
+				case "btn_cb_Set_EnableAutoStartFPSLimiter":
+					Settings.EnableAutoStartFPSLimiter = !Settings.EnableAutoStartFPSLimiter;
+					break;
+				case "btn_cb_Set_EnableAutoStartStreamProgram":
+					Settings.EnableAutoStartStreamProgram = !Settings.EnableAutoStartStreamProgram;
+					break;
+				case "btn_cb_Set_EnableAutoStartNohboard":
+					Settings.EnableAutoStartNohboard = !Settings.EnableAutoStartNohboard;
+					break;
+			}
+			RefreshGUI();
 		}
 
 

@@ -17,9 +17,8 @@
     <Border BorderThickness="{x:Static local:Globals.MW_BorderThickness}" BorderBrush="{x:Static local:Globals.MW_BorderBrush}">
         <Grid x:Name="GridMain">
             <Grid x:Name="GridHamburgerOuter" HorizontalAlignment="Left" Width="275" Background="{x:Static local:Globals.MW_HamburgerMenuGridBackground}">
-                <Grid x:Name="GridHamburgerInner" Margin="15, 100, 15, 50">
+                <Grid x:Name="GridHamburgerInner" Margin="15, 120, 15, 60">
                     <Grid.RowDefinitions>
-                        <RowDefinition/>
                         <RowDefinition/>
                         <RowDefinition/>
                         <RowDefinition/>
@@ -30,14 +29,13 @@
                     <Button x:Name="btn_Upgrade" Grid.Row="0" Style="{StaticResource btn_hamburgeritem}" Content="Upgrade" Click="btn_Upgrade_Click"/>
                     <Button x:Name="btn_Repair" Grid.Row="1" Style="{StaticResource btn_hamburgeritem}" Content="Repair Installation" Click="btn_Repair_Click"/>
                     <Button x:Name="btn_Downgrade" Grid.Row="2" Style="{StaticResource btn_hamburgeritem}" Content="Downgrade" Click="btn_Downgrade_Click"/>
-                    <Button x:Name="btn_ImportZip" Grid.Row="3" Style="{StaticResource btn_hamburgeritem}" Content="Import ZIP" Click="btn_ImportZip_Click"/>
-                    <Button x:Name="btn_SaveFiles" Grid.Row="4" Style="{StaticResource btn_hamburgeritem}" BorderThickness="0" Content="Save File Manager" Click="btn_SaveFiles_Click" MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
-                    <Button x:Name="btn_Settings" Grid.Row="5" Style="{StaticResource btn_hamburgeritem}" BorderThickness="0" Content="Settings" Click="btn_Settings_Click" MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
-                    <Button x:Name="btn_ReadMe" Grid.Row="6" Style="{StaticResource btn_hamburgeritem}" BorderThickness="0" Content="ReadMe" Click="btn_ReadMe_Click" MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
+                    <Button x:Name="btn_SaveFiles" Grid.Row="3" Style="{StaticResource btn_hamburgeritem}" BorderThickness="0" Content="Save File Manager" Click="btn_SaveFiles_Click" MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
+                    <Button x:Name="btn_Settings" Grid.Row="4" Style="{StaticResource btn_hamburgeritem}" BorderThickness="0" Content="Settings" Click="btn_Settings_Click" MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
+                    <Button x:Name="btn_ReadMe" Grid.Row="5" Style="{StaticResource btn_hamburgeritem}" BorderThickness="0" Content="ReadMe" Click="btn_ReadMe_Click" MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
                 </Grid>
                 <!-- GridHamburgerInner -->
-                <Label x:Name="lbl_GTA" Style="{StaticResource lbl}" VerticalAlignment="Top" VerticalContentAlignment="Bottom" Margin="105,25,0,0" Width="160" HorizontalContentAlignment="Left" HorizontalAlignment="Left"/>
-                <Button x:Name="btn_Auth" Style="{StaticResource btn_SmallIcon}" Height="40" Width="40" MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave" MouseRightButtonDown="btn_Auth_MouseRightButtonDown" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="60,15,0,0" Click="btn_Auth_Click"/>
+                <Label x:Name="lbl_GTA" Style="{StaticResource lbl}" VerticalAlignment="Top" VerticalContentAlignment="Bottom" Margin="115,25,0,0" Width="160" HorizontalContentAlignment="Left" HorizontalAlignment="Left"/>
+                <Button x:Name="btn_Auth" Style="{StaticResource btn_SmallIcon}" Height="40" Width="40" MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave" MouseRightButtonDown="btn_Auth_MouseRightButtonDown" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="70,15,0,0" Click="btn_Auth_Click"/>
             </Grid>
             <!-- GridHamburgerOuter -->
 

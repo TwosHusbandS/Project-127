@@ -21,7 +21,7 @@
             </Grid.RowDefinitions>
 
             <Label x:Name="lbl_Main" Grid.Row="0" Style="{StaticResource lbl}"/>
-            <ComboBox x:Name="cb_Main" Grid.Row="1" Style="{StaticResource cb}"/>
+            <ComboBox x:Name="cb_Main" Grid.Row="1" Style="{StaticResource cobo}"/>
             <Button x:Name="btn_Ok" Grid.Row="2" Style="{StaticResource PU_btn}" Content="Ok" Click="btn_Ok_Click"/>
         </Grid>
     </Border>
