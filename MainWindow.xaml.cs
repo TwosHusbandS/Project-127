@@ -70,9 +70,11 @@ Main To do:
 		- Command Line Args Base Written
 		- ReadMe Page written and documented (semi)
 		- BugFix for AuthState MouseOver 5 second limit
-		- Dragons Magic on ROSIntegration.xaml.cs to make it look nice
+		- ReDesigned LoginWindow by dr490n
 		- ReDesigned SaveFileHandler
+		- ReDesigned Settings
 		- Added Uninstalling Capabilities
+		- Auto Start XYZ Progrm
 
 	-REMEMBER:
 		-> Release with admin mode manifest thingy...		

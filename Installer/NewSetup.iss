@@ -58,12 +58,13 @@ Source: "C:\Users\ingow\source\repos\Project-127\bin\x64\Release\WpfAnimatedGif.
 
 
 [UninstallRun]
-Filename: "{app}\Project_127_Uninstaller.exe";
+Filename: "{app}\Project_127_Uninstaller.exe"; StatusMsg: "Custom Uninstaller..."; Flags: runascurrentuser 
+Filename: "Project_127_Uninstaller.exe"; StatusMsg: "Custom Uninstaller..."; Flags: runascurrentuser
 
 [UninstallDelete]
 Type: filesandordirs; Name: "{app}"
 
-; NOTE: Don't use "Flags: ignoreversion" on any shared system files
+;NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
 Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
