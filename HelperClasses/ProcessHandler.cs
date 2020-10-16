@@ -201,16 +201,29 @@ namespace Project_127.HelperClasses
 		}
 
 
+
 		/// <summary>
 		/// Starting Game as Non Retail
 		/// </summary>
 		public static void StartGameNonRetail()
 		{
+			int AmountOfCores = Environment.ProcessorCount;
 
-		string cmdLineArgs = @"/c cd /d " + "\"" + LauncherLogic.GTAVFilePath + "\"" + @" && start playgtav.exe -uilanguage " + Settings.ToMyLanguageString(Settings.LanguageSelected).ToLower() + " && exit";
+			if (AmountOfCores < 4)
+			{
+				AmountOfCores = 4;
+			}
 
-		//cmdLineArgs = @"/c cd / d "F:\SteamLibrary\steamapps\common\Grand Theft Auto V" && playgtav.exe -uilanguage french && exit";
-		Process tmp = GSF.Identity.UserAccountControl.CreateProcessAsStandardUser(@"cmd.exe", cmdLineArgs);
+			UInt64 Possibilities = (UInt64)Math.Pow(2, AmountOfCores);
+
+			string MyHex = (Possibilities - 1).ToString("X");
+
+			string cmdLineArgs = @"/c cd /d " + "\"" + LauncherLogic.GTAVFilePath + "\"" + @" && start /affinity " + MyHex + " playgtav.exe -uilanguage " + Settings.ToMyLanguageString(Settings.LanguageSelected).ToLower() + " && exit";
+
+			//cmdLineArgs = @"/c cd / d "F:\SteamLibrary\steamapps\common\Grand Theft Auto V" && playgtav.exe -uilanguage french && exit";
+
+
+			Process tmp = GSF.Identity.UserAccountControl.CreateProcessAsStandardUser(@"cmd.exe", cmdLineArgs);
 		}
 
 	} // End of Class

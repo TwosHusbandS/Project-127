@@ -19,7 +19,7 @@ namespace Project_127
 	/// <summary>
 	/// Class SaveFileHandler.xaml
 	/// </summary>
-	public partial class SaveFileHandler : Window
+	public partial class SaveFileHandler : Page
 	{
 		/// <summary>
 		/// Constructor of SaveFileHandler
@@ -33,6 +33,51 @@ namespace Project_127
 			this.DataContext = this;
 
 			btn_Refresh_Click(null, null);
+			MouseOverMagic(btn_LeftArrow);
+			MouseOverMagic(btn_RightArrow);
+			MouseOverMagic(btn_Refresh);
+		}
+
+
+		/// <summary>
+		/// Mouse Over Magic
+		/// </summary>
+		/// <param name="myBtn"></param>
+		public static void MouseOverMagic(Button myBtn)
+		{
+			switch (myBtn.Name)
+			{
+				case "btn_LeftArrow":
+					if (myBtn.IsMouseOver)
+					{
+						MainWindow.MW.SetControlBackground(myBtn,@"Artwork/arrowleft_mo.png");
+					}
+					else
+					{
+						MainWindow.MW.SetControlBackground(myBtn, @"Artwork/arrowleft.png");
+					}
+					break;
+				case "btn_RightArrow":
+					if (myBtn.IsMouseOver)
+					{
+						MainWindow.MW.SetControlBackground(myBtn, @"Artwork/arrowright_mo.png");
+					}
+					else
+					{
+						MainWindow.MW.SetControlBackground(myBtn, @"Artwork/arrowright.png");
+					}
+					break;
+				case "btn_Refresh":
+					if (myBtn.IsMouseOver)
+					{
+						MainWindow.MW.SetControlBackground(myBtn, @"Artwork/refresh_mo.png");
+					}
+					else
+					{
+						MainWindow.MW.SetControlBackground(myBtn, @"Artwork/refresh.png");
+					}
+					break;
+			}
 		}
 
 
@@ -266,6 +311,27 @@ namespace Project_127
 			return null;
 		}
 
+
+		/// <summary>
+		/// Mouse Enter Event
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void btn_MouseEnter(object sender, MouseEventArgs e)
+		{
+			MouseOverMagic((Button)sender);
+		}
+
+		/// <summary>
+		/// Mouse Leave Event
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void btn_MouseLeave(object sender, MouseEventArgs e)
+		{
+			MouseOverMagic((Button)sender);
+		}
+
 		/// <summary>
 		/// New Name Popup Logic
 		/// </summary>
@@ -277,7 +343,7 @@ namespace Project_127
 			string newName = "";
 
 			// Asking for Name 
-			Popup newNamePU = new Popup(Popup.PopupWindowTypes.PopupOkTextBox, "Enter new Name for the SaveFile: ", pDefaultTBText: pMySaveFileName);
+			PopupTextbox newNamePU = new PopupTextbox("Enter new Name for the SaveFile:\n'" + pMySaveFileName + "'", pMySaveFileName);
 			newNamePU.ShowDialog();
 			if (newNamePU.DialogResult == true)
 			{
@@ -299,43 +365,16 @@ namespace Project_127
 					else
 					{
 						// When you wanna stay in while loop
-						newNamePU = new Popup(Popup.PopupWindowTypes.PopupOkTextBox, "Enter new Name for the SaveFile: ", pDefaultTBText: pMySaveFileName);
-						newNamePU.ShowDialog();
-						if (newNamePU.DialogResult == true)
+						PopupTextbox newNamePU2 = new PopupTextbox("Enter new Name for the SaveFile:\n'" + pMySaveFileName + "'", pMySaveFileName);
+						newNamePU2.ShowDialog();
+						if (newNamePU2.DialogResult == true)
 						{
-							newName = newNamePU.MyReturnString;
+							newName = newNamePU2.MyReturnString;
 						}
 					}
 				}
 			}
 			return newName;
-		}
-
-
-
-
-		/// <summary>
-		/// Close Button
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
-		private void btn_Close_Click(object sender, RoutedEventArgs e)
-		{
-			this.Close();
-		}
-
-
-		// Below are Methods we need to make the behaviour of this nice.
-
-
-		/// <summary>
-		/// Method which makes the Window draggable, which moves the whole window when holding down Mouse1 on the background
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
-		private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-		{
-			DragMove(); // Pre-Defined Method
 		}
 
 		/// <summary>
@@ -475,5 +514,7 @@ namespace Project_127
 
 			Sort(dg_BackupFiles);
 		}
+
+
 	} // End of Class
 } // End of Namespace

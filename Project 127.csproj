@@ -146,6 +146,9 @@
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="WpfAnimatedGif, Version=2.0.0.0, Culture=neutral, PublicKeyToken=9e7cd3b544a090dc, processorArchitecture=MSIL">
+      <HintPath>packages\WpfAnimatedGif.2.0.0\lib\net40\WpfAnimatedGif.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
@@ -155,10 +158,22 @@
     <Compile Include="DragHandler.cs" />
     <Compile Include="EntitlementBlock.cs" />
     <Compile Include="EntitlementBlockCipher.cs" />
+    <Compile Include="GTA_Page.xaml.cs">
+      <DependentUpon>GTA_Page.xaml</DependentUpon>
+    </Compile>
     <Compile Include="HelperClasses\OwnOpenFolderDialog\FolderSelectDialog.cs" />
     <Compile Include="HelperClasses\OwnOpenFolderDialog\Reflector.cs" />
     <Compile Include="MyFileOperation.cs" />
+    <Compile Include="PopupCombobox.xaml.cs">
+      <DependentUpon>PopupCombobox.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="PopupTextbox.xaml.cs">
+      <DependentUpon>PopupTextbox.xaml</DependentUpon>
+    </Compile>
     <Compile Include="RC4.cs" />
+    <Compile Include="ReadMe.xaml.cs">
+      <DependentUpon>ReadMe.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ROSCommunicationBackend.cs" />
     <Compile Include="PopupProgress.xaml.cs">
       <DependentUpon>PopupProgress.xaml</DependentUpon>
@@ -185,6 +200,14 @@
     <Compile Include="Settings.xaml.cs">
       <DependentUpon>Settings.xaml</DependentUpon>
     </Compile>
+    <Page Include="GTA_Page.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="PopupCombobox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="PopupProgress.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -207,6 +230,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="PopupDownload.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="PopupTextbox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ReadMe.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -278,21 +309,49 @@
     <Resource Include="Installer\AuthUser.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Artwork\bg.png" />
-    <Resource Include="Artwork\bg_blur.png" />
     <Resource Include="Artwork\exit.png" />
     <Resource Include="Artwork\exit_mo.png" />
     <Resource Include="Artwork\hamburger.png" />
     <Resource Include="Artwork\hamburger_mo.png" />
     <Resource Include="Artwork\icon.ico" />
     <Resource Include="Artwork\icon.png" />
-    <Resource Include="Artwork\leftarrow.png" />
     <Resource Include="Artwork\lock_closed.png" />
     <Resource Include="Artwork\lock_closed_mo.png" />
     <Resource Include="Artwork\lock_open.png" />
     <Resource Include="Artwork\lock_open_mo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Artwork\bg_420.png" />
+    <Resource Include="Artwork\bg_420_blur.png" />
+    <Resource Include="Artwork\bg_420_hb.png" />
+    <Resource Include="Artwork\bg_main.png" />
+    <Resource Include="Artwork\bg_main_blur.png" />
+    <Resource Include="Artwork\bg_main_hb.png" />
+    <Resource Include="Artwork\bg_spooky.png" />
+    <Resource Include="Artwork\bg_spooky_blur.png" />
+    <Resource Include="Artwork\bg_spooky_hb.png" />
+    <Resource Include="Artwork\bg_xmas.png" />
+    <Resource Include="Artwork\bg_xmas_blur.png" />
+    <Resource Include="Artwork\bg_xmas_hb.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Artwork\loading.gif" />
+  </ItemGroup>
+  <ItemGroup>
     <Resource Include="Artwork\refresh.png" />
-    <Resource Include="Artwork\rightarrow.png" />
+    <Resource Include="Artwork\refresh_mo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Artwork\arrowleft.png" />
+    <Resource Include="Artwork\arrowleft_mo.png" />
+    <Resource Include="Artwork\arrowright.png" />
+    <Resource Include="Artwork\arrowright_mo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Artwork\checkbox_false.png" />
+    <Resource Include="Artwork\checkbox_false_mo.png" />
+    <Resource Include="Artwork\checkbox_true.png" />
+    <Resource Include="Artwork\checkbox_true_mo.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
