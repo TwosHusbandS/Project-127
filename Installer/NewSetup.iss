@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Project 1.27"
-#define MyAppVersion "0.9.1.0"
+#define MyAppVersion "1.0.0.0"
 #define MyAppPublisher "Project 1.27 Inc."
 #define MyAppURL "https://github.com/TwosHusbandS/Project-127/blob/master/README.md"
 #define MyAppExeName "Project 1.27.exe"
@@ -25,7 +25,7 @@ AllowNoIcons=yes
 ;PrivilegesRequired=lowest
 PrivilegesRequiredOverridesAllowed=dialog
 OutputDir=C:\Users\ingow\source\repos\Project-127\Installer
-OutputBaseFilename=Project_127_Installer_V_0_9_1_0
+OutputBaseFilename=Project_127_Installer_V_1_0_0_0
 SetupIconFile=C:\Users\ingow\source\repos\Project-127\Artwork\icon.ico
 Compression=lzma
 SolidCompression=yes
@@ -39,6 +39,10 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 
 [Files]
 Source: "C:\Users\ingow\source\repos\Project-127\bin\x64\Release\Project 1.27.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\Users\ingow\source\repos\Project-127\bin\x64\Release\cef.pak"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\Users\ingow\source\repos\Project-127\bin\x64\Release\cef_100_percent.pak"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\Users\ingow\source\repos\Project-127\bin\x64\Release\cef_200_percent.pak"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\Users\ingow\source\repos\Project-127\bin\x64\Release\cef_extensions.pak"; DestDir: "{app}"; Flags: ignoreversion
 Source: "C:\Users\ingow\source\repos\Project-127\bin\x64\Release\CefSharp.BrowserSubprocess.Core.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "C:\Users\ingow\source\repos\Project-127\bin\x64\Release\CefSharp.BrowserSubprocess.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "C:\Users\ingow\source\repos\Project-127\bin\x64\Release\CefSharp.Core.dll"; DestDir: "{app}"; Flags: ignoreversion
