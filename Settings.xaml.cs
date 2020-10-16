@@ -519,7 +519,7 @@ namespace Project_127
 			{
 				new Popup(Popup.PopupWindowTypes.PopupOk, "No ZIP File selected").ShowDialog();
 			}
-			btn_Import_Zip.Content = "Click Me! (Current Version: " + Globals.ZipVersion +")";
+			RefreshGUI();
 		}
 
 
@@ -646,6 +646,7 @@ namespace Project_127
 			ButtonMouseOverMagic(btn_cb_Set_EnableAutoStartStreamProgram);
 			ButtonMouseOverMagic(btn_cb_Set_AutoSetHighPriority);
 			ButtonMouseOverMagic(btn_cb_Set_OnlyAutoStartProgramsWhenDowngraded);
+			ButtonMouseOverMagic(btn_cb_Set_EnableDontLaunchThroughSteam);
 
 			//btn_Set_JumpScriptKey1.Content = Settings.JumpScriptKey1;
 			//btn_Set_JumpScriptKey2.Content = Settings.JumpScriptKey2;
@@ -748,6 +749,9 @@ namespace Project_127
 				case "btn_cb_Set_EnableAutoStartNohboard":
 					SetCheckBoxBackground(myBtn, Settings.EnableAutoStartNohboard);
 					break;
+				case "btn_cb_Set_EnableDontLaunchThroughSteam":
+					SetCheckBoxBackground(myBtn, Settings.EnableDontLaunchThroughSteam);
+					break;
 			}
 		}
 
@@ -778,6 +782,7 @@ namespace Project_127
 					break;
 				case "btn_cb_Set_CopyFilesInsteadOfHardlinking":
 					Settings.EnableCopyFilesInsteadOfHardlinking = !Settings.EnableCopyFilesInsteadOfHardlinking;
+					SetDefaultEnableCopyingHardlinking();
 					break;
 				case "btn_cb_Set_EnablePreOrderBonus":
 					Settings.EnablePreOrderBonus = !Settings.EnablePreOrderBonus;
@@ -799,6 +804,9 @@ namespace Project_127
 					break;
 				case "btn_cb_Set_EnableAutoStartNohboard":
 					Settings.EnableAutoStartNohboard = !Settings.EnableAutoStartNohboard;
+					break;
+				case "btn_cb_Set_EnableDontLaunchThroughSteam":
+					Settings.EnableDontLaunchThroughSteam = !Settings.EnableDontLaunchThroughSteam;
 					break;
 			}
 			RefreshGUI();

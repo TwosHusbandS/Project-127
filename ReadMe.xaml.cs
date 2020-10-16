@@ -39,7 +39,7 @@ namespace Project_127
 			ReadMeState = ReadMe.LastReadMeState;
 
 			string msg1 = "" +
-				"This Popup will contain Information about GTAV Speedrunning.\n" +
+				"This text will contain Information about GTAV Speedrunning.\n" +
 				"Paragraphs explaining the basics, rules, categories etc.\n" +
 				"And some link to resources like the Leaderboard, Guides\n" +
 				"Useful Programs, Maps, and whatever else is useful\n\n" +
@@ -64,7 +64,7 @@ namespace Project_127
 				 "BuildInfo: '" + Globals.BuildInfo + "'\n" +
 				 "ZIP Version: '" + Globals.ZipVersion + "'";
 			Grid_About_Lbl.Content = msg2;
-			Grid_About_Lbl.FontSize = 16;
+			Grid_About_Lbl.FontSize = 14;
 
 			string msg3 = "" +
 				"Solving the patch 1.27 Downgrade problem has been achieved by a month of hard work by a\n" +
@@ -176,8 +176,10 @@ namespace Project_127
 			ReadMeState = ReadMeStates.Credits;
 		}
 
-
-
+		private void Grid_About_Btn_Click(object sender, RoutedEventArgs e)
+		{
+			Process.Start(@"https://www.mind.org.uk/donate");
+		}
 	}
 }
 

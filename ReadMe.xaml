@@ -21,8 +21,8 @@
         </Grid.ColumnDefinitions>
 
 
-        <Label Style="{StaticResource lbl}" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Left" FontSize="24" Height="60" VerticalAlignment="Bottom" Margin="5,0,0,0" Content="ReadMe"/>
-        <Button x:Name="btn_SpeedRun" Margin="0,10,5,10" Content="SpeedRun" Grid.Row="1" Grid.Column="0" Click="btn_SpeedRun_Click" Style="{StaticResource btn_hamburgeritem}"/>
+        <Label Style="{StaticResource lbl}" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Left" FontSize="24" Height="60" VerticalAlignment="Bottom" Margin="5,0,0,0" Content="Information"/>
+        <Button x:Name="btn_SpeedRun" Margin="0,10,5,10" Content="Speedrun" Grid.Row="1" Grid.Column="0" Click="btn_SpeedRun_Click" Style="{StaticResource btn_hamburgeritem}"/>
         <Button x:Name="btn_About" Margin="5,10,5,10" Content="About" Grid.Row="1" Grid.Column="1" Click="btn_About_Click" Style="{StaticResource btn_hamburgeritem}"/>
         <Button x:Name="btn_Credits" Margin="5,10,0,10" Content="Credits" Grid.Row="1" Grid.Column="2" Click="btn_Credits_Click" Style="{StaticResource btn_hamburgeritem}"/>
 
@@ -34,13 +34,18 @@
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
                 <Label x:Name="Grid_SpeedRun_Lbl" Style="{StaticResource lbl}" Grid.Row="0"/>
-                <Button x:Name="Grid_SpeedRun_Btn" Style="{StaticResource btn_SE_Path}" Grid.Row="1" Margin="100,0,100,30" Content="Click Me" Click="Grid_SpeedRun_Btn_Click"/>
+                <Button x:Name="Grid_SpeedRun_Btn" Style="{StaticResource btn_SM}" Grid.Row="1" Margin="100,0,100,30" Content="Click Me" Click="Grid_SpeedRun_Btn_Click"/>
             </Grid>
         </Border>
 
         <Border x:Name="Border_About" Margin="0,10,0,20" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" BorderBrush="{x:Static local:Globals.ReadME_Inner_BorderBrush}" BorderThickness="{x:Static local:Globals.ReadME_Inner_BorderThickness}" Background="{x:Static local:Globals.ReadME_Inner_Background}" CornerRadius="{x:Static local:Globals.ReadME_Inner_CornerRadius}">
             <Grid x:Name="Grid_About">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="3.5*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
                 <Label x:Name="Grid_About_Lbl" Style="{StaticResource lbl}" Grid.Row="0"/>
+                <Button x:Name="Grid_About_Btn" Style="{StaticResource btn_SM}" Grid.Row="1" Margin="100,10,100,30" Content="Donate to charity if you want to support us." Click="Grid_About_Btn_Click"/>
             </Grid>
         </Border>
 

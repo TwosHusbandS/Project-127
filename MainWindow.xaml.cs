@@ -4,7 +4,7 @@ Main Documentation:
 Actual code (partially closed source) which authentificates, handles entitlement and launches the game is done by @dr490n with the help of other members of the core team like @Special For and @zCri
 Artwork, Design of GUI, GUI Behaviourehaviour, Colorchoices etc. by "@Hossel"
 Client by "@thS"
-Version: 0.9.1.0
+Version: 1.0.0.0
 
 Build Instructions:
 	Press CTRLF + F5, pray that nuget does its magic.
@@ -55,20 +55,7 @@ General Files / Classes:
 
 Main To do:
 	- Things changed since last official release (not last commit)
-		- BugFixes, BugFixes, BugFixes,
-		- Lots of minor Quality of Life Improvements
-		- Actually call new Ways to guess GTA V Installation Path
-		- Implementing most Popup Windows as their own Page inside Main Window
-		- Implementing Properties with proper Setters (it affecting UI) for PageState, HamburgerMenuState, BackgroundImages
-			=> Made new blurry shit easily possible + loading and unloading pages + mouse over color changing on loaded page
-		- Command Line Args Base Written
-		- ReadMe Page written and documented (semi)
-		- BugFix for AuthState MouseOver 5 second limit
-		- ReDesigned LoginWindow by dr490n
-		- ReDesigned SaveFileHandler
-		- ReDesigned Settings
-		- Added Uninstalling Capabilities
-		- Auto Start XYZ Program on Game Launch
+
 
 	- Could Always Use some Re-Writing, Re-Facturing, and Documenting...
 		
@@ -1040,7 +1027,7 @@ namespace Project_127
 		/// <param name="e"></param>
 		private void btn_Repair_Click(object sender, RoutedEventArgs e)
 		{
-			Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "This Method is supposed to be called when there was a Game Update.\nOr you verified Files through Steam.\nIs that the case?\nGTAV Installation ath is: '" + Settings.GTAVInstallationPath + "'");
+			Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "This Method is supposed to be called when there was a Game Update.\nOr you verified Files through Steam.\nIs that the case?");
 			yesno.ShowDialog();
 			if (yesno.DialogResult == true)
 			{
