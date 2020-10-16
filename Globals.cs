@@ -97,7 +97,7 @@ namespace Project_127
 		/// <summary>
 		/// Property of other Buildinfo. Will be in the top message of logs
 		/// </summary>
-		public static string BuildInfo = "Build 2";
+		public static string BuildInfo = "Build 3";
 
 		/// <summary>
 		/// Returns all Command Line Args as StringArray

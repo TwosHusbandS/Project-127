@@ -59,6 +59,7 @@ Source: "C:\Users\ingow\source\repos\Project-127\bin\x64\Release\libEGL.dll"; De
 Source: "C:\Users\ingow\source\repos\Project-127\bin\x64\Release\libGLESv2.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "C:\Users\ingow\source\repos\Project-127\bin\x64\Release\Project 1.27.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "C:\Users\ingow\source\repos\Project-127\bin\x64\Release\WpfAnimatedGif.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\Users\ingow\source\repos\Project-127\bin\x64\Release\v8_context_snapshot.bin"; DestDir: "{app}"; Flags: ignoreversion
 
 
 [UninstallRun]
