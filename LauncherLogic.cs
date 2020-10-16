@@ -477,7 +477,11 @@ namespace Project_127
 						if (HelperClasses.FileHandling.doesFileExist(Settings.PathFPSLimiter))
 						{
 							HelperClasses.Logger.Log("File does exist, lets start it...",1);
+							try
+							{
 							HelperClasses.ProcessHandler.StartProcess(Settings.PathFPSLimiter);
+							}
+							catch { }
 						}
 						else
 						{
@@ -499,7 +503,11 @@ namespace Project_127
 						if (HelperClasses.FileHandling.doesFileExist(Settings.PathLiveSplit))
 						{
 							HelperClasses.Logger.Log("File does exist, lets start it...", 1);
-							HelperClasses.ProcessHandler.StartProcess(Settings.PathLiveSplit);
+							try
+							{
+								HelperClasses.ProcessHandler.StartProcess(Settings.PathLiveSplit);
+							}
+							catch { }
 						}
 						else
 						{
@@ -521,7 +529,11 @@ namespace Project_127
 						if (HelperClasses.FileHandling.doesFileExist(Settings.PathStreamProgram))
 						{
 							HelperClasses.Logger.Log("File does exist, lets start it...", 1);
-							HelperClasses.ProcessHandler.StartProcess(Settings.PathStreamProgram);
+							try
+							{
+								HelperClasses.ProcessHandler.StartProcess(Settings.PathStreamProgram);
+							}
+							catch { }
 						}
 						else
 						{
@@ -543,7 +555,11 @@ namespace Project_127
 						if (HelperClasses.FileHandling.doesFileExist(Settings.PathNohboard))
 						{
 							HelperClasses.Logger.Log("File does exist, lets start it...", 1);
-							HelperClasses.ProcessHandler.StartProcess(Settings.PathNohboard);
+							try
+							{
+								HelperClasses.ProcessHandler.StartProcess(Settings.PathNohboard);
+							}
+							catch { }
 						}
 						else
 						{

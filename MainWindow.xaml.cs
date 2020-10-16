@@ -69,6 +69,7 @@ Main To do:
 		- ReDesigned Settings
 		- Added Uninstalling Capabilities
 		- Auto Start XYZ Program on Game Launch
+		- Automatic Core Fix (when not launching through Steam)
 
 	- Could Always Use some Re-Writing, Re-Facturing, and Documenting...
 		

@@ -41,13 +41,14 @@
             <Setter Property="BorderBrush" Value="{x:Static local:Globals.SM_ButtonBorderBrush}"/>
             <Setter Property="FontSize" Value="18"/>
             <Setter Property="FontFamily" Value="Tahoma"/>
+            <Setter Property="BorderThickness" Value="{x:Static local:Globals.SM_ButtonBorderThickness}"/>
             <Setter Property="Margin" Value="10"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
                         <Border Background="{TemplateBinding Background}"
                             CornerRadius="5"
-                            BorderThickness="{x:Static local:Globals.SM_ButtonBorderThickness}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
                             Padding="5"
                             BorderBrush="{TemplateBinding BorderBrush}">
                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
@@ -149,7 +150,7 @@
 
         <!--#endregion-->
 
-        <Style TargetType="Button" x:Key="PU_btn">
+        <Style x:Key="PU_btn" TargetType="Button">
             <Setter Property="Background" Value="{x:Static local:Globals.PU_ButtonBackground}"/>
             <Setter Property="Foreground" Value="{x:Static local:Globals.PU_ButtonForeground}"/>
             <Setter Property="BorderBrush" Value="{x:Static local:Globals.PU_ButtonBorderBrush}"/>
@@ -384,6 +385,8 @@
             <Setter Property="Margin" Value="10,5"/>
             <Setter Property="FontSize" Value="14"/>
             <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
         </Style>
 
         <Style x:Key="btn_cb" TargetType="Button" BasedOn="{StaticResource btn}">

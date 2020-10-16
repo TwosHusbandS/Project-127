@@ -97,7 +97,7 @@ namespace Project_127
 		/// <summary>
 		/// Property of other Buildinfo. Will be in the top message of logs
 		/// </summary>
-		public static string BuildInfo = "Build 1";
+		public static string BuildInfo = "Build 2 - Core Affinity Fix";
 
 		/// <summary>
 		/// Returns all Command Line Args as StringArray
@@ -155,7 +155,7 @@ namespace Project_127
 			{"EnableOnlyAutoStartProgramsWhenDowngraded", "True"},
 			{"Retailer", "Steam"},
 			{"LanguageSelected", "English"},
-			{"EnableDontLaunchThroughSteam", "false"},
+			{"EnableDontLaunchThroughSteam", "False"},
 			{"InGameName", "HiMomImOnYoutube"},
 			{"EnableAutoSetHighPriority", "True" },
 			{"EnableAutoSteamCoreFix", "True" },
@@ -623,7 +623,7 @@ namespace Project_127
 		public static Brush SFH_DGBackground { get; private set; } = SetOpacity(MyColorBlack, 50);
 		public static Brush SFH_DGRowBackground { get; private set; } = Brushes.Transparent;
 		public static Brush SFH_DGAlternateRowBackground { get; private set; } = SetOpacity(MyColorOffWhite,20);
-		public static Brush SFH_DGForeground { get; private set; } = MyColorOffWhite;
+		public static Brush SFH_DGForeground { get; private set; } = MyColorWhite;
 		public static Brush SFH_DGCellBorderBrush { get; private set; } = Brushes.Transparent;
 		public static Thickness SFH_DGCellBorderThickness { get; private set; } = new Thickness(0);
 		//public static Brush SFH_DGSelectedBackground { get; private set; } = Brushes.Transparent;
