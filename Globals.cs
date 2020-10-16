@@ -97,7 +97,7 @@ namespace Project_127
 		/// <summary>
 		/// Property of other Buildinfo. Will be in the top message of logs
 		/// </summary>
-		public static string BuildInfo = "Build 2 - Core Affinity Fix";
+		public static string BuildInfo = "Build 1";
 
 		/// <summary>
 		/// Returns all Command Line Args as StringArray

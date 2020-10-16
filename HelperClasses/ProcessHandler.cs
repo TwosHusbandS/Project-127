@@ -214,12 +214,14 @@ namespace Project_127.HelperClasses
 				AmountOfCores = 4;
 			}
 
-			int Possibilities = (int)Math.Pow(2, AmountOfCores);
+			UInt64 Possibilities = (UInt64)Math.Pow(2, AmountOfCores);
+
 			string MyHex = (Possibilities - 1).ToString("X");
 
 			string cmdLineArgs = @"/c cd /d " + "\"" + LauncherLogic.GTAVFilePath + "\"" + @" && start /affinity " + MyHex + " playgtav.exe -uilanguage " + Settings.ToMyLanguageString(Settings.LanguageSelected).ToLower() + " && exit";
 
 			//cmdLineArgs = @"/c cd / d "F:\SteamLibrary\steamapps\common\Grand Theft Auto V" && playgtav.exe -uilanguage french && exit";
+
 
 			Process tmp = GSF.Identity.UserAccountControl.CreateProcessAsStandardUser(@"cmd.exe", cmdLineArgs);
 		}

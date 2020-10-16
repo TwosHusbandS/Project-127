@@ -782,6 +782,7 @@ namespace Project_127
 					break;
 				case "btn_cb_Set_CopyFilesInsteadOfHardlinking":
 					Settings.EnableCopyFilesInsteadOfHardlinking = !Settings.EnableCopyFilesInsteadOfHardlinking;
+					SetDefaultEnableCopyingHardlinking();
 					break;
 				case "btn_cb_Set_EnablePreOrderBonus":
 					Settings.EnablePreOrderBonus = !Settings.EnablePreOrderBonus;
