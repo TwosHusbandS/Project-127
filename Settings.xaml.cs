@@ -86,16 +86,16 @@ namespace Project_127
 			{
 				if (String.IsNullOrWhiteSpace(Settings.GTAVInstallationPath))
 				{
-					HelperClasses.Logger.Log("GTAV Guess Number " + i + 1 + "is: '" + GTAVPathGuesses[i] + "'");
+					HelperClasses.Logger.Log("GTAV Guess Number " + (i + 1).ToString() + " is: '" + GTAVPathGuesses[i] + "'");
 					if (LauncherLogic.IsGTAVInstallationPathCorrect(GTAVPathGuesses[i], false))
 					{
-						HelperClasses.Logger.Log("GTAV Guess Number " + i + 1 + "is theoretically valid. Asking user if he wants it");
+						HelperClasses.Logger.Log("GTAV Guess Number " + (i + 1).ToString() + " is theoretically VALID. Asking user if he wants it");
 						Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Is: '" + GTAVPathGuesses[i] + "' your GTA V Installation Path?");
 						yesno.ShowDialog();
 						if (yesno.DialogResult == true)
 						{
 							Settings.GTAVInstallationPath = GTAVPathGuesses[i];
-							HelperClasses.Logger.Log("GTAV Guess Number " + i + 1 + " was picked by User");
+							HelperClasses.Logger.Log("GTAV Guess Number " + (i + 1).ToString() + " was picked by User");
 
 							// Guessing the Retail Version
 							string myRetailGuess = "";
@@ -137,26 +137,26 @@ namespace Project_127
 						}
 						else
 						{
-							HelperClasses.Logger.Log("GTAV Guess Number " + i + 1 + " was NOT picked by User, moving on");
+							HelperClasses.Logger.Log("GTAV Guess Number " + (i + 1).ToString() + " was NOT picked by User, moving on");
 						}
 					}
 					else
 					{
-						HelperClasses.Logger.Log("GTAV Guess Number " + i + 1 + "is theoretically invalid, moving on");
+						HelperClasses.Logger.Log("GTAV Guess Number " + (i + 1).ToString() + "is theoretically invalid, moving on");
 					}
 				}
 			}
 
 			// If Setting is STILL not correct
-			// Needs to be while since you can exit out of SetGTAVPathManually
-			while ((String.IsNullOrWhiteSpace(Settings.GTAVInstallationPath)))
+			if ((String.IsNullOrWhiteSpace(Settings.GTAVInstallationPath)))
 			{
-				// Log
 				HelperClasses.Logger.Log("After " + GTAVPathGuesses.Count + " guesses we still dont have the correct GTAVInstallationPath. User has to do it manually now. Fucking casual");
-				HelperClasses.Logger.Log("If you see this more than once, user exited out of the SetGTAVPathManually()");
 
-				// Ask User for Path
-				SetGTAVPathManually(false);
+				while ((String.IsNullOrWhiteSpace(Settings.GTAVInstallationPath)))
+				{
+					HelperClasses.Logger.Log("If you see this, the user exited out exited out of the SetGTAVPathManually() on FirstLaunch or SettingsReset");
+					SetGTAVPathManually(false);
+				}
 			}
 
 
@@ -207,19 +207,6 @@ namespace Project_127
 				{
 					HelperClasses.Logger.Log("Dialog Result is false.");
 				}
-			}
-
-			HelperClasses.Logger.Log("Throwing Popup for Language Selection");
-			PopupCombobox myPopup = new PopupCombobox("Language you want as your downgraded GTA V Language?", LanguageSelected);
-			myPopup.ShowDialog();
-			if (myPopup.DialogResult == true)
-			{
-				HelperClasses.Logger.Log("User picked '" + myPopup.MyReturnString + "' as their Language");
-				LanguageSelected = (Languages)System.Enum.Parse(typeof(Languages), myPopup.MyReturnString);
-			}
-			else
-			{
-				HelperClasses.Logger.Log("Dialog Result is false.");
 			}
 
 			HelperClasses.Logger.Log("LogInfo - GTAVInstallationPath: '" + Settings.GTAVInstallationPath + "'");
@@ -582,7 +569,7 @@ namespace Project_127
 			string ExistingPCSettingsBinPath = MyFolderReturn.TrimEnd('\\') + @"\pc_settings.bin";
 			string correctPCSettingsBinPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) +
 											@"\Rockstar Games\GTA V\Profiles\Project127\GTA V\0F74F4C4\pc_settings.bin";
-			string ExistingControlUserXmlPath = MyFolderReturn.TrimEnd('\\') + @"\control\user.xml";
+			string ExistingControlUserXmlPath = MyFolderReturn.TrimEnd('\\') + @"  ";
 			string correctControlUserXmlPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) +
 											@"\Rockstar Games\GTA V\Profiles\Project127\GTA V\0F74F4C4\control\user.xml";
 
@@ -632,7 +619,7 @@ namespace Project_127
 
 			combox_Set_Retail.SelectedItem = Settings.Retailer;
 			combox_Set_LanguageSelected.SelectedItem = Settings.LanguageSelected;
-			
+
 			tb_Set_InGameName.Text = Settings.InGameName;
 
 			ButtonMouseOverMagic(btn_Refresh);

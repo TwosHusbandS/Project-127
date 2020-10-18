@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="Popup Download" 
         Background="{x:Static local:Globals.PU_Background}"
-        WindowStyle="None" ResizeMode="NoResize" WindowStartupLocation="CenterOwner" MouseLeftButtonDown="Window_MouseLeftButtonDown"
+        WindowStyle="None" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" MouseLeftButtonDown="Window_MouseLeftButtonDown"
         Height="200"
         Width="400"
         Icon="/Artwork/icon.png">

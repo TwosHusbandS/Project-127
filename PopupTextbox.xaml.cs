@@ -36,10 +36,7 @@ namespace Project_127
 			if (MainWindow.MW.IsVisible)
 			{
 				this.Owner = MainWindow.MW;
-			}
-			else
-			{
-				this.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+				this.WindowStartupLocation = WindowStartupLocation.CenterOwner;
 			}
 
 			InitializeComponent();

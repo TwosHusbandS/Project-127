@@ -122,6 +122,10 @@ namespace Project_127
 		/// </summary>
 		public static DispatcherTimer MyDispatcherTimer;
 
+		/// <summary>
+		/// Property we use to keep track if we have already thrown one OfflineError Popup
+		/// </summary>
+		public static bool OfflineErrorThrown = false;
 
 		/// <summary>
 		/// Property of LogFile Location. Will always be in in the same folder as the executable, since we want to start logging before inititng regedit and loading settings
@@ -145,7 +149,7 @@ namespace Project_127
 			*/
 
 			{"FirstLaunch", "True" },
-			{"LastLaunchedVersion", "0.0.0.1" },
+			{"LastLaunchedVersion", Globals.ProjectVersion.ToString() },
 			{"InstallationPath", Process.GetCurrentProcess().MainModule.FileName.Substring(0, Process.GetCurrentProcess().MainModule.FileName.LastIndexOf('\\')) },
 			{"GTAVInstallationPath", ""},
 			{"ZIPExtractionPath", Process.GetCurrentProcess().MainModule.FileName.Substring(0, Process.GetCurrentProcess().MainModule.FileName.LastIndexOf('\\')) },
@@ -208,6 +212,19 @@ namespace Project_127
 				// Set FirstLaunch to false
 				Settings.FirstLaunch = false;
 
+
+				new Popup(Popup.PopupWindowTypes.PopupOk,
+				"Project 1.27 is finally in fully released.\n" +
+				"The published Product should work as expected.\n\n" +
+				"No gurantees that this will not break your GTAV in any way, shape or form.\n\n" +
+				"The 'Remember' Me function, is storing credentials\n" +
+				"using the Windows Credential Manager.\n" +
+				"You are using the it on your own risk.\n\n" +
+				"If anything does not work as expected, \n" +
+				"contact me on Discord. @thS#0305\n\n" +
+				" - The Project 1.27 Team").ShowDialog();
+
+
 				HelperClasses.Logger.Log("FirstLaunch Procedure Ended");
 			}
 
@@ -253,6 +270,22 @@ namespace Project_127
 				Settings.LastLaunchedVersion = Globals.ProjectVersion;
 			}
 
+
+			// Deleting all Installer and ZIP Files from own Project Installation Path
+			DeleteOldFiles();
+
+			// Auto Updater
+			CheckForUpdate();
+
+			// Downloads the "big 3" gamefiles from github release
+			CheckForBigThree();
+
+			// Check whats the latest Version of the ZIP File in GITHUB
+			CheckForZipUpdate();
+
+			// Intepreting all Command Line shit
+			CommandLineArgumentIntepretation();
+
 			// Starting the Dispatcher Timer for the automatic updates of the GTA V Button
 			MyDispatcherTimer = new System.Windows.Threading.DispatcherTimer();
 			MyDispatcherTimer.Tick += new EventHandler(pMW.UpdateGUIDispatcherTimer);
@@ -261,7 +294,286 @@ namespace Project_127
 			pMW.UpdateGUIDispatcherTimer();
 		}
 
+		/// <summary>
+		/// CommandLineArgumentIntepretation(), currently used for Background Image
+		/// </summary>
+		private static void CommandLineArgumentIntepretation()
+		{
+			// Code for internal mode is in Globals.Internalmode Getter
 
+			// Need to be in following Format
+			// "-CommandLineArg:Value"
+			foreach (string CommandLineArg in Globals.CommandLineArgs)
+			{
+				string Argument = CommandLineArg.Substring(0, CommandLineArg.IndexOf(':'));
+				string Value = CommandLineArg.Substring(CommandLineArg.IndexOf(':') + 1);
+
+				if (Argument == "-Background")
+				{
+					Globals.BackgroundImages Tmp = Globals.BackgroundImages.Main;
+					try
+					{
+						Tmp = (Globals.BackgroundImages)System.Enum.Parse(typeof(Globals.BackgroundImages), Value);
+						Globals.BackgroundImage = Tmp;
+						MainWindow.MW.SetControlBackground(MainWindow.MW, Globals.GetBackGroundPath());
+					}
+					catch { }
+				}
+			}
+		}
+
+		/// <summary>
+		/// Deleting all Old Files (Installer and ZIP Files) from the Installation Folder
+		/// </summary>
+		private static void DeleteOldFiles()
+		{
+			HelperClasses.Logger.Log("Checking if there is an old Installer or ZIP Files in the Project InstallationPath during startup procedure.");
+
+			// Looping through all Files in the Installation Path
+			foreach (string myFile in HelperClasses.FileHandling.GetFilesFromFolder(Globals.ProjectInstallationPath))
+			{
+				// If it contains the word installer, delete it
+				if (myFile.ToLower().Contains("installer"))
+				{
+					HelperClasses.Logger.Log("Found old installer File ('" + HelperClasses.FileHandling.PathSplitUp(myFile)[1] + "') in the Directory. Will delete it.");
+					HelperClasses.FileHandling.deleteFile(myFile);
+				}
+				// If it is the Name of the ZIP File we download, we delete it
+				if (myFile == Globals.ZipFileDownloadLocation)
+				{
+					HelperClasses.Logger.Log("Found old ZIP File ('" + HelperClasses.FileHandling.PathSplitUp(myFile)[1] + "') in the Directory. Will delete it.");
+					HelperClasses.FileHandling.deleteFile(myFile);
+				}
+			}
+		}
+
+
+		/// <summary>
+		/// Method which does the UpdateCheck on Startup
+		/// </summary>
+		private static void CheckForUpdate()
+		{
+			// Check online File for Version.
+			string MyVersionOnlineString = HelperClasses.FileHandling.GetXMLTagContent(HelperClasses.FileHandling.GetStringFromURL(Globals.URL_AutoUpdate), "version");
+
+			// If this is empty,  github returned ""
+			if (!(String.IsNullOrEmpty(MyVersionOnlineString)))
+			{
+				// Building a Version out of the String
+				Version MyVersionOnline = new Version(MyVersionOnlineString);
+
+				// Logging some stuff
+				HelperClasses.Logger.Log("Checking for Project 1.27 Update during start up procedure");
+				HelperClasses.Logger.Log("MyVersionOnline = '" + MyVersionOnline.ToString() + "', Globals.ProjectVersion = '" + Globals.ProjectVersion + "'", 1);
+
+				// If Online Version is "bigger" than our own local Version
+				if (MyVersionOnline > Globals.ProjectVersion)
+				{
+					// Update Found.
+					HelperClasses.Logger.Log("Update found", 1);
+					Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Version: '" + MyVersionOnline.ToString() + "' found on the Server.\nVersion: '" + Globals.ProjectVersion.ToString() + "' found installed.\nDo you want to upgrade?");
+					yesno.ShowDialog();
+					// Asking User if he wants update.
+					if (yesno.DialogResult == true)
+					{
+						// User wants Update
+						HelperClasses.Logger.Log("Update found. User wants it", 1);
+						string DLPath = HelperClasses.FileHandling.GetXMLTagContent(HelperClasses.FileHandling.GetStringFromURL(Globals.URL_AutoUpdate), "url");
+						string DLFilename = DLPath.Substring(DLPath.LastIndexOf('/') + 1);
+						string LocalFileName = Globals.ProjectInstallationPath.TrimEnd('\\') + @"\" + DLFilename;
+
+						new PopupDownload(DLPath, LocalFileName, "Installer").ShowDialog();
+						HelperClasses.ProcessHandler.StartProcess(LocalFileName);
+						Environment.Exit(0);
+					}
+					else
+					{
+						// User doesnt want update
+						HelperClasses.Logger.Log("Update found. User does not wants it", 1);
+					}
+				}
+				else
+				{
+					// No update found
+					HelperClasses.Logger.Log("No Update Found");
+				}
+			}
+			else
+			{
+				// String return is fucked
+				HelperClasses.Logger.Log("Did not get most up to date Project 1.27 Version from Github. Github offline or your PC offline. Probably. Lets hope so.");
+			}
+		}
+
+
+		/// <summary>
+		/// Checks Github for the big 3 files we need
+		/// </summary>
+		public static void CheckForBigThree()
+		{
+			HelperClasses.Logger.Log("Downloading the 'big three' files");
+
+			string DLLinkG = HelperClasses.FileHandling.GetXMLTagContent(HelperClasses.FileHandling.GetStringFromURL(Globals.URL_AutoUpdate), "DLLinkG");
+			string DLLinkGHash = HelperClasses.FileHandling.GetXMLTagContent(HelperClasses.FileHandling.GetStringFromURL(Globals.URL_AutoUpdate), "DLLinkGHash");
+			string DLLinkU = HelperClasses.FileHandling.GetXMLTagContent(HelperClasses.FileHandling.GetStringFromURL(Globals.URL_AutoUpdate), "DLLinkU");
+			string DLLinkUHash = HelperClasses.FileHandling.GetXMLTagContent(HelperClasses.FileHandling.GetStringFromURL(Globals.URL_AutoUpdate), "DLLinkUHash");
+			string DLLinkX = HelperClasses.FileHandling.GetXMLTagContent(HelperClasses.FileHandling.GetStringFromURL(Globals.URL_AutoUpdate), "DLLinkX");
+			string DLLinkXHash = HelperClasses.FileHandling.GetXMLTagContent(HelperClasses.FileHandling.GetStringFromURL(Globals.URL_AutoUpdate), "DLLinkXHash");
+
+			HelperClasses.Logger.Log("Checking if gta5.exe exists locally", 1);
+			if (HelperClasses.FileHandling.doesFileExist(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\GTA5.exe"))
+			{
+				HelperClasses.Logger.Log("It does and we dont need to download anything", 2);
+			}
+			else
+			{
+				HelperClasses.Logger.Log("It does NOT and we DO need to download something", 2);
+				new PopupDownload(DLLinkG, LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\GTA5.exe", "Needed Files (gta5.exe 1/3)").ShowDialog();
+
+				if (!string.IsNullOrWhiteSpace(DLLinkGHash))
+				{
+					HelperClasses.Logger.Log("We do have a Hash for that file. Lets compare it:", 2);
+					HelperClasses.Logger.Log("Hash we want: '" + DLLinkGHash + "'", 3);
+					HelperClasses.Logger.Log("Hash we have: '" + HelperClasses.FileHandling.GetHashFromFile(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\GTA5.exe") + "'", 3);
+					while (HelperClasses.FileHandling.GetHashFromFile(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\GTA5.exe") != DLLinkGHash)
+					{
+						HelperClasses.Logger.Log("Well..hashes dont match shit. Lets try again", 2);
+						HelperClasses.FileHandling.deleteFile(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\GTA5.exe");
+						new PopupDownload(DLLinkG, LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\GTA5.exe", "Needed Files (gta5.exe 1/3)").ShowDialog();
+						HelperClasses.Logger.Log("Hash we want: '" + DLLinkGHash + "'", 3);
+						HelperClasses.Logger.Log("Hash we have: '" + HelperClasses.FileHandling.GetHashFromFile(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\GTA5.exe") + "'", 3);
+					}
+				}
+			}
+
+			HelperClasses.Logger.Log("Checking if x64a.rpf exists locally", 1);
+			if (HelperClasses.FileHandling.doesFileExist(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\x64a.rpf"))
+			{
+				HelperClasses.Logger.Log("It does and we dont need to download anything", 2);
+			}
+			else
+			{
+				HelperClasses.Logger.Log("It does NOT and we DO need to download something", 2);
+				new PopupDownload(DLLinkX, LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\x64a.rpf", "Needed Files (x64a.rpf, 2/3)").ShowDialog();
+
+				if (!string.IsNullOrWhiteSpace(DLLinkXHash))
+				{
+					HelperClasses.Logger.Log("We do have a Hash for that file. Lets compare it:", 2);
+					HelperClasses.Logger.Log("Hash we want: '" + DLLinkXHash + "'", 3);
+					HelperClasses.Logger.Log("Hash we have: '" + HelperClasses.FileHandling.GetHashFromFile(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\x64a.rpf") + "'", 3);
+					while (HelperClasses.FileHandling.GetHashFromFile(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\x64a.rpf") != DLLinkXHash)
+					{
+						HelperClasses.Logger.Log("Well..hashes dont match shit. Lets try again", 2);
+						HelperClasses.FileHandling.deleteFile(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\x64a.rpf");
+						new PopupDownload(DLLinkX, LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\x64a.rpf", "Needed Files (x64a.rpf, 2/3)").ShowDialog();
+						HelperClasses.Logger.Log("Hash we want: '" + DLLinkXHash + "'", 3);
+						HelperClasses.Logger.Log("Hash we have: '" + HelperClasses.FileHandling.GetHashFromFile(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\x64a.rpf") + "'", 3);
+					}
+				}
+			}
+
+			HelperClasses.Logger.Log(@"Checking if update\update.rpf exists locally", 1);
+			if (HelperClasses.FileHandling.doesFileExist(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\update\update.rpf"))
+			{
+				HelperClasses.Logger.Log("It does and we dont need to download anything", 2);
+			}
+			else
+			{
+				HelperClasses.Logger.Log("It does NOT and we DO need to download something", 2);
+				new PopupDownload(DLLinkU, LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\update\update.rpf", "Needed Files (Update.rpf, 3/3)").ShowDialog();
+
+				if (!string.IsNullOrWhiteSpace(DLLinkUHash))
+				{
+					HelperClasses.Logger.Log("We do have a Hash for that file. Lets compare it:", 2);
+					HelperClasses.Logger.Log("Hash we want: '" + DLLinkUHash + "'", 3);
+					HelperClasses.Logger.Log("Hash we have: '" + HelperClasses.FileHandling.GetHashFromFile(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\update\update.rpf") + "'", 3);
+					while (HelperClasses.FileHandling.GetHashFromFile(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\update\update.rpf") != DLLinkUHash)
+					{
+						HelperClasses.Logger.Log("Well..hashes dont match shit. Lets try again", 2);
+						HelperClasses.FileHandling.deleteFile(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\update\update.rpf");
+						new PopupDownload(DLLinkU, LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\update\update.rpf", "Needed Files (update.rpf, 3/3)").ShowDialog();
+						HelperClasses.Logger.Log("Hash we want: '" + DLLinkUHash + "'", 3);
+						HelperClasses.Logger.Log("Hash we have: '" + HelperClasses.FileHandling.GetHashFromFile(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\update\update.rpf") + "'", 3);
+					}
+				}
+			}
+		}
+
+
+		/// <summary>
+		/// Checks for Update of the ZIPFile and extracts it
+		/// </summary>
+		public static void CheckForZipUpdate()
+		{
+			// Check whats the latest Version of the ZIP File in GITHUB
+			int ZipOnlineVersion = 0;
+			Int32.TryParse(HelperClasses.FileHandling.GetXMLTagContent(HelperClasses.FileHandling.GetStringFromURL(Globals.URL_AutoUpdate), "zipversion"), out ZipOnlineVersion);
+
+			HelperClasses.Logger.Log("Checking for ZIP - Update");
+			HelperClasses.Logger.Log("ZipVersion = '" + Globals.ZipVersion + "', ZipOnlineVersion = '" + ZipOnlineVersion + "'");
+
+			// If Zip file from Server is newer
+			if (ZipOnlineVersion > Globals.ZipVersion)
+			{
+				HelperClasses.Logger.Log("Update for ZIP found");
+				Popup yesno;
+				if (Globals.ZipVersion > 0)
+				{
+					yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "ZIP Version: '" + ZipOnlineVersion.ToString() + "' found on the Server.\nZIP Version: '" + Globals.ZipVersion.ToString() + "' found installed.\nDo you want to upgrade?");
+				}
+				else
+				{
+					yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "ZIP Version: '" + ZipOnlineVersion.ToString() + "' found on the Server.\nNo ZIP Version found installed.\nDo you want to install the ZIP?");
+				}
+				yesno.ShowDialog();
+				if (yesno.DialogResult == true)
+				{
+					HelperClasses.Logger.Log("User wants update for ZIP");
+
+					// Getting the Hash of the new ZIPFile
+					string hashNeeded = HelperClasses.FileHandling.GetXMLTagContent(HelperClasses.FileHandling.GetStringFromURL(Globals.URL_AutoUpdate), "zipmd5");
+					HelperClasses.Logger.Log("HashNeeded: " + hashNeeded);
+
+					// Looping 0 through 5
+					for (int i = 0; i <= 5; i++)
+					{
+						// Getting DL Link of zip + i
+						string pathOfNewZip = HelperClasses.FileHandling.GetXMLTagContent(HelperClasses.FileHandling.GetStringFromURL(Globals.URL_AutoUpdate), "zip" + i.ToString());
+						HelperClasses.Logger.Log("Zip-Try: 'zip" + i.ToString() + "'");
+						HelperClasses.Logger.Log("DL Link: '" + pathOfNewZip + "'");
+
+						// Deleting old ZIPFile
+						HelperClasses.FileHandling.deleteFile(Globals.ZipFileDownloadLocation);
+
+						// Downloading the ZIP File
+						new PopupDownload(pathOfNewZip, Globals.ZipFileDownloadLocation, "ZIP-File").ShowDialog();
+
+						// Checking the hash of the Download
+						string HashOfDownload = HelperClasses.FileHandling.GetHashFromFile(Globals.ZipFileDownloadLocation);
+						HelperClasses.Logger.Log("Download Done, Hash of Downloaded File: '" + HashOfDownload + "'");
+
+						// If Hash looks good, we import it
+						if (HashOfDownload == hashNeeded)
+						{
+							HelperClasses.Logger.Log("Hashes Match, will Import");
+							LauncherLogic.ImportZip(Globals.ZipFileDownloadLocation, true);
+							return;
+						}
+						HelperClasses.Logger.Log("Hashes dont match, will move on");
+					}
+					HelperClasses.Logger.Log("Error. Could not find a suitable ZIP File from a FileHoster. Program cannot download new ZIP at the moment.");
+					new Popup(Popup.PopupWindowTypes.PopupOkError, "Update of ZIP File failed (No Suitable ZIP Files Found).\nI suggest restarting the program and opting out of update.");
+				}
+				else
+				{
+					HelperClasses.Logger.Log("User does not want update for ZIP");
+				}
+			}
+			else
+			{
+				HelperClasses.Logger.Log("NO Update for ZIP found");
+			}
+		}
 
 		/// <summary>
 		/// Proper Exit Method. EMPTY FOR NOW. Get called when closed (user and taskmgr) and when PC is shutdown. Not when process is killed or power ist lost.
@@ -450,7 +762,7 @@ namespace Project_127
 				}
 			}
 		}
-		
+
 
 		/// <summary>
 		/// Gets Path to correct Background URI, based on the 3 States above
@@ -506,7 +818,7 @@ namespace Project_127
 		public static Brush MyColorOffWhite { get; private set; } = (Brush)new BrushConverter().ConvertFromString("#c1ced1");
 		public static Brush MyColorBlack { get; private set; } = (Brush)new BrushConverter().ConvertFromString("#000000");
 		public static Brush MyColorOffBlack { get; private set; } = (Brush)new BrushConverter().ConvertFromString("#1a1a1a");
-		public static Brush MyColorOffBlack70 { get; private set; } = SetOpacity((Brush)new BrushConverter().ConvertFromString("#1a1a1a"),70);
+		public static Brush MyColorOffBlack70 { get; private set; } = SetOpacity((Brush)new BrushConverter().ConvertFromString("#1a1a1a"), 70);
 		public static Brush MyColorOrange { get; private set; } = (Brush)new BrushConverter().ConvertFromString("#E35627");
 		public static Brush MyColorGreen { get; private set; } = (Brush)new BrushConverter().ConvertFromString("#4cd213");
 
@@ -622,7 +934,7 @@ namespace Project_127
 		public static Brush SFH_DGHeaderForeground { get; private set; } = MyColorBlack;
 		public static Brush SFH_DGBackground { get; private set; } = SetOpacity(MyColorBlack, 50);
 		public static Brush SFH_DGRowBackground { get; private set; } = Brushes.Transparent;
-		public static Brush SFH_DGAlternateRowBackground { get; private set; } = SetOpacity(MyColorOffWhite,20);
+		public static Brush SFH_DGAlternateRowBackground { get; private set; } = SetOpacity(MyColorOffWhite, 20);
 		public static Brush SFH_DGForeground { get; private set; } = MyColorWhite;
 		public static Brush SFH_DGCellBorderBrush { get; private set; } = Brushes.Transparent;
 		public static Thickness SFH_DGCellBorderThickness { get; private set; } = new Thickness(0);
@@ -638,7 +950,7 @@ namespace Project_127
 
 		// Settings Window
 
-		public static Brush SE_RowBackground { get; private set; } = SetOpacity(MyColorBlack,50);
+		public static Brush SE_RowBackground { get; private set; } = SetOpacity(MyColorBlack, 50);
 		public static Brush SE_AlternateRowBackground { get; private set; } = SetOpacity(MyColorOffWhite, 20);
 		public static Brush SE_BorderBrush_Inner { get; private set; } = MyColorWhite;
 
@@ -653,7 +965,7 @@ namespace Project_127
 		public static Thickness ReadME_Inner_BorderThickness { get; private set; } = new Thickness(2);
 		public static CornerRadius ReadME_Inner_CornerRadius { get; private set; } = new CornerRadius(10);
 
-		
+
 
 		//public static Brush SE_LabelForeground { get; private set; } = MyColorWhite;
 		//public static Brush SE_LabelSetForeground { get; private set; } = MyColorWhite;
