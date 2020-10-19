@@ -59,6 +59,17 @@ General Files / Classes:
 Main To do:
 	- Tell Karsten about Birthday Present Thingy and show him this for work
 		
+		quick and dirty thoughts:
+		NoteOverlay Keyboard Listiner Integration Done. Gotta conntect that to the GameState in LauncherLogic
+			Gotta Connect to GUI itself
+			Gotta Connect to Settings for Hotkeys
+			
+		SaveFileHandler Folder dectection and display. Dummy Double Click Method done.
+			Gotta implement the actual displaying files from new folder and updating Label
+			Gotta Refresh on Renaming Left side btw (for NiceName Update)
+			Then on to multiselect, then just the rightclick
+		
+		
 	- Changelog past 1.0.0.0 Build 3:
 		=> Gave Reloe the new Installer Link
 		=> Fixed Spelling Mistake
@@ -80,11 +91,11 @@ Main To do:
 			=> to not have own files in them (because of "botan.dll"...so im fixing fivem :D)
 		- Native jump Script
 		- [@thS currently working on] Better Save File Handler
-			=> ReWrite of SaveFileHandler class with enum for File or Folder
-				>> Add Support for Copy & Move (in Ram) and Paste.
 			=> Add Folder Support
+				>> ReWrite of SaveFileHandler class with enum for File or Folder
 				>> Folders as clickable items in list at the very top with a "[FolderName]
 				>> Top Folder being "[..]" like in WinRar
+			=> Add Support for Copy & Move (in Ram) and Paste.
 			=> Multiselect
 			=> RightClick on File (Copy, Rename, Delete)
 			=> RightClick on Files (Copy, Delete, Delete)
@@ -877,8 +888,19 @@ namespace Project_127
 
 
 
+
 		#endregion
 
-
+		private void btn_NoteOverlay_Click(object sender, RoutedEventArgs e)
+		{
+			if (Globals.PageState == Globals.PageStates.NoteOverlay)
+			{
+				Globals.PageState = Globals.PageStates.GTA;
+			}
+			else
+			{
+				Globals.PageState = Globals.PageStates.NoteOverlay;
+			}
+		}
 	} // End of Class
 } // End of Namespace

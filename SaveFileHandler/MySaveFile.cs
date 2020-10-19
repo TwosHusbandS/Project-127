@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -68,7 +69,7 @@ namespace Project_127
 		/// Path for the SaveFiles inside GTAV Installation Location
 		/// </summary>
 		/// https://stackoverflow.com/a/3492996
-		public static string GTAVSavesPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + 
+		public static string GTAVSavesPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) +
 											@"\Rockstar Games\GTA V\Profiles\Project127\GTA V\0F74F4C4";
 
 		/// <summary>
@@ -130,13 +131,25 @@ namespace Project_127
 			get
 			{
 				string _FileName = this.FilePath.Substring(this.FilePath.LastIndexOf('\\') + 1);
-				if (!String.IsNullOrEmpty(this.FileNameAddition))
+				if (this.FileOrFolder == FileOrFolders.File)
 				{
-					return _FileName + " (" + FileNameAddition + ")";
+					if (!String.IsNullOrEmpty(this.FileNameAddition))
+					{
+						return _FileName + " (" + FileNameAddition + ")";
+					}
+					else
+					{
+						return _FileName;
+					}
 				}
 				else
 				{
-					return _FileName;
+					_FileName = _FileName.TrimEnd('\\');
+					if (_FileName.Length == 0)
+					{
+						_FileName = "..";
+					}
+					return "  [  " + _FileName + "  ]  ";
 				}
 			}
 		}
@@ -154,7 +167,7 @@ namespace Project_127
 		/// <summary>
 		/// PathName Property
 		/// </summary>
-		public string Path { get { return this.FilePath.Substring(0,this.FilePath.LastIndexOf('\\')); } }
+		public string Path { get { return this.FilePath.Substring(0, this.FilePath.LastIndexOf('\\')); } }
 
 		/// <summary>
 		/// Hash of Content. Currently we get it once on Constructur
@@ -205,8 +218,8 @@ namespace Project_127
 		/// <param name="pNewName"></param>
 		public void CopyToBackup(string pNewName)
 		{
-			HelperClasses.Logger.Log("Copying SaveFiles '" + this.FileName + "' to Backup Folder under Name '"  + pNewName + "'");
-			
+			HelperClasses.Logger.Log("Copying SaveFiles '" + this.FileName + "' to Backup Folder under Name '" + pNewName + "'");
+
 			string newFilePath = MySaveFile.BackupSavesPath.TrimEnd('\\') + @"\" + pNewName;
 			HelperClasses.FileHandling.copyFile(this.FilePath, newFilePath);
 			HelperClasses.FileHandling.copyFile(this.FilePathBak, newFilePath + ".bak");

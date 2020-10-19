@@ -163,6 +163,11 @@
     <Compile Include="HelperClasses\OwnOpenFolderDialog\FolderSelectDialog.cs" />
     <Compile Include="HelperClasses\OwnOpenFolderDialog\Reflector.cs" />
     <Compile Include="MyFileOperation.cs" />
+    <Compile Include="Overlay\GameOverlay.cs" />
+    <Compile Include="Overlay\KeyboardListener.cs" />
+    <Compile Include="Overlay\NoteOverlay.xaml.cs">
+      <DependentUpon>NoteOverlay.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Popups\PopupCombobox.xaml.cs">
       <DependentUpon>PopupCombobox.xaml</DependentUpon>
     </Compile>
@@ -200,6 +205,10 @@
       <DependentUpon>Settings.xaml</DependentUpon>
     </Compile>
     <Page Include="GTA_Page.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Overlay\NoteOverlay.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -352,6 +361,7 @@
     <Resource Include="Artwork\checkbox_true.png" />
     <Resource Include="Artwork\checkbox_true_mo.png" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
