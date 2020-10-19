@@ -77,6 +77,20 @@ namespace Project_127
 		public static string ProperSaveNameBase = "SGTA500";
 
 		/// <summary>
+		/// Enum we use to difference between Files and Folders
+		/// </summary>
+		public enum FileOrFolders
+		{
+			File,
+			Folder
+		}
+
+		/// <summary>
+		/// Enum Property to know if its a Backup - SaveFile or a GTAV - SaveFile
+		/// </summary>
+		public FileOrFolders FileOrFolder;
+
+		/// <summary>
 		/// Enum we use to diffe
 		/// </summary>
 		public enum SaveFileKinds
@@ -152,7 +166,7 @@ namespace Project_127
 		/// Standart Constructor. Dont need to forbid default Constructor since it wont be generated.
 		/// </summary>
 		/// <param name="pFilePath"></param>
-		public MySaveFile(string pFilePath)
+		public MySaveFile(string pFilePath, bool isFolder = false)
 		{
 			// Setting the FilePath
 			this.FilePath = pFilePath;
@@ -173,6 +187,15 @@ namespace Project_127
 						this.FileNameAddition = MSV.FileName;
 					}
 				}
+			}
+
+			if (isFolder)
+			{
+				this.FileOrFolder = FileOrFolders.Folder;
+			}
+			else
+			{
+				this.FileOrFolder = FileOrFolders.File;
 			}
 		}
 

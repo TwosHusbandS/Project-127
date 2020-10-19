@@ -1,0 +1,21 @@
+﻿<Page x:Class="Project_127.ROSIntegration"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:cefSharp="clr-namespace:CefSharp.Wpf;assembly=CefSharp.Wpf"
+        xmlns:cefSharpCore="clr-namespace:CefSharp;assembly=CefSharp.Core"
+        xmlns:local="clr-namespace:Project_127"
+        xmlns:gif="http://wpfanimatedgif.codeplex.com"
+        mc:Ignorable="d"
+        Background="{x:Static local:Globals.App_Submenu_Background}"
+        Title="ROSIntegration" d:DesignHeight="540" d:DesignWidth="625"    >
+    <Grid Height="540" Width="625" HorizontalAlignment="Left" VerticalAlignment="Top">
+        <Grid x:Name="myGridContent">
+            <cefSharp:ChromiumWebBrowser x:Name="browser" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="480" Height="460" Margin="0,0,60,10" Address="https://rgl.rockstargames.com/launcher" LoadingStateChanged="LoadingStateChange" JavascriptMessageReceived="browser_JavascriptMessageReceived"/>
+        </Grid>
+        <Grid x:Name="myGridLoading">
+            <Image x:Name="Image_Loading" gif:ImageBehavior.AnimatedSource="../Artwork/loading.gif" VerticalAlignment="Center" HorizontalAlignment="Center" Height="48" Width="48" />
+        </Grid>
+    </Grid>
+</Page>

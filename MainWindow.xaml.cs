@@ -60,23 +60,26 @@ Main To do:
 	- Tell Karsten about Birthday Present Thingy and show him this for work
 		
 	- Changelog past 1.0.0.0 Build 3:
+		=> Gave Reloe the new Installer Link
+		=> Fixed Spelling Mistake
 		=> Throwing only one nice Network error now, instead of all of them with exception string
 		=> Removed the language selection from firstlaunch and Reset Settings
 		=> Improved Popup Startup Location Code to make it look nicer
 		=> Moved Code around
 		=> Improved GTA V Path detection Logging
 		=> Added Import GTA V Settings Button back
+		=> Moved SourceCodeFiles around to make it easier to find stuff
 
 		=== Keep in Mind === 
-	- Installer Link wrong (gave Reloe new one, so far not changed)
 	- Uninstaller still is semi-manual...argh
+	- "Look for Updates" Button needs to be implemented
 	- Features still to do:
 		- Upgrade / Downgrade / Repair Improvements 
 			=> Popup Messages when Upgrading / Downgrading doesnt get you what you wanted (Specials Suggestion)
 			=> to handle steam updates automatically, without User Interaction
 			=> to not have own files in them (because of "botan.dll"...so im fixing fivem :D)
-		- Native jump script
-		- Better Save File Handler
+		- Native jump Script
+		- [@thS currently working on] Better Save File Handler
 			=> ReWrite of SaveFileHandler class with enum for File or Folder
 				>> Add Support for Copy & Move (in Ram) and Paste.
 			=> Add Folder Support
@@ -95,27 +98,28 @@ Main To do:
 		Fix Code signing so we dont get anti virus error
 
 
-Weird Beta Reportings:
-	- Reloe and JakeMiester and dr490n had some issues with the GTA V Path Settings
-			Changed a lot of the backend for that. Should all be fixed.
-			If given Path is detected to be wrong, but user has to confirm this three times every startup...
-	- Game wasnt launching for most
-			I actually hardcoded the Path...its now fixed.
-	- People had to run as Admin manually even tho I have the admin relauncher.
-	- ZIP Extraction failed for 2 people when not manually running as admin
-			Added more and better logging, issue can not be reproduced as of right now
+Bug Reportings:
 	- Open Twice message (and killing old process) not working for one guy
 			Works for me and on some other testers machines.
 			Confirmed funky. Also can not kill Process spawned by VS
-	- Auth Window popup crashed for Hossel in some circumstances. (CredentialManager dll missing)
-	- Investigate oneDrive shit (turned out to be crypto char in document path [or path variable??])
-	- Dragons NAS machine was just doing weird stuff with importing zip.
+	- [RESOLVED] Installer Link wrong (gave Reloe new one, so far not changed)
+	- [RESOLVED] Changed a lot of that, should be all good now
+			Reloe and JakeMiester and dr490n had some issues with the GTA V Path Settings
+			Changed a lot of the backend for that. Should all be fixed.
+	- [RESOLVED][FIXED] Game wasnt launching for most
+			I actually hardcoded the Path...its now fixed.
+	- [RESOLVED][FIXED] People had to run as Admin manually even tho I have the admin relauncher.
+	- [RESOLVED][FIXED] ZIP Extraction failed for 2 people when not manually running as admin
+			Added more and better logging, issue can not be reproduced as of right now
+	- [RESOLVED][FIXED] Auth Window popup crashed for Hossel in some circumstances. (CredentialManager dll missing)
+	- [RESOLVED] Dragon Fixed that on his end, Investigate oneDrive shit (turned out to be crypto char in document path [or path variable??])
+	- [RESOLVED] Just this one machine being dumb...Dragons NAS machine was just doing weird stuff with importing zip.
 		-> Simple stuff like (If Path doesnt exist, create it) crashed for no reason
 		-> Added logging to extract zip didnt work and failed in weird places
 		-> Complained about STATHread even its there
 		-> "Old" no progressbar zip extracting also failed
 		-> Probably due to NAS
-	- Investigate Specials worry about user getting "Already auth" even when session expired.
+	- [RESOLVED] Investigate Specials worry about user getting "Already auth" even when session expired.
 		=> Took a quick look at the code, this should not happen, but special said it happened before...
 															also Software doing Software things...
 		=> Bottom Line: INVESTIGATE

@@ -155,27 +155,26 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="DragHandler.cs" />
-    <Compile Include="EntitlementBlock.cs" />
-    <Compile Include="EntitlementBlockCipher.cs" />
+    <Compile Include="Auth\EntitlementBlock.cs" />
+    <Compile Include="Auth\EntitlementBlockCipher.cs" />
     <Compile Include="GTA_Page.xaml.cs">
       <DependentUpon>GTA_Page.xaml</DependentUpon>
     </Compile>
     <Compile Include="HelperClasses\OwnOpenFolderDialog\FolderSelectDialog.cs" />
     <Compile Include="HelperClasses\OwnOpenFolderDialog\Reflector.cs" />
     <Compile Include="MyFileOperation.cs" />
-    <Compile Include="PopupCombobox.xaml.cs">
+    <Compile Include="Popups\PopupCombobox.xaml.cs">
       <DependentUpon>PopupCombobox.xaml</DependentUpon>
     </Compile>
-    <Compile Include="PopupTextbox.xaml.cs">
+    <Compile Include="Popups\PopupTextbox.xaml.cs">
       <DependentUpon>PopupTextbox.xaml</DependentUpon>
     </Compile>
-    <Compile Include="RC4.cs" />
+    <Compile Include="Auth\RC4.cs" />
     <Compile Include="ReadMe.xaml.cs">
       <DependentUpon>ReadMe.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ROSCommunicationBackend.cs" />
-    <Compile Include="PopupProgress.xaml.cs">
+    <Compile Include="Auth\ROSCommunicationBackend.cs" />
+    <Compile Include="Popups\PopupProgress.xaml.cs">
       <DependentUpon>PopupProgress.xaml</DependentUpon>
     </Compile>
     <Compile Include="Globals.cs" />
@@ -183,32 +182,32 @@
     <Compile Include="HelperClasses\Logger.cs" />
     <Compile Include="HelperClasses\ProcessHandler.cs" />
     <Compile Include="HelperClasses\RegeditHandler.cs" />
-    <Compile Include="MySaveFile.cs" />
-    <Compile Include="Popup.xaml.cs">
+    <Compile Include="SaveFileHandler\MySaveFile.cs" />
+    <Compile Include="Popups\Popup.xaml.cs">
       <DependentUpon>Popup.xaml</DependentUpon>
     </Compile>
-    <Compile Include="PopupDownload.xaml.cs">
+    <Compile Include="Popups\PopupDownload.xaml.cs">
       <DependentUpon>PopupDownload.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ROSIntegration.xaml.cs">
+    <Compile Include="Auth\ROSIntegration.xaml.cs">
       <DependentUpon>ROSIntegration.xaml</DependentUpon>
     </Compile>
-    <Compile Include="SaveFileHandler.xaml.cs">
+    <Compile Include="SaveFileHandler\SaveFileHandler.xaml.cs">
       <DependentUpon>SaveFileHandler.xaml</DependentUpon>
     </Compile>
-    <Compile Include="SettingsPartial.cs" />
-    <Compile Include="Settings.xaml.cs">
+    <Compile Include="Settings\SettingsPartial.cs" />
+    <Compile Include="Settings\Settings.xaml.cs">
       <DependentUpon>Settings.xaml</DependentUpon>
     </Compile>
     <Page Include="GTA_Page.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="PopupCombobox.xaml">
+    <Page Include="Popups\PopupCombobox.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="PopupProgress.xaml">
+    <Page Include="Popups\PopupProgress.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -225,15 +224,15 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="Popup.xaml">
+    <Page Include="Popups\Popup.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="PopupDownload.xaml">
+    <Page Include="Popups\PopupDownload.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="PopupTextbox.xaml">
+    <Page Include="Popups\PopupTextbox.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -241,15 +240,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="ROSIntegration.xaml">
+    <Page Include="Auth\ROSIntegration.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="SaveFileHandler.xaml">
+    <Page Include="SaveFileHandler\SaveFileHandler.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Settings.xaml">
+    <Page Include="Settings\Settings.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

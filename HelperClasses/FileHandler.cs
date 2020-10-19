@@ -388,6 +388,22 @@ namespace Project_127.HelperClasses
 		}
 
 
+		public static string[] GetSubFolders (string pPath)
+		{
+			if (doesPathExist(pPath))
+			{
+				try
+				{
+					return Directory.GetDirectories(pPath);
+				}
+				catch (Exception e)
+				{
+					HelperClasses.Logger.Log("Get Sub Folders failed. " + e.ToString());
+				}
+			}
+			return new string[0];
+		}
+
 
 		/// <summary>
 		/// Makes "C:\Some\Path(\)" and "Somefile.txt" into "C:\Some\Path\Somefile.txt". Doesnt check for errors.

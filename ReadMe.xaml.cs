@@ -56,7 +56,7 @@ namespace Project_127
 				 "including Downgrading, Upgrading and launching the game.\n" +
 				 "\nSpecial shoutouts to @dr490n who was responsible for getting the\n" +
 				 "downgraded game to launch, adding patches against in-game triggers,\n" +
-				 "the authentication backend, decryption and managed to get\n" +
+				 "writing the authentication backend, decryption and managed to get\n" +
 				 "the preorder entitlement to work.\n\n" +
 				 "If you have any issues with this program or ideas for new features,\n" +
 				 "feel free to contact me on Discord: @thS#0305\n\n" +
