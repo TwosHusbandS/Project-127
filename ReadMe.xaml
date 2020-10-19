@@ -1,0 +1,60 @@
+﻿<Page x:Class="Project_127.ReadMe"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:Project_127"
+      mc:Ignorable="d" 
+      d:DesignHeight="540" d:DesignWidth="625"      
+      Background="{x:Static local:Globals.App_Submenu_Background}"
+      Title="ReadMe">
+    <Grid Height="540" Margin="15,0,15,0">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="70"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="6*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+
+        <Label Style="{StaticResource lbl}" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Left" FontSize="24" Height="60" VerticalAlignment="Bottom" Margin="5,0,0,0" Content="Information"/>
+        <Button x:Name="btn_SpeedRun" Margin="0,10,5,10" Content="Speedrun" Grid.Row="1" Grid.Column="0" Click="btn_SpeedRun_Click" Style="{StaticResource btn_hamburgeritem}"/>
+        <Button x:Name="btn_About" Margin="5,10,5,10" Content="About" Grid.Row="1" Grid.Column="1" Click="btn_About_Click" Style="{StaticResource btn_hamburgeritem}"/>
+        <Button x:Name="btn_Credits" Margin="5,10,0,10" Content="Credits" Grid.Row="1" Grid.Column="2" Click="btn_Credits_Click" Style="{StaticResource btn_hamburgeritem}"/>
+
+
+        <Border x:Name="Border_SpeedRun" Margin="0,10,0,20" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" BorderBrush="{x:Static local:Globals.ReadME_Inner_BorderBrush}" BorderThickness="{x:Static local:Globals.ReadME_Inner_BorderThickness}" Background="{x:Static local:Globals.ReadME_Inner_Background}" CornerRadius="{x:Static local:Globals.ReadME_Inner_CornerRadius}">
+            <Grid x:Name="Grid_SpeedRun" >
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="3.5*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Label x:Name="Grid_SpeedRun_Lbl" Style="{StaticResource lbl}" Grid.Row="0"/>
+                <Button x:Name="Grid_SpeedRun_Btn" Style="{StaticResource btn_SM}" Grid.Row="1" Margin="100,0,100,30" Content="Click Me" Click="Grid_SpeedRun_Btn_Click"/>
+            </Grid>
+        </Border>
+
+        <Border x:Name="Border_About" Margin="0,10,0,20" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" BorderBrush="{x:Static local:Globals.ReadME_Inner_BorderBrush}" BorderThickness="{x:Static local:Globals.ReadME_Inner_BorderThickness}" Background="{x:Static local:Globals.ReadME_Inner_Background}" CornerRadius="{x:Static local:Globals.ReadME_Inner_CornerRadius}">
+            <Grid x:Name="Grid_About">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="3.5*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Label x:Name="Grid_About_Lbl" Style="{StaticResource lbl}" Grid.Row="0"/>
+                <Button x:Name="Grid_About_Btn" Style="{StaticResource btn_SM}" Grid.Row="1" Margin="100,10,100,30" Content="Donate to charity if you want to support us." Click="Grid_About_Btn_Click"/>
+            </Grid>
+        </Border>
+
+        <Border x:Name="Border_Credits" Margin="0,10,0,20" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" BorderBrush="{x:Static local:Globals.ReadME_Inner_BorderBrush}" BorderThickness="{x:Static local:Globals.ReadME_Inner_BorderThickness}" Background="{x:Static local:Globals.ReadME_Inner_Background}" CornerRadius="{x:Static local:Globals.ReadME_Inner_CornerRadius}">
+            <Grid x:Name="Grid_Credits">
+                <Label x:Name="Grid_Credits_Lbl" Style="{StaticResource lbl}" Grid.Row="0"/>
+            </Grid>
+        </Border>
+
+
+    </Grid>
+</Page>

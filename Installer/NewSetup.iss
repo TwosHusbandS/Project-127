@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Project 1.27"
-#define MyAppVersion "0.0.4.1"
+#define MyAppVersion "1.0.0.0"
 #define MyAppPublisher "Project 1.27 Inc."
 #define MyAppURL "https://github.com/TwosHusbandS/Project-127/blob/master/README.md"
 #define MyAppExeName "Project 1.27.exe"
@@ -25,7 +25,7 @@ AllowNoIcons=yes
 ;PrivilegesRequired=lowest
 PrivilegesRequiredOverridesAllowed=dialog
 OutputDir=C:\Users\ingow\source\repos\Project-127\Installer
-OutputBaseFilename=Project_127_Installer_V_0_0_4_1
+OutputBaseFilename=Project_127_Installer_V_1_0_0_0
 SetupIconFile=C:\Users\ingow\source\repos\Project-127\Artwork\icon.ico
 Compression=lzma
 SolidCompression=yes
@@ -44,33 +44,32 @@ Source: "C:\Users\ingow\source\repos\Project-127\bin\x64\Release\cef_100_percent
 Source: "C:\Users\ingow\source\repos\Project-127\bin\x64\Release\cef_200_percent.pak"; DestDir: "{app}"; Flags: ignoreversion
 Source: "C:\Users\ingow\source\repos\Project-127\bin\x64\Release\cef_extensions.pak"; DestDir: "{app}"; Flags: ignoreversion
 Source: "C:\Users\ingow\source\repos\Project-127\bin\x64\Release\CefSharp.BrowserSubprocess.Core.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\ingow\source\repos\Project-127\bin\x64\Release\CefSharp.BrowserSubprocess.Core.pdb"; DestDir: "{app}"; Flags: ignoreversion
 Source: "C:\Users\ingow\source\repos\Project-127\bin\x64\Release\CefSharp.BrowserSubprocess.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\ingow\source\repos\Project-127\bin\x64\Release\CefSharp.BrowserSubprocess.pdb"; DestDir: "{app}"; Flags: ignoreversion
 Source: "C:\Users\ingow\source\repos\Project-127\bin\x64\Release\CefSharp.Core.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\ingow\source\repos\Project-127\bin\x64\Release\CefSharp.Core.pdb"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\ingow\source\repos\Project-127\bin\x64\Release\CefSharp.Core.xml"; DestDir: "{app}"; Flags: ignoreversion
 Source: "C:\Users\ingow\source\repos\Project-127\bin\x64\Release\CefSharp.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\ingow\source\repos\Project-127\bin\x64\Release\CefSharp.pdb"; DestDir: "{app}"; Flags: ignoreversion
 Source: "C:\Users\ingow\source\repos\Project-127\bin\x64\Release\CefSharp.Wpf.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\ingow\source\repos\Project-127\bin\x64\Release\CefSharp.Wpf.pdb"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\ingow\source\repos\Project-127\bin\x64\Release\CefSharp.Wpf.XML"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\ingow\source\repos\Project-127\bin\x64\Release\CefSharp.XML"; DestDir: "{app}"; Flags: ignoreversion
 Source: "C:\Users\ingow\source\repos\Project-127\bin\x64\Release\chrome_elf.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "C:\Users\ingow\source\repos\Project-127\bin\x64\Release\CredentialManagement.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\Users\ingow\source\repos\Project-127\bin\x64\Release\Project_127_Uninstaller.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "C:\Users\ingow\source\repos\Project-127\bin\x64\Release\d3dcompiler_47.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\ingow\source\repos\Project-127\bin\x64\Release\debug.log"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\ingow\source\repos\Project-127\bin\x64\Release\devtools_resources.pak"; DestDir: "{app}"; Flags: ignoreversion
 Source: "C:\Users\ingow\source\repos\Project-127\bin\x64\Release\GSF.Core.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\ingow\source\repos\Project-127\bin\x64\Release\GSF.Core.xml"; DestDir: "{app}"; Flags: ignoreversion
 Source: "C:\Users\ingow\source\repos\Project-127\bin\x64\Release\icudtl.dat"; DestDir: "{app}"; Flags: ignoreversion
 Source: "C:\Users\ingow\source\repos\Project-127\bin\x64\Release\libcef.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "C:\Users\ingow\source\repos\Project-127\bin\x64\Release\libEGL.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "C:\Users\ingow\source\repos\Project-127\bin\x64\Release\libGLESv2.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "C:\Users\ingow\source\repos\Project-127\bin\x64\Release\Project 1.27.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\ingow\source\repos\Project-127\bin\x64\Release\snapshot_blob.bin"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\Users\ingow\source\repos\Project-127\bin\x64\Release\WpfAnimatedGif.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "C:\Users\ingow\source\repos\Project-127\bin\x64\Release\v8_context_snapshot.bin"; DestDir: "{app}"; Flags: ignoreversion
-; NOTE: Don't use "Flags: ignoreversion" on any shared system files
+
+
+[UninstallRun]
+Filename: "{app}\Project_127_Uninstaller.exe"; StatusMsg: "Custom Uninstaller..."; Flags: runascurrentuser 
+Filename: "Project_127_Uninstaller.exe"; StatusMsg: "Custom Uninstaller..."; Flags: runascurrentuser
+
+[UninstallDelete]
+Type: filesandordirs; Name: "{app}"
+
+;NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
 Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
