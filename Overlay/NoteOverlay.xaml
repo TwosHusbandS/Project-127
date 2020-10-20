@@ -3,11 +3,33 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      xmlns:local="clr-namespace:Project_127.Overlay"
+      xmlns:local="clr-namespace:Project_127"
       mc:Ignorable="d" 
-      d:DesignHeight="450" d:DesignWidth="800"
-      Title="NoteOverlay">
-    <Grid Background="Green" Height="400">
-        <Button Margin="50" x:Name="btn_Tmp" Click="btn_Tmp_Click"/>
+      d:DesignHeight="540" d:DesignWidth="625" 
+      Background="{x:Static local:Globals.App_Submenu_Background}"
+      Title="ReadMe">
+    <Grid Height="340" Margin="100">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <Label Foreground="White" Grid.Row="0" Grid.Column="0" Content="KeyBoardListener Running"/>
+        <CheckBox Grid.Row="0" Grid.Column="1" x:Name="cb_EnableKeyboardListener" Click="cb_EnableKeyboardListener_Click"/>
+        <Label Foreground="White" Grid.Row="1" Grid.Column="0" Content="KeyBoardListener Surpress Keys"/>
+        <CheckBox Grid.Row="1" Grid.Column="1" x:Name="cb_EnableKeyboardListenerSurpress" Click="cb_EnableKeyboardListenerSurpress_Click"/>
+        <Label Foreground="White" Grid.Row="2" Grid.Column="0" Content="WindowChangeListener"/>
+        <CheckBox Grid.Row="2" Grid.Column="1" x:Name="cb_EnableWindowChangeListener" Click="cb_EnableWindowChangeListener_Click"/>
+        <Label Foreground="White" Grid.Row="3" Grid.Column="0" Content="Latest Keypress"/>
+        <Label Foreground="White" Grid.Row="3" Grid.Column="1" x:Name="lbl_Latest_Keypress"/>
+        <Label Foreground="White" Grid.Row="4" Grid.Column="0" Content="Latest ForegroundEvent"/>
+        <Label Foreground="White" Grid.Row="4" Grid.Column="1" x:Name="lbl_Latest_ForegroundEvent"/>
     </Grid>
 </Page>

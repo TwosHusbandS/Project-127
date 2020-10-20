@@ -20,6 +20,7 @@ using System.Web.UI;
 using System.Security.Permissions;
 using System.Configuration;
 using System.Text.RegularExpressions;
+using Project_127.SettingsStuff;
 
 /*
  * This file is based on partially on SCUIStub/LegitimacyChecking from the CitizenFX Project - http://citizen.re/
@@ -28,7 +29,8 @@ using System.Text.RegularExpressions;
  * 
  * Rewritten in C# for project by @dr490n/@jaredtb  
  */
-namespace Project_127 {
+namespace Project_127.Auth
+{
 
 
     public class ROSCommunicationBackend

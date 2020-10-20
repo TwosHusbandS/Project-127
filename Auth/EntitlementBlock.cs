@@ -11,7 +11,7 @@ using System.Threading.Tasks;
  * 
  * Rewritten in C# by @dr490n/@jaredtb  
  */
-namespace Project_127
+namespace Project_127.Auth
 {
     class EntitlementBlock
     {

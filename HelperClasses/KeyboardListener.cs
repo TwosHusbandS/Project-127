@@ -6,15 +6,23 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Project_127;
+using Project_127.Auth;
+using Project_127.HelperClasses;
+using Project_127.KeyStuff;
+using Project_127.Overlay;
+using Project_127.Popups;
+using Project_127.SettingsStuff;
 
-namespace Project_127.Overlay
+namespace Project_127.HelperClasses
 {
-
-
-
+	// Copied and Adapted from: https://docs.microsoft.com/en-us/archive/blogs/toub/low-level-keyboard-hook-in-c
 
 	class KeyboardListener
 	{
+		// Dont need to mess with KeyUp or see how long something is pressed
+		// Since Jumpscript should just "translate" keypressed 1:1 and not act like a auto-spam-script
+
 		private const int WH_KEYBOARD_LL = 13;
 		private const int WM_KEYDOWN = 0x0100;
 		private static LowLevelKeyboardProc _proc = HookCallback;
@@ -24,14 +32,23 @@ namespace Project_127.Overlay
 
 		public static void Start()
 		{
+			Task.Run(() => KeyboardListener._Start());
+		}
+
+		public static void Stop()
+		{
+			Task.Run(() => KeyboardListener._Stop());
+		}
+
+		public static void _Start()
+		{
 			_hookID = SetHook(_proc);
 			KeyboardListener.IsRunning = true;
 			System.Windows.Forms.Application.Run();
 			UnhookWindowsHookEx(_hookID);
 		}
 
-
-		public static void Stop()
+		public static void _Stop()
 		{
 			System.Windows.Forms.Application.Exit();
 			KeyboardListener.IsRunning = false;
@@ -47,31 +64,38 @@ namespace Project_127.Overlay
 			}
 		}
 
-		private delegate IntPtr LowLevelKeyboardProc(
-			int nCode, IntPtr wParam, IntPtr lParam);
+		private delegate IntPtr LowLevelKeyboardProc(int nCode, IntPtr wParam, IntPtr lParam);
 
-		private static IntPtr HookCallback(
-			int nCode, IntPtr wParam, IntPtr lParam)
+		private static IntPtr HookCallback(int nCode, IntPtr wParam, IntPtr lParam)
 		{
-			if (nCode >= 0 && wParam == (IntPtr)WM_KEYDOWN)
+			bool SurpressKeyEvent = false;
+			if (nCode >= 0)
 			{
-				int vkCode = Marshal.ReadInt32(lParam);
-				Task.Run(() => NoteOverlay.KeyBoardEvent((Keys)vkCode));
+				if (wParam == (IntPtr)WM_KEYDOWN)
+				{
+					int vkCode = Marshal.ReadInt32(lParam);
+					SurpressKeyEvent = KeyboardHandler.KeyboardEvent((Keys)vkCode);
+				}
 			}
-			return CallNextHookEx(_hookID, nCode, wParam, lParam);
+			if (SurpressKeyEvent)
+			{
+				return new IntPtr(-1);
+			}
+			else
+			{
+				return CallNextHookEx(_hookID, nCode, wParam, lParam);
+			}
 		}
 
 		[DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-		private static extern IntPtr SetWindowsHookEx(int idHook,
-			LowLevelKeyboardProc lpfn, IntPtr hMod, uint dwThreadId);
+		private static extern IntPtr SetWindowsHookEx(int idHook, LowLevelKeyboardProc lpfn, IntPtr hMod, uint dwThreadId);
 
 		[DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
 		[return: MarshalAs(UnmanagedType.Bool)]
 		private static extern bool UnhookWindowsHookEx(IntPtr hhk);
 
 		[DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-		private static extern IntPtr CallNextHookEx(IntPtr hhk, int nCode,
-			IntPtr wParam, IntPtr lParam);
+		private static extern IntPtr CallNextHookEx(IntPtr hhk, int nCode, IntPtr wParam, IntPtr lParam);
 
 		[DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
 		private static extern IntPtr GetModuleHandle(string lpModuleName);

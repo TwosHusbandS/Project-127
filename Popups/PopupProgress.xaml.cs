@@ -16,7 +16,7 @@ using System.Windows.Shapes;
 using System.IO.Compression;
 
 
-namespace Project_127
+namespace Project_127.Popups
 {
 	/// <summary>
 	/// Interaction logic for CopyFileProgress.xaml

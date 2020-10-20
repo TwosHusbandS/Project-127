@@ -162,9 +162,12 @@
     </Compile>
     <Compile Include="HelperClasses\OwnOpenFolderDialog\FolderSelectDialog.cs" />
     <Compile Include="HelperClasses\OwnOpenFolderDialog\Reflector.cs" />
+    <Compile Include="HelperClasses\WindowChangeListener.cs" />
+    <Compile Include="KeyStuff\KeyboardHandler.cs" />
+    <Compile Include="KeyStuff\KeyboardSender.cs" />
     <Compile Include="MyFileOperation.cs" />
     <Compile Include="Overlay\GameOverlay.cs" />
-    <Compile Include="Overlay\KeyboardListener.cs" />
+    <Compile Include="HelperClasses\KeyboardListener.cs" />
     <Compile Include="Overlay\NoteOverlay.xaml.cs">
       <DependentUpon>NoteOverlay.xaml</DependentUpon>
     </Compile>
@@ -200,8 +203,8 @@
     <Compile Include="SaveFileHandler\SaveFileHandler.xaml.cs">
       <DependentUpon>SaveFileHandler.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Settings\SettingsPartial.cs" />
-    <Compile Include="Settings\Settings.xaml.cs">
+    <Compile Include="SettingsStuff\SettingsPartial.cs" />
+    <Compile Include="SettingsStuff\Settings.xaml.cs">
       <DependentUpon>Settings.xaml</DependentUpon>
     </Compile>
     <Page Include="GTA_Page.xaml">
@@ -257,7 +260,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Settings\Settings.xaml">
+    <Page Include="SettingsStuff\Settings.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

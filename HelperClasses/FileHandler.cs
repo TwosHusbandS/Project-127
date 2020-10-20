@@ -8,6 +8,13 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Project_127;
+using Project_127.Auth;
+using Project_127.HelperClasses;
+using Project_127.KeyStuff;
+using Project_127.Overlay;
+using Project_127.Popups;
+using Project_127.SettingsStuff;
 
 namespace Project_127.HelperClasses
 {
@@ -658,6 +665,7 @@ namespace Project_127.HelperClasses
 			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\UpgradeFiles");
 			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\UpgradeFiles\update");
 			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\SupportFiles\");
+			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\SupportFiles\Notes");
 			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\SupportFiles\Installer");
 			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\SupportFiles\SaveFiles");
 		}

@@ -10,6 +10,13 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
+using Project_127;
+using Project_127.Auth;
+using Project_127.HelperClasses;
+using Project_127.KeyStuff;
+using Project_127.Overlay;
+using Project_127.Popups;
+using Project_127.SettingsStuff;
 using GSF;
 
 namespace Project_127
@@ -598,8 +605,6 @@ namespace Project_127
 
 
 			string[] myFiles = HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(LauncherLogic.ZIPFilePath.TrimEnd('\\') + @"\Project_127_Files");
-
-
 
 			// Dont need this for now, lets keep it in case its needed again
 			//foreach (string myFile in myFiles)

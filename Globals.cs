@@ -13,6 +13,13 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Threading;
+using Project_127;
+using Project_127.Auth;
+using Project_127.HelperClasses;
+using Project_127.KeyStuff;
+using Project_127.Overlay;
+using Project_127.Popups;
+using Project_127.SettingsStuff;
 
 namespace Project_127
 {
@@ -289,7 +296,7 @@ namespace Project_127
 			// Starting the Dispatcher Timer for the automatic updates of the GTA V Button
 			MyDispatcherTimer = new System.Windows.Threading.DispatcherTimer();
 			MyDispatcherTimer.Tick += new EventHandler(pMW.UpdateGUIDispatcherTimer);
-			MyDispatcherTimer.Interval = TimeSpan.FromMilliseconds(5000);
+			MyDispatcherTimer.Interval = TimeSpan.FromMilliseconds(2500);
 			MyDispatcherTimer.Start();
 			pMW.UpdateGUIDispatcherTimer();
 		}

@@ -12,7 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace Project_127
+namespace Project_127.Popups
 {
 	/// <summary>
 	/// Popup Window. Used to custom Yes/No and Ok Dialogs.

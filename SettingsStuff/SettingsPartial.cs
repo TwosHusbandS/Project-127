@@ -6,8 +6,15 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using Project_127;
+using Project_127.Auth;
+using Project_127.HelperClasses;
+using Project_127.KeyStuff;
+using Project_127.Overlay;
+using Project_127.Popups;
+using Project_127.SettingsStuff;
 
-namespace Project_127
+namespace Project_127.SettingsStuff
 {
 	/// <summary>
 	/// Partial Class for Settings Window. 

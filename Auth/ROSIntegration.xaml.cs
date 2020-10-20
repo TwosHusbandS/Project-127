@@ -27,6 +27,14 @@ using CredentialManagement;
 using System.Security;
 using System.Diagnostics.Eventing.Reader;
 using WpfAnimatedGif;
+using Project_127;
+using Project_127.Auth;
+using Project_127.HelperClasses;
+using Project_127.KeyStuff;
+using Project_127.Overlay;
+using Project_127.Popups;
+using Project_127.SettingsStuff;
+
 /*
 * This file is based on LegitimacyNUI.cpp from the CitizenFX Project - http://citizen.re/
 * 
@@ -35,7 +43,7 @@ using WpfAnimatedGif;
 * Rewritten for Project 1.27 by @dr490n/@jaredtb  
 */
 
-namespace Project_127
+namespace Project_127.Auth
 {
 	/// <summary>
 	/// Interaction logic for ROSIntegration.xaml
