@@ -19,6 +19,8 @@ namespace Project_127.KeyStuff
 			//NoteOverlay.KeyBoardEvent(pKey);
 			HelperClasses.Logger.Log("Keypress detected: " + pKey);
 
+			NoteOverlay.KeyBoardEvent(pKey);
+
 			return SurpressEventFurther;
 			//return SurpressEventFurther;
 		}

@@ -79,18 +79,20 @@ namespace Project_127.HelperClasses
 
 		public static void WinEventProc(IntPtr hWinEventHook, uint eventType, IntPtr hwnd, int idObject, int idChild, uint dwEventThread, uint dwmsEventTime)
 		{
-			if (GetActiveWindowTitle() == "Grand Theft Auto V")
+			//if (GetActiveWindowTitle() == "Project - 1.27")
+			//if (GetActiveWindowTitle() == "Grand Theft Auto V")
+			if (GetActiveWindowTitle() == "WhatsApp")
 			{
 				MainWindow.MW.Dispatcher.Invoke((Action)delegate
 				{
-					KeyboardListener.Start();
+					//KeyboardListener.Start();
 				});
 			}
 			else
 			{
 				MainWindow.MW.Dispatcher.Invoke((Action)delegate
 				{
-					KeyboardListener.Stop();
+					//KeyboardListener.Stop();
 				});
 			}
 		}

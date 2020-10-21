@@ -14,13 +14,15 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <Label Foreground="White" Grid.Row="0" Grid.Column="0" Content="Selected Note File"/>
+        <Label Foreground="White" Grid.Row="0" Grid.Column="0" Content="Selected Note Files"/>
         <Button Grid.Row="0" Grid.Column="1" Content="Click Me" x:Name="btn_NoteFile" Click="btn_NoteFile_Click"/>
         <Label Foreground="White" Grid.Row="1" Grid.Column="0" Content="Overlay Toggle Hotkey"/>
         <Button Grid.Row="1" Grid.Column="1" Content="Click Me" x:Name="btn_OverlayHotkeyToggle" Click="btn_OverlayHotkeyToggle_Click"/>
@@ -28,5 +30,9 @@
         <Button Grid.Row="2" Grid.Column="1" Content="Click Me" x:Name="btn_OverlayHotkeyScrollUp" Click="btn_OverlayHotkeyScrollUp_Click"/>
         <Label Foreground="White" Grid.Row="3" Grid.Column="0" Content="Overlay Scroll Down Hotkey"/>
         <Button Grid.Row="3" Grid.Column="1" Content="Click Me" x:Name="btn_OverlayHotkeyScrollDown" Click="btn_OverlayHotkeyScrollDown_Click"/>
+        <Label Foreground="White" Grid.Row="4" Grid.Column="0" Content="Overlay Scroll Left Hotkey"/>
+        <Button Grid.Row="4" Grid.Column="1" Content="Click Me" x:Name="btn_OverlayHotkeyScrollLeft" Click="btn_OverlayHotkeyScrollLeft_Click"/>
+        <Label Foreground="White" Grid.Row="5" Grid.Column="0" Content="Overlay Scroll Right Hotkey"/>
+        <Button Grid.Row="5" Grid.Column="1" Content="Click Me" x:Name="btn_OverlayHotkeyScrollRight" Click="btn_OverlayHotkeyScrollRight_Click"/>
     </Grid>
 </Page>

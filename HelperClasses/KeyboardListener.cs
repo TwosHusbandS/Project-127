@@ -38,6 +38,7 @@ namespace Project_127.HelperClasses
 		{
 			if (!KeyboardListener.IsRunning)
 			{
+				HelperClasses.Logger.Log("Started KeyboardListener");
 				Task.Run(() => KeyboardListener._Start());
 			}
 		}
@@ -46,6 +47,7 @@ namespace Project_127.HelperClasses
 		{
 			if (KeyboardListener.IsRunning)
 			{
+				HelperClasses.Logger.Log("Stopped KeyboardListener");
 				Task.Run(() => KeyboardListener._Stop());
 			}
 		}
@@ -94,10 +96,11 @@ namespace Project_127.HelperClasses
 			catch (Exception e)
 			{
 				Globals.DebugPopup(e.ToString());
-				HelperClasses.Logger.Log("TRY CATCH IN KEYBOARD CALLBACK: " + e.ToString());
+				HelperClasses.Logger.Log("Try Catch in KeyEvent Callback Failed: " + e.ToString());
 				return new IntPtr(-1);
 			}
 
+			// Surpresses the Key Event 
 			if (SurpressKeyEvent)
 			{
 				return new IntPtr(-1);

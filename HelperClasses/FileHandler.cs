@@ -481,7 +481,7 @@ namespace Project_127.HelperClasses
 				{
 					doesLineExist = false;
 					currentLine = sr.ReadLine();
-					if (currentLine != null && currentLine != "")
+					if (currentLine != null)
 					{
 						rtrnList.Add(currentLine);
 						doesLineExist = true;

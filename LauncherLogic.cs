@@ -86,10 +86,13 @@ namespace Project_127
 					if (Settings.EnableAutoStartJumpScript || Settings.EnableOverlay)
 					{
 						// Start WindowChangeListener, which then toggles KeyListener when needed 
+						//NoteOverlay.InitGTAOverlay();
 						HelperClasses.WindowChangeListener.Start();
+
 					}
 					else
 					{
+						//NoteOverlay.DisposeGTAOverlay();
 						HelperClasses.WindowChangeListener.Stop();
 					}
 					return GameStates.Running;
@@ -97,7 +100,7 @@ namespace Project_127
 				else
 				{
 					HelperClasses.WindowChangeListener.Stop();
-					HelperClasses.KeyboardListener.Stop();
+					//HelperClasses.KeyboardListener.Stop();
 					return GameStates.NonRunning;
 				}
 			}

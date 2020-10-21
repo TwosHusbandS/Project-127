@@ -167,7 +167,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="GTAOverlay.cs" />
+    <Compile Include="Overlay\GTAOverlay.cs" />
     <Compile Include="Auth\EntitlementBlock.cs" />
     <Compile Include="Auth\EntitlementBlockCipher.cs" />
     <Compile Include="GTA_Page.xaml.cs">
@@ -179,7 +179,6 @@
     <Compile Include="KeyStuff\KeyboardHandler.cs" />
     <Compile Include="KeyStuff\KeyboardSender.cs" />
     <Compile Include="MyFileOperation.cs" />
-    <Compile Include="Overlay\GameOverlay.cs" />
     <Compile Include="HelperClasses\KeyboardListener.cs" />
     <Compile Include="Overlay\NoteOverlay.xaml.cs">
       <DependentUpon>NoteOverlay.xaml</DependentUpon>
