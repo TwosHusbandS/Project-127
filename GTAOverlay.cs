@@ -57,6 +57,11 @@ namespace Project_127
 		public bool UseBackground { get; set; } = false;
 
 		/// <summary>
+		/// Determines whether or not the background image should fill the whole overlay.
+		/// </summary>
+		public bool UseImageFill { get; set; } = false;
+
+		/// <summary>
 		/// Generates the game overlay
 		/// </summary>
 		/// <param name="position">The screen positioning (TopLeft, BottomRight, etc.)</param>
@@ -136,8 +141,14 @@ namespace Project_127
 			gfx.ClearScene(_brushes["background"]);
 			if (UseBackground && _images.ContainsKey("bgImage"))
             {
-				gfx.DrawImage(_images["bgImage"], 0, 0, bgImageOpac);
-
+				if (UseImageFill)
+                {
+					gfx.DrawImage(_images["bgImage"], new Rectangle(0, 0, e.Graphics.Width, e.Graphics.Height), bgImageOpac, true);
+                }
+				else
+                {
+					gfx.DrawImage(_images["bgImage"], 0, 0, bgImageOpac);
+				}
 			} 
 			else if (bgImagePath != "")
             {
