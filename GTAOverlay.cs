@@ -15,19 +15,46 @@ namespace Project_127
     {
 		private readonly GraphicsWindow _window;
 
-		//private const string targetWindow = "Project - 1.27";
-		private const string targetWindow = "Grand Theft Auto V";
+		private const string targetWindow = "Project - 1.27";
+		//private const string targetWindow = "Grand Theft Auto V";
 		private readonly Dictionary<string, SolidBrush> _brushes;
 		private readonly Dictionary<string, Font> _fonts;
 		private readonly Dictionary<string, Image> _images;
-		private int wrapConstant;
-		private float bgImageOpac = (float).7;
-		private Positions renderPosition;
-		//private Image bgImage = null;
-		private string bgImagePath = "";
-		private bool enableBackground = false;
+        private float bgImageOpac = (float).7;
+        private string bgImagePath = "";
         private string NoteText = "";
-		private int renderMargin;
+		private int textOffsetX = 20;
+		private int textOffsetY = 20;
+
+		//// <summary>
+		/// Determines the positioning of the overlay.
+		/// </summary>
+		public Positions Position { get; set; }
+
+		//// <summary>
+		/// Overrides the positioning of line wrap.
+		/// </summary>
+		public int WrapCount { get; set; } = int.MaxValue;
+
+		//// <summary>
+		/// Determines the base offset of the overlay.
+		/// </summary>
+		public int PaddingSize { get; set; } = 0;
+
+		/// <summary>
+		/// Determines the X offset of the overlay (from padding position).
+		/// </summary>
+		public int XMargin { get; set; } = 0;
+
+		/// <summary>
+		/// Determines the Y offset of the overlay (from padding position.
+		/// </summary>
+		public int YMargin { get; set; } = 0;
+
+		/// <summary>
+		/// Determines whether or not the background image is used.
+		/// </summary>
+		public bool UseBackground { get; set; } = false;
 
 		/// <summary>
 		/// Generates the game overlay
@@ -36,11 +63,9 @@ namespace Project_127
 		/// <param name="width">The horizontal resolution</param>
 		/// <param name="height">The vertical resolution</param>
 		/// <param name="wrapNum">The number of characters before a line wrap</param>
-		public GTAOverlay(Positions position = Positions.TopLeft, int width = 560, int height = 380, int wrapNum = 40, int margin = 0)
+		public GTAOverlay(Positions position = Positions.TopLeft, int width = 560, int height = 380)
 		{
 			HelperClasses.Logger.Log("Game Overlay Initiated");
-			wrapConstant = wrapNum;
-			renderMargin = margin;
 			_brushes = new Dictionary<string, SolidBrush>();
 			_fonts = new Dictionary<string, Font>();
 			_images = new Dictionary<string, Image>();
@@ -90,7 +115,7 @@ namespace Project_127
 			if (e.RecreateResources) return;
 
 			//_fonts["arial"] = gfx.CreateFont("Arial", 12);
-			_fonts["consolas"] = gfx.CreateFont("Consolas", 24);
+			_fonts["textFont"] = gfx.CreateFont("Consolas", 24, false, false, true);
 		}
 
 		private void _window_DestroyGraphics(object sender, DestroyGraphicsEventArgs e)
@@ -109,7 +134,7 @@ namespace Project_127
             _window.Y = pos[1];
 			var gfx = e.Graphics;
 			gfx.ClearScene(_brushes["background"]);
-			if (enableBackground && _images.ContainsKey("bgImage"))
+			if (UseBackground && _images.ContainsKey("bgImage"))
             {
 				gfx.DrawImage(_images["bgImage"], 0, 0, bgImageOpac);
 
@@ -127,7 +152,7 @@ namespace Project_127
                 }
 			}
 
-			gfx.DrawTextWithBackground(_fonts["consolas"], _brushes["textColor"], _brushes["textBack"], 20, 20, NoteText);
+			gfx.DrawTextWithBackground(_fonts["textFont"], _brushes["textColor"], _brushes["textBack"], textOffsetX, textOffsetY, NoteText);
 
 		}
 
@@ -147,10 +172,7 @@ namespace Project_127
 		/// <param name="textBG">Color of the text background</param>
 		public async void setTextColors(System.Drawing.Color textColor, System.Drawing.Color textBG)
         {
-            while (!_window.IsInitialized || !_window.Graphics.IsInitialized)
-            {
-				await Task.Delay(250);
-            }
+			await graphicsReady();
 			_brushes["textColor"].Color = Color.FromARGB(textColor.ToArgb());
 			_brushes["textBack"].Color = Color.FromARGB(textBG.ToArgb());
 		}
@@ -175,7 +197,51 @@ namespace Project_127
 		public void setText(string text)
 		{
 			HelperClasses.Logger.Log("Overlay text updated");
-			NoteText = charWrap(text, wrapConstant);
+			NoteText = charWrap(text, WrapCount);
+		}
+
+		/// <summary>
+		/// Sets the background color of the overlay.
+		/// </summary>
+		/// <param name="color">Background color</param>
+		public async void setBackgroundColor(System.Drawing.Color color)
+        {
+			await graphicsReady();
+			_brushes["background"].Color = Color.FromARGB(color.ToArgb());
+		}
+
+		/// <summary>
+		/// Sets the overlay font
+		/// </summary>
+		/// <param name="fontFamily">Font family</param>
+		/// <param name="fontSize">Font size in px</param>
+		/// <param name="bold">Determines if bold</param>
+		/// <param name="italic">Determines if italic</param>
+		/// <param name="wordWrap">Enables auto line wrap</param>
+		public async void setFont(string fontFamily, int fontSize, bool bold = false, bool italic = false, bool wordWrap = true)
+        {
+			await graphicsReady();
+			_fonts["textFont"] = _window.Graphics.CreateFont(fontFamily, fontSize, bold, italic, wordWrap);
+        }
+
+		/// <summary>
+		/// Sets the render offset for text.
+		/// </summary>
+		/// <param name="x">X Offset</param>
+		/// <param name="y">Y Offset</param>
+		public void setTextPosition(int x, int y)
+        {
+			textOffsetX = x;
+			textOffsetY = y;
+        }
+
+		private async Task<bool> graphicsReady() //Bool is just so it can be an awaitable task
+        {
+			while (!_window.IsInitialized || !_window.Graphics.IsInitialized)
+			{
+				await Task.Delay(250);
+			}
+			return true;
 		}
 
 		/// <summary>
@@ -193,25 +259,10 @@ namespace Project_127
             }
         }
 
-		/// <summary>
-		/// Determines whether or not the background image is used.
-		/// </summary>
-		public bool UseBackground
-        {
-            get
-            {
-				return enableBackground;
-            }
-            set
-            {
-				enableBackground = value;
-            }
-        }
-
-		/// <summary>
-		/// Determines whether or not the overlay is visible.
-		/// </summary>
-		public bool Visible
+        /// <summary>
+        /// Determines whether or not the overlay is visible.
+        /// </summary>
+        public bool Visible
 		{
 			get
 			{
@@ -252,22 +303,22 @@ namespace Project_127
 		}
 		private int[] coordFromPos(Positions p, WindowBounds wb, int resx, int resy)
         {
-			resx += renderMargin;
-			resy += renderMargin;
+			resx += PaddingSize + XMargin;
+			resy += PaddingSize + YMargin;
 			var coords = new int[2];
 			switch (p)
             {
 				case Positions.TopLeft:
-					coords[1] = wb.Top + renderMargin;
-					coords[0] = wb.Left + renderMargin;
+					coords[1] = wb.Top + PaddingSize + YMargin;
+					coords[0] = wb.Left + PaddingSize + XMargin;
 					break;
 				case Positions.TopRight:
-					coords[1] = wb.Top + renderMargin;
+					coords[1] = wb.Top + PaddingSize + YMargin;
 					coords[0] = wb.Right - resx;
 					break;
 				case Positions.BottomLeft:
 					coords[1] = wb.Bottom - resy;
-					coords[0] = wb.Left + renderMargin;
+					coords[0] = wb.Left + PaddingSize + XMargin;
 					break;
 				case Positions.BottomRight:
 					coords[1] = wb.Bottom - resy;
@@ -279,54 +330,7 @@ namespace Project_127
 			return coords;
         }
 
-
-
-		//// <summary>
-		/// Determines the positioning of the overlay.
-		/// </summary>
-		public Positions Position
-        {
-            get
-            {
-				return renderPosition;
-            }
-            set
-            {
-				renderPosition = value;
-            }
-        }
-
-		//// <summary>
-		/// Determines the positioning of line wrap.
-		/// </summary>
-		public int WrapCharacter
-        {
-            get
-            {
-				return wrapConstant;
-            }
-            set
-            {
-				wrapConstant = value;
-            }
-        }
-
-		//// <summary>
-		/// Determines the positioning of line wrap.
-		/// </summary>
-		public int MarginSize
-		{
-			get
-			{
-				return renderMargin;
-			}
-			set
-			{
-				renderMargin = value;
-			}
-		}
-
-		public enum Positions
+        public enum Positions
 		{
 			TopLeft,
 			TopRight,
