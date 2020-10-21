@@ -1,0 +1,32 @@
+﻿<Page x:Class="Project_127.Overlay.NoteOverlay"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:Project_127"
+      mc:Ignorable="d" 
+      d:DesignHeight="540" d:DesignWidth="625" 
+      Background="{x:Static local:Globals.App_Submenu_Background}"
+      Title="ReadMe">
+    <Grid Height="340" Margin="100">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <Label Foreground="White" Grid.Row="0" Grid.Column="0" Content="Selected Note File"/>
+        <Button Grid.Row="0" Grid.Column="1" Content="Click Me" x:Name="btn_NoteFile" Click="btn_NoteFile_Click"/>
+        <Label Foreground="White" Grid.Row="1" Grid.Column="0" Content="Overlay Toggle Hotkey"/>
+        <Button Grid.Row="1" Grid.Column="1" Content="Click Me" x:Name="btn_OverlayHotkeyToggle" Click="btn_OverlayHotkeyToggle_Click"/>
+        <Label Foreground="White" Grid.Row="2" Grid.Column="0" Content="Overlay Scroll Up Hotkey"/>
+        <Button Grid.Row="2" Grid.Column="1" Content="Click Me" x:Name="btn_OverlayHotkeyScrollUp" Click="btn_OverlayHotkeyScrollUp_Click"/>
+        <Label Foreground="White" Grid.Row="3" Grid.Column="0" Content="Overlay Scroll Down Hotkey"/>
+        <Button Grid.Row="3" Grid.Column="1" Content="Click Me" x:Name="btn_OverlayHotkeyScrollDown" Click="btn_OverlayHotkeyScrollDown_Click"/>
+    </Grid>
+</Page>

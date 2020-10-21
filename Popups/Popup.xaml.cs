@@ -12,7 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace Project_127
+namespace Project_127.Popups
 {
 	/// <summary>
 	/// Popup Window. Used to custom Yes/No and Ok Dialogs.
@@ -47,10 +47,7 @@ namespace Project_127
 			if (MainWindow.MW.IsVisible)
 			{
 				this.Owner = MainWindow.MW;
-			}
-			else
-			{
-				this.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+				this.WindowStartupLocation = WindowStartupLocation.CenterOwner;
 			}
 
 			// Initializing all WPF Elements

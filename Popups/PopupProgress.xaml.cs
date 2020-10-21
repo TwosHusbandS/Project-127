@@ -16,7 +16,7 @@ using System.Windows.Shapes;
 using System.IO.Compression;
 
 
-namespace Project_127
+namespace Project_127.Popups
 {
 	/// <summary>
 	/// Interaction logic for CopyFileProgress.xaml
@@ -65,10 +65,7 @@ namespace Project_127
 			if (MainWindow.MW.IsVisible)
 			{
 				this.Owner = MainWindow.MW;
-			}
-			else
-			{
-				this.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+				this.WindowStartupLocation = WindowStartupLocation.CenterOwner;
 			}
 
 			InitializeComponent();

@@ -12,7 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace Project_127
+namespace Project_127.Popups
 {
 	/// <summary>
 	/// Interaction logic for PopupTextbox.xaml
@@ -36,10 +36,7 @@ namespace Project_127
 			if (MainWindow.MW.IsVisible)
 			{
 				this.Owner = MainWindow.MW;
-			}
-			else
-			{
-				this.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+				this.WindowStartupLocation = WindowStartupLocation.CenterOwner;
 			}
 
 			InitializeComponent();
