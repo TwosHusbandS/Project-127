@@ -54,8 +54,13 @@ namespace Project_127.Auth
 		private bool signinInProgress = false;
 		private int sendCount = 0;
 		private static bool newInstance = false;
-		public ROSIntegration()
+
+		private bool LaunchAfter;
+
+		public ROSIntegration(bool pLaunchAfter = false)
 		{
+			LaunchAfter = pLaunchAfter;
+
 			newInstance = true;
 			//CefSettings s = new CefSettings();
 			//s.CachePath = "B:\\test";
@@ -458,8 +463,6 @@ setTimeout(modHtml, 1000);
 					var RockstarID = UInt64.Parse(nav.SelectSingleNode("//*[local-name()='Response']/*[local-name()='RockstarAccount']/*[local-name()='RockstarId']").Value);
 					var ctime = Int64.Parse(nav.SelectSingleNode("//*[local-name()='Response']/*[local-name()='PosixTime']").Value);
 					var RockstarNick = nav.SelectSingleNode("//*[local-name()='Response']/*[local-name()='RockstarAccount']/*[local-name()='Nickname']").Value; //For (future?) use
-					this.Dispatcher.Invoke(() => this.Visibility = Visibility.Hidden);
-					MainWindow.MW.Dispatcher.Invoke(() => Globals.PageState = Globals.PageStates.GTA);
 					// Call our version of validate
 					bool valsucess = await ROSCommunicationBackend.Login(ticket, sessionKey, sessionTicket, RockstarID, ctime, RockstarNick);
 					// Do something with valsuccess (true if ownership is valid)
@@ -490,6 +493,15 @@ setTimeout(modHtml, 1000);
 						System.Windows.Forms.MessageBox.Show("Login Failure");
 					}
 
+					this.Dispatcher.Invoke(() => this.Visibility = Visibility.Hidden);
+					MainWindow.MW.Dispatcher.Invoke((Action)delegate
+					{
+						Globals.PageState = Globals.PageStates.GTA;
+						if (LaunchAfter)
+						{
+							LauncherLogic.Launch();
+						}
+					});
 					/*this.Dispatcher.Invoke(() =>
 					{
 						//this.Close();

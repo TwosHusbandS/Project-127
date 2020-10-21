@@ -14,22 +14,19 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <Label Foreground="White" Grid.Row="0" Grid.Column="0" Content="KeyBoardListener Running"/>
-        <CheckBox Grid.Row="0" Grid.Column="1" x:Name="cb_EnableKeyboardListener" Click="cb_EnableKeyboardListener_Click"/>
-        <Label Foreground="White" Grid.Row="1" Grid.Column="0" Content="KeyBoardListener Surpress Keys"/>
-        <CheckBox Grid.Row="1" Grid.Column="1" x:Name="cb_EnableKeyboardListenerSurpress" Click="cb_EnableKeyboardListenerSurpress_Click"/>
-        <Label Foreground="White" Grid.Row="2" Grid.Column="0" Content="WindowChangeListener"/>
-        <CheckBox Grid.Row="2" Grid.Column="1" x:Name="cb_EnableWindowChangeListener" Click="cb_EnableWindowChangeListener_Click"/>
-        <Label Foreground="White" Grid.Row="3" Grid.Column="0" Content="Latest Keypress"/>
-        <Label Foreground="White" Grid.Row="3" Grid.Column="1" x:Name="lbl_Latest_Keypress"/>
-        <Label Foreground="White" Grid.Row="4" Grid.Column="0" Content="Latest ForegroundEvent"/>
-        <Label Foreground="White" Grid.Row="4" Grid.Column="1" x:Name="lbl_Latest_ForegroundEvent"/>
+        <Label Foreground="White" Grid.Row="0" Grid.Column="0" Content="Selected Note File"/>
+        <Button Grid.Row="0" Grid.Column="1" Content="Click Me" x:Name="btn_NoteFile" Click="btn_NoteFile_Click"/>
+        <Label Foreground="White" Grid.Row="1" Grid.Column="0" Content="Overlay Toggle Hotkey"/>
+        <Button Grid.Row="1" Grid.Column="1" Content="Click Me" x:Name="btn_OverlayHotkeyToggle" Click="btn_OverlayHotkeyToggle_Click"/>
+        <Label Foreground="White" Grid.Row="2" Grid.Column="0" Content="Overlay Scroll Up Hotkey"/>
+        <Button Grid.Row="2" Grid.Column="1" Content="Click Me" x:Name="btn_OverlayHotkeyScrollUp" Click="btn_OverlayHotkeyScrollUp_Click"/>
+        <Label Foreground="White" Grid.Row="3" Grid.Column="0" Content="Overlay Scroll Down Hotkey"/>
+        <Button Grid.Row="3" Grid.Column="1" Content="Click Me" x:Name="btn_OverlayHotkeyScrollDown" Click="btn_OverlayHotkeyScrollDown_Click"/>
     </Grid>
 </Page>

@@ -73,18 +73,31 @@ namespace Project_127
 		}
 
 		/// <summary>
-		/// Property of our GameState
+		/// Property of our GameState. Gets polled every 2.5 seconds
 		/// </summary>
 		public static GameStates GameState
 		{
 			get
 			{
+				// Check if GTA V is running
 				if (HelperClasses.ProcessHandler.IsGtaRunning())
 				{
+					// If one of the Settings which require Hotkeys are enabled
+					if (Settings.EnableAutoStartJumpScript || Settings.EnableOverlay)
+					{
+						// Start WindowChangeListener, which then toggles KeyListener when needed 
+						HelperClasses.WindowChangeListener.Start();
+					}
+					else
+					{
+						HelperClasses.WindowChangeListener.Stop();
+					}
 					return GameStates.Running;
 				}
 				else
 				{
+					HelperClasses.WindowChangeListener.Stop();
+					HelperClasses.KeyboardListener.Stop();
 					return GameStates.NonRunning;
 				}
 			}
@@ -353,20 +366,22 @@ namespace Project_127
 					HelperClasses.Logger.Log("You are NOT already Authenticated. Throwing up Window now.");
 
 					// Trying to Auth User
+					Globals.LaunchAfterAuth = true;
 					Globals.PageState = Globals.PageStates.Auth;
+					return;
 
-					// If still not authed
-					if (AuthState == AuthStates.NotAuth)
-					{
-						// Throw Error and Quick
-						HelperClasses.Logger.Log("Manual User Auth on Launch click did not work. Launch method will exit");
-						new Popup(Popup.PopupWindowTypes.PopupOk, "Authentication not sucessfull. Will abort Launch Function. Please Try again");
-						return;
-					}
-					else
-					{
-						HelperClasses.Logger.Log("Auth inside of Launch Click worked");
-					}
+					//// If still not authed
+					//if (AuthState == AuthStates.NotAuth)
+					//{
+					//	// Throw Error and Quick
+					//	HelperClasses.Logger.Log("Manual User Auth on Launch click did not work. Launch method will exit");
+					//	new Popup(Popup.PopupWindowTypes.PopupOk, "Authentication not sucessfull. Will abort Launch Function. Please Try again");
+					//	return;
+					//}
+					//else
+					//{
+					//	HelperClasses.Logger.Log("Auth inside of Launch Click worked");
+					//}
 				}
 
 
@@ -483,10 +498,10 @@ namespace Project_127
 						HelperClasses.Logger.Log("Process is not already running...", 1);
 						if (HelperClasses.FileHandling.doesFileExist(Settings.PathFPSLimiter))
 						{
-							HelperClasses.Logger.Log("File does exist, lets start it...",1);
+							HelperClasses.Logger.Log("File does exist, lets start it...", 1);
 							try
 							{
-							HelperClasses.ProcessHandler.StartProcess(Settings.PathFPSLimiter);
+								HelperClasses.ProcessHandler.StartProcess(Settings.PathFPSLimiter);
 							}
 							catch { }
 						}

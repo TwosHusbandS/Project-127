@@ -13,6 +13,7 @@ using Project_127.KeyStuff;
 using Project_127.Overlay;
 using Project_127.Popups;
 using Project_127.SettingsStuff;
+using System.Windows.Forms;
 
 namespace Project_127.SettingsStuff
 {
@@ -599,6 +600,21 @@ namespace Project_127.SettingsStuff
 		/// <summary>
 		/// Settings EnableAutoStartJumpScript. Gets and Sets from the Dictionary.
 		/// </summary>
+		public static bool EnableOverlay
+		{
+			get
+			{
+				return GetBoolFromString(GetSetting("EnableOverlay"));
+			}
+			set
+			{
+				SetSetting("EnableOverlay", value.ToString());
+			}
+		}
+
+		/// <summary>
+		/// Settings EnableAutoStartJumpScript. Gets and Sets from the Dictionary.
+		/// </summary>
 		public static bool EnableAutoStartJumpScript
 		{
 			get
@@ -611,33 +627,94 @@ namespace Project_127.SettingsStuff
 			}
 		}
 
+
+		public static Keys GetKeyFromString(string pString)
+		{
+			Keys myReturnKey;
+			try
+			{
+				myReturnKey = (Keys)(Int32.Parse(pString));
+			}
+			catch
+			{
+				new Popups.Popup(Popup.PopupWindowTypes.PopupOkError, "Something broke while getting the Hotkeys from the Settings.\n Try Resetting Settings").ToString();
+				myReturnKey = Keys.None;
+			}
+			return myReturnKey;
+		}
+
 		/// <summary>
 		/// Settings JumpScriptKey1. Gets and Sets from the Dictionary.
 		/// </summary>
-		public static string JumpScriptKey1
+		public static Keys JumpScriptKey1
 		{
 			get
 			{
-				return GetSetting("JumpScriptKey1");
+				return GetKeyFromString(GetSetting("JumpScriptKey1"));
 			}
 			set
 			{
-				SetSetting("JumpScriptKey1", value);
+				SetSetting("JumpScriptKey1", ((int)value).ToString());
 			}
 		}
 
 		/// <summary>
 		/// Settings JumpScriptKey2. Gets and Sets from the Dictionary.
 		/// </summary>
-		public static string JumpScriptKey2
+		public static Keys JumpScriptKey2
 		{
 			get
 			{
-				return GetSetting("JumpScriptKey2");
+				return GetKeyFromString(GetSetting("JumpScriptKey2"));
 			}
 			set
 			{
-				SetSetting("JumpScriptKey2", value);
+				SetSetting("JumpScriptKey2", ((int)value).ToString());
+			}
+		}
+
+		/// <summary>
+		/// Settings KeyOverlayToggle. Gets and Sets from the Dictionary.
+		/// </summary>
+		public static Keys KeyOverlayToggle
+		{
+			get
+			{
+				return GetKeyFromString(GetSetting("KeyOverlayToggle"));
+			}
+			set
+			{
+				SetSetting("KeyOverlayToggle", ((int)value).ToString());
+			}
+		}
+
+		/// <summary>
+		/// Settings KeyOverlayScrollUp. Gets and Sets from the Dictionary.
+		/// </summary>
+		public static Keys KeyOverlayScrollUp
+		{
+			get
+			{
+				return GetKeyFromString(GetSetting("KeyOverlayScrollUp"));
+			}
+			set
+			{
+				SetSetting("KeyOverlayScrollUp", ((int)value).ToString());
+			}
+		}
+
+		/// <summary>
+		/// Settings KeyOverlayScrollDown. Gets and Sets from the Dictionary.
+		/// </summary>
+		public static Keys KeyOverlayScrollDown
+		{
+			get
+			{
+				return GetKeyFromString(GetSetting("KeyOverlayScrollDown"));
+			}
+			set
+			{
+				SetSetting("KeyOverlayScrollDown", ((int)value).ToString());
 			}
 		}
 

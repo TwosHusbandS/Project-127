@@ -18,6 +18,10 @@ namespace Project_127.HelperClasses
 {
 	// Copied and Adapted from: https://docs.microsoft.com/en-us/archive/blogs/toub/low-level-keyboard-hook-in-c
 
+	// This gets Started / Stopped based on the foreground Window in WindowChangeListener
+	//		(which gets started / stopped on 2.5 Second poll if GTA V is running in GameStates)
+
+
 	class KeyboardListener
 	{
 		// Dont need to mess with KeyUp or see how long something is pressed
@@ -32,12 +36,18 @@ namespace Project_127.HelperClasses
 
 		public static void Start()
 		{
-			Task.Run(() => KeyboardListener._Start());
+			if (!KeyboardListener.IsRunning)
+			{
+				Task.Run(() => KeyboardListener._Start());
+			}
 		}
 
 		public static void Stop()
 		{
-			Task.Run(() => KeyboardListener._Stop());
+			if (KeyboardListener.IsRunning)
+			{
+				Task.Run(() => KeyboardListener._Stop());
+			}
 		}
 
 		public static void _Start()
@@ -69,14 +79,25 @@ namespace Project_127.HelperClasses
 		private static IntPtr HookCallback(int nCode, IntPtr wParam, IntPtr lParam)
 		{
 			bool SurpressKeyEvent = false;
-			if (nCode >= 0)
+
+			try
 			{
-				if (wParam == (IntPtr)WM_KEYDOWN)
+				if (nCode >= 0)
 				{
-					int vkCode = Marshal.ReadInt32(lParam);
-					SurpressKeyEvent = KeyboardHandler.KeyboardEvent((Keys)vkCode);
+					if (wParam == (IntPtr)WM_KEYDOWN)
+					{
+						int vkCode = Marshal.ReadInt32(lParam);
+						SurpressKeyEvent = KeyboardHandler.KeyboardEvent((Keys)vkCode);
+					}
 				}
 			}
+			catch (Exception e)
+			{
+				Globals.DebugPopup(e.ToString());
+				HelperClasses.Logger.Log("TRY CATCH IN KEYBOARD CALLBACK: " + e.ToString());
+				return new IntPtr(-1);
+			}
+
 			if (SurpressKeyEvent)
 			{
 				return new IntPtr(-1);

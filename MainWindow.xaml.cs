@@ -59,6 +59,22 @@ General Files / Classes:
 Main To do:
 	- Tell Karsten about Birthday Present Thingy and show him this for work
 		
+
+
+	So thinky thinky:
+
+	Start and Stop the WindowChangeListener on GameState (Running or Non Running)
+	Start and Stop the KeyboardListener on WindowChangeListener (depending on top window)
+	Process KeyboardListener stuff for Jumpscript and also for Noteoverlay
+		Only do that if those features are enabled
+		
+	I might want to change it so the listener only runs if one of the features are enabled
+
+	Set Properties of Keys to Note overlay
+
+
+
+
 		AAAAAAAAAAA:
 		A lot of PoC is implemented, but not properly integrated in existing codebase, 
 		and should NOT be used at this point. Gotta connect it to the classes / Pages for overlay and jumpscript
@@ -270,8 +286,6 @@ namespace Project_127
 
 				new Popup(Popup.PopupWindowTypes.PopupOk, msg).ShowDialog();
 			}
-
-
 
 			// GUI SHIT
 			SetButtonMouseOverMagic(btn_Exit);

@@ -16,9 +16,10 @@ namespace Project_127.KeyStuff
 			bool SurpressEventFurther = false;
 
 			// Process Keyboard event here and then call the correct Methods in NoteOverlay and also in the Jumpscript
-			NoteOverlay.KeyBoardEvent(pKey);
+			//NoteOverlay.KeyBoardEvent(pKey);
+			HelperClasses.Logger.Log("Keypress detected: " + pKey);
 
-			return NoteOverlay.NO.RunKeyboardListenerSurpress;
+			return SurpressEventFurther;
 			//return SurpressEventFurther;
 		}
 	}

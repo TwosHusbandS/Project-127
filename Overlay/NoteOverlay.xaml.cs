@@ -14,6 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Project_127.HelperClasses;
+using Project_127.SettingsStuff;
 
 namespace Project_127.Overlay
 {
@@ -24,98 +25,65 @@ namespace Project_127.Overlay
 	{
 		public static NoteOverlay NO;
 
-		public bool RunKeyboardListener = false;
-		public bool RunKeyboardListenerSurpress = false;
-		public bool RunWindowChangeListener = false;
-
 		public NoteOverlay()
 		{
 			NoteOverlay.NO = this;
 			InitializeComponent();
-			//KeyboardListener.Start();
-			//WindowChangeListener.Start();
+
+			btn_OverlayHotkeyToggle.Content = Settings.KeyOverlayToggle;
+			btn_OverlayHotkeyScrollUp.Content = Settings.KeyOverlayScrollUp;
+			btn_OverlayHotkeyScrollDown.Content = Settings.KeyOverlayScrollDown;
 		}
-
-
-
 
 		public static void KeyBoardEvent(Keys pKey)
 		{
-			//if (pKey == Keys.Insert)
-			//{
-			//	KeyboardListener.Stop();
-			//}
-			//else
-			//{
-				try
-				{
-					NoteOverlay.NO.Dispatcher.Invoke((Action)delegate
-					{
-						NoteOverlay.NO.lbl_Latest_Keypress.Content = pKey.ToString();
-						//NoteOverlay.NO.btn_Tmp.Content = pKey.ToString();
-					});
-				}
-				catch (Exception e)
-				{
-					Globals.DebugPopup(e.ToString());
-				}
-			//}
-		}
-
-		private void btn_Tmp_Click(object sender, RoutedEventArgs e)
-		{
-			if (!KeyboardListener.IsRunning)
+			if (pKey == Settings.KeyOverlayToggle)
 			{
-				Globals.DebugPopup("Not running already, so ill start");
-				Task.Run(() => KeyboardListener.Start());
+				OverlayToggle();
 			}
-			else
+			else if (pKey == Settings.KeyOverlayScrollUp)
 			{
-				Globals.DebugPopup("Running already, so ill NOT start");
+				OverlayScrollUp();
+			}
+			else if (pKey == Settings.KeyOverlayScrollDown)
+			{
+				OverlayScrollDown();
 			}
 		}
 
-		private void cb_EnableKeyboardListener_Click(object sender, RoutedEventArgs e)
+		public static void OverlayToggle()
 		{
-			if (RunKeyboardListener == false)
-			{
-				RunKeyboardListener = true;
-				KeyboardListener.Start();
-			}
-			else
-			{
-				RunKeyboardListener = false;
-				KeyboardListener.Stop();
-			}
-			((System.Windows.Controls.CheckBox)sender).IsChecked = RunKeyboardListener;
+
 		}
 
-		private void cb_EnableKeyboardListenerSurpress_Click(object sender, RoutedEventArgs e)
+		public static void OverlayScrollUp()
 		{
-			if (RunKeyboardListenerSurpress == false)
-			{
-				RunKeyboardListenerSurpress = true;
-			}
-			else
-			{
-				RunKeyboardListenerSurpress = false;
-			}
-			((System.Windows.Controls.CheckBox)sender).IsChecked = RunKeyboardListenerSurpress;
+
 		}
 
-		private void cb_EnableWindowChangeListener_Click(object sender, RoutedEventArgs e)
+		public static void OverlayScrollDown()
 		{
-			if (RunWindowChangeListener == false)
-			{
-				RunWindowChangeListener = true;
-				WindowChangeListener.Start();
-			}
-			else
-			{
-				RunWindowChangeListener = false;
-				WindowChangeListener.Stop();
-			}
-			((System.Windows.Controls.CheckBox)sender).IsChecked = RunWindowChangeListener;
+
+		}
+
+		private void btn_NoteFile_Click(object sender, RoutedEventArgs e)
+		{
+
+		}
+
+		private void btn_OverlayHotkeyToggle_Click(object sender, RoutedEventArgs e)
+		{
+			
+		}
+
+		private void btn_OverlayHotkeyScrollUp_Click(object sender, RoutedEventArgs e)
+		{
+
+		}
+
+		private void btn_OverlayHotkeyScrollDown_Click(object sender, RoutedEventArgs e)
+		{
+
 		}
 	}
 }

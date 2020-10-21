@@ -85,6 +85,11 @@ namespace Project_127
 		public static string ZipFileDownloadLocation = Globals.ProjectInstallationPath + @"\NewZipFile.zip";
 
 		/// <summary>
+		/// We use this to launch after Auth automatically
+		/// </summary>
+		public static bool LaunchAfterAuth = false;
+
+		/// <summary>
 		/// Property if we are in Beta
 		/// </summary>
 		public static bool InternalMode
@@ -160,6 +165,7 @@ namespace Project_127
 			{"InstallationPath", Process.GetCurrentProcess().MainModule.FileName.Substring(0, Process.GetCurrentProcess().MainModule.FileName.LastIndexOf('\\')) },
 			{"GTAVInstallationPath", ""},
 			{"ZIPExtractionPath", Process.GetCurrentProcess().MainModule.FileName.Substring(0, Process.GetCurrentProcess().MainModule.FileName.LastIndexOf('\\')) },
+			{"EnableOverlay", "True"},
 			{"EnableLogging", "True"},
 			{"EnableCopyFilesInsteadOfHardlinking", "False"},
 			{"EnablePreOrderBonus", "False"},
@@ -177,8 +183,11 @@ namespace Project_127
 			{"EnableAutoStartFPSLimiter", "True" },
 			{"PathFPSLimiter", @"C:\Some\Path\SomeFile.exe" },
 			{"EnableAutoStartJumpScript", "True" },
-			{"JumpScriptKey1", "A" },
-			{"JumpScriptKey2", "A" },
+			{"JumpScriptKey1", "32" },
+			{"JumpScriptKey2", "76" },
+			{"KeyOverlayToggle", "45" },
+			{"KeyOverlayScrollUp", "38" },
+			{"KeyOverlayScrollDown", "40" },
 			{"EnableAutoStartNohboard", "True" },
 			{"EnableNohboardBurhac", "True" },
 			{"PathNohboard", @"C:\Some\Path\SomeFile.exe" },
@@ -687,7 +696,15 @@ namespace Project_127
 						MainWindow.MW.btn_ReadMe.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
 						break;
 					case PageStates.Auth:
-						MainWindow.MW.Frame_Main.Content = new ROSIntegration();
+						if (Globals.LaunchAfterAuth)
+						{
+							Globals.LaunchAfterAuth = false;
+							MainWindow.MW.Frame_Main.Content = new ROSIntegration(true);
+						}
+						else
+						{
+							MainWindow.MW.Frame_Main.Content = new ROSIntegration();
+						}
 						MainWindow.MW.btn_Auth.Style = Application.Current.FindResource("btn_hamburgeritem_selected") as Style;
 
 						MainWindow.MW.btn_ReadMe.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;

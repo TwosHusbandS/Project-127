@@ -10,6 +10,9 @@ namespace Project_127.HelperClasses
 
 	// Taken and adapted from: https://stackoverflow.com/a/10280800
 
+	// Gets Started / Stopped from the 2.5 seconds poll of if GTA V is running in GameStates
+	// This Starts / Stopps the KeyBoard Listener on Foreground Changed Event
+
 	class WindowChangeListener
 	{
 		private static WinEventDelegate dele = null;
@@ -18,7 +21,10 @@ namespace Project_127.HelperClasses
 
 		public static void Stop()
 		{
-			Task.Run(() => WindowChangeListener._Stop());
+			if (WindowChangeListener.IsRunning)
+			{
+				Task.Run(() => WindowChangeListener._Stop());
+			}
 		}
 
 		public static void _Stop()
@@ -28,7 +34,11 @@ namespace Project_127.HelperClasses
 
 		public static void Start()
 		{
-			Task.Run(() => WindowChangeListener._Start());
+			if (!WindowChangeListener.IsRunning)
+			{
+				Task.Run(() => WindowChangeListener._Start());
+			}
+			WinEventProc((IntPtr)null, 0, (IntPtr)null, 0, 0, 0, 0);
 		}
 
 		public static void _Start()
@@ -69,12 +79,18 @@ namespace Project_127.HelperClasses
 
 		public static void WinEventProc(IntPtr hWinEventHook, uint eventType, IntPtr hwnd, int idObject, int idChild, uint dwEventThread, uint dwmsEventTime)
 		{
-			if (GetActiveWindowTitle() != "Project 127 - Microsoft Visual Studio (Administrator)")
+			if (GetActiveWindowTitle() == "Grand Theft Auto V")
 			{
-				Overlay.NoteOverlay.NO.Dispatcher.Invoke((Action)delegate
+				MainWindow.MW.Dispatcher.Invoke((Action)delegate
 				{
-					Overlay.NoteOverlay.NO.lbl_Latest_ForegroundEvent.Content = GetActiveWindowTitle();
-					//NoteOverlay.NO.btn_Tmp.Content = pKey.ToString();
+					KeyboardListener.Start();
+				});
+			}
+			else
+			{
+				MainWindow.MW.Dispatcher.Invoke((Action)delegate
+				{
+					KeyboardListener.Stop();
 				});
 			}
 		}
