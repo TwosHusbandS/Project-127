@@ -134,9 +134,9 @@ namespace Project_127
 		/// <summary>
 		/// Enables the overlay
 		/// </summary>
-		public void Run()
+		public async void Run()
 		{
-			_window.Create();
+			await Task.Run(() => _window.Create());
 			//_window.Join();
 		}
 		
