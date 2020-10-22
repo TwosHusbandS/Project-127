@@ -7,11 +7,12 @@ using Image = GameOverlay.Drawing.Image;
 
 namespace Project_127
 {
-    class GTAOverlay : IDisposable
+    public class GTAOverlay : IDisposable
     {
 		private readonly GraphicsWindow _window;
 
-		private const string targetWindow = "Project - 1.27";
+		private const string targetWindow = "TeamSpeak 3";
+		//private const string targetWindow = "Project - 1.27";
 		//private const string targetWindow = "Grand Theft Auto V";
 		private readonly Dictionary<string, SolidBrush> _brushes;
 		private readonly Dictionary<string, Font> _fonts;
@@ -76,7 +77,8 @@ namespace Project_127
 			if (windowHandle == IntPtr.Zero)
             {
 				HelperClasses.Logger.Log("Failed to find GTAV window.");
-			} else
+			} 
+			else
             {
 				HelperClasses.Logger.Log("GTAV window found.");
 			}
@@ -98,6 +100,9 @@ namespace Project_127
 			_window.DestroyGraphics += _window_DestroyGraphics;
 			_window.DrawGraphics += _window_DrawGraphics;
 			_window.SetupGraphics += _window_SetupGraphics;
+
+			this.Run();
+			this.Visible = false;
 		}
 
 		private void _window_SetupGraphics(object sender, SetupGraphicsEventArgs e)
@@ -160,6 +165,7 @@ namespace Project_127
 			}
 
 			gfx.DrawTextWithBackground(_fonts["textFont"], _brushes["textColor"], _brushes["textBack"], textOffsetX, textOffsetY, NoteText);
+
 		}
 
 		/// <summary>
@@ -241,6 +247,21 @@ namespace Project_127
 			textOffsetY = y;
         }
 
+		/// <summary>
+		/// Represents the point at which text is rendered.
+		/// </summary>
+		public Point TextRenderPoint
+        {
+            get
+            {
+				return new Point(textOffsetX, textOffsetY);
+			}
+            set
+            {
+				setTextPosition((int)value.X, (int)value.Y);
+            }
+        }
+
 		private async Task<bool> graphicsReady() //Bool is just so it can be an awaitable task
         {
 			while (!_window.IsInitialized || !_window.Graphics.IsInitialized)
@@ -277,6 +298,7 @@ namespace Project_127
 			set
 			{
 				_window.IsVisible = value;
+				HelperClasses.Logger.Log("Set Overlay Visibility to " + this.Visible);
 			}
 		}
 		private string charWrap(string wtext, int lmax)
