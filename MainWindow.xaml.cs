@@ -81,14 +81,18 @@ Main To do:
 		=> Moved SourceCodeFiles around to make it easier to find stuff
 		=> Fixed Not launching after pressing Launch when non-auth
 		=> Dragon Implemented the GameOverlay (GTAOverlay)
-		=> KeyboardListener
-		=> WindowChangeForegroundEventListener
+		=> KeyboardListener (semi connected to backend, some stuff commented out)
+		=> WindowChangeForegroundEventListener (semi connected to backend, some stuff commented out)
+		=> "Look for Updates" Button
+		=> Made it generate debugfile and open explorer window of project 1.27 on rightclick of auth button
+		=> Fixed Auth Mouse Over
 
 		=== Keep in Mind === 
+	- Consistent Style
+	- USE GIT TO KEEP TRACK OF INSTALLATION STATES???
 	- Auth Button Mouseover
-	- CLient crashes when trying to auth when offline
+	- Client crashes when trying to auth when offline
 	- Uninstaller still is semi-manual...argh
-	- "Look for Updates" Button needs to be implemented
 	- Features still to do:
 		- Upgrade / Downgrade / Repair Improvements 
 			=> Popup Messages when Upgrading / Downgrading doesnt get you what you wanted (Specials Suggestion)
@@ -466,17 +470,21 @@ namespace Project_127
 					break;
 				case "btn_Auth":
 					string BaseArtworkPath = "";
+
 					if (LauncherLogic.AuthState == LauncherLogic.AuthStates.Auth)
 					{
 						BaseArtworkPath = @"Artwork\lock_closed";
 					}
-					else
+					else if (LauncherLogic.AuthState == LauncherLogic.AuthStates.NotAuth)
 					{
 						BaseArtworkPath = @"Artwork\lock_open";
 					}
-					if (myBtn.IsMouseOver)
+
+					if (Globals.PageState == Globals.PageStates.Auth)
 					{
-						if (Globals.PageState == Globals.PageStates.Auth)
+						// Reverse Mouse Over Effect
+
+						if (myBtn.IsMouseOver)
 						{
 							SetControlBackground(myBtn, BaseArtworkPath + ".png");
 						}
@@ -485,9 +493,11 @@ namespace Project_127
 							SetControlBackground(myBtn, BaseArtworkPath + "_mo.png");
 						}
 					}
-					else
+					else if (Globals.PageState != Globals.PageStates.Auth)
 					{
-						if (Globals.PageState == Globals.PageStates.Auth)
+						// Normal Mouse Over Effect
+
+						if (myBtn.IsMouseOver)
 						{
 							SetControlBackground(myBtn, BaseArtworkPath + "_mo.png");
 						}
@@ -496,6 +506,7 @@ namespace Project_127
 							SetControlBackground(myBtn, BaseArtworkPath + ".png");
 						}
 					}
+
 					break;
 			}
 		}
@@ -634,11 +645,7 @@ namespace Project_127
 			// Deletes File, Creates File, Adds to it
 			HelperClasses.FileHandling.WriteStringToFileOverwrite(DebugFile, DebugMessage.ToArray());
 
-			if (Globals.BetaMode || Globals.InternalMode)
-			{
-				// Opens the File
-				HelperClasses.ProcessHandler.StartProcess(@"C:\Windows\System32\notepad.exe", pCommandLineArguments: DebugFile);
-			}
+			HelperClasses.ProcessHandler.StartProcess(@"C:\Windows\explorer.exe", pCommandLineArguments: Globals.ProjectInstallationPath);
 		}
 
 
@@ -715,7 +722,8 @@ namespace Project_127
 				else
 				{
 					HelperClasses.Logger.Log("Installation State Broken.", 1);
-					new Popup(Popup.PopupWindowTypes.PopupOkError, "Installation State is broken. I suggest trying to repair.").ShowDialog();
+					new Popup(Popup.PopupWindowTypes.PopupOkError, "Installation State is broken. I suggest trying to repair.\nWill try to Upgrade anyways.").ShowDialog();
+					LauncherLogic.Upgrade();
 				}
 			}
 			else
@@ -815,8 +823,9 @@ namespace Project_127
 				}
 				else
 				{
-					HelperClasses.Logger.Log("Installation State Broken.", 1);
-					new Popup(Popup.PopupWindowTypes.PopupOkError, "Installation State is broken. I suggest trying to repair.").ShowDialog();
+					HelperClasses.Logger.Log("Installation State Broken. Downgrade procedure will be called anyways since it shouldnt break things.", 1);
+					new Popup(Popup.PopupWindowTypes.PopupOk, "Installation State is broken. I suggest trying to repair.\nWill try to Downgrade anyways").ShowDialog();
+					LauncherLogic.Downgrade();
 				}
 			}
 			else

@@ -11,7 +11,8 @@ namespace Project_127
     {
 		private readonly GraphicsWindow _window;
 
-		private const string targetWindow = "Command Prompt";
+		private const string targetWindow = "TeamSpeak 3";
+		//private const string targetWindow = "Command Prompt";
 		//private const string targetWindow = "Project - 1.27";
 		//private const string targetWindow = "Grand Theft Auto V";
 		private readonly Dictionary<string, SolidBrush> _brushes;

@@ -368,7 +368,7 @@ namespace Project_127
 		/// <summary>
 		/// Method which does the UpdateCheck on Startup
 		/// </summary>
-		private static void CheckForUpdate()
+		public static void CheckForUpdate()
 		{
 			// Check online File for Version.
 			string MyVersionOnlineString = HelperClasses.FileHandling.GetXMLTagContent(HelperClasses.FileHandling.GetStringFromURL(Globals.URL_AutoUpdate), "version");

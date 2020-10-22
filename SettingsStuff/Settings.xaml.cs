@@ -805,6 +805,11 @@ namespace Project_127.SettingsStuff
 			RefreshGUI();
 		}
 
-
+		private void btn_CheckForUpdate_Click(object sender, RoutedEventArgs e)
+		{
+			Globals.CheckForBigThree();
+			Globals.CheckForZipUpdate();
+			Globals.CheckForUpdate();
+		}
 	} // End of Class
 } // End of Namespace

@@ -63,7 +63,11 @@ namespace Project_127.Overlay
 				MyGTAOverlay.setTextColors(Color.FromArgb(255, 0, 255, 0), Color.Transparent);
 				MyGTAOverlay.setBackgroundColor(Color.FromArgb(102, Color.Black));
 				//MyGTAOverlay.setFont("consolas", 24, false, false, false);
-				MyGTAOverlay.setText("TestingSlashN\nTesting2SlashNSlashN\n\nTesting3SlashNSlashNslashN\n\n\nTesting4");
+				string[] tmp = new string[1];
+				tmp[0] = "TestingSlashN\nTesting2SlashNSlashN\n\nTesting3SlashNSlashNslashN\n\n\nTesting4";
+				NotesLoaded = tmp;
+				MyGTAOverlay.setText(NotesLoaded[0]);
+				NotesLoadedIndex = 0;
 			}
 		}
 
@@ -127,7 +131,7 @@ namespace Project_127.Overlay
 		public static void OverlayNoteNext()
 		{
 			int NotesLoadedNewIndex = NotesLoadedIndex;
-			if (NotesLoadedIndex == NotesLoaded.Length - 1)
+			if (NotesLoadedNewIndex == NotesLoaded.Length - 1)
 			{
 				NotesLoadedNewIndex = 0;
 			}
@@ -140,17 +144,18 @@ namespace Project_127.Overlay
 
 		public static void ChangeNoteIndex(int pNotesLoadedNewIndex)
 		{
-			if (pNotesLoadedNewIndex > 0 && pNotesLoadedNewIndex <= NotesLoaded.Length - 1)
+			if (pNotesLoadedNewIndex >= 0 && pNotesLoadedNewIndex <= NotesLoaded.Length - 1)
 			{
-				HelperClasses.Logger.Log("NotesLoadedIndex is now: " + NotesLoadedIndex);
-				NoteOverlay.MyGTAOverlay.setText(NotesLoaded[NotesLoadedIndex]);
+				HelperClasses.Logger.Log("NotesLoadedIndex is now: " + pNotesLoadedNewIndex);
+				NotesLoadedIndex = pNotesLoadedNewIndex;
+				NoteOverlay.MyGTAOverlay.setText(NotesLoaded[pNotesLoadedNewIndex]);
 			}
 		}
 
 		public static void OverlayNotePrev()
 		{
 			int NotesLoadedNewIndex = NotesLoadedIndex;
-			if (NotesLoadedIndex == 0)
+			if (NotesLoadedNewIndex == 0)
 			{
 				NotesLoadedNewIndex = NotesLoaded.Length - 1;
 			}
