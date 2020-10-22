@@ -11,7 +11,7 @@ namespace Project_127
     {
 		private readonly GraphicsWindow _window;
 
-		private const string targetWindow = "TeamSpeak 3";
+		private const string targetWindow = "Command Prompt";
 		//private const string targetWindow = "Project - 1.27";
 		//private const string targetWindow = "Grand Theft Auto V";
 		private readonly Dictionary<string, SolidBrush> _brushes;
@@ -22,6 +22,7 @@ namespace Project_127
         private string NoteText = "";
 		private int textOffsetX = 20;
 		private int textOffsetY = 20;
+		private int scrollInitial = 20;
 
 		//// <summary>
 		/// Determines the positioning of the overlay.
@@ -135,7 +136,7 @@ namespace Project_127
 		{
             var wb = new WindowBounds();
             WindowHelper.GetWindowBounds(WindowHelper.FindWindow(targetWindow), out wb);
-			var pos= coordFromPos(Position, wb, e.Graphics.Width, e.Graphics.Height);
+			var pos= coordFromPos(Position, wb, _window.Width, _window.Height);
             _window.X = pos[0];
             _window.Y = pos[1];
 			var gfx = e.Graphics;
@@ -163,7 +164,6 @@ namespace Project_127
 					bgImagePath = "";
                 }
 			}
-
 			gfx.DrawTextWithBackground(_fonts["textFont"], _brushes["textColor"], _brushes["textBack"], textOffsetX, textOffsetY, NoteText);
 
 		}
@@ -285,6 +285,66 @@ namespace Project_127
 				bgImageOpac = (float)value;
             }
         }
+
+		/// <summary>
+		/// Sets the initial point for scrolling render.
+		/// </summary>
+		public void SetInitialScropPosition()
+		{
+			scrollInitial = textOffsetY;
+		}
+
+		/// <summary>
+		/// Sets the initial point for scrolling render.
+		/// </summary>
+		/// <param name="y">Initial scroll y position</param>
+		public void SetInitialScropPosition(int y)
+        {
+			scrollInitial = y;
+        }
+
+		/// <summary>
+		/// Scrolls the text by a given number of pixels
+		/// </summary>
+		/// <param name="delta">Number of pixels to scroll</param>
+		public async void scroll(int delta)
+        {
+			await graphicsReady();
+			var f = _fonts["textFont"];
+			var wtext = charWrap(NoteText, WrapCount);
+			var lines = wtext.Replace("\r\n", "\n").Split('\n');
+			int lineH = 0;
+			int lineCount = 0;
+			foreach (var line in lines)
+            {
+				var SF = new System.Drawing.Font(f.FontFamilyName,
+					f.FontSize,
+					(f.Bold ? System.Drawing.FontStyle.Bold : 0) |
+					(f.Italic ? System.Drawing.FontStyle.Italic : 0),
+					System.Drawing.GraphicsUnit.Pixel);
+				var lineS = System.Windows.Forms.TextRenderer.MeasureText(line, SF);
+				double n = ((double)lineS.Width) / (_window.Graphics.Width - 2 * textOffsetX);
+				var lh = (int)Math.Ceiling((double)lineS.Height);
+				lineH = lh > lineH ? lh : lineH;
+				if (!f.WordWeapping)
+                {
+					n = 1;
+                }
+				n = (n > 0) ? n : 1;
+				lineCount += (int)Math.Ceiling(n);
+			}
+			int boundMin = (int)(scrollInitial - lineH * (lineCount-1));
+			_window.Graphics.Height = (int)(lineH * lineCount * 2);
+			textOffsetY += delta;
+			if (textOffsetY > scrollInitial)
+            {
+				textOffsetY = scrollInitial;
+            }
+			if (textOffsetY < boundMin)
+            {
+				textOffsetY = boundMin;
+            }
+		}
 
         /// <summary>
         /// Determines whether or not the overlay is visible.
