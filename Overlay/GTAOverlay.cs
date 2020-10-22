@@ -394,23 +394,25 @@ namespace Project_127
 			resx += PaddingSize + XMargin;
 			resy += PaddingSize + YMargin;
 			var coords = new int[2];
+			int xborder = System.Windows.Forms.SystemInformation.FrameBorderSize.Width*2;
+			int yborder = System.Windows.Forms.SystemInformation.FrameBorderSize.Height*2;
 			switch (p)
             {
 				case Positions.TopLeft:
 					coords[1] = wb.Top + PaddingSize + YMargin;
-					coords[0] = wb.Left + PaddingSize + XMargin;
+					coords[0] = wb.Left + PaddingSize + XMargin + xborder;
 					break;
 				case Positions.TopRight:
 					coords[1] = wb.Top + PaddingSize + YMargin;
-					coords[0] = wb.Right - resx;
+					coords[0] = wb.Right - resx - xborder;
 					break;
 				case Positions.BottomLeft:
-					coords[1] = wb.Bottom - resy;
-					coords[0] = wb.Left + PaddingSize + XMargin;
+					coords[1] = wb.Bottom - resy - yborder;
+					coords[0] = wb.Left + PaddingSize + XMargin + +xborder;
 					break;
 				case Positions.BottomRight:
-					coords[1] = wb.Bottom - resy;
-					coords[0] = wb.Right - resx;
+					coords[1] = wb.Bottom - resy - yborder;
+					coords[0] = wb.Right - resx - xborder;
 					break;
 				default:
 					goto case Positions.TopLeft;
