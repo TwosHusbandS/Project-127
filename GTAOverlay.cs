@@ -1,12 +1,8 @@
 ﻿using GameOverlay.Drawing;
 using GameOverlay.Windows;
-using SharpDX.Direct2D1;
-using SharpDX.DXGI;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 using Image = GameOverlay.Drawing.Image;
 
 namespace Project_127
@@ -164,7 +160,6 @@ namespace Project_127
 			}
 
 			gfx.DrawTextWithBackground(_fonts["textFont"], _brushes["textColor"], _brushes["textBack"], textOffsetX, textOffsetY, NoteText);
-
 		}
 
 		/// <summary>
