@@ -57,38 +57,11 @@ General Files / Classes:
 		ROSCommunicationBackend.cs // Backend by @d490n
 
 Main To do:
-	- Tell Karsten about Birthday Present Thingy and show him this for work
-		
-
-
 	So thinky thinky:
 
-	Start and Stop the WindowChangeListener on GameState (Running or Non Running)
-	Start and Stop the KeyboardListener on WindowChangeListener (depending on top window)
-	Process KeyboardListener stuff for Jumpscript and also for Noteoverlay
+	Process KeyboardListener stuff for Jumpscript and also for Noteoverlay in KeyboardHandler instead of the actual classes...
 		Only do that if those features are enabled
 		
-	I might want to change it so the listener only runs if one of the features are enabled
-
-	Set Properties of Keys to Note overlay
-
-
-
-
-		AAAAAAAAAAA:
-		A lot of PoC is implemented, but not properly integrated in existing codebase, 
-		and should NOT be used at this point. Gotta connect it to the classes / Pages for overlay and jumpscript
-		and also decide when to start / stop them and shit
-		
-		quick and dirty thoughts:
-		Changed Polling of if GTA V is running from 5 to 2.5 seconds.
-		Implemented PoC of KeyboardListener (with ability to surpress further processing of the keystroke by other programs) done
-		Implemented PoC of WindowChange Listener done
-		Both of those have the ability to start and stop at will (and do not use any resources when turned off)
-		
-		To Do:
-		Connect all of the PoC event listeners to the actual classes and windows we are gonna use for the logic.
-		Semi implement logic, semi implement front end for NoteOverlay so we have some data and params to call dragons stuff.
 		Look into sending Keypresses to GTA V, then check if they get caught in our spider web of keyboard listener logic and find a workaround if they do
 			
 		SaveFileHandler Folder dectection and display. Dummy Double Click Method done.
@@ -96,6 +69,7 @@ Main To do:
 			Gotta Refresh on Renaming Left side btw (for NiceName Update)
 		
 	- Changelog past 1.0.0.0 Build 3:
+		=> Changed Polling Rate of GTA V Running or Not from 5 to 2.5 seconds
 		=> Gave Reloe the new Installer Link
 		=> Fixed Spelling Mistake
 		=> Throwing only one nice Network error now, instead of all of them with exception string
@@ -105,8 +79,14 @@ Main To do:
 		=> Improved GTA V Path detection Logging
 		=> Added Import GTA V Settings Button back
 		=> Moved SourceCodeFiles around to make it easier to find stuff
+		=> Fixed Not launching after pressing Launch when non-auth
+		=> Dragon Implemented the GameOverlay (GTAOverlay)
+		=> KeyboardListener
+		=> WindowChangeForegroundEventListener
 
 		=== Keep in Mind === 
+	- Auth Button Mouseover
+	- CLient crashes when trying to auth when offline
 	- Uninstaller still is semi-manual...argh
 	- "Look for Updates" Button needs to be implemented
 	- Features still to do:
