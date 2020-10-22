@@ -79,18 +79,20 @@ namespace Project_127.HelperClasses
 
 		public static void WinEventProc(IntPtr hWinEventHook, uint eventType, IntPtr hwnd, int idObject, int idChild, uint dwEventThread, uint dwmsEventTime)
 		{
+			// Lines below are commented out because we are testing the Overlay on TeamSpeak 3
+
 			if (GetActiveWindowTitle() == "Grand Theft Auto V")
 			{
 				MainWindow.MW.Dispatcher.Invoke((Action)delegate
 				{
-					KeyboardListener.Start();
+					//KeyboardListener.Start();
 				});
 			}
 			else
 			{
 				MainWindow.MW.Dispatcher.Invoke((Action)delegate
 				{
-					KeyboardListener.Stop();
+					//KeyboardListener.Stop();
 				});
 			}
 		}

@@ -9,7 +9,6 @@ using System.Windows.Controls;
 using Project_127;
 using Project_127.Auth;
 using Project_127.HelperClasses;
-using Project_127.KeyStuff;
 using Project_127.Overlay;
 using Project_127.Popups;
 using Project_127.SettingsStuff;
@@ -637,7 +636,7 @@ namespace Project_127.SettingsStuff
 			}
 			catch
 			{
-				new Popups.Popup(Popup.PopupWindowTypes.PopupOkError, "Something broke while getting the Hotkeys from the Settings.\n Try Resetting Settings").ToString();
+				new Popups.Popup(Popup.PopupWindowTypes.PopupOkError, "Something broke while getting the Hotkeys from the Settings.\n Try Resetting Settings").ShowDialog();
 				myReturnKey = Keys.None;
 			}
 			return myReturnKey;
@@ -685,6 +684,37 @@ namespace Project_127.SettingsStuff
 			set
 			{
 				SetSetting("KeyOverlayToggle", ((int)value).ToString());
+			}
+		}
+
+
+		/// <summary>
+		/// Settings KeyOverlayScrollLeft. Gets and Sets from the Dictionary.
+		/// </summary>
+		public static Keys KeyOverlayScrollLeft
+		{
+			get
+			{
+				return GetKeyFromString(GetSetting("KeyOverlayScrollLeft"));
+			}
+			set
+			{
+				SetSetting("KeyOverlayScrollLeft", ((int)value).ToString());
+			}
+		}
+
+		/// <summary>
+		/// Settings KeyOverlayScrollRight. Gets and Sets from the Dictionary.
+		/// </summary>
+		public static Keys KeyOverlayScrollRight
+		{
+			get
+			{
+				return GetKeyFromString(GetSetting("KeyOverlayScrollRight"));
+			}
+			set
+			{
+				SetSetting("KeyOverlayScrollRight", ((int)value).ToString());
 			}
 		}
 

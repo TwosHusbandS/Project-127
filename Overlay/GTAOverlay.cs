@@ -251,16 +251,16 @@ namespace Project_127
 		/// Represents the point at which text is rendered.
 		/// </summary>
 		public Point TextRenderPoint
-        {
-            get
-            {
+		{
+			get
+			{
 				return new Point(textOffsetX, textOffsetY);
 			}
-            set
-            {
+			set
+			{
 				setTextPosition((int)value.X, (int)value.Y);
-            }
-        }
+			}
+		}
 
 		private async Task<bool> graphicsReady() //Bool is just so it can be an awaitable task
         {

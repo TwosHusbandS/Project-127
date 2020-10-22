@@ -16,7 +16,6 @@ using System.Windows.Threading;
 using Project_127;
 using Project_127.Auth;
 using Project_127.HelperClasses;
-using Project_127.KeyStuff;
 using Project_127.Overlay;
 using Project_127.Popups;
 using Project_127.SettingsStuff;
@@ -186,7 +185,9 @@ namespace Project_127
 			{"JumpScriptKey1", "32" },
 			{"JumpScriptKey2", "76" },
 			{"KeyOverlayToggle", "45" },
+			{"KeyOverlayScrollLeft", "37" },
 			{"KeyOverlayScrollUp", "38" },
+			{"KeyOverlayScrollRight", "39" },
 			{"KeyOverlayScrollDown", "40" },
 			{"EnableAutoStartNohboard", "True" },
 			{"EnableNohboardBurhac", "True" },
