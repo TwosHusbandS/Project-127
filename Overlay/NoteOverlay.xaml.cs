@@ -15,6 +15,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Project_127.HelperClasses;
 using Project_127.SettingsStuff;
+using System.Diagnostics;
 
 namespace Project_127.Overlay
 {
@@ -42,6 +43,7 @@ namespace Project_127.Overlay
 			// To get Back to real things, we gotta uncomment a few things in Globals.GameState Getter, 
 			//	as well as WindowChangeListener.WinEventproc
 			// as well as change target window to "Grand Theft Auto V" in GTAOverlay.cs
+			// as well as actually processing the keyboard inputs in KeyboardHandler.cs
 
 			InitializeComponent();
 
@@ -118,32 +120,39 @@ namespace Project_127.Overlay
 
 		public static void OverlayNoteNext()
 		{
-			int LengthOfNotesLoaded = NotesLoaded.Length;
-			if (NotesLoadedIndex == LengthOfNotesLoaded - 1)
+			int NotesLoadedNewIndex = NotesLoadedIndex;
+			if (NotesLoadedIndex == NotesLoaded.Length - 1)
 			{
-				NotesLoadedIndex = 0;
+				NotesLoadedNewIndex = 0;
 			}
 			else
 			{
-				NotesLoadedIndex += 1;
+				NotesLoadedNewIndex += 1;
 			}
-			HelperClasses.Logger.Log("NotesLoadedIndex is now: " + NotesLoadedIndex);
-			NoteOverlay.MyGTAOverlay.setText(NotesLoaded[NotesLoadedIndex]);
+			ChangeNoteIndex(NotesLoadedNewIndex);
+		}
+
+		public static void ChangeNoteIndex(int pNotesLoadedNewIndex)
+		{
+			if (pNotesLoadedNewIndex > 0 && pNotesLoadedNewIndex <= NotesLoaded.Length - 1)
+			{
+				HelperClasses.Logger.Log("NotesLoadedIndex is now: " + NotesLoadedIndex);
+				NoteOverlay.MyGTAOverlay.setText(NotesLoaded[NotesLoadedIndex]);
+			}
 		}
 
 		public static void OverlayNotePrev()
 		{
-			int LengthOfNotesLoaded = NotesLoaded.Length;
+			int NotesLoadedNewIndex = NotesLoadedIndex;
 			if (NotesLoadedIndex == 0)
 			{
-				NotesLoadedIndex = NotesLoaded.Length - 1;
+				NotesLoadedNewIndex = NotesLoaded.Length - 1;
 			}
 			else
 			{
-				NotesLoadedIndex -= 1;
+				NotesLoadedNewIndex -= 1;
 			}
-			HelperClasses.Logger.Log("NotesLoadedIndex is now: " + NotesLoadedIndex);
-			NoteOverlay.MyGTAOverlay.setText(NotesLoaded[NotesLoadedIndex]);
+			ChangeNoteIndex(NotesLoadedNewIndex);
 		}
 
 		private void btn_NoteFile_Click(object sender, RoutedEventArgs e)
@@ -169,44 +178,59 @@ namespace Project_127.Overlay
 			NoteOverlay.MyGTAOverlay.setText(NotesLoaded[0]);
 		}
 
-		private void btn_OverlayHotkeyToggle_Click(object sender, RoutedEventArgs e)
+		private async void btn_OverlayHotkeyToggle_Click(object sender, RoutedEventArgs e)
 		{
-			// Methods to change the hotkey for this. Will just be here for POC Implementation of that	
-			btn_OverlayHotkeyToggle.Content = "[Press new Key Now]";
-			Keys MyNewKey = KeyboardHandler.GetNextKeyPress();
-			if (MyNewKey == Keys.None)
+			((Button)sender).Content = "[Press new Key Now]";
+			Keys MyNewKey = await KeyboardHandler.GetNextKeyPress();
+			if (MyNewKey != Keys.None && MyNewKey != Keys.Escape)
 			{
-				HelperClasses.Logger.Log("FUCK THIS");
-				Globals.DebugPopup("Well this sucks, None");
+				Settings.KeyOverlayToggle = MyNewKey;
 			}
-			else if (MyNewKey == Keys.Escape)
+			((Button)sender).Content = Settings.KeyOverlayToggle;
+		}
+
+		private async void btn_OverlayHotkeyScrollUp_Click(object sender, RoutedEventArgs e)
+		{
+			((Button)sender).Content = "[Press new Key Now]";
+			Keys MyNewKey = await KeyboardHandler.GetNextKeyPress();
+			if (MyNewKey != Keys.None && MyNewKey != Keys.Escape)
 			{
-				Globals.DebugPopup("Well this sucks, Escape");
+				Settings.KeyOverlayScrollUp = MyNewKey;
 			}
-			else
+			((Button)sender).Content = Settings.KeyOverlayScrollUp;
+		}
+
+		private async void btn_OverlayHotkeyScrollDown_Click(object sender, RoutedEventArgs e)
+		{
+			((Button)sender).Content = "[Press new Key Now]";
+			Keys MyNewKey = await KeyboardHandler.GetNextKeyPress();
+			if (MyNewKey != Keys.None && MyNewKey != Keys.Escape)
 			{
-				btn_OverlayHotkeyToggle.Content = MyNewKey;
+				Settings.KeyOverlayScrollDown = MyNewKey;
 			}
+			((Button)sender).Content = Settings.KeyOverlayScrollDown;
 		}
 
-		private void btn_OverlayHotkeyScrollUp_Click(object sender, RoutedEventArgs e)
+		private async void btn_OverlayHotkeyScrollRight_Click(object sender, RoutedEventArgs e)
 		{
-
+			((Button)sender).Content = "[Press new Key Now]";
+			Keys MyNewKey = await KeyboardHandler.GetNextKeyPress();
+			if (MyNewKey != Keys.None && MyNewKey != Keys.Escape)
+			{
+				Settings.KeyOverlayScrollRight = MyNewKey;
+			}
+			((Button)sender).Content = Settings.KeyOverlayScrollRight;
 		}
 
-		private void btn_OverlayHotkeyScrollDown_Click(object sender, RoutedEventArgs e)
+		private async void btn_OverlayHotkeyScrollLeft_Click(object sender, RoutedEventArgs e)
 		{
-
-		}
-
-		private void btn_OverlayHotkeyScrollRight_Click(object sender, RoutedEventArgs e)
-		{
-
-		}
-
-		private void btn_OverlayHotkeyScrollLeft_Click(object sender, RoutedEventArgs e)
-		{
-
+			((Button)sender).Content = "[Press new Key Now]";
+			Keys MyNewKey = await KeyboardHandler.GetNextKeyPress();
+			if (MyNewKey != Keys.None && MyNewKey != Keys.Escape)
+			{
+				Settings.KeyOverlayScrollLeft = MyNewKey;
+			}
+			((Button)sender).Content = Settings.KeyOverlayScrollLeft;
 		}
 	}
 }
