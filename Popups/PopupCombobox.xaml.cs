@@ -11,8 +11,15 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using Project_127;
+using Project_127.Auth;
+using Project_127.HelperClasses;
+using Project_127.KeyStuff;
+using Project_127.Overlay;
+using Project_127.Popups;
+using Project_127.SettingsStuff;
 
-namespace Project_127
+namespace Project_127.Popups
 {
 	/// <summary>
 	/// Interaction logic for PopupCombobox.xaml
@@ -31,10 +38,7 @@ namespace Project_127
 			if (MainWindow.MW.IsVisible)
 			{
 				this.Owner = MainWindow.MW;
-			}
-			else
-			{
-				this.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+				this.WindowStartupLocation = WindowStartupLocation.CenterOwner;
 			}
 
 			// Initializing all WPF Elements

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,6 +14,13 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using Project_127;
+using Project_127.Auth;
+using Project_127.HelperClasses;
+using Project_127.KeyStuff;
+using Project_127.Overlay;
+using Project_127.Popups;
+using Project_127.SettingsStuff;
 
 namespace Project_127
 {
@@ -26,6 +34,7 @@ namespace Project_127
 		/// </summary>
 		public SaveFileHandler()
 		{
+
 			// Initializing all WPF Elements
 			InitializeComponent();
 
@@ -36,6 +45,7 @@ namespace Project_127
 			MouseOverMagic(btn_LeftArrow);
 			MouseOverMagic(btn_RightArrow);
 			MouseOverMagic(btn_Refresh);
+
 		}
 
 
@@ -50,7 +60,7 @@ namespace Project_127
 				case "btn_LeftArrow":
 					if (myBtn.IsMouseOver)
 					{
-						MainWindow.MW.SetControlBackground(myBtn,@"Artwork/arrowleft_mo.png");
+						MainWindow.MW.SetControlBackground(myBtn, @"Artwork/arrowleft_mo.png");
 					}
 					else
 					{
@@ -94,17 +104,17 @@ namespace Project_127
 			// Loop through the childitems and then move it to the correct index
 			// Pretty much implement our own Sorting Method which uses MySaveFile.BackupSaves.Move(a,b);
 
-			if (pDataGrid.ItemsSource == null)
-				pDataGrid.ItemsSource = MySaveFile.BackupSaves;
-			CollectionViewSource.GetDefaultView(pDataGrid.ItemsSource).Refresh();
-			pDataGrid.Items.SortDescriptions.Clear();
-			pDataGrid.Items.SortDescriptions.Add(new SortDescription(pDataGrid.Columns[0].SortMemberPath, ListSortDirection.Ascending));
-			foreach (var col in pDataGrid.Columns)
-			{
-				col.SortDirection = null;
-			}
-			pDataGrid.Columns[0].SortDirection = ListSortDirection.Ascending;
-			pDataGrid.Items.Refresh();
+			//if (pDataGrid.ItemsSource == null)
+			//	pDataGrid.ItemsSource = MySaveFile.BackupSaves;
+			//CollectionViewSource.GetDefaultView(pDataGrid.ItemsSource).Refresh();
+			//pDataGrid.Items.SortDescriptions.Clear();
+			//pDataGrid.Items.SortDescriptions.Add(new SortDescription(pDataGrid.Columns[0].SortMemberPath, ListSortDirection.Ascending));
+			//foreach (var col in pDataGrid.Columns)
+			//{
+			//	col.SortDirection = null;
+			//}
+			//pDataGrid.Columns[0].SortDirection = ListSortDirection.Ascending;
+			//pDataGrid.Items.Refresh();
 		}
 
 		/// <summary>
@@ -117,6 +127,15 @@ namespace Project_127
 			// Resetting the Obvservable Collections:
 			MySaveFile.BackupSaves = new ObservableCollection<MySaveFile>();
 			MySaveFile.GTASaves = new ObservableCollection<MySaveFile>();
+
+
+			MySaveFile.BackupSaves.Add(new MySaveFile(MySaveFile.BackupSavesPath, true));
+			string[] MySubFolders = HelperClasses.FileHandling.GetSubFolders(MySaveFile.BackupSavesPath);
+			foreach (string MySubFolder in MySubFolders)
+			{
+				MySaveFile.BackupSaves.Add(new MySaveFile(MySubFolder, true));
+			}
+
 
 			// Files in BackupSaves (own File Path)
 			string[] MyBackupSaveFiles = HelperClasses.FileHandling.GetFilesFromFolder(MySaveFile.BackupSavesPath);
@@ -515,6 +534,13 @@ namespace Project_127
 			Sort(dg_BackupFiles);
 		}
 
-
+		private void Row_DoubleClick(object sender, MouseButtonEventArgs e)
+		{
+			MySaveFile asdff = GetSelectedSaveFile();
+			if (asdff.FileOrFolder == MySaveFile.FileOrFolders.Folder)
+			{
+				Globals.DebugPopup(asdff.FilePath);
+			}
+		}
 	} // End of Class
 } // End of Namespace

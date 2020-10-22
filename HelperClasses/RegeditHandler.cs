@@ -109,14 +109,13 @@ namespace Project_127.HelperClasses
 			}
 			catch
 			{
-				HelperClasses.Logger.Log("haha regedit goes boom while reading. Function will return \"\"");
 				if (pRKey == null)
 				{
-					HelperClasses.Logger.Log("pRKey is null");
+					HelperClasses.Logger.Log("haha regedit goes boom while reading. Function will return \"\". pRKey is null");
 				}
 				else
 				{
-				HelperClasses.Logger.Log("pRKey: '" + pRKey.ToString() + "', pValue: '" + pValue + "'", 1);
+				HelperClasses.Logger.Log("haha regedit goes boom while reading. Function will return \"\". pRKey: '" + pRKey.ToString() + "', pValue: '" + pValue + "'", 1);
 				}
 			}
 			return rtrn;

@@ -48,6 +48,11 @@
 
                     <ScrollViewer x:Name="sv_BackupFiles" Grid.Row="1">
                         <DataGrid x:Name="dg_BackupFiles" Style="{StaticResource dg}" PreviewMouseWheel="dg_BackupFiles_PreviewMouseWheel" GotFocus="dg_BackupFiles_GotFocus" PreviewKeyDown="dg_KeyDown">
+                            <DataGrid.Resources>
+                                <Style TargetType="DataGridRow">
+                                    <EventSetter Event="MouseDoubleClick" Handler="Row_DoubleClick"/>
+                                </Style>
+                            </DataGrid.Resources>
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="Filename" Binding="{Binding FileName, Mode=OneWay}" Width="*" FontSize="20" />
                             </DataGrid.Columns>
