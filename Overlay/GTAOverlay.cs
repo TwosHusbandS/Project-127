@@ -15,7 +15,7 @@ namespace Project_127
     {
 		private readonly GraphicsWindow _window;
 
-		private const string targetWindow = "WhatsApp";
+		private const string targetWindow = "TeamSpeak 3";
 		//private const string targetWindow = "Project - 1.27";
 		//private const string targetWindow = "Grand Theft Auto V";
 		private readonly Dictionary<string, SolidBrush> _brushes;
@@ -104,6 +104,9 @@ namespace Project_127
 			_window.DestroyGraphics += _window_DestroyGraphics;
 			_window.DrawGraphics += _window_DrawGraphics;
 			_window.SetupGraphics += _window_SetupGraphics;
+
+			this.Run();
+			this.Visible = false;
 		}
 
 		private void _window_SetupGraphics(object sender, SetupGraphicsEventArgs e)
@@ -284,6 +287,7 @@ namespace Project_127
 			set
 			{
 				_window.IsVisible = value;
+				HelperClasses.Logger.Log("Set Overlay Visibility to " + this.Visible);
 			}
 		}
 		private string charWrap(string wtext, int lmax)

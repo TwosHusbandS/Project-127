@@ -13,7 +13,6 @@ using System.Windows;
 using Project_127;
 using Project_127.Auth;
 using Project_127.HelperClasses;
-using Project_127.KeyStuff;
 using Project_127.Overlay;
 using Project_127.Popups;
 using Project_127.SettingsStuff;
@@ -77,6 +76,8 @@ namespace Project_127
 		/// </summary>
 		public static GameStates GameState
 		{
+			// Shit is commented out, because we dont handle the Overlay and the Keyboard Listener automatically here
+			// because we use TeamSpeak 3 for testing the overlay, instead of GTA V
 			get
 			{
 				// Check if GTA V is running
@@ -85,22 +86,22 @@ namespace Project_127
 					// If one of the Settings which require Hotkeys are enabled
 					if (Settings.EnableAutoStartJumpScript || Settings.EnableOverlay)
 					{
-						// Start WindowChangeListener, which then toggles KeyListener when needed 
 						//NoteOverlay.InitGTAOverlay();
 						HelperClasses.WindowChangeListener.Start();
-
 					}
 					else
 					{
 						//NoteOverlay.DisposeGTAOverlay();
+						//HelperClasses.KeyboardListener.Stop();
 						HelperClasses.WindowChangeListener.Stop();
 					}
 					return GameStates.Running;
 				}
 				else
 				{
-					HelperClasses.WindowChangeListener.Stop();
+					//NoteOverlay.DisposeGTAOverlay();
 					//HelperClasses.KeyboardListener.Stop();
+					HelperClasses.WindowChangeListener.Stop();
 					return GameStates.NonRunning;
 				}
 			}

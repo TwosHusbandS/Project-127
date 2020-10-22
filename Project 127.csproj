@@ -176,10 +176,10 @@
     <Compile Include="HelperClasses\OwnOpenFolderDialog\FolderSelectDialog.cs" />
     <Compile Include="HelperClasses\OwnOpenFolderDialog\Reflector.cs" />
     <Compile Include="HelperClasses\WindowChangeListener.cs" />
-    <Compile Include="KeyStuff\KeyboardHandler.cs" />
-    <Compile Include="KeyStuff\KeyboardSender.cs" />
+    <Compile Include="HelperClasses\Keyboard\KeyboardHandler.cs" />
+    <Compile Include="HelperClasses\Keyboard\KeyboardSender.cs" />
     <Compile Include="MyFileOperation.cs" />
-    <Compile Include="HelperClasses\KeyboardListener.cs" />
+    <Compile Include="HelperClasses\Keyboard\KeyboardListener.cs" />
     <Compile Include="Overlay\NoteOverlay.xaml.cs">
       <DependentUpon>NoteOverlay.xaml</DependentUpon>
     </Compile>

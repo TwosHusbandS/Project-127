@@ -9,7 +9,6 @@ using System.Windows.Forms;
 using Project_127;
 using Project_127.Auth;
 using Project_127.HelperClasses;
-using Project_127.KeyStuff;
 using Project_127.Overlay;
 using Project_127.Popups;
 using Project_127.SettingsStuff;
@@ -27,6 +26,9 @@ namespace Project_127.HelperClasses
 		// Dont need to mess with KeyUp or see how long something is pressed
 		// Since Jumpscript should just "translate" keypressed 1:1 and not act like a auto-spam-script
 
+		public static bool DontStop = false;
+		public static bool WantToStop = false;
+
 		private const int WH_KEYBOARD_LL = 13;
 		private const int WM_KEYDOWN = 0x0100;
 		private static LowLevelKeyboardProc _proc = HookCallback;
@@ -36,6 +38,7 @@ namespace Project_127.HelperClasses
 
 		public static void Start()
 		{
+			WantToStop = false;
 			if (!KeyboardListener.IsRunning)
 			{
 				HelperClasses.Logger.Log("Started KeyboardListener");
@@ -45,6 +48,11 @@ namespace Project_127.HelperClasses
 
 		public static void Stop()
 		{
+			if (DontStop)
+			{
+				WantToStop = true;
+				return;
+			}
 			if (KeyboardListener.IsRunning)
 			{
 				HelperClasses.Logger.Log("Stopped KeyboardListener");
@@ -78,6 +86,7 @@ namespace Project_127.HelperClasses
 
 		private delegate IntPtr LowLevelKeyboardProc(int nCode, IntPtr wParam, IntPtr lParam);
 
+		[STAThread]
 		private static IntPtr HookCallback(int nCode, IntPtr wParam, IntPtr lParam)
 		{
 			bool SurpressKeyEvent = false;

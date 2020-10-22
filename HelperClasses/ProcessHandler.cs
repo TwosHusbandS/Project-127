@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 using Project_127;
 using Project_127.Auth;
 using Project_127.HelperClasses;
-using Project_127.KeyStuff;
 using Project_127.Overlay;
 using Project_127.Popups;
 using Project_127.SettingsStuff;
@@ -227,7 +226,7 @@ namespace Project_127.HelperClasses
 
 			string cmdLineArgs = @"/c cd /d " + "\"" + LauncherLogic.GTAVFilePath + "\"" + @" && start /affinity " + MyHex + " playgtav.exe -uilanguage " + Settings.ToMyLanguageString(Settings.LanguageSelected).ToLower() + " && exit";
 
-			//cmdLineArgs = @"/c cd / d "F:\SteamLibrary\steamapps\common\Grand Theft Auto V" && playgtav.exe -uilanguage french && exit";
+			//cmdLineArgs = @"/c cd / d "F:\SteamLibrary\steamapps\common\Grand Theft Auto V" && start /affinity FFFF playgtav.exe -uilanguage french && exit";
 
 
 			Process tmp = GSF.Identity.UserAccountControl.CreateProcessAsStandardUser(@"cmd.exe", cmdLineArgs);

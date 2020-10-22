@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace Project_127.KeyStuff
+namespace Project_127.HelperClasses
 {
 	class KeyboardSender
 	{

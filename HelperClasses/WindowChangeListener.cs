@@ -79,9 +79,9 @@ namespace Project_127.HelperClasses
 
 		public static void WinEventProc(IntPtr hWinEventHook, uint eventType, IntPtr hwnd, int idObject, int idChild, uint dwEventThread, uint dwmsEventTime)
 		{
-			//if (GetActiveWindowTitle() == "Project - 1.27")
-			//if (GetActiveWindowTitle() == "Grand Theft Auto V")
-			if (GetActiveWindowTitle() == "WhatsApp")
+			// Lines below are commented out because we are testing the Overlay on TeamSpeak 3
+
+			if (GetActiveWindowTitle() == "Grand Theft Auto V")
 			{
 				MainWindow.MW.Dispatcher.Invoke((Action)delegate
 				{

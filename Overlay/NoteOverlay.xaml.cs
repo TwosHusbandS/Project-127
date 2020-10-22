@@ -7,7 +7,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
-using System.Windows.Forms;
+using Keys = System.Windows.Forms.Keys;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -26,7 +26,6 @@ namespace Project_127.Overlay
 		// Open the NoteOverlayShit, Click Top Button, select 1-n TEXT Files. everything past that should be based on KeyInputs
 
 
-		public static NoteOverlay NO;
 		public static string[] NotesLoaded = new string[0];
 		public static int NotesLoadedIndex = 0;
 
@@ -34,14 +33,15 @@ namespace Project_127.Overlay
 
 		public NoteOverlay()
 		{
-			NoteOverlay.NO = this;
-
 			// We currently need this here, normally this will be started by GameState (but this points to GTA V.exe as of right now)
 			NoteOverlay.InitGTAOverlay();
 
 			// We currently need this here, normally this will be started by WindowEventThingy (but this only starts or stops based on GTA V.exe)
 			KeyboardListener.Start();
 
+			// To get Back to real things, we gotta uncomment a few things in Globals.GameState Getter, 
+			//	as well as WindowChangeListener.WinEventproc
+			// as well as change target window to "Grand Theft Auto V" in GTAOverlay.cs
 
 			InitializeComponent();
 
@@ -54,13 +54,20 @@ namespace Project_127.Overlay
 
 		public static void InitGTAOverlay()
 		{
-			MyGTAOverlay = new GTAOverlay();
-			MyGTAOverlay.setText("");
+			if (MyGTAOverlay == null)
+			{
+				MyGTAOverlay = new GTAOverlay();
+				MyGTAOverlay.setText("TestingSlashN\nTesting2SlashNSlashN\n\nTesting3SlashNSlashNslashN\n\n\nTesting4");
+			}
 		}
 
 		public static void DisposeGTAOverlay()
 		{
-			MyGTAOverlay.Dispose();
+			if (MyGTAOverlay != null)
+			{
+				MyGTAOverlay.Dispose();
+				MyGTAOverlay = null;
+			}
 		}
 
 		public static void KeyBoardEvent(Keys pKey)
@@ -91,25 +98,22 @@ namespace Project_127.Overlay
 		{
 			if (MyGTAOverlay.Visible)
 			{
-				HelperClasses.Logger.Log("Set Visibility to false");
 				MyGTAOverlay.Visible = false;
 			}
 			else
 			{
-				HelperClasses.Logger.Log("Set Visibility to true");
 				MyGTAOverlay.Visible = true;
 			}
-
 		}
 
 		public static void OverlayScrollUp()
 		{
-
+			HelperClasses.Logger.Log("About to scroll Up a bit...JK, this aint implemented yet");
 		}
 
 		public static void OverlayScrollDown()
 		{
-
+			HelperClasses.Logger.Log("About to scroll Down a bit...JK, this aint implemented yet");
 		}
 
 		public static void OverlayNoteNext()
@@ -160,7 +164,6 @@ namespace Project_127.Overlay
 				NotesLoading[i] = tempFileContent;
 			}
 
-
 			NoteOverlay.NotesLoaded = NotesLoading;
 			NoteOverlay.NotesLoadedIndex = 0;
 			NoteOverlay.MyGTAOverlay.setText(NotesLoaded[0]);
@@ -169,6 +172,21 @@ namespace Project_127.Overlay
 		private void btn_OverlayHotkeyToggle_Click(object sender, RoutedEventArgs e)
 		{
 			// Methods to change the hotkey for this. Will just be here for POC Implementation of that	
+			btn_OverlayHotkeyToggle.Content = "[Press new Key Now]";
+			Keys MyNewKey = KeyboardHandler.GetNextKeyPress();
+			if (MyNewKey == Keys.None)
+			{
+				HelperClasses.Logger.Log("FUCK THIS");
+				Globals.DebugPopup("Well this sucks, None");
+			}
+			else if (MyNewKey == Keys.Escape)
+			{
+				Globals.DebugPopup("Well this sucks, Escape");
+			}
+			else
+			{
+				btn_OverlayHotkeyToggle.Content = MyNewKey;
+			}
 		}
 
 		private void btn_OverlayHotkeyScrollUp_Click(object sender, RoutedEventArgs e)
