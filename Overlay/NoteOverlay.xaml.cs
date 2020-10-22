@@ -9,11 +9,12 @@ using System.Windows.Data;
 using System.Windows.Documents;
 using Keys = System.Windows.Forms.Keys;
 using System.Windows.Input;
-using System.Windows.Media;
+using System.Drawing;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Project_127.HelperClasses;
+using Project_127.SettingsStuff;
 using Project_127.SettingsStuff;
 using System.Diagnostics;
 
@@ -59,6 +60,9 @@ namespace Project_127.Overlay
 			if (MyGTAOverlay == null)
 			{
 				MyGTAOverlay = new GTAOverlay();
+				MyGTAOverlay.setTextColors(Color.FromArgb(255, 0, 255, 0), Color.Transparent);
+				MyGTAOverlay.setBackgroundColor(Color.FromArgb(102, Color.Black));
+				//MyGTAOverlay.setFont("consolas", 24, false, false, false);
 				MyGTAOverlay.setText("TestingSlashN\nTesting2SlashNSlashN\n\nTesting3SlashNSlashNslashN\n\n\nTesting4");
 			}
 		}
@@ -110,12 +114,14 @@ namespace Project_127.Overlay
 
 		public static void OverlayScrollUp()
 		{
-			HelperClasses.Logger.Log("About to scroll Up a bit...JK, this aint implemented yet");
+			MyGTAOverlay.scroll(-5);
+			//HelperClasses.Logger.Log("About to scroll Up a bit...JK, this aint implemented yet");
 		}
 
 		public static void OverlayScrollDown()
 		{
-			HelperClasses.Logger.Log("About to scroll Down a bit...JK, this aint implemented yet");
+			MyGTAOverlay.scroll(5);
+			//HelperClasses.Logger.Log("About to scroll Down a bit...JK, this aint implemented yet");
 		}
 
 		public static void OverlayNoteNext()
