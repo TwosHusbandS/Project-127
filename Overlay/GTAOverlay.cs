@@ -2,6 +2,7 @@
 using GameOverlay.Windows;
 using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Image = GameOverlay.Drawing.Image;
 
@@ -10,6 +11,48 @@ namespace Project_127
     public class GTAOverlay : IDisposable
     {
 		private readonly GraphicsWindow _window;
+
+		[DllImport("dwmapi.dll")]
+		private static extern int DwmGetWindowAttribute(IntPtr hwnd, int dwAttribute, out RECT pvAttribute, int cbAttribute);
+
+		private struct RECT
+		{
+			public int Left;
+			public int Top;
+			public int Right;
+			public int Bottom;
+		}
+
+		[Flags]
+		private enum DwmWindowAttribute : uint
+		{
+			DWMWA_NCRENDERING_ENABLED = 1,
+			DWMWA_NCRENDERING_POLICY,
+			DWMWA_TRANSITIONS_FORCEDISABLED,
+			DWMWA_ALLOW_NCPAINT,
+			DWMWA_CAPTION_BUTTON_BOUNDS,
+			DWMWA_NONCLIENT_RTL_LAYOUT,
+			DWMWA_FORCE_ICONIC_REPRESENTATION,
+			DWMWA_FLIP3D_POLICY,
+			DWMWA_EXTENDED_FRAME_BOUNDS,
+			DWMWA_HAS_ICONIC_BITMAP,
+			DWMWA_DISALLOW_PEEK,
+			DWMWA_EXCLUDED_FROM_PEEK,
+			DWMWA_CLOAK,
+			DWMWA_CLOAKED,
+			DWMWA_FREEZE_REPRESENTATION,
+			DWMWA_LAST
+		}
+
+		private static RECT GetWindowRectangle(IntPtr hWnd)
+		{
+			RECT rect;
+
+			int size = Marshal.SizeOf(typeof(RECT));
+			DwmGetWindowAttribute(hWnd, (int)DwmWindowAttribute.DWMWA_EXTENDED_FRAME_BOUNDS, out rect, size);
+
+			return rect;
+		}
 
 		private const string targetWindow = "Command Prompt";
 		//private const string targetWindow = "Project - 1.27";
@@ -72,7 +115,7 @@ namespace Project_127
 			_brushes = new Dictionary<string, SolidBrush>();
 			_fonts = new Dictionary<string, Font>();
 			_images = new Dictionary<string, Image>();
-            var wb = new WindowBounds();
+            //var wb = new WindowBounds();
 			HelperClasses.Logger.Log("Searching for GTAV window...");
 			var windowHandle = WindowHelper.FindWindow(targetWindow);
 			if (windowHandle == IntPtr.Zero)
@@ -83,14 +126,14 @@ namespace Project_127
             {
 				HelperClasses.Logger.Log("GTAV window found.");
 			}
-			WindowHelper.GetWindowBounds(windowHandle, out wb);
+			//WindowHelper.GetWindowBounds(windowHandle, out wb);
             var gfx = new Graphics()
 			{
 				MeasureFPS = true,
 				PerPrimitiveAntiAliasing = true,
 				TextAntiAliasing = true
 			};
-			var pos = coordFromPos(position, wb, width, height);
+			var pos = coordFromPos(position, GetWindowRectangle(windowHandle), width, height);
 			_window = new GraphicsWindow(pos[0], pos[1], width, height, gfx)
 			{
 				FPS = 10,
@@ -134,9 +177,9 @@ namespace Project_127
 
 		private void _window_DrawGraphics(object sender, DrawGraphicsEventArgs e)
 		{
-            var wb = new WindowBounds();
-            WindowHelper.GetWindowBounds(WindowHelper.FindWindow(targetWindow), out wb);
-			var pos= coordFromPos(Position, wb, _window.Width, _window.Height);
+            //var wb = new WindowBounds();
+            //WindowHelper.GetWindowBounds(WindowHelper.FindWindow(targetWindow), out wb);
+			var pos = coordFromPos(Position, GetWindowRectangle(WindowHelper.FindWindow(targetWindow)), _window.Width, _window.Height);
             _window.X = pos[0];
             _window.Y = pos[1];
 			var gfx = e.Graphics;
@@ -389,7 +432,7 @@ namespace Project_127
 			}
 			return String.Join("\r\n", lines);
 		}
-		private int[] coordFromPos(Positions p, WindowBounds wb, int resx, int resy)
+		private int[] coordFromPos(Positions p, RECT wb, int resx, int resy)
         {
 			resx += PaddingSize + XMargin;
 			resy += PaddingSize + YMargin;
