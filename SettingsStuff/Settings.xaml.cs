@@ -636,6 +636,7 @@ namespace Project_127.SettingsStuff
 			ButtonMouseOverMagic(btn_cb_Set_EnableAutoStartFPSLimiter);
 			ButtonMouseOverMagic(btn_cb_Set_EnableAutoStartLiveSplit);
 			ButtonMouseOverMagic(btn_cb_Set_EnableAutoStartNohboard);
+			ButtonMouseOverMagic(btn_cb_Set_EnableOverlay);
 			ButtonMouseOverMagic(btn_cb_Set_EnableAutoStartStreamProgram);
 			ButtonMouseOverMagic(btn_cb_Set_AutoSetHighPriority);
 			ButtonMouseOverMagic(btn_cb_Set_OnlyAutoStartProgramsWhenDowngraded);
@@ -801,6 +802,10 @@ namespace Project_127.SettingsStuff
 				case "btn_cb_Set_EnableDontLaunchThroughSteam":
 					Settings.EnableDontLaunchThroughSteam = !Settings.EnableDontLaunchThroughSteam;
 					break;
+				case "btn_cb_Set_EnableOverlay":
+					Settings.EnableOverlay = !Settings.EnableOverlay;
+					break;
+
 			}
 			RefreshGUI();
 		}

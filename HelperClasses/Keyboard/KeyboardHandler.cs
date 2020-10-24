@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Project_127.Overlay;
+using Project_127;
+using Project_127.SettingsStuff;
 
 namespace Project_127.HelperClasses
 {
@@ -15,18 +17,76 @@ namespace Project_127.HelperClasses
 		[STAThread]
 		public static bool KeyboardEvent(Keys pKey)
 		{
-			// Need this for some Jumpscript thing later
 			bool SurpressEventFurther = false;
 
-			// Process Keyboard event here and then call the correct Methods in NoteOverlay and also in the Jumpscript
-			// Dont do the actual Processing inside the NoteOverlay and the Jumpscript, because they might not be init
-			NoteOverlay.KeyBoardEvent(pKey);
-
-			if (KeyboardListener.DontStop)
+			MainWindow.MW.Dispatcher.Invoke((Action)delegate
 			{
-				LastKeyPress = pKey;
-			}
+				try
+				{
+					if (KeyboardListener.DontStop)
+					{
+						LastKeyPress = pKey;
+						SurpressEventFurther = true;
+					}
 
+					// Those are all if and not else if because users might be stupid and use the same key for multiple things
+
+					if (Settings.EnableAutoStartJumpScript)
+					{
+						if (pKey == Settings.JumpScriptKey1)
+						{
+							HelperClasses.Jumpscript.KeyADetected();
+							SurpressEventFurther = true;
+						}
+						if (pKey == Settings.JumpScriptKey2)
+						{
+							HelperClasses.Jumpscript.KeyBDetected();
+							SurpressEventFurther = true;
+						}
+					}
+
+					if (Settings.EnableOverlay)
+					{
+						if (pKey == Settings.KeyOverlayToggle)
+						{
+							NoteOverlay.OverlayToggle();
+						}
+
+						if (NoteOverlay.IsOverlayVisible())
+						{
+							if (pKey == Settings.KeyOverlayScrollUp)
+							{
+								NoteOverlay.OverlayScrollUp();
+							}
+							if (pKey == Settings.KeyOverlayScrollDown)
+							{
+								NoteOverlay.OverlayScrollDown();
+							}
+							if (pKey == Settings.KeyOverlayScrollLeft)
+							{
+								NoteOverlay.OverlayNoteChapterPrev();
+							}
+							if (pKey == Settings.KeyOverlayScrollRight)
+							{
+								NoteOverlay.OverlayNoteChapterNext();
+							}
+							if (pKey == Settings.KeyOverlayNotePrev)
+							{
+								NoteOverlay.OverlayNotePrev();
+							}
+							if (pKey == Settings.KeyOverlayNoteNext)
+							{
+								NoteOverlay.OverlayNoteNext();
+							}
+						}
+					}
+				}
+				catch (Exception e)
+				{
+					HelperClasses.Logger.Log("Try Catch in KeyboardHandler KeyEvent Callback Failed: " + e.ToString());
+				}
+
+			});
 
 			return SurpressEventFurther;
 		}
@@ -58,6 +118,6 @@ namespace Project_127.HelperClasses
 			return RtrnKey;
 		}
 
-	
+
 	}
 }

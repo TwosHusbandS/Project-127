@@ -18,12 +18,12 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <Label Style="{StaticResource lbl}" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Left" FontSize="24" Height="60" VerticalAlignment="Bottom" Margin="5,0,0,0" Content="Settings"/>
+        <Label Style="{StaticResource lbl}" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Left" FontSize="24" Height="60" VerticalAlignment="Bottom" Margin="0,0,0,0" Content="Settings"/>
         <Button Style="{StaticResource btn_SmallIcon}"  MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"  Grid.Row="0" Margin="0,15,55,0" VerticalAlignment="Top" HorizontalAlignment="Right" x:Name="btn_Refresh"  ToolTip="Refresh (load Settings from Registry)"  Height="40" Width="40" Click="btn_Refresh_Click"/>
 
-        <Button Style="{StaticResource btn_SM}" x:Name="btn_Reset" Grid.Row="2" Grid.Column="0" Margin="10" Content="Reset" Click="btn_Reset_Click"/>
+        <Button Style="{StaticResource btn_SM}" x:Name="btn_Reset" Grid.Row="2" Grid.Column="0" Margin="0,10" Content="Reset" Click="btn_Reset_Click"/>
 
-        <Border  Grid.Row="1" Margin="10,0" BorderBrush="{x:Static local:Globals.SE_BorderBrush_Inner}" BorderThickness="3" Background="{x:Static local:Globals.SE_RowBackground}">
+        <Border  Grid.Row="1" Margin="0,0" BorderBrush="{x:Static local:Globals.SE_BorderBrush_Inner}" BorderThickness="2" Background="{x:Static local:Globals.SE_RowBackground}">
             <ScrollViewer>
                 <StackPanel x:Name="sp_Settings">
                     <Grid x:Name="Grid_Set_GTAVInstallationPath">
@@ -123,7 +123,10 @@
                         <Label Grid.Row="12" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Hide from Steam"/>
                         <Button Grid.Row="12" Grid.Column="1" x:Name="btn_cb_Set_EnableDontLaunchThroughSteam"  Style="{StaticResource btn_cb}" Click="btn_cb_Click" MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
 
-                        <Label Grid.Row="13" Grid.Column="0" Grid.ColumnSpan="2" Content="Automating Game Launch" Style="{StaticResource lbl_Set_Header}"/>
+                        <Label Grid.Row="13" Grid.Column="0" Grid.ColumnSpan="2" Content="Extra Features" Style="{StaticResource lbl_Set_Header}"/>
+
+                        <Label Grid.Row="22" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Enable Project 1.27 Overlay"/>
+                        <Button Grid.Row="22" Grid.Column="1" x:Name="btn_cb_Set_EnableOverlay"  Style="{StaticResource btn_cb}" Click="btn_cb_Click"  MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
 
                         <Label Grid.Row="14" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Automatically set process priority of GTA to 'High'"/>
                         <Button Grid.Row="14" Grid.Column="1" x:Name="btn_cb_Set_AutoSetHighPriority"  Style="{StaticResource btn_cb}" Click="btn_cb_Click"  MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>

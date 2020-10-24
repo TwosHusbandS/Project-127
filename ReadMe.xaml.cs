@@ -60,7 +60,7 @@ namespace Project_127
 				 "the preorder entitlement to work.\n\n" +
 				 "If you have any issues with this program or ideas for new features,\n" +
 				 "feel free to contact me on Discord: @thS#0305\n\n" +
-				 "Project 1.27 Version: '" + Globals.ProjectVersion + "'\n" + 
+				 "Project 1.27 Version: '" + Globals.ProjectVersion + "'\n" +
 				 "BuildInfo: '" + Globals.BuildInfo + "'\n" +
 				 "ZIP Version: '" + Globals.ZipVersion + "'";
 			Grid_About_Lbl.Content = msg2;
@@ -85,6 +85,11 @@ namespace Project_127
 				"to understand and reverse engineer the GTA V Launch Process";
 			Grid_Credits_Lbl.Content = msg3;
 			Grid_Credits_Lbl.FontSize = 14;
+
+			string msg4 = "" +
+		"BlaBlaBla\nCommonErrors\nBlablabla\nAnd how to fix them\nBlablabla\n\nIf you see this after installing or updating Project 1.27 we forgot to change this Text.\nUpsi." ;
+			Grid_Help_Lbl.Content = msg4;
+			Grid_Help_Lbl.FontSize = 14;
 		}
 
 		/// <summary>
@@ -94,7 +99,8 @@ namespace Project_127
 		{
 			SpeedRun,
 			About,
-			Credits
+			Credits,
+			Help
 		}
 
 		/// <summary>
@@ -128,6 +134,9 @@ namespace Project_127
 
 					Border_Credits.Visibility = Visibility.Hidden;
 					btn_Credits.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
+
+					Border_Help.Visibility = Visibility.Hidden;
+					btn_Help.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
 				}
 				else if (value == ReadMeStates.About)
 				{
@@ -139,11 +148,31 @@ namespace Project_127
 
 					Border_Credits.Visibility = Visibility.Hidden;
 					btn_Credits.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
+
+					Border_Help.Visibility = Visibility.Hidden;
+					btn_Help.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
 				}
 				else if (value == ReadMeStates.Credits)
 				{
 					Border_Credits.Visibility = Visibility.Visible;
 					btn_Credits.Style = Application.Current.FindResource("btn_hamburgeritem_selected") as Style;
+
+					Border_SpeedRun.Visibility = Visibility.Hidden;
+					btn_SpeedRun.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
+
+					Border_About.Visibility = Visibility.Hidden;
+					btn_About.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
+
+					Border_Help.Visibility = Visibility.Hidden;
+					btn_Help.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
+				}
+				else if (value == ReadMeStates.Help)
+				{
+					Border_Help.Visibility = Visibility.Visible;
+					btn_Help.Style = Application.Current.FindResource("btn_hamburgeritem_selected") as Style;
+
+					Border_Credits.Visibility = Visibility.Hidden;
+					btn_Credits.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
 
 					Border_SpeedRun.Visibility = Visibility.Hidden;
 					btn_SpeedRun.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
@@ -179,6 +208,11 @@ namespace Project_127
 		private void Grid_About_Btn_Click(object sender, RoutedEventArgs e)
 		{
 			Process.Start(@"https://www.mind.org.uk/donate");
+		}
+
+		private void btn_Help_Click(object sender, RoutedEventArgs e)
+		{
+			ReadMeState = ReadMeStates.Help;
 		}
 	}
 }

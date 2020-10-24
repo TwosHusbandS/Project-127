@@ -83,24 +83,39 @@ namespace Project_127
 				// Check if GTA V is running
 				if (HelperClasses.ProcessHandler.IsGtaRunning())
 				{
+					SetGTAProcessPriority();
+
 					// If one of the Settings which require Hotkeys are enabled
 					if (Settings.EnableAutoStartJumpScript || Settings.EnableOverlay)
 					{
-						//NoteOverlay.InitGTAOverlay();
+						// Only Start Stop shit here when the overlay is not in debugmode
+						if (!GTAOverlay.DebugMode)
+						{
+							NoteOverlay.InitGTAOverlay();
+						}
+
 						HelperClasses.WindowChangeListener.Start();
 					}
 					else
 					{
-						//NoteOverlay.DisposeGTAOverlay();
-						//HelperClasses.KeyboardListener.Stop();
+						if (!GTAOverlay.DebugMode)
+						{
+							NoteOverlay.DisposeGTAOverlay();
+							HelperClasses.KeyboardListener.Stop();
+						}
+
 						HelperClasses.WindowChangeListener.Stop();
 					}
 					return GameStates.Running;
 				}
 				else
 				{
-					//NoteOverlay.DisposeGTAOverlay();
-					//HelperClasses.KeyboardListener.Stop();
+					if (!GTAOverlay.DebugMode)
+					{
+						NoteOverlay.DisposeGTAOverlay();
+						HelperClasses.KeyboardListener.Stop();
+					}
+
 					HelperClasses.WindowChangeListener.Stop();
 					return GameStates.NonRunning;
 				}
@@ -456,6 +471,30 @@ namespace Project_127
 		}
 
 
+		public static void SetGTAProcessPriority()
+		{
+			if (Settings.EnableAutoSetHighPriority)
+			{
+				try
+				{
+					Process[] processes = HelperClasses.ProcessHandler.GetProcesses("gta5");
+					if (processes.Length > 0)
+					{
+						if (processes[0].PriorityClass != ProcessPriorityClass.High)
+						{
+							processes[0].PriorityClass = ProcessPriorityClass.High;
+							HelperClasses.Logger.Log("Set GTA5 Process Priority to High");
+						}
+
+					}
+				}
+				catch
+				{
+					HelperClasses.Logger.Log("Failed to get GTA5 Process...");
+				}
+			}
+		}
+
 		/// <summary>
 		/// Method which gets called after Starting GTAV
 		/// </summary>
@@ -465,29 +504,8 @@ namespace Project_127
 			await Task.Delay(2500);
 			HelperClasses.Logger.Log("Waited a good bit");
 
-			if (Settings.EnableAutoSetHighPriority)
-			{
-				HelperClasses.Logger.Log("Trying to Set GTAV Process Priority to High");
-				Process[] processes = HelperClasses.ProcessHandler.GetProcesses("gta5");
-				HelperClasses.Logger.Log(processes.Length + " Processes containing 'gta5' found");
-				try
-				{
-					processes[0].PriorityClass = ProcessPriorityClass.High;
-					HelperClasses.Logger.Log("I changed the priority of one process...");
-					if (processes[0].PriorityClass == ProcessPriorityClass.High)
-					{
-						HelperClasses.Logger.Log("Did so sucessfully.");
-					}
-					else
-					{
-						HelperClasses.Logger.Log("Failed to Set priority. This sucks.");
-					}
-				}
-				catch
-				{
-					HelperClasses.Logger.Log("Failed to get GTA5 Process...");
-				}
-			}
+			HelperClasses.Logger.Log("Trying to Set GTAV Process Priority to High");
+			SetGTAProcessPriority();
 
 			// If we DONT only auto start when downgraded OR if we are downgraded
 			if (Settings.EnableOnlyAutoStartProgramsWhenDowngraded == false || LauncherLogic.InstallationState == InstallationStates.Downgraded)

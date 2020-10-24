@@ -167,6 +167,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="HelperClasses\Jumpscript.cs" />
     <Compile Include="Overlay\GTAOverlay.cs" />
     <Compile Include="Auth\EntitlementBlock.cs" />
     <Compile Include="Auth\EntitlementBlockCipher.cs" />
@@ -376,7 +377,9 @@
     <Resource Include="Artwork\checkbox_true.png" />
     <Resource Include="Artwork\checkbox_true_mo.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Overlay\NoteOverlayPages\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

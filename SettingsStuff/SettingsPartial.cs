@@ -748,6 +748,37 @@ namespace Project_127.SettingsStuff
 			}
 		}
 
+
+		/// <summary>
+		/// Settings KeyOverlayNoteNext. Gets and Sets from the Dictionary.
+		/// </summary>
+		public static Keys KeyOverlayNoteNext
+		{
+			get
+			{
+				return GetKeyFromString(GetSetting("KeyOverlayNoteNext"));
+			}
+			set
+			{
+				SetSetting("KeyOverlayNoteNext", ((int)value).ToString());
+			}
+		}
+
+		/// <summary>
+		/// Settings KeyOverlayNotePrev. Gets and Sets from the Dictionary.
+		/// </summary>
+		public static Keys KeyOverlayNotePrev
+		{
+			get
+			{
+				return GetKeyFromString(GetSetting("KeyOverlayNotePrev"));
+			}
+			set
+			{
+				SetSetting("KeyOverlayNotePrev", ((int)value).ToString());
+			}
+		}
+
 		/// <summary>
 		/// Settings EnableAutoStartNohboard. Gets and Sets from the Dictionary.
 		/// </summary>

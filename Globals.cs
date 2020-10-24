@@ -164,7 +164,7 @@ namespace Project_127
 			{"InstallationPath", Process.GetCurrentProcess().MainModule.FileName.Substring(0, Process.GetCurrentProcess().MainModule.FileName.LastIndexOf('\\')) },
 			{"GTAVInstallationPath", ""},
 			{"ZIPExtractionPath", Process.GetCurrentProcess().MainModule.FileName.Substring(0, Process.GetCurrentProcess().MainModule.FileName.LastIndexOf('\\')) },
-			{"EnableOverlay", "True"},
+			{"EnableOverlay", "False"},
 			{"EnableLogging", "True"},
 			{"EnableCopyFilesInsteadOfHardlinking", "False"},
 			{"EnablePreOrderBonus", "False"},
@@ -184,11 +184,13 @@ namespace Project_127
 			{"EnableAutoStartJumpScript", "True" },
 			{"JumpScriptKey1", "32" },
 			{"JumpScriptKey2", "76" },
-			{"KeyOverlayToggle", "45" },
-			{"KeyOverlayScrollLeft", "37" },
-			{"KeyOverlayScrollUp", "38" },
-			{"KeyOverlayScrollRight", "39" },
-			{"KeyOverlayScrollDown", "40" },
+			{"KeyOverlayToggle", "163" },
+			{"KeyOverlayScrollUp", "109" },
+			{"KeyOverlayScrollDown", "107" },
+			{"KeyOverlayScrollRight", "106" },
+			{"KeyOverlayScrollLeft", "111" },
+			{"KeyOverlayNoteNext", "103" },
+			{"KeyOverlayNotePrev", "105" },
 			{"EnableAutoStartNohboard", "True" },
 			{"EnableNohboardBurhac", "True" },
 			{"PathNohboard", @"C:\Some\Path\SomeFile.exe" },
@@ -1001,7 +1003,7 @@ namespace Project_127
 		// ReadMe Window
 
 		public static Brush ReadME_Inner_Background { get; private set; } = SetOpacity(MyColorBlack, 50);
-		public static Brush ReadME_Inner_BorderBrush { get; private set; } = MyColorOffWhite;
+		public static Brush ReadME_Inner_BorderBrush { get; private set; } = MyColorWhite;
 		public static Thickness ReadME_Inner_BorderThickness { get; private set; } = new Thickness(2);
 		public static CornerRadius ReadME_Inner_CornerRadius { get; private set; } = new CornerRadius(10);
 

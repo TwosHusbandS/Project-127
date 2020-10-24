@@ -39,6 +39,7 @@ namespace Project_127.HelperClasses
 		public static void Start()
 		{
 			WantToStop = false;
+
 			if (!KeyboardListener.IsRunning)
 			{
 				HelperClasses.Logger.Log("Started KeyboardListener");
@@ -104,8 +105,7 @@ namespace Project_127.HelperClasses
 			}
 			catch (Exception e)
 			{
-				Globals.DebugPopup(e.ToString());
-				HelperClasses.Logger.Log("Try Catch in KeyEvent Callback Failed: " + e.ToString());
+				HelperClasses.Logger.Log("Try Catch in KeyboardListener KeyEvent Callback Failed: " + e.ToString());
 				return new IntPtr(-1);
 			}
 

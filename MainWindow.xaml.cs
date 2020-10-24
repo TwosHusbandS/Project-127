@@ -81,17 +81,22 @@ Main To do:
 		=> Moved SourceCodeFiles around to make it easier to find stuff
 		=> Fixed Not launching after pressing Launch when non-auth
 		=> Dragon Implemented the GameOverlay (GTAOverlay)
-		=> KeyboardListener (semi connected to backend, some stuff commented out)
-		=> WindowChangeForegroundEventListener (semi connected to backend, some stuff commented out)
+		=> KeyboardListener (conntected to Backend)
+		=> WindowChangeForegroundEventListener (connected to Backend)
 		=> "Look for Updates" Button
 		=> Made it generate debugfile and open explorer window of project 1.27 on rightclick of auth button
 		=> Fixed Auth Mouse Over
+		=> Fixed Consistent Margins and BorderThicknesses for Pages
+		=> Made sure Process Priority is set correctly
+		=> Implemented GTA Overlay debugmode which means the rest of that stuff is properly connected to backend
+		=> Hotkeys only work when Overlay is visible
 
 		=== Keep in Mind === 
-	- Consistent Style
+	- Make sure GTA Overlay will turn off when not ingame
+	- If i can prevent the keypress from being processed further...I can probably change a param and send a different keypress there...
 	- USE GIT TO KEEP TRACK OF INSTALLATION STATES???
-	- Auth Button Mouseover
 	- Client crashes when trying to auth when offline
+	- We call the Getter of all hotkeys on each hotkey press...not that efficent
 	- Uninstaller still is semi-manual...argh
 	- Features still to do:
 		- Upgrade / Downgrade / Repair Improvements 
@@ -109,6 +114,7 @@ Main To do:
 			=> RightClick on File (Copy, Rename, Delete)
 			=> RightClick on Files (Copy, Delete, Delete)
 			=> RightClick on Background (new Folder, Paste)
+			=> RightClick on Folder
 		- Auto Start via CSV and custom shit
 		- Note Feature from Reloes suggestion 
 
@@ -278,6 +284,21 @@ namespace Project_127
 
 			HelperClasses.Logger.Log("Startup procedure (Constructor of MainWindow) completed.");
 			HelperClasses.Logger.Log("--------------------------------------------------------");
+
+#if DEBUG
+   GTAOverlay.DebugMode = true;
+#endif
+
+
+			// Testing Purpose for the overlay shit
+			if (GTAOverlay.DebugMode)
+			{
+				// We currently need this here, normally this will be started by GameState (but this points to GTA V.exe as of right now)
+				NoteOverlay.InitGTAOverlay();
+
+				// We currently need this here, normally this will be started by WindowEventThingy (but this only starts or stops based on GTA V.exe)
+				KeyboardListener.Start();
+			}
 		}
 
 		/// <summary>
