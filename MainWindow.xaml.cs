@@ -57,13 +57,6 @@ General Files / Classes:
 		ROSCommunicationBackend.cs // Backend by @d490n
 
 Main To do:
-	So thinky thinky:
-
-	Process KeyboardListener stuff for Jumpscript and also for Noteoverlay in KeyboardHandler instead of the actual classes...
-		Only do that if those features are enabled
-		
-		Look into sending Keypresses to GTA V, then check if they get caught in our spider web of keyboard listener logic and find a workaround if they do
-			
 		SaveFileHandler Folder dectection and display. Dummy Double Click Method done.
 			Gotta implement the actual displaying files from new folder and updating Label
 			Gotta Refresh on Renaming Left side btw (for NiceName Update)
@@ -90,14 +83,26 @@ Main To do:
 		=> Made sure Process Priority is set correctly
 		=> Implemented GTA Overlay debugmode which means the rest of that stuff is properly connected to backend
 		=> Hotkeys only work when Overlay is visible
+		=> Made sure GTA Overlay will turn off when not ingame
+		=> Running Core stuff when launching through steam. This might not have any effect
+		=> Design of UX for NoteOverlay.xaml
+		=> Updated Settings with JumpScript and NoteOverlay stuff
 
 		=== Keep in Mind === 
+
+	For 1.1
+	- Auto-Start XYZ working dir...
+	- Overlay
+		=> Needs Sub - Pages, scrollNextChaptor. Other stuff is implemented. Currently in non working state due to pages not being there
+	- Some SaveFileHandler stuff
 	- Jumpscript
 		-> Find input sender which works in Game and doesnt infinite loop
-	- Make sure GTA Overlay will turn off when not ingame
+	- Make texts in readme markdown with easy links and scrollbar and stuff. Also reference the resetall button in settings
 	- Client crashes when trying to auth when offline
 	- We call the Getter of all hotkeys on each hotkey press...not that efficent
-	- Uninstaller still is semi-manual...argh
+	- Uninstaller still is semi-manual...Should be fixed with "Reset" Buttons
+
+	Other stuff:
 	- If i can prevent the keypress from being processed further...I can probably change a param and send a different keypress there...
 	- USE GIT TO KEEP TRACK OF INSTALLATION STATES???
 	- Features still to do:
@@ -127,10 +132,11 @@ Main To do:
 
 
 Bug Reportings:
-	- Open Twice message (and killing old process) not working for one guy
+	- [RESOLVED][IDC][Its fine for now, no idea how to improve]
+			Open Twice message (and killing old process) not working for one guy
 			Works for me and on some other testers machines.
 			Confirmed funky. Also can not kill Process spawned by VS
-	- [RESOLVED] Installer Link wrong (gave Reloe new one, so far not changed)
+	- [RESOLVED] Installer Link wrong (gave Reloe new one, it got changed)
 	- [RESOLVED] Changed a lot of that, should be all good now
 			Reloe and JakeMiester and dr490n had some issues with the GTA V Path Settings
 			Changed a lot of the backend for that. Should all be fixed.
@@ -287,6 +293,7 @@ namespace Project_127
 			HelperClasses.Logger.Log("Startup procedure (Constructor of MainWindow) completed.");
 			HelperClasses.Logger.Log("--------------------------------------------------------");
 
+
 #if DEBUG
    GTAOverlay.DebugMode = true;
 #endif
@@ -297,6 +304,9 @@ namespace Project_127
 			{
 				// We currently need this here, normally this will be started by GameState (but this points to GTA V.exe as of right now)
 				NoteOverlay.InitGTAOverlay();
+
+				// Same as other two thingies here lolerino
+				HelperClasses.WindowChangeListener.Start();
 
 				// We currently need this here, normally this will be started by WindowEventThingy (but this only starts or stops based on GTA V.exe)
 				KeyboardListener.Start();

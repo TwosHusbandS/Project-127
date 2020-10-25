@@ -25,7 +25,7 @@ namespace Project_127.HelperClasses
 			if (WindowChangeListener.IsRunning)
 			{
 				Task.Run(() => WindowChangeListener._Stop());
-				HelperClasses.Logger.Log("Stopped WindowChangeListener",1);
+				HelperClasses.Logger.Log("Stopped WindowChangeListener", 1);
 			}
 			else
 			{
@@ -94,24 +94,31 @@ namespace Project_127.HelperClasses
 
 		public static void WinEventProc(IntPtr hWinEventHook, uint eventType, IntPtr hwnd, int idObject, int idChild, uint dwEventThread, uint dwmsEventTime)
 		{
-			if (!GTAOverlay.DebugMode)
+			if (GetActiveWindowTitle() == GTAOverlay.targetWindow)
 			{
-				if (GetActiveWindowTitle() == "Grand Theft Auto V")
+				MainWindow.MW.Dispatcher.Invoke((Action)delegate
 				{
-					MainWindow.MW.Dispatcher.Invoke((Action)delegate
+					HelperClasses.Logger.Log("'" + GTAOverlay.targetWindow + "' Foreground Change Event detected");
+					KeyboardListener.Start();
+					if (Overlay.NoteOverlay.OverlayWasVisible)
 					{
-						HelperClasses.Logger.Log("GTA V Foreground Change Event detected");
-						KeyboardListener.Start();
-					});
-				}
-				else
+						Overlay.NoteOverlay.OverlaySetVisible();
+						Overlay.NoteOverlay.OverlayWasVisible = false;
+					}
+				});
+			}
+			else
+			{
+				MainWindow.MW.Dispatcher.Invoke((Action)delegate
 				{
-					MainWindow.MW.Dispatcher.Invoke((Action)delegate
+					HelperClasses.Logger.Log("Anything other Foreground Change Event detected");
+					KeyboardListener.Stop();
+					if (Overlay.NoteOverlay.IsOverlayVisible())
 					{
-						HelperClasses.Logger.Log("Anything other Foreground Change Event detected");
-						KeyboardListener.Stop();
-					});
-				}
+						Overlay.NoteOverlay.OverlayWasVisible = true;
+						Overlay.NoteOverlay.OverlaySetInvisible();
+					}
+				});
 			}
 		}
 	}

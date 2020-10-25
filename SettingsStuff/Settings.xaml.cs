@@ -329,7 +329,7 @@ namespace Project_127.SettingsStuff
 				case "btn_Set_GTAVInstallationPath":
 					if (IsRightClick)
 					{
-						HelperClasses.ProcessHandler.StartProcess(@"C:\Windows\explorer.exe", pCommandLineArguments: HelperClasses.FileHandling.PathSplitUp(Settings.GTAVInstallationPath.TrimEnd('\\'))[0]);
+						HelperClasses.ProcessHandler.StartProcess(@"C:\Windows\explorer.exe", pCommandLineArguments: Settings.GTAVInstallationPath);
 					}
 					else
 					{
@@ -339,7 +339,7 @@ namespace Project_127.SettingsStuff
 				case "btn_Set_ZIPExtractionPath":
 					if (IsRightClick)
 					{
-						HelperClasses.ProcessHandler.StartProcess(@"C:\Windows\explorer.exe", pCommandLineArguments: HelperClasses.FileHandling.PathSplitUp(Settings.ZIPExtractionPath.TrimEnd('\\'))[0]);
+						HelperClasses.ProcessHandler.StartProcess(@"C:\Windows\explorer.exe", pCommandLineArguments: Settings.ZIPExtractionPath);
 					}
 					else
 					{
@@ -856,19 +856,19 @@ namespace Project_127.SettingsStuff
 
 		private void btn_Set_Overlay_Notes_Click(object sender, RoutedEventArgs e)
 		{
-			NoteOverlay.NoteOverlayPageOnNextLoad = NoteOverlay.NoteOverlayPages.NoteFiles;
+			//NoteOverlay.NoteOverlayPageOnNextLoad = NoteOverlay.NoteOverlayPages.NoteFiles;
 			Globals.PageState = Globals.PageStates.NoteOverlay;
 		}
 
 		private void btn_Set_Overlay_Hotkeys_Click(object sender, RoutedEventArgs e)
 		{
-			NoteOverlay.NoteOverlayPageOnNextLoad = NoteOverlay.NoteOverlayPages.Keybinds;
+			//NoteOverlay.NoteOverlayPageOnNextLoad = NoteOverlay.NoteOverlayPages.Keybinds;
 			Globals.PageState = Globals.PageStates.NoteOverlay;
 		}
 
 		private void btn_Set_Overlay_Looks_Click(object sender, RoutedEventArgs e)
 		{
-			NoteOverlay.NoteOverlayPageOnNextLoad = NoteOverlay.NoteOverlayPages.Look;
+			//NoteOverlay.NoteOverlayPageOnNextLoad = NoteOverlay.NoteOverlayPages.Look;
 			Globals.PageState = Globals.PageStates.NoteOverlay;
 		}
 

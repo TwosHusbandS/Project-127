@@ -92,9 +92,9 @@ namespace Project_127
 						if (!GTAOverlay.DebugMode)
 						{
 							NoteOverlay.InitGTAOverlay();
+							HelperClasses.WindowChangeListener.Start();
 						}
 
-						HelperClasses.WindowChangeListener.Start();
 					}
 					else
 					{
@@ -102,9 +102,8 @@ namespace Project_127
 						{
 							NoteOverlay.DisposeGTAOverlay();
 							HelperClasses.KeyboardListener.Stop();
+							HelperClasses.WindowChangeListener.Stop();
 						}
-
-						HelperClasses.WindowChangeListener.Stop();
 					}
 					return GameStates.Running;
 				}
@@ -114,9 +113,8 @@ namespace Project_127
 					{
 						NoteOverlay.DisposeGTAOverlay();
 						HelperClasses.KeyboardListener.Stop();
+						HelperClasses.WindowChangeListener.Stop();
 					}
-
-					HelperClasses.WindowChangeListener.Stop();
 					return GameStates.NonRunning;
 				}
 			}
@@ -132,28 +130,42 @@ namespace Project_127
 				long SizeOfGTAV = HelperClasses.FileHandling.GetSizeOfFile(GTAVFilePath.TrimEnd('\\') + @"\GTA5.exe");
 				long SizeOfUpdate = HelperClasses.FileHandling.GetSizeOfFile(GTAVFilePath.TrimEnd('\\') + @"\update\update.rpf");
 
-				// if Sizes in GTA V Installation Path match what files we use from ZIP for downgrading
-				if (SizeOfGTAV == SizeOfDowngradedGTAV && SizeOfUpdate == SizeOfDowngradedUPDATE)
+				long SizeOfUpgradedGTAV = HelperClasses.FileHandling.GetSizeOfFile(UpgradeFilePath.TrimEnd('\\') + @"\GTA5.exe");
+				long SizeOfUpgradedUpdate = HelperClasses.FileHandling.GetSizeOfFile(UpgradeFilePath.TrimEnd('\\') + @"\update\update.rpf");
+
+
+				// if both Files in the GTA V Install Path exist
+				if (SizeOfGTAV > 0 && SizeOfUpdate > 0)
 				{
-					return InstallationStates.Downgraded;
-				}
-				else
-				{
-					// if both Files in the GTA V Install Path exist
-					if (SizeOfGTAV > 0 && SizeOfUpdate > 0)
+					// if Sizes in GTA V Installation Path match what files we use from ZIP for downgrading
+					if (SizeOfGTAV == SizeOfDowngradedGTAV && SizeOfUpdate == SizeOfDowngradedUPDATE)
 					{
-						// If both are NOT downgrad
-						if (SizeOfGTAV != SizeOfDowngradedGTAV && SizeOfUpdate != SizeOfDowngradedUPDATE)
+						return InstallationStates.Downgraded;
+					}
+
+					// if not downgraded
+					else
+					{
+						// If upgrade files exist
+						if (SizeOfUpgradedGTAV > 0 && SizeOfUpgradedUpdate > 0)
 						{
-							return InstallationStates.Upgraded;
+							// If both are NOT downgrad
+							if (SizeOfGTAV == SizeOfUpgradedGTAV && SizeOfUpdate == SizeOfUpgradedUpdate)
+							{
+								return InstallationStates.Upgraded;
+							}
+							else
+							{
+								return InstallationStates.Unsure;
+							}
 						}
 						else
 						{
-							return InstallationStates.Unsure;
+							return InstallationStates.Upgraded;
 						}
 					}
-					return InstallationStates.Unsure;
 				}
+				return InstallationStates.Unsure;
 			}
 		}
 
@@ -424,18 +436,21 @@ namespace Project_127
 			// If Steam
 			if (GameVersion == Settings.Retailers.Steam)
 			{
-				HelperClasses.Logger.Log("Trying to start Game normally through Steam.", 1);
 
 				// If we dont want to launch through Steam
 				if (Settings.EnableDontLaunchThroughSteam)
 				{
+					HelperClasses.Logger.Log("Trying to start Game non-retail.", 1);
 					// Launch through non retail
 					HelperClasses.ProcessHandler.StartGameNonRetail();
 				}
 				else
 				{
+					HelperClasses.Logger.Log("Trying to start Game normally through Steam.", 1);
 					// Launch through steam
-					HelperClasses.ProcessHandler.StartProcess(Globals.SteamInstallPath.TrimEnd('\\') + @"\steam.exe", pCommandLineArguments: "-applaunch 271590 -uilanguage " + Settings.ToMyLanguageString(Settings.LanguageSelected).ToLower());
+					HelperClasses.ProcessHandler.StartGameNonRetail(true);
+
+					//HelperClasses.ProcessHandler.StartProcess(Globals.SteamInstallPath.TrimEnd('\\') + @"\steam.exe", pCommandLineArguments: "-applaunch 271590 -uilanguage " + Settings.ToMyLanguageString(Settings.LanguageSelected).ToLower());
 				}
 
 			}

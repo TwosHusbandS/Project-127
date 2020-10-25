@@ -33,7 +33,7 @@ namespace Project_127.Overlay
 		public static string[] NotesLoaded = { "Test-Note to show what it can do\nThis is in the next line\n\nThis is in the next Paragraph" };
 		public static int NotesLoadedIndex = 0;
 
-		public static NoteOverlayPages NoteOverlayPageOnNextLoad;
+		public static bool OverlayWasVisible = false;
 
 		public enum NoteOverlayPages
 		{
@@ -42,17 +42,67 @@ namespace Project_127.Overlay
 			Look
 		}
 
+		private NoteOverlayPages _NoteOverlayPage = NoteOverlayPages.NoteFiles;
+
+		public NoteOverlayPages NoteOverlayPage
+		{
+			get
+			{
+				return _NoteOverlayPage;
+			}
+			set
+			{
+				// Setting actual Enum to the correct Value
+				_NoteOverlayPage = value;
+
+				// Switch Value
+				switch (value)
+				{
+					// In Case: Settings
+					case NoteOverlayPages.NoteFiles:
+
+						// Set actual Frame_Main Content to the correct Page
+						Frame_Notes.Content = new Project_127.Overlay.NoteOverlayPages.NoteOverlay_NoteFiles();
+						btn_Notes.Style = Application.Current.FindResource("btn_hamburgeritem_selected") as Style;
+
+						// Call Mouse_Over false on other Buttons where a page is behind
+						btn_Looks.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
+						btn_Keybindings.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
+						break;
+					case NoteOverlayPages.Keybinds:
+
+						// Set actual Frame_Main Content to the correct Page
+						Frame_Notes.Content = new Project_127.Overlay.NoteOverlayPages.NoteOverlay_Keybinds();
+						btn_Keybindings.Style = Application.Current.FindResource("btn_hamburgeritem_selected") as Style;
+
+						// Call Mouse_Over false on other Buttons where a page is behind
+						btn_Looks.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
+						btn_Notes.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
+						break;
+					case NoteOverlayPages.Look:
+
+						// Set actual Frame_Main Content to the correct Page
+						Frame_Notes.Content = new Project_127.Overlay.NoteOverlayPages.NoteOverlay_Look();
+						btn_Looks.Style = Application.Current.FindResource("btn_hamburgeritem_selected") as Style;
+
+						// Call Mouse_Over false on other Buttons where a page is behind
+						btn_Notes.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
+						btn_Keybindings.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
+						break;
+				}
+			}
+		}
+
 		public static GTAOverlay MyGTAOverlay;
 
-		public NoteOverlay()
+		public NoteOverlay(NoteOverlayPages pNoteOverlayPage = NoteOverlayPages.NoteFiles)
 		{
 			InitializeComponent();
 
-			btn_OverlayHotkeyToggle.Content = Settings.KeyOverlayToggle;
-			btn_OverlayHotkeyScrollUp.Content = Settings.KeyOverlayScrollUp;
-			btn_OverlayHotkeyScrollDown.Content = Settings.KeyOverlayScrollDown;
-			btn_OverlayHotkeyScrollLeft.Content = Settings.KeyOverlayScrollLeft;
-			btn_OverlayHotkeyScrollRight.Content = Settings.KeyOverlayScrollRight;
+			NoteOverlayPage = pNoteOverlayPage;
+
+			ButtonMouseOverMagic(btn_cb_Set_EnableOverlay);
+
 		}
 
 		public static void InitGTAOverlay()
@@ -79,6 +129,7 @@ namespace Project_127.Overlay
 			//HelperClasses.Logger.Log("Trying to Dispose GTA Overlay");
 			if (MyGTAOverlay != null)
 			{
+				OverlayWasVisible = false;
 				MyGTAOverlay.Dispose();
 				MyGTAOverlay = null;
 				HelperClasses.Logger.Log("GTA Overlay disposed", 1);
@@ -225,82 +276,78 @@ namespace Project_127.Overlay
 
 		}
 
-		private void btn_NoteFile_Click(object sender, RoutedEventArgs e)
+	
+
+
+		private void btn_cb_Click(object sender, RoutedEventArgs e)
 		{
-			string SelectedFiles = HelperClasses.FileHandling.OpenDialogExplorer(FileHandling.PathDialogType.File, "Select the Notes Files you want to load.", LauncherLogic.ZIPFilePath, true, "TEXT Files|*.txt*");
-			string[] AllFiles = SelectedFiles.Split(',');
-			string[] NotesLoading = new string[AllFiles.Length];
-
-			for (int i = 0; i <= AllFiles.Length - 1; i++)
-			{
-				string[] MyFileContents = HelperClasses.FileHandling.ReadFile(AllFiles[i]).ToArray();
-				string tempFileContent = "";
-				for (int j = 0; j <= MyFileContents.Count() - 1; j++)
-				{
-					// This leaves a \n at the end of the file...this is wanted behaviour tho
-					tempFileContent += MyFileContents[j] + "\n";
-				}
-				NotesLoading[i] = tempFileContent;
-			}
-
-			NoteOverlay.NotesLoaded = NotesLoading;
-			NoteOverlay.NotesLoadedIndex = 0;
-			NoteOverlay.MyGTAOverlay.setText(NotesLoaded[0]);
+			Settings.EnableOverlay = !Settings.EnableOverlay;
+			ButtonMouseOverMagic((Button)sender);
 		}
 
-		private async void btn_OverlayHotkeyToggle_Click(object sender, RoutedEventArgs e)
+		private void btn_MouseEnter(object sender, MouseEventArgs e)
 		{
-			((Button)sender).Content = "[Press new Key Now]";
-			Keys MyNewKey = await KeyboardHandler.GetNextKeyPress();
-			if (MyNewKey != Keys.None && MyNewKey != Keys.Escape)
-			{
-				Settings.KeyOverlayToggle = MyNewKey;
-			}
-			((Button)sender).Content = Settings.KeyOverlayToggle;
+			Button myBtn = (Button)sender;
+			ButtonMouseOverMagic(myBtn);
 		}
 
-		private async void btn_OverlayHotkeyScrollUp_Click(object sender, RoutedEventArgs e)
+		private void btn_MouseLeave(object sender, MouseEventArgs e)
 		{
-			((Button)sender).Content = "[Press new Key Now]";
-			Keys MyNewKey = await KeyboardHandler.GetNextKeyPress();
-			if (MyNewKey != Keys.None && MyNewKey != Keys.Escape)
-			{
-				Settings.KeyOverlayScrollUp = MyNewKey;
-			}
-			((Button)sender).Content = Settings.KeyOverlayScrollUp;
+			Button myBtn = (Button)sender;
+			ButtonMouseOverMagic(myBtn);
 		}
 
-		private async void btn_OverlayHotkeyScrollDown_Click(object sender, RoutedEventArgs e)
+
+
+		/// <summary>
+		/// Sets the Background for one specific CheckboxButton. Needs the second property to know if it should be checked or not
+		/// </summary>
+		/// <param name="myBtn"></param>
+		/// <param name="pChecked"></param>
+		private void SetCheckBoxBackground(Button myBtn, bool pChecked)
 		{
-			((Button)sender).Content = "[Press new Key Now]";
-			Keys MyNewKey = await KeyboardHandler.GetNextKeyPress();
-			if (MyNewKey != Keys.None && MyNewKey != Keys.Escape)
+			string BaseURL = @"Artwork/checkbox";
+			if (pChecked)
 			{
-				Settings.KeyOverlayScrollDown = MyNewKey;
+				BaseURL += "_true";
 			}
-			((Button)sender).Content = Settings.KeyOverlayScrollDown;
+			else
+			{
+				BaseURL += "_false";
+			}
+			if (myBtn.IsMouseOver)
+			{
+				BaseURL += "_mo.png";
+			}
+			else
+			{
+				BaseURL += ".png";
+			}
+			MainWindow.MW.SetControlBackground(myBtn, BaseURL);
 		}
 
-		private async void btn_OverlayHotkeyScrollRight_Click(object sender, RoutedEventArgs e)
+		/// <summary>
+		/// Logic behind all MouseOver Stuff. Checkboxes and Refresh Button
+		/// </summary>
+		/// <param name="myBtn"></param>
+		private void ButtonMouseOverMagic(Button myBtn)
 		{
-			((Button)sender).Content = "[Press new Key Now]";
-			Keys MyNewKey = await KeyboardHandler.GetNextKeyPress();
-			if (MyNewKey != Keys.None && MyNewKey != Keys.Escape)
-			{
-				Settings.KeyOverlayScrollRight = MyNewKey;
-			}
-			((Button)sender).Content = Settings.KeyOverlayScrollRight;
+			SetCheckBoxBackground(myBtn, Settings.EnableOverlay);
 		}
 
-		private async void btn_OverlayHotkeyScrollLeft_Click(object sender, RoutedEventArgs e)
+		private void btn_Notes_Click(object sender, RoutedEventArgs e)
 		{
-			((Button)sender).Content = "[Press new Key Now]";
-			Keys MyNewKey = await KeyboardHandler.GetNextKeyPress();
-			if (MyNewKey != Keys.None && MyNewKey != Keys.Escape)
-			{
-				Settings.KeyOverlayScrollLeft = MyNewKey;
-			}
-			((Button)sender).Content = Settings.KeyOverlayScrollLeft;
+			NoteOverlayPage = NoteOverlayPages.NoteFiles;
+		}
+
+		private void btn_Looks_Click(object sender, RoutedEventArgs e)
+		{
+			NoteOverlayPage = NoteOverlayPages.Look;
+		}
+
+		private void btn_Keybindings_Click(object sender, RoutedEventArgs e)
+		{
+			NoteOverlayPage = NoteOverlayPages.Keybinds;
 		}
 	}
 }

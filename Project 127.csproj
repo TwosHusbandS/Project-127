@@ -192,6 +192,15 @@
     <Compile Include="Overlay\NoteOverlay.xaml.cs">
       <DependentUpon>NoteOverlay.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Overlay\NoteOverlayPages\NoteOverlay_Keybinds.xaml.cs">
+      <DependentUpon>NoteOverlay_Keybinds.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Overlay\NoteOverlayPages\NoteOverlay_Look.xaml.cs">
+      <DependentUpon>NoteOverlay_Look.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Overlay\NoteOverlayPages\NoteOverlay_NoteFiles.xaml.cs">
+      <DependentUpon>NoteOverlay_NoteFiles.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Popups\PopupCombobox.xaml.cs">
       <DependentUpon>PopupCombobox.xaml</DependentUpon>
     </Compile>
@@ -233,6 +242,18 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Overlay\NoteOverlay.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Overlay\NoteOverlayPages\NoteOverlay_Keybinds.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Overlay\NoteOverlayPages\NoteOverlay_Look.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Overlay\NoteOverlayPages\NoteOverlay_NoteFiles.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -385,9 +406,7 @@
     <Resource Include="Artwork\checkbox_true.png" />
     <Resource Include="Artwork\checkbox_true_mo.png" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Overlay\NoteOverlayPages\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
