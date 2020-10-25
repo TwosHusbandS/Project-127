@@ -91,16 +91,17 @@ Main To do:
 		=== Keep in Mind === 
 
 	For 1.1
-	- Auto-Start XYZ working dir...
+	- Auto-Start XYZ on Game Launch working dir fix...
 	- Overlay
-		=> Needs Sub - Pages, scrollNextChaptor. Other stuff is implemented. Currently in non working state due to pages not being there
+		=> Needs Sub - Pages, scrollNextChaptor. Other stuff is implemented. Currently in semi-working state due to pages not being fully implemented
 	- Some SaveFileHandler stuff
 	- Jumpscript
 		-> Find input sender which works in Game and doesnt infinite loop
-	- Make texts in readme markdown with easy links and scrollbar and stuff. Also reference the resetall button in settings
+	- Make texts in readme / Information markdown with easy links and scrollbar and stuff. Also reference the resetall button in settings
 	- Client crashes when trying to auth when offline
 	- We call the Getter of all hotkeys on each hotkey press...not that efficent
-	- Uninstaller still is semi-manual...Should be fixed with "Reset" Buttons
+	- Uninstaller still is semi-manual...Should be fixed with "Reset" Buttons eliminating the need for custom uninstaller
+	- Add new DLLs to installer
 
 	Other stuff:
 	- If i can prevent the keypress from being processed further...I can probably change a param and send a different keypress there...
