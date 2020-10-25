@@ -12,10 +12,13 @@ namespace Project_127.HelperClasses
 {
 	class KeyboardHandler
 	{
+		public static bool JumpKey1Down = false;
+		public static bool JumpKey2Down = false;
+
 		public static Keys LastKeyPress = Keys.None;
 
 		[STAThread]
-		public static bool KeyboardEvent(Keys pKey)
+		public static bool KeyboardDownEvent(Keys pKey)
 		{
 			bool SurpressEventFurther = false;
 
@@ -31,19 +34,28 @@ namespace Project_127.HelperClasses
 
 					// Those are all if and not else if because users might be stupid and use the same key for multiple things
 
-					if (Settings.EnableAutoStartJumpScript)
-					{
-						if (pKey == Settings.JumpScriptKey1)
-						{
-							HelperClasses.Jumpscript.KeyADetected();
-							SurpressEventFurther = true;
-						}
-						if (pKey == Settings.JumpScriptKey2)
-						{
-							HelperClasses.Jumpscript.KeyBDetected();
-							SurpressEventFurther = true;
-						}
-					}
+					//if (Settings.EnableAutoStartJumpScript)
+					//{
+					//	if (pKey == Settings.JumpScriptKey1)
+					//	{
+					//		SurpressEventFurther = true;
+					//		if (!JumpKey1Down)
+					//		{
+					//			HelperClasses.KeyboardSender.SendKeyPress(GTAOverlay.targetWindow, Settings.JumpScriptKey2);
+					//		}
+					//		JumpKey1Down = true;
+					//	}
+					//	if (pKey == Settings.JumpScriptKey2)
+					//	{
+					//		SurpressEventFurther = true;
+					//		if (!JumpKey2Down)
+					//		{
+					//			HelperClasses.KeyboardSender.SendKeyPress(GTAOverlay.targetWindow, Settings.JumpScriptKey1);
+					//		}
+					//		JumpKey2Down = true;
+					//	}
+					//}
+
 
 					if (Settings.EnableOverlay)
 					{
@@ -90,6 +102,29 @@ namespace Project_127.HelperClasses
 
 			return SurpressEventFurther;
 		}
+
+
+
+
+
+		[STAThread]
+		public static void KeyboardUpEvent(Keys pKey)
+		{
+			if (Settings.EnableAutoStartJumpScript)
+			{
+				if (pKey == Settings.JumpScriptKey1)
+				{
+					JumpKey1Down = false;
+				}
+				else if (pKey == Settings.JumpScriptKey2)
+				{
+					JumpKey2Down = false;
+				}
+			}
+		}
+
+
+
 
 		public static async Task<Keys> GetNextKeyPress(int pWaitMilliSeconds = 2000)
 		{

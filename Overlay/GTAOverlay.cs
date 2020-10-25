@@ -14,8 +14,9 @@ namespace Project_127
 		// If set to false, this starts and keeps KeyboardListenerEvent running 100% of the time.
 		public static bool DebugMode = false;
 		public const string targetWindowDebug = "TeamSpeak 3";
-		
-		private string targetWindow
+		public const string targetWindowNonDebug = "Grand Theft Auto V";
+
+		public static string targetWindow
 		{
 			get
 			{
@@ -25,7 +26,7 @@ namespace Project_127
 				}
 				else
 				{
-					return "Grand Theft Auto V";
+					return targetWindowNonDebug;
 				}
 			}
 		}

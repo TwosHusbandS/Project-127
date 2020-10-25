@@ -33,6 +33,15 @@ namespace Project_127.Overlay
 		public static string[] NotesLoaded = { "Test-Note to show what it can do\nThis is in the next line\n\nThis is in the next Paragraph" };
 		public static int NotesLoadedIndex = 0;
 
+		public static NoteOverlayPages NoteOverlayPageOnNextLoad;
+
+		public enum NoteOverlayPages
+		{
+			NoteFiles,
+			Keybinds,
+			Look
+		}
+
 		public static GTAOverlay MyGTAOverlay;
 
 		public NoteOverlay()

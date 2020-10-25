@@ -92,16 +92,18 @@ Main To do:
 		=> Hotkeys only work when Overlay is visible
 
 		=== Keep in Mind === 
+	- Jumpscript
+		-> Find input sender which works in Game and doesnt infinite loop
 	- Make sure GTA Overlay will turn off when not ingame
-	- If i can prevent the keypress from being processed further...I can probably change a param and send a different keypress there...
-	- USE GIT TO KEEP TRACK OF INSTALLATION STATES???
 	- Client crashes when trying to auth when offline
 	- We call the Getter of all hotkeys on each hotkey press...not that efficent
 	- Uninstaller still is semi-manual...argh
+	- If i can prevent the keypress from being processed further...I can probably change a param and send a different keypress there...
+	- USE GIT TO KEEP TRACK OF INSTALLATION STATES???
 	- Features still to do:
 		- Upgrade / Downgrade / Repair Improvements 
 			=> Popup Messages when Upgrading / Downgrading doesnt get you what you wanted (Specials Suggestion)
-			=> to handle steam updates automatically, without User Interaction
+			=> to handle steam updates automatically, without User Interaction (Check on Startup, Upgrade, Downgrade, Repair, Game Launch maybe)
 			=> to not have own files in them (because of "botan.dll"...so im fixing fivem :D)
 		- Native jump Script
 		- [@thS currently working on] Better Save File Handler
@@ -551,8 +553,6 @@ namespace Project_127
 		{
 			SetButtonMouseOverMagic((Button)sender);
 		}
-
-
 
 
 
