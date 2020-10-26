@@ -48,5 +48,49 @@ namespace Project_127.Overlay.NoteOverlayPages
 			NoteOverlay.MyGTAOverlay.setText(NoteOverlay.NotesLoaded[0]);
 		}
 
+		private void dg_BackupFiles_GotFocus(object sender, RoutedEventArgs e)
+		{
+
+		}
+
+		private void dg_KeyDown(object sender, KeyEventArgs e)
+		{
+
+		}
+
+		private void dg_BackupFiles_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
+		{
+
+		}
+
+		private void Row_DoubleClick(object sender, MouseButtonEventArgs e)
+		{
+
+		}
+
+		private void btn_Add_Click(object sender, RoutedEventArgs e)
+		{
+
+		}
+
+		private void btn_Delete_Click(object sender, RoutedEventArgs e)
+		{
+
+		}
+
+		private void btn_PresetLoad_Click(object sender, RoutedEventArgs e)
+		{
+
+		}
+
+		private void btn_PresetSave_Click(object sender, RoutedEventArgs e)
+		{
+
+		}
+
+		private void btn_Help_Click(object sender, RoutedEventArgs e)
+		{
+
+		}
 	}
 }

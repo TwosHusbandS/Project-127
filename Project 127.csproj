@@ -192,6 +192,9 @@
     <Compile Include="Overlay\NoteOverlay.xaml.cs">
       <DependentUpon>NoteOverlay.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Overlay\NoteOverlayPages\GTAOverlayColorPicker.xaml.cs">
+      <DependentUpon>GTAOverlayColorPicker.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Overlay\NoteOverlayPages\NoteOverlay_Keybinds.xaml.cs">
       <DependentUpon>NoteOverlay_Keybinds.xaml</DependentUpon>
     </Compile>
@@ -242,6 +245,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Overlay\NoteOverlay.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Overlay\NoteOverlayPages\GTAOverlayColorPicker.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

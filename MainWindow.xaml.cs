@@ -98,6 +98,7 @@ Main To do:
 	- Jumpscript
 		-> Find input sender which works in Game and doesnt infinite loop
 	- Make texts in readme / Information markdown with easy links and scrollbar and stuff. Also reference the resetall button in settings
+	- Imrpovements to Upgrade/Downgrade/Repair (see notes below)
 	- Client crashes when trying to auth when offline
 	- We call the Getter of all hotkeys on each hotkey press...not that efficent
 	- Uninstaller still is semi-manual...Should be fixed with "Reset" Buttons eliminating the need for custom uninstaller

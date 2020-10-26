@@ -1007,6 +1007,11 @@ namespace Project_127
 		public static Thickness ReadME_Inner_BorderThickness { get; private set; } = new Thickness(2);
 		public static CornerRadius ReadME_Inner_CornerRadius { get; private set; } = new CornerRadius(10);
 
+		// Using a lot of settings stuff (grid-background, grid second / alternative row color, button styles inside grid) on the noteoverlay...whatevs XD
+
+		public static Brush NO_Slider_Track_Brush { get; private set; } = MyColorOffWhite;
+		public static Brush NO_Slider_Thumb_Brush { get; private set; } = MyColorOffWhite;
+		public static Brush NO_Slider_Thumb_MO_Brush { get; private set; } = MyColorOffBlack;
 
 
 		//public static Brush SE_LabelForeground { get; private set; } = MyColorWhite;

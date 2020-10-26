@@ -3,12 +3,74 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      xmlns:local="clr-namespace:Project_127.Overlay.NoteOverlayPages"
+      xmlns:converters="clr-namespace:Project_127.Overlay.NoteOverlayPages"
+      xmlns:local="clr-namespace:Project_127"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       Title="NoteOverlay_Look">
-
     <Grid>
-        
+        <Grid.Resources>
+            <converters:PrintableFontFamilyConverter  x:Key="PrintableFontFamilyConverter" />
+        </Grid.Resources>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="4*"/>
+            <ColumnDefinition Width="5*"/>
+            <ColumnDefinition Width="1.2*"/>
+        </Grid.ColumnDefinitions>
+
+        <Rectangle Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Fill="Transparent"/>
+        <Rectangle Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Fill="{x:Static local:Globals.SE_AlternateRowBackground}"/>
+        <Rectangle Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" Fill="Transparent"/>
+        <Rectangle Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3" Fill="{x:Static local:Globals.SE_AlternateRowBackground}"/>
+        <Rectangle Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3" Fill="Transparent"/>
+        <Rectangle Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="3" Fill="{x:Static local:Globals.SE_AlternateRowBackground}"/>
+        <Rectangle Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="3" Fill="Transparent"/>
+        <Rectangle Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="3" Fill="{x:Static local:Globals.SE_AlternateRowBackground}"/>
+
+        <Label Grid.Row="1" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="  Overlay - BackgroundColor"/>
+        <Label Grid.Row="2" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="  Overlay - TextColor"/>
+        <Label Grid.Row="3" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="  Overlay - Location"/>
+        <Label Grid.Row="4" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="  Overlay - Width"/>
+        <Label Grid.Row="5" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="  Overlay - Height"/>
+        <Label Grid.Row="6" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="  Overlay - TextFont"/>
+        <Label Grid.Row="7" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="  Overlay - TextSize"/>
+
+        <Button Style="{StaticResource btn_SE_Path}" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Center" Content="Toggle Preview Overlay" x:Name="btn_Toggle_Preview" Click="btn_Toggle_Preview_Click"/>
+        <Button Style="{StaticResource btn_SE_Path}" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Content="#00000000" HorizontalAlignment="Center" Click="Button_Color_Click"/>
+        <Button Style="{StaticResource btn_SE_Path}" Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Content="#FFFFFFFF" HorizontalAlignment="Center" Click="Button_Color_Click"/>
+        <ComboBox Grid.Row="3" Grid.Column="1" Margin="10" Grid.ColumnSpan="2" Style="{StaticResource cobo}" x:Name="ComboBox_OverlayLocation" SelectionChanged="ComboBox_OverlayLocation_SelectionChanged"/>
+        <Slider Grid.Row="4" Grid.Column="1" Style="{StaticResource SliderStyle}"/>
+        <Label Style="{StaticResource lbl_Set_Info}" Grid.Row="4" Grid.Column="2" Content="600px"/>
+        <Slider Grid.Row="5" Grid.Column="1" Style="{StaticResource SliderStyle}"/>
+        <Label Style="{StaticResource lbl_Set_Info}" Grid.Row="5" Grid.Column="2" Content="800px"/>
+        <ComboBox Grid.Row="6" Grid.Column="1" Margin="10" Grid.ColumnSpan="2" Style="{StaticResource cobo}" x:Name="ComboBox_Fonts" SelectionChanged="ComboBox_Fonts_SelectionChanged" ItemsSource="{Binding Source={x:Static Fonts.SystemFontFamilies}}">
+            <ComboBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Source}" FontFamily="{Binding Converter={StaticResource PrintableFontFamilyConverter}}" Height="20"></TextBlock>
+                </DataTemplate>
+            </ComboBox.ItemTemplate>
+        </ComboBox>
+
+        <Slider Grid.Row="7" Grid.Column="1" Style="{StaticResource SliderStyle}"/>
+        <Label Style="{StaticResource lbl_Set_Info}" Grid.Row="7" Grid.Column="2" Content="24"/>
+
+        <!--Background
+        Foreground
+        OverlayLocation
+        Width
+        Height
+        Font
+        Fontsize-->
+
     </Grid>
 </Page>

@@ -87,7 +87,7 @@ namespace Project_127
 			Grid_Credits_Lbl.FontSize = 14;
 
 			string msg4 = "" +
-		"BlaBlaBla\nCommonErrors\nBlablabla\nAnd how to fix them\nBlablabla\n\nIf you see this after installing or updating Project 1.27 we forgot to change this Text.\nUpsi." ;
+		"BlaBlaBla\nCommonErrors\nBlablabla\nAnd how to fix them\nBlablabla\n\nIf you see this after installing or updating Project 1.27 we forgot to change this Text.\nUpsi.";
 			Grid_Help_Lbl.Content = msg4;
 			Grid_Help_Lbl.FontSize = 14;
 		}
@@ -213,6 +213,22 @@ namespace Project_127
 		private void btn_Help_Click(object sender, RoutedEventArgs e)
 		{
 			ReadMeState = ReadMeStates.Help;
+		}
+
+		private void btn_SpeedRun_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+		{
+			if (e.ClickCount == 3)
+			{
+				new Popups.Popup(Popups.Popup.PopupWindowTypes.PopupOk, "Shoutouts to @thedosei for being cool\nYou do matter, dont let someone tell you different\nAlso your cat picture is cute").ShowDialog();
+			}
+		}
+
+		private void btn_About_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+		{
+			if (e.ClickCount == 3)
+			{
+				new Popups.Popup(Popups.Popup.PopupWindowTypes.PopupOk, "Shoutouts to @crapideot for being awesome and a\ngreat friend and Helper during Project 1.27 :)\nHope you have a great day buddy").ShowDialog();
+			}
 		}
 	}
 }

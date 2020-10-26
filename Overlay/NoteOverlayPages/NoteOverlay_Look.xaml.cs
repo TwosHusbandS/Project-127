@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,9 +21,87 @@ namespace Project_127.Overlay.NoteOverlayPages
 	/// </summary>
 	public partial class NoteOverlay_Look : Page
 	{
+		public static FontFamily[] AllFonts = Fonts.SystemFontFamilies.ToArray();
+		public static string SelectedFont = "Arial";
+		public static GTAOverlay.Positions Position = GTAOverlay.Positions.TopLeft;
+
 		public NoteOverlay_Look()
 		{
 			InitializeComponent();
+			//ComboBox_Fonts.SelectedItem = (Fonts.SystemFontFamilies.ToArray())[0];
+			//ComboBox_Fonts.SelectedItem = (Fonts.SystemFontFamilies.ElementAt<FontFamily>(0));
+			ComboBox_Fonts.ItemsSource = AllFonts;
+
+			foreach (FontFamily myFF in AllFonts)
+			{
+				if (myFF.ToString() == NoteOverlay_Look.SelectedFont)
+				{
+					ComboBox_Fonts.SelectedItem = myFF;
+				}
+			}
+
+
+			List<string> myEnumValues = new List<string>();
+			foreach (string myString in Position.GetType().GetEnumNames())
+			{
+				myEnumValues.Add(myString);
+			}
+
+			string enumname = Position.GetType().ToString();
+			ComboBox_OverlayLocation.ItemsSource = myEnumValues;
+			ComboBox_OverlayLocation.SelectedItem = Position.ToString();
+
 		}
+
+		private void ComboBox_Fonts_SelectionChanged(object sender, SelectionChangedEventArgs e)
+		{
+			SelectedFont = ((FontFamily)ComboBox_Fonts.SelectedItem).ToString();
+		}
+
+		private void ComboBox_OverlayLocation_SelectionChanged(object sender, SelectionChangedEventArgs e)
+		{
+			Position = (GTAOverlay.Positions)System.Enum.Parse(typeof(GTAOverlay.Positions), ComboBox_OverlayLocation.SelectedItem.ToString());
+		}
+
+		private void Button_Color_Click(object sender, RoutedEventArgs e)
+		{
+
+		}
+
+		private void btn_Toggle_Preview_Click(object sender, RoutedEventArgs e)
+		{
+		}
+	}
+
+
+	public class PrintableFontFamilyConverter : IValueConverter
+	{
+		public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+		{
+			var fontFamily = value as FontFamily;
+
+			if (fontFamily != null)
+			{
+				foreach (var typeface in fontFamily.GetTypefaces())
+				{
+					if (typeface.TryGetGlyphTypeface(out var glyphTypeface))
+					{
+						if (glyphTypeface.Symbol)
+						{
+							return null;
+						}
+					}
+				}
+			}
+
+			return fontFamily;
+		}
+
+
+		public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+		{
+			throw new NotImplementedException();
+		}
+
 	}
 }
