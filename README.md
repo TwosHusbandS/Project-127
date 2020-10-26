@@ -4,6 +4,10 @@ Hi! This is a custom Client which is capable of Downgrading and Upgrading the PC
 
 The Client is also able to launch the Downgraded GTA V while authenticating through Rockstar Services, made possible by the hard work of @dr490n.
 
+Shoutout to FiveM and Goldberg, whose Source Code proved to be vital to understand and reverse engineer the GTA V Launch Process
+
+Also shoutout to the [Open-Source GTAV Auto Patcher by DaWolf85](https://github.com/DaWolf85/GTAVAutoPatcher) which was an important resource during the development of this Client.
+
 List of Main Features:
 
 * Upgrading / Downgrading GTAV (both via File-Copying and via Hardlinking)
@@ -72,9 +76,7 @@ This was made possibly for the GTA V Speedrunning community through almost a mon
 
 Special shoutouts to @dr490n who was responsible for getting the downgraded game to launch, added patches against in-game triggers, wrote the authentication backend, decryption and got the preorder entitlement to work.
 
-Shoutout to FiveM and Goldberg, whose Source Code proved to be vital to understand and reverse engineer the GTA V Launch Process
 
-Also shoutout to the [Open-Source GTAV Auto Patcher by DaWolf85](https://github.com/DaWolf85/GTAVAutoPatcher) which was an important resource during the development of this Client.
 
 ----------
 
