@@ -9,7 +9,7 @@
         Title="Project - 1.27"
          Height="540" Width="900"
         WindowStyle="None" 
-        AllowsTransparency="True" 
+        AllowsTransparency="False" 
         MouseLeftButtonDown="Window_MouseLeftButtonDown" 
         WindowStartupLocation="CenterScreen"
         ResizeMode="CanMinimize"
@@ -37,17 +37,17 @@
                 </Grid>
                 <!-- GridHamburgerInner -->
                 <Label x:Name="lbl_GTA" Style="{StaticResource lbl}" VerticalAlignment="Top" VerticalContentAlignment="Bottom" FontSize="20" Margin="115,25,0,0" Width="160" HorizontalContentAlignment="Left" HorizontalAlignment="Left"/>
-                <Button x:Name="btn_Auth" Style="{StaticResource btn_SmallIcon}" Height="40" Width="40" MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave" MouseRightButtonDown="btn_Auth_MouseRightButtonDown" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="70,15,0,0" Click="btn_Auth_Click"/>
+                <Button x:Name="btn_Auth" Style="{StaticResource btn_SmallIcon}" ToolTip="Login Button. Lock closed = Logged in. Lock open = Not logged in" Height="40" Width="40" MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave" MouseRightButtonDown="btn_Auth_MouseRightButtonDown" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="70,15,0,0" Click="btn_Auth_Click"/>
             </Grid>
             <!-- GridHamburgerOuter -->
 
             <Rectangle x:Name="GridHamburgerOuterSeperator" Width="2" Height="9999" Fill="{x:Static local:Globals.MW_HamburgerMenuSeperatorBrush}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="275,0,0,0"/>
 
-            <Button x:Name="btn_Hamburger"  Style="{StaticResource btn_SmallIcon}" MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave" MouseRightButtonDown="btn_Hamburger_MouseRightButtonDown" VerticalAlignment="Top" HorizontalAlignment="Left" Click="btn_Hamburger_Click" />
+            <Button x:Name="btn_Hamburger" ToolTip="Toggle Hamburger Menu"  Style="{StaticResource btn_SmallIcon}" MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave" MouseRightButtonDown="btn_Hamburger_MouseRightButtonDown" VerticalAlignment="Top" HorizontalAlignment="Left" Click="btn_Hamburger_Click" />
 
             <Frame x:Name="Frame_Main" Navigating="Frame_Main_Navigating" NavigationUIVisibility="Hidden" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0" Width="619"/>
 
-            <Button x:Name="btn_Exit" Style="{StaticResource btn_SmallIcon}" MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave" VerticalAlignment="Top" HorizontalAlignment="Right" Click="btn_Exit_Click" MouseRightButtonDown="btn_Exit_MouseRightButtonDown"/>
+            <Button x:Name="btn_Exit" ToolTip="Exit" Style="{StaticResource btn_SmallIcon}" MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave" VerticalAlignment="Top" HorizontalAlignment="Right" Click="btn_Exit_Click" MouseRightButtonDown="btn_Exit_MouseRightButtonDown"/>
         </Grid >
         <!-- Main Grid -->
     </Border>

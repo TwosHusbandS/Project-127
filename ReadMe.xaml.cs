@@ -46,8 +46,8 @@ namespace Project_127
 				"I am not a speedrunner or very involved with the GTA V Community,\n" +
 				"if you read this, and could shoot me a PM on Discord with stuff\n" +
 				"you want to Read here, that would be great.";
-			Grid_SpeedRun_Lbl.Content = msg1;
-			Grid_SpeedRun_Lbl.FontSize = 18;
+			//Grid_SpeedRun_Lbl.Content = msg1;
+			//Grid_SpeedRun_Lbl.FontSize = 18;
 
 			string msg2 = "" +
 				 "You are running Project 1.27, a tool for the GTA V Speedrunning\n" +
@@ -88,6 +88,11 @@ namespace Project_127
 
 			string msg4 = "" +
 		"BlaBlaBla\nCommonErrors\nBlablabla\nAnd how to fix them\nBlablabla\n\nIf you see this after installing or updating Project 1.27 we forgot to change this Text.\nUpsi.";
+
+			// Change Error Popup to link here
+
+			// Issues: Path, File Permissions, fucked up GTAV, Wrong version booting,installation state not changing
+
 			Grid_Help_Lbl.Content = msg4;
 			Grid_Help_Lbl.FontSize = 14;
 		}
@@ -229,6 +234,11 @@ namespace Project_127
 			{
 				new Popups.Popup(Popups.Popup.PopupWindowTypes.PopupOk, "Shoutouts to @crapideot for being awesome and a\ngreat friend and Helper during Project 1.27 :)\nHope you have a great day buddy").ShowDialog();
 			}
+		}
+
+		private void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e)
+		{
+			Process.Start("http://google.com");
 		}
 	}
 }

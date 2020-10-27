@@ -12,7 +12,9 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
+using System.Windows.Resources;
 using System.Windows.Shapes;
+using Color = System.Drawing.Color;
 
 namespace Project_127.Overlay.NoteOverlayPages
 {
@@ -28,8 +30,7 @@ namespace Project_127.Overlay.NoteOverlayPages
 		public NoteOverlay_Look()
 		{
 			InitializeComponent();
-			//ComboBox_Fonts.SelectedItem = (Fonts.SystemFontFamilies.ToArray())[0];
-			//ComboBox_Fonts.SelectedItem = (Fonts.SystemFontFamilies.ElementAt<FontFamily>(0));
+
 			ComboBox_Fonts.ItemsSource = AllFonts;
 
 			foreach (FontFamily myFF in AllFonts)
@@ -39,6 +40,7 @@ namespace Project_127.Overlay.NoteOverlayPages
 					ComboBox_Fonts.SelectedItem = myFF;
 				}
 			}
+
 
 
 			List<string> myEnumValues = new List<string>();
@@ -63,13 +65,21 @@ namespace Project_127.Overlay.NoteOverlayPages
 			Position = (GTAOverlay.Positions)System.Enum.Parse(typeof(GTAOverlay.Positions), ComboBox_OverlayLocation.SelectedItem.ToString());
 		}
 
-		private void Button_Color_Click(object sender, RoutedEventArgs e)
+
+		private void btn_Toggle_Preview_Click(object sender, RoutedEventArgs e)
 		{
 
 		}
 
-		private void btn_Toggle_Preview_Click(object sender, RoutedEventArgs e)
+		private void ColorPicker_Background_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<System.Windows.Media.Color?> e)
 		{
+			Color asdf = (Color)new ColorConverter().ConvertFrom(ColorPicker_Background.SelectedColor);
+
+		}
+
+		private void ColorPicker_Foreground_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<System.Windows.Media.Color?> e)
+		{
+
 		}
 	}
 

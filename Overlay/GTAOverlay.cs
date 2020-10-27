@@ -12,7 +12,8 @@ namespace Project_127
 		private readonly GraphicsWindow _window;
 
 		// If set to false, this starts and keeps KeyboardListenerEvent running 100% of the time.
-		public static bool DebugMode = true;
+		// Automatically set to true if we compile debug
+		public static bool DebugMode = false;
 		public const string targetWindowDebug = "TeamSpeak 3";
 		public const string targetWindowNonDebug = "Grand Theft Auto V";
 

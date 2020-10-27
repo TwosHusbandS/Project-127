@@ -87,22 +87,30 @@ Main To do:
 		=> Running Core stuff when launching through steam. This might not have any effect
 		=> Design of UX for NoteOverlay.xaml
 		=> Updated Settings with JumpScript and NoteOverlay stuff
+		=> Rolling Log
+		=> ToolTips on all Buttons
+		=> [NEEDS TESTING] Overlay + Jumpscript stuff
+		=> [NEEDS TESTING] Auto-Start XYZ on Game Launch working dir fix
+		=> [NEEDS INTENSE TESTING] Downgrade/Upgrade/Repair improvements:
+			- Detecting Updates automatically (checking for it on start, upgrade, downgrade), throwing one popup per P127 Launch
+			- Throwing Popup with potential Fixes for non-changing InstallationState (upgraded, downgraded, unsure)
+			- Not having own files in GTA V Folder when upgraded
 
 		=== Keep in Mind === 
 
-	For 1.1
-	- Auto-Start XYZ on Game Launch working dir fix...
+	Still to do for 1.1
+	- Connect NoteOverlay UI stuff to backend
 	- Overlay
 		=> Needs Sub - Pages, scrollNextChaptor. Other stuff is implemented. Currently in semi-working state due to pages not being fully implemented
 	- Some SaveFileHandler stuff
 	- Jumpscript
 		-> Find input sender which works in Game and doesnt infinite loop
 	- Make texts in readme / Information markdown with easy links and scrollbar and stuff. Also reference the resetall button in settings
-	- Imrpovements to Upgrade/Downgrade/Repair (see notes below)
 	- Client crashes when trying to auth when offline
 	- We call the Getter of all hotkeys on each hotkey press...not that efficent
 	- Uninstaller still is semi-manual...Should be fixed with "Reset" Buttons eliminating the need for custom uninstaller
-	- Add new DLLs to installer
+	- Add new DLLs to installer (I think at least 2, probably 3...Bottom Line: test installer.
+
 
 	Other stuff:
 	- If i can prevent the keypress from being processed further...I can probably change a param and send a different keypress there...

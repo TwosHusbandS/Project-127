@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -248,7 +249,7 @@ namespace Project_127.HelperClasses
 			catch (Exception e)
 			{
 				new Popup(Popup.PopupWindowTypes.PopupOkError, "Writing to Log failed. File was probably deleted after start of Program.\nI suggest you restart the Program and contact me if it happens again.\n\nErrorMessage:\n" + e.ToString()).ShowDialog();
-				System.Windows.Forms.MessageBox.Show("Writing to Log failed. File was probably deleted after start of Program.\n\nLogmessage:'" + pLineContent + "'\nI suggest you restart the Program and contact me if it happens again.\n\nErrorMessage:\n" + e.ToString());
+				//System.Windows.Forms.MessageBox.Show("Writing to Log failed. File was probably deleted after start of Program.\n\nLogmessage:'" + pLineContent + "'\nI suggest you restart the Program and contact me if it happens again.\n\nErrorMessage:\n" + e.ToString());
 			}
 		}
 
@@ -295,6 +296,42 @@ namespace Project_127.HelperClasses
 			return rtrn;
 		}
 
+		public static bool AreFilesEqual(string pFilePathA, string pFilePathB)
+		{
+			if (FileHandling.doesFileExist(pFilePathA) && FileHandling.doesFileExist(pFilePathB))
+			{
+				if (FileHandling.GetSizeOfFile(pFilePathA) == FileHandling.GetSizeOfFile(pFilePathB))
+				{
+					return AreFileSignaturesEqual(pFilePathA, pFilePathB);
+				}
+				else
+				{
+					return false;
+				}
+			}
+			else
+			{
+				return false;
+			}
+		}
+
+		public static bool AreFileSignaturesEqual(string pFilePathA, string pFilePathB)
+		{
+			try
+			{
+				X509Certificate theSignerA = X509Certificate.CreateFromSignedFile(pFilePathA);
+				X509Certificate theSignerB = X509Certificate.CreateFromSignedFile(pFilePathB);
+				if (theSignerA.GetRawCertDataString() == theSignerB.GetRawCertDataString())
+				{
+					return true;
+				}
+			}
+			catch
+			{
+
+			}
+			return false;
+		}
 
 		/// <summary>
 		/// Gets the MD5 Hash of one file
@@ -394,7 +431,7 @@ namespace Project_127.HelperClasses
 		}
 
 
-		public static string[] GetSubFolders (string pPath)
+		public static string[] GetSubFolders(string pPath)
 		{
 			if (doesPathExist(pPath))
 			{

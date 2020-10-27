@@ -111,7 +111,11 @@ namespace Project_127.HelperClasses
 			{
 				MainWindow.MW.Dispatcher.Invoke((Action)delegate
 				{
-					HelperClasses.Logger.Log("Anything other Foreground Change Event detected");
+					if (KeyboardListener.IsRunning)
+					{
+						// So we dont spam log with that.
+						HelperClasses.Logger.Log("GTA V no longer foreground");
+					}
 					KeyboardListener.Stop();
 					if (Overlay.NoteOverlay.IsOverlayVisible())
 					{

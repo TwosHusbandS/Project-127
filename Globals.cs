@@ -262,9 +262,6 @@ namespace Project_127
 			// Last Launched Version Cleanup
 			if (Settings.LastLaunchedVersion < Globals.ProjectVersion)
 			{
-				// Do things we want to do
-				Version GiveWarningMessageVersion = new Version("0.0.3.1");
-
 				if (Settings.LastLaunchedVersion < new Version("0.0.3.1"))
 				{
 					new Popup(Popup.PopupWindowTypes.PopupOk,
@@ -286,6 +283,28 @@ namespace Project_127
 					" - The Project 1.27 Team").ShowDialog();
 				}
 
+				if (Settings.LastLaunchedVersion < new Version("1.1.0.0"))
+				{
+					if (LauncherLogic.InstallationState != LauncherLogic.InstallationStates.Downgraded)
+					{
+						FileHandling.deleteFile(LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\asmjit.dll");
+						FileHandling.deleteFile(LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\botan.dll");
+						FileHandling.deleteFile(LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\launc.dll");
+						FileHandling.deleteFile(LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\origi_socialclub.dll");
+						FileHandling.deleteFile(LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\Readme.txt");
+						FileHandling.deleteFile(LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\socialclub.dll");
+						FileHandling.deleteFile(LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\tinyxml2.dll");
+					}
+
+					FileHandling.deleteFile(LauncherLogic.UpgradeFilePath.TrimEnd('\\') + @"\asmjit.dll");
+					FileHandling.deleteFile(LauncherLogic.UpgradeFilePath.TrimEnd('\\') + @"\botan.dll");
+					FileHandling.deleteFile(LauncherLogic.UpgradeFilePath.TrimEnd('\\') + @"\launc.dll");
+					FileHandling.deleteFile(LauncherLogic.UpgradeFilePath.TrimEnd('\\') + @"\origi_socialclub.dll");
+					FileHandling.deleteFile(LauncherLogic.UpgradeFilePath.TrimEnd('\\') + @"\Readme.txt");
+					FileHandling.deleteFile(LauncherLogic.UpgradeFilePath.TrimEnd('\\') + @"\socialclub.dll");
+					FileHandling.deleteFile(LauncherLogic.UpgradeFilePath.TrimEnd('\\') + @"\tinyxml2.dll");
+				}
+
 				Settings.LastLaunchedVersion = Globals.ProjectVersion;
 			}
 
@@ -305,12 +324,18 @@ namespace Project_127
 			// Intepreting all Command Line shit
 			CommandLineArgumentIntepretation();
 
+			// Checks if Update hit
+			LauncherLogic.HandleUpdates();
+
+			// Rolling Log stuff
+			HelperClasses.Logger.RollingLog();
+
 			// Starting the Dispatcher Timer for the automatic updates of the GTA V Button
 			MyDispatcherTimer = new System.Windows.Threading.DispatcherTimer();
-			MyDispatcherTimer.Tick += new EventHandler(pMW.UpdateGUIDispatcherTimer);
+			MyDispatcherTimer.Tick += new EventHandler(MainWindow.MW.UpdateGUIDispatcherTimer);
 			MyDispatcherTimer.Interval = TimeSpan.FromMilliseconds(2500);
 			MyDispatcherTimer.Start();
-			pMW.UpdateGUIDispatcherTimer();
+			MainWindow.MW.UpdateGUIDispatcherTimer();
 		}
 
 		/// <summary>
