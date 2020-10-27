@@ -87,7 +87,7 @@ Main To do:
 		=> Running Core stuff when launching through steam. This might not have any effect
 		=> Design of UX for NoteOverlay.xaml
 		=> Updated Settings with JumpScript and NoteOverlay stuff
-		=> Rolling Log
+		=> Rolling Log (fixed potential off by one)
 		=> ToolTips on all Buttons
 		=> [NEEDS TESTING] Overlay + Jumpscript stuff
 		=> [NEEDS TESTING] Auto-Start XYZ on Game Launch working dir fix
@@ -95,6 +95,15 @@ Main To do:
 			- Detecting Updates automatically (checking for it on start, upgrade, downgrade), throwing one popup per P127 Launch
 			- Throwing Popup with potential Fixes for non-changing InstallationState (upgraded, downgraded, unsure)
 			- Not having own files in GTA V Folder when upgraded
+
+
+			Quick and dirty notes:
+			Support for preview window has begun.
+			SetControlbackground is still getting called for some actual background stuff, when we are now using the grid.
+			need to set up new grid for right part, and the seperation vertical rectance
+			toggle for that shit.
+
+
 
 		=== Keep in Mind === 
 
@@ -614,6 +623,7 @@ namespace Project_127
 				// Opens the File
 				HelperClasses.ProcessHandler.StartProcess(@"C:\Windows\System32\notepad.exe", pCommandLineArguments: Globals.Logfile);
 			}
+			this.Width = this.Width + 700;
 		}
 
 

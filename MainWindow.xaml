@@ -15,7 +15,7 @@
         ResizeMode="CanMinimize"
         Icon="/Artwork/icon.png">
     <Border BorderThickness="{x:Static local:Globals.MW_BorderThickness}" BorderBrush="{x:Static local:Globals.MW_BorderBrush}">
-        <Grid x:Name="GridMain">
+        <Grid x:Name="GridMain" Height="536" Width="896" HorizontalAlignment="Left" >
             <Grid x:Name="GridHamburgerOuter" HorizontalAlignment="Left" Width="275" Background="{x:Static local:Globals.MW_HamburgerMenuGridBackground}">
                 <Grid x:Name="GridHamburgerInner" Margin="15, 120, 15, 60">
                     <Grid.RowDefinitions>

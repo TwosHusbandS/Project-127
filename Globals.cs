@@ -19,6 +19,8 @@ using Project_127.HelperClasses;
 using Project_127.Overlay;
 using Project_127.Popups;
 using Project_127.SettingsStuff;
+using System.Windows.Resources;
+using System.Windows.Media.Imaging;
 
 namespace Project_127
 {
@@ -781,7 +783,12 @@ namespace Project_127
 			set
 			{
 				_BackgroundImage = value;
-				MainWindow.MW.SetControlBackground(MainWindow.MW, GetBackGroundPath());
+				Uri resourceUri = new Uri(GetBackGroundPath(), UriKind.Relative);
+				StreamResourceInfo streamInfo = Application.GetResourceStream(resourceUri);
+				BitmapFrame temp = BitmapFrame.Create(streamInfo.Stream);
+				var brush = new ImageBrush();
+				brush.ImageSource = temp;
+				MainWindow.MW.GridMain.Background = brush;
 			}
 		}
 

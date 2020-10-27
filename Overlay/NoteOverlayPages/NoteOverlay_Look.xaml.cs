@@ -73,7 +73,7 @@ namespace Project_127.Overlay.NoteOverlayPages
 
 		private void ColorPicker_Background_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<System.Windows.Media.Color?> e)
 		{
-			Color asdf = (Color)new ColorConverter().ConvertFrom(ColorPicker_Background.SelectedColor);
+			//Color asdf = (Color)new ColorConverter().ConvertFrom(ColorPicker_Background.SelectedColor);
 
 		}
 

@@ -51,6 +51,14 @@ namespace Project_127.HelperClasses
 			}
 		}
 
+		private static void _Start()
+		{
+			_hookID = SetHook(_proc);
+			KeyboardListener.IsRunning = true;
+			System.Windows.Forms.Application.Run();
+			UnhookWindowsHookEx(_hookID);
+		}
+
 		public static void Stop()
 		{
 			if (DontStop)
@@ -65,13 +73,7 @@ namespace Project_127.HelperClasses
 			}
 		}
 
-		public static void _Start()
-		{
-			_hookID = SetHook(_proc);
-			KeyboardListener.IsRunning = true;
-			System.Windows.Forms.Application.Run();
-			UnhookWindowsHookEx(_hookID);
-		}
+
 
 		public static void _Stop()
 		{
