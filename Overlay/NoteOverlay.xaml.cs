@@ -60,6 +60,8 @@ namespace Project_127.Overlay
 				{
 					// In Case: Settings
 					case NoteOverlayPages.NoteFiles:
+						MainWindow.MW.Width = 900;
+						MainWindow.MW.Grid_Preview.Visibility = Visibility.Hidden;
 
 						// Set actual Frame_Main Content to the correct Page
 						Frame_Notes.Content = new Project_127.Overlay.NoteOverlayPages.NoteOverlay_NoteFiles();
@@ -70,6 +72,8 @@ namespace Project_127.Overlay
 						btn_Keybindings.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
 						break;
 					case NoteOverlayPages.Keybinds:
+						MainWindow.MW.Width = 900;
+						MainWindow.MW.Grid_Preview.Visibility = Visibility.Hidden;
 
 						// Set actual Frame_Main Content to the correct Page
 						Frame_Notes.Content = new Project_127.Overlay.NoteOverlayPages.NoteOverlay_Keybinds();
@@ -80,6 +84,8 @@ namespace Project_127.Overlay
 						btn_Notes.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
 						break;
 					case NoteOverlayPages.Look:
+						MainWindow.MW.Width = 1600;
+						MainWindow.MW.Grid_Preview.Visibility = Visibility.Visible;
 
 						// Set actual Frame_Main Content to the correct Page
 						Frame_Notes.Content = new Project_127.Overlay.NoteOverlayPages.NoteOverlay_Look();

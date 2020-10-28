@@ -102,12 +102,14 @@ Main To do:
 			SetControlbackground is still getting called for some actual background stuff, when we are now using the grid.
 			need to set up new grid for right part, and the seperation vertical rectance
 			toggle for that shit.
+			
 
 
 
 		=== Keep in Mind === 
 
 	Still to do for 1.1
+	- 1.5 seconds delay on downgrade... + warning popup on first downgrade that it takes some time
 	- Connect NoteOverlay UI stuff to backend
 	- Overlay
 		=> Needs Sub - Pages, scrollNextChaptor. Other stuff is implemented. Currently in semi-working state due to pages not being fully implemented
@@ -307,6 +309,8 @@ namespace Project_127
 			SetButtonMouseOverMagic(btn_Exit);
 			SetButtonMouseOverMagic(btn_Auth);
 			SetButtonMouseOverMagic(btn_Hamburger);
+			SetButtonMouseOverMagic(btn_LeftArrow);
+			SetButtonMouseOverMagic(btn_RightArrow);
 			Globals.HamburgerMenuState = Globals.HamburgerMenuStates.Hidden;
 
 			HelperClasses.Logger.Log("Startup procedure (Constructor of MainWindow) completed.");
@@ -520,6 +524,26 @@ namespace Project_127
 						SetControlBackground(myBtn, @"Artwork\exit.png");
 					}
 					break;
+				case "btn_RightArrow":
+					if (myBtn.IsMouseOver)
+					{
+						SetControlBackground(myBtn, @"Artwork\arrowright_mo.png");
+					}
+					else
+					{
+						SetControlBackground(myBtn, @"Artwork\arrowright.png");
+					}
+					break;
+				case "btn_LeftArrow":
+					if (myBtn.IsMouseOver)
+					{
+						SetControlBackground(myBtn, @"Artwork\arrowleft_mo.png");
+					}
+					else
+					{
+						SetControlBackground(myBtn, @"Artwork\arrowleft.png");
+					}
+					break;
 				case "btn_Auth":
 					string BaseArtworkPath = "";
 
@@ -623,7 +647,6 @@ namespace Project_127
 				// Opens the File
 				HelperClasses.ProcessHandler.StartProcess(@"C:\Windows\System32\notepad.exe", pCommandLineArguments: Globals.Logfile);
 			}
-			this.Width = this.Width + 700;
 		}
 
 
@@ -960,6 +983,17 @@ namespace Project_127
 
 		#endregion
 
+
+		public void SetBackground(string pArtworkPath)
+		{
+			Uri resourceUri = new Uri(pArtworkPath, UriKind.Relative);
+			StreamResourceInfo streamInfo = Application.GetResourceStream(resourceUri);
+			BitmapFrame temp = BitmapFrame.Create(streamInfo.Stream);
+			var brush = new ImageBrush();
+			brush.ImageSource = temp;
+			MainWindow.MW.GridMain.Background = brush;
+		}
+
 		private void btn_NoteOverlay_Click(object sender, RoutedEventArgs e)
 		{
 			if (Globals.PageState == Globals.PageStates.NoteOverlay)
@@ -971,5 +1005,16 @@ namespace Project_127
 				Globals.PageState = Globals.PageStates.NoteOverlay;
 			}
 		}
+
+		private void btn_RightArrow_Click(object sender, RoutedEventArgs e)
+		{
+
+		}
+
+		private void btn_LeftArrow_Click(object sender, RoutedEventArgs e)
+		{
+
+		}
+
 	} // End of Class
 } // End of Namespace

@@ -361,7 +361,7 @@ namespace Project_127
 					{
 						Tmp = (Globals.BackgroundImages)System.Enum.Parse(typeof(Globals.BackgroundImages), Value);
 						Globals.BackgroundImage = Tmp;
-						MainWindow.MW.SetControlBackground(MainWindow.MW, Globals.GetBackGroundPath());
+						MainWindow.MW.SetBackground(Globals.GetBackGroundPath());
 					}
 					catch { }
 				}
@@ -680,7 +680,7 @@ namespace Project_127
 					HamburgerMenuState = HamburgerMenuStates.Visible;
 				}
 
-				MainWindow.MW.SetControlBackground(MainWindow.MW, GetBackGroundPath());
+				MainWindow.MW.SetBackground(Globals.GetBackGroundPath());
 
 				// Switch Value
 				switch (value)
@@ -783,12 +783,7 @@ namespace Project_127
 			set
 			{
 				_BackgroundImage = value;
-				Uri resourceUri = new Uri(GetBackGroundPath(), UriKind.Relative);
-				StreamResourceInfo streamInfo = Application.GetResourceStream(resourceUri);
-				BitmapFrame temp = BitmapFrame.Create(streamInfo.Stream);
-				var brush = new ImageBrush();
-				brush.ImageSource = temp;
-				MainWindow.MW.GridMain.Background = brush;
+				MainWindow.MW.SetBackground(GetBackGroundPath());
 			}
 		}
 
@@ -818,7 +813,8 @@ namespace Project_127
 			set
 			{
 				_HamburgerMenuState = value;
-				MainWindow.MW.SetControlBackground(MainWindow.MW, GetBackGroundPath());
+				MainWindow.MW.SetBackground(Globals.GetBackGroundPath());
+
 
 				if (value == HamburgerMenuStates.Visible)
 				{

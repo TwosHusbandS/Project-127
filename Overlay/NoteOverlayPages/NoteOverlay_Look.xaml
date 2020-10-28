@@ -41,20 +41,21 @@
 
         <!--<xctk:ColorCanvas Grid.Row="1" Grid.Column="1" Background="Transparent"></xctk:ColorCanvas>-->
         
-        <Label Grid.Row="1" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="  Overlay - BackgroundColor"/>
-        <Label Grid.Row="2" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="  Overlay - TextColor"/>
-        <Label Grid.Row="3" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="  Overlay - Location"/>
+        <Label Grid.Row="0" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="  Overlay - BackgroundColor"/>
+        <Label Grid.Row="1" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="  Overlay - TextColor"/>
+        <Label Grid.Row="2" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="  Overlay - Location"/>
+        <Label Grid.Row="3" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="  Overlay - Margin"/>
         <Label Grid.Row="4" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="  Overlay - Width"/>
         <Label Grid.Row="5" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="  Overlay - Height"/>
         <Label Grid.Row="6" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="  Overlay - TextFont"/>
         <Label Grid.Row="7" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="  Overlay - TextSize"/>
 
-        <Button Style="{StaticResource btn_SE_Path}" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Center" Content="Toggle Preview Overlay" x:Name="btn_Toggle_Preview" Click="btn_Toggle_Preview_Click"/>
+        <xctk:ColorPicker Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" x:Name="ColorPicker_Background" SelectedColorChanged="ColorPicker_Background_SelectedColorChanged" Style="{StaticResource MyColorPicker}"/>
+        <xctk:ColorPicker Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" x:Name="ColorPicker_Foreground" SelectedColorChanged="ColorPicker_Foreground_SelectedColorChanged" Style="{StaticResource MyColorPicker}"/>
 
-        <xctk:ColorPicker Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" x:Name="ColorPicker_Background" SelectedColorChanged="ColorPicker_Background_SelectedColorChanged" Style="{StaticResource MyColorPicker}"/>
-        <xctk:ColorPicker Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" x:Name="ColorPicker_Foreground" SelectedColorChanged="ColorPicker_Foreground_SelectedColorChanged" Style="{StaticResource MyColorPicker}"/>
-
-        <ComboBox Grid.Row="3" Grid.Column="1" Margin="10" Grid.ColumnSpan="2" Style="{StaticResource cobo}" x:Name="ComboBox_OverlayLocation" SelectionChanged="ComboBox_OverlayLocation_SelectionChanged"/>
+        <ComboBox Grid.Row="2" Grid.Column="1" Margin="10" Grid.ColumnSpan="2" Style="{StaticResource cobo}" x:Name="ComboBox_OverlayLocation" SelectionChanged="ComboBox_OverlayLocation_SelectionChanged"/>
+        <Slider Grid.Row="3" Grid.Column="1" Style="{StaticResource SliderStyle}"/>
+        <Label Style="{StaticResource lbl_Set_Info}" Grid.Row="3" Grid.Column="2" Content="20px"/>
         <Slider Grid.Row="4" Grid.Column="1" Style="{StaticResource SliderStyle}"/>
         <Label Style="{StaticResource lbl_Set_Info}" Grid.Row="4" Grid.Column="2" Content="600px"/>
         <Slider Grid.Row="5" Grid.Column="1" Style="{StaticResource SliderStyle}"/>
