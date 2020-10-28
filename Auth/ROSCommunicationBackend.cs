@@ -454,6 +454,7 @@ namespace Project_127.Auth
                             { "locale", "en-US"},
                             { "machineHash", btoa(session.machineHash)},
                         }), session.sessionKey);
+                    //addLaunchExtension("saveDirOverride", Encoding.UTF8.GetBytes());
                     setFlag(Flags.preorder, Settings.EnablePreOrderBonus);
                     LKey.Add(laflags);
 
