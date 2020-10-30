@@ -21,9 +21,15 @@ namespace Project_127.HelperClasses
 
 		public static void Stop()
 		{
+			//HelperClasses.Logger.Log("Trying to stop WindowChangeListener");
 			if (WindowChangeListener.IsRunning)
 			{
 				Task.Run(() => WindowChangeListener._Stop());
+				HelperClasses.Logger.Log("Stopped WindowChangeListener", 1);
+			}
+			else
+			{
+				//HelperClasses.Logger.Log("WindowChangeListener already stopped", 1);
 			}
 		}
 
@@ -34,11 +40,17 @@ namespace Project_127.HelperClasses
 
 		public static void Start()
 		{
+			//HelperClasses.Logger.Log("Trying to start WindowChangeListener");
 			if (!WindowChangeListener.IsRunning)
 			{
 				Task.Run(() => WindowChangeListener._Start());
+				HelperClasses.Logger.Log("Started WindowChangeListener", 1);
 			}
-			WinEventProc((IntPtr)null, 0, (IntPtr)null, 0, 0, 0, 0);
+			else
+			{
+				//HelperClasses.Logger.Log("WindowChangeListener already started", 1);
+			}
+
 		}
 
 		public static void _Start()
@@ -47,6 +59,9 @@ namespace Project_127.HelperClasses
 			dele = new WinEventDelegate(WinEventProc);
 			IntPtr m_hhook = SetWinEventHook(EVENT_SYSTEM_FOREGROUND, EVENT_SYSTEM_FOREGROUND, IntPtr.Zero, dele, 0, 0, WINEVENT_OUTOFCONTEXT);
 			EventLoop.Run();
+
+			// Caling this to "update" based on what the current foreground window is
+			WinEventProc((IntPtr)null, 0, (IntPtr)null, 0, 0, 0, 0);
 		}
 
 		delegate void WinEventDelegate(IntPtr hWinEventHook, uint eventType, IntPtr hwnd, int idObject, int idChild, uint dwEventThread, uint dwmsEventTime);
@@ -79,20 +94,34 @@ namespace Project_127.HelperClasses
 
 		public static void WinEventProc(IntPtr hWinEventHook, uint eventType, IntPtr hwnd, int idObject, int idChild, uint dwEventThread, uint dwmsEventTime)
 		{
-			// Lines below are commented out because we are testing the Overlay on TeamSpeak 3
-
-			if (GetActiveWindowTitle() == "Grand Theft Auto V")
+			if (GetActiveWindowTitle() == GTAOverlay.targetWindow)
 			{
 				MainWindow.MW.Dispatcher.Invoke((Action)delegate
 				{
-					//KeyboardListener.Start();
+					HelperClasses.Logger.Log("'" + GTAOverlay.targetWindow + "' Foreground Change Event detected");
+					KeyboardListener.Start();
+					if (Overlay.NoteOverlay.OverlayWasVisible)
+					{
+						Overlay.NoteOverlay.OverlaySetVisible();
+						Overlay.NoteOverlay.OverlayWasVisible = false;
+					}
 				});
 			}
 			else
 			{
 				MainWindow.MW.Dispatcher.Invoke((Action)delegate
 				{
-					//KeyboardListener.Stop();
+					if (KeyboardListener.IsRunning)
+					{
+						// So we dont spam log with that.
+						HelperClasses.Logger.Log("GTA V no longer foreground");
+					}
+					KeyboardListener.Stop();
+					if (Overlay.NoteOverlay.IsOverlayVisible())
+					{
+						Overlay.NoteOverlay.OverlayWasVisible = true;
+						Overlay.NoteOverlay.OverlaySetInvisible();
+					}
 				});
 			}
 		}

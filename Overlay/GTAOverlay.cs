@@ -54,9 +54,28 @@ namespace Project_127
 			return rect;
 		}
 
-		private const string targetWindow = "Command Prompt";
-		//private const string targetWindow = "Project - 1.27";
-		//private const string targetWindow = "Grand Theft Auto V";
+
+		// If set to false, this starts and keeps KeyboardListenerEvent running 100% of the time.
+		// Automatically set to true if we compile debug
+		public static bool DebugMode = true;
+		public const string targetWindowDebug = "TeamSpeak 3";
+		public const string targetWindowNonDebug = "Grand Theft Auto V";
+
+		public static string targetWindow
+		{
+			get
+			{
+				if (DebugMode)
+				{
+					return targetWindowDebug;
+				}
+				else
+				{
+					return targetWindowNonDebug;
+				}
+			}
+		}
+
 		private readonly Dictionary<string, SolidBrush> _brushes;
 		private readonly Dictionary<string, Font> _fonts;
 		private readonly Dictionary<string, Image> _images;
@@ -145,16 +164,18 @@ namespace Project_127
 			_brushes = new Dictionary<string, SolidBrush>();
 			_fonts = new Dictionary<string, Font>();
 			_images = new Dictionary<string, Image>();
-            //var wb = new WindowBounds();
-			HelperClasses.Logger.Log("Searching for GTAV window...");
+
+            var wb = new WindowBounds();
+			HelperClasses.Logger.Log("Searching for '" + targetWindow + "' window...");
+
 			var windowHandle = WindowHelper.FindWindow(targetWindow);
 			if (windowHandle == IntPtr.Zero)
             {
-				HelperClasses.Logger.Log("Failed to find GTAV window.");
+				HelperClasses.Logger.Log("Failed to find '" + targetWindow + "' window.");
 			} 
 			else
             {
-				HelperClasses.Logger.Log("GTAV window found.");
+				HelperClasses.Logger.Log("'" + targetWindow + "' window found.");
 			}
 			//WindowHelper.GetWindowBounds(windowHandle, out wb);
             var gfx = new Graphics()
@@ -467,23 +488,25 @@ namespace Project_127
 			resx += PaddingSize + XMargin;
 			resy += PaddingSize + YMargin;
 			var coords = new int[2];
+			int xborder = System.Windows.Forms.SystemInformation.FrameBorderSize.Width*2;
+			int yborder = System.Windows.Forms.SystemInformation.FrameBorderSize.Height*2;
 			switch (p)
             {
 				case Positions.TopLeft:
 					coords[1] = wb.Top + PaddingSize + YMargin;
-					coords[0] = wb.Left + PaddingSize + XMargin;
+					coords[0] = wb.Left + PaddingSize + XMargin + xborder;
 					break;
 				case Positions.TopRight:
 					coords[1] = wb.Top + PaddingSize + YMargin;
-					coords[0] = wb.Right - resx;
+					coords[0] = wb.Right - resx - xborder;
 					break;
 				case Positions.BottomLeft:
-					coords[1] = wb.Bottom - resy;
-					coords[0] = wb.Left + PaddingSize + XMargin;
+					coords[1] = wb.Bottom - resy - yborder;
+					coords[0] = wb.Left + PaddingSize + XMargin + +xborder;
 					break;
 				case Positions.BottomRight:
-					coords[1] = wb.Bottom - resy;
-					coords[0] = wb.Right - resx;
+					coords[1] = wb.Bottom - resy - yborder;
+					coords[0] = wb.Right - resx - xborder;
 					break;
 				default:
 					goto case Positions.TopLeft;

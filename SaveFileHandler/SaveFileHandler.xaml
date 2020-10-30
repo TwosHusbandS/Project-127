@@ -7,12 +7,6 @@
         mc:Ignorable="d"
         Title="Save File Manager" d:DesignHeight="540" d:DesignWidth="625"        
         Background="{x:Static local:Globals.App_Submenu_Background}">
-    <Page.Resources>
-
-
-
-    </Page.Resources>
-
     <Grid x:Name="Grid_Main" Margin="15,0,15,0" Height="540">
         <Grid.RowDefinitions>
             <RowDefinition Height="70"/>
@@ -26,7 +20,7 @@
         </Grid.ColumnDefinitions>
 
 
-        <Label Style="{StaticResource lbl}" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Left" FontSize="24" Height="60" VerticalAlignment="Bottom" Margin="5,0,0,0" Content="Save File Handler"/>
+        <Label Style="{StaticResource lbl}" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Left" FontSize="24" Height="60" VerticalAlignment="Bottom" Margin="0,0,0,0" Content="Save File Handler"/>
 
         <Button Style="{StaticResource btn_SmallIcon}"  MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"  Grid.Row="0" Grid.Column="2" Margin="0,15,55,0" VerticalAlignment="Top" HorizontalAlignment="Right" x:Name="btn_Refresh"  ToolTip="Refresh (detect new Files)"  Height="40" Width="40" Click="btn_Refresh_Click"/>
 
@@ -47,7 +41,7 @@
                     <Label Grid.Row="0"  FontSize="20" Content="Backup Save Files" Style="{StaticResource lbl}" Margin="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Foreground="{x:Static local:Globals.SFH_DGHeaderForeground}" Background="{x:Static local:Globals.SFH_DGHeaderBackground}"/>
 
                     <ScrollViewer x:Name="sv_BackupFiles" Grid.Row="1">
-                        <DataGrid x:Name="dg_BackupFiles" Style="{StaticResource dg}" PreviewMouseWheel="dg_BackupFiles_PreviewMouseWheel" GotFocus="dg_BackupFiles_GotFocus" PreviewKeyDown="dg_KeyDown">
+                        <DataGrid x:Name="dg_BackupFiles" Style="{StaticResource dg_cm}" PreviewMouseWheel="dg_BackupFiles_PreviewMouseWheel" GotFocus="dg_BackupFiles_GotFocus" PreviewKeyDown="dg_KeyDown">
                             <DataGrid.Resources>
                                 <Style TargetType="DataGridRow">
                                     <EventSetter Event="MouseDoubleClick" Handler="Row_DoubleClick"/>
@@ -76,7 +70,7 @@
                     <Label Grid.Row="0"  FontSize="20" Content="GTA V Save Files" Style="{StaticResource lbl}" Margin="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Foreground="{x:Static local:Globals.SFH_DGHeaderForeground}" Background="{x:Static local:Globals.SFH_DGHeaderBackground}"/>
 
                     <ScrollViewer x:Name="sv_GTAFiles" Grid.Row="1">
-                        <DataGrid x:Name="dg_GTAFiles" Style="{StaticResource dg}" PreviewMouseWheel="dg_GTAFiles_PreviewMouseWheel" GotFocus="dg_GTAFiles_GotFocus" PreviewKeyDown="dg_KeyDown">
+                        <DataGrid x:Name="dg_GTAFiles" Style="{StaticResource dg_cm}" PreviewMouseWheel="dg_GTAFiles_PreviewMouseWheel" GotFocus="dg_GTAFiles_GotFocus" PreviewKeyDown="dg_KeyDown">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="Filename" Binding="{Binding FileName, Mode=OneWay}" Width="*" FontSize="20" />
                             </DataGrid.Columns>

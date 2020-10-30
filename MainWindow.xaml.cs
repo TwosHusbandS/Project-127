@@ -57,13 +57,6 @@ General Files / Classes:
 		ROSCommunicationBackend.cs // Backend by @d490n
 
 Main To do:
-	So thinky thinky:
-
-	Process KeyboardListener stuff for Jumpscript and also for Noteoverlay in KeyboardHandler instead of the actual classes...
-		Only do that if those features are enabled
-		
-		Look into sending Keypresses to GTA V, then check if they get caught in our spider web of keyboard listener logic and find a workaround if they do
-			
 		SaveFileHandler Folder dectection and display. Dummy Double Click Method done.
 			Gotta implement the actual displaying files from new folder and updating Label
 			Gotta Refresh on Renaming Left side btw (for NiceName Update)
@@ -81,18 +74,63 @@ Main To do:
 		=> Moved SourceCodeFiles around to make it easier to find stuff
 		=> Fixed Not launching after pressing Launch when non-auth
 		=> Dragon Implemented the GameOverlay (GTAOverlay)
-		=> KeyboardListener
-		=> WindowChangeForegroundEventListener
+		=> KeyboardListener (conntected to Backend)
+		=> WindowChangeForegroundEventListener (connected to Backend)
+		=> "Look for Updates" Button
+		=> Made it generate debugfile and open explorer window of project 1.27 on rightclick of auth button
+		=> Fixed Auth Mouse Over
+		=> Fixed Consistent Margins and BorderThicknesses for Pages
+		=> Made sure Process Priority is set correctly
+		=> Implemented GTA Overlay debugmode which means the rest of that stuff is properly connected to backend
+		=> Hotkeys only work when Overlay is visible
+		=> Made sure GTA Overlay will turn off when not ingame
+		=> Running Core stuff when launching through steam. This might not have any effect
+		=> Design of UX for NoteOverlay.xaml
+		=> Updated Settings with JumpScript and NoteOverlay stuff
+		=> Rolling Log (fixed potential off by one)
+		=> ToolTips on all Buttons
+		=> [NEEDS TESTING] Overlay + Jumpscript stuff
+		=> [NEEDS TESTING] Auto-Start XYZ on Game Launch working dir fix
+		=> [NEEDS INTENSE TESTING] Downgrade/Upgrade/Repair improvements:
+			- Detecting Updates automatically (checking for it on start, upgrade, downgrade), throwing one popup per P127 Launch
+			- Throwing Popup with potential Fixes for non-changing InstallationState (upgraded, downgraded, unsure)
+			- Not having own files in GTA V Folder when upgraded
+
+
+			Quick and dirty notes:
+				- Figure out why NoteOverlay_Looks is crashing (when setting label to slider value)
+				- Connect that shit to settings properties (which good default values)
+				- Write NoteOverlay_File stuff
+
+				- Connect it to the actual overlay.
+
 
 		=== Keep in Mind === 
-	- Auth Button Mouseover
-	- CLient crashes when trying to auth when offline
-	- Uninstaller still is semi-manual...argh
-	- "Look for Updates" Button needs to be implemented
+
+	Still to do for 1.1
+	- Add credits to Yoshi
+	- Ask Yoshi, Crapideot, and that other guy from hossels discord
+	- 1.5 seconds delay on downgrade... + warning popup on first downgrade that it takes some time
+	- Connect NoteOverlay UI stuff to backend
+	- Overlay
+		=> Needs Sub - Pages, scrollNextChaptor. Other stuff is implemented. Currently in semi-working state due to pages not being fully implemented
+	- Some SaveFileHandler stuff
+	- Jumpscript
+		-> Find input sender which works in Game and doesnt infinite loop
+	- Make texts in readme / Information markdown with easy links and scrollbar and stuff. Also reference the resetall button in settings
+	- Client crashes when trying to auth when offline
+	- We call the Getter of all hotkeys on each hotkey press...not that efficent
+	- Uninstaller still is semi-manual...Should be fixed with "Reset" Buttons eliminating the need for custom uninstaller
+	- Add new DLLs to installer (I think at least 2, probably 3...Bottom Line: test installer.
+
+
+	Other stuff:
+	- If i can prevent the keypress from being processed further...I can probably change a param and send a different keypress there...
+	- USE GIT TO KEEP TRACK OF INSTALLATION STATES???
 	- Features still to do:
 		- Upgrade / Downgrade / Repair Improvements 
 			=> Popup Messages when Upgrading / Downgrading doesnt get you what you wanted (Specials Suggestion)
-			=> to handle steam updates automatically, without User Interaction
+			=> to handle steam updates automatically, without User Interaction (Check on Startup, Upgrade, Downgrade, Repair, Game Launch maybe)
 			=> to not have own files in them (because of "botan.dll"...so im fixing fivem :D)
 		- Native jump Script
 		- [@thS currently working on] Better Save File Handler
@@ -105,6 +143,7 @@ Main To do:
 			=> RightClick on File (Copy, Rename, Delete)
 			=> RightClick on Files (Copy, Delete, Delete)
 			=> RightClick on Background (new Folder, Paste)
+			=> RightClick on Folder
 		- Auto Start via CSV and custom shit
 		- Note Feature from Reloes suggestion 
 
@@ -115,10 +154,11 @@ Main To do:
 
 
 Bug Reportings:
-	- Open Twice message (and killing old process) not working for one guy
+	- [RESOLVED][IDC][Its fine for now, no idea how to improve]
+			Open Twice message (and killing old process) not working for one guy
 			Works for me and on some other testers machines.
 			Confirmed funky. Also can not kill Process spawned by VS
-	- [RESOLVED] Installer Link wrong (gave Reloe new one, so far not changed)
+	- [RESOLVED] Installer Link wrong (gave Reloe new one, it got changed)
 	- [RESOLVED] Changed a lot of that, should be all good now
 			Reloe and JakeMiester and dr490n had some issues with the GTA V Path Settings
 			Changed a lot of the backend for that. Should all be fixed.
@@ -270,10 +310,33 @@ namespace Project_127
 			SetButtonMouseOverMagic(btn_Exit);
 			SetButtonMouseOverMagic(btn_Auth);
 			SetButtonMouseOverMagic(btn_Hamburger);
+			SetButtonMouseOverMagic(btn_LeftArrow);
+			SetButtonMouseOverMagic(btn_RightArrow);
 			Globals.HamburgerMenuState = Globals.HamburgerMenuStates.Hidden;
+
+			MainWindow.MW.Frame_Game.Content = new Overlay_Preview();
 
 			HelperClasses.Logger.Log("Startup procedure (Constructor of MainWindow) completed.");
 			HelperClasses.Logger.Log("--------------------------------------------------------");
+
+
+#if DEBUG
+   GTAOverlay.DebugMode = true;
+#endif
+
+
+			// Testing Purpose for the overlay shit
+			if (GTAOverlay.DebugMode)
+			{
+				// We currently need this here, normally this will be started by GameState (but this points to GTA V.exe as of right now)
+				NoteOverlay.InitGTAOverlay();
+
+				// Same as other two thingies here lolerino
+				HelperClasses.WindowChangeListener.Start();
+
+				// We currently need this here, normally this will be started by WindowEventThingy (but this only starts or stops based on GTA V.exe)
+				KeyboardListener.Start();
+			}
 		}
 
 		/// <summary>
@@ -464,19 +527,43 @@ namespace Project_127
 						SetControlBackground(myBtn, @"Artwork\exit.png");
 					}
 					break;
+				case "btn_RightArrow":
+					if (myBtn.IsMouseOver)
+					{
+						SetControlBackground(myBtn, @"Artwork\arrowright_mo.png");
+					}
+					else
+					{
+						SetControlBackground(myBtn, @"Artwork\arrowright.png");
+					}
+					break;
+				case "btn_LeftArrow":
+					if (myBtn.IsMouseOver)
+					{
+						SetControlBackground(myBtn, @"Artwork\arrowleft_mo.png");
+					}
+					else
+					{
+						SetControlBackground(myBtn, @"Artwork\arrowleft.png");
+					}
+					break;
 				case "btn_Auth":
 					string BaseArtworkPath = "";
+
 					if (LauncherLogic.AuthState == LauncherLogic.AuthStates.Auth)
 					{
 						BaseArtworkPath = @"Artwork\lock_closed";
 					}
-					else
+					else if (LauncherLogic.AuthState == LauncherLogic.AuthStates.NotAuth)
 					{
 						BaseArtworkPath = @"Artwork\lock_open";
 					}
-					if (myBtn.IsMouseOver)
+
+					if (Globals.PageState == Globals.PageStates.Auth)
 					{
-						if (Globals.PageState == Globals.PageStates.Auth)
+						// Reverse Mouse Over Effect
+
+						if (myBtn.IsMouseOver)
 						{
 							SetControlBackground(myBtn, BaseArtworkPath + ".png");
 						}
@@ -485,9 +572,11 @@ namespace Project_127
 							SetControlBackground(myBtn, BaseArtworkPath + "_mo.png");
 						}
 					}
-					else
+					else if (Globals.PageState != Globals.PageStates.Auth)
 					{
-						if (Globals.PageState == Globals.PageStates.Auth)
+						// Normal Mouse Over Effect
+
+						if (myBtn.IsMouseOver)
 						{
 							SetControlBackground(myBtn, BaseArtworkPath + "_mo.png");
 						}
@@ -496,6 +585,7 @@ namespace Project_127
 							SetControlBackground(myBtn, BaseArtworkPath + ".png");
 						}
 					}
+
 					break;
 			}
 		}
@@ -519,8 +609,6 @@ namespace Project_127
 		{
 			SetButtonMouseOverMagic((Button)sender);
 		}
-
-
 
 
 
@@ -634,11 +722,7 @@ namespace Project_127
 			// Deletes File, Creates File, Adds to it
 			HelperClasses.FileHandling.WriteStringToFileOverwrite(DebugFile, DebugMessage.ToArray());
 
-			if (Globals.BetaMode || Globals.InternalMode)
-			{
-				// Opens the File
-				HelperClasses.ProcessHandler.StartProcess(@"C:\Windows\System32\notepad.exe", pCommandLineArguments: DebugFile);
-			}
+			HelperClasses.ProcessHandler.StartProcess(@"C:\Windows\explorer.exe", pCommandLineArguments: Globals.ProjectInstallationPath);
 		}
 
 
@@ -715,7 +799,8 @@ namespace Project_127
 				else
 				{
 					HelperClasses.Logger.Log("Installation State Broken.", 1);
-					new Popup(Popup.PopupWindowTypes.PopupOkError, "Installation State is broken. I suggest trying to repair.").ShowDialog();
+					new Popup(Popup.PopupWindowTypes.PopupOkError, "Installation State is broken. I suggest trying to repair.\nWill try to Upgrade anyways.").ShowDialog();
+					LauncherLogic.Upgrade();
 				}
 			}
 			else
@@ -743,46 +828,7 @@ namespace Project_127
 			UpdateGUIDispatcherTimer();
 		}
 
-		/// <summary>
-		/// Method which gets called when the Update Button is clicked
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
-		private void btn_Repair_Click(object sender, RoutedEventArgs e)
-		{
-			Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "This Method is supposed to be called when there was a Game Update.\nOr you verified Files through Steam.\nIs that the case?");
-			yesno.ShowDialog();
-			if (yesno.DialogResult == true)
-			{
-				if (LauncherLogic.IsGTAVInstallationPathCorrect() && Globals.ZipVersion != 0)
-				{
-					LauncherLogic.Repair();
-				}
-				else
-				{
 
-					HelperClasses.Logger.Log("GTA V Installation Path not found or incorrect. User will get Popup");
-
-					string msg = "Error: GTA V Installation Path incorrect or ZIP Version == 0.\nGTAV Installation Path: '" + LauncherLogic.GTAVFilePath + "'\nInstallationState (probably): '" + LauncherLogic.InstallationState.ToString() + "'\nZip Version: " + Globals.ZipVersion + ".";
-
-					if (Globals.BetaMode || Globals.InternalMode)
-					{
-						Popup yesno2 = new Popup(Popup.PopupWindowTypes.PopupYesNo, msg + "\n. Force this Repair?");
-						yesno2.ShowDialog();
-						if (yesno2.DialogResult == true)
-						{
-							LauncherLogic.Repair();
-						}
-					}
-					else
-					{
-						new Popup(Popup.PopupWindowTypes.PopupOkError, msg).ShowDialog();
-					}
-				}
-			}
-
-			UpdateGUIDispatcherTimer();
-		}
 
 		/// <summary>
 		/// Method which gets called when the Downgrade Button is clicked
@@ -815,8 +861,9 @@ namespace Project_127
 				}
 				else
 				{
-					HelperClasses.Logger.Log("Installation State Broken.", 1);
-					new Popup(Popup.PopupWindowTypes.PopupOkError, "Installation State is broken. I suggest trying to repair.").ShowDialog();
+					HelperClasses.Logger.Log("Installation State Broken. Downgrade procedure will be called anyways since it shouldnt break things.", 1);
+					new Popup(Popup.PopupWindowTypes.PopupOk, "Installation State is broken. I suggest trying to repair.\nWill try to Downgrade anyways").ShowDialog();
+					LauncherLogic.Downgrade();
 				}
 			}
 			else
@@ -900,6 +947,17 @@ namespace Project_127
 
 		#endregion
 
+
+		public void SetBackground(string pArtworkPath)
+		{
+			Uri resourceUri = new Uri(pArtworkPath, UriKind.Relative);
+			StreamResourceInfo streamInfo = Application.GetResourceStream(resourceUri);
+			BitmapFrame temp = BitmapFrame.Create(streamInfo.Stream);
+			var brush = new ImageBrush();
+			brush.ImageSource = temp;
+			MainWindow.MW.GridMain.Background = brush;
+		}
+
 		private void btn_NoteOverlay_Click(object sender, RoutedEventArgs e)
 		{
 			if (Globals.PageState == Globals.PageStates.NoteOverlay)
@@ -911,5 +969,16 @@ namespace Project_127
 				Globals.PageState = Globals.PageStates.NoteOverlay;
 			}
 		}
+
+		private void btn_RightArrow_Click(object sender, RoutedEventArgs e)
+		{
+
+		}
+
+		private void btn_LeftArrow_Click(object sender, RoutedEventArgs e)
+		{
+
+		}
+
 	} // End of Class
 } // End of Namespace

@@ -329,7 +329,7 @@ namespace Project_127.SettingsStuff
 				case "btn_Set_GTAVInstallationPath":
 					if (IsRightClick)
 					{
-						HelperClasses.ProcessHandler.StartProcess(@"C:\Windows\explorer.exe", pCommandLineArguments: HelperClasses.FileHandling.PathSplitUp(Settings.GTAVInstallationPath.TrimEnd('\\'))[0]);
+						HelperClasses.ProcessHandler.StartProcess(@"C:\Windows\explorer.exe", pCommandLineArguments: Settings.GTAVInstallationPath);
 					}
 					else
 					{
@@ -339,7 +339,7 @@ namespace Project_127.SettingsStuff
 				case "btn_Set_ZIPExtractionPath":
 					if (IsRightClick)
 					{
-						HelperClasses.ProcessHandler.StartProcess(@"C:\Windows\explorer.exe", pCommandLineArguments: HelperClasses.FileHandling.PathSplitUp(Settings.ZIPExtractionPath.TrimEnd('\\'))[0]);
+						HelperClasses.ProcessHandler.StartProcess(@"C:\Windows\explorer.exe", pCommandLineArguments: Settings.ZIPExtractionPath);
 					}
 					else
 					{
@@ -480,9 +480,15 @@ namespace Project_127.SettingsStuff
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
-		private void btn_Set_JumpScriptKey1_Click(object sender, RoutedEventArgs e)
+		private async void btn_Set_JumpScriptKey1_Click(object sender, RoutedEventArgs e)
 		{
-
+			((Button)sender).Content = "[Press new Key]";
+			System.Windows.Forms.Keys MyNewKey = await KeyboardHandler.GetNextKeyPress();
+			if (MyNewKey != System.Windows.Forms.Keys.None && MyNewKey != System.Windows.Forms.Keys.Escape)
+			{
+				Settings.JumpScriptKey1 = MyNewKey;
+			}
+			((Button)sender).Content = Settings.JumpScriptKey1;
 		}
 
 		/// <summary>
@@ -490,9 +496,15 @@ namespace Project_127.SettingsStuff
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
-		private void btn_Set_JumpScriptKey2_Click(object sender, RoutedEventArgs e)
+		private async void btn_Set_JumpScriptKey2_Click(object sender, RoutedEventArgs e)
 		{
-
+			((Button)sender).Content = "[Press new Key]";
+			System.Windows.Forms.Keys MyNewKey = await KeyboardHandler.GetNextKeyPress();
+			if (MyNewKey != System.Windows.Forms.Keys.None && MyNewKey != System.Windows.Forms.Keys.Escape)
+			{
+				Settings.JumpScriptKey2 = MyNewKey;
+			}
+			((Button)sender).Content = Settings.JumpScriptKey2;
 		}
 
 
@@ -628,6 +640,9 @@ namespace Project_127.SettingsStuff
 
 			tb_Set_InGameName.Text = Settings.InGameName;
 
+			btn_Set_JumpScriptKey1.Content = Settings.JumpScriptKey1;
+			btn_Set_JumpScriptKey2.Content = Settings.JumpScriptKey2;
+
 			ButtonMouseOverMagic(btn_Refresh);
 
 			ButtonMouseOverMagic(btn_cb_Set_EnableLogging);
@@ -636,10 +651,12 @@ namespace Project_127.SettingsStuff
 			ButtonMouseOverMagic(btn_cb_Set_EnableAutoStartFPSLimiter);
 			ButtonMouseOverMagic(btn_cb_Set_EnableAutoStartLiveSplit);
 			ButtonMouseOverMagic(btn_cb_Set_EnableAutoStartNohboard);
+			ButtonMouseOverMagic(btn_cb_Set_EnableOverlay);
 			ButtonMouseOverMagic(btn_cb_Set_EnableAutoStartStreamProgram);
 			ButtonMouseOverMagic(btn_cb_Set_AutoSetHighPriority);
 			ButtonMouseOverMagic(btn_cb_Set_OnlyAutoStartProgramsWhenDowngraded);
 			ButtonMouseOverMagic(btn_cb_Set_EnableDontLaunchThroughSteam);
+			ButtonMouseOverMagic(btn_cb_Set_EnableAutoStartJumpScript);
 
 			//btn_Set_JumpScriptKey1.Content = Settings.JumpScriptKey1;
 			//btn_Set_JumpScriptKey2.Content = Settings.JumpScriptKey2;
@@ -745,6 +762,12 @@ namespace Project_127.SettingsStuff
 				case "btn_cb_Set_EnableDontLaunchThroughSteam":
 					SetCheckBoxBackground(myBtn, Settings.EnableDontLaunchThroughSteam);
 					break;
+				case "btn_cb_Set_EnableOverlay":
+					SetCheckBoxBackground(myBtn, Settings.EnableOverlay);
+					break;
+				case "btn_cb_Set_EnableAutoStartJumpScript":
+					SetCheckBoxBackground(myBtn, Settings.EnableAutoStartJumpScript);
+					break;
 			}
 		}
 
@@ -801,8 +824,129 @@ namespace Project_127.SettingsStuff
 				case "btn_cb_Set_EnableDontLaunchThroughSteam":
 					Settings.EnableDontLaunchThroughSteam = !Settings.EnableDontLaunchThroughSteam;
 					break;
+				case "btn_cb_Set_EnableOverlay":
+					Settings.EnableOverlay = !Settings.EnableOverlay;
+					break;
+				case "btn_cb_Set_EnableAutoStartJumpScript":
+					Settings.EnableAutoStartJumpScript = !Settings.EnableAutoStartJumpScript;
+					break;
 			}
 			RefreshGUI();
+		}
+
+		private void btn_CheckForUpdate_Click(object sender, RoutedEventArgs e)
+		{
+			Globals.CheckForBigThree();
+			Globals.CheckForZipUpdate();
+			Globals.CheckForUpdate();
+		}
+
+		private void btn_ImportZIP_Click(object sender, RoutedEventArgs e)
+		{
+			string ZipFileLocation = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.File, "Import ZIP File", Globals.ProjectInstallationPath, pFilter: "ZIP Files|*.zip*");
+			if (HelperClasses.FileHandling.doesFileExist(ZipFileLocation))
+			{
+				LauncherLogic.ImportZip(ZipFileLocation);
+			}
+			else
+			{
+				new Popup(Popup.PopupWindowTypes.PopupOk, "No ZIP File selected").ShowDialog();
+			}
+		}
+
+		private void btn_Set_Overlay_Notes_Click(object sender, RoutedEventArgs e)
+		{
+			NoteOverlay.LoadNoteOverlayWithCustomPage = NoteOverlay.NoteOverlayPages.NoteFiles;
+			Globals.PageState = Globals.PageStates.NoteOverlay;
+		}
+
+		private void btn_Set_Overlay_Hotkeys_Click(object sender, RoutedEventArgs e)
+		{
+			NoteOverlay.LoadNoteOverlayWithCustomPage = NoteOverlay.NoteOverlayPages.Keybinds;
+			Globals.PageState = Globals.PageStates.NoteOverlay;
+		}
+
+		private void btn_Set_Overlay_Looks_Click(object sender, RoutedEventArgs e)
+		{
+			NoteOverlay.LoadNoteOverlayWithCustomPage = NoteOverlay.NoteOverlayPages.Look;
+			Globals.PageState = Globals.PageStates.NoteOverlay;
+		}
+
+		public void btn_Reset_Everything_Click(object sender, RoutedEventArgs e)
+		{
+			Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "This resets the whole Project 1.27 Client including:\nSettings\nZIP Files Downloaded\nBacked up GTA Files to upgrade when downgraded\n\nYou need to repair GTA V through Steam / Epic / Rockstar after this\n(if its not already Up-To-Date)");
+			yesno.ShowDialog();
+			if (yesno.DialogResult == true)
+			{
+				HelperClasses.Logger.Log("Initiating a full Reset:");
+				
+				HelperClasses.Logger.Log("Making an Upgrade.");
+				LauncherLogic.Upgrade();
+				HelperClasses.Logger.Log("Done making an Upgrade.",1);
+				
+				HelperClasses.Logger.Log("Deleting all Regedit Values.");
+				RegeditHandler.DeleteKey();
+				HelperClasses.Logger.Log("Done deleting all Regedit Values.",1);
+				
+				HelperClasses.Logger.Log("Deleting all extracted ZIP Files.");
+				HelperClasses.FileHandling.DeleteFolder(LauncherLogic.ZIPFilePath.TrimEnd('\\') + @"\Project_127_Files");
+				HelperClasses.Logger.Log("Done deleting all extracted ZIP Files.",1);
+				
+				HelperClasses.Logger.Log("Gonna close this now I guess...cya");
+				HelperClasses.Logger.Log("=");
+				HelperClasses.Logger.Log("=");
+				HelperClasses.Logger.Log("=");
+				HelperClasses.Logger.Log("=");
+				HelperClasses.Logger.Log("=");
+				HelperClasses.Logger.Log("=");
+				HelperClasses.Logger.Log("=");
+				HelperClasses.Logger.Log("=== FULL REPAIR DONE ===");
+				HelperClasses.Logger.Log("=");
+				HelperClasses.Logger.Log("=");
+				HelperClasses.Logger.Log("=");
+				Environment.Exit(0);
+			}
+		}
+
+		/// <summary>
+		/// Method which gets called when the Update Button is clicked
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void btn_RepairGTA_Click(object sender, RoutedEventArgs e)
+		{
+			Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "This Method is supposed to be called when there was a Game Update.\nOr you verified Files through Steam.\nIs that the case?");
+			yesno.ShowDialog();
+			if (yesno.DialogResult == true)
+			{
+				if (LauncherLogic.IsGTAVInstallationPathCorrect() && Globals.ZipVersion != 0)
+				{
+					LauncherLogic.Repair();
+				}
+				else
+				{
+
+					HelperClasses.Logger.Log("GTA V Installation Path not found or incorrect. User will get Popup");
+
+					string msg = "Error: GTA V Installation Path incorrect or ZIP Version == 0.\nGTAV Installation Path: '" + LauncherLogic.GTAVFilePath + "'\nInstallationState (probably): '" + LauncherLogic.InstallationState.ToString() + "'\nZip Version: " + Globals.ZipVersion + ".";
+
+					if (Globals.BetaMode || Globals.InternalMode)
+					{
+						Popup yesno2 = new Popup(Popup.PopupWindowTypes.PopupYesNo, msg + "\n. Force this Repair?");
+						yesno2.ShowDialog();
+						if (yesno2.DialogResult == true)
+						{
+							LauncherLogic.Repair();
+						}
+					}
+					else
+					{
+						new Popup(Popup.PopupWindowTypes.PopupOkError, msg).ShowDialog();
+					}
+				}
+			}
+
+			MainWindow.MW.UpdateGUIDispatcherTimer();
 		}
 
 
