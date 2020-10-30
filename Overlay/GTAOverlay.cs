@@ -103,6 +103,36 @@ namespace Project_127
 		public bool UseImageFill { get; set; } = false;
 
 		/// <summary>
+		/// Gets/Sets overlay height.
+		/// </summary>
+		public int height
+        {
+            get
+            {
+				return _window.Height;
+            }
+            set
+            {
+				_window.Resize(width, value);
+            }
+        }
+
+		/// <summary>
+		/// Gets/Sets overlay width.
+		/// </summary>
+		public int width
+		{
+			get
+			{
+				return _window.Width;
+			}
+			set
+			{
+				_window.Resize(value, height);
+			}
+		}
+
+		/// <summary>
 		/// Generates the game overlay
 		/// </summary>
 		/// <param name="position">The screen positioning (TopLeft, BottomRight, etc.)</param>
