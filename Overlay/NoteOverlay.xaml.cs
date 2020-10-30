@@ -33,6 +33,8 @@ namespace Project_127.Overlay
 		public static string[] NotesLoaded = { "Test-Note to show what it can do\nThis is in the next line\n\nThis is in the next Paragraph" };
 		public static int NotesLoadedIndex = 0;
 
+		public static NoteOverlayPages LoadNoteOverlayWithCustomPage = NoteOverlayPages.NoteFiles;
+
 		public static bool OverlayWasVisible = false;
 
 		public enum NoteOverlayPages
@@ -101,11 +103,12 @@ namespace Project_127.Overlay
 
 		public static GTAOverlay MyGTAOverlay;
 
-		public NoteOverlay(NoteOverlayPages pNoteOverlayPage = NoteOverlayPages.NoteFiles)
+		public NoteOverlay()
 		{
 			InitializeComponent();
 
-			NoteOverlayPage = pNoteOverlayPage;
+			NoteOverlayPage = LoadNoteOverlayWithCustomPage;
+			LoadNoteOverlayWithCustomPage = NoteOverlayPages.NoteFiles;
 
 			ButtonMouseOverMagic(btn_cb_Set_EnableOverlay);
 
@@ -117,9 +120,14 @@ namespace Project_127.Overlay
 			if (MyGTAOverlay == null)
 			{
 				MyGTAOverlay = new GTAOverlay();
-				MyGTAOverlay.setTextColors(Color.FromArgb(255, 0, 255, 0), Color.Transparent);
-				MyGTAOverlay.setBackgroundColor(Color.FromArgb(102, Color.Black));
-				//MyGTAOverlay.setFont("consolas", 24, false, false, false);
+				MyGTAOverlay.setTextColors(Settings.OverlayForeground, Color.Transparent);
+				MyGTAOverlay.setBackgroundColor(Settings.OverlayBackground);
+				MyGTAOverlay.setFont(Settings.OverlayTextFont, Settings.OverlayTextSize, false, false, false);
+				MyGTAOverlay.Position = Settings.OverlayLocation;
+				MyGTAOverlay.XMargin = Settings.OverlayMargin;
+				MyGTAOverlay.YMargin = Settings.OverlayMargin;
+				//MyGTAOverlay.Width = Settings.OverlayWidth;
+				//MyGTAOverlay.Height = Settings.OverlayHeight;
 				MyGTAOverlay.setText(NotesLoaded[0]);
 				NotesLoadedIndex = 0;
 				HelperClasses.Logger.Log("GTA Overlay initiated", 1);

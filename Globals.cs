@@ -159,33 +159,49 @@ namespace Project_127
 			Previously Used Settings Variables, we cannot use anymore, since they are written,
 			and we are not able to reset only them (for now...):
 				- "FileFolder"
+				- "EnableAutoSteamCoreFix"
+			    - "EnableNohboardBurhac"
+				- "Theme"
 			*/
 
+			// Internal Settings we dont show the user
 			{"FirstLaunch", "True" },
 			{"LastLaunchedVersion", Globals.ProjectVersion.ToString() },
 			{"InstallationPath", Process.GetCurrentProcess().MainModule.FileName.Substring(0, Process.GetCurrentProcess().MainModule.FileName.LastIndexOf('\\')) },
+			{"EnableRememberMe", "False" },
+
+			// Project 1.27 Settings
 			{"GTAVInstallationPath", ""},
 			{"ZIPExtractionPath", Process.GetCurrentProcess().MainModule.FileName.Substring(0, Process.GetCurrentProcess().MainModule.FileName.LastIndexOf('\\')) },
-			{"EnableOverlay", "False"},
 			{"EnableLogging", "True"},
 			{"EnableCopyFilesInsteadOfHardlinking", "False"},
-			{"EnablePreOrderBonus", "False"},
-			{"EnableOnlyAutoStartProgramsWhenDowngraded", "True"},
+			
+			// GTA V Settings
 			{"Retailer", "Steam"},
 			{"LanguageSelected", "English"},
-			{"EnableDontLaunchThroughSteam", "False"},
 			{"InGameName", "HiMomImOnYoutube"},
+			{"EnablePreOrderBonus", "False"},
+			{"EnableDontLaunchThroughSteam", "False"},
+   
+			// Extra Features
+			{"EnableOverlay", "False"},
+			{"EnableAutoStartJumpScript", "True" },
+			{"JumpScriptKey1", "32" },
+			{"JumpScriptKey2", "76" },
 			{"EnableAutoSetHighPriority", "True" },
-			{"EnableAutoSteamCoreFix", "True" },
+
+			// Auto start Shit
+			{"EnableOnlyAutoStartProgramsWhenDowngraded", "True"},
 			{"EnableAutoStartLiveSplit", "True" },
 			{"PathLiveSplit", @"C:\Some\Path\SomeFile.exe" },
 			{"EnableAutoStartStreamProgram", "True" },
 			{"PathStreamProgram", @"C:\Some\Path\SomeFile.exe" },
 			{"EnableAutoStartFPSLimiter", "True" },
 			{"PathFPSLimiter", @"C:\Some\Path\SomeFile.exe" },
-			{"EnableAutoStartJumpScript", "True" },
-			{"JumpScriptKey1", "32" },
-			{"JumpScriptKey2", "76" },
+			{"EnableAutoStartNohboard", "True" },
+			{"PathNohboard", @"C:\Some\Path\SomeFile.exe" },
+
+			// Overlay shit
 			{"KeyOverlayToggle", "163" },
 			{"KeyOverlayScrollUp", "109" },
 			{"KeyOverlayScrollDown", "107" },
@@ -193,11 +209,24 @@ namespace Project_127
 			{"KeyOverlayScrollLeft", "111" },
 			{"KeyOverlayNoteNext", "103" },
 			{"KeyOverlayNotePrev", "105" },
-			{"EnableAutoStartNohboard", "True" },
-			{"EnableNohboardBurhac", "True" },
-			{"PathNohboard", @"C:\Some\Path\SomeFile.exe" },
-			{"Theme", @"Empty" },
-			{"EnableRememberMe", "False" }
+
+
+			{"OverlayBackground", "100,0,0,0" },
+			{"OverlayForeground", "255,255,0,255" },
+			{"OverlayLocation", "TopLeft" },
+			{"OverlayMargin", "10" },
+			{"OverlayWidth", "580" },
+			{"OverlayHeight", "500" },
+			{"OverlayTextFont", "Arial" },
+			{"OverlayTextSize", "24" },
+
+			{"OverlayNotesMain",""},
+			{"OverlayNotesPresetA",""},
+			{"OverlayNotesPresetB",""},
+			{"OverlayNotesPresetC",""},
+			{"OverlayNotesPresetD",""},
+			{"OverlayNotesPresetE",""},
+			{"OverlayNotesPresetF",""},
 		};
 
 		/// <summary>
@@ -287,6 +316,10 @@ namespace Project_127
 
 				if (Settings.LastLaunchedVersion < new Version("1.1.0.0"))
 				{
+
+					Settings.JumpScriptKey1 = System.Windows.Forms.Keys.Space;
+					Settings.JumpScriptKey2 = System.Windows.Forms.Keys.L;
+
 					if (LauncherLogic.InstallationState != LauncherLogic.InstallationStates.Downgraded)
 					{
 						FileHandling.deleteFile(LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\asmjit.dll");
@@ -678,6 +711,12 @@ namespace Project_127
 				if (value != PageStates.GTA)
 				{
 					HamburgerMenuState = HamburgerMenuStates.Visible;
+				}
+
+				if (value != PageStates.NoteOverlay)
+				{
+					MainWindow.MW.Width = 900;
+					MainWindow.MW.Grid_Preview.Visibility = Visibility.Hidden;
 				}
 
 				MainWindow.MW.SetBackground(Globals.GetBackGroundPath());

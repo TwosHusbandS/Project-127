@@ -856,19 +856,19 @@ namespace Project_127.SettingsStuff
 
 		private void btn_Set_Overlay_Notes_Click(object sender, RoutedEventArgs e)
 		{
-			//NoteOverlay.NoteOverlayPageOnNextLoad = NoteOverlay.NoteOverlayPages.NoteFiles;
+			NoteOverlay.LoadNoteOverlayWithCustomPage = NoteOverlay.NoteOverlayPages.NoteFiles;
 			Globals.PageState = Globals.PageStates.NoteOverlay;
 		}
 
 		private void btn_Set_Overlay_Hotkeys_Click(object sender, RoutedEventArgs e)
 		{
-			//NoteOverlay.NoteOverlayPageOnNextLoad = NoteOverlay.NoteOverlayPages.Keybinds;
+			NoteOverlay.LoadNoteOverlayWithCustomPage = NoteOverlay.NoteOverlayPages.Keybinds;
 			Globals.PageState = Globals.PageStates.NoteOverlay;
 		}
 
 		private void btn_Set_Overlay_Looks_Click(object sender, RoutedEventArgs e)
 		{
-			//NoteOverlay.NoteOverlayPageOnNextLoad = NoteOverlay.NoteOverlayPages.Look;
+			NoteOverlay.LoadNoteOverlayWithCustomPage = NoteOverlay.NoteOverlayPages.Look;
 			Globals.PageState = Globals.PageStates.NoteOverlay;
 		}
 
@@ -907,5 +907,48 @@ namespace Project_127.SettingsStuff
 				Environment.Exit(0);
 			}
 		}
+
+		/// <summary>
+		/// Method which gets called when the Update Button is clicked
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void btn_RepairGTA_Click(object sender, RoutedEventArgs e)
+		{
+			Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "This Method is supposed to be called when there was a Game Update.\nOr you verified Files through Steam.\nIs that the case?");
+			yesno.ShowDialog();
+			if (yesno.DialogResult == true)
+			{
+				if (LauncherLogic.IsGTAVInstallationPathCorrect() && Globals.ZipVersion != 0)
+				{
+					LauncherLogic.Repair();
+				}
+				else
+				{
+
+					HelperClasses.Logger.Log("GTA V Installation Path not found or incorrect. User will get Popup");
+
+					string msg = "Error: GTA V Installation Path incorrect or ZIP Version == 0.\nGTAV Installation Path: '" + LauncherLogic.GTAVFilePath + "'\nInstallationState (probably): '" + LauncherLogic.InstallationState.ToString() + "'\nZip Version: " + Globals.ZipVersion + ".";
+
+					if (Globals.BetaMode || Globals.InternalMode)
+					{
+						Popup yesno2 = new Popup(Popup.PopupWindowTypes.PopupYesNo, msg + "\n. Force this Repair?");
+						yesno2.ShowDialog();
+						if (yesno2.DialogResult == true)
+						{
+							LauncherLogic.Repair();
+						}
+					}
+					else
+					{
+						new Popup(Popup.PopupWindowTypes.PopupOkError, msg).ShowDialog();
+					}
+				}
+			}
+
+			MainWindow.MW.UpdateGUIDispatcherTimer();
+		}
+
+
 	} // End of Class
 } // End of Namespace

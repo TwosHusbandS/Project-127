@@ -98,17 +98,18 @@ Main To do:
 
 
 			Quick and dirty notes:
-			Support for preview window has begun.
-			SetControlbackground is still getting called for some actual background stuff, when we are now using the grid.
-			need to set up new grid for right part, and the seperation vertical rectance
-			toggle for that shit.
-			
+				- Figure out why NoteOverlay_Looks is crashing (when setting label to slider value)
+				- Connect that shit to settings properties (which good default values)
+				- Write NoteOverlay_File stuff
 
+				- Connect it to the actual overlay.
 
 
 		=== Keep in Mind === 
 
 	Still to do for 1.1
+	- Add credits to Yoshi
+	- Ask Yoshi, Crapideot, and that other guy from hossels discord
 	- 1.5 seconds delay on downgrade... + warning popup on first downgrade that it takes some time
 	- Connect NoteOverlay UI stuff to backend
 	- Overlay
@@ -312,6 +313,8 @@ namespace Project_127
 			SetButtonMouseOverMagic(btn_LeftArrow);
 			SetButtonMouseOverMagic(btn_RightArrow);
 			Globals.HamburgerMenuState = Globals.HamburgerMenuStates.Hidden;
+
+			MainWindow.MW.Frame_Game.Content = new Overlay_Preview();
 
 			HelperClasses.Logger.Log("Startup procedure (Constructor of MainWindow) completed.");
 			HelperClasses.Logger.Log("--------------------------------------------------------");
@@ -825,46 +828,7 @@ namespace Project_127
 			UpdateGUIDispatcherTimer();
 		}
 
-		/// <summary>
-		/// Method which gets called when the Update Button is clicked
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
-		private void btn_Repair_Click(object sender, RoutedEventArgs e)
-		{
-			Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "This Method is supposed to be called when there was a Game Update.\nOr you verified Files through Steam.\nIs that the case?");
-			yesno.ShowDialog();
-			if (yesno.DialogResult == true)
-			{
-				if (LauncherLogic.IsGTAVInstallationPathCorrect() && Globals.ZipVersion != 0)
-				{
-					LauncherLogic.Repair();
-				}
-				else
-				{
 
-					HelperClasses.Logger.Log("GTA V Installation Path not found or incorrect. User will get Popup");
-
-					string msg = "Error: GTA V Installation Path incorrect or ZIP Version == 0.\nGTAV Installation Path: '" + LauncherLogic.GTAVFilePath + "'\nInstallationState (probably): '" + LauncherLogic.InstallationState.ToString() + "'\nZip Version: " + Globals.ZipVersion + ".";
-
-					if (Globals.BetaMode || Globals.InternalMode)
-					{
-						Popup yesno2 = new Popup(Popup.PopupWindowTypes.PopupYesNo, msg + "\n. Force this Repair?");
-						yesno2.ShowDialog();
-						if (yesno2.DialogResult == true)
-						{
-							LauncherLogic.Repair();
-						}
-					}
-					else
-					{
-						new Popup(Popup.PopupWindowTypes.PopupOkError, msg).ShowDialog();
-					}
-				}
-			}
-
-			UpdateGUIDispatcherTimer();
-		}
 
 		/// <summary>
 		/// Method which gets called when the Downgrade Button is clicked

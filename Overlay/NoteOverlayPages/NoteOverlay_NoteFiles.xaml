@@ -30,19 +30,14 @@
 
         <Border x:Name="bdr_Files" Grid.Row="1" Grid.RowSpan="5" Grid.Column="0" Grid.ColumnSpan="2" BorderThickness="2" Margin="5" BorderBrush="{x:Static local:Globals.MyColorOffWhite}">
             <ScrollViewer x:Name="sv_Files">
-                <DataGrid x:Name="dg_Files" Style="{StaticResource dg}" PreviewMouseWheel="dg_BackupFiles_PreviewMouseWheel" GotFocus="dg_BackupFiles_GotFocus" PreviewKeyDown="dg_KeyDown">
-                    <DataGrid.Resources>
-                        <Style TargetType="DataGridRow">
-                            <EventSetter Event="MouseDoubleClick" Handler="Row_DoubleClick"/>
-                        </Style>
-                    </DataGrid.Resources>
+                <DataGrid x:Name="dg_Files" Style="{StaticResource dg}" PreviewMouseWheel="dg_Files_PreviewMouseWheel">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="Filename" Binding="{Binding FileName, Mode=OneWay}" Width="*" FontSize="20" />
+                        <DataGridTextColumn Header="FileName" Binding="{Binding FileName, Mode=OneWay}" Width="*" FontSize="20" />
                     </DataGrid.Columns>
                 </DataGrid>
             </ScrollViewer>
         </Border>
-
+        
 
 
 

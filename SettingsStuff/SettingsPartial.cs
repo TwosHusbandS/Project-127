@@ -779,6 +779,150 @@ namespace Project_127.SettingsStuff
 			}
 		}
 
+
+
+		public static string GetStringFromColor(System.Drawing.Color pColor)
+		{
+			string rtrn = pColor.A.ToString() + "," + pColor.R.ToString() + "," + pColor.B.ToString() + "," + pColor.G.ToString();
+			return rtrn;
+		}
+
+		public static System.Drawing.Color GetColorFromString(string pColor)
+		{
+			System.Drawing.Color rtrn = System.Drawing.Color.Black;
+			try
+			{
+				string[] values_s = pColor.Split(',');
+				int[] values_i = new int[values_s.Length];
+
+				for (int i = 0; i <= values_s.Length - 1; i++)
+				{
+					values_i[i] = Int32.Parse(values_s[i]);
+				}
+
+				rtrn = System.Drawing.Color.FromArgb(values_i[0], values_i[1], values_i[2], values_i[3]);
+			}
+			catch
+			{
+				new Popups.Popup(Popup.PopupWindowTypes.PopupOkError, "Something broke while getting the Colors from the Settings.\n Try Resetting Settings").ShowDialog();
+			}
+			return rtrn;
+		}
+
+
+		public static System.Drawing.Color OverlayBackground
+		{
+			get
+			{
+				return GetColorFromString(GetSetting("OverlayBackground"));
+			}
+			set
+			{
+				SetSetting("OverlayBackground", GetStringFromColor(value));
+			}
+		}
+
+
+		public static System.Drawing.Color OverlayForeground
+		{
+			get
+			{
+				return GetColorFromString(GetSetting("OverlayForeground"));
+			}
+			set
+			{
+				SetSetting("OverlayForeground", GetStringFromColor(value));
+			}
+		}
+
+		public static GTAOverlay.Positions OverlayLocation
+		{
+			get
+			{
+				return (GTAOverlay.Positions)System.Enum.Parse(typeof(GTAOverlay.Positions), GetSetting("OverlayLocation"));
+			}
+			set
+			{
+				SetSetting("OverlayLocation", value.ToString());
+			}
+		}
+
+		public static string OverlayTextFont
+		{
+			get
+			{
+				return GetSetting("OverlayTextFont");
+			}
+			set
+			{
+				SetSetting("OverlayTextFont", value.ToString());
+			}
+		}
+
+		public static int GetIntFromString(string pString)
+		{
+			int rtrn = 0;
+			try
+			{
+				rtrn = Int32.Parse(pString);
+			}
+			catch
+			{
+				new Popups.Popup(Popup.PopupWindowTypes.PopupOkError, "Something broke while getting the a Number from the Settings.\n Try Resetting Settings").ShowDialog();
+			}
+			return rtrn;
+		}
+
+		public static int OverlayMargin
+		{
+			get
+			{
+				return GetIntFromString(GetSetting("OverlayMargin"));
+			}
+			set
+			{
+				SetSetting("OverlayMargin", value.ToString());
+			}
+		}
+
+		public static int OverlayHeight
+		{
+			get
+			{
+				return GetIntFromString(GetSetting("OverlayHeight"));
+			}
+			set
+			{
+				SetSetting("OverlayHeight", value.ToString());
+			}
+		}
+
+		public static int OverlayWidth
+		{
+			get
+			{
+				return GetIntFromString(GetSetting("OverlayWidth"));
+			}
+			set
+			{
+				SetSetting("OverlayWidth", value.ToString());
+			}
+		}
+
+		public static int OverlayTextSize
+		{
+			get
+			{
+				return GetIntFromString(GetSetting("OverlayTextSize"));
+			}
+			set
+			{
+				SetSetting("OverlayTextSize", value.ToString());
+			}
+		}
+
+
+
 		/// <summary>
 		/// Settings EnableAutoStartNohboard. Gets and Sets from the Dictionary.
 		/// </summary>
@@ -840,21 +984,89 @@ namespace Project_127.SettingsStuff
 			}
 		}
 
-		/// <summary>
-		/// Settings Theme. Gets and Sets from the Dictionary.
-		/// </summary>
-		public static string Theme
+		public static List<string> OverlayNotesPresetA
 		{
 			get
 			{
-				return GetSetting("Theme");
+				return new List<string>((GetSetting("OverlayNotesPresetA").Split(';')));
 			}
 			set
 			{
-				SetSetting("Theme", value);
+				SetSetting("OverlayNotesPresetA", String.Join(";", value.ToArray()));
 			}
 		}
 
+		public static List<string> OverlayNotesPresetB
+		{
+			get
+			{
+				return new List<string>((GetSetting("OverlayNotesPresetB").Split(';')));
+			}
+			set
+			{
+				SetSetting("OverlayNotesPresetB", String.Join(";", value.ToArray()));
+			}
+		}
+
+		public static List<string> OverlayNotesPresetC
+		{
+			get
+			{
+				return new List<string>((GetSetting("OverlayNotesPresetC").Split(';')));
+			}
+			set
+			{
+				SetSetting("OverlayNotesPresetC", String.Join(";", value.ToArray()));
+			}
+		}
+
+		public static List<string> OverlayNotesPresetD
+		{
+			get
+			{
+				return new List<string>((GetSetting("OverlayNotesPresetD").Split(';')));
+			}
+			set
+			{
+				SetSetting("OverlayNotesPresetD", String.Join(";", value.ToArray()));
+			}
+		}
+
+		public static List<string> OverlayNotesPresetE
+		{
+			get
+			{
+				return new List<string>((GetSetting("OverlayNotesPresetE").Split(';')));
+			}
+			set
+			{
+				SetSetting("OverlayNotesPresetE", String.Join(";", value.ToArray()));
+			}
+		}
+
+		public static List<string> OverlayNotesPresetF
+		{
+			get
+			{
+				return new List<string>((GetSetting("OverlayNotesPresetF").Split(';')));
+			}
+			set
+			{
+				SetSetting("OverlayNotesPresetF", String.Join(";", value.ToArray()));
+			}
+		}
+
+		public static List<string> OverlayNotesMain
+		{
+			get
+			{
+				return new List<string>((GetSetting("OverlayNotesMain").Split(';')));
+			}
+			set
+			{
+				SetSetting("OverlayNotesMain", String.Join(";", value.ToArray()));
+			}
+		}
 
 
 		/// <summary>

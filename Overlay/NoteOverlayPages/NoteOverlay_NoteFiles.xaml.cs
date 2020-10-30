@@ -12,6 +12,15 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Diagnostics;
+using Project_127;
+using Project_127.Auth;
+using Project_127.HelperClasses;
+using Project_127.Overlay;
+using Project_127.Popups;
+using Project_127.SettingsStuff;
 
 namespace Project_127.Overlay.NoteOverlayPages
 {
@@ -20,53 +29,47 @@ namespace Project_127.Overlay.NoteOverlayPages
 	/// </summary>
 	public partial class NoteOverlay_NoteFiles : Page
 	{
+		ObservableCollection<MyNoteFile> MyNoteFiles;
+
 		public NoteOverlay_NoteFiles()
 		{
 			InitializeComponent();
+
+			this.DataContext = this;
+
+			MyNoteFiles = new ObservableCollection<MyNoteFile>();
+
+			dg_Files.ItemsSource = MyNoteFiles;
+
+			MyNoteFiles.Add(new MyNoteFile("Test1"));
+			MyNoteFiles.Add(new MyNoteFile("Test2"));
+			MyNoteFiles.Add(new MyNoteFile("Test3"));
+
 		}
 
-		private void btn_NoteFile_Click(object sender, RoutedEventArgs e)
-		{
-			string SelectedFiles = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.File, "Select the Notes Files you want to load.", LauncherLogic.ZIPFilePath, true, "TEXT Files|*.txt*");
-			string[] AllFiles = SelectedFiles.Split(',');
-			string[] NotesLoading = new string[AllFiles.Length];
 
-			for (int i = 0; i <= AllFiles.Length - 1; i++)
+		private void Shit()
+		{
+			// Resetting the Obvservable Collections:
+			MyNoteFiles = new ObservableCollection<MyNoteFile>();
+
+			// Files in BackupSaves (own File Path)
+			string[] MyBackupSaveFiles = HelperClasses.FileHandling.GetFilesFromFolder(MySaveFile.BackupSavesPath);
+			foreach (string MyBackupSaveFile in MyBackupSaveFiles)
 			{
-				string[] MyFileContents = HelperClasses.FileHandling.ReadFile(AllFiles[i]).ToArray();
-				string tempFileContent = "";
-				for (int j = 0; j <= MyFileContents.Count() - 1; j++)
+				if (!MyBackupSaveFile.Contains(".bak"))
 				{
-					// This leaves a \n at the end of the file...this is wanted behaviour tho
-					tempFileContent += MyFileContents[j] + "\n";
+					MyNoteFiles.Add(new MyNoteFile(MyBackupSaveFile));
 				}
-				NotesLoading[i] = tempFileContent;
 			}
 
-			NoteOverlay.NotesLoaded = NotesLoading;
-			NoteOverlay.NotesLoadedIndex = 0;
-			NoteOverlay.MyGTAOverlay.setText(NoteOverlay.NotesLoaded[0]);
 		}
 
-		private void dg_BackupFiles_GotFocus(object sender, RoutedEventArgs e)
+		private void dg_Files_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
 		{
-
+			sv_Files.ScrollToVerticalOffset(sv_Files.VerticalOffset - e.Delta / 3);
 		}
 
-		private void dg_KeyDown(object sender, KeyEventArgs e)
-		{
-
-		}
-
-		private void dg_BackupFiles_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
-		{
-
-		}
-
-		private void Row_DoubleClick(object sender, MouseButtonEventArgs e)
-		{
-
-		}
 
 		private void btn_Add_Click(object sender, RoutedEventArgs e)
 		{
@@ -75,7 +78,7 @@ namespace Project_127.Overlay.NoteOverlayPages
 
 		private void btn_Delete_Click(object sender, RoutedEventArgs e)
 		{
-
+			//Globals.DebugPopup(MyFiles[0].FileName.ToString());
 		}
 
 		private void btn_PresetLoad_Click(object sender, RoutedEventArgs e)
@@ -88,9 +91,41 @@ namespace Project_127.Overlay.NoteOverlayPages
 
 		}
 
-		private void btn_Help_Click(object sender, RoutedEventArgs e)
-		{
 
+		private void Row_DoubleClick(object sender, MouseButtonEventArgs e)
+		{
+			try
+			{
+				Globals.DebugPopup(((MyNoteFile)dg_Files.SelectedItem).FileName);
+			}
+			catch { }
 		}
 	}
+
+	/// <summary>
+	/// Class for "MyFile" Objects. Used in the DataGrids for the SaveFileManagement
+	/// </summary>
+	public class MyNoteFile
+	{
+		private string _FileName;
+
+		public string FileName
+		{
+			get
+			{
+				return _FileName;
+			}
+			set
+			{
+				_FileName = value;
+			}
+		}
+
+	
+		public MyNoteFile(string pFileName)
+		{
+			this.FileName = pFileName;
+		}
+
+	} // End of Class
 }

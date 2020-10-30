@@ -219,6 +219,9 @@
     <Compile Include="Overlay\NoteOverlayPages\NoteOverlay_NoteFiles.xaml.cs">
       <DependentUpon>NoteOverlay_NoteFiles.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Overlay\Overlay_Preview.xaml.cs">
+      <DependentUpon>Overlay_Preview.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Popups\PopupCombobox.xaml.cs">
       <DependentUpon>PopupCombobox.xaml</DependentUpon>
     </Compile>
@@ -272,6 +275,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Overlay\NoteOverlayPages\NoteOverlay_NoteFiles.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Overlay\Overlay_Preview.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
