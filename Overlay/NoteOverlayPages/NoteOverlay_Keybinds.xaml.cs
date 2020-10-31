@@ -14,7 +14,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Project_127.HelperClasses;
 using Keys = System.Windows.Forms.Keys;
-using Project_127.SettingsStuff;
+using Project_127.MySettings;
 
 namespace Project_127.Overlay.NoteOverlayPages
 {

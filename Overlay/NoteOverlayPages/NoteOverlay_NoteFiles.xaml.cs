@@ -20,7 +20,7 @@ using Project_127.Auth;
 using Project_127.HelperClasses;
 using Project_127.Overlay;
 using Project_127.Popups;
-using Project_127.SettingsStuff;
+using Project_127.MySettings;
 
 namespace Project_127.Overlay.NoteOverlayPages
 {
@@ -78,7 +78,13 @@ namespace Project_127.Overlay.NoteOverlayPages
 
 		private void btn_Delete_Click(object sender, RoutedEventArgs e)
 		{
-			//Globals.DebugPopup(MyFiles[0].FileName.ToString());
+			
+		}
+
+
+		private void btn_Import_Click(object sender, RoutedEventArgs e)
+		{
+
 		}
 
 		private void btn_PresetLoad_Click(object sender, RoutedEventArgs e)
@@ -91,14 +97,9 @@ namespace Project_127.Overlay.NoteOverlayPages
 
 		}
 
-
-		private void Row_DoubleClick(object sender, MouseButtonEventArgs e)
+		private void dg_Files_PreviewKeyDown(object sender, KeyEventArgs e)
 		{
-			try
-			{
-				Globals.DebugPopup(((MyNoteFile)dg_Files.SelectedItem).FileName);
-			}
-			catch { }
+
 		}
 	}
 

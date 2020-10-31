@@ -20,7 +20,7 @@ using System.Web.UI;
 using System.Security.Permissions;
 using System.Configuration;
 using System.Text.RegularExpressions;
-using Project_127.SettingsStuff;
+using Project_127.MySettings;
 
 /*
  * This file is based on partially on SCUIStub/LegitimacyChecking from the CitizenFX Project - http://citizen.re/

@@ -11,10 +11,10 @@ using Project_127.Auth;
 using Project_127.HelperClasses;
 using Project_127.Overlay;
 using Project_127.Popups;
-using Project_127.SettingsStuff;
+using Project_127.MySettings;
 using System.Windows.Forms;
 
-namespace Project_127.SettingsStuff
+namespace Project_127.MySettings
 {
 	/// <summary>
 	/// Partial Class for Settings Window. 
@@ -44,7 +44,7 @@ namespace Project_127.SettingsStuff
 			{
 				if (!(HelperClasses.RegeditHandler.DoesValueExists(KVP.Key)))
 				{
-					HelperClasses.Logger.Log("Writing '" + KVP.Key.ToString() + "' to the Registry (Value: '" + KVP.Value.ToString() + "') as a Part of Initiating Settings.", true, 2);
+					HelperClasses.Logger.Log("Writing '" + KVP.Key.ToString() + "' to the Registry (Value: '" + KVP.Value.ToString() + "') on Startup of P127, because it doesnt exist or is empty", true, 2);
 					HelperClasses.RegeditHandler.SetValue(KVP.Key, KVP.Value);
 				}
 			}

@@ -16,7 +16,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Resources;
 using System.Windows.Shapes;
-using Project_127.SettingsStuff;
+using Project_127.MySettings;
 using Color = System.Drawing.Color;
 
 namespace Project_127.Overlay.NoteOverlayPages
@@ -26,11 +26,10 @@ namespace Project_127.Overlay.NoteOverlayPages
 	/// </summary>
 	public partial class NoteOverlay_Look : Page
 	{
-		// Using Properties for all Look related stuff here
-		// with getter and setter (they just get / set the settings)
-		// for some (colors and numbers, im not doing that, since those get updated a lot
-		//			[all interactions in colorpicker, all values which are slided over])
-		//         im not doing that, but manually set the setting on XAML events
+		// the DropDowns / ComboBoxes are getting Writte and Read from Settings on getter / setter
+
+		// Setting those 4 getters setters below all the time
+		// and writing it to settings on close / mouseleftup events
 
 		private static int _OverlayMargin = Settings.OverlayMargin;
 		private static int _OverlayWidth = Settings.OverlayWidth;
@@ -224,7 +223,7 @@ namespace Project_127.Overlay.NoteOverlayPages
 			Settings.OverlayWidth = OverlayWidth;
 			if (NoteOverlay.IsOverlayInit())
 			{
-				//MyGTAOverlay.Width = Settings.OverlayWidth;
+				NoteOverlay.MyGTAOverlay.width = Settings.OverlayWidth;
 			}
 		}
 
@@ -243,7 +242,7 @@ namespace Project_127.Overlay.NoteOverlayPages
 			Settings.OverlayHeight = OverlayHeight;
 			if (NoteOverlay.IsOverlayInit())
 			{
-				//MyGTAOverlay.Height = Settings.OverlayHeight;
+				NoteOverlay.MyGTAOverlay.height = Settings.OverlayHeight;
 			}
 		}
 
@@ -266,23 +265,32 @@ namespace Project_127.Overlay.NoteOverlayPages
 			}
 		}
 
-
-		private void ColorPicker_Background_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<System.Windows.Media.Color?> e)
+		private void MyColorPicker_Foreground_ColorChanged()
 		{
-
+			OverlayForeground = MyColorPicker_Foreground.SelectedColor;
 		}
 
-		private void ColorPicker_Foreground_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<System.Windows.Media.Color?> e)
+		private void MyColorPicker_Foreground_Closed()
 		{
-			System.Windows.Media.Color? asdf = ColorPicker_Foreground.SelectedColor;
-			// asdf.ToString() is just = "#AARRGGBB";
-			// so easy to deal with I suppose
+			Settings.OverlayForeground = OverlayForeground;
+			if (NoteOverlay.IsOverlayInit())
+			{
+				NoteOverlay.MyGTAOverlay.setTextColors(Settings.OverlayForeground, Color.Transparent);
+			}
 		}
 
-
-		private void DisplayPopup(object sender, RoutedEventArgs e)
+		private void MyColorPicker_Background_ColorChanged()
 		{
-			popup.IsOpen = true;
+			OverlayBackground = MyColorPicker_Background.SelectedColor;
+		}
+
+		private void MyColorPicker_Background_Closed()
+		{
+			Settings.OverlayBackground = OverlayBackground;
+			if (NoteOverlay.IsOverlayInit())
+			{
+				NoteOverlay.MyGTAOverlay.setBackgroundColor(Settings.OverlayBackground);
+			}
 		}
 	}
 

@@ -14,7 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Project_127.HelperClasses;
-using Project_127.SettingsStuff;
+using Project_127.MySettings;
 using System.Diagnostics;
 
 namespace Project_127.Overlay

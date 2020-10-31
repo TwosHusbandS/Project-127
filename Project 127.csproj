@@ -193,10 +193,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="ColorPicker.xaml.cs">
-      <DependentUpon>ColorPicker.xaml</DependentUpon>
-    </Compile>
     <Compile Include="HelperClasses\Jumpscript.cs" />
+    <Compile Include="Overlay\MyColorPicker.xaml.cs">
+      <DependentUpon>MyColorPicker.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Overlay\GTAOverlay.cs" />
     <Compile Include="Auth\EntitlementBlock.cs" />
     <Compile Include="Auth\EntitlementBlockCipher.cs" />
@@ -257,15 +257,15 @@
     <Compile Include="SaveFileHandler\SaveFileHandler.xaml.cs">
       <DependentUpon>SaveFileHandler.xaml</DependentUpon>
     </Compile>
-    <Compile Include="SettingsStuff\SettingsPartial.cs" />
-    <Compile Include="SettingsStuff\Settings.xaml.cs">
+    <Compile Include="MySettings\SettingsPartial.cs" />
+    <Compile Include="MySettings\Settings.xaml.cs">
       <DependentUpon>Settings.xaml</DependentUpon>
     </Compile>
-    <Page Include="ColorPicker.xaml">
+    <Page Include="GTA_Page.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="GTA_Page.xaml">
+    <Page Include="Overlay\MyColorPicker.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -334,7 +334,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="SettingsStuff\Settings.xaml">
+    <Page Include="MySettings\Settings.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

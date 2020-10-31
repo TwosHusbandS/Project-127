@@ -11,7 +11,7 @@ using Project_127.Auth;
 using Project_127.HelperClasses;
 using Project_127.Overlay;
 using Project_127.Popups;
-using Project_127.SettingsStuff;
+using Project_127.MySettings;
 
 namespace Project_127.HelperClasses
 {
@@ -130,6 +130,15 @@ namespace Project_127.HelperClasses
 						{
 							if (((Keys)vkCode == Settings.JumpScriptKey1))
 							{
+								//KBDLLHOOKSTRUCT asdf = new KBDLLHOOKSTRUCT();
+								//Marshal.PtrToStructure(lParam, asdf);
+								//asdf.vkCode = (uint)Settings.JumpScriptKey2;
+								//
+								//IntPtr assdf = new IntPtr();
+								//Marshal.StructureToPtr(asdf, assdf, false);
+								//
+								//return CallNextHookEx(_hookID, nCode, wParam, assdf);
+
 								// Call Line Below with IntPtr to the KBDLLHOOKSTRUCT with the uint vkCode: (int)Settings.JumpScriptKey2
 								// return CallNextHookEx(_hookID, nCode, wParam, lParam);
 							}
@@ -137,6 +146,15 @@ namespace Project_127.HelperClasses
 							{
 								// Call Line Below with IntPtr to the KBDLLHOOKSTRUCT with the uint vkCode: (int)Settings.JumpScriptKey1
 								// return CallNextHookEx(_hookID, nCode, wParam, lParam);
+
+								//KBDLLHOOKSTRUCT asdf = new KBDLLHOOKSTRUCT();
+								//Marshal.PtrToStructure(lParam, asdf);
+								//asdf.vkCode = (uint)Settings.JumpScriptKey1;
+								//
+								//IntPtr assdf = lParam;
+								//Marshal.StructureToPtr(asdf, assdf, false);
+								//
+								//return CallNextHookEx(_hookID, nCode, wParam, assdf);
 							}
 						}
 

@@ -114,7 +114,7 @@ namespace Project_127.HelperClasses
 					if (KeyboardListener.IsRunning)
 					{
 						// So we dont spam log with that.
-						HelperClasses.Logger.Log("GTA V no longer foreground");
+						HelperClasses.Logger.Log("'" + GTAOverlay.targetWindow + "' no longer foreground");
 					}
 					KeyboardListener.Stop();
 					if (Overlay.NoteOverlay.IsOverlayVisible())

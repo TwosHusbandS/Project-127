@@ -18,7 +18,7 @@ using Project_127.Auth;
 using Project_127.HelperClasses;
 using Project_127.Overlay;
 using Project_127.Popups;
-using Project_127.SettingsStuff;
+using Project_127.MySettings;
 using System.Windows.Resources;
 using System.Windows.Media.Imaging;
 

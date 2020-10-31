@@ -42,18 +42,10 @@
         <!--<xctk:ColorCanvas Grid.Row="1" Grid.Column="1" Background="Transparent"></xctk:ColorCanvas>-->
 
         <Label Grid.Row="0" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="  Overlay - BackgroundColor"/>
-        <Button x:Name="btn" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" Style="{StaticResource btn_SE_Path}" Click="DisplayPopup" Content="ASDF"/>
-
-        <Popup x:Name="popup"  PlacementTarget="{Binding ElementName=btn}" Placement="Bottom"  Width="300" Height="300" Margin="0,0,0,0" StaysOpen="False">
-            <Border BorderBrush="Black" BorderThickness="2" Background="AliceBlue">
-                <TextBox x:Name="txtBox" VerticalAlignment="Center" Margin="15,0,15,0"/>
-            </Border>
-        </Popup>
-
-        <!--<xctk:ColorPicker Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" x:Name="ColorPicker_Background" SelectedColorChanged="ColorPicker_Background_SelectedColorChanged" Style="{StaticResource MyColorPicker}"/>-->
+        <local:MyColorPicker x:Name="MyColorPicker_Background" Margin="10" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" ColorChanged="MyColorPicker_Background_ColorChanged" Closed="MyColorPicker_Background_Closed"/>
 
         <Label Grid.Row="1" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="  Overlay - TextColor"/>
-        <xctk:ColorPicker Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" x:Name="ColorPicker_Foreground" SelectedColorChanged="ColorPicker_Foreground_SelectedColorChanged" Style="{StaticResource MyColorPicker}"/>
+        <local:MyColorPicker x:Name="MyColorPicker_Foreground" Margin="10" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" ColorChanged="MyColorPicker_Foreground_ColorChanged" Closed="MyColorPicker_Foreground_Closed"/>
 
         <Label Grid.Row="2" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="  Overlay - Location"/>
         <ComboBox Grid.Row="2" Grid.Column="1" Margin="10" Grid.ColumnSpan="2" Style="{StaticResource cobo}" x:Name="ComboBox_OverlayLocation" SelectionChanged="ComboBox_OverlayLocation_SelectionChanged"/>

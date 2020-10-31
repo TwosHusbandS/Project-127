@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Project_127.Overlay;
 using Project_127;
-using Project_127.SettingsStuff;
+using Project_127.MySettings;
 
 namespace Project_127.HelperClasses
 {
