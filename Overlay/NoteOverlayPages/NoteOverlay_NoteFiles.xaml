@@ -32,7 +32,7 @@
             <ScrollViewer x:Name="sv_Files">
                 <DataGrid x:Name="dg_Files" Style="{StaticResource dg}" PreviewMouseWheel="dg_Files_PreviewMouseWheel" PreviewKeyDown="dg_Files_PreviewKeyDown">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="FileName" Binding="{Binding FileName, Mode=OneWay}" Width="*" FontSize="20" />
+                        <DataGridTextColumn Header="FileNiceName" Binding="{Binding FileNiceName, Mode=OneWay}" Width="*" FontSize="20" />
                     </DataGrid.Columns>
                 </DataGrid>
             </ScrollViewer>

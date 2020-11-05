@@ -100,11 +100,10 @@ Main To do:
 
 
 			Quick and dirty notes:
-				- Figure out why NoteOverlay_Looks is crashing (when setting label to slider value)
-				- Connect that shit to settings properties (which good default values)
-				- Write NoteOverlay_File stuff
-
-				- Connect it to the actual overlay.
+				- Apart from Presets everything noteoverlay related works
+				- Title from GTAV Overlay is missing (waiting on Dragon for that)
+				- It wont launch in release mode via VS...can double click just fine, can launch in debug mode just fine
+				- Re-Think some of the keybinds (up is down, next is prev and stuff)
 
 
 		=== Keep in Mind === 
@@ -320,6 +319,8 @@ namespace Project_127
 
 			HelperClasses.Logger.Log("Startup procedure (Constructor of MainWindow) completed.");
 			HelperClasses.Logger.Log("--------------------------------------------------------");
+
+		
 
 
 #if DEBUG

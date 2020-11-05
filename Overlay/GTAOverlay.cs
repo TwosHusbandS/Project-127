@@ -10,6 +10,28 @@ namespace Project_127
 {
     public class GTAOverlay : IDisposable
     {
+		// If set to false, this starts and keeps KeyboardListenerEvent running 100% of the time.
+		// Automatically set to true if we compile debug
+		public static bool DebugMode = true;
+		public const string targetWindowDebug = "TeamSpeak 3";
+		public const string targetWindowNonDebug = "Grand Theft Auto V";
+
+		public static string targetWindow
+		{
+			get
+			{
+				if (DebugMode)
+				{
+					return targetWindowDebug;
+				}
+				else
+				{
+					return targetWindowNonDebug;
+				}
+			}
+		}
+
+
 		private readonly GraphicsWindow _window;
 
 		[DllImport("dwmapi.dll")]
@@ -55,26 +77,7 @@ namespace Project_127
 		}
 
 
-		// If set to false, this starts and keeps KeyboardListenerEvent running 100% of the time.
-		// Automatically set to true if we compile debug
-		public static bool DebugMode = true;
-		public const string targetWindowDebug = "TeamSpeak 3";
-		public const string targetWindowNonDebug = "Grand Theft Auto V";
-
-		public static string targetWindow
-		{
-			get
-			{
-				if (DebugMode)
-				{
-					return targetWindowDebug;
-				}
-				else
-				{
-					return targetWindowNonDebug;
-				}
-			}
-		}
+		
 
 		private readonly Dictionary<string, SolidBrush> _brushes;
 		private readonly Dictionary<string, Font> _fonts;
@@ -304,6 +307,12 @@ namespace Project_127
 		{
 			HelperClasses.Logger.Log("Overlay text updated");
 			NoteText = charWrap(text, WrapCount);
+		}
+
+		// Just have this here, so i have something to call...
+		public void setTitle(string title)
+		{
+
 		}
 
 		/// <summary>

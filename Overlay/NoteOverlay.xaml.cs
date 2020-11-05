@@ -30,7 +30,8 @@ namespace Project_127.Overlay
 
 		// https://stackoverflow.com/a/47582420
 
-		public static string[] NotesLoaded = { "Test-Note to show what it can do\nThis is in the next line\n\nThis is in the next Paragraph" };
+		public static string[] NotesLoaded = { "" };
+		public static string[] NotesLoadedTitle = { "" };
 		public static int NotesLoadedIndex = 0;
 
 		public static NoteOverlayPages LoadNoteOverlayWithCustomPage = NoteOverlayPages.NoteFiles;
@@ -132,7 +133,7 @@ namespace Project_127.Overlay
 				MyGTAOverlay.YMargin = Settings.OverlayMargin;
 				MyGTAOverlay.width = Settings.OverlayWidth;
 				MyGTAOverlay.height = Settings.OverlayHeight;
-				MyGTAOverlay.setText(NotesLoaded[0]);
+				LoadTexts();
 				NotesLoadedIndex = 0;
 				HelperClasses.Logger.Log("GTA Overlay initiated", 1);
 			}
@@ -140,6 +141,44 @@ namespace Project_127.Overlay
 			{
 				//HelperClasses.Logger.Log("GTA Overlay already initiated", 1);
 			}
+		}
+
+
+		public static void LoadTexts()
+		{
+			List<string> NotesTexts = new List<string>();
+			List<string> NotesTextsTitles = new List<string>();
+
+			for (int i = 0; i <= Settings.OverlayNotesMain.Count - 1; i++)
+			{
+				Overlay.NoteOverlayPages.MyNoteFile tmp = new Overlay.NoteOverlayPages.MyNoteFile(Settings.OverlayNotesMain[i]);
+
+				string[] contenta = HelperClasses.FileHandling.ReadFileEachLine(tmp.FilePath);
+				string contents = "";
+
+
+				for (int j = 0; j <= contenta.Length - 1; j++)
+				{
+					contents += contenta[j];
+					if (j != contenta.Length - 1)
+					{
+						contents += "\n";
+					}
+				}
+
+				if (String.IsNullOrWhiteSpace(contents))
+				{
+					contents = "Note - File could not be read. File doesnt exist or is empty";
+				}
+
+				NotesTexts.Add(contents);
+				NotesTextsTitles.Add("Project 1.27 - Overlay - " + tmp.FileNiceName);
+			}
+
+			NotesLoaded = NotesTexts.ToArray();
+			NotesLoadedTitle = NotesTextsTitles.ToArray();
+
+			ChangeNoteIndex(0);
 		}
 
 		public static void DisposeGTAOverlay()
@@ -272,6 +311,7 @@ namespace Project_127.Overlay
 				HelperClasses.Logger.Log("NotesLoadedIndex is now: " + pNotesLoadedNewIndex);
 				NotesLoadedIndex = pNotesLoadedNewIndex;
 				NoteOverlay.MyGTAOverlay.setText(NotesLoaded[pNotesLoadedNewIndex]);
+				NoteOverlay.MyGTAOverlay.setTitle(NotesLoadedTitle[pNotesLoadedNewIndex]);
 			}
 		}
 
@@ -299,7 +339,7 @@ namespace Project_127.Overlay
 
 		}
 
-	
+
 
 
 		private void btn_cb_Click(object sender, RoutedEventArgs e)

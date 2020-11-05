@@ -127,41 +127,6 @@ namespace Project_127.HelperClasses
 					int vkCode = Marshal.ReadInt32(lParam);
 					if (wParam == (IntPtr)WM_KEYDOWN)
 					{
-						// Non Working Proof of Concept:
-
-						// Creating Struct
-						KBDLLHOOKSTRUCT myStruct = new KBDLLHOOKSTRUCT();
-
-						// Reading Struct in from lParam IntPtr
-						Marshal.PtrToStructure(lParam, myStruct);
-
-						//Marshal.Write
-
-						// Now all properties from myStruct are what we expect and I can use that to 
-						// determine which key was pressed.
-						HelperClasses.Logger.Log("Key was pressed: myStruct.vkCode = '" + myStruct.vkCode + "'");
-
-						// Changing Properties of the Structure
-						myStruct.vkCode = 65; // vkCode of the key A
-						myStruct.scanCode = 30; // scancode of the key A
-						HelperClasses.Logger.Log("Just modified the vkCode. myStruct.vkCode = '" + myStruct.vkCode + "'",1);
-
-						// Making sure the IntPtr lParam points to the structure I just created, read in, and modified
-						Marshal.StructureToPtr(myStruct, lParam, false);
-
-						// if i were to do the following, it the properties would give me what i expect (what I just set)
-						KBDLLHOOKSTRUCT myStruct2 = new KBDLLHOOKSTRUCT();
-						Marshal.PtrToStructure(lParam, myStruct2);
-						HelperClasses.Logger.Log("Made lParam point to myStruct, and created myStruct2 based off the lParam IntPtr. myStruct2.vkCode = '" + myStruct2.vkCode +"'",1);
-
-						// Continue processing the Keyboard Event. lParam now points to our modified Structure
-						return CallNextHookEx(_hookID, nCode, wParam, lParam);
-
-
-						// End of Proof of Concept
-
-
-
 						SurpressKeyEvent = KeyboardHandler.KeyboardDownEvent((Keys)vkCode);
 					}
 					else if (wParam == (IntPtr)WM_KEYUP)
