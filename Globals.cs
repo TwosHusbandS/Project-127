@@ -150,6 +150,12 @@ namespace Project_127
 		/// </summary>													
 		public static RegistryKey MySettingsKey { get { return RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64).CreateSubKey("SOFTWARE").CreateSubKey("Project_127"); } }
 
+
+		public static Dictionary<string, string> VersionTable { get; private set; } = new Dictionary<string, string>()
+		{
+			{"1.0.323.1", "1.24" },
+		};
+
 		/// <summary>
 		/// Property of our default Settings
 		/// </summary>
@@ -347,6 +353,9 @@ namespace Project_127
 			// Deleting all Installer and ZIP Files from own Project Installation Path
 			DeleteOldFiles();
 
+			// Throw annoucements
+			HandleAnnouncements();
+
 			// Auto Updater
 			CheckForUpdate();
 
@@ -398,6 +407,17 @@ namespace Project_127
 					}
 					catch { }
 				}
+			}
+		}
+
+
+		private static void HandleAnnouncements()
+		{
+			string MyAnnoucment = HelperClasses.FileHandling.GetXMLTagContent(HelperClasses.FileHandling.GetStringFromURL(Globals.URL_AutoUpdate), "announcement");
+			if (MyAnnoucment != "")
+			{
+				MyAnnoucment = MyAnnoucment.Replace(@"\n", "\n");
+				new Popup(Popup.PopupWindowTypes.PopupOk, MyAnnoucment);
 			}
 		}
 
@@ -578,6 +598,42 @@ namespace Project_127
 			}
 		}
 
+		private static string DDL = "";
+
+		private async static void GetDDL(string pLink)
+		{
+			DDL = pLink;
+
+			if (pLink.Contains("anonfiles"))
+			{
+				string NonDDL = pLink;
+
+				//href = "https:\/\/cdn-[0-9]+\.anonfiles\.com\/[a-zA-Z0-9]+\/[a-zA-Z0-9]+-[a-zA-Z0-9]+\/[_\w]+\.zip">
+				string RegexPattern = @"href=""https:\/\/cdn-[0-9]+\.anonfiles\.com\/[a-zA-Z0-9]+\/[a-zA-Z0-9]+-[a-zA-Z0-9]+\/[_\w]+\.zip"">";
+
+				// Setting up some Webclient stuff. 
+				WebClient webClient = new WebClient();
+				string webSource = await webClient.DownloadStringTaskAsync(NonDDL);
+				webSource.Replace(" ", "");
+				webSource.Replace("\n", "");
+				webSource.Replace("\r", "");
+				webSource.Replace("\t", "");
+
+				Regex MyRegex = new Regex(RegexPattern);
+				Match MyMatch = MyRegex.Match(webSource);
+
+				if (MyMatch.Success)
+				{
+					if (MyMatch.Groups.Count > 0)
+					{
+						DDL = MyMatch.Groups[0].ToString();
+						int FirstIndexOfDoubleQuotes = DDL.IndexOf('"');
+						int LastIndexOfDoubleQuotes = DDL.LastIndexOf('"');
+						DDL = DDL.Substring(FirstIndexOfDoubleQuotes + 1, LastIndexOfDoubleQuotes - FirstIndexOfDoubleQuotes - 1);
+					}
+				}
+			}
+		}
 
 		/// <summary>
 		/// Checks for Update of the ZIPFile and extracts it
@@ -623,6 +679,10 @@ namespace Project_127
 
 						// Deleting old ZIPFile
 						HelperClasses.FileHandling.deleteFile(Globals.ZipFileDownloadLocation);
+
+						// Getting actual DDL
+						GetDDL(pathOfNewZip);
+						pathOfNewZip = DDL;
 
 						// Downloading the ZIP File
 						new PopupDownload(pathOfNewZip, Globals.ZipFileDownloadLocation, "ZIP-File").ShowDialog();
@@ -717,6 +777,7 @@ namespace Project_127
 				{
 					MainWindow.MW.Width = 900;
 					MainWindow.MW.Grid_Preview.Visibility = Visibility.Hidden;
+					Overlay_Preview.StopDispatcherTimer();
 				}
 
 				MainWindow.MW.SetBackground(Globals.GetBackGroundPath());

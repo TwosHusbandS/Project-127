@@ -229,6 +229,14 @@ namespace Project_127
 				return;
 			}
 
+
+			// Cancel any stuff when we have no files in upgrade files...simple right?
+			if (HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(UpgradeFilePath).Length <= 1)
+			{
+				new Popup(Popup.PopupWindowTypes.PopupOk, "Found no Files to Upgrade with. I suggest verifying Files through steam\nor clicking \"Use Backup Files\" in Settings.\nWill abort Upgrade.").ShowDialog();
+				return;
+			}
+
 			// Saving all the File Operations I want to do, executing this at the end of this Method
 			List<MyFileOperation> MyFileOperations = new List<MyFileOperation>();
 
@@ -416,17 +424,25 @@ namespace Project_127
 			HelperClasses.Logger.Log("Checking if an Update hit");
 			if (DidUpdateHit())
 			{
-				if (ThrewUpdateDetectedMessageAlready)
+				if (ThrewUpdateDetectedMessageAlready == false)
 				{
 					ThrewUpdateDetectedMessageAlready = true;
 
 					HelperClasses.Logger.Log("Apparently it did. Lets see if the user wants a repair");
-					Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Detected an automatic Update of GTA.\nDo you want to use your current state of GTA V\nas your new \"Upgraded\" Files?\nI recommend \"Yes\"");
+					Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Detected an automatic Update of GTA.\nDo you want to use your current state of GTA V\nas your new \"Upgraded\" Files?\nI recommend \"Yes\"\nThis will create a Backup of the Files P127 uses for Upgrading");
 					yesno.ShowDialog();
 					if (yesno.DialogResult == true)
 					{
 						HelperClasses.Logger.Log("User does want it. Initiating Repair");
-						Repair();
+
+						string oldPath = LauncherLogic.ZIPFilePath.TrimEnd('\\') + @"\Project_127_Files\UpgradeFiles\";
+						string newPath = LauncherLogic.ZIPFilePath.TrimEnd('\\') + @"\Project_127_Files\UpgradeFiles_Backup\";
+
+						HelperClasses.FileHandling.DeleteFolder(newPath);
+						HelperClasses.FileHandling.movePath(oldPath, newPath);
+
+						HelperClasses.FileHandling.createPath(LauncherLogic.ZIPFilePath.TrimEnd('\\') + @"\Project_127_Files\UpgradeFiles\");
+						HelperClasses.FileHandling.createPath(LauncherLogic.ZIPFilePath.TrimEnd('\\') + @"\Project_127_Files\UpgradeFiles\update");
 						return true;
 					}
 					else
@@ -493,7 +509,6 @@ namespace Project_127
 				{
 					return false;
 				}
-
 			}
 		}
 
@@ -668,7 +683,7 @@ namespace Project_127
 							try
 							{
 								string[] Stufferino = HelperClasses.FileHandling.PathSplitUp(Settings.PathFPSLimiter);
-								HelperClasses.ProcessHandler.StartProcess(Stufferino[0],Stufferino[1]);
+								HelperClasses.ProcessHandler.StartProcess(Stufferino[0], Stufferino[1]);
 							}
 							catch { }
 						}

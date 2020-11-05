@@ -30,8 +30,8 @@ namespace Project_127.Overlay.NoteOverlayPages
 			btn_OverlayHotkeyToggle.Content = Settings.KeyOverlayToggle;
 			btn_OverlayHotkeyScrollUp.Content = Settings.KeyOverlayScrollUp;
 			btn_OverlayHotkeyScrollDown.Content = Settings.KeyOverlayScrollDown;
-			btn_OverlayHotkeyScrollLeft.Content = Settings.KeyOverlayScrollLeft;
-			btn_OverlayHotkeyScrollRight.Content = Settings.KeyOverlayScrollRight;
+			//btn_OverlayHotkeyScrollLeft.Content = Settings.KeyOverlayScrollLeft;
+			//btn_OverlayHotkeyScrollRight.Content = Settings.KeyOverlayScrollRight;
 			btn_OverlayHotkeyNotePrev.Content = Settings.KeyOverlayNotePrev;
 			btn_OverlayHotkeyNoteNext.Content = Settings.KeyOverlayNoteNext;
 		}

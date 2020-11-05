@@ -64,6 +64,7 @@ namespace Project_127.Overlay
 					case NoteOverlayPages.NoteFiles:
 						MainWindow.MW.Width = 900;
 						MainWindow.MW.Grid_Preview.Visibility = Visibility.Hidden;
+						Overlay_Preview.StopDispatcherTimer();
 
 						// Set actual Frame_Main Content to the correct Page
 						Frame_Notes.Content = new Project_127.Overlay.NoteOverlayPages.NoteOverlay_NoteFiles();
@@ -76,6 +77,7 @@ namespace Project_127.Overlay
 					case NoteOverlayPages.Keybinds:
 						MainWindow.MW.Width = 900;
 						MainWindow.MW.Grid_Preview.Visibility = Visibility.Hidden;
+						Overlay_Preview.StopDispatcherTimer();
 
 						// Set actual Frame_Main Content to the correct Page
 						Frame_Notes.Content = new Project_127.Overlay.NoteOverlayPages.NoteOverlay_Keybinds();
@@ -88,6 +90,7 @@ namespace Project_127.Overlay
 					case NoteOverlayPages.Look:
 						MainWindow.MW.Width = 1600;
 						MainWindow.MW.Grid_Preview.Visibility = Visibility.Visible;
+						Overlay_Preview.StartDispatcherTimer();
 
 						// Set actual Frame_Main Content to the correct Page
 						Frame_Notes.Content = new Project_127.Overlay.NoteOverlayPages.NoteOverlay_Look();
@@ -119,6 +122,7 @@ namespace Project_127.Overlay
 			//HelperClasses.Logger.Log("Trying to Init GTA Overlay");
 			if (MyGTAOverlay == null)
 			{
+				// Set NotesLoaded here based on the
 				MyGTAOverlay = new GTAOverlay();
 				MyGTAOverlay.setTextColors(Settings.OverlayForeground, Color.Transparent);
 				MyGTAOverlay.setBackgroundColor(Settings.OverlayBackground);
@@ -126,8 +130,8 @@ namespace Project_127.Overlay
 				MyGTAOverlay.Position = Settings.OverlayLocation;
 				MyGTAOverlay.XMargin = Settings.OverlayMargin;
 				MyGTAOverlay.YMargin = Settings.OverlayMargin;
-				//MyGTAOverlay.Width = Settings.OverlayWidth;
-				//MyGTAOverlay.Height = Settings.OverlayHeight;
+				MyGTAOverlay.width = Settings.OverlayWidth;
+				MyGTAOverlay.height = Settings.OverlayHeight;
 				MyGTAOverlay.setText(NotesLoaded[0]);
 				NotesLoadedIndex = 0;
 				HelperClasses.Logger.Log("GTA Overlay initiated", 1);
@@ -182,6 +186,7 @@ namespace Project_127.Overlay
 		{
 			if (IsOverlayInit())
 			{
+				HelperClasses.Logger.Log("Setting Visibility to true");
 				MyGTAOverlay.Visible = true;
 			}
 		}
@@ -190,6 +195,7 @@ namespace Project_127.Overlay
 		{
 			if (IsOverlayInit())
 			{
+				HelperClasses.Logger.Log("Setting Visibility to false");
 				MyGTAOverlay.Visible = false;
 			}
 		}
@@ -220,12 +226,15 @@ namespace Project_127.Overlay
 
 		public static void OverlayToggle()
 		{
+			HelperClasses.Logger.Log("A");
 			if (IsOverlayVisible())
 			{
+				HelperClasses.Logger.Log("B");
 				OverlaySetInvisible();
 			}
 			else
 			{
+				HelperClasses.Logger.Log("C");
 				OverlaySetVisible();
 			}
 		}

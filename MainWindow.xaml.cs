@@ -88,10 +88,12 @@ Main To do:
 		=> Design of UX for NoteOverlay.xaml
 		=> Updated Settings with JumpScript and NoteOverlay stuff
 		=> Rolling Log (fixed potential off by one)
-		=> ToolTips on all Buttons
+		=> ToolTips on all Icon-Buttons
+		=> Annoucement Feature
+		=> FailSafe Backup System for Upgrade Files
 		=> [NEEDS TESTING] Overlay + Jumpscript stuff
 		=> [NEEDS TESTING] Auto-Start XYZ on Game Launch working dir fix
-		=> [NEEDS INTENSE TESTING] Downgrade/Upgrade/Repair improvements:
+		=> [NEEDS TESTING] Downgrade/Upgrade/Repair improvements:
 			- Detecting Updates automatically (checking for it on start, upgrade, downgrade), throwing one popup per P127 Launch
 			- Throwing Popup with potential Fixes for non-changing InstallationState (upgraded, downgraded, unsure)
 			- Not having own files in GTA V Folder when upgraded
@@ -108,18 +110,21 @@ Main To do:
 		=== Keep in Mind === 
 
 	Still to do for 1.1
-	- Add credits to Yoshi
+	- Cef no disk cache...
+	- Use Yoshi's information
 	- Ask Yoshi, Crapideot, and that other guy from hossels discord
 	- 1.5 seconds delay on downgrade... + warning popup on first downgrade that it takes some time
-	- Connect NoteOverlay UI stuff to backend
-	- Overlay
-		=> Needs Sub - Pages, scrollNextChaptor. Other stuff is implemented. Currently in semi-working state due to pages not being fully implemented
+	- NoteOverlayUI
+		=> Cycle Background Images with playpause / next and stuff...
+		=> Connect Subpage Files to backend
+		=> Implement Title in Overlay
+		=> Implement Scroll to Chaptor
 	- Some SaveFileHandler stuff
 	- Jumpscript
 		-> Find input sender which works in Game and doesnt infinite loop
+		-> OR make pointer to struct work...
 	- Make texts in readme / Information markdown with easy links and scrollbar and stuff. Also reference the resetall button in settings
 	- Client crashes when trying to auth when offline
-	- We call the Getter of all hotkeys on each hotkey press...not that efficent
 	- Uninstaller still is semi-manual...Should be fixed with "Reset" Buttons eliminating the need for custom uninstaller
 	- Add new DLLs to installer (I think at least 2, probably 3...Bottom Line: test installer.
 
@@ -310,10 +315,7 @@ namespace Project_127
 			SetButtonMouseOverMagic(btn_Exit);
 			SetButtonMouseOverMagic(btn_Auth);
 			SetButtonMouseOverMagic(btn_Hamburger);
-			SetButtonMouseOverMagic(btn_LeftArrow);
-			SetButtonMouseOverMagic(btn_RightArrow);
 			Globals.HamburgerMenuState = Globals.HamburgerMenuStates.Hidden;
-
 			MainWindow.MW.Frame_Game.Content = new Overlay_Preview();
 
 			HelperClasses.Logger.Log("Startup procedure (Constructor of MainWindow) completed.");
@@ -525,26 +527,6 @@ namespace Project_127
 					else
 					{
 						SetControlBackground(myBtn, @"Artwork\exit.png");
-					}
-					break;
-				case "btn_RightArrow":
-					if (myBtn.IsMouseOver)
-					{
-						SetControlBackground(myBtn, @"Artwork\arrowright_mo.png");
-					}
-					else
-					{
-						SetControlBackground(myBtn, @"Artwork\arrowright.png");
-					}
-					break;
-				case "btn_LeftArrow":
-					if (myBtn.IsMouseOver)
-					{
-						SetControlBackground(myBtn, @"Artwork\arrowleft_mo.png");
-					}
-					else
-					{
-						SetControlBackground(myBtn, @"Artwork\arrowleft.png");
 					}
 					break;
 				case "btn_Auth":
@@ -970,15 +952,7 @@ namespace Project_127
 			}
 		}
 
-		private void btn_RightArrow_Click(object sender, RoutedEventArgs e)
-		{
 
-		}
-
-		private void btn_LeftArrow_Click(object sender, RoutedEventArgs e)
-		{
-
-		}
 
 	} // End of Class
 } // End of Namespace

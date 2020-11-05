@@ -218,7 +218,25 @@ namespace Project_127.HelperClasses
 			}
 		}
 
-
+		public static void movePath(string Source, string Dest)
+		{
+			try
+			{
+				if (doesPathExist(Source))
+				{
+					if (doesPathExist(Dest))
+					{
+						DeleteFolder(Dest);
+					}
+					Directory.Move(Source, Dest);
+				}
+			}
+			catch (Exception e)
+			{
+				new Popup(Popup.PopupWindowTypes.PopupOkError, "Moving Path: '" + Source + "' to '" + Dest + "' failed.\nI suggest you restart the Program and contact me if it happens again.\n\nErrorMessage:\n" + e.ToString()).ShowDialog();
+				HelperClasses.Logger.Log("Moving Path: '" + Source + "' to '" + Dest + "' failed.", true, 0);
+			}
+		}
 
 		public static void WriteStringToFileOverwrite(string pFilePath, string[] pContent)
 		{
@@ -302,7 +320,14 @@ namespace Project_127.HelperClasses
 			{
 				if (FileHandling.GetSizeOfFile(pFilePathA) == FileHandling.GetSizeOfFile(pFilePathB))
 				{
-					return AreFileSignaturesEqual(pFilePathA, pFilePathB);
+					if (FileHandling.GetRawCertDataString(pFilePathA) == FileHandling.GetRawCertDataString(pFilePathB))
+					{
+						return true;
+					}
+					else
+					{
+						return false;
+					}
 				}
 				else
 				{
@@ -315,22 +340,18 @@ namespace Project_127.HelperClasses
 			}
 		}
 
-		public static bool AreFileSignaturesEqual(string pFilePathA, string pFilePathB)
+
+		public static string GetRawCertDataString(string pFilePath)
 		{
 			try
 			{
-				X509Certificate theSignerA = X509Certificate.CreateFromSignedFile(pFilePathA);
-				X509Certificate theSignerB = X509Certificate.CreateFromSignedFile(pFilePathB);
-				if (theSignerA.GetRawCertDataString() == theSignerB.GetRawCertDataString())
-				{
-					return true;
-				}
+				X509Certificate theSigner = X509Certificate.CreateFromSignedFile(pFilePath);
+				return theSigner.GetRawCertDataString();
 			}
 			catch
 			{
-
+				return "";
 			}
-			return false;
 		}
 
 		/// <summary>
@@ -375,7 +396,7 @@ namespace Project_127.HelperClasses
 			if (!doesPathExist(srcPath))
 			{
 				Logger.Log("ZIP Extraction Path is not a valid Filepath...wut");
-				Globals.DebugPopup("Yeah shit broke...You gotta uninstall\nvia Uninstaller from Github, bro...");
+				new Popup(Popup.PopupWindowTypes.PopupOkError, "Could not find some of the Paths we use to keep track of GTA Files.").ShowDialog();
 				Environment.Exit(5);
 			}
 
@@ -706,17 +727,7 @@ namespace Project_127.HelperClasses
 			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\SupportFiles\SaveFiles");
 		}
 
-		/// <summary>
-		/// Deletes a File
-		/// </summary>
-		/// <param name="pFilePath"></param>
-		public static void deletePath(string pFilePath)
-		{
-			if (doesPathExist(pFilePath))
-			{
-				Directory.Delete(pFilePath, true);
-			}
-		}
+
 
 		// ALL SORTS OF RANDOM METHODS
 

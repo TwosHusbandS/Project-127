@@ -878,20 +878,22 @@ namespace Project_127.MySettings
 			yesno.ShowDialog();
 			if (yesno.DialogResult == true)
 			{
+				new Popup(Popup.PopupWindowTypes.PopupOk, "This might take a while, just hit \"OK\" and wait a bit.\nProject 1.27 will Exit once its done.").ShowDialog();
+
 				HelperClasses.Logger.Log("Initiating a full Reset:");
-				
+
 				HelperClasses.Logger.Log("Making an Upgrade.");
 				LauncherLogic.Upgrade();
-				HelperClasses.Logger.Log("Done making an Upgrade.",1);
-				
+				HelperClasses.Logger.Log("Done making an Upgrade.", 1);
+
 				HelperClasses.Logger.Log("Deleting all Regedit Values.");
 				RegeditHandler.DeleteKey();
-				HelperClasses.Logger.Log("Done deleting all Regedit Values.",1);
-				
+				HelperClasses.Logger.Log("Done deleting all Regedit Values.", 1);
+
 				HelperClasses.Logger.Log("Deleting all extracted ZIP Files.");
 				HelperClasses.FileHandling.DeleteFolder(LauncherLogic.ZIPFilePath.TrimEnd('\\') + @"\Project_127_Files");
-				HelperClasses.Logger.Log("Done deleting all extracted ZIP Files.",1);
-				
+				HelperClasses.Logger.Log("Done deleting all extracted ZIP Files.", 1);
+
 				HelperClasses.Logger.Log("Gonna close this now I guess...cya");
 				HelperClasses.Logger.Log("=");
 				HelperClasses.Logger.Log("=");
@@ -949,6 +951,24 @@ namespace Project_127.MySettings
 			MainWindow.MW.UpdateGUIDispatcherTimer();
 		}
 
+		private void btn_UseBackup_Click(object sender, RoutedEventArgs e)
+		{
+			string oldPath = LauncherLogic.ZIPFilePath.TrimEnd('\\') + @"\Project_127_Files\UpgradeFiles\";
+			string newPath = LauncherLogic.ZIPFilePath.TrimEnd('\\') + @"\Project_127_Files\UpgradeFiles_Backup\";
 
+			if (HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(newPath).Length <= 1)
+			{
+				new Popup(Popup.PopupWindowTypes.PopupOk, "No Backup Files available.").ShowDialog();
+				return;
+			}
+			else
+			{
+				HelperClasses.FileHandling.DeleteFolder(oldPath);
+				HelperClasses.FileHandling.movePath(newPath, oldPath);
+				new Popup(Popup.PopupWindowTypes.PopupOk, "Using backup files now.").ShowDialog();
+			}
+
+
+		}
 	} // End of Class
 } // End of Namespace

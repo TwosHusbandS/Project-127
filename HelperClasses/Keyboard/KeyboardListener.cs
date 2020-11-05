@@ -38,6 +38,16 @@ namespace Project_127.HelperClasses
 
 		public static bool IsRunning = false;
 
+		private static IntPtr SetHook(LowLevelKeyboardProc proc)
+		{
+			using (Process curProcess = Process.GetCurrentProcess())
+			using (ProcessModule curModule = curProcess.MainModule)
+			{
+				return SetWindowsHookEx(WH_KEYBOARD_LL, proc,
+					GetModuleHandle(curModule.ModuleName), 0);
+			}
+		}
+
 		public static void Start()
 		{
 			WantToStop = false;
@@ -81,15 +91,7 @@ namespace Project_127.HelperClasses
 			KeyboardListener.IsRunning = false;
 		}
 
-		private static IntPtr SetHook(LowLevelKeyboardProc proc)
-		{
-			using (Process curProcess = Process.GetCurrentProcess())
-			using (ProcessModule curModule = curProcess.MainModule)
-			{
-				return SetWindowsHookEx(WH_KEYBOARD_LL, proc,
-					GetModuleHandle(curModule.ModuleName), 0);
-			}
-		}
+
 
 		private delegate IntPtr LowLevelKeyboardProc(int nCode, IntPtr wParam, IntPtr lParam);
 
@@ -118,7 +120,6 @@ namespace Project_127.HelperClasses
 		private static IntPtr HookCallback(int nCode, IntPtr wParam, IntPtr lParam)
 		{
 			bool SurpressKeyEvent = false;
-
 			try
 			{
 				if (nCode >= 0)
@@ -126,50 +127,52 @@ namespace Project_127.HelperClasses
 					int vkCode = Marshal.ReadInt32(lParam);
 					if (wParam == (IntPtr)WM_KEYDOWN)
 					{
-						if (Settings.EnableAutoStartJumpScript)
-						{
-							if (((Keys)vkCode == Settings.JumpScriptKey1))
-							{
-								//KBDLLHOOKSTRUCT asdf = new KBDLLHOOKSTRUCT();
-								//Marshal.PtrToStructure(lParam, asdf);
-								//asdf.vkCode = (uint)Settings.JumpScriptKey2;
-								//
-								//IntPtr assdf = new IntPtr();
-								//Marshal.StructureToPtr(asdf, assdf, false);
-								//
-								//return CallNextHookEx(_hookID, nCode, wParam, assdf);
+						// Non Working Proof of Concept:
 
-								// Call Line Below with IntPtr to the KBDLLHOOKSTRUCT with the uint vkCode: (int)Settings.JumpScriptKey2
-								// return CallNextHookEx(_hookID, nCode, wParam, lParam);
-							}
-							else if (((Keys)vkCode == Settings.JumpScriptKey2))
-							{
-								// Call Line Below with IntPtr to the KBDLLHOOKSTRUCT with the uint vkCode: (int)Settings.JumpScriptKey1
-								// return CallNextHookEx(_hookID, nCode, wParam, lParam);
+						// Creating Struct
+						KBDLLHOOKSTRUCT myStruct = new KBDLLHOOKSTRUCT();
 
-								//KBDLLHOOKSTRUCT asdf = new KBDLLHOOKSTRUCT();
-								//Marshal.PtrToStructure(lParam, asdf);
-								//asdf.vkCode = (uint)Settings.JumpScriptKey1;
-								//
-								//IntPtr assdf = lParam;
-								//Marshal.StructureToPtr(asdf, assdf, false);
-								//
-								//return CallNextHookEx(_hookID, nCode, wParam, assdf);
-							}
-						}
+						// Reading Struct in from lParam IntPtr
+						Marshal.PtrToStructure(lParam, myStruct);
+
+						//Marshal.Write
+
+						// Now all properties from myStruct are what we expect and I can use that to 
+						// determine which key was pressed.
+						HelperClasses.Logger.Log("Key was pressed: myStruct.vkCode = '" + myStruct.vkCode + "'");
+
+						// Changing Properties of the Structure
+						myStruct.vkCode = 65; // vkCode of the key A
+						myStruct.scanCode = 30; // scancode of the key A
+						HelperClasses.Logger.Log("Just modified the vkCode. myStruct.vkCode = '" + myStruct.vkCode + "'",1);
+
+						// Making sure the IntPtr lParam points to the structure I just created, read in, and modified
+						Marshal.StructureToPtr(myStruct, lParam, false);
+
+						// if i were to do the following, it the properties would give me what i expect (what I just set)
+						KBDLLHOOKSTRUCT myStruct2 = new KBDLLHOOKSTRUCT();
+						Marshal.PtrToStructure(lParam, myStruct2);
+						HelperClasses.Logger.Log("Made lParam point to myStruct, and created myStruct2 based off the lParam IntPtr. myStruct2.vkCode = '" + myStruct2.vkCode +"'",1);
+
+						// Continue processing the Keyboard Event. lParam now points to our modified Structure
+						return CallNextHookEx(_hookID, nCode, wParam, lParam);
+
+
+						// End of Proof of Concept
+
+
 
 						SurpressKeyEvent = KeyboardHandler.KeyboardDownEvent((Keys)vkCode);
 					}
 					else if (wParam == (IntPtr)WM_KEYUP)
 					{
-						KeyboardHandler.KeyboardUpEvent((Keys)vkCode);
+						SurpressKeyEvent = KeyboardHandler.KeyboardUpEvent((Keys)vkCode);
 					}
 				}
 			}
 			catch (Exception e)
 			{
 				HelperClasses.Logger.Log("Try Catch in KeyboardListener KeyEvent Callback Failed: " + e.ToString());
-				Globals.DebugPopup(e.ToString());
 				return new IntPtr(-1);
 			}
 

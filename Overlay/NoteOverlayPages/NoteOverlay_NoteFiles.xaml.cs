@@ -73,18 +73,16 @@ namespace Project_127.Overlay.NoteOverlayPages
 
 		private void btn_Add_Click(object sender, RoutedEventArgs e)
 		{
-
+			// Select one or multiple files
+			// copy it to folder inside ZIP if it isnt
+			// add it to our stupid thingy...
+			string rtrn = HelperClasses.FileHandling.OpenDialogExplorer(FileHandling.PathDialogType.File, "Select the Note Files you want to add to your selection:", LauncherLogic.SupportFilePath.TrimEnd('\\') + @"\Notes", true, "TXT Files|*.txt*");
+			string[] files = rtrn.Split(',');
 		}
 
 		private void btn_Delete_Click(object sender, RoutedEventArgs e)
 		{
 			
-		}
-
-
-		private void btn_Import_Click(object sender, RoutedEventArgs e)
-		{
-
 		}
 
 		private void btn_PresetLoad_Click(object sender, RoutedEventArgs e)

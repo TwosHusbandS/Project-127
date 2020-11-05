@@ -68,7 +68,13 @@
 
         <Border x:Name="Border_Help" Margin="0,10,0,20" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="4" BorderBrush="{x:Static local:Globals.ReadME_Inner_BorderBrush}" BorderThickness="{x:Static local:Globals.ReadME_Inner_BorderThickness}" Background="{x:Static local:Globals.ReadME_Inner_Background}" CornerRadius="{x:Static local:Globals.ReadME_Inner_CornerRadius}">
             <Grid x:Name="Grid_Help">
-                <Label x:Name="Grid_Help_Lbl" Style="{StaticResource lbl}" Grid.Row="0"/>
+                <!--<Label x:Name="Grid_Help_Lbl" Style="{StaticResource lbl}" Grid.Row="0"/>-->
+                <TextBlock Grid.Row="0" Foreground="Yellow">  
+                        ASDF
+                        <Hyperlink NavigateUri="http://www.google.com" RequestNavigate="Hyperlink_RequestNavigate">
+                         Click here
+                        </Hyperlink>
+                </TextBlock>
             </Grid>
         </Border>
 

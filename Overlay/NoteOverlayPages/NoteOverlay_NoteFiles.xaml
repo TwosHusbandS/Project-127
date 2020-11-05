@@ -37,19 +37,10 @@
                 </DataGrid>
             </ScrollViewer>
         </Border>
+        <Button Style="{StaticResource btn_SM}" Grid.Row="6" Grid.Column="0" Margin="5" x:Name="btn_Add" Click="btn_Add_Click" Content="Add File" ToolTip="Add File to selection"/>
+        <Button Style="{StaticResource btn_SM}" Grid.Row="6" Grid.Column="1" Margin="5" x:Name="btn_Delete" Click="btn_Delete_Click" Content="Remove File" ToolTip="Remove File from selection"/>
 
-        <Grid Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
-                </Grid.ColumnDefinitions>
-                <Button Style="{StaticResource btn_SM}" Grid.Column="0" Margin="5" x:Name="btn_Add" Click="btn_Add_Click" Content="Add File"/>
-                <Button Style="{StaticResource btn_SM}" Grid.Column="1" Margin="5" x:Name="btn_Import" Click="btn_Import_Click" Content="Import File"/>
-                <Button Style="{StaticResource btn_SM}" Grid.Column="2" Margin="5" x:Name="btn_Delete" Click="btn_Delete_Click" Content="Delete File"/>
-            </Grid>
-        </Grid>
+
 
 
         <!--<Button Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2" x:Name="btn_Help" Content="Help" Click="btn_Help_Click" Style="{StaticResource btn_SE_Path}"/>-->

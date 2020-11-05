@@ -47,6 +47,7 @@ namespace Project_127.Overlay.NoteOverlayPages
 			set
 			{
 				_OverlayMargin = value;
+				Overlay_Preview.OP.SetMargin(OverlayMargin);
 			}
 		}
 
@@ -59,6 +60,7 @@ namespace Project_127.Overlay.NoteOverlayPages
 			set
 			{
 				_OverlayWidth = value;
+				Overlay_Preview.OP.SetWidth(OverlayWidth);
 			}
 		}
 
@@ -71,6 +73,7 @@ namespace Project_127.Overlay.NoteOverlayPages
 			set
 			{
 				_OverlayHeight = value;
+				Overlay_Preview.OP.SetHeight(OverlayHeight);
 			}
 		}
 
@@ -83,6 +86,7 @@ namespace Project_127.Overlay.NoteOverlayPages
 			set
 			{
 				_OverlayTextSize = value;
+				Overlay_Preview.OP.SetTextSize(OverlayTextSize);
 			}
 		}
 
@@ -95,6 +99,7 @@ namespace Project_127.Overlay.NoteOverlayPages
 			set
 			{
 				Settings.OverlayLocation = value;
+				Overlay_Preview.OP.SetLocation();
 				if (NoteOverlay.IsOverlayInit())
 				{
 					NoteOverlay.MyGTAOverlay.Position = Settings.OverlayLocation;
@@ -111,6 +116,7 @@ namespace Project_127.Overlay.NoteOverlayPages
 			set
 			{
 				Settings.OverlayTextFont = value;
+				Overlay_Preview.OP.SetFont();
 				if (NoteOverlay.IsOverlayInit())
 				{
 					NoteOverlay.MyGTAOverlay.setFont(Settings.OverlayTextFont, Settings.OverlayTextSize);
@@ -127,6 +133,7 @@ namespace Project_127.Overlay.NoteOverlayPages
 			set
 			{
 				_OverlayBackground = value;
+				Overlay_Preview.OP.SetBackground(OverlayBackground);
 			}
 		}
 
@@ -139,6 +146,7 @@ namespace Project_127.Overlay.NoteOverlayPages
 			set
 			{
 				_OverlayForeground = value;
+				Overlay_Preview.OP.SetForeground(OverlayForeground);
 			}
 		}
 
@@ -176,6 +184,8 @@ namespace Project_127.Overlay.NoteOverlayPages
 			ComboBox_OverlayLocation.ItemsSource = myEnumValues;
 			ComboBox_OverlayLocation.SelectedItem = NoteOverlay_Look.OverlayLocation.ToString();
 
+			MyColorPicker_Background.SelectedColor = Settings.OverlayBackground;
+			MyColorPicker_Foreground.SelectedColor = Settings.OverlayForeground;
 		}
 
 		private void ComboBox_Fonts_SelectionChanged(object sender, SelectionChangedEventArgs e)

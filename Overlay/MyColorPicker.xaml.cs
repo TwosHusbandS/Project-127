@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CefSharp;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -30,7 +31,6 @@ namespace Project_127
 
 		*/
 
-
 		/// <summary>
 		/// Devegate Method for ColorChanged Event (updated in real time on each click)
 		/// </summary>
@@ -52,36 +52,23 @@ namespace Project_127
 		public event ClosedHandler Closed;
 
 		/// <summary>
-		/// Actual Value of the Selected Color
-		/// </summary>
-		private Color InternalSelectedColor;
-
-		/// <summary>
 		/// Internal Property for the SelectedColor Property
 		/// </summary>
-		private Color _SelectedColor
+		private Color _SelectedColor;
+
+		/// <summary>
+		/// Property exposed which returns the SelectedColor as Brush and can get set from the Window / Page using this CustomControl
+		/// </summary>
+		private Brush SelectedColorBrush
 		{
 			get
 			{
-				return InternalSelectedColor;
-			}
-			set
-			{
-				InternalSelectedColor = value;
-
-				// Get a Brush, sets it as background of Button
-				Brush brush = new SolidColorBrush(System.Windows.Media.Color.FromArgb(255, InternalSelectedColor.R, InternalSelectedColor.G, InternalSelectedColor.B));
-				double tmp = (double)((byte)InternalSelectedColor.A);
-				brush.Opacity = tmp / 255;
-				btn.Background = brush;
-
-				// raises event which then can get used by the WPF Window / Page
-				if (ColorChanged != null)
-				{
-					ColorChanged();
-				}
+				Brush brush = new SolidColorBrush(System.Windows.Media.Color.FromArgb(255, SelectedColor.R, SelectedColor.G, SelectedColor.B));
+				brush.Opacity = (double)((byte)SelectedColor.A) / 255;
+				return brush;
 			}
 		}
+
 
 		/// <summary>
 		/// Property exposed which returns the SelectedColor and can get set from the Window / Page using this CustomControl
@@ -94,14 +81,15 @@ namespace Project_127
 			}
 			set
 			{
-				// Load this color in the cef window.
-				// As in update the sliders / textboxes and most importantly the HSL square
-
-				// "value" is of System.Drawing.Color
-				// "value" contains 4 properties (A,R,G,B) which are all bytes
-
-				// if doing that raises the "My_Browser_JavascriptMessageReceived" event, the line below can be commented out
 				_SelectedColor = value;
+
+				btn.Background = SelectedColorBrush;
+
+				// raises event which then can get used by the WPF Window / Page
+				if (ColorChanged != null)
+				{
+					ColorChanged();
+				}
 			}
 		}
 
@@ -133,7 +121,7 @@ namespace Project_127
 				int A = (int)(Convert.ToDouble(vals[3], CultureInfo.InvariantCulture) * 255);
 
 				// Sets the Property
-				this._SelectedColor = MySettings.Settings.GetColorFromString(A + "," + R + "," + G + "," + B);
+				this.SelectedColor = MySettings.Settings.GetColorFromString(A + "," + R + "," + G + "," + B);
 			});
 		}
 
@@ -147,17 +135,26 @@ namespace Project_127
 			popup.IsOpen = true;
 		}
 
-		/// <summary>
-		/// Event when Popup is closed
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
+		public void setColor(int r, int g, int b, double a)
+		{
+			string sender = "document.getElementById('RCS').value = {0};document.getElementById('GCS').value = {1};document.getElementById('BCS').value = {2};document.getElementById('ACS').value = {3};document.getElementById('RC').value = {0};document.getElementById('GC').value = {1};document.getElementById('BC').value = {2};document.getElementById('AC').value = {3};rgba2hsla();";
+			My_Browser.GetMainFrame().ExecuteJavaScriptAsync(String.Format(sender, r.ToString(), g.ToString(), b.ToString(), a.ToString()));
+		}
+
 		private void popup_Closed(object sender, EventArgs e)
 		{
-			// Raises Event
 			if (Closed != null)
 			{
 				Closed();
+			}
+		}
+
+		private async void popup_Opened(object sender, EventArgs e)
+		{
+			await Task.Delay(200);
+			if (My_Browser.IsInitialized)
+			{
+				setColor(SelectedColor.R, SelectedColor.G, SelectedColor.B, (double)((byte)SelectedColor.A));
 			}
 		}
 	}

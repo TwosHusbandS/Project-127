@@ -106,7 +106,7 @@ namespace Project_127.Popups
 		private void DownloadProgressed(object sender, DownloadProgressChangedEventArgs e)
 		{
 			pb_Main.Value = (double)e.ProgressPercentage;
-			lbl_Main.Content = "Downloading " + DownloadName + "...(" + pb_Main.Value + "%)";
+			lbl_Main.Content = "Downloading " + DownloadName + "...\n(" + pb_Main.Value + "%)";
 		}
 
 

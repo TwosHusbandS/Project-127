@@ -37,6 +37,15 @@
             </Setter>
         </Style>
 
+        <Style x:Key="btn_Preview" TargetType="{x:Type Button}" BasedOn="{StaticResource btn}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <TextBlock Text="{TemplateBinding Content}" FontSize="{TemplateBinding FontSize}" FontFamily="{TemplateBinding FontFamily}" Foreground="{TemplateBinding Foreground}" Background="{TemplateBinding Background}" TextWrapping="Wrap"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
 
 
         <Style TargetType="Button" x:Key="btn_SM">

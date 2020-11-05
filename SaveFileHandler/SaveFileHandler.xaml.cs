@@ -538,7 +538,7 @@ namespace Project_127
 			MySaveFile asdff = GetSelectedSaveFile();
 			if (asdff.FileOrFolder == MySaveFile.FileOrFolders.Folder)
 			{
-				Globals.DebugPopup(asdff.FilePath);
+				//Globals.DebugPopup(asdff.FilePath);
 			}
 		}
 	} // End of Class

@@ -32,10 +32,10 @@
         </Rectangle>
         <Button x:Name="btn" Style="{StaticResource btn}" Background="Transparent" Click="btn_Click"/>
 
-        <Popup x:Name="popup"  PlacementTarget="{Binding ElementName=btn}" Placement="Bottom" Width="240" Height="365"  Margin="0,0,0,0" StaysOpen="False" Closed="popup_Closed">
+        <Popup x:Name="popup"  PlacementTarget="{Binding ElementName=btn}" Placement="Bottom" Width="240" Height="365"  Margin="0,0,0,0" StaysOpen="False" Closed="popup_Closed" Opened="popup_Opened">
             <Border BorderBrush="{x:Static local:Globals.MyColorWhite}" BorderThickness="2" Background="{x:Static local:Globals.MyColorOffBlack}">
                 <cefSharp:ChromiumWebBrowser
-            x:Name="My_Browser" 
+            x:Name="My_Browser"
             HorizontalAlignment="Stretch" 
             VerticalAlignment="Stretch"
             Margin="0,0,0,0" 

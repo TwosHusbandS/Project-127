@@ -783,7 +783,7 @@ namespace Project_127.MySettings
 
 		public static string GetStringFromColor(System.Drawing.Color pColor)
 		{
-			string rtrn = pColor.A.ToString() + "," + pColor.R.ToString() + "," + pColor.B.ToString() + "," + pColor.G.ToString();
+			string rtrn = pColor.A.ToString() + "," + pColor.R.ToString() + "," + pColor.G.ToString() + "," + pColor.B.ToString();
 			return rtrn;
 		}
 

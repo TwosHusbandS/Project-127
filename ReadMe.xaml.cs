@@ -93,8 +93,33 @@ namespace Project_127
 
 			// Issues: Path, File Permissions, fucked up GTAV, Wrong version booting,installation state not changing
 
-			Grid_Help_Lbl.Content = msg4;
-			Grid_Help_Lbl.FontSize = 14;
+			//Grid_Help_Lbl.Content = msg4;
+			//Grid_Help_Lbl.FontSize = 14;
+
+			/*
+
+
+			When Project 1.27 crashes when Downloading or Importing Files, try to download the ZIP manually from [here](), then go to Settings -> Import ZIP Manually and select the file you just downloaded. If that doesnt work, rightclick the ZIP Extraction Path in Settings, copy your downloaded zip file there, right click -> extract here.
+
+When Launching GTA V does not launch the Version it says it is (Text in Top Left Corner), make sure the Path to GTA V is set correctly in the settings of Project 1.27
+
+When the Auth / Login appears to load infinitely, please try to re-start Project 1.27, and wait a few  minutes. If its still not working, Rockstar just might not like your IP. In this case try using a Hotspot from your phone or a VPN or any other internet connection.
+
+When P127 crashes just when you are expected to login (on click of Auth Button, or on Game Launch when not logged in already), you might fail to connect to Rockstar Server. Make sure you are connected to the internet.
+
+When Upgrading / Downgrading does not work as expected in general, verify Game Files via Steam / Rockstar / Epic (Or re-download GTAV) and click "Repair GTAV" inside Settings.
+
+If something is still not working, you can always try verifying Files via Steam / Rockstar / Epic and hitting the "Reset all" Button below. This might take a few minutes, and Project 1.27 will quit automatically when its done. Re-Open it and everything will work.
+
+If you still cant get it to work or you wish to contact me, please RIGHT-click the Auth icon (the one with the lock icon in the top left corner) and send me the AAA - Logfile.log and the AAA - Debugfile.txt from the folder which will open (Project 1.27 Installation Directory) and include a detailed Report of what you did and whats not working.
+
+Working on Project 1.27 has been incredibly satisfying but also incredibly frustrating. I am glad we were able to give the GTA V Speedrunning Community a permanent solution for their problem and I cheerish the experience I have gained from doing this Project. Shoutouts to everyone involved in Project 1.27 from Day 1. Working with all of you has been a great pleasure.
+
+I hope everything works for you and you dont experience any crashes or anything like that. In case you do, i sincerly apoligze for the inconvenience. Feel free to contact me for help :) Discord: @thS#0305.
+
+I hope whoever reads this has a great day : )
+
+			*/
 		}
 
 		/// <summary>
@@ -220,7 +245,7 @@ namespace Project_127
 			ReadMeState = ReadMeStates.Help;
 		}
 
-		private void btn_SpeedRun_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+		private void btn_About_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
 		{
 			if (e.ClickCount == 3)
 			{
@@ -228,7 +253,7 @@ namespace Project_127
 			}
 		}
 
-		private void btn_About_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+		private void btn_SpeedRun_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
 		{
 			if (e.ClickCount == 3)
 			{
@@ -239,6 +264,7 @@ namespace Project_127
 		private void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e)
 		{
 			Process.Start("http://google.com");
+			e.Handled = true;
 		}
 	}
 }
