@@ -30,7 +30,7 @@ namespace Project_127.Overlay.NoteOverlayPages
 	public partial class NoteOverlay_NoteFiles : Page
 	{
 		ObservableCollection<MyNoteFile> _MyNoteFiles;
-	
+
 
 		ObservableCollection<MyNoteFile> MyNoteFiles
 		{
@@ -61,6 +61,16 @@ namespace Project_127.Overlay.NoteOverlayPages
 			MyNoteFiles = new ObservableCollection<MyNoteFile>();
 
 			dg_Files.ItemsSource = MyNoteFiles;
+
+			LoadMainNotes();
+		}
+
+		public void LoadMainNotes()
+		{
+			while (MyNoteFiles.Count > 0)
+			{
+				MyNoteFiles.MyRemove(0);
+			}
 
 			foreach (string mystring in Settings.OverlayNotesMain)
 			{
@@ -134,21 +144,113 @@ namespace Project_127.Overlay.NoteOverlayPages
 			{
 				MyNoteFiles.MyRemove(MNF);
 			}
+
+			if (dg_Files.Items.Count > 0)
+			{
+				dg_Files.SelectedItems.Clear();
+				dg_Files.SelectedItems.Add(dg_Files.Items[0]);
+			}
+
+			//SelectRowByIndex(dg_Files, 0);
+		}
+
+		public static void SelectRowByIndex(DataGrid dataGrid, int rowIndex)
+		{
+			if (!dataGrid.SelectionUnit.Equals(DataGridSelectionUnit.FullRow))
+				//throw new ArgumentException("The SelectionUnit of the DataGrid must be set to FullRow.");
+
+				if (rowIndex < 0 || rowIndex > (dataGrid.Items.Count - 1))
+					//throw new ArgumentException(string.Format("{0} is an invalid row index.", rowIndex));
+
+					dataGrid.SelectedItems.Clear();
+			/* set the SelectedItem property */
+			object item = dataGrid.Items[rowIndex]; // = Product X
+			dataGrid.SelectedItem = item;
+
+			DataGridRow row = dataGrid.ItemContainerGenerator.ContainerFromIndex(rowIndex) as DataGridRow;
+			if (row == null)
+			{
+				/* bring the data item (Product object) into view
+				 * in case it has been virtualized away */
+				dataGrid.ScrollIntoView(item);
+				row = dataGrid.ItemContainerGenerator.ContainerFromIndex(rowIndex) as DataGridRow;
+			}
+			//TODO: Retrieve and focus a DataGridCell object
 		}
 
 		private void btn_PresetLoad_Click(object sender, RoutedEventArgs e)
 		{
-
+			switch (((Button)sender).Tag.ToString())
+			{
+				case "A":
+					Settings.OverlayNotesMain = Settings.OverlayNotesPresetA;
+					LoadMainNotes();
+					break;
+				case "B":
+					Settings.OverlayNotesMain = Settings.OverlayNotesPresetB;
+					LoadMainNotes();
+					break;
+				case "C":
+					Settings.OverlayNotesMain = Settings.OverlayNotesPresetC;
+					LoadMainNotes();
+					break;
+				case "D":
+					Settings.OverlayNotesMain = Settings.OverlayNotesPresetD;
+					LoadMainNotes();
+					break;
+				case "E":
+					Settings.OverlayNotesMain = Settings.OverlayNotesPresetE;
+					LoadMainNotes();
+					break;
+				case "F":
+					Settings.OverlayNotesMain = Settings.OverlayNotesPresetF;
+					LoadMainNotes();
+					break;
+			}
 		}
 
 		private void btn_PresetSave_Click(object sender, RoutedEventArgs e)
 		{
-
+			switch (((Button)sender).Tag.ToString())
+			{
+				case "A":
+					Settings.OverlayNotesPresetA = Settings.OverlayNotesMain;
+					break;
+				case "B":
+					Settings.OverlayNotesPresetB = Settings.OverlayNotesMain;
+					break;
+				case "C":
+					Settings.OverlayNotesPresetC = Settings.OverlayNotesMain;
+					break;
+				case "D":
+					Settings.OverlayNotesPresetD = Settings.OverlayNotesMain;
+					break;
+				case "E":
+					Settings.OverlayNotesPresetE = Settings.OverlayNotesMain;
+					break;
+				case "F":
+					Settings.OverlayNotesPresetF = Settings.OverlayNotesMain;
+					break;
+			}
 		}
 
 		private void dg_Files_PreviewKeyDown(object sender, KeyEventArgs e)
 		{
+			if ((e.Key == Key.Up && Keyboard.IsKeyDown(Key.LeftCtrl)) ||
+				(e.Key == Key.Up && Keyboard.IsKeyDown(Key.RightCtrl)))
+			{
 
+				e.Handled = true;
+			}
+			if ((e.Key == Key.Down && Keyboard.IsKeyDown(Key.LeftCtrl)) ||
+				(e.Key == Key.Down && Keyboard.IsKeyDown(Key.RightCtrl)))
+			{
+				e.Handled = true;
+			}
+			if (e.Key == Key.Delete)
+			{
+				btn_Delete_Click(null, null);
+			}
 		}
 
 	}
@@ -179,6 +281,16 @@ namespace Project_127.Overlay.NoteOverlayPages
 		public static void MyRemove(this ObservableCollection<MyNoteFile> OC, MyNoteFile MNF)
 		{
 			OC.Remove(MNF);
+
+			Refresh(OC);
+		}
+
+		public static void MyRemove(this ObservableCollection<MyNoteFile> OC, int Index)
+		{
+			if (0 <= Index && Index <= OC.Count - 1)
+			{
+				OC.RemoveAt(Index);
+			}
 
 			Refresh(OC);
 		}
@@ -234,7 +346,15 @@ namespace Project_127.Overlay.NoteOverlayPages
 		public MyNoteFile(string pFileName)
 		{
 			this.FileName = pFileName;
-			this.FileNiceName = pFileName.Substring(0, pFileName.LastIndexOf('.'));
+			int LastIndexOfDot = pFileName.LastIndexOf('.');
+			if (LastIndexOfDot == -1)
+			{
+				this.FileNiceName = this.FileName;
+			}
+			else
+			{
+				this.FileNiceName = pFileName.Substring(0, LastIndexOfDot);
+			}
 			this.FilePath = NoteOverlay_NoteFiles.NotePath + @"\" + this.FileName;
 		}
 

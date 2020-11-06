@@ -168,7 +168,7 @@ namespace Project_127
 			_fonts = new Dictionary<string, Font>();
 			_images = new Dictionary<string, Image>();
 
-            var wb = new WindowBounds();
+            //var wb = new WindowBounds();
 			HelperClasses.Logger.Log("Searching for '" + targetWindow + "' window...");
 
 			var windowHandle = WindowHelper.FindWindow(targetWindow);

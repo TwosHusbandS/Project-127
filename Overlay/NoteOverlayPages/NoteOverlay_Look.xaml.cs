@@ -165,6 +165,12 @@ namespace Project_127.Overlay.NoteOverlayPages
 			sl_Height.Value = OverlayHeight;
 			sl_TextSize.Value = OverlayTextSize;
 
+			try { lbl_Width.Content = OverlayWidth.ToString() + " px"; } catch { }
+			try { lbl_Height.Content = OverlayHeight.ToString() + " px"; } catch { }
+			try { lbl_Margin.Content = OverlayMargin.ToString() + " px"; } catch { }
+			try { lbl_TextSize.Content = OverlayTextSize.ToString() + " pt"; } catch { }
+
+
 			ComboBox_Fonts.ItemsSource = Fonts.SystemFontFamilies.ToArray();
 
 			foreach (FontFamily myFF in ComboBox_Fonts.ItemsSource)

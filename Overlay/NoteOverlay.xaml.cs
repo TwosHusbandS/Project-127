@@ -280,14 +280,12 @@ namespace Project_127.Overlay
 
 		public static void OverlayScrollUp()
 		{
-			MyGTAOverlay.scroll(-5);
-			//HelperClasses.Logger.Log("About to scroll Up a bit...JK, this aint implemented yet");
+			MyGTAOverlay.scroll(5);
 		}
 
 		public static void OverlayScrollDown()
 		{
-			MyGTAOverlay.scroll(5);
-			//HelperClasses.Logger.Log("About to scroll Down a bit...JK, this aint implemented yet");
+			MyGTAOverlay.scroll(-5);
 		}
 
 		public static void OverlayNoteNext()

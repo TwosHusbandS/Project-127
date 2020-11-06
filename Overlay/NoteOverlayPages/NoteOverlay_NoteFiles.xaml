@@ -30,7 +30,7 @@
 
         <Border x:Name="bdr_Files" Grid.Row="1" Grid.RowSpan="5" Grid.Column="0" Grid.ColumnSpan="2" BorderThickness="2" Margin="5" BorderBrush="{x:Static local:Globals.MyColorOffWhite}">
             <ScrollViewer x:Name="sv_Files">
-                <DataGrid x:Name="dg_Files" Style="{StaticResource dg}" PreviewMouseWheel="dg_Files_PreviewMouseWheel" PreviewKeyDown="dg_Files_PreviewKeyDown">
+                <DataGrid x:Name="dg_Files" Style="{StaticResource dg}" PreviewMouseWheel="dg_Files_PreviewMouseWheel" PreviewKeyDown="dg_Files_PreviewKeyDown" SelectionMode="Extended" SelectionUnit="FullRow">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="FileNiceName" Binding="{Binding FileNiceName, Mode=OneWay}" Width="*" FontSize="20" />
                     </DataGrid.Columns>

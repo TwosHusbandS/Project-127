@@ -101,9 +101,12 @@ Main To do:
 
 
 			Quick and dirty notes:
-				- Apart from Presets everything noteoverlay related works
+				- CTRL + Arrows  does nothing atm. Gonna swap there
+				- Selection after deletion is fucked.
 				- Title from GTAV Overlay is missing (waiting on Dragon for that)
-				- Re-Think some of the keybinds (up is down, next is prev and stuff)
+				- Yoshis Info
+				- ReadMe shit
+				- Jumpscript stuff
 
 		=== Keep in Mind === 
 

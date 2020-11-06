@@ -988,7 +988,7 @@ namespace Project_127.MySettings
 		{
 			get
 			{
-				return new List<string>((GetSetting("OverlayNotesPresetA").Split(';')));
+				return GetStringListFromString(GetSetting("OverlayNotesPresetA"), ';');
 			}
 			set
 			{
@@ -1000,7 +1000,7 @@ namespace Project_127.MySettings
 		{
 			get
 			{
-				return new List<string>((GetSetting("OverlayNotesPresetB").Split(';')));
+				return GetStringListFromString(GetSetting("OverlayNotesPresetB"), ';');
 			}
 			set
 			{
@@ -1012,7 +1012,7 @@ namespace Project_127.MySettings
 		{
 			get
 			{
-				return new List<string>((GetSetting("OverlayNotesPresetC").Split(';')));
+				return GetStringListFromString(GetSetting("OverlayNotesPresetC"), ';');
 			}
 			set
 			{
@@ -1024,7 +1024,7 @@ namespace Project_127.MySettings
 		{
 			get
 			{
-				return new List<string>((GetSetting("OverlayNotesPresetD").Split(';')));
+				return GetStringListFromString(GetSetting("OverlayNotesPresetD"), ';');
 			}
 			set
 			{
@@ -1036,7 +1036,8 @@ namespace Project_127.MySettings
 		{
 			get
 			{
-				return new List<string>((GetSetting("OverlayNotesPresetE").Split(';')));
+				return GetStringListFromString(GetSetting("OverlayNotesPresetE"), ';');
+
 			}
 			set
 			{
@@ -1048,7 +1049,7 @@ namespace Project_127.MySettings
 		{
 			get
 			{
-				return new List<string>((GetSetting("OverlayNotesPresetF").Split(';')));
+				return GetStringListFromString(GetSetting("OverlayNotesPresetF"), ';');
 			}
 			set
 			{
@@ -1060,12 +1061,27 @@ namespace Project_127.MySettings
 		{
 			get
 			{
-				return new List<string>((GetSetting("OverlayNotesMain").Split(';')));
+				return GetStringListFromString(GetSetting("OverlayNotesMain"), ';');
 			}
 			set
 			{
 				SetSetting("OverlayNotesMain", String.Join(";", value.ToArray()));
 			}
+		}
+
+		public static List<string> GetStringListFromString(string pString, char Deliminiter)
+		{
+			List<string> rtrn = new List<string>(pString.Split(Deliminiter));
+
+			if (rtrn.Count == 1)
+			{
+				if (String.IsNullOrWhiteSpace(rtrn[0]))
+				{
+					rtrn = new List<string>();
+				}
+			}
+
+			return rtrn;
 		}
 
 
