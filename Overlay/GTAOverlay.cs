@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 using Image = GameOverlay.Drawing.Image;
 
 namespace Project_127
@@ -60,7 +61,8 @@ namespace Project_127
 		private readonly Dictionary<string, SolidBrush> _brushes;
 		private readonly Dictionary<string, Font> _fonts;
 		private readonly Dictionary<string, Image> _images;
-        private float bgImageOpac = (float).7;
+		private readonly List<overlayObject> overlayObjects;
+		private float bgImageOpac = (float).7;
         private string bgImagePath = "";
         private string NoteText = "";
 		private int textOffsetX = 20;
@@ -145,6 +147,7 @@ namespace Project_127
 			_brushes = new Dictionary<string, SolidBrush>();
 			_fonts = new Dictionary<string, Font>();
 			_images = new Dictionary<string, Image>();
+			overlayObjects = new List<overlayObject>();
             //var wb = new WindowBounds();
 			HelperClasses.Logger.Log("Searching for GTAV window...");
 			var windowHandle = WindowHelper.FindWindow(targetWindow);
@@ -238,6 +241,11 @@ namespace Project_127
                 }
 			}
 			gfx.DrawTextWithBackground(_fonts["textFont"], _brushes["textColor"], _brushes["textBack"], textOffsetX, textOffsetY, NoteText);
+
+			foreach (var obj in overlayObjects)
+            {
+				obj.render(gfx);
+            }
 
 		}
 
@@ -499,6 +507,29 @@ namespace Project_127
 			BottomLeft
 		}
 
+		public bool attach(overlayTextBox t)
+        {
+			if (t.host != null)
+            {
+				return false;
+            }
+			t.gfx = _window.Graphics;
+			t.host = this;
+			overlayObjects.Add(t);
+			return true;
+        }
+
+		public bool detach(string id)
+        {
+			var idx = overlayObjects.FindIndex(x => x.id == id);
+			if (idx == -1)
+            {
+				return false;
+			}
+			overlayObjects.RemoveAt(idx);
+			return true;
+        }
+
 		#region IDisposable Support
 		private bool disposedValue;
 
@@ -520,4 +551,218 @@ namespace Project_127
 		#endregion
 		
 	}
+	public interface overlayObject : IDisposable
+    {
+		//interface void render();
+		void link(GTAOverlay O, Graphics G);
+
+		void unlink();
+
+		void render(Graphics g);
+
+		string id { get; }
+
+		bool linked { get; }
+
+    }
+
+	public class overlayTextBox : overlayObject
+    {
+		public string text { get; set; }
+		
+		public Point position { get; set; }
+
+		public bool renderEnabled { get; set; }
+
+		private Color _textColor = Color.Green, _bgColor = Color.Transparent;
+
+		private SolidBrush _textBrush = null, _bgBrush = null;
+
+		private SolidBrush textBrush
+        {
+            get
+            {
+				if (gfx == null)
+                {
+					return null;
+                }
+				if (_textBrush == null)
+                {
+					_textBrush = gfx.CreateSolidBrush(_textColor);
+                }
+				_textBrush.Color = _textColor;
+				return _textBrush;
+            }
+        }
+
+		private SolidBrush bgBrush
+        {
+            get
+            {
+				if (gfx == null)
+				{
+					return null;
+				}
+				if (_bgBrush == null)
+				{
+					_bgBrush = gfx.CreateSolidBrush(_bgColor);
+				}
+				_bgBrush.Color = _bgColor;
+				return _bgBrush;
+			}
+        }
+
+		private Font _textFont =  null;
+
+		private Font currentFont
+        {
+            get
+            {
+				if (gfx == null)
+                {
+					return null;
+                }
+				if (_textFont == null || storedFont.updated)
+                {
+					if (_textFont != null)
+                    {
+						_textFont.Dispose();
+                    }
+					_textFont = gfx.CreateFont(storedFont.fontFamily, storedFont.fontSize, storedFont.bold, storedFont.italic, storedFont.italic);
+                }
+				return _textFont;
+            }
+        }
+
+		public bool linked { get; private set; } = false;
+
+		internal Graphics gfx { private get; set; } = null;
+
+		private fontProperties storedFont = new fontProperties();
+
+		private class fontProperties
+        {
+			private bool _updated = true;
+			public bool updated
+            {
+                get
+                {
+					if (_updated)
+                    {
+						_updated = false;
+						return true;
+                    }
+					return false;
+                }
+                set
+                {
+					_updated = value;
+                }
+            }
+			public string fontFamily = "Consolas";
+			public int fontSize = 24;
+			public bool bold = false;
+			public bool italic = false;
+			public bool wordWrap = false;
+		}
+
+		public System.Drawing.Color textColor { 
+			get
+            {
+				return System.Drawing.Color.FromArgb(_textColor.ToARGB());
+            }
+            set
+            {
+				_textColor = Color.FromARGB(value.ToArgb());
+            }
+		}
+
+		public System.Drawing.Color bgColor
+		{
+			get
+			{
+				return System.Drawing.Color.FromArgb(_bgColor.ToARGB());
+			}
+			set
+			{
+				_bgColor = Color.FromARGB(value.ToArgb());
+			}
+		}
+
+        public string id { get; private set; }
+
+
+		internal GTAOverlay host { set; get; } = null;
+
+		public overlayTextBox(string id)
+        {
+			this.id = id;
+        }
+
+		public void setFont(string fontFamily, int fontSize, bool bold = false, bool italic = false, bool wordWrap = true)
+        {
+			storedFont.fontFamily = fontFamily;
+			storedFont.fontSize = fontSize;
+			storedFont.bold = bold;
+			storedFont.italic = italic;
+			storedFont.wordWrap = wordWrap;
+			storedFont.updated = true;
+        }
+
+		public void render(Graphics gfx = null)
+        {
+			//gfx.DrawTextWithBackground(currentFont, tb,
+			if (gfx == null)
+            {
+				return;
+            }
+			if (renderEnabled)
+            {
+				gfx.DrawTextWithBackground(currentFont, textBrush, bgBrush, position, text);
+			}
+		}
+
+		public void link(GTAOverlay host, Graphics gfx)
+        {
+			this.host = host;
+			this.gfx = gfx;
+			linked = true;
+        }
+
+		public void unlink()
+        {
+			linked = false;
+			host = null;
+			gfx = null;
+        }
+
+		public Rectangle approxBounds()
+        {
+			return new Rectangle();
+        }
+
+		#region IDisposable Support
+		private bool disposedValue;
+
+		protected virtual void Dispose(bool disposing)
+		{
+			if (!disposedValue)
+			{
+				_textFont.Dispose();
+				_textBrush.Dispose();
+				_bgBrush.Dispose();
+
+				disposedValue = true;
+			}
+		}
+
+		public void Dispose()
+		{
+			Dispose(true);
+			GC.SuppressFinalize(this);
+		}
+		#endregion
+
+	}
+
 }
