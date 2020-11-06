@@ -323,6 +323,7 @@ namespace Project_127
 				if (Settings.LastLaunchedVersion < new Version("1.1.0.0"))
 				{
 
+
 					Settings.JumpScriptKey1 = System.Windows.Forms.Keys.Space;
 					Settings.JumpScriptKey2 = System.Windows.Forms.Keys.L;
 
@@ -344,6 +345,12 @@ namespace Project_127
 					FileHandling.deleteFile(LauncherLogic.UpgradeFilePath.TrimEnd('\\') + @"\Readme.txt");
 					FileHandling.deleteFile(LauncherLogic.UpgradeFilePath.TrimEnd('\\') + @"\socialclub.dll");
 					FileHandling.deleteFile(LauncherLogic.UpgradeFilePath.TrimEnd('\\') + @"\tinyxml2.dll");
+
+					string[] tmp = HelperClasses.FileHandling.GetSubFolders(ProjectInstallationPath);
+					foreach (string temp in tmp)
+					{
+						HelperClasses.FileHandling.DeleteFolder(temp);
+					}
 				}
 
 				Settings.LastLaunchedVersion = Globals.ProjectVersion;

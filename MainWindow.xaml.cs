@@ -91,6 +91,7 @@ Main To do:
 		=> ToolTips on all Icon-Buttons
 		=> Annoucement Feature
 		=> FailSafe Backup System for Upgrade Files
+		=> Auth will no longer crash when not reachable. Well at least we check it on page load...
 		=> [NEEDS TESTING] Overlay + Jumpscript stuff
 		=> [NEEDS TESTING] Auto-Start XYZ on Game Launch working dir fix
 		=> [NEEDS TESTING] Downgrade/Upgrade/Repair improvements:
@@ -102,28 +103,21 @@ Main To do:
 			Quick and dirty notes:
 				- Apart from Presets everything noteoverlay related works
 				- Title from GTAV Overlay is missing (waiting on Dragon for that)
-				- It wont launch in release mode via VS...can double click just fine, can launch in debug mode just fine
 				- Re-Think some of the keybinds (up is down, next is prev and stuff)
-
 
 		=== Keep in Mind === 
 
 	Still to do for 1.1
 	- Cef no disk cache...
 	- Use Yoshi's information
+	- Add Credit for Fro guy for mirrors (Both ín readme page and on readme.md)
 	- Ask Yoshi, Crapideot, and that other guy from hossels discord
 	- 1.5 seconds delay on downgrade... + warning popup on first downgrade that it takes some time
-	- NoteOverlayUI
-		=> Cycle Background Images with playpause / next and stuff...
-		=> Connect Subpage Files to backend
-		=> Implement Title in Overlay
-		=> Implement Scroll to Chaptor
-	- Some SaveFileHandler stuff
+	- Comment SaveFileHandler stuff out so we are back to 1.0 SaveFileHandler
 	- Jumpscript
 		-> Find input sender which works in Game and doesnt infinite loop
 		-> OR make pointer to struct work...
 	- Make texts in readme / Information markdown with easy links and scrollbar and stuff. Also reference the resetall button in settings
-	- Client crashes when trying to auth when offline
 	- Uninstaller still is semi-manual...Should be fixed with "Reset" Buttons eliminating the need for custom uninstaller
 	- Add new DLLs to installer (I think at least 2, probably 3...Bottom Line: test installer.
 
@@ -132,10 +126,6 @@ Main To do:
 	- If i can prevent the keypress from being processed further...I can probably change a param and send a different keypress there...
 	- USE GIT TO KEEP TRACK OF INSTALLATION STATES???
 	- Features still to do:
-		- Upgrade / Downgrade / Repair Improvements 
-			=> Popup Messages when Upgrading / Downgrading doesnt get you what you wanted (Specials Suggestion)
-			=> to handle steam updates automatically, without User Interaction (Check on Startup, Upgrade, Downgrade, Repair, Game Launch maybe)
-			=> to not have own files in them (because of "botan.dll"...so im fixing fivem :D)
 		- Native jump Script
 		- [@thS currently working on] Better Save File Handler
 			=> Add Folder Support
@@ -158,10 +148,13 @@ Main To do:
 
 
 Bug Reportings:
+	- [RESOLVED][IDC]
+			GTA5.exe being "stuck" in taskmanager...hossels virus shit
 	- [RESOLVED][IDC][Its fine for now, no idea how to improve]
 			Open Twice message (and killing old process) not working for one guy
 			Works for me and on some other testers machines.
 			Confirmed funky. Also can not kill Process spawned by VS
+			Works for me...even in VS...
 	- [RESOLVED] Installer Link wrong (gave Reloe new one, it got changed)
 	- [RESOLVED] Changed a lot of that, should be all good now
 			Reloe and JakeMiester and dr490n had some issues with the GTA V Path Settings

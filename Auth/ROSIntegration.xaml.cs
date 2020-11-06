@@ -56,44 +56,81 @@ namespace Project_127.Auth
 
 		private bool LaunchAfter;
 
+
+		public bool WebSiteIsAvailable(string Url)
+		{
+			string Message = string.Empty;
+			HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(Url);
+
+			// Set the credentials to the current user account
+			request.Credentials = System.Net.CredentialCache.DefaultCredentials;
+			request.Method = "GET";
+
+			try
+			{
+				using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+				{
+					// Do nothing; we're only testing to see if we can get the response
+				}
+			}
+			catch (WebException ex)
+			{
+				Message += ((Message.Length > 0) ? "\n" : "") + ex.Message;
+			}
+
+			return (Message.Length == 0);
+		}
+
 		public ROSIntegration(bool pLaunchAfter = false)
 		{
-			LaunchAfter = pLaunchAfter;
-
-			newInstance = true;
-			//CefSettings s = new CefSettings();
-			//s.CachePath = "B:\\test";
-			//Cef.Initialize(s);
-			HelperClasses.Logger.Log("Hello from dr490n's auth");
-			if (!CEFInited)
+			// this if else is new, just to check if we can reach the website
+			if (!WebSiteIsAvailable(@"https://rgl.rockstargames.com/launcher"))
 			{
-				HelperClasses.Logger.Log("Detected first launch, initializing...");
-				var s = new CefSettings();
-				s.CachePath = System.IO.Path.GetFullPath(".\\");
-				s.BackgroundColor = 0;//0x13 << 16 | 0x15 << 8 | 0x18;
-				s.DisableGpuAcceleration();
-				s.CefCommandLineArgs["autoplay-policy"] = "no-user-gesture-required";
-				Cef.Initialize(s);
-				CEFInited = true;
+				new Popup(Popup.PopupWindowTypes.PopupOkError, "Cant reach rockstar server, cannot authenticate.").ShowDialog();
+				this.Dispatcher.Invoke(() =>
+				{
+					Globals.PageState = Globals.PageStates.GTA;
+				});
 			}
-			NavigationCommands.BrowseBack.InputGestures.Clear();
-			InitializeComponent();
-			this.Dispatcher.Invoke(() =>
+			else
 			{
-				this.myGridContent.Visibility = Visibility.Hidden;
-				this.myGridLoading.Visibility = Visibility.Visible;
-			});
+				LaunchAfter = pLaunchAfter;
 
-			browser.BrowserSettings.ApplicationCache = CefState.Disabled;
-			//browser.BrowserSettings.BackgroundColor = 0x13 << 16 | 0x15 << 8 | 0x18 | 0xFF << 24;
-			HelperClasses.Logger.Log("Initialization complete");
+				newInstance = true;
+				//CefSettings s = new CefSettings();
+				//s.CachePath = "B:\\test";
+				//Cef.Initialize(s);
+				HelperClasses.Logger.Log("Hello from dr490n's auth");
+				if (!CEFInited)
+				{
+					HelperClasses.Logger.Log("Detected first launch, initializing...");
+					var s = new CefSettings();
+					s.CachePath = Globals.ProjectInstallationPath.TrimEnd('\\') + @"\CEF_CacheFiles";
+					s.BackgroundColor = 0;//0x13 << 16 | 0x15 << 8 | 0x18;
+					s.DisableGpuAcceleration();
+					s.CefCommandLineArgs["autoplay-policy"] = "no-user-gesture-required";
+					Cef.Initialize(s);
+					CEFInited = true;
+				}
+				NavigationCommands.BrowseBack.InputGestures.Clear();
+				InitializeComponent();
+				this.Dispatcher.Invoke(() =>
+				{
+					this.myGridContent.Visibility = Visibility.Hidden;
+					this.myGridLoading.Visibility = Visibility.Visible;
+				});
 
-			if (Settings.EnableRememberMe)
-			{
-				HelperClasses.Logger.Log("Remember Me enabled: fetching credentials...");
-				fetchStoredCredentials();
+				browser.BrowserSettings.ApplicationCache = CefState.Disabled;
+				//browser.BrowserSettings.BackgroundColor = 0x13 << 16 | 0x15 << 8 | 0x18 | 0xFF << 24;
+				HelperClasses.Logger.Log("Initialization complete");
+
+				if (Settings.EnableRememberMe)
+				{
+					HelperClasses.Logger.Log("Remember Me enabled: fetching credentials...");
+					fetchStoredCredentials();
+				}
+				//browser.BrowserSettings.ApplicationCache = CefState.Enabled;
 			}
-			//browser.BrowserSettings.ApplicationCache = CefState.Enabled;
 		}
 		private string passField;
 		private string emField;

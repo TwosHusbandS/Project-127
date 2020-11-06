@@ -109,6 +109,8 @@ When P127 crashes just when you are expected to login (on click of Auth Button, 
 
 When Upgrading / Downgrading does not work as expected in general, verify Game Files via Steam / Rockstar / Epic (Or re-download GTAV) and click "Repair GTAV" inside Settings.
 
+When Project 1.27 crashes when you are trying to authenticate (when pressing the Auth Button or when Pressing "Launch GTAV" while not being authenticated) Project 1.27 cannot reach Rockstar Servers.
+
 If something is still not working, you can always try verifying Files via Steam / Rockstar / Epic and hitting the "Reset all" Button below. This might take a few minutes, and Project 1.27 will quit automatically when its done. Re-Open it and everything will work.
 
 If you still cant get it to work or you wish to contact me, please RIGHT-click the Auth icon (the one with the lock icon in the top left corner) and send me the AAA - Logfile.log and the AAA - Debugfile.txt from the folder which will open (Project 1.27 Installation Directory) and include a detailed Report of what you did and whats not working.
