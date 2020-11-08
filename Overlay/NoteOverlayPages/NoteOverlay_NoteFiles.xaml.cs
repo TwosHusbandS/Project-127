@@ -21,6 +21,8 @@ using Project_127.HelperClasses;
 using Project_127.Overlay;
 using Project_127.Popups;
 using Project_127.MySettings;
+using System.Windows.Controls.Primitives;
+using Popup = Project_127.Popups.Popup;
 
 namespace Project_127.Overlay.NoteOverlayPages
 {
@@ -76,6 +78,7 @@ namespace Project_127.Overlay.NoteOverlayPages
 			{
 				MyNoteFiles.MyAdd(new MyNoteFile(mystring));
 			}
+			SelectFirst();
 		}
 
 
@@ -144,14 +147,23 @@ namespace Project_127.Overlay.NoteOverlayPages
 			{
 				MyNoteFiles.MyRemove(MNF);
 			}
+			SelectFirst();
+		}
 
+		private void SelectFirst()
+		{
 			if (dg_Files.Items.Count > 0)
 			{
-				dg_Files.SelectedItems.Clear();
-				dg_Files.SelectedItems.Add(dg_Files.Items[0]);
+				//dg_Files.SelectedItems.Add(dg_Files.Items[0]);
+
+				//dg_Files.CurrentCell = new DataGridCellInfo(dg_Files.Items[0], dg_Files.Columns[0]);
+				//dg_Files.SelectedItems.Clear();
+				//dg_Files.SelectedCells.Add(dg_Files.CurrentCell);
+
+
+				SelectRowByIndex(dg_Files, 0);
 			}
 
-			//SelectRowByIndex(dg_Files, 0);
 		}
 
 		public static void SelectRowByIndex(DataGrid dataGrid, int rowIndex)
@@ -175,7 +187,58 @@ namespace Project_127.Overlay.NoteOverlayPages
 				dataGrid.ScrollIntoView(item);
 				row = dataGrid.ItemContainerGenerator.ContainerFromIndex(rowIndex) as DataGridRow;
 			}
-			//TODO: Retrieve and focus a DataGridCell object
+			if (row != null)
+			{
+				DataGridCell cell = GetCell(dataGrid, row, 0);
+				if (cell != null)
+					cell.Focus();
+			}
+		}
+
+		public static T FindVisualChild<T>(DependencyObject obj) where T : DependencyObject
+		{
+			for (int i = 0; i < VisualTreeHelper.GetChildrenCount(obj); i++)
+			{
+				DependencyObject child = VisualTreeHelper.GetChild(obj, i);
+				if (child != null && child is T)
+					return (T)child;
+				else
+				{
+					T childOfChild = FindVisualChild<T>(child);
+					if (childOfChild != null)
+						return childOfChild;
+				}
+			}
+			return null;
+		}
+
+		public static DataGridCell GetCell(DataGrid dataGrid, DataGridRow rowContainer, int column)
+		{
+			if (rowContainer != null)
+			{
+				DataGridCellsPresenter presenter = FindVisualChild<DataGridCellsPresenter>(rowContainer);
+				if (presenter == null)
+				{
+					/* if the row has been virtualized away, call its ApplyTemplate() method 
+					 * to build its visual tree in order for the DataGridCellsPresenter
+					 * and the DataGridCells to be created */
+					rowContainer.ApplyTemplate();
+					presenter = FindVisualChild<DataGridCellsPresenter>(rowContainer);
+				}
+				if (presenter != null)
+				{
+					DataGridCell cell = presenter.ItemContainerGenerator.ContainerFromIndex(column) as DataGridCell;
+					if (cell == null)
+					{
+						/* bring the column into view
+						 * in case it has been virtualized away */
+						dataGrid.ScrollIntoView(rowContainer, dataGrid.Columns[column]);
+						cell = presenter.ItemContainerGenerator.ContainerFromIndex(column) as DataGridCell;
+					}
+					return cell;
+				}
+			}
+			return null;
 		}
 
 		private void btn_PresetLoad_Click(object sender, RoutedEventArgs e)
@@ -236,20 +299,10 @@ namespace Project_127.Overlay.NoteOverlayPages
 
 		private void dg_Files_PreviewKeyDown(object sender, KeyEventArgs e)
 		{
-			if ((e.Key == Key.Up && Keyboard.IsKeyDown(Key.LeftCtrl)) ||
-				(e.Key == Key.Up && Keyboard.IsKeyDown(Key.RightCtrl)))
-			{
-
-				e.Handled = true;
-			}
-			if ((e.Key == Key.Down && Keyboard.IsKeyDown(Key.LeftCtrl)) ||
-				(e.Key == Key.Down && Keyboard.IsKeyDown(Key.RightCtrl)))
-			{
-				e.Handled = true;
-			}
 			if (e.Key == Key.Delete)
 			{
 				btn_Delete_Click(null, null);
+				e.Handled = true;
 			}
 		}
 

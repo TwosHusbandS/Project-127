@@ -37,14 +37,16 @@
                     <RowDefinition Height="3.5*"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
-                <Label x:Name="Grid_SpeedRun_Lbl" Style="{StaticResource lbl}" Grid.Row="0">
-                    <TextBlock>
+                <!--<Label x:Name="Grid_SpeedRun_Lbl" Style="{StaticResource lbl}" Grid.Row="0">
+                    <TextBlock TextWrapping="Wrap" Text="{Binding MyText}">
                     ASDF
-                       <Hyperlink RequestNavigate="Hyperlink_RequestNavigate">Click here
-     </Hyperlink>
+                       <Hyperlink RequestNavigate="Hyperlink_RequestNavigate">Click here</Hyperlink>
                     FDSA
                     </TextBlock>
-                </Label>
+                </Label>-->
+                <RichTextBox Grid.Row="0" x:Name="myRTB"  IsReadOnly="True" IsDocumentEnabled="True" HorizontalAlignment="Center" HorizontalContentAlignment="Center">
+                    
+                </RichTextBox>
                 <Button x:Name="Grid_SpeedRun_Btn" Style="{StaticResource btn_SM}" Grid.Row="1" Margin="100,0,100,30" Content="Click Me" Click="Grid_SpeedRun_Btn_Click"/>
             </Grid>
         </Border>

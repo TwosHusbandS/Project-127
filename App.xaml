@@ -2,7 +2,6 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:Project_127"
-            xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
              Startup="Application_Startup"
              SessionEnding="Application_SessionEnding"
              StartupUri="MainWindow.xaml">
@@ -516,7 +515,7 @@
         </Style>
 
 
-        <Style x:Key="MyColorPicker" TargetType="xctk:ColorPicker">
+        <!--<Style x:Key="MyColorPicker" TargetType="xctk:ColorPicker">
             <Setter Property="ColorMode" Value="ColorCanvas"/>
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="BorderThickness" Value="2"/>
@@ -527,7 +526,7 @@
             <Setter Property="ShowStandardColors" Value="False"/>
             <Setter Property="ShowTabHeaders" Value="False"/>
             <Setter Property="ShowDropDownButton" Value="False"/>
-        </Style>
+        </Style>-->
 
     </Application.Resources>
 </Application>

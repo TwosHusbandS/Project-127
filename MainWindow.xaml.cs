@@ -101,12 +101,14 @@ Main To do:
 
 
 			Quick and dirty notes:
-				- CTRL + Arrows  does nothing atm. Gonna swap there
-				- Selection after deletion is fucked.
 				- Title from GTAV Overlay is missing (waiting on Dragon for that)
+				- CPU usage (probably due to window change listener, maybe poll the foreground window every XYZ ms)
+				- [RESTART FIXED IT] Antivirus thing...commit and revert and see if it still happens...
 				- Yoshis Info
-				- ReadMe shit
-				- Jumpscript stuff
+				- ReadMe shit (PoC is there, I think)
+				- Jumpscript Send Key stuff
+				- Investigate CEF Cache.
+				- Split upgrading downgrading into 2 progress popups
 
 		=== Keep in Mind === 
 
