@@ -110,6 +110,8 @@ Main To do:
 				- Jumpscript Send Key stuff
 				- Investigate CEF Cache.
 				- Split upgrading downgrading into 2 progress popups
+				- CPU Usage Poll foreground window instead of change listener
+				- Save Ressources with PreviewWindow
 
 		=== Keep in Mind === 
 
