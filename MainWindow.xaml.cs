@@ -104,14 +104,14 @@ Main To do:
 				- Bring back functionality from: https://github.com/TwosHusbandS/Project-127/commit/a5dcbd5c1a4011c8e1845c4f338f6f9ffbe79a92
 					Without making anti virus appear again
 				- Selection after deletion is fucked (Solution in Commit Above)
-				- ReadMe shit (PoC in Commit Above)
 				- Title from GTAV Overlay is missing (waiting on Dragon for that)
 				- Yoshis Info
 				- Jumpscript Send Key stuff
 				- Investigate CEF Cache.
 				- Split upgrading downgrading into 2 progress popups
 				- CPU Usage Poll foreground window instead of change listener
-				- Save Ressources with PreviewWindow
+				- Finish Readme (Speedrun text + Reset Button + DL of big zip)
+				- ZIP Hash for big ZIP
 
 		=== Keep in Mind === 
 
@@ -432,6 +432,9 @@ namespace Project_127
 				lbl_GTA.Foreground = Globals.MW_GTALabelUnsureForeground;
 				lbl_GTA.Content = "Unsure";
 			}
+
+			lbl_GTA.Content += " (" + Globals.GetGameVersionOfBuildNumber(Globals.GameVersion) + ")";
+   
 			if (LauncherLogic.GameState == LauncherLogic.GameStates.Running)
 			{
 				GTA_Page.btn_GTA_static.BorderBrush = Globals.MW_ButtonGTAGameRunningBorderBrush;
