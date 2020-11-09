@@ -30,22 +30,10 @@
 
 
         <Border x:Name="Border_SpeedRun" Margin="0,10,0,20" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="4" BorderBrush="{x:Static local:Globals.ReadME_Inner_BorderBrush}" BorderThickness="{x:Static local:Globals.ReadME_Inner_BorderThickness}" Background="{x:Static local:Globals.ReadME_Inner_Background}" CornerRadius="{x:Static local:Globals.ReadME_Inner_CornerRadius}">
-
-
             <Grid x:Name="Grid_SpeedRun" >
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="3.5*"/>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
-                <Label x:Name="Grid_SpeedRun_Lbl" Style="{StaticResource lbl}" Grid.Row="0">
-                    <TextBlock>
-                    ASDF
-                       <Hyperlink RequestNavigate="Hyperlink_RequestNavigate">Click here
-     </Hyperlink>
-                    FDSA
-                    </TextBlock>
-                </Label>
-                <Button x:Name="Grid_SpeedRun_Btn" Style="{StaticResource btn_SM}" Grid.Row="1" Margin="100,0,100,30" Content="Click Me" Click="Grid_SpeedRun_Btn_Click"/>
+                <ScrollViewer>
+                    <RichTextBox x:Name="rtb_SpeedRun" IsReadOnly="True" IsDocumentEnabled="True"  Style="{StaticResource rtb}"/>
+                </ScrollViewer>
             </Grid>
         </Border>
 
@@ -60,7 +48,7 @@
         <Border x:Name="Border_Credits" Margin="0,10,0,20" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="4" BorderBrush="{x:Static local:Globals.ReadME_Inner_BorderBrush}" BorderThickness="{x:Static local:Globals.ReadME_Inner_BorderThickness}" Background="{x:Static local:Globals.ReadME_Inner_Background}" CornerRadius="{x:Static local:Globals.ReadME_Inner_CornerRadius}">
             <Grid x:Name="Grid_Credits">
                 <ScrollViewer>
-                <RichTextBox x:Name="rtb_Credits" IsReadOnly="True" IsDocumentEnabled="True"  Style="{StaticResource rtb}"/>
+                    <RichTextBox x:Name="rtb_Credits" IsReadOnly="True" IsDocumentEnabled="True"  Style="{StaticResource rtb}"/>
                 </ScrollViewer>
             </Grid>
         </Border>

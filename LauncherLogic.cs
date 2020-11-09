@@ -790,6 +790,23 @@ namespace Project_127
 		/// </summary>
 		public static void ImportZip(string pZipFileLocation, bool deleteFileAfter = false)
 		{
+			if (deleteFileAfter == false)
+			{
+				HelperClasses.Logger.Log("Importing ZIP File manually");
+
+				Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "You are manually importing a ZIP File.\nProject 1.27 cannot gurantee the integrity of the ZIP File.\nThis is the case even if you got the Download Link through Project 1.27 Help Page\nThe person hosting this file or the Person you got the Link from could have altered the Files inside to include malicious files.\nDo you still want to import the ZIP File?");
+				yesno.ShowDialog();
+				if (yesno.DialogResult == false)
+				{
+					HelperClasses.Logger.Log("User does NOT trust the ZIP File. Will abort.");
+					return;
+				}
+				else
+				{
+					HelperClasses.Logger.Log("User DOES trust the ZIP File. Will continue.");
+				}
+			}
+
 			// Creating all needed Folders
 			HelperClasses.FileHandling.CreateAllZIPPaths(Settings.ZIPExtractionPath);
 

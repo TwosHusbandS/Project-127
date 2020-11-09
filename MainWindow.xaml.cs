@@ -101,24 +101,26 @@ Main To do:
 
 
 			Quick and dirty notes:
-				- Bring back functionality from: https://github.com/TwosHusbandS/Project-127/commit/a5dcbd5c1a4011c8e1845c4f338f6f9ffbe79a92
 					Without making anti virus appear again
-				- Selection after deletion is fucked (Solution in Commit Above)
 				- Title from GTAV Overlay is missing (waiting on Dragon for that)
-				- Yoshis Info
-				- Jumpscript Send Key stuff
-				- Investigate CEF Cache.
-				- Split upgrading downgrading into 2 progress popups
 				- CPU Usage Poll foreground window instead of change listener
-				- Finish Readme (Speedrun text + Reset Button + DL of big zip)
-				- ZIP Hash for big ZIP
+					=> Finish new implementation of hook with Application.Run instead of custom EventLoop
+						>> https://stackoverflow.com/a/32016279
+					=> If that doesnt work, poll every 100 ms, see how CPU usage is
+				- Jumpscript Send Key stuff
+				- Split upgrading downgrading into 2 progress popups
+				- [DONE] Finish Readme (Speedrun text + Reset Button + DL of big zip)
+				- [DONE] ZIP Hash for big ZIP
+				- [DONE] Bring back functionality from: https://github.com/TwosHusbandS/Project-127/commit/a5dcbd5c1a4011c8e1845c4f338f6f9ffbe79a92
+				- [DONE] Selection after deletion is fucked (Solution in Commit Above)
+				- [DONE] Yoshis Info
+				- [DONE] NoteOverlay Null Reference Fix + CPU Improvements
+				- [DONE] Cache works, there are other cache files tho...argh. ~~Investigate CEF Cache~~
 
 		=== Keep in Mind === 
 
 	Still to do for 1.1
 	- Cef no disk cache...
-	- Use Yoshi's information
-	- Add Credit for Fro guy for mirrors (Both ín readme page and on readme.md)
 	- Ask Yoshi, Crapideot, and that other guy from hossels discord
 	- 1.5 seconds delay on downgrade... + warning popup on first downgrade that it takes some time
 	- Comment SaveFileHandler stuff out so we are back to 1.0 SaveFileHandler
@@ -319,9 +321,6 @@ namespace Project_127
 
 			HelperClasses.Logger.Log("Startup procedure (Constructor of MainWindow) completed.");
 			HelperClasses.Logger.Log("--------------------------------------------------------");
-
-		
-
 
 #if DEBUG
    GTAOverlay.DebugMode = true;

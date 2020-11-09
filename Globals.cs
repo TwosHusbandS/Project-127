@@ -679,9 +679,15 @@ namespace Project_127
 			}
 		}
 
-		private static string DDL = "";
+		public static string DDL = "";
 
-		private async static void GetDDL(string pLink)
+		public static string GetDDL(string pLink)
+		{
+			ActualGetDDL(pLink);
+			return DDL;
+		}
+
+		public async static void ActualGetDDL(string pLink)
 		{
 			DDL = pLink;
 
@@ -762,8 +768,7 @@ namespace Project_127
 						HelperClasses.FileHandling.deleteFile(Globals.ZipFileDownloadLocation);
 
 						// Getting actual DDL
-						GetDDL(pathOfNewZip);
-						pathOfNewZip = DDL;
+						pathOfNewZip = GetDDL(pathOfNewZip);
 
 						// Downloading the ZIP File
 						new PopupDownload(pathOfNewZip, Globals.ZipFileDownloadLocation, "ZIP-File").ShowDialog();
