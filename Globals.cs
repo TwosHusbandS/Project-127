@@ -782,9 +782,7 @@ namespace Project_127
 
 				if (value != PageStates.NoteOverlay)
 				{
-					MainWindow.MW.Width = 900;
-					MainWindow.MW.Grid_Preview.Visibility = Visibility.Hidden;
-					Overlay_Preview.StopDispatcherTimer();
+					NoteOverlay.DisposePreview();
 				}
 
 				MainWindow.MW.SetBackground(Globals.GetBackGroundPath());

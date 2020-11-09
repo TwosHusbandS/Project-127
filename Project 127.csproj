@@ -179,6 +179,9 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="HelperClasses\Jumpscript.cs" />
+    <Compile Include="Overlay\EmptyPage.xaml.cs">
+      <DependentUpon>EmptyPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Overlay\MyColorPicker.xaml.cs">
       <DependentUpon>MyColorPicker.xaml</DependentUpon>
     </Compile>
@@ -247,6 +250,10 @@
       <DependentUpon>Settings.xaml</DependentUpon>
     </Compile>
     <Page Include="GTA_Page.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Overlay\EmptyPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
