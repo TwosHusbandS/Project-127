@@ -451,6 +451,9 @@
     <Resource Include="Artwork\play.png" />
     <Resource Include="Artwork\play_mo.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Auth\authpage.js" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
