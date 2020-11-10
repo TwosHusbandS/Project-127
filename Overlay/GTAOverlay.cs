@@ -819,7 +819,7 @@ namespace Project_127
 					{
 						_textFont.Dispose();
 					}
-					_textFont = gfx.CreateFont(storedFont.fontFamily, storedFont.fontSize, storedFont.bold, storedFont.italic, storedFont.italic);
+					_textFont = gfx.CreateFont(storedFont.fontFamily, storedFont.fontSize, storedFont.bold, storedFont.italic, storedFont.wordWrap);
 				}
 				return _textFont;
 			}
