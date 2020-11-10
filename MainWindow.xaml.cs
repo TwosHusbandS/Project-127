@@ -108,7 +108,7 @@ Main To do:
 						>> https://stackoverflow.com/a/32016279
 					=> If that doesnt work, poll every 100 ms, see how CPU usage is
 				- Jumpscript Send Key stuff
-				- Split upgrading downgrading into 2 progress popups
+				- [DONE] Split upgrading downgrading into 2 progress popups
 				- [DONE] Finish Readme (Speedrun text + Reset Button + DL of big zip)
 				- [DONE] ZIP Hash for big ZIP
 				- [DONE] Bring back functionality from: https://github.com/TwosHusbandS/Project-127/commit/a5dcbd5c1a4011c8e1845c4f338f6f9ffbe79a92
@@ -433,7 +433,7 @@ namespace Project_127
 			}
 
 			lbl_GTA.Content += " (" + Globals.GetGameVersionOfBuildNumber(Globals.GameVersion) + ")";
-   
+
 			if (LauncherLogic.GameState == LauncherLogic.GameStates.Running)
 			{
 				GTA_Page.btn_GTA_static.BorderBrush = Globals.MW_ButtonGTAGameRunningBorderBrush;
@@ -774,19 +774,17 @@ namespace Project_127
 				if (LauncherLogic.InstallationState == LauncherLogic.InstallationStates.Downgraded)
 				{
 					HelperClasses.Logger.Log("Gamestate looks OK (Downgraded). Will Proceed to try to Upgrade.", 1);
-					LauncherLogic.Upgrade();
 				}
 				else if (LauncherLogic.InstallationState == LauncherLogic.InstallationStates.Upgraded)
 				{
 					HelperClasses.Logger.Log("This program THINKS you are already Upgraded. Update procedure will be called anyways since it shouldnt break things.", 1);
-					LauncherLogic.Upgrade();
 				}
 				else
 				{
 					HelperClasses.Logger.Log("Installation State Broken.", 1);
 					new Popup(Popup.PopupWindowTypes.PopupOkError, "Installation State is broken. I suggest trying to repair.\nWill try to Upgrade anyways.").ShowDialog();
-					LauncherLogic.Upgrade();
 				}
+				LauncherLogic.Upgrade();
 			}
 			else
 			{
@@ -837,19 +835,17 @@ namespace Project_127
 				if (LauncherLogic.InstallationState == LauncherLogic.InstallationStates.Upgraded)
 				{
 					HelperClasses.Logger.Log("Gamestate looks OK (Upgraded). Will Proceed to try to Downgrade.", 1);
-					LauncherLogic.Downgrade();
 				}
 				else if (LauncherLogic.InstallationState == LauncherLogic.InstallationStates.Downgraded)
 				{
 					HelperClasses.Logger.Log("This program THINKS you are already Downgraded. Downgrade procedure will be called anyways since it shouldnt break things.", 1);
-					LauncherLogic.Downgrade();
 				}
 				else
 				{
 					HelperClasses.Logger.Log("Installation State Broken. Downgrade procedure will be called anyways since it shouldnt break things.", 1);
 					new Popup(Popup.PopupWindowTypes.PopupOk, "Installation State is broken. I suggest trying to repair.\nWill try to Downgrade anyways").ShowDialog();
-					LauncherLogic.Downgrade();
 				}
+				LauncherLogic.Downgrade();
 			}
 			else
 			{

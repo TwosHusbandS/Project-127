@@ -43,7 +43,7 @@
                     
                     
                     <!-- GridHamburgerInner -->
-                    <Label x:Name="lbl_GTA" Style="{StaticResource lbl}" VerticalAlignment="Top" VerticalContentAlignment="Bottom" FontSize="20" Margin="115,25,0,0" Width="160" HorizontalContentAlignment="Left" HorizontalAlignment="Left"/>
+                    <Label x:Name="lbl_GTA" Style="{StaticResource lbl}" VerticalAlignment="Top" VerticalContentAlignment="Bottom" FontSize="16" Margin="115,30,0,0" Width="160" HorizontalContentAlignment="Left" HorizontalAlignment="Left"/>
                     <Button x:Name="btn_Auth" Style="{StaticResource btn_SmallIcon}" ToolTip="Login Button. Lock closed = Logged in. Lock open = Not logged in" Height="40" Width="40" MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave" MouseRightButtonDown="btn_Auth_MouseRightButtonDown" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="70,15,0,0" Click="btn_Auth_Click"/>
                 </Grid>
                 <!-- GridHamburgerOuter -->
