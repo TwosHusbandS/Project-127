@@ -117,6 +117,7 @@ Main To do:
 				- [DONE] NoteOverlay Null Reference Fix + CPU Improvements
 				- [DONE] Cache works, there are other cache files tho...argh. ~~Investigate CEF Cache~~
 
+
 		=== Keep in Mind === 
 
 	Still to do for 1.1

@@ -150,6 +150,8 @@ namespace Project_127.Overlay.NoteOverlayPages
 			{
 				MyNoteFiles.MyRemove(MNF);
 			}
+			SelectFirst();
+		}
 
 			SelectFirst();
 		}
@@ -164,9 +166,9 @@ namespace Project_127.Overlay.NoteOverlayPages
 				//dg_Files.SelectedItems.Clear();
 				//dg_Files.SelectedCells.Add(dg_Files.CurrentCell);
 
-
 				SelectRowByIndex(dg_Files, 0);
 			}
+
 		}
 
 		public static void SelectRowByIndex(DataGrid dataGrid, int rowIndex)
@@ -302,20 +304,10 @@ namespace Project_127.Overlay.NoteOverlayPages
 
 		private void dg_Files_PreviewKeyDown(object sender, KeyEventArgs e)
 		{
-			if ((e.Key == Key.Up && Keyboard.IsKeyDown(Key.LeftCtrl)) ||
-				(e.Key == Key.Up && Keyboard.IsKeyDown(Key.RightCtrl)))
-			{
-
-				e.Handled = true;
-			}
-			if ((e.Key == Key.Down && Keyboard.IsKeyDown(Key.LeftCtrl)) ||
-				(e.Key == Key.Down && Keyboard.IsKeyDown(Key.RightCtrl)))
-			{
-				e.Handled = true;
-			}
 			if (e.Key == Key.Delete)
 			{
 				btn_Delete_Click(null, null);
+				e.Handled = true;
 			}
 		}
 
