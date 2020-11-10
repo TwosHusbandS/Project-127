@@ -1,0 +1,320 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Globalization;
+using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
+using System.Windows.Resources;
+using System.Windows.Shapes;
+using Project_127.SettingsStuff;
+using Color = System.Drawing.Color;
+
+namespace Project_127.Overlay.NoteOverlayPages
+{
+	/// <summary>
+	/// Interaction logic for NoteOverlay_Looks.xaml
+	/// </summary>
+	public partial class NoteOverlay_Look : Page
+	{
+		// Using Properties for all Look related stuff here
+		// with getter and setter (they just get / set the settings)
+		// for some (colors and numbers, im not doing that, since those get updated a lot
+		//			[all interactions in colorpicker, all values which are slided over])
+		//         im not doing that, but manually set the setting on XAML events
+
+		private static int _OverlayMargin = Settings.OverlayMargin;
+		private static int _OverlayWidth = Settings.OverlayWidth;
+		private static int _OverlayHeight = Settings.OverlayHeight;
+		private static int _OverlayTextSize = Settings.OverlayTextSize;
+		private static Color _OverlayBackground = Settings.OverlayBackground;
+		private static Color _OverlayForeground = Settings.OverlayForeground;
+
+		public static int OverlayMargin
+		{
+			get
+			{
+				return _OverlayMargin;
+			}
+			set
+			{
+				_OverlayMargin = value;
+			}
+		}
+
+		public static int OverlayWidth
+		{
+			get
+			{
+				return _OverlayWidth;
+			}
+			set
+			{
+				_OverlayWidth = value;
+			}
+		}
+
+		public static int OverlayHeight
+		{
+			get
+			{
+				return _OverlayHeight;
+			}
+			set
+			{
+				_OverlayHeight = value;
+			}
+		}
+
+		public static int OverlayTextSize
+		{
+			get
+			{
+				return _OverlayTextSize;
+			}
+			set
+			{
+				_OverlayTextSize = value;
+			}
+		}
+
+		public static GTAOverlay.Positions OverlayLocation
+		{
+			get
+			{
+				return Settings.OverlayLocation;
+			}
+			set
+			{
+				Settings.OverlayLocation = value;
+				if (NoteOverlay.IsOverlayInit())
+				{
+					NoteOverlay.MyGTAOverlay.Position = Settings.OverlayLocation;
+				}
+			}
+		}
+
+		public static string OverlayTextFont
+		{
+			get
+			{
+				return Settings.OverlayTextFont;
+			}
+			set
+			{
+				Settings.OverlayTextFont = value;
+				if (NoteOverlay.IsOverlayInit())
+				{
+					NoteOverlay.MyGTAOverlay.setFont(Settings.OverlayTextFont, Settings.OverlayTextSize);
+				}
+			}
+		}
+
+		public static Color OverlayBackground
+		{
+			get
+			{
+				return _OverlayBackground;
+			}
+			set
+			{
+				_OverlayBackground = value;
+			}
+		}
+
+		public static Color OverlayForeground
+		{
+			get
+			{
+				return _OverlayForeground;
+			}
+			set
+			{
+				_OverlayForeground = value;
+			}
+		}
+
+
+
+		public NoteOverlay_Look()
+		{
+			InitializeComponent();
+			_OverlayHeight = Settings.OverlayHeight;
+			_OverlayMargin = Settings.OverlayMargin;
+			_OverlayWidth = Settings.OverlayWidth;
+			_OverlayTextSize = Settings.OverlayTextSize;
+
+			sl_Width.Value = OverlayWidth;
+			sl_Margin.Value = OverlayMargin;
+			sl_Height.Value = OverlayHeight;
+			sl_TextSize.Value = OverlayTextSize;
+
+			ComboBox_Fonts.ItemsSource = Fonts.SystemFontFamilies.ToArray();
+
+			foreach (FontFamily myFF in ComboBox_Fonts.ItemsSource)
+			{
+				if (myFF.ToString() == NoteOverlay_Look.OverlayTextFont)
+				{
+					ComboBox_Fonts.SelectedItem = myFF;
+				}
+			}
+
+			List<string> myEnumValues = new List<string>();
+			foreach (string myString in OverlayLocation.GetType().GetEnumNames())
+			{
+				myEnumValues.Add(myString);
+			}
+
+			ComboBox_OverlayLocation.ItemsSource = myEnumValues;
+			ComboBox_OverlayLocation.SelectedItem = NoteOverlay_Look.OverlayLocation.ToString();
+
+		}
+
+		private void ComboBox_Fonts_SelectionChanged(object sender, SelectionChangedEventArgs e)
+		{
+			NoteOverlay_Look.OverlayTextFont = ((FontFamily)ComboBox_Fonts.SelectedItem).ToString();
+		}
+
+		private void ComboBox_OverlayLocation_SelectionChanged(object sender, SelectionChangedEventArgs e)
+		{
+			NoteOverlay_Look.OverlayLocation = (GTAOverlay.Positions)System.Enum.Parse(typeof(GTAOverlay.Positions), ComboBox_OverlayLocation.SelectedItem.ToString());
+		}
+
+		private void sl_Margin_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+		{
+			OverlayMargin = (int)(((Slider)sender).Value);
+			string myNewContent = OverlayMargin.ToString() + " px";
+			if (lbl_Margin != null)
+			{
+				lbl_Margin.Content = myNewContent;
+			}
+		}
+
+		private void sl_Margin_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+		{
+			Settings.OverlayMargin = OverlayMargin;
+			if (NoteOverlay.IsOverlayInit())
+			{
+				NoteOverlay.MyGTAOverlay.XMargin = Settings.OverlayMargin;
+				NoteOverlay.MyGTAOverlay.YMargin = Settings.OverlayMargin;
+			}
+		}
+
+		private void sl_Width_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+		{
+			OverlayWidth = (int)(((Slider)sender).Value);
+			string myNewContent = OverlayWidth.ToString() + " px";
+			if (lbl_Width != null)
+			{
+				lbl_Width.Content = myNewContent;
+			}
+		}
+
+		private void sl_Width_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+		{
+			Settings.OverlayWidth = OverlayWidth;
+			if (NoteOverlay.IsOverlayInit())
+			{
+				//MyGTAOverlay.Width = Settings.OverlayWidth;
+			}
+		}
+
+		private void sl_Height_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+		{
+			OverlayHeight = (int)(((Slider)sender).Value);
+			string myNewContent = OverlayHeight.ToString() + " px";
+			if (lbl_Height != null)
+			{
+				lbl_Height.Content = myNewContent;
+			}
+		}
+
+		private void sl_Height_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+		{
+			Settings.OverlayHeight = OverlayHeight;
+			if (NoteOverlay.IsOverlayInit())
+			{
+				//MyGTAOverlay.Height = Settings.OverlayHeight;
+			}
+		}
+
+		private void sl_TextSize_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+		{
+			OverlayTextSize = (int)(((Slider)sender).Value);
+			string myNewContent = OverlayTextSize.ToString() + " pt";
+			if (lbl_TextSize != null)
+			{
+				lbl_TextSize.Content = myNewContent;
+			}
+		}
+
+		private void sl_TextSize_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+		{
+			Settings.OverlayTextSize = OverlayTextSize;
+			if (NoteOverlay.IsOverlayInit())
+			{
+				NoteOverlay.MyGTAOverlay.setFont(Settings.OverlayTextFont, Settings.OverlayTextSize);
+			}
+		}
+
+
+		private void ColorPicker_Background_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<System.Windows.Media.Color?> e)
+		{
+
+		}
+
+		private void ColorPicker_Foreground_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<System.Windows.Media.Color?> e)
+		{
+			System.Windows.Media.Color? asdf = ColorPicker_Foreground.SelectedColor;
+			// asdf.ToString() is just = "#AARRGGBB";
+			// so easy to deal with I suppose
+		}
+
+
+		private void DisplayPopup(object sender, RoutedEventArgs e)
+		{
+			popup.IsOpen = true;
+		}
+	}
+
+
+	public class PrintableFontFamilyConverter : IValueConverter
+	{
+		public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+		{
+			var fontFamily = value as FontFamily;
+
+			if (fontFamily != null)
+			{
+				foreach (var typeface in fontFamily.GetTypefaces())
+				{
+					if (typeface.TryGetGlyphTypeface(out var glyphTypeface))
+					{
+						if (glyphTypeface.Symbol)
+						{
+							return null;
+						}
+					}
+				}
+			}
+
+			return fontFamily;
+		}
+
+
+		public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+		{
+			throw new NotImplementedException();
+		}
+
+	}
+}

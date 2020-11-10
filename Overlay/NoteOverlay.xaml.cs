@@ -15,7 +15,6 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Project_127.HelperClasses;
 using Project_127.SettingsStuff;
-using Project_127.SettingsStuff;
 using System.Diagnostics;
 
 namespace Project_127.Overlay
@@ -27,52 +26,131 @@ namespace Project_127.Overlay
 	{
 		// Open the NoteOverlayShit, Click Top Button, select 1-n TEXT Files. everything past that should be based on KeyInputs
 
+		// https://github.com/crclayton/WPF-DataBinding-Example/tree/master/WpfApplication2
 
-		public static string[] NotesLoaded = new string[0];
+		// https://stackoverflow.com/a/47582420
+
+		public static string[] NotesLoaded = { "Test-Note to show what it can do\nThis is in the next line\n\nThis is in the next Paragraph" };
 		public static int NotesLoadedIndex = 0;
+
+		public static NoteOverlayPages LoadNoteOverlayWithCustomPage = NoteOverlayPages.NoteFiles;
+
+		public static bool OverlayWasVisible = false;
+
+		public enum NoteOverlayPages
+		{
+			NoteFiles,
+			Keybinds,
+			Look
+		}
+
+		private NoteOverlayPages _NoteOverlayPage = NoteOverlayPages.NoteFiles;
+
+		public NoteOverlayPages NoteOverlayPage
+		{
+			get
+			{
+				return _NoteOverlayPage;
+			}
+			set
+			{
+				// Setting actual Enum to the correct Value
+				_NoteOverlayPage = value;
+
+				// Switch Value
+				switch (value)
+				{
+					// In Case: Settings
+					case NoteOverlayPages.NoteFiles:
+						MainWindow.MW.Width = 900;
+						MainWindow.MW.Grid_Preview.Visibility = Visibility.Hidden;
+
+						// Set actual Frame_Main Content to the correct Page
+						Frame_Notes.Content = new Project_127.Overlay.NoteOverlayPages.NoteOverlay_NoteFiles();
+						btn_Notes.Style = Application.Current.FindResource("btn_hamburgeritem_selected") as Style;
+
+						// Call Mouse_Over false on other Buttons where a page is behind
+						btn_Looks.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
+						btn_Keybindings.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
+						break;
+					case NoteOverlayPages.Keybinds:
+						MainWindow.MW.Width = 900;
+						MainWindow.MW.Grid_Preview.Visibility = Visibility.Hidden;
+
+						// Set actual Frame_Main Content to the correct Page
+						Frame_Notes.Content = new Project_127.Overlay.NoteOverlayPages.NoteOverlay_Keybinds();
+						btn_Keybindings.Style = Application.Current.FindResource("btn_hamburgeritem_selected") as Style;
+
+						// Call Mouse_Over false on other Buttons where a page is behind
+						btn_Looks.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
+						btn_Notes.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
+						break;
+					case NoteOverlayPages.Look:
+						MainWindow.MW.Width = 1600;
+						MainWindow.MW.Grid_Preview.Visibility = Visibility.Visible;
+
+						// Set actual Frame_Main Content to the correct Page
+						Frame_Notes.Content = new Project_127.Overlay.NoteOverlayPages.NoteOverlay_Look();
+						btn_Looks.Style = Application.Current.FindResource("btn_hamburgeritem_selected") as Style;
+
+						// Call Mouse_Over false on other Buttons where a page is behind
+						btn_Notes.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
+						btn_Keybindings.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
+						break;
+				}
+			}
+		}
 
 		public static GTAOverlay MyGTAOverlay;
 
 		public NoteOverlay()
 		{
-			// We currently need this here, normally this will be started by GameState (but this points to GTA V.exe as of right now)
-			NoteOverlay.InitGTAOverlay();
-
-			// We currently need this here, normally this will be started by WindowEventThingy (but this only starts or stops based on GTA V.exe)
-			KeyboardListener.Start();
-
-			// To get Back to real things, we gotta uncomment a few things in Globals.GameState Getter, 
-			//	as well as WindowChangeListener.WinEventproc
-			// as well as change target window to "Grand Theft Auto V" in GTAOverlay.cs
-			// as well as actually processing the keyboard inputs in KeyboardHandler.cs
-
 			InitializeComponent();
 
-			btn_OverlayHotkeyToggle.Content = Settings.KeyOverlayToggle;
-			btn_OverlayHotkeyScrollUp.Content = Settings.KeyOverlayScrollUp;
-			btn_OverlayHotkeyScrollDown.Content = Settings.KeyOverlayScrollDown;
-			btn_OverlayHotkeyScrollLeft.Content = Settings.KeyOverlayScrollLeft;
-			btn_OverlayHotkeyScrollRight.Content = Settings.KeyOverlayScrollRight;
+			NoteOverlayPage = LoadNoteOverlayWithCustomPage;
+			LoadNoteOverlayWithCustomPage = NoteOverlayPages.NoteFiles;
+
+			ButtonMouseOverMagic(btn_cb_Set_EnableOverlay);
+
 		}
 
 		public static void InitGTAOverlay()
 		{
+			//HelperClasses.Logger.Log("Trying to Init GTA Overlay");
 			if (MyGTAOverlay == null)
 			{
 				MyGTAOverlay = new GTAOverlay();
-				MyGTAOverlay.setTextColors(Color.FromArgb(255, 0, 255, 0), Color.Transparent);
-				MyGTAOverlay.setBackgroundColor(Color.FromArgb(102, Color.Black));
-				//MyGTAOverlay.setFont("consolas", 24, false, false, false);
-				MyGTAOverlay.setText("TestingSlashN\nTesting2SlashNSlashN\n\nTesting3SlashNSlashNslashN\n\n\nTesting4");
+				MyGTAOverlay.setTextColors(Settings.OverlayForeground, Color.Transparent);
+				MyGTAOverlay.setBackgroundColor(Settings.OverlayBackground);
+				MyGTAOverlay.setFont(Settings.OverlayTextFont, Settings.OverlayTextSize, false, false, false);
+				MyGTAOverlay.Position = Settings.OverlayLocation;
+				MyGTAOverlay.XMargin = Settings.OverlayMargin;
+				MyGTAOverlay.YMargin = Settings.OverlayMargin;
+				//MyGTAOverlay.Width = Settings.OverlayWidth;
+				//MyGTAOverlay.Height = Settings.OverlayHeight;
+				MyGTAOverlay.setText(NotesLoaded[0]);
+				NotesLoadedIndex = 0;
+				HelperClasses.Logger.Log("GTA Overlay initiated", 1);
+			}
+			else
+			{
+				//HelperClasses.Logger.Log("GTA Overlay already initiated", 1);
 			}
 		}
 
 		public static void DisposeGTAOverlay()
 		{
+			//HelperClasses.Logger.Log("Trying to Dispose GTA Overlay");
 			if (MyGTAOverlay != null)
 			{
+				OverlayWasVisible = false;
 				MyGTAOverlay.Dispose();
 				MyGTAOverlay = null;
+				HelperClasses.Logger.Log("GTA Overlay disposed", 1);
+			}
+			else
+			{
+				//HelperClasses.Logger.Log("GTA Overlay already disposed", 1);
 			}
 		}
 
@@ -100,15 +178,55 @@ namespace Project_127.Overlay
 			}
 		}
 
-		public static void OverlayToggle()
+		public static void OverlaySetVisible()
 		{
-			if (MyGTAOverlay.Visible)
+			if (IsOverlayInit())
+			{
+				MyGTAOverlay.Visible = true;
+			}
+		}
+
+		public static void OverlaySetInvisible()
+		{
+			if (IsOverlayInit())
 			{
 				MyGTAOverlay.Visible = false;
 			}
+		}
+
+		public static bool IsOverlayInit()
+		{
+			if (MyGTAOverlay == null)
+			{
+				return false;
+			}
 			else
 			{
-				MyGTAOverlay.Visible = true;
+				return true;
+			}
+		}
+
+		public static bool IsOverlayVisible()
+		{
+			if (IsOverlayInit())
+			{
+				return MyGTAOverlay.Visible;
+			}
+			else
+			{
+				return false;
+			}
+		}
+
+		public static void OverlayToggle()
+		{
+			if (IsOverlayVisible())
+			{
+				OverlaySetInvisible();
+			}
+			else
+			{
+				OverlaySetVisible();
 			}
 		}
 
@@ -127,7 +245,7 @@ namespace Project_127.Overlay
 		public static void OverlayNoteNext()
 		{
 			int NotesLoadedNewIndex = NotesLoadedIndex;
-			if (NotesLoadedIndex == NotesLoaded.Length - 1)
+			if (NotesLoadedNewIndex == NotesLoaded.Length - 1)
 			{
 				NotesLoadedNewIndex = 0;
 			}
@@ -140,17 +258,18 @@ namespace Project_127.Overlay
 
 		public static void ChangeNoteIndex(int pNotesLoadedNewIndex)
 		{
-			if (pNotesLoadedNewIndex > 0 && pNotesLoadedNewIndex <= NotesLoaded.Length - 1)
+			if (pNotesLoadedNewIndex >= 0 && pNotesLoadedNewIndex <= NotesLoaded.Length - 1)
 			{
-				HelperClasses.Logger.Log("NotesLoadedIndex is now: " + NotesLoadedIndex);
-				NoteOverlay.MyGTAOverlay.setText(NotesLoaded[NotesLoadedIndex]);
+				HelperClasses.Logger.Log("NotesLoadedIndex is now: " + pNotesLoadedNewIndex);
+				NotesLoadedIndex = pNotesLoadedNewIndex;
+				NoteOverlay.MyGTAOverlay.setText(NotesLoaded[pNotesLoadedNewIndex]);
 			}
 		}
 
 		public static void OverlayNotePrev()
 		{
 			int NotesLoadedNewIndex = NotesLoadedIndex;
-			if (NotesLoadedIndex == 0)
+			if (NotesLoadedNewIndex == 0)
 			{
 				NotesLoadedNewIndex = NotesLoaded.Length - 1;
 			}
@@ -161,82 +280,88 @@ namespace Project_127.Overlay
 			ChangeNoteIndex(NotesLoadedNewIndex);
 		}
 
-		private void btn_NoteFile_Click(object sender, RoutedEventArgs e)
+		public static void OverlayNoteChapterNext()
 		{
-			string SelectedFiles = HelperClasses.FileHandling.OpenDialogExplorer(FileHandling.PathDialogType.File, "Select the Notes Files you want to load.", LauncherLogic.ZIPFilePath, true, "TEXT Files|*.txt*");
-			string[] AllFiles = SelectedFiles.Split(',');
-			string[] NotesLoading = new string[AllFiles.Length];
 
-			for (int i = 0; i <= AllFiles.Length - 1; i++)
-			{
-				string[] MyFileContents = HelperClasses.FileHandling.ReadFile(AllFiles[i]).ToArray();
-				string tempFileContent = "";
-				for (int j = 0; j <= MyFileContents.Count() - 1; j++)
-				{
-					// This leaves a \n at the end of the file...this is wanted behaviour tho
-					tempFileContent += MyFileContents[j] + "\n";
-				}
-				NotesLoading[i] = tempFileContent;
-			}
-
-			NoteOverlay.NotesLoaded = NotesLoading;
-			NoteOverlay.NotesLoadedIndex = 0;
-			NoteOverlay.MyGTAOverlay.setText(NotesLoaded[0]);
 		}
 
-		private async void btn_OverlayHotkeyToggle_Click(object sender, RoutedEventArgs e)
+		public static void OverlayNoteChapterPrev()
 		{
-			((Button)sender).Content = "[Press new Key Now]";
-			Keys MyNewKey = await KeyboardHandler.GetNextKeyPress();
-			if (MyNewKey != Keys.None && MyNewKey != Keys.Escape)
-			{
-				Settings.KeyOverlayToggle = MyNewKey;
-			}
-			((Button)sender).Content = Settings.KeyOverlayToggle;
+
 		}
 
-		private async void btn_OverlayHotkeyScrollUp_Click(object sender, RoutedEventArgs e)
+	
+
+
+		private void btn_cb_Click(object sender, RoutedEventArgs e)
 		{
-			((Button)sender).Content = "[Press new Key Now]";
-			Keys MyNewKey = await KeyboardHandler.GetNextKeyPress();
-			if (MyNewKey != Keys.None && MyNewKey != Keys.Escape)
-			{
-				Settings.KeyOverlayScrollUp = MyNewKey;
-			}
-			((Button)sender).Content = Settings.KeyOverlayScrollUp;
+			Settings.EnableOverlay = !Settings.EnableOverlay;
+			ButtonMouseOverMagic((Button)sender);
 		}
 
-		private async void btn_OverlayHotkeyScrollDown_Click(object sender, RoutedEventArgs e)
+		private void btn_MouseEnter(object sender, MouseEventArgs e)
 		{
-			((Button)sender).Content = "[Press new Key Now]";
-			Keys MyNewKey = await KeyboardHandler.GetNextKeyPress();
-			if (MyNewKey != Keys.None && MyNewKey != Keys.Escape)
-			{
-				Settings.KeyOverlayScrollDown = MyNewKey;
-			}
-			((Button)sender).Content = Settings.KeyOverlayScrollDown;
+			Button myBtn = (Button)sender;
+			ButtonMouseOverMagic(myBtn);
 		}
 
-		private async void btn_OverlayHotkeyScrollRight_Click(object sender, RoutedEventArgs e)
+		private void btn_MouseLeave(object sender, MouseEventArgs e)
 		{
-			((Button)sender).Content = "[Press new Key Now]";
-			Keys MyNewKey = await KeyboardHandler.GetNextKeyPress();
-			if (MyNewKey != Keys.None && MyNewKey != Keys.Escape)
-			{
-				Settings.KeyOverlayScrollRight = MyNewKey;
-			}
-			((Button)sender).Content = Settings.KeyOverlayScrollRight;
+			Button myBtn = (Button)sender;
+			ButtonMouseOverMagic(myBtn);
 		}
 
-		private async void btn_OverlayHotkeyScrollLeft_Click(object sender, RoutedEventArgs e)
+
+
+		/// <summary>
+		/// Sets the Background for one specific CheckboxButton. Needs the second property to know if it should be checked or not
+		/// </summary>
+		/// <param name="myBtn"></param>
+		/// <param name="pChecked"></param>
+		private void SetCheckBoxBackground(Button myBtn, bool pChecked)
 		{
-			((Button)sender).Content = "[Press new Key Now]";
-			Keys MyNewKey = await KeyboardHandler.GetNextKeyPress();
-			if (MyNewKey != Keys.None && MyNewKey != Keys.Escape)
+			string BaseURL = @"Artwork/checkbox";
+			if (pChecked)
 			{
-				Settings.KeyOverlayScrollLeft = MyNewKey;
+				BaseURL += "_true";
 			}
-			((Button)sender).Content = Settings.KeyOverlayScrollLeft;
+			else
+			{
+				BaseURL += "_false";
+			}
+			if (myBtn.IsMouseOver)
+			{
+				BaseURL += "_mo.png";
+			}
+			else
+			{
+				BaseURL += ".png";
+			}
+			MainWindow.MW.SetControlBackground(myBtn, BaseURL);
+		}
+
+		/// <summary>
+		/// Logic behind all MouseOver Stuff. Checkboxes and Refresh Button
+		/// </summary>
+		/// <param name="myBtn"></param>
+		private void ButtonMouseOverMagic(Button myBtn)
+		{
+			SetCheckBoxBackground(myBtn, Settings.EnableOverlay);
+		}
+
+		private void btn_Notes_Click(object sender, RoutedEventArgs e)
+		{
+			NoteOverlayPage = NoteOverlayPages.NoteFiles;
+		}
+
+		private void btn_Looks_Click(object sender, RoutedEventArgs e)
+		{
+			NoteOverlayPage = NoteOverlayPages.Look;
+		}
+
+		private void btn_Keybindings_Click(object sender, RoutedEventArgs e)
+		{
+			NoteOverlayPage = NoteOverlayPages.Keybinds;
 		}
 	}
 }

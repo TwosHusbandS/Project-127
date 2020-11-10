@@ -19,6 +19,8 @@ using Project_127.HelperClasses;
 using Project_127.Overlay;
 using Project_127.Popups;
 using Project_127.SettingsStuff;
+using System.Windows.Resources;
+using System.Windows.Media.Imaging;
 
 namespace Project_127
 {
@@ -157,43 +159,74 @@ namespace Project_127
 			Previously Used Settings Variables, we cannot use anymore, since they are written,
 			and we are not able to reset only them (for now...):
 				- "FileFolder"
+				- "EnableAutoSteamCoreFix"
+			    - "EnableNohboardBurhac"
+				- "Theme"
 			*/
 
+			// Internal Settings we dont show the user
 			{"FirstLaunch", "True" },
 			{"LastLaunchedVersion", Globals.ProjectVersion.ToString() },
 			{"InstallationPath", Process.GetCurrentProcess().MainModule.FileName.Substring(0, Process.GetCurrentProcess().MainModule.FileName.LastIndexOf('\\')) },
+			{"EnableRememberMe", "False" },
+
+			// Project 1.27 Settings
 			{"GTAVInstallationPath", ""},
 			{"ZIPExtractionPath", Process.GetCurrentProcess().MainModule.FileName.Substring(0, Process.GetCurrentProcess().MainModule.FileName.LastIndexOf('\\')) },
-			{"EnableOverlay", "True"},
 			{"EnableLogging", "True"},
 			{"EnableCopyFilesInsteadOfHardlinking", "False"},
-			{"EnablePreOrderBonus", "False"},
-			{"EnableOnlyAutoStartProgramsWhenDowngraded", "True"},
+			
+			// GTA V Settings
 			{"Retailer", "Steam"},
 			{"LanguageSelected", "English"},
-			{"EnableDontLaunchThroughSteam", "False"},
 			{"InGameName", "HiMomImOnYoutube"},
+			{"EnablePreOrderBonus", "False"},
+			{"EnableDontLaunchThroughSteam", "False"},
+   
+			// Extra Features
+			{"EnableOverlay", "False"},
+			{"EnableAutoStartJumpScript", "True" },
+			{"JumpScriptKey1", "32" },
+			{"JumpScriptKey2", "76" },
 			{"EnableAutoSetHighPriority", "True" },
-			{"EnableAutoSteamCoreFix", "True" },
+
+			// Auto start Shit
+			{"EnableOnlyAutoStartProgramsWhenDowngraded", "True"},
 			{"EnableAutoStartLiveSplit", "True" },
 			{"PathLiveSplit", @"C:\Some\Path\SomeFile.exe" },
 			{"EnableAutoStartStreamProgram", "True" },
 			{"PathStreamProgram", @"C:\Some\Path\SomeFile.exe" },
 			{"EnableAutoStartFPSLimiter", "True" },
 			{"PathFPSLimiter", @"C:\Some\Path\SomeFile.exe" },
-			{"EnableAutoStartJumpScript", "True" },
-			{"JumpScriptKey1", "32" },
-			{"JumpScriptKey2", "76" },
-			{"KeyOverlayToggle", "45" },
-			{"KeyOverlayScrollLeft", "37" },
-			{"KeyOverlayScrollUp", "38" },
-			{"KeyOverlayScrollRight", "39" },
-			{"KeyOverlayScrollDown", "40" },
 			{"EnableAutoStartNohboard", "True" },
-			{"EnableNohboardBurhac", "True" },
 			{"PathNohboard", @"C:\Some\Path\SomeFile.exe" },
-			{"Theme", @"Empty" },
-			{"EnableRememberMe", "False" }
+
+			// Overlay shit
+			{"KeyOverlayToggle", "163" },
+			{"KeyOverlayScrollUp", "109" },
+			{"KeyOverlayScrollDown", "107" },
+			{"KeyOverlayScrollRight", "106" },
+			{"KeyOverlayScrollLeft", "111" },
+			{"KeyOverlayNoteNext", "103" },
+			{"KeyOverlayNotePrev", "105" },
+
+
+			{"OverlayBackground", "100,0,0,0" },
+			{"OverlayForeground", "255,255,0,255" },
+			{"OverlayLocation", "TopLeft" },
+			{"OverlayMargin", "10" },
+			{"OverlayWidth", "580" },
+			{"OverlayHeight", "500" },
+			{"OverlayTextFont", "Arial" },
+			{"OverlayTextSize", "24" },
+
+			{"OverlayNotesMain",""},
+			{"OverlayNotesPresetA",""},
+			{"OverlayNotesPresetB",""},
+			{"OverlayNotesPresetC",""},
+			{"OverlayNotesPresetD",""},
+			{"OverlayNotesPresetE",""},
+			{"OverlayNotesPresetF",""},
 		};
 
 		/// <summary>
@@ -260,9 +293,6 @@ namespace Project_127
 			// Last Launched Version Cleanup
 			if (Settings.LastLaunchedVersion < Globals.ProjectVersion)
 			{
-				// Do things we want to do
-				Version GiveWarningMessageVersion = new Version("0.0.3.1");
-
 				if (Settings.LastLaunchedVersion < new Version("0.0.3.1"))
 				{
 					new Popup(Popup.PopupWindowTypes.PopupOk,
@@ -284,6 +314,32 @@ namespace Project_127
 					" - The Project 1.27 Team").ShowDialog();
 				}
 
+				if (Settings.LastLaunchedVersion < new Version("1.1.0.0"))
+				{
+
+					Settings.JumpScriptKey1 = System.Windows.Forms.Keys.Space;
+					Settings.JumpScriptKey2 = System.Windows.Forms.Keys.L;
+
+					if (LauncherLogic.InstallationState != LauncherLogic.InstallationStates.Downgraded)
+					{
+						FileHandling.deleteFile(LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\asmjit.dll");
+						FileHandling.deleteFile(LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\botan.dll");
+						FileHandling.deleteFile(LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\launc.dll");
+						FileHandling.deleteFile(LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\origi_socialclub.dll");
+						FileHandling.deleteFile(LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\Readme.txt");
+						FileHandling.deleteFile(LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\socialclub.dll");
+						FileHandling.deleteFile(LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\tinyxml2.dll");
+					}
+
+					FileHandling.deleteFile(LauncherLogic.UpgradeFilePath.TrimEnd('\\') + @"\asmjit.dll");
+					FileHandling.deleteFile(LauncherLogic.UpgradeFilePath.TrimEnd('\\') + @"\botan.dll");
+					FileHandling.deleteFile(LauncherLogic.UpgradeFilePath.TrimEnd('\\') + @"\launc.dll");
+					FileHandling.deleteFile(LauncherLogic.UpgradeFilePath.TrimEnd('\\') + @"\origi_socialclub.dll");
+					FileHandling.deleteFile(LauncherLogic.UpgradeFilePath.TrimEnd('\\') + @"\Readme.txt");
+					FileHandling.deleteFile(LauncherLogic.UpgradeFilePath.TrimEnd('\\') + @"\socialclub.dll");
+					FileHandling.deleteFile(LauncherLogic.UpgradeFilePath.TrimEnd('\\') + @"\tinyxml2.dll");
+				}
+
 				Settings.LastLaunchedVersion = Globals.ProjectVersion;
 			}
 
@@ -303,12 +359,18 @@ namespace Project_127
 			// Intepreting all Command Line shit
 			CommandLineArgumentIntepretation();
 
+			// Checks if Update hit
+			LauncherLogic.HandleUpdates();
+
+			// Rolling Log stuff
+			HelperClasses.Logger.RollingLog();
+
 			// Starting the Dispatcher Timer for the automatic updates of the GTA V Button
 			MyDispatcherTimer = new System.Windows.Threading.DispatcherTimer();
-			MyDispatcherTimer.Tick += new EventHandler(pMW.UpdateGUIDispatcherTimer);
+			MyDispatcherTimer.Tick += new EventHandler(MainWindow.MW.UpdateGUIDispatcherTimer);
 			MyDispatcherTimer.Interval = TimeSpan.FromMilliseconds(2500);
 			MyDispatcherTimer.Start();
-			pMW.UpdateGUIDispatcherTimer();
+			MainWindow.MW.UpdateGUIDispatcherTimer();
 		}
 
 		/// <summary>
@@ -332,7 +394,7 @@ namespace Project_127
 					{
 						Tmp = (Globals.BackgroundImages)System.Enum.Parse(typeof(Globals.BackgroundImages), Value);
 						Globals.BackgroundImage = Tmp;
-						MainWindow.MW.SetControlBackground(MainWindow.MW, Globals.GetBackGroundPath());
+						MainWindow.MW.SetBackground(Globals.GetBackGroundPath());
 					}
 					catch { }
 				}
@@ -368,7 +430,7 @@ namespace Project_127
 		/// <summary>
 		/// Method which does the UpdateCheck on Startup
 		/// </summary>
-		private static void CheckForUpdate()
+		public static void CheckForUpdate()
 		{
 			// Check online File for Version.
 			string MyVersionOnlineString = HelperClasses.FileHandling.GetXMLTagContent(HelperClasses.FileHandling.GetStringFromURL(Globals.URL_AutoUpdate), "version");
@@ -651,7 +713,13 @@ namespace Project_127
 					HamburgerMenuState = HamburgerMenuStates.Visible;
 				}
 
-				MainWindow.MW.SetControlBackground(MainWindow.MW, GetBackGroundPath());
+				if (value != PageStates.NoteOverlay)
+				{
+					MainWindow.MW.Width = 900;
+					MainWindow.MW.Grid_Preview.Visibility = Visibility.Hidden;
+				}
+
+				MainWindow.MW.SetBackground(Globals.GetBackGroundPath());
 
 				// Switch Value
 				switch (value)
@@ -754,7 +822,7 @@ namespace Project_127
 			set
 			{
 				_BackgroundImage = value;
-				MainWindow.MW.SetControlBackground(MainWindow.MW, GetBackGroundPath());
+				MainWindow.MW.SetBackground(GetBackGroundPath());
 			}
 		}
 
@@ -784,7 +852,8 @@ namespace Project_127
 			set
 			{
 				_HamburgerMenuState = value;
-				MainWindow.MW.SetControlBackground(MainWindow.MW, GetBackGroundPath());
+				MainWindow.MW.SetBackground(Globals.GetBackGroundPath());
+
 
 				if (value == HamburgerMenuStates.Visible)
 				{
@@ -1001,10 +1070,15 @@ namespace Project_127
 		// ReadMe Window
 
 		public static Brush ReadME_Inner_Background { get; private set; } = SetOpacity(MyColorBlack, 50);
-		public static Brush ReadME_Inner_BorderBrush { get; private set; } = MyColorOffWhite;
+		public static Brush ReadME_Inner_BorderBrush { get; private set; } = MyColorWhite;
 		public static Thickness ReadME_Inner_BorderThickness { get; private set; } = new Thickness(2);
 		public static CornerRadius ReadME_Inner_CornerRadius { get; private set; } = new CornerRadius(10);
 
+		// Using a lot of settings stuff (grid-background, grid second / alternative row color, button styles inside grid) on the noteoverlay...whatevs XD
+
+		public static Brush NO_Slider_Track_Brush { get; private set; } = MyColorOffWhite;
+		public static Brush NO_Slider_Thumb_Brush { get; private set; } = MyColorOffWhite;
+		public static Brush NO_Slider_Thumb_MO_Brush { get; private set; } = MyColorOffBlack;
 
 
 		//public static Brush SE_LabelForeground { get; private set; } = MyColorWhite;

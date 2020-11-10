@@ -18,16 +18,26 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <Label Style="{StaticResource lbl}" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Left" FontSize="24" Height="60" VerticalAlignment="Bottom" Margin="5,0,0,0" Content="Settings"/>
+        <Label Style="{StaticResource lbl}" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Left" FontSize="24" Height="60" VerticalAlignment="Bottom" Margin="0,0,0,0" Content="Settings"/>
         <Button Style="{StaticResource btn_SmallIcon}"  MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"  Grid.Row="0" Margin="0,15,55,0" VerticalAlignment="Top" HorizontalAlignment="Right" x:Name="btn_Refresh"  ToolTip="Refresh (load Settings from Registry)"  Height="40" Width="40" Click="btn_Refresh_Click"/>
 
-        <Button Style="{StaticResource btn_SM}" x:Name="btn_Reset" Grid.Row="2" Grid.Column="0" Margin="10" Content="Reset" Click="btn_Reset_Click"/>
+        <Button Style="{StaticResource btn_SM}" x:Name="btn_Reset" Grid.Row="2" Grid.Column="0" Margin="0,10" Content="Reset Settings" Click="btn_Reset_Click"/>
 
-        <Border  Grid.Row="1" Margin="10,0" BorderBrush="{x:Static local:Globals.SE_BorderBrush_Inner}" BorderThickness="3" Background="{x:Static local:Globals.SE_RowBackground}">
+        <Border  Grid.Row="1" Margin="0,0" BorderBrush="{x:Static local:Globals.SE_BorderBrush_Inner}" BorderThickness="2" Background="{x:Static local:Globals.SE_RowBackground}">
             <ScrollViewer>
                 <StackPanel x:Name="sp_Settings">
                     <Grid x:Name="Grid_Set_GTAVInstallationPath">
                         <Grid.RowDefinitions>
+                            <RowDefinition Height="40"/>
+                            <RowDefinition Height="40"/>
+                            <RowDefinition Height="40"/>
+                            <RowDefinition Height="40"/>
+                            <RowDefinition Height="40"/>
+                            <RowDefinition Height="40"/>
+                            <RowDefinition Height="40"/>
+                            <RowDefinition Height="40"/>
+                            <RowDefinition Height="40"/>
+                            <RowDefinition Height="40"/>
                             <RowDefinition Height="40"/>
                             <RowDefinition Height="40"/>
                             <RowDefinition Height="40"/>
@@ -64,92 +74,119 @@
                         <Rectangle Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3" Fill="Transparent"/>
                         <Rectangle Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3" Fill="{x:Static local:Globals.SE_AlternateRowBackground}"/>
                         <Rectangle Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="3" Fill="Transparent"/>
-                        <Rectangle Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="3" Fill="Transparent"/>
+                        <Rectangle Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="3" Fill="{x:Static local:Globals.SE_AlternateRowBackground}"/>
                         <Rectangle Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="3" Fill="Transparent"/>
                         <Rectangle Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="3" Fill="{x:Static local:Globals.SE_AlternateRowBackground}"/>
                         <Rectangle Grid.Row="9" Grid.Column="0" Grid.ColumnSpan="3" Fill="Transparent"/>
-                        <Rectangle Grid.Row="10" Grid.Column="0" Grid.ColumnSpan="3" Fill="{x:Static local:Globals.SE_AlternateRowBackground}"/>
-                        <Rectangle Grid.Row="11" Grid.Column="0" Grid.ColumnSpan="3" Fill="Transparent"/>
-                        <Rectangle Grid.Row="12" Grid.Column="0" Grid.ColumnSpan="3" Fill="{x:Static local:Globals.SE_AlternateRowBackground}"/>
-                        <Rectangle Grid.Row="13" Grid.Column="0" Grid.ColumnSpan="3" Fill="Transparent"/>
+                        <Rectangle Grid.Row="10" Grid.Column="0" Grid.ColumnSpan="3" Fill="Transparent"/>
+                        <Rectangle Grid.Row="11" Grid.Column="0" Grid.ColumnSpan="3" Fill="{x:Static local:Globals.SE_AlternateRowBackground}"/>
+                        <Rectangle Grid.Row="12" Grid.Column="0" Grid.ColumnSpan="3" Fill="Transparent"/>
+                        <Rectangle Grid.Row="13" Grid.Column="0" Grid.ColumnSpan="3" Fill="{x:Static local:Globals.SE_AlternateRowBackground}"/>
                         <Rectangle Grid.Row="14" Grid.Column="0" Grid.ColumnSpan="3" Fill="Transparent"/>
                         <Rectangle Grid.Row="15" Grid.Column="0" Grid.ColumnSpan="3" Fill="{x:Static local:Globals.SE_AlternateRowBackground}"/>
                         <Rectangle Grid.Row="16" Grid.Column="0" Grid.ColumnSpan="3" Fill="Transparent"/>
-                        <Rectangle Grid.Row="17" Grid.Column="0" Grid.ColumnSpan="3" Fill="{x:Static local:Globals.SE_AlternateRowBackground}"/>
-                        <Rectangle Grid.Row="18" Grid.Column="0" Grid.ColumnSpan="3" Fill="Transparent"/>
-                        <Rectangle Grid.Row="19" Grid.Column="0" Grid.ColumnSpan="3" Fill="{x:Static local:Globals.SE_AlternateRowBackground}"/>
-                        <Rectangle Grid.Row="20" Grid.Column="0" Grid.ColumnSpan="3" Fill="Transparent"/>
-                        <Rectangle Grid.Row="21" Grid.Column="0" Grid.ColumnSpan="3" Fill="{x:Static local:Globals.SE_AlternateRowBackground}"/>
-                        <Rectangle Grid.Row="22" Grid.Column="0" Grid.ColumnSpan="3" Fill="Transparent"/>
-                        <Rectangle Grid.Row="23" Grid.Column="0" Grid.ColumnSpan="3" Fill="{x:Static local:Globals.SE_AlternateRowBackground}"/>
+                        <Rectangle Grid.Row="17" Grid.Column="0" Grid.ColumnSpan="3" Fill="Transparent"/>
+                        <Rectangle Grid.Row="18" Grid.Column="0" Grid.ColumnSpan="3" Fill="{x:Static local:Globals.SE_AlternateRowBackground}"/>
+                        <Rectangle Grid.Row="19" Grid.Column="0" Grid.ColumnSpan="3" Fill="Transparent"/>
+                        <Rectangle Grid.Row="20" Grid.Column="0" Grid.ColumnSpan="3" Fill="{x:Static local:Globals.SE_AlternateRowBackground}"/>
+                        <Rectangle Grid.Row="21" Grid.Column="0" Grid.ColumnSpan="3" Fill="Transparent"/>
+                        <Rectangle Grid.Row="22" Grid.Column="0" Grid.ColumnSpan="3" Fill="{x:Static local:Globals.SE_AlternateRowBackground}"/>
+                        <Rectangle Grid.Row="23" Grid.Column="0" Grid.ColumnSpan="3" Fill="Transparent"/>
+                        <Rectangle Grid.Row="24" Grid.Column="0" Grid.ColumnSpan="3" Fill="{x:Static local:Globals.SE_AlternateRowBackground}"/>
+                        <Rectangle Grid.Row="25" Grid.Column="0" Grid.ColumnSpan="3" Fill="Transparent"/>
+                        <Rectangle Grid.Row="26" Grid.Column="0" Grid.ColumnSpan="3" Fill="{x:Static local:Globals.SE_AlternateRowBackground}"/>
+                        <Rectangle Grid.Row="27" Grid.Column="0" Grid.ColumnSpan="3" Fill="Transparent"/>
+                        <Rectangle Grid.Row="28" Grid.Column="0" Grid.ColumnSpan="3" Fill="{x:Static local:Globals.SE_AlternateRowBackground}"/>
+                        <Rectangle Grid.Row="29" Grid.Column="0" Grid.ColumnSpan="3" Fill="Transparent"/>
+                        <Rectangle Grid.Row="30" Grid.Column="0" Grid.ColumnSpan="3" Fill="{x:Static local:Globals.SE_AlternateRowBackground}"/>
+                        <Rectangle Grid.Row="31" Grid.Column="0" Grid.ColumnSpan="3" Fill="Transparent"/>
+                        <Rectangle Grid.Row="32" Grid.Column="0" Grid.ColumnSpan="3" Fill="{x:Static local:Globals.SE_AlternateRowBackground}"/>
+                        <Rectangle Grid.Row="33" Grid.Column="0" Grid.ColumnSpan="3" Fill="Transparent"/>
 
                         <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Content="Project 1.27 Settings" Style="{StaticResource lbl_Set_Header}"/>
 
-                        <!--<Label Grid.Row="1" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="GTA V Installation Path: "/>-->
-                        <Button Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource btn_SE_Path}" x:Name="btn_Set_GTAVInstallationPath" Click="btn_Path_Click" MouseRightButtonDown="btn_Path_RightClick"/>
+                        <Button Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource btn_SE_Path}" x:Name="btn_CheckForUpdate" Click="btn_CheckForUpdate_Click" Content="Check for Update"/>
 
-                        <!--<Label Grid.Row="2" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="ZIP Extraction Path: "/>-->
-                        <Button Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource btn_SE_Path}" x:Name="btn_Set_ZIPExtractionPath" Click="btn_Path_Click" MouseRightButtonDown="btn_Path_RightClick"/>
+                        <Button Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource btn_SE_Path}" x:Name="btn_Import_Zip" Click="btn_Import_Zip_Click" Content="Click Me!"/>
 
-                        <!--<Label Grid.Row="3" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Import ZIP Manually"/>-->
-                        <Button Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource btn_SE_Path}" x:Name="btn_Import_Zip" Click="btn_Import_Zip_Click" Content="Click Me!"/>
+                        <Button Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource btn_SE_Path}" x:Name="btn_Reset_Everything" Click="btn_Reset_Everything_Click" Content="Reset Everything"/>
+                        
+                        <Button Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource btn_SE_Path}" x:Name="btn_RepairGTA" Click="btn_RepairGTA_Click" Content="Repair GTA V Installation"/>
+                        
+                        <Button Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource btn_SE_Path}" x:Name="btn_Set_GTAVInstallationPath" Click="btn_Path_Click" MouseRightButtonDown="btn_Path_RightClick"/>
 
-                        <Label Grid.Row="4" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Enable Logging for Project 1.27"/>
-                        <Button Grid.Row="4" Grid.Column="1" x:Name="btn_cb_Set_EnableLogging" Style="{StaticResource btn_cb}" Click="btn_cb_Click"  MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
+                        <Button Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource btn_SE_Path}" x:Name="btn_Set_ZIPExtractionPath" Click="btn_Path_Click" MouseRightButtonDown="btn_Path_RightClick"/>
 
-                        <Label Grid.Row="5" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Use Copying instead of Hardlinking"/>
-                        <Button Grid.Row="5" Grid.Column="1" x:Name="btn_cb_Set_CopyFilesInsteadOfHardlinking" Style="{StaticResource btn_cb}" Click="btn_cb_Click"  MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
+                        <Label Grid.Row="7" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Enable Logging for Project 1.27"/>
+                        <Button Grid.Row="7" Grid.Column="1" x:Name="btn_cb_Set_EnableLogging" Style="{StaticResource btn_cb}" Click="btn_cb_Click"  MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
 
-                        <Label Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2" Content="GTA V Settings" Style="{StaticResource lbl_Set_Header}"/>
+                        <Label Grid.Row="8" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Use Copying instead of Hardlinking"/>
+                        <Button Grid.Row="8" Grid.Column="1" x:Name="btn_cb_Set_CopyFilesInsteadOfHardlinking" Style="{StaticResource btn_cb}" Click="btn_cb_Click"  MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
 
-                        <Label Grid.Row="7" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="GTA V Retailer: "/>
-                        <ComboBox Grid.Row="7" Grid.Column="1" Margin="10,5" Style="{StaticResource cobo}" x:Name="combox_Set_Retail" SelectionChanged="combox_Set_Retail_SelectionChanged"/>
+                        <Label Grid.Row="9" Grid.Column="0" Grid.ColumnSpan="2" Content="GTA V Settings" Style="{StaticResource lbl_Set_Header}"/>
 
-                        <Label Grid.Row="8" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="GTA V Language: "/>
-                        <ComboBox Grid.Row="8" Grid.Column="1" Margin="10,5" Style="{StaticResource cobo}" x:Name="combox_Set_LanguageSelected" SelectionChanged="combox_Set_LanguageSelected_SelectionChanged"/>
+                        <Label Grid.Row="10" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="GTA V Retailer: "/>
+                        <ComboBox Grid.Row="10" Grid.Column="1" Margin="10,5" Style="{StaticResource cobo}" x:Name="combox_Set_Retail" SelectionChanged="combox_Set_Retail_SelectionChanged"/>
 
-                        <Button Grid.Row="9" Grid.Column="0" Grid.ColumnSpan="2" x:Name="btn_Set_ImportGTAVSettings"  Style="{StaticResource btn_SE_Path}" Content="Import GTA V Settings" Click="btn_Set_ImportGTAVSettings_Click" MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
+                        <Label Grid.Row="11" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="GTA V Language: "/>
+                        <ComboBox Grid.Row="11" Grid.Column="1" Margin="10,5" Style="{StaticResource cobo}" x:Name="combox_Set_LanguageSelected" SelectionChanged="combox_Set_LanguageSelected_SelectionChanged"/>
 
-                        <Label Grid.Row="10" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="GTA V In-Game Name: "/>
-                        <TextBox Grid.Row="10" Grid.Column="1" Style="{StaticResource tb}" x:Name="tb_Set_InGameName" LostFocus="tb_Set_InGameName_LostFocus"/>
+                        <Button Grid.Row="12" Grid.Column="0" Grid.ColumnSpan="2" x:Name="btn_Set_ImportGTAVSettings"  Style="{StaticResource btn_SE_Path}" Content="Import GTA V Settings" Click="btn_Set_ImportGTAVSettings_Click" MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
 
-                        <Label Grid.Row="11" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Enable In-Game Pre-order bonus"/>
-                        <Button Grid.Row="11" Grid.Column="1" x:Name="btn_cb_Set_EnablePreOrderBonus"  Style="{StaticResource btn_cb}" Click="btn_cb_Click" MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
+                        <Label Grid.Row="13" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="GTA V In-Game Name: "/>
+                        <TextBox Grid.Row="13" Grid.Column="1" Style="{StaticResource tb}" x:Name="tb_Set_InGameName" LostFocus="tb_Set_InGameName_LostFocus"/>
 
-                        <Label Grid.Row="12" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Hide from Steam"/>
-                        <Button Grid.Row="12" Grid.Column="1" x:Name="btn_cb_Set_EnableDontLaunchThroughSteam"  Style="{StaticResource btn_cb}" Click="btn_cb_Click" MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
+                        <Label Grid.Row="14" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Enable In-Game Pre-order bonus"/>
+                        <Button Grid.Row="14" Grid.Column="1" x:Name="btn_cb_Set_EnablePreOrderBonus"  Style="{StaticResource btn_cb}" Click="btn_cb_Click" MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
 
-                        <Label Grid.Row="13" Grid.Column="0" Grid.ColumnSpan="2" Content="Automating Game Launch" Style="{StaticResource lbl_Set_Header}"/>
+                        <Label Grid.Row="15" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Hide from Steam"/>
+                        <Button Grid.Row="15" Grid.Column="1" x:Name="btn_cb_Set_EnableDontLaunchThroughSteam"  Style="{StaticResource btn_cb}" Click="btn_cb_Click" MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
 
-                        <Label Grid.Row="14" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Automatically set process priority of GTA to 'High'"/>
-                        <Button Grid.Row="14" Grid.Column="1" x:Name="btn_cb_Set_AutoSetHighPriority"  Style="{StaticResource btn_cb}" Click="btn_cb_Click"  MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
+                        <Label Grid.Row="16" Grid.Column="0" Grid.ColumnSpan="2" Content="Extra Features" Style="{StaticResource lbl_Set_Header}"/>
 
-                        <Label Grid.Row="15" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Only auto-start programs below when Downgraded"/>
-                        <Button Grid.Row="15" Grid.Column="1" x:Name="btn_cb_Set_OnlyAutoStartProgramsWhenDowngraded"  Style="{StaticResource btn_cb}" Click="btn_cb_Click"  MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
+                        <Label Grid.Row="17" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Enable Project 1.27 Notes - Overlay"/>
+                        <Button Grid.Row="17" Grid.Column="1" x:Name="btn_cb_Set_EnableOverlay"  Style="{StaticResource btn_cb}" Click="btn_cb_Click"  MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
 
-                        <Label Grid.Row="16" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Automatically start LiveSplit on game launch"/>
-                        <Button Grid.Row="16" Grid.Column="1" x:Name="btn_cb_Set_EnableAutoStartLiveSplit"  Style="{StaticResource btn_cb}" Click="btn_cb_Click"  MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
+                        <Button Grid.Row="18" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource btn_SE_Path}" x:Name="btn_Set_Overlay_Notes" Click="btn_Set_Overlay_Notes_Click" Content="Change Notes of Overlay"/>
 
-                        <!--<Label Grid.Row="17" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Live-Split Path: "/>-->
-                        <Button Grid.Row="17" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource btn_SE_Path}" x:Name="btn_Set_PathLiveSplit" Click="btn_Path_Click" MouseRightButtonDown="btn_Path_RightClick"/>
+                        <Button Grid.Row="19" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource btn_SE_Path}" x:Name="btn_Set_Overlay_Looks" Click="btn_Set_Overlay_Looks_Click" Content="Change Looks of Overlay"/>
 
-                        <Label Grid.Row="18" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Automatically start FPS Limiter on game launch"/>
-                        <Button Grid.Row="18" Grid.Column="1" x:Name="btn_cb_Set_EnableAutoStartFPSLimiter"  Style="{StaticResource btn_cb}" Click="btn_cb_Click"  MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
+                        <Button Grid.Row="20" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource btn_SE_Path}" x:Name="btn_Set_Overlay_Hotkeys" Click="btn_Set_Overlay_Hotkeys_Click" Content="Change Hotkeys of Overlay"/>
 
-                        <!--<Label Grid.Row="19" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="FPS Limiter Path: "/>-->
-                        <Button Grid.Row="19" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource btn_SE_Path}" x:Name="btn_Set_PathFPSLimiter" Click="btn_Path_Click" MouseRightButtonDown="btn_Path_RightClick"/>
+                        <Label Grid.Row="21" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Enable Jumpscript"/>
+                        <Button Grid.Row="21" Grid.Column="1" x:Name="btn_cb_Set_EnableAutoStartJumpScript"  Style="{StaticResource btn_cb}" Click="btn_cb_Click"  MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
 
-                        <Label Grid.Row="20" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Automatically start Stream-Program on game launch"/>
-                        <Button Grid.Row="20" Grid.Column="1" x:Name="btn_cb_Set_EnableAutoStartStreamProgram"  Style="{StaticResource btn_cb}" Click="btn_cb_Click"  MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
+                        <Label Grid.Row="22" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="        Jumpscript Key 1"/>
+                        <Button Grid.Row="22" Grid.Column="1" x:Name="btn_Set_JumpScriptKey1"  Style="{StaticResource btn_SE_Path}" Click="btn_Set_JumpScriptKey1_Click"/>
 
-                        <!--<Label Grid.Row="21" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Stream-Program Path: "/>-->
-                        <Button Grid.Row="21" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource btn_SE_Path}" x:Name="btn_Set_PathStreamProgram" Click="btn_Path_Click" MouseRightButtonDown="btn_Path_RightClick"/>
+                        <Label Grid.Row="23" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="        Jumpscript Key 2"/>
+                        <Button Grid.Row="23" Grid.Column="1" x:Name="btn_Set_JumpScriptKey2"  Style="{StaticResource btn_SE_Path}" Click="btn_Set_JumpScriptKey2_Click"/>
 
-                        <Label Grid.Row="22" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Automatically start Nohboard on game launch"/>
-                        <Button Grid.Row="22" Grid.Column="1" x:Name="btn_cb_Set_EnableAutoStartNohboard"  Style="{StaticResource btn_cb}" Click="btn_cb_Click"  MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
+                        <Label Grid.Row="24" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Automatically set process priority of GTA to 'High'"/>
+                        <Button Grid.Row="24" Grid.Column="1" x:Name="btn_cb_Set_AutoSetHighPriority"  Style="{StaticResource btn_cb}" Click="btn_cb_Click"  MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
 
-                        <!--<Label Grid.Row="23" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Nohboard Path: "/>-->
-                        <Button Grid.Row="23" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource btn_SE_Path}" x:Name="btn_Set_PathNohboard" Click="btn_Path_Click" MouseRightButtonDown="btn_Path_RightClick"/>
+                        <Label Grid.Row="25" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Only auto-start programs below when Downgraded"/>
+                        <Button Grid.Row="25" Grid.Column="1" x:Name="btn_cb_Set_OnlyAutoStartProgramsWhenDowngraded"  Style="{StaticResource btn_cb}" Click="btn_cb_Click"  MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
+
+                        <Label Grid.Row="26" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Automatically start LiveSplit on game launch"/>
+                        <Button Grid.Row="26" Grid.Column="1" x:Name="btn_cb_Set_EnableAutoStartLiveSplit"  Style="{StaticResource btn_cb}" Click="btn_cb_Click"  MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
+
+                        <Button Grid.Row="27" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource btn_SE_Path}" x:Name="btn_Set_PathLiveSplit" Click="btn_Path_Click" MouseRightButtonDown="btn_Path_RightClick"/>
+
+                        <Label Grid.Row="28" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Automatically start FPS Limiter on game launch"/>
+                        <Button Grid.Row="28" Grid.Column="1" x:Name="btn_cb_Set_EnableAutoStartFPSLimiter"  Style="{StaticResource btn_cb}" Click="btn_cb_Click"  MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
+
+                        <Button Grid.Row="29" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource btn_SE_Path}" x:Name="btn_Set_PathFPSLimiter" Click="btn_Path_Click" MouseRightButtonDown="btn_Path_RightClick"/>
+
+                        <Label Grid.Row="30" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Automatically start Stream-Program on game launch"/>
+                        <Button Grid.Row="30" Grid.Column="1" x:Name="btn_cb_Set_EnableAutoStartStreamProgram"  Style="{StaticResource btn_cb}" Click="btn_cb_Click"  MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
+
+                        <Button Grid.Row="31" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource btn_SE_Path}" x:Name="btn_Set_PathStreamProgram" Click="btn_Path_Click" MouseRightButtonDown="btn_Path_RightClick"/>
+
+                        <Label Grid.Row="32" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Automatically start Nohboard on game launch"/>
+                        <Button Grid.Row="32" Grid.Column="1" x:Name="btn_cb_Set_EnableAutoStartNohboard"  Style="{StaticResource btn_cb}" Click="btn_cb_Click"  MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
+
+                        <Button Grid.Row="33" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource btn_SE_Path}" x:Name="btn_Set_PathNohboard" Click="btn_Path_Click" MouseRightButtonDown="btn_Path_RightClick"/>
 
 
                     </Grid>

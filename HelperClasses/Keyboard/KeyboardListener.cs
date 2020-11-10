@@ -17,8 +17,9 @@ namespace Project_127.HelperClasses
 {
 	// Copied and Adapted from: https://docs.microsoft.com/en-us/archive/blogs/toub/low-level-keyboard-hook-in-c
 
-	// This gets Started / Stopped based on the foreground Window in WindowChangeListener
+	// This gets Started / Stoppeds based on the foreground Window in WindowChangeListener
 	//		(which gets started / stopped on 2.5 Second poll if GTA V is running in GameStates)
+
 
 
 	class KeyboardListener
@@ -31,6 +32,7 @@ namespace Project_127.HelperClasses
 
 		private const int WH_KEYBOARD_LL = 13;
 		private const int WM_KEYDOWN = 0x0100;
+		private const int WM_KEYUP = 0x0101;
 		private static LowLevelKeyboardProc _proc = HookCallback;
 		private static IntPtr _hookID = IntPtr.Zero;
 
@@ -39,11 +41,22 @@ namespace Project_127.HelperClasses
 		public static void Start()
 		{
 			WantToStop = false;
+
 			if (!KeyboardListener.IsRunning)
 			{
 				HelperClasses.Logger.Log("Started KeyboardListener");
+				KeyboardHandler.JumpKey1Down = false;
+				KeyboardHandler.JumpKey2Down = false;
 				Task.Run(() => KeyboardListener._Start());
 			}
+		}
+
+		private static void _Start()
+		{
+			_hookID = SetHook(_proc);
+			KeyboardListener.IsRunning = true;
+			System.Windows.Forms.Application.Run();
+			UnhookWindowsHookEx(_hookID);
 		}
 
 		public static void Stop()
@@ -60,13 +73,7 @@ namespace Project_127.HelperClasses
 			}
 		}
 
-		public static void _Start()
-		{
-			_hookID = SetHook(_proc);
-			KeyboardListener.IsRunning = true;
-			System.Windows.Forms.Application.Run();
-			UnhookWindowsHookEx(_hookID);
-		}
+
 
 		public static void _Stop()
 		{
@@ -86,6 +93,27 @@ namespace Project_127.HelperClasses
 
 		private delegate IntPtr LowLevelKeyboardProc(int nCode, IntPtr wParam, IntPtr lParam);
 
+
+		[StructLayout(LayoutKind.Sequential)]
+		public class KBDLLHOOKSTRUCT
+		{
+			public uint vkCode;
+			public uint scanCode;
+			public KBDLLHOOKSTRUCTFlags flags;
+			public uint time;
+			public UIntPtr dwExtraInfo;
+		}
+
+		[Flags]
+		public enum KBDLLHOOKSTRUCTFlags : uint
+		{
+			LLKHF_EXTENDED = 0x01,
+			LLKHF_INJECTED = 0x10,
+			LLKHF_ALTDOWN = 0x20,
+			LLKHF_UP = 0x80,
+		}
+
+
 		[STAThread]
 		private static IntPtr HookCallback(int nCode, IntPtr wParam, IntPtr lParam)
 		{
@@ -95,17 +123,35 @@ namespace Project_127.HelperClasses
 			{
 				if (nCode >= 0)
 				{
+					int vkCode = Marshal.ReadInt32(lParam);
 					if (wParam == (IntPtr)WM_KEYDOWN)
 					{
-						int vkCode = Marshal.ReadInt32(lParam);
-						SurpressKeyEvent = KeyboardHandler.KeyboardEvent((Keys)vkCode);
+						if (Settings.EnableAutoStartJumpScript)
+						{
+							if (((Keys)vkCode == Settings.JumpScriptKey1))
+							{
+								// Call Line Below with IntPtr to the KBDLLHOOKSTRUCT with the uint vkCode: (int)Settings.JumpScriptKey2
+								// return CallNextHookEx(_hookID, nCode, wParam, lParam);
+							}
+							else if (((Keys)vkCode == Settings.JumpScriptKey2))
+							{
+								// Call Line Below with IntPtr to the KBDLLHOOKSTRUCT with the uint vkCode: (int)Settings.JumpScriptKey1
+								// return CallNextHookEx(_hookID, nCode, wParam, lParam);
+							}
+						}
+
+						SurpressKeyEvent = KeyboardHandler.KeyboardDownEvent((Keys)vkCode);
+					}
+					else if (wParam == (IntPtr)WM_KEYUP)
+					{
+						KeyboardHandler.KeyboardUpEvent((Keys)vkCode);
 					}
 				}
 			}
 			catch (Exception e)
 			{
+				HelperClasses.Logger.Log("Try Catch in KeyboardListener KeyEvent Callback Failed: " + e.ToString());
 				Globals.DebugPopup(e.ToString());
-				HelperClasses.Logger.Log("Try Catch in KeyEvent Callback Failed: " + e.ToString());
 				return new IntPtr(-1);
 			}
 
@@ -119,6 +165,7 @@ namespace Project_127.HelperClasses
 				return CallNextHookEx(_hookID, nCode, wParam, lParam);
 			}
 		}
+
 
 		[DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
 		private static extern IntPtr SetWindowsHookEx(int idHook, LowLevelKeyboardProc lpfn, IntPtr hMod, uint dwThreadId);

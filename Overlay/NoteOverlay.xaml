@@ -5,34 +5,36 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:Project_127"
       mc:Ignorable="d" 
-      d:DesignHeight="540" d:DesignWidth="625" 
+      d:DesignHeight="540" d:DesignWidth="625"      
       Background="{x:Static local:Globals.App_Submenu_Background}"
       Title="ReadMe">
-    <Grid Height="340" Margin="100">
+    <Grid Height="540" Margin="15,0,15,0">
         <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="70"/>
+            <RowDefinition Height="45"/>
+            <RowDefinition Height="60"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <Label Foreground="White" Grid.Row="0" Grid.Column="0" Content="Selected Note Files"/>
-        <Button Grid.Row="0" Grid.Column="1" Content="Click Me" x:Name="btn_NoteFile" Click="btn_NoteFile_Click"/>
-        <Label Foreground="White" Grid.Row="1" Grid.Column="0" Content="Overlay Toggle Hotkey"/>
-        <Button Grid.Row="1" Grid.Column="1" Content="Click Me" x:Name="btn_OverlayHotkeyToggle" Click="btn_OverlayHotkeyToggle_Click"/>
-        <Label Foreground="White" Grid.Row="2" Grid.Column="0" Content="Overlay Scroll Up Hotkey"/>
-        <Button Grid.Row="2" Grid.Column="1" Content="Click Me" x:Name="btn_OverlayHotkeyScrollUp" Click="btn_OverlayHotkeyScrollUp_Click"/>
-        <Label Foreground="White" Grid.Row="3" Grid.Column="0" Content="Overlay Scroll Down Hotkey"/>
-        <Button Grid.Row="3" Grid.Column="1" Content="Click Me" x:Name="btn_OverlayHotkeyScrollDown" Click="btn_OverlayHotkeyScrollDown_Click"/>
-        <Label Foreground="White" Grid.Row="4" Grid.Column="0" Content="Overlay Scroll Left Hotkey"/>
-        <Button Grid.Row="4" Grid.Column="1" Content="Click Me" x:Name="btn_OverlayHotkeyScrollLeft" Click="btn_OverlayHotkeyScrollLeft_Click"/>
-        <Label Foreground="White" Grid.Row="5" Grid.Column="0" Content="Overlay Scroll Right Hotkey"/>
-        <Button Grid.Row="5" Grid.Column="1" Content="Click Me" x:Name="btn_OverlayHotkeyScrollRight" Click="btn_OverlayHotkeyScrollRight_Click"/>
+        <Label Style="{StaticResource lbl}" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Left" FontSize="24" Height="60" VerticalAlignment="Bottom" Margin="0,0,0,0" Content="Note Overlay"/>
+
+        <Rectangle Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Fill="{x:Static local:Globals.SE_RowBackground}"/>
+
+        <Label Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource lbl_Set_Info}" Content="Enable Project 1.27 Notes - Overlay"/>
+        <Button Grid.Row="1" Grid.Column="2" x:Name="btn_cb_Set_EnableOverlay"  Style="{StaticResource btn_cb}" Click="btn_cb_Click" MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
+
+        <Button x:Name="btn_Notes" Margin="0,10,5,10" Content="Notes" Grid.Row="2" Grid.Column="0" Click="btn_Notes_Click" Style="{StaticResource btn_hamburgeritem}"/>
+        <Button x:Name="btn_Looks" Margin="5,10,5,10" Content="Looks" Grid.Row="2" Grid.Column="1" Click="btn_Looks_Click" Style="{StaticResource btn_hamburgeritem}"/>
+        <Button x:Name="btn_Keybindings" Margin="5,10,0,10" Content="Keybindings" Grid.Row="2" Grid.Column="2" Click="btn_Keybindings_Click" Style="{StaticResource btn_hamburgeritem}"/>
+
+        <Border Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3" Margin="0,5,0,15" BorderBrush="{x:Static local:Globals.SE_BorderBrush_Inner}" BorderThickness="2" Background="{x:Static local:Globals.SE_RowBackground}">
+            <Frame x:Name="Frame_Notes" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3"/>
+        </Border>
+
     </Grid>
 </Page>

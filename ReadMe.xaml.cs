@@ -46,8 +46,8 @@ namespace Project_127
 				"I am not a speedrunner or very involved with the GTA V Community,\n" +
 				"if you read this, and could shoot me a PM on Discord with stuff\n" +
 				"you want to Read here, that would be great.";
-			Grid_SpeedRun_Lbl.Content = msg1;
-			Grid_SpeedRun_Lbl.FontSize = 18;
+			//Grid_SpeedRun_Lbl.Content = msg1;
+			//Grid_SpeedRun_Lbl.FontSize = 18;
 
 			string msg2 = "" +
 				 "You are running Project 1.27, a tool for the GTA V Speedrunning\n" +
@@ -60,7 +60,7 @@ namespace Project_127
 				 "the preorder entitlement to work.\n\n" +
 				 "If you have any issues with this program or ideas for new features,\n" +
 				 "feel free to contact me on Discord: @thS#0305\n\n" +
-				 "Project 1.27 Version: '" + Globals.ProjectVersion + "'\n" + 
+				 "Project 1.27 Version: '" + Globals.ProjectVersion + "'\n" +
 				 "BuildInfo: '" + Globals.BuildInfo + "'\n" +
 				 "ZIP Version: '" + Globals.ZipVersion + "'";
 			Grid_About_Lbl.Content = msg2;
@@ -85,6 +85,16 @@ namespace Project_127
 				"to understand and reverse engineer the GTA V Launch Process";
 			Grid_Credits_Lbl.Content = msg3;
 			Grid_Credits_Lbl.FontSize = 14;
+
+			string msg4 = "" +
+		"BlaBlaBla\nCommonErrors\nBlablabla\nAnd how to fix them\nBlablabla\n\nIf you see this after installing or updating Project 1.27 we forgot to change this Text.\nUpsi.";
+
+			// Change Error Popup to link here
+
+			// Issues: Path, File Permissions, fucked up GTAV, Wrong version booting,installation state not changing
+
+			Grid_Help_Lbl.Content = msg4;
+			Grid_Help_Lbl.FontSize = 14;
 		}
 
 		/// <summary>
@@ -94,7 +104,8 @@ namespace Project_127
 		{
 			SpeedRun,
 			About,
-			Credits
+			Credits,
+			Help
 		}
 
 		/// <summary>
@@ -128,6 +139,9 @@ namespace Project_127
 
 					Border_Credits.Visibility = Visibility.Hidden;
 					btn_Credits.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
+
+					Border_Help.Visibility = Visibility.Hidden;
+					btn_Help.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
 				}
 				else if (value == ReadMeStates.About)
 				{
@@ -139,11 +153,31 @@ namespace Project_127
 
 					Border_Credits.Visibility = Visibility.Hidden;
 					btn_Credits.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
+
+					Border_Help.Visibility = Visibility.Hidden;
+					btn_Help.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
 				}
 				else if (value == ReadMeStates.Credits)
 				{
 					Border_Credits.Visibility = Visibility.Visible;
 					btn_Credits.Style = Application.Current.FindResource("btn_hamburgeritem_selected") as Style;
+
+					Border_SpeedRun.Visibility = Visibility.Hidden;
+					btn_SpeedRun.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
+
+					Border_About.Visibility = Visibility.Hidden;
+					btn_About.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
+
+					Border_Help.Visibility = Visibility.Hidden;
+					btn_Help.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
+				}
+				else if (value == ReadMeStates.Help)
+				{
+					Border_Help.Visibility = Visibility.Visible;
+					btn_Help.Style = Application.Current.FindResource("btn_hamburgeritem_selected") as Style;
+
+					Border_Credits.Visibility = Visibility.Hidden;
+					btn_Credits.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
 
 					Border_SpeedRun.Visibility = Visibility.Hidden;
 					btn_SpeedRun.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
@@ -179,6 +213,32 @@ namespace Project_127
 		private void Grid_About_Btn_Click(object sender, RoutedEventArgs e)
 		{
 			Process.Start(@"https://www.mind.org.uk/donate");
+		}
+
+		private void btn_Help_Click(object sender, RoutedEventArgs e)
+		{
+			ReadMeState = ReadMeStates.Help;
+		}
+
+		private void btn_SpeedRun_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+		{
+			if (e.ClickCount == 3)
+			{
+				new Popups.Popup(Popups.Popup.PopupWindowTypes.PopupOk, "Shoutouts to @thedosei for being cool\nYou do matter, dont let someone tell you different\nAlso your cat picture is cute").ShowDialog();
+			}
+		}
+
+		private void btn_About_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+		{
+			if (e.ClickCount == 3)
+			{
+				new Popups.Popup(Popups.Popup.PopupWindowTypes.PopupOk, "Shoutouts to @crapideot for being awesome and a\ngreat friend and Helper during Project 1.27 :)\nHope you have a great day buddy").ShowDialog();
+			}
+		}
+
+		private void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e)
+		{
+			Process.Start("http://google.com");
 		}
 	}
 }
