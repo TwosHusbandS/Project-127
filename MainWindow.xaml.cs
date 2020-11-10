@@ -101,21 +101,27 @@ Main To do:
 
 
 			Quick and dirty notes:
+					Without making anti virus appear again
 				- Title from GTAV Overlay is missing (waiting on Dragon for that)
-				- CPU usage (probably due to window change listener, maybe poll the foreground window every XYZ ms)
-				- [RESTART FIXED IT] Antivirus thing...commit and revert and see if it still happens...
-				- Yoshis Info
-				- ReadMe shit (PoC is there, I think)
+				- CPU Usage Poll foreground window instead of change listener
+					=> Finish new implementation of hook with Application.Run instead of custom EventLoop
+						>> https://stackoverflow.com/a/32016279
+					=> If that doesnt work, poll every 100 ms, see how CPU usage is
 				- Jumpscript Send Key stuff
-				- Investigate CEF Cache.
-				- Split upgrading downgrading into 2 progress popups
+				- [DONE] Split upgrading downgrading into 2 progress popups
+				- [DONE] Finish Readme (Speedrun text + Reset Button + DL of big zip)
+				- [DONE] ZIP Hash for big ZIP
+				- [DONE] Bring back functionality from: https://github.com/TwosHusbandS/Project-127/commit/a5dcbd5c1a4011c8e1845c4f338f6f9ffbe79a92
+				- [DONE] Selection after deletion is fucked (Solution in Commit Above)
+				- [DONE] Yoshis Info
+				- [DONE] NoteOverlay Null Reference Fix + CPU Improvements
+				- [DONE] Cache works, there are other cache files tho...argh. ~~Investigate CEF Cache~~
+
 
 		=== Keep in Mind === 
 
 	Still to do for 1.1
 	- Cef no disk cache...
-	- Use Yoshi's information
-	- Add Credit for Fro guy for mirrors (Both ín readme page and on readme.md)
 	- Ask Yoshi, Crapideot, and that other guy from hossels discord
 	- 1.5 seconds delay on downgrade... + warning popup on first downgrade that it takes some time
 	- Comment SaveFileHandler stuff out so we are back to 1.0 SaveFileHandler
@@ -313,13 +319,9 @@ namespace Project_127
 			SetButtonMouseOverMagic(btn_Auth);
 			SetButtonMouseOverMagic(btn_Hamburger);
 			Globals.HamburgerMenuState = Globals.HamburgerMenuStates.Hidden;
-			MainWindow.MW.Frame_Game.Content = new Overlay_Preview();
 
 			HelperClasses.Logger.Log("Startup procedure (Constructor of MainWindow) completed.");
 			HelperClasses.Logger.Log("--------------------------------------------------------");
-
-		
-
 
 #if DEBUG
    GTAOverlay.DebugMode = true;
@@ -430,6 +432,9 @@ namespace Project_127
 				lbl_GTA.Foreground = Globals.MW_GTALabelUnsureForeground;
 				lbl_GTA.Content = "Unsure";
 			}
+
+			lbl_GTA.Content += " (" + Globals.GetGameVersionOfBuildNumber(Globals.GameVersion) + ")";
+
 			if (LauncherLogic.GameState == LauncherLogic.GameStates.Running)
 			{
 				GTA_Page.btn_GTA_static.BorderBrush = Globals.MW_ButtonGTAGameRunningBorderBrush;
@@ -770,19 +775,17 @@ namespace Project_127
 				if (LauncherLogic.InstallationState == LauncherLogic.InstallationStates.Downgraded)
 				{
 					HelperClasses.Logger.Log("Gamestate looks OK (Downgraded). Will Proceed to try to Upgrade.", 1);
-					LauncherLogic.Upgrade();
 				}
 				else if (LauncherLogic.InstallationState == LauncherLogic.InstallationStates.Upgraded)
 				{
 					HelperClasses.Logger.Log("This program THINKS you are already Upgraded. Update procedure will be called anyways since it shouldnt break things.", 1);
-					LauncherLogic.Upgrade();
 				}
 				else
 				{
 					HelperClasses.Logger.Log("Installation State Broken.", 1);
 					new Popup(Popup.PopupWindowTypes.PopupOkError, "Installation State is broken. I suggest trying to repair.\nWill try to Upgrade anyways.").ShowDialog();
-					LauncherLogic.Upgrade();
 				}
+				LauncherLogic.Upgrade();
 			}
 			else
 			{
@@ -833,19 +836,17 @@ namespace Project_127
 				if (LauncherLogic.InstallationState == LauncherLogic.InstallationStates.Upgraded)
 				{
 					HelperClasses.Logger.Log("Gamestate looks OK (Upgraded). Will Proceed to try to Downgrade.", 1);
-					LauncherLogic.Downgrade();
 				}
 				else if (LauncherLogic.InstallationState == LauncherLogic.InstallationStates.Downgraded)
 				{
 					HelperClasses.Logger.Log("This program THINKS you are already Downgraded. Downgrade procedure will be called anyways since it shouldnt break things.", 1);
-					LauncherLogic.Downgrade();
 				}
 				else
 				{
 					HelperClasses.Logger.Log("Installation State Broken. Downgrade procedure will be called anyways since it shouldnt break things.", 1);
 					new Popup(Popup.PopupWindowTypes.PopupOk, "Installation State is broken. I suggest trying to repair.\nWill try to Downgrade anyways").ShowDialog();
-					LauncherLogic.Downgrade();
 				}
+				LauncherLogic.Downgrade();
 			}
 			else
 			{

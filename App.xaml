@@ -5,6 +5,7 @@
              Startup="Application_Startup"
              SessionEnding="Application_SessionEnding"
              StartupUri="MainWindow.xaml">
+            <!--xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"-->
     <Application.Resources>
 
         <!--<XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls" />-->
@@ -20,6 +21,16 @@
             <Setter Property="HorizontalContentAlignment" Value="Center" />
             <Setter Property="VerticalContentAlignment" Value="Center" />
             <Setter Property="Margin" Value="0" />
+        </Style>
+
+        <Style x:Key="rtb" TargetType="RichTextBox">
+            <Setter Property="Foreground" Value="{x:Static local:Globals.App_LabelForeground}" />
+            <Setter Property="FontFamily" Value="Tahoma" />
+            <Setter Property="FontSize" Value="16" />
+            <Setter Property="Margin" Value="0" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
         </Style>
 
         <!--#region Buttons-->

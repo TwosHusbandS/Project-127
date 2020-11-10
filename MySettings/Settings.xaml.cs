@@ -841,18 +841,6 @@ namespace Project_127.MySettings
 			Globals.CheckForUpdate();
 		}
 
-		private void btn_ImportZIP_Click(object sender, RoutedEventArgs e)
-		{
-			string ZipFileLocation = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.File, "Import ZIP File", Globals.ProjectInstallationPath, pFilter: "ZIP Files|*.zip*");
-			if (HelperClasses.FileHandling.doesFileExist(ZipFileLocation))
-			{
-				LauncherLogic.ImportZip(ZipFileLocation);
-			}
-			else
-			{
-				new Popup(Popup.PopupWindowTypes.PopupOk, "No ZIP File selected").ShowDialog();
-			}
-		}
 
 		private void btn_Set_Overlay_Notes_Click(object sender, RoutedEventArgs e)
 		{
@@ -872,7 +860,13 @@ namespace Project_127.MySettings
 			Globals.PageState = Globals.PageStates.NoteOverlay;
 		}
 
-		public void btn_Reset_Everything_Click(object sender, RoutedEventArgs e)
+
+		private void btn_Reset_Everything_Click(object sender, RoutedEventArgs e)
+		{
+			ResetEverything();
+		}
+
+		public static void ResetEverything()
 		{
 			Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "This resets the whole Project 1.27 Client including:\nSettings\nZIP Files Downloaded\nBacked up GTA Files to upgrade when downgraded\n\nYou need to repair GTA V through Steam / Epic / Rockstar after this\n(if its not already Up-To-Date)");
 			yesno.ShowDialog();
@@ -909,6 +903,7 @@ namespace Project_127.MySettings
 				Environment.Exit(0);
 			}
 		}
+
 
 		/// <summary>
 		/// Method which gets called when the Update Button is clicked
@@ -965,10 +960,25 @@ namespace Project_127.MySettings
 			{
 				HelperClasses.FileHandling.DeleteFolder(oldPath);
 				HelperClasses.FileHandling.movePath(newPath, oldPath);
+
+
+
+				List<MyFileOperation> MyFileOperations = new List<MyFileOperation>();
+
+				MyFileOperations.Add(new MyFileOperation(MyFileOperation.FileOperations.Delete, oldPath, "", "Deleting '" + (oldPath) + "'", 2, MyFileOperation.FileOrFolder.Folder));
+				MyFileOperations.Add(new MyFileOperation(MyFileOperation.FileOperations.Move, newPath, oldPath, "Moving '" + (newPath) + "' to '" + (oldPath) + "'", 2, MyFileOperation.FileOrFolder.Folder));
+
+				new PopupProgress(PopupProgress.ProgressTypes.FileOperation, "Backup", MyFileOperations).ShowDialog();
+
+
+
+
+
 				new Popup(Popup.PopupWindowTypes.PopupOk, "Using backup files now.").ShowDialog();
 			}
 
 
 		}
+
 	} // End of Class
 } // End of Namespace

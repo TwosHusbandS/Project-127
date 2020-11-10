@@ -63,9 +63,7 @@ namespace Project_127.Overlay
 				{
 					// In Case: Settings
 					case NoteOverlayPages.NoteFiles:
-						MainWindow.MW.Width = 900;
-						MainWindow.MW.Grid_Preview.Visibility = Visibility.Hidden;
-						Overlay_Preview.StopDispatcherTimer();
+						NoteOverlay.DisposePreview();
 
 						// Set actual Frame_Main Content to the correct Page
 						Frame_Notes.Content = new Project_127.Overlay.NoteOverlayPages.NoteOverlay_NoteFiles();
@@ -76,9 +74,7 @@ namespace Project_127.Overlay
 						btn_Keybindings.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
 						break;
 					case NoteOverlayPages.Keybinds:
-						MainWindow.MW.Width = 900;
-						MainWindow.MW.Grid_Preview.Visibility = Visibility.Hidden;
-						Overlay_Preview.StopDispatcherTimer();
+
 
 						// Set actual Frame_Main Content to the correct Page
 						Frame_Notes.Content = new Project_127.Overlay.NoteOverlayPages.NoteOverlay_Keybinds();
@@ -89,9 +85,7 @@ namespace Project_127.Overlay
 						btn_Notes.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
 						break;
 					case NoteOverlayPages.Look:
-						MainWindow.MW.Width = 1600;
-						MainWindow.MW.Grid_Preview.Visibility = Visibility.Visible;
-						Overlay_Preview.StartDispatcherTimer();
+						LoadPreview();
 
 						// Set actual Frame_Main Content to the correct Page
 						Frame_Notes.Content = new Project_127.Overlay.NoteOverlayPages.NoteOverlay_Look();
@@ -106,6 +100,23 @@ namespace Project_127.Overlay
 		}
 
 		public static GTAOverlay MyGTAOverlay;
+
+		public static void LoadPreview()
+		{
+			MainWindow.MW.Frame_Game.Content = new Overlay_Preview();
+			MainWindow.MW.Width = 1600;
+			MainWindow.MW.Grid_Preview.Visibility = Visibility.Visible;
+			Overlay_Preview.StartDispatcherTimer();
+		}
+
+		public static void DisposePreview()
+		{
+			MainWindow.MW.Width = 900;
+			MainWindow.MW.Grid_Preview.Visibility = Visibility.Hidden;
+			MainWindow.MW.Frame_Game.Content = new EmptyPage();
+			Overlay_Preview.StopDispatcherTimer();
+		}
+
 
 		public NoteOverlay()
 		{
@@ -304,12 +315,15 @@ namespace Project_127.Overlay
 
 		public static void ChangeNoteIndex(int pNotesLoadedNewIndex)
 		{
-			if (pNotesLoadedNewIndex >= 0 && pNotesLoadedNewIndex <= NotesLoaded.Length - 1)
+			if (IsOverlayInit())
 			{
-				HelperClasses.Logger.Log("NotesLoadedIndex is now: " + pNotesLoadedNewIndex);
-				NotesLoadedIndex = pNotesLoadedNewIndex;
-				NoteOverlay.MyGTAOverlay.setText(NotesLoaded[pNotesLoadedNewIndex]);
-				NoteOverlay.MyGTAOverlay.setTitle(NotesLoadedTitle[pNotesLoadedNewIndex]);
+				if (pNotesLoadedNewIndex >= 0 && pNotesLoadedNewIndex <= NotesLoaded.Length - 1)
+				{
+					HelperClasses.Logger.Log("NotesLoadedIndex is now: " + pNotesLoadedNewIndex);
+					NotesLoadedIndex = pNotesLoadedNewIndex;
+					NoteOverlay.MyGTAOverlay.setText(NotesLoaded[pNotesLoadedNewIndex]);
+					NoteOverlay.MyGTAOverlay.setTitle(NotesLoadedTitle[pNotesLoadedNewIndex]);
+				}
 			}
 		}
 

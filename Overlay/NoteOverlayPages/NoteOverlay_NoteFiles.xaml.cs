@@ -78,6 +78,7 @@ namespace Project_127.Overlay.NoteOverlayPages
 			{
 				MyNoteFiles.MyAdd(new MyNoteFile(mystring));
 			}
+
 			SelectFirst();
 		}
 
@@ -141,12 +142,17 @@ namespace Project_127.Overlay.NoteOverlayPages
 			return tmp;
 		}
 
+
+
 		private void btn_Delete_Click(object sender, RoutedEventArgs e)
 		{
 			foreach (MyNoteFile MNF in GetSelectedNoteFiles())
 			{
 				MyNoteFiles.MyRemove(MNF);
 			}
+			SelectFirst();
+		}
+
 			SelectFirst();
 		}
 
@@ -159,7 +165,6 @@ namespace Project_127.Overlay.NoteOverlayPages
 				//dg_Files.CurrentCell = new DataGridCellInfo(dg_Files.Items[0], dg_Files.Columns[0]);
 				//dg_Files.SelectedItems.Clear();
 				//dg_Files.SelectedCells.Add(dg_Files.CurrentCell);
-
 
 				SelectRowByIndex(dg_Files, 0);
 			}
