@@ -27,30 +27,6 @@ namespace Project_127
 		/// </summary>
 		public static ReadMeStates LastReadMeState = ReadMeStates.About;
 
-		public string MyText = "ASDFFFFFFF";
-
-		private void AddHyperlinkText(string linkURL, string linkName,
-			  string TextBeforeLink, string TextAfterLink)
-		{
-			Paragraph para = new Paragraph();
-			para.Margin = new Thickness(0); // remove indent between paragraphs
-
-			Hyperlink link = new Hyperlink();
-			link.IsEnabled = true;
-			link.Inlines.Add(linkName);
-			link.NavigateUri = new Uri(linkURL);
-			link.RequestNavigate += Hyperlink_RequestNavigate;
-
-			para.Inlines.Add(new Run("[" + DateTime.Now.ToLongTimeString() + "]: "));
-			para.Inlines.Add(TextBeforeLink);
-			para.Inlines.Add(link);
-			para.Inlines.Add(new Run(TextAfterLink));
-
-			myRTB.Document.Blocks.Add(para);
-			myRTB.Document.Blocks.Remove(myRTB.Document.Blocks.FirstBlock);
-			myRTB.Document.Blocks.Add(para);
-		}
-
 		/// <summary>
 		/// Constructor
 		/// </summary>
@@ -69,25 +45,6 @@ namespace Project_127
 
 		}
 
-		private void LoadSpeedrun()
-		{
-
-		}
-
-		private void LoadAbout()
-		{
-
-		}
-
-		private void LoadHelp()
-		{
-
-		}
-
-		private void LoadCredits()
-		{
-
-		}
 
 		/// <summary>
 		/// Enum for all ReadMeStates

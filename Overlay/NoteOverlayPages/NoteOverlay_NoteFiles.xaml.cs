@@ -153,9 +153,6 @@ namespace Project_127.Overlay.NoteOverlayPages
 			SelectFirst();
 		}
 
-			SelectFirst();
-		}
-
 		private void SelectFirst()
 		{
 			if (dg_Files.Items.Count > 0)
@@ -418,3 +415,4 @@ namespace Project_127.Overlay.NoteOverlayPages
 
 	} // End of Class
 }
+

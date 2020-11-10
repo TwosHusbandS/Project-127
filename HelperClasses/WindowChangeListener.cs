@@ -59,8 +59,8 @@ namespace Project_127.HelperClasses
 			IsRunning = true;
 			dele = new WinEventDelegate(WinEventProc);
 			IntPtr m_hhook = SetWinEventHook(EVENT_SYSTEM_FOREGROUND, EVENT_SYSTEM_FOREGROUND, IntPtr.Zero, dele, 0, 0, WINEVENT_OUTOFCONTEXT);
-			Application.Run();
-			//EventLoop.Run();
+			//Application.Run();
+			EventLoop.Run();
 
 			// Caling this to "update" based on what the current foreground window is
 			WinEventProc((IntPtr)null, 0, (IntPtr)null, 0, 0, 0, 0);
