@@ -16,7 +16,7 @@ namespace Project_127
     {
 		// If set to false, this starts and keeps KeyboardListenerEvent running 100% of the time.
 		// Automatically set to true if we compile debug
-		public static bool DebugMode = true;
+		public static bool DebugMode = false;
 		public const string targetWindowDebug = "TeamSpeak 3";
 		public const string targetWindowNonDebug = "Grand Theft Auto V";
 
@@ -209,7 +209,7 @@ namespace Project_127
 			this.Run();
 			this.Visible = false;
 			var title = new overlayTextBox("title");
-			title.text = "test";
+			title.text = "Project 1.27 GTA Overlay";
 			title.position = new Point(10, 10);
 			title.renderEnabled = true;
 			title.setFont("consolas", 36, true);

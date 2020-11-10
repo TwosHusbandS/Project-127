@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -16,55 +17,41 @@ namespace Project_127.HelperClasses
 
 	class WindowChangeListener
 	{
-		private static WinEventDelegate dele = null;
-
 		public static bool IsRunning = false;
 
-		public static void Stop()
-		{
-			//HelperClasses.Logger.Log("Trying to stop WindowChangeListener");
-			if (WindowChangeListener.IsRunning)
-			{
-				Task.Run(() => WindowChangeListener._Stop());
-				HelperClasses.Logger.Log("Stopped WindowChangeListener", 1);
-			}
-			else
-			{
-				//HelperClasses.Logger.Log("WindowChangeListener already stopped", 1);
-			}
-		}
+		static Thread myThread;
 
-		public static void _Stop()
+		public static void _Start()
 		{
-			IsRunning = false;
+			dele = new WinEventDelegate(WinEventProc);
+			IntPtr m_hhook = SetWinEventHook(EVENT_SYSTEM_FOREGROUND, EVENT_SYSTEM_FOREGROUND, IntPtr.Zero, dele, 0, 0, WINEVENT_OUTOFCONTEXT);
+			IsRunning = true;
+			Application.Run();
 		}
 
 		public static void Start()
 		{
-			//HelperClasses.Logger.Log("Trying to start WindowChangeListener");
 			if (!WindowChangeListener.IsRunning)
 			{
-				Task.Run(() => WindowChangeListener._Start());
-				HelperClasses.Logger.Log("Started WindowChangeListener", 1);
+				HelperClasses.Logger.Log("Starting WindowChangeListener");
+				myThread = new Thread(_Start);
+				myThread.Start();
 			}
-			else
+		}
+
+		public static void Stop()
+		{
+			if (WindowChangeListener.IsRunning)
 			{
-				//HelperClasses.Logger.Log("WindowChangeListener already started", 1);
+				IsRunning = false;
+				myThread.Abort();
+				HelperClasses.Logger.Log("Stopped WindowChangeListener");
 			}
-
 		}
 
-		public static void _Start()
-		{ 
-			IsRunning = true;
-			dele = new WinEventDelegate(WinEventProc);
-			IntPtr m_hhook = SetWinEventHook(EVENT_SYSTEM_FOREGROUND, EVENT_SYSTEM_FOREGROUND, IntPtr.Zero, dele, 0, 0, WINEVENT_OUTOFCONTEXT);
-			//Application.Run();
-			EventLoop.Run();
 
-			// Caling this to "update" based on what the current foreground window is
-			WinEventProc((IntPtr)null, 0, (IntPtr)null, 0, 0, 0, 0);
-		}
+
+		static WinEventDelegate dele = null; //STATIC
 
 		delegate void WinEventDelegate(IntPtr hWinEventHook, uint eventType, IntPtr hwnd, int idObject, int idChild, uint dwEventThread, uint dwmsEventTime);
 
@@ -80,7 +67,7 @@ namespace Project_127.HelperClasses
 		[DllImport("user32.dll")]
 		static extern int GetWindowText(IntPtr hWnd, StringBuilder text, int count);
 
-		private static string GetActiveWindowTitle()
+		private static string GetActiveWindowTitle() //STATIC
 		{
 			const int nChars = 256;
 			IntPtr handle = IntPtr.Zero;
@@ -94,82 +81,11 @@ namespace Project_127.HelperClasses
 			return null;
 		}
 
-		public static void WinEventProc(IntPtr hWinEventHook, uint eventType, IntPtr hwnd, int idObject, int idChild, uint dwEventThread, uint dwmsEventTime)
+		[STAThread]
+		public static void WinEventProc(IntPtr hWinEventHook, uint eventType, IntPtr hwnd, int idObject, int idChild, uint dwEventThread, uint dwmsEventTime) //STATIC
 		{
-			if (GetActiveWindowTitle() == GTAOverlay.targetWindow)
-			{
-				MainWindow.MW.Dispatcher.Invoke((Action)delegate
-				{
-					HelperClasses.Logger.Log("'" + GTAOverlay.targetWindow + "' Foreground Change Event detected");
-					KeyboardListener.Start();
-					if (Overlay.NoteOverlay.OverlayWasVisible)
-					{
-						Overlay.NoteOverlay.OverlaySetVisible();
-						Overlay.NoteOverlay.OverlayWasVisible = false;
-					}
-				});
-			}
-			else
-			{
-				MainWindow.MW.Dispatcher.Invoke((Action)delegate
-				{
-					if (KeyboardListener.IsRunning)
-					{
-						// So we dont spam log with that.
-						HelperClasses.Logger.Log("'" + GTAOverlay.targetWindow + "' no longer foreground");
-					}
-					KeyboardListener.Stop();
-					if (Overlay.NoteOverlay.IsOverlayVisible())
-					{
-						Overlay.NoteOverlay.OverlayWasVisible = true;
-						Overlay.NoteOverlay.OverlaySetInvisible();
-					}
-				});
-			}
+			//HelperClasses.Logger.Log("DEBUG WINDOW: '" + GetActiveWindowTitle() + "'",2);
+			WindowChangeHander.WindowChangeEvent(GetActiveWindowTitle());
 		}
 	}
-
-	public static class EventLoop
-	{
-		public static void Run()
-		{
-			MSG msg;
-
-			while (WindowChangeListener.IsRunning)
-			{
-				if (PeekMessage(out msg, IntPtr.Zero, 0, 0, PM_REMOVE))
-				{
-					if (msg.Message == WM_QUIT)
-						break;
-
-					TranslateMessage(ref msg);
-					DispatchMessage(ref msg);
-				}
-			}
-		}
-
-		[StructLayout(LayoutKind.Sequential)]
-		private struct MSG
-		{
-			public IntPtr Hwnd;
-			public uint Message;
-			public IntPtr WParam;
-			public IntPtr LParam;
-			public uint Time;
-			public System.Drawing.Point Point;
-		}
-
-		const uint PM_NOREMOVE = 0;
-		const uint PM_REMOVE = 1;
-
-		const uint WM_QUIT = 0x0012;
-
-		[DllImport("user32.dll")]
-		private static extern bool PeekMessage(out MSG lpMsg, IntPtr hwnd, uint wMsgFilterMin, uint wMsgFilterMax, uint wRemoveMsg);
-		[DllImport("user32.dll")]
-		private static extern bool TranslateMessage(ref MSG lpMsg);
-		[DllImport("user32.dll")]
-		private static extern IntPtr DispatchMessage(ref MSG lpMsg);
-	}
-
 }

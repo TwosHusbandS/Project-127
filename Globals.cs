@@ -805,6 +805,8 @@ namespace Project_127
 		/// </summary>
 		public static void ProperExit()
 		{
+			KeyboardListener.Stop();
+			WindowChangeListener.Stop();
 			HelperClasses.Logger.Log("Program closed. Proper Exit. Ended normally");
 		}
 
