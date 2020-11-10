@@ -17,7 +17,7 @@ namespace Project_127
 		// If set to false, this starts and keeps KeyboardListenerEvent running 100% of the time.
 		// Automatically set to true if we compile debug
 		public static bool DebugMode = true;
-		public const string targetWindowDebug = "TeamSpeak 3";
+		public const string targetWindowDebug = "Command Prompt";
 		public const string targetWindowNonDebug = "Grand Theft Auto V";
 
 		public static string targetWindow
@@ -83,15 +83,12 @@ namespace Project_127
 
 
 		private readonly Dictionary<string, SolidBrush> _brushes;
-		private readonly Dictionary<string, Font> _fonts;
 		private readonly Dictionary<string, Image> _images;
 		private readonly List<overlayObject> overlayObjects;
 		private float bgImageOpac = (float).7;
 		private string bgImagePath = "";
-		private string NoteText = "";
-		private int textOffsetX = 20;
-		private int textOffsetY = 50;
-		private int scrollInitial = 20;
+		private int scrollInitial = 50;
+		private overlayTextBox mainText;
 
 		//// <summary>
 		/// Determines the positioning of the overlay.
@@ -99,9 +96,19 @@ namespace Project_127
 		public Positions Position { get; set; }
 
 		//// <summary>
-		/// Overrides the positioning of line wrap.
+		/// Overrides the positioning of line wrap. (Disabled by vals <1)
 		/// </summary>
-		public int WrapCount { get; set; } = int.MaxValue;
+		public int WrapCount
+        {
+            get
+            {
+				return mainText.wrapOnChar;
+            }
+            set
+            {
+				mainText.wrapOnChar = value;
+            }
+        }
 
 		//// <summary>
 		/// Determines the base offset of the overlay.
@@ -171,7 +178,6 @@ namespace Project_127
 		{
 			HelperClasses.Logger.Log("Game Overlay Initiated");
 			_brushes = new Dictionary<string, SolidBrush>();
-			_fonts = new Dictionary<string, Font>();
 			_images = new Dictionary<string, Image>();
 			overlayObjects = new List<overlayObject>();
 			//var wb = new WindowBounds();
@@ -208,6 +214,9 @@ namespace Project_127
 
 			this.Run();
 			this.Visible = false;
+			mainText = new overlayTextBox("GTAOVERLAY_MAIN");
+			attach(mainText);
+			mainText.renderEnabled = true;
 			var title = new overlayTextBox("title");
 			title.text = "test";
 			title.position = new Point(10, 10);
@@ -232,13 +241,11 @@ namespace Project_127
 			if (e.RecreateResources) return;
 
 			//_fonts["arial"] = gfx.CreateFont("Arial", 12);
-			_fonts["textFont"] = gfx.CreateFont("Consolas", 24, false, false, true);
 		}
 
 		private void _window_DestroyGraphics(object sender, DestroyGraphicsEventArgs e)
 		{
 			foreach (var pair in _brushes) pair.Value.Dispose();
-			foreach (var pair in _fonts) pair.Value.Dispose();
 			foreach (var pair in _images) pair.Value.Dispose();
 		}
 
@@ -286,7 +293,7 @@ namespace Project_127
 					bgImagePath = "";
 				}
 			}
-			gfx.DrawTextWithBackground(_fonts["textFont"], _brushes["textColor"], _brushes["textBack"], textOffsetX, textOffsetY, NoteText);
+			//gfx.DrawTextWithBackground(_fonts["textFont"], _brushes["textColor"], _brushes["textBack"], textOffsetX, textOffsetY, NoteText);
 
 			foreach (var obj in overlayObjects)
 			{
@@ -311,9 +318,8 @@ namespace Project_127
 		/// <param name="textBG">Color of the text background</param>
 		public async void setTextColors(System.Drawing.Color textColor, System.Drawing.Color textBG)
 		{
-			await graphicsReady();
-			_brushes["textColor"].Color = Color.FromARGB(textColor.ToArgb());
-			_brushes["textBack"].Color = Color.FromARGB(textBG.ToArgb());
+			mainText.textColor = textColor;
+			mainText.bgColor = textBG;
 		}
 
 		/// <summary>
@@ -336,7 +342,7 @@ namespace Project_127
 		public void setText(string text)
 		{
 			HelperClasses.Logger.Log("Overlay text updated");
-			NoteText = charWrap(text, WrapCount);
+			mainText.text = text;
 		}
 
 		// Just have this here, so i have something to call...
@@ -365,8 +371,7 @@ namespace Project_127
 		/// <param name="wordWrap">Enables auto line wrap</param>
 		public async void setFont(string fontFamily, int fontSize, bool bold = false, bool italic = false, bool wordWrap = true)
 		{
-			await graphicsReady();
-			_fonts["textFont"] = _window.Graphics.CreateFont(fontFamily, fontSize, bold, italic, wordWrap);
+			mainText.setFont(fontFamily, fontSize, bold, italic, wordWrap);
 		}
 
 		/// <summary>
@@ -376,8 +381,7 @@ namespace Project_127
 		/// <param name="y">Y Offset</param>
 		public void setTextPosition(int x, int y)
 		{
-			textOffsetX = x;
-			textOffsetY = y;
+			mainText.position = new Point(x, y);
 		}
 
 		/// <summary>
@@ -387,11 +391,11 @@ namespace Project_127
 		{
 			get
 			{
-				return new Point(textOffsetX, textOffsetY);
+				return mainText.position;
 			}
 			set
 			{
-				setTextPosition((int)value.X, (int)value.Y);
+				mainText.position = value;
 			}
 		}
 
@@ -422,16 +426,16 @@ namespace Project_127
 		/// <summary>
 		/// Sets the initial point for scrolling render.
 		/// </summary>
-		public void SetInitialScropPosition()
+		public void SetInitialScrollPosition()
 		{
-			scrollInitial = textOffsetY;
+			scrollInitial = (int)mainText.position.Y;
 		}
 
 		/// <summary>
 		/// Sets the initial point for scrolling render.
 		/// </summary>
 		/// <param name="y">Initial scroll y position</param>
-		public void SetInitialScropPosition(int y)
+		public void SetInitialScrollPosition(int y)
 		{
 			scrollInitial = y;
 		}
@@ -443,40 +447,22 @@ namespace Project_127
 		public async void scroll(int delta)
 		{
 			await graphicsReady();
-			var f = _fonts["textFont"];
-			var wtext = charWrap(NoteText, WrapCount);
-			var lines = wtext.Replace("\r\n", "\n").Split('\n');
-			int lineH = 0;
-			int lineCount = 0;
-			foreach (var line in lines)
+			var aprx = mainText.approxBounds();
+			int boundMin = (int)(scrollInitial - aprx.Height);
+			//System.Windows.MessageBox.Show(aprx.Height.ToString());
+			_window.Graphics.Height = (int)(aprx.Height > _window.Height? aprx.Height * 2.1:_window.Height);
+			//System.Windows.MessageBox.Show(_window.Graphics.Height.ToString());
+			var pos = mainText.position;
+			pos.Y += delta;
+			if (pos.Y > scrollInitial)
 			{
-				var SF = new System.Drawing.Font(f.FontFamilyName,
-					f.FontSize,
-					(f.Bold ? System.Drawing.FontStyle.Bold : 0) |
-					(f.Italic ? System.Drawing.FontStyle.Italic : 0),
-					System.Drawing.GraphicsUnit.Pixel);
-				var lineS = System.Windows.Forms.TextRenderer.MeasureText(line, SF);
-				double n = ((double)lineS.Width) / (_window.Graphics.Width - 2 * textOffsetX);
-				var lh = (int)Math.Ceiling((double)lineS.Height);
-				lineH = lh > lineH ? lh : lineH;
-				if (!f.WordWeapping)//Their typo, not mine
-				{
-					n = 1;
-				}
-				n = (n > 0) ? n : 1;
-				lineCount += (int)Math.Ceiling(n);
+				pos.Y = scrollInitial;
 			}
-			int boundMin = (int)(scrollInitial - lineH * (lineCount - 1));
-			_window.Graphics.Height = (int)(lineH * lineCount * 2);
-			textOffsetY += delta;
-			if (textOffsetY > scrollInitial)
+			if (pos.Y < boundMin)
 			{
-				textOffsetY = scrollInitial;
+				pos.Y = boundMin;
 			}
-			if (textOffsetY < boundMin)
-			{
-				textOffsetY = boundMin;
-			}
+			mainText.position = pos;
 		}
 
 		/// <summary>
@@ -494,46 +480,18 @@ namespace Project_127
 				HelperClasses.Logger.Log("Set Overlay Visibility to " + this.Visible);
 			}
 		}
-		private string charWrap(string wtext, int lmax)
-		{
-			var lines = new List<string>();
-			wtext = wtext.Replace("\r\n", "\n");
-			var ilines = wtext.Split('\n');
-			foreach (string line in ilines)
-			{
-				if (line.Length > lmax)
-				{
-					var i = lmax - 1;
-					while (line.ToCharArray()[i] != ' ' && (i > 0))
-					{
-						i--;
-					}
-					if (i == 0)
-					{
-						i = lmax - 1;
-					}
-					lines.Add(line.Substring(0, i + 1));
-					lines.Add(charWrap(line.Substring(i + 1), lmax));
-				}
-				else
-				{
-					lines.Add(line);
-				}
-			}
-			return String.Join("\r\n", lines);
-		}
 		private int[] coordFromPos(Positions p, RECT wb, int resx, int resy)
 		{
 			resx += PaddingSize + XMargin;
 			resy += PaddingSize + YMargin;
 			var coords = new int[2];
-			int xborder = System.Windows.Forms.SystemInformation.FrameBorderSize.Width * 2;
-			int yborder = System.Windows.Forms.SystemInformation.FrameBorderSize.Height * 2;
+			int xborder = System.Windows.Forms.SystemInformation.FrameBorderSize.Width;
+			int yborder = System.Windows.Forms.SystemInformation.FrameBorderSize.Height;
 			switch (p)
 			{
 				case Positions.TopLeft:
 					coords[1] = wb.Top + PaddingSize + YMargin;
-					coords[0] = wb.Left + PaddingSize + XMargin + xborder;
+					coords[0] = wb.Left + PaddingSize + XMargin;
 					break;
 				case Positions.TopRight:
 					coords[1] = wb.Top + PaddingSize + YMargin;
@@ -541,7 +499,7 @@ namespace Project_127
 					break;
 				case Positions.BottomLeft:
 					coords[1] = wb.Bottom - resy - yborder;
-					coords[0] = wb.Left + PaddingSize + XMargin + +xborder;
+					coords[0] = wb.Left + PaddingSize + XMargin +xborder;
 					break;
 				case Positions.BottomRight:
 					coords[1] = wb.Bottom - resy - yborder;
@@ -592,7 +550,7 @@ namespace Project_127
 			if (!disposedValue)
 			{
 				_window.Dispose();
-
+				mainText.Dispose();
 				disposedValue = true;
 			}
 		}
@@ -655,6 +613,40 @@ namespace Project_127
 		private int _maxLineWidth;
 
 		/// <summary>
+		/// Determines the maximum number of chars before character wrap (<1 disables by-char wrapping)
+		/// </summary>
+		public int wrapOnChar { get; set; } = -1;
+
+		private string charWrap(string wtext, int lmax)
+		{
+			var lines = new List<string>();
+			wtext = wtext.Replace("\r\n", "\n");
+			var ilines = wtext.Split('\n');
+			foreach (string line in ilines)
+			{
+				if (line.Length > lmax)
+				{
+					var i = lmax - 1;
+					while (line.ToCharArray()[i] != ' ' && (i > 0))
+					{
+						i--;
+					}
+					if (i == 0)
+					{
+						i = lmax - 1;
+					}
+					lines.Add(line.Substring(0, i + 1));
+					lines.Add(charWrap(line.Substring(i + 1), lmax));
+				}
+				else
+				{
+					lines.Add(line);
+				}
+			}
+			return String.Join("\r\n", lines);
+		}
+
+		/// <summary>
 		/// Determines the max width of a line in pixels
 		/// </summary>
 		public int maxLineWidth
@@ -679,7 +671,26 @@ namespace Project_127
 		/// <summary>
 		/// Determines the text content of the textbox.
 		/// </summary>
-		public string text { get; set; } = "";
+		public string text
+        {
+			get
+            {
+				if (wrapOnChar > 0)
+                {
+					return charWrap(_text, wrapOnChar);
+                }
+				if (maxLineWidth > 0)
+                {
+					return autowrap;
+				}
+				return _text;
+            }
+            set
+            {
+				_text = value;
+				textUpdate = true;
+            }
+        }
 
 		private bool textUpdate = true;
 
@@ -695,6 +706,7 @@ namespace Project_127
 		}
 
 		private string _autowrap;
+
 		private string autowrap
         {
             get
@@ -724,7 +736,7 @@ namespace Project_127
 				return lines;
             }
 			int blength = line.Length, slength;
-			while (System.Windows.Forms.TextRenderer.MeasureText(line.Substring(0,blength), SDFont).Width > _maxLineWidth)
+			while (System.Windows.Forms.TextRenderer.MeasureText(line.Substring(0,blength), SDFont).Width > maxLineWidth)
 			{
 				blength--;
 			}
