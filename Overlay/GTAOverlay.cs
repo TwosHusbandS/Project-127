@@ -16,8 +16,10 @@ namespace Project_127
     {
 		// If set to false, this starts and keeps KeyboardListenerEvent running 100% of the time.
 		// Automatically set to true if we compile debug
+
 		public static bool DebugMode = true;
 		public const string targetWindowDebug = "Command Prompt";
+
 		public const string targetWindowNonDebug = "Grand Theft Auto V";
 
 		public static string targetWindow
@@ -218,7 +220,7 @@ namespace Project_127
 			attach(mainText);
 			mainText.renderEnabled = true;
 			var title = new overlayTextBox("title");
-			title.text = "test";
+			title.text = "Project 1.27 GTA Overlay";
 			title.position = new Point(10, 10);
 			title.renderEnabled = true;
 			title.setFont("consolas", 36, true);

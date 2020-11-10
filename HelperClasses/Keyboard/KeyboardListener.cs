@@ -12,6 +12,7 @@ using Project_127.HelperClasses;
 using Project_127.Overlay;
 using Project_127.Popups;
 using Project_127.MySettings;
+using System.Threading;
 
 namespace Project_127.HelperClasses
 {
@@ -27,6 +28,7 @@ namespace Project_127.HelperClasses
 		// Dont need to mess with KeyUp or see how long something is pressed
 		// Since Jumpscript should just "translate" keypressed 1:1 and not act like a auto-spam-script
 
+
 		public static bool DontStop = false;
 		public static bool WantToStop = false;
 
@@ -37,6 +39,8 @@ namespace Project_127.HelperClasses
 		private static IntPtr _hookID = IntPtr.Zero;
 
 		public static bool IsRunning = false;
+
+		public static Thread MyThread;
 
 		private static IntPtr SetHook(LowLevelKeyboardProc proc)
 		{
@@ -57,7 +61,8 @@ namespace Project_127.HelperClasses
 				HelperClasses.Logger.Log("Started KeyboardListener");
 				KeyboardHandler.JumpKey1Down = false;
 				KeyboardHandler.JumpKey2Down = false;
-				Task.Run(() => KeyboardListener._Start());
+				MyThread = new Thread(_Start);
+				MyThread.Start();
 			}
 		}
 
@@ -66,7 +71,6 @@ namespace Project_127.HelperClasses
 			_hookID = SetHook(_proc);
 			KeyboardListener.IsRunning = true;
 			System.Windows.Forms.Application.Run();
-			UnhookWindowsHookEx(_hookID);
 		}
 
 		public static void Stop()
@@ -78,23 +82,14 @@ namespace Project_127.HelperClasses
 			}
 			if (KeyboardListener.IsRunning)
 			{
+				UnhookWindowsHookEx(_hookID);
+				KeyboardListener.IsRunning = false;
+				MyThread.Abort();
 				HelperClasses.Logger.Log("Stopped KeyboardListener");
-				Task.Run(() => KeyboardListener._Stop());
 			}
 		}
 
-
-
-		public static void _Stop()
-		{
-			System.Windows.Forms.Application.Exit();
-			KeyboardListener.IsRunning = false;
-		}
-
-
-
 		private delegate IntPtr LowLevelKeyboardProc(int nCode, IntPtr wParam, IntPtr lParam);
-
 
 		[StructLayout(LayoutKind.Sequential)]
 		public class KBDLLHOOKSTRUCT

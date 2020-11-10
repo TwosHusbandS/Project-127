@@ -138,7 +138,7 @@ namespace Project_127.Overlay
 				MyGTAOverlay = new GTAOverlay();
 				MyGTAOverlay.setTextColors(Settings.OverlayForeground, Color.Transparent);
 				MyGTAOverlay.setBackgroundColor(Settings.OverlayBackground);
-				MyGTAOverlay.setFont(Settings.OverlayTextFont, Settings.OverlayTextSize, false, false, false);
+				MyGTAOverlay.setFont(Settings.OverlayTextFont, Settings.OverlayTextSize);
 				MyGTAOverlay.Position = Settings.OverlayLocation;
 				MyGTAOverlay.XMargin = Settings.OverlayMargin;
 				MyGTAOverlay.YMargin = Settings.OverlayMargin;
@@ -276,15 +276,12 @@ namespace Project_127.Overlay
 
 		public static void OverlayToggle()
 		{
-			HelperClasses.Logger.Log("A");
 			if (IsOverlayVisible())
 			{
-				HelperClasses.Logger.Log("B");
 				OverlaySetInvisible();
 			}
 			else
 			{
-				HelperClasses.Logger.Log("C");
 				OverlaySetVisible();
 			}
 		}

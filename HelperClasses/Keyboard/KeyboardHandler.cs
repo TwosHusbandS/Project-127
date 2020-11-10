@@ -30,6 +30,7 @@ namespace Project_127.HelperClasses
 					{
 						LastKeyPress = pKey;
 						SurpressEventFurther = true;
+						return;
 					}
 
 					// Those are all if and not else if because users might be stupid and use the same key for multiple things
