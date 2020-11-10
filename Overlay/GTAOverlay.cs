@@ -17,8 +17,8 @@ namespace Project_127
 		// If set to false, this starts and keeps KeyboardListenerEvent running 100% of the time.
 		// Automatically set to true if we compile debug
 
-		public static bool DebugMode = true;
-		public const string targetWindowDebug = "Command Prompt";
+		public static bool DebugMode = false;
+		public const string targetWindowDebug = "TeamSpeak 3";
 
 		public const string targetWindowNonDebug = "Grand Theft Auto V";
 

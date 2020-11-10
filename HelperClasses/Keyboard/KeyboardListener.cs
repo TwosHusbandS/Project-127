@@ -139,6 +139,7 @@ namespace Project_127.HelperClasses
 			// Surpresses the Key Event 
 			if (SurpressKeyEvent)
 			{
+				HelperClasses.Logger.Log("Surpressed: " + ((Keys)Marshal.ReadInt32(lParam)).ToString());
 				return new IntPtr(-1);
 			}
 			else

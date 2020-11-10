@@ -7,6 +7,8 @@ using System.Windows.Forms;
 using Project_127.Overlay;
 using Project_127;
 using Project_127.MySettings;
+using Project_127.HelperClasses.Keyboard;
+//using WindowsInput;
 
 namespace Project_127.HelperClasses
 {
@@ -42,7 +44,13 @@ namespace Project_127.HelperClasses
 							SurpressEventFurther = true;
 							if (!JumpKey1Down)
 							{
-								HelperClasses.KeyboardSender.SendKeyPress(GTAOverlay.targetWindow, Settings.JumpScriptKey2);
+								//new Task(() => { KeyboardSimulator.Send(KeyboardSimulator.ScanCodeShort.KEY_A, false); }).Start();
+								//new Task(() => { KeyboardSimulator.Send(KeyboardSimulator.ScanCodeShort.KEY_A, true); }).Start();
+
+								//KeyboardSimulator.Send(KeyboardSimulator.ScanCodeShort.KEY_A);
+								//HelperClasses.KeyboardSender.SendKeyPress(GTAOverlay.targetWindow, Settings.JumpScriptKey2);
+								//InputSimulator asdf = new InputSimulator();
+								//asdf.Keyboard.KeyPress(WindowsInput.Native.VirtualKeyCode.VK_A);
 							}
 							JumpKey1Down = true;
 						}
@@ -51,7 +59,12 @@ namespace Project_127.HelperClasses
 							SurpressEventFurther = true;
 							if (!JumpKey2Down)
 							{
-								HelperClasses.KeyboardSender.SendKeyPress(GTAOverlay.targetWindow, Settings.JumpScriptKey1);
+								//new Task(() => { KeyboardSimulator.Send(KeyboardSimulator.ScanCodeShort.SPACE, false); }).Start();
+								//new Task(() => { KeyboardSimulator.Send(KeyboardSimulator.ScanCodeShort.SPACE, true); }).Start();
+								//HelperClasses.KeyboardSender.SendKeyPress(GTAOverlay.targetWindow, Settings.JumpScriptKey1);
+								//HelperClasses.Keyboard.Keyboard.Send(Keyboard.Keyboard.ScanCodeShort.KEY_B);
+								//InputSimulator asdf = new InputSimulator();
+								//asdf.Keyboard.KeyPress(WindowsInput.Native.VirtualKeyCode.VK_B);
 							}
 							JumpKey2Down = true;
 						}
