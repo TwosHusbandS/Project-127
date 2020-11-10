@@ -49,7 +49,7 @@ namespace Project_127.Auth
 	/// </summary>
 	public partial class ROSIntegration : Page
 	{
-		private static bool CEFInited = false;
+		//private static bool CEFInited = false;
 		private bool signinInProgress = false;
 		private int sendCount = 0;
 		private static bool newInstance = false;
@@ -107,7 +107,7 @@ namespace Project_127.Auth
 				//s.CachePath = "B:\\test";
 				//Cef.Initialize(s);
 				HelperClasses.Logger.Log("Hello from dr490n's auth");
-				if (!CEFInited)
+				/*if (!CEFInited)
 				{
 					HelperClasses.Logger.Log("Detected first launch, initializing...");
 					var s = new CefSettings();
@@ -117,7 +117,7 @@ namespace Project_127.Auth
 					s.CefCommandLineArgs["autoplay-policy"] = "no-user-gesture-required";
 					Cef.Initialize(s);
 					CEFInited = true;
-				}
+				}*/
 				NavigationCommands.BrowseBack.InputGestures.Clear();
 				InitializeComponent();
 				this.Dispatcher.Invoke(() =>
