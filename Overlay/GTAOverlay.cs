@@ -16,7 +16,7 @@ namespace Project_127
 		// If set to false, this starts and keeps KeyboardListenerEvent running 100% of the time.
 		// Automatically set to true if we compile debug
 		public static bool DebugMode = true;
-		public const string targetWindowDebug = "TeamSpeak 3";
+		public const string targetWindowDebug = "Command Prompt";
 		public const string targetWindowNonDebug = "Grand Theft Auto V";
 
 		public static string targetWindow
@@ -90,7 +90,7 @@ namespace Project_127
 		private string bgImagePath = "";
 		private string NoteText = "";
 		private int textOffsetX = 20;
-		private int textOffsetY = 20;
+		private int textOffsetY = 50;
 		private int scrollInitial = 20;
 
 		//// <summary>
@@ -210,6 +210,7 @@ namespace Project_127
 			var title = new overlayTextBox("title");
 			title.text = "test";
 			title.position = new Point(10, 10);
+			title.renderEnabled = true;
 			title.setFont("consolas", 36, true);
 			this.attach(title);
 		}
