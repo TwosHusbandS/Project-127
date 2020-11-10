@@ -88,38 +88,47 @@ Main To do:
 		=> Design of UX for NoteOverlay.xaml
 		=> Updated Settings with JumpScript and NoteOverlay stuff
 		=> Rolling Log (fixed potential off by one)
-		=> ToolTips on all Buttons
+		=> ToolTips on all Icon-Buttons
+		=> Annoucement Feature
+		=> FailSafe Backup System for Upgrade Files
+		=> Auth will no longer crash when not reachable. Well at least we check it on page load...
 		=> [NEEDS TESTING] Overlay + Jumpscript stuff
 		=> [NEEDS TESTING] Auto-Start XYZ on Game Launch working dir fix
-		=> [NEEDS INTENSE TESTING] Downgrade/Upgrade/Repair improvements:
+		=> [NEEDS TESTING] Downgrade/Upgrade/Repair improvements:
 			- Detecting Updates automatically (checking for it on start, upgrade, downgrade), throwing one popup per P127 Launch
 			- Throwing Popup with potential Fixes for non-changing InstallationState (upgraded, downgraded, unsure)
 			- Not having own files in GTA V Folder when upgraded
 
 
 			Quick and dirty notes:
-				- Figure out why NoteOverlay_Looks is crashing (when setting label to slider value)
-				- Connect that shit to settings properties (which good default values)
-				- Write NoteOverlay_File stuff
-
-				- Connect it to the actual overlay.
+					Without making anti virus appear again
+				- Title from GTAV Overlay is missing (waiting on Dragon for that)
+				- CPU Usage Poll foreground window instead of change listener
+					=> Finish new implementation of hook with Application.Run instead of custom EventLoop
+						>> https://stackoverflow.com/a/32016279
+					=> If that doesnt work, poll every 100 ms, see how CPU usage is
+				- Jumpscript Send Key stuff
+				- [DONE] Split upgrading downgrading into 2 progress popups
+				- [DONE] Finish Readme (Speedrun text + Reset Button + DL of big zip)
+				- [DONE] ZIP Hash for big ZIP
+				- [DONE] Bring back functionality from: https://github.com/TwosHusbandS/Project-127/commit/a5dcbd5c1a4011c8e1845c4f338f6f9ffbe79a92
+				- [DONE] Selection after deletion is fucked (Solution in Commit Above)
+				- [DONE] Yoshis Info
+				- [DONE] NoteOverlay Null Reference Fix + CPU Improvements
+				- [DONE] Cache works, there are other cache files tho...argh. ~~Investigate CEF Cache~~
 
 
 		=== Keep in Mind === 
 
 	Still to do for 1.1
-	- Add credits to Yoshi
+	- Cef no disk cache...
 	- Ask Yoshi, Crapideot, and that other guy from hossels discord
 	- 1.5 seconds delay on downgrade... + warning popup on first downgrade that it takes some time
-	- Connect NoteOverlay UI stuff to backend
-	- Overlay
-		=> Needs Sub - Pages, scrollNextChaptor. Other stuff is implemented. Currently in semi-working state due to pages not being fully implemented
-	- Some SaveFileHandler stuff
+	- Comment SaveFileHandler stuff out so we are back to 1.0 SaveFileHandler
 	- Jumpscript
 		-> Find input sender which works in Game and doesnt infinite loop
+		-> OR make pointer to struct work...
 	- Make texts in readme / Information markdown with easy links and scrollbar and stuff. Also reference the resetall button in settings
-	- Client crashes when trying to auth when offline
-	- We call the Getter of all hotkeys on each hotkey press...not that efficent
 	- Uninstaller still is semi-manual...Should be fixed with "Reset" Buttons eliminating the need for custom uninstaller
 	- Add new DLLs to installer (I think at least 2, probably 3...Bottom Line: test installer.
 
@@ -128,10 +137,6 @@ Main To do:
 	- If i can prevent the keypress from being processed further...I can probably change a param and send a different keypress there...
 	- USE GIT TO KEEP TRACK OF INSTALLATION STATES???
 	- Features still to do:
-		- Upgrade / Downgrade / Repair Improvements 
-			=> Popup Messages when Upgrading / Downgrading doesnt get you what you wanted (Specials Suggestion)
-			=> to handle steam updates automatically, without User Interaction (Check on Startup, Upgrade, Downgrade, Repair, Game Launch maybe)
-			=> to not have own files in them (because of "botan.dll"...so im fixing fivem :D)
 		- Native jump Script
 		- [@thS currently working on] Better Save File Handler
 			=> Add Folder Support
@@ -154,10 +159,13 @@ Main To do:
 
 
 Bug Reportings:
+	- [RESOLVED][IDC]
+			GTA5.exe being "stuck" in taskmanager...hossels virus shit
 	- [RESOLVED][IDC][Its fine for now, no idea how to improve]
 			Open Twice message (and killing old process) not working for one guy
 			Works for me and on some other testers machines.
 			Confirmed funky. Also can not kill Process spawned by VS
+			Works for me...even in VS...
 	- [RESOLVED] Installer Link wrong (gave Reloe new one, it got changed)
 	- [RESOLVED] Changed a lot of that, should be all good now
 			Reloe and JakeMiester and dr490n had some issues with the GTA V Path Settings
@@ -215,7 +223,7 @@ using Project_127.Auth;
 using Project_127.HelperClasses;
 using Project_127.Overlay;
 using Project_127.Popups;
-using Project_127.SettingsStuff;
+using Project_127.MySettings;
 
 namespace Project_127
 {
@@ -310,15 +318,10 @@ namespace Project_127
 			SetButtonMouseOverMagic(btn_Exit);
 			SetButtonMouseOverMagic(btn_Auth);
 			SetButtonMouseOverMagic(btn_Hamburger);
-			SetButtonMouseOverMagic(btn_LeftArrow);
-			SetButtonMouseOverMagic(btn_RightArrow);
 			Globals.HamburgerMenuState = Globals.HamburgerMenuStates.Hidden;
-
-			MainWindow.MW.Frame_Game.Content = new Overlay_Preview();
 
 			HelperClasses.Logger.Log("Startup procedure (Constructor of MainWindow) completed.");
 			HelperClasses.Logger.Log("--------------------------------------------------------");
-
 
 #if DEBUG
    GTAOverlay.DebugMode = true;
@@ -429,6 +432,9 @@ namespace Project_127
 				lbl_GTA.Foreground = Globals.MW_GTALabelUnsureForeground;
 				lbl_GTA.Content = "Unsure";
 			}
+
+			lbl_GTA.Content += " (" + Globals.GetGameVersionOfBuildNumber(Globals.GameVersion) + ")";
+
 			if (LauncherLogic.GameState == LauncherLogic.GameStates.Running)
 			{
 				GTA_Page.btn_GTA_static.BorderBrush = Globals.MW_ButtonGTAGameRunningBorderBrush;
@@ -525,26 +531,6 @@ namespace Project_127
 					else
 					{
 						SetControlBackground(myBtn, @"Artwork\exit.png");
-					}
-					break;
-				case "btn_RightArrow":
-					if (myBtn.IsMouseOver)
-					{
-						SetControlBackground(myBtn, @"Artwork\arrowright_mo.png");
-					}
-					else
-					{
-						SetControlBackground(myBtn, @"Artwork\arrowright.png");
-					}
-					break;
-				case "btn_LeftArrow":
-					if (myBtn.IsMouseOver)
-					{
-						SetControlBackground(myBtn, @"Artwork\arrowleft_mo.png");
-					}
-					else
-					{
-						SetControlBackground(myBtn, @"Artwork\arrowleft.png");
 					}
 					break;
 				case "btn_Auth":
@@ -789,19 +775,17 @@ namespace Project_127
 				if (LauncherLogic.InstallationState == LauncherLogic.InstallationStates.Downgraded)
 				{
 					HelperClasses.Logger.Log("Gamestate looks OK (Downgraded). Will Proceed to try to Upgrade.", 1);
-					LauncherLogic.Upgrade();
 				}
 				else if (LauncherLogic.InstallationState == LauncherLogic.InstallationStates.Upgraded)
 				{
 					HelperClasses.Logger.Log("This program THINKS you are already Upgraded. Update procedure will be called anyways since it shouldnt break things.", 1);
-					LauncherLogic.Upgrade();
 				}
 				else
 				{
 					HelperClasses.Logger.Log("Installation State Broken.", 1);
 					new Popup(Popup.PopupWindowTypes.PopupOkError, "Installation State is broken. I suggest trying to repair.\nWill try to Upgrade anyways.").ShowDialog();
-					LauncherLogic.Upgrade();
 				}
+				LauncherLogic.Upgrade();
 			}
 			else
 			{
@@ -852,19 +836,17 @@ namespace Project_127
 				if (LauncherLogic.InstallationState == LauncherLogic.InstallationStates.Upgraded)
 				{
 					HelperClasses.Logger.Log("Gamestate looks OK (Upgraded). Will Proceed to try to Downgrade.", 1);
-					LauncherLogic.Downgrade();
 				}
 				else if (LauncherLogic.InstallationState == LauncherLogic.InstallationStates.Downgraded)
 				{
 					HelperClasses.Logger.Log("This program THINKS you are already Downgraded. Downgrade procedure will be called anyways since it shouldnt break things.", 1);
-					LauncherLogic.Downgrade();
 				}
 				else
 				{
 					HelperClasses.Logger.Log("Installation State Broken. Downgrade procedure will be called anyways since it shouldnt break things.", 1);
 					new Popup(Popup.PopupWindowTypes.PopupOk, "Installation State is broken. I suggest trying to repair.\nWill try to Downgrade anyways").ShowDialog();
-					LauncherLogic.Downgrade();
 				}
+				LauncherLogic.Downgrade();
 			}
 			else
 			{
@@ -970,15 +952,7 @@ namespace Project_127
 			}
 		}
 
-		private void btn_RightArrow_Click(object sender, RoutedEventArgs e)
-		{
 
-		}
-
-		private void btn_LeftArrow_Click(object sender, RoutedEventArgs e)
-		{
-
-		}
 
 	} // End of Class
 } // End of Namespace

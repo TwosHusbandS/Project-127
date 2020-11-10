@@ -3,6 +3,7 @@
   <version>1.0.0.0</version>
   <url>https://raw.githubusercontent.com/TwosHusbandS/Project-127/master/Installer/Project_127_Installer_V_1_0_0_0.exe</url>
   <authuser>https://raw.githubusercontent.com/TwosHusbandS/Project-127/master/Installer/AuthUser.txt</authuser>
+  <announcement></announcement>
   <DLLinkG>https://github.com/TwosHusbandS/Project-127/releases/download/V_Final/file.g</DLLinkG>
   <DLLinkGHash>5c706e27f1f204050450839f24e12c8a</DLLinkGHash>
   <DLLinkU>https://github.com/TwosHusbandS/Project-127/releases/download/V_Final/file.u</DLLinkU>
@@ -10,6 +11,7 @@
   <DLLinkX>https://github.com/TwosHusbandS/Project-127/releases/download/V_Final/file.x</DLLinkX>
   <DLLinkXHash>683610e269ba60c5fcc7a9f6d1a8bfd5</DLLinkXHash>
   <zip>https://www.dl.dropboxusercontent.com/s/kfrh7zq5twya9b5/Project_127_Files_V11_Big.zip</zip>
+  <bigzipmd5>3efc909f456f14ab2bd1256cec8f9398</bigzipmd5>
   <zipversion>11</zipversion>
   <comment>We need a "complete" ZIP above in a "zip" Tag, for old Versions. Atleast for now.</comment>
   <zipmd5>adae10a44e5873244060177611da4b23</zipmd5>

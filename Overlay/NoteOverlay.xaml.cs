@@ -14,7 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Project_127.HelperClasses;
-using Project_127.SettingsStuff;
+using Project_127.MySettings;
 using System.Diagnostics;
 
 namespace Project_127.Overlay
@@ -30,7 +30,8 @@ namespace Project_127.Overlay
 
 		// https://stackoverflow.com/a/47582420
 
-		public static string[] NotesLoaded = { "Test-Note to show what it can do\nThis is in the next line\n\nThis is in the next Paragraph" };
+		public static string[] NotesLoaded = { "" };
+		public static string[] NotesLoadedTitle = { "" };
 		public static int NotesLoadedIndex = 0;
 
 		public static NoteOverlayPages LoadNoteOverlayWithCustomPage = NoteOverlayPages.NoteFiles;
@@ -62,8 +63,7 @@ namespace Project_127.Overlay
 				{
 					// In Case: Settings
 					case NoteOverlayPages.NoteFiles:
-						MainWindow.MW.Width = 900;
-						MainWindow.MW.Grid_Preview.Visibility = Visibility.Hidden;
+						NoteOverlay.DisposePreview();
 
 						// Set actual Frame_Main Content to the correct Page
 						Frame_Notes.Content = new Project_127.Overlay.NoteOverlayPages.NoteOverlay_NoteFiles();
@@ -74,8 +74,7 @@ namespace Project_127.Overlay
 						btn_Keybindings.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
 						break;
 					case NoteOverlayPages.Keybinds:
-						MainWindow.MW.Width = 900;
-						MainWindow.MW.Grid_Preview.Visibility = Visibility.Hidden;
+
 
 						// Set actual Frame_Main Content to the correct Page
 						Frame_Notes.Content = new Project_127.Overlay.NoteOverlayPages.NoteOverlay_Keybinds();
@@ -86,8 +85,7 @@ namespace Project_127.Overlay
 						btn_Notes.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
 						break;
 					case NoteOverlayPages.Look:
-						MainWindow.MW.Width = 1600;
-						MainWindow.MW.Grid_Preview.Visibility = Visibility.Visible;
+						LoadPreview();
 
 						// Set actual Frame_Main Content to the correct Page
 						Frame_Notes.Content = new Project_127.Overlay.NoteOverlayPages.NoteOverlay_Look();
@@ -102,6 +100,23 @@ namespace Project_127.Overlay
 		}
 
 		public static GTAOverlay MyGTAOverlay;
+
+		public static void LoadPreview()
+		{
+			MainWindow.MW.Frame_Game.Content = new Overlay_Preview();
+			MainWindow.MW.Width = 1600;
+			MainWindow.MW.Grid_Preview.Visibility = Visibility.Visible;
+			Overlay_Preview.StartDispatcherTimer();
+		}
+
+		public static void DisposePreview()
+		{
+			MainWindow.MW.Width = 900;
+			MainWindow.MW.Grid_Preview.Visibility = Visibility.Hidden;
+			MainWindow.MW.Frame_Game.Content = new EmptyPage();
+			Overlay_Preview.StopDispatcherTimer();
+		}
+
 
 		public NoteOverlay()
 		{
@@ -119,6 +134,7 @@ namespace Project_127.Overlay
 			//HelperClasses.Logger.Log("Trying to Init GTA Overlay");
 			if (MyGTAOverlay == null)
 			{
+				// Set NotesLoaded here based on the
 				MyGTAOverlay = new GTAOverlay();
 				MyGTAOverlay.setTextColors(Settings.OverlayForeground, Color.Transparent);
 				MyGTAOverlay.setBackgroundColor(Settings.OverlayBackground);
@@ -126,9 +142,9 @@ namespace Project_127.Overlay
 				MyGTAOverlay.Position = Settings.OverlayLocation;
 				MyGTAOverlay.XMargin = Settings.OverlayMargin;
 				MyGTAOverlay.YMargin = Settings.OverlayMargin;
-				//MyGTAOverlay.Width = Settings.OverlayWidth;
-				//MyGTAOverlay.Height = Settings.OverlayHeight;
-				MyGTAOverlay.setText(NotesLoaded[0]);
+				MyGTAOverlay.width = Settings.OverlayWidth;
+				MyGTAOverlay.height = Settings.OverlayHeight;
+				LoadTexts();
 				NotesLoadedIndex = 0;
 				HelperClasses.Logger.Log("GTA Overlay initiated", 1);
 			}
@@ -136,6 +152,44 @@ namespace Project_127.Overlay
 			{
 				//HelperClasses.Logger.Log("GTA Overlay already initiated", 1);
 			}
+		}
+
+
+		public static void LoadTexts()
+		{
+			List<string> NotesTexts = new List<string>();
+			List<string> NotesTextsTitles = new List<string>();
+
+			for (int i = 0; i <= Settings.OverlayNotesMain.Count - 1; i++)
+			{
+				Overlay.NoteOverlayPages.MyNoteFile tmp = new Overlay.NoteOverlayPages.MyNoteFile(Settings.OverlayNotesMain[i]);
+
+				string[] contenta = HelperClasses.FileHandling.ReadFileEachLine(tmp.FilePath);
+				string contents = "";
+
+
+				for (int j = 0; j <= contenta.Length - 1; j++)
+				{
+					contents += contenta[j];
+					if (j != contenta.Length - 1)
+					{
+						contents += "\n";
+					}
+				}
+
+				if (String.IsNullOrWhiteSpace(contents))
+				{
+					contents = "Note - File could not be read. File doesnt exist or is empty";
+				}
+
+				NotesTexts.Add(contents);
+				NotesTextsTitles.Add("Project 1.27 - Overlay - " + tmp.FileNiceName);
+			}
+
+			NotesLoaded = NotesTexts.ToArray();
+			NotesLoadedTitle = NotesTextsTitles.ToArray();
+
+			ChangeNoteIndex(0);
 		}
 
 		public static void DisposeGTAOverlay()
@@ -182,6 +236,7 @@ namespace Project_127.Overlay
 		{
 			if (IsOverlayInit())
 			{
+				HelperClasses.Logger.Log("Setting Visibility to true");
 				MyGTAOverlay.Visible = true;
 			}
 		}
@@ -190,6 +245,7 @@ namespace Project_127.Overlay
 		{
 			if (IsOverlayInit())
 			{
+				HelperClasses.Logger.Log("Setting Visibility to false");
 				MyGTAOverlay.Visible = false;
 			}
 		}
@@ -220,26 +276,27 @@ namespace Project_127.Overlay
 
 		public static void OverlayToggle()
 		{
+			HelperClasses.Logger.Log("A");
 			if (IsOverlayVisible())
 			{
+				HelperClasses.Logger.Log("B");
 				OverlaySetInvisible();
 			}
 			else
 			{
+				HelperClasses.Logger.Log("C");
 				OverlaySetVisible();
 			}
 		}
 
 		public static void OverlayScrollUp()
 		{
-			MyGTAOverlay.scroll(-5);
-			//HelperClasses.Logger.Log("About to scroll Up a bit...JK, this aint implemented yet");
+			MyGTAOverlay.scroll(5);
 		}
 
 		public static void OverlayScrollDown()
 		{
-			MyGTAOverlay.scroll(5);
-			//HelperClasses.Logger.Log("About to scroll Down a bit...JK, this aint implemented yet");
+			MyGTAOverlay.scroll(-5);
 		}
 
 		public static void OverlayNoteNext()
@@ -258,11 +315,15 @@ namespace Project_127.Overlay
 
 		public static void ChangeNoteIndex(int pNotesLoadedNewIndex)
 		{
-			if (pNotesLoadedNewIndex >= 0 && pNotesLoadedNewIndex <= NotesLoaded.Length - 1)
+			if (IsOverlayInit())
 			{
-				HelperClasses.Logger.Log("NotesLoadedIndex is now: " + pNotesLoadedNewIndex);
-				NotesLoadedIndex = pNotesLoadedNewIndex;
-				NoteOverlay.MyGTAOverlay.setText(NotesLoaded[pNotesLoadedNewIndex]);
+				if (pNotesLoadedNewIndex >= 0 && pNotesLoadedNewIndex <= NotesLoaded.Length - 1)
+				{
+					HelperClasses.Logger.Log("NotesLoadedIndex is now: " + pNotesLoadedNewIndex);
+					NotesLoadedIndex = pNotesLoadedNewIndex;
+					NoteOverlay.MyGTAOverlay.setText(NotesLoaded[pNotesLoadedNewIndex]);
+					NoteOverlay.MyGTAOverlay.setTitle(NotesLoadedTitle[pNotesLoadedNewIndex]);
+				}
 			}
 		}
 
@@ -290,7 +351,7 @@ namespace Project_127.Overlay
 
 		}
 
-	
+
 
 
 		private void btn_cb_Click(object sender, RoutedEventArgs e)

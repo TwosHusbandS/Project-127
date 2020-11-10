@@ -30,45 +30,34 @@
 
 
         <Border x:Name="Border_SpeedRun" Margin="0,10,0,20" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="4" BorderBrush="{x:Static local:Globals.ReadME_Inner_BorderBrush}" BorderThickness="{x:Static local:Globals.ReadME_Inner_BorderThickness}" Background="{x:Static local:Globals.ReadME_Inner_Background}" CornerRadius="{x:Static local:Globals.ReadME_Inner_CornerRadius}">
-
-
             <Grid x:Name="Grid_SpeedRun" >
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="3.5*"/>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
-                <Label x:Name="Grid_SpeedRun_Lbl" Style="{StaticResource lbl}" Grid.Row="0">
-                    <TextBlock>
-                    ASDF
-                       <Hyperlink RequestNavigate="Hyperlink_RequestNavigate">Click here
-     </Hyperlink>
-                    FDSA
-                    </TextBlock>
-                </Label>
-                <Button x:Name="Grid_SpeedRun_Btn" Style="{StaticResource btn_SM}" Grid.Row="1" Margin="100,0,100,30" Content="Click Me" Click="Grid_SpeedRun_Btn_Click"/>
+                <ScrollViewer>
+                    <RichTextBox x:Name="rtb_SpeedRun" IsReadOnly="True" IsDocumentEnabled="True"  Style="{StaticResource rtb}"/>
+                </ScrollViewer>
             </Grid>
         </Border>
 
         <Border x:Name="Border_About" Margin="0,10,0,20" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="4" BorderBrush="{x:Static local:Globals.ReadME_Inner_BorderBrush}" BorderThickness="{x:Static local:Globals.ReadME_Inner_BorderThickness}" Background="{x:Static local:Globals.ReadME_Inner_Background}" CornerRadius="{x:Static local:Globals.ReadME_Inner_CornerRadius}">
             <Grid x:Name="Grid_About">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="3.5*"/>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
-                <Label x:Name="Grid_About_Lbl" Style="{StaticResource lbl}" Grid.Row="0"/>
-                <Button x:Name="Grid_About_Btn" Style="{StaticResource btn_SM}" Grid.Row="1" Margin="100,10,100,30" Content="Donate to charity if you want to support us." Click="Grid_About_Btn_Click"/>
+                <ScrollViewer>
+                    <RichTextBox x:Name="rtb_About" IsReadOnly="True" IsDocumentEnabled="True"  Style="{StaticResource rtb}"/>
+                </ScrollViewer>
             </Grid>
         </Border>
 
         <Border x:Name="Border_Credits" Margin="0,10,0,20" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="4" BorderBrush="{x:Static local:Globals.ReadME_Inner_BorderBrush}" BorderThickness="{x:Static local:Globals.ReadME_Inner_BorderThickness}" Background="{x:Static local:Globals.ReadME_Inner_Background}" CornerRadius="{x:Static local:Globals.ReadME_Inner_CornerRadius}">
             <Grid x:Name="Grid_Credits">
-                <Label x:Name="Grid_Credits_Lbl" Style="{StaticResource lbl}" Grid.Row="0"/>
+                <ScrollViewer>
+                    <RichTextBox x:Name="rtb_Credits" IsReadOnly="True" IsDocumentEnabled="True"  Style="{StaticResource rtb}"/>
+                </ScrollViewer>
             </Grid>
         </Border>
 
         <Border x:Name="Border_Help" Margin="0,10,0,20" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="4" BorderBrush="{x:Static local:Globals.ReadME_Inner_BorderBrush}" BorderThickness="{x:Static local:Globals.ReadME_Inner_BorderThickness}" Background="{x:Static local:Globals.ReadME_Inner_Background}" CornerRadius="{x:Static local:Globals.ReadME_Inner_CornerRadius}">
             <Grid x:Name="Grid_Help">
-                <Label x:Name="Grid_Help_Lbl" Style="{StaticResource lbl}" Grid.Row="0"/>
+                <ScrollViewer>
+                    <RichTextBox x:Name="rtb_Help" IsReadOnly="True" IsDocumentEnabled="True"  Style="{StaticResource rtb}"/>
+                </ScrollViewer>
             </Grid>
         </Border>
 

@@ -11,10 +11,10 @@ using Project_127.Auth;
 using Project_127.HelperClasses;
 using Project_127.Overlay;
 using Project_127.Popups;
-using Project_127.SettingsStuff;
+using Project_127.MySettings;
 using System.Windows.Forms;
 
-namespace Project_127.SettingsStuff
+namespace Project_127.MySettings
 {
 	/// <summary>
 	/// Partial Class for Settings Window. 
@@ -44,7 +44,7 @@ namespace Project_127.SettingsStuff
 			{
 				if (!(HelperClasses.RegeditHandler.DoesValueExists(KVP.Key)))
 				{
-					HelperClasses.Logger.Log("Writing '" + KVP.Key.ToString() + "' to the Registry (Value: '" + KVP.Value.ToString() + "') as a Part of Initiating Settings.", true, 2);
+					HelperClasses.Logger.Log("Writing '" + KVP.Key.ToString() + "' to the Registry (Value: '" + KVP.Value.ToString() + "') on Startup of P127, because it doesnt exist or is empty", true, 2);
 					HelperClasses.RegeditHandler.SetValue(KVP.Key, KVP.Value);
 				}
 			}
@@ -783,7 +783,7 @@ namespace Project_127.SettingsStuff
 
 		public static string GetStringFromColor(System.Drawing.Color pColor)
 		{
-			string rtrn = pColor.A.ToString() + "," + pColor.R.ToString() + "," + pColor.B.ToString() + "," + pColor.G.ToString();
+			string rtrn = pColor.A.ToString() + "," + pColor.R.ToString() + "," + pColor.G.ToString() + "," + pColor.B.ToString();
 			return rtrn;
 		}
 
@@ -988,7 +988,7 @@ namespace Project_127.SettingsStuff
 		{
 			get
 			{
-				return new List<string>((GetSetting("OverlayNotesPresetA").Split(';')));
+				return GetStringListFromString(GetSetting("OverlayNotesPresetA"), ';');
 			}
 			set
 			{
@@ -1000,7 +1000,7 @@ namespace Project_127.SettingsStuff
 		{
 			get
 			{
-				return new List<string>((GetSetting("OverlayNotesPresetB").Split(';')));
+				return GetStringListFromString(GetSetting("OverlayNotesPresetB"), ';');
 			}
 			set
 			{
@@ -1012,7 +1012,7 @@ namespace Project_127.SettingsStuff
 		{
 			get
 			{
-				return new List<string>((GetSetting("OverlayNotesPresetC").Split(';')));
+				return GetStringListFromString(GetSetting("OverlayNotesPresetC"), ';');
 			}
 			set
 			{
@@ -1024,7 +1024,7 @@ namespace Project_127.SettingsStuff
 		{
 			get
 			{
-				return new List<string>((GetSetting("OverlayNotesPresetD").Split(';')));
+				return GetStringListFromString(GetSetting("OverlayNotesPresetD"), ';');
 			}
 			set
 			{
@@ -1036,7 +1036,8 @@ namespace Project_127.SettingsStuff
 		{
 			get
 			{
-				return new List<string>((GetSetting("OverlayNotesPresetE").Split(';')));
+				return GetStringListFromString(GetSetting("OverlayNotesPresetE"), ';');
+
 			}
 			set
 			{
@@ -1048,7 +1049,7 @@ namespace Project_127.SettingsStuff
 		{
 			get
 			{
-				return new List<string>((GetSetting("OverlayNotesPresetF").Split(';')));
+				return GetStringListFromString(GetSetting("OverlayNotesPresetF"), ';');
 			}
 			set
 			{
@@ -1060,12 +1061,27 @@ namespace Project_127.SettingsStuff
 		{
 			get
 			{
-				return new List<string>((GetSetting("OverlayNotesMain").Split(';')));
+				return GetStringListFromString(GetSetting("OverlayNotesMain"), ';');
 			}
 			set
 			{
 				SetSetting("OverlayNotesMain", String.Join(";", value.ToArray()));
 			}
+		}
+
+		public static List<string> GetStringListFromString(string pString, char Deliminiter)
+		{
+			List<string> rtrn = new List<string>(pString.Split(Deliminiter));
+
+			if (rtrn.Count == 1)
+			{
+				if (String.IsNullOrWhiteSpace(rtrn[0]))
+				{
+					rtrn = new List<string>();
+				}
+			}
+
+			return rtrn;
 		}
 
 

@@ -19,7 +19,7 @@ using Project_127.Auth;
 using Project_127.HelperClasses;
 using Project_127.Overlay;
 using Project_127.Popups;
-using Project_127.SettingsStuff;
+using Project_127.MySettings;
 
 namespace Project_127
 {
@@ -538,7 +538,7 @@ namespace Project_127
 			MySaveFile asdff = GetSelectedSaveFile();
 			if (asdff.FileOrFolder == MySaveFile.FileOrFolders.Folder)
 			{
-				Globals.DebugPopup(asdff.FilePath);
+				//Globals.DebugPopup(asdff.FilePath);
 			}
 		}
 	} // End of Class

@@ -16,7 +16,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Resources;
 using System.Windows.Shapes;
-using Project_127.SettingsStuff;
+using Project_127.MySettings;
 using Color = System.Drawing.Color;
 
 namespace Project_127.Overlay.NoteOverlayPages
@@ -26,11 +26,10 @@ namespace Project_127.Overlay.NoteOverlayPages
 	/// </summary>
 	public partial class NoteOverlay_Look : Page
 	{
-		// Using Properties for all Look related stuff here
-		// with getter and setter (they just get / set the settings)
-		// for some (colors and numbers, im not doing that, since those get updated a lot
-		//			[all interactions in colorpicker, all values which are slided over])
-		//         im not doing that, but manually set the setting on XAML events
+		// the DropDowns / ComboBoxes are getting Writte and Read from Settings on getter / setter
+
+		// Setting those 4 getters setters below all the time
+		// and writing it to settings on close / mouseleftup events
 
 		private static int _OverlayMargin = Settings.OverlayMargin;
 		private static int _OverlayWidth = Settings.OverlayWidth;
@@ -48,6 +47,7 @@ namespace Project_127.Overlay.NoteOverlayPages
 			set
 			{
 				_OverlayMargin = value;
+				Overlay_Preview.OP.SetMargin(OverlayMargin);
 			}
 		}
 
@@ -60,6 +60,7 @@ namespace Project_127.Overlay.NoteOverlayPages
 			set
 			{
 				_OverlayWidth = value;
+				Overlay_Preview.OP.SetWidth(OverlayWidth);
 			}
 		}
 
@@ -72,6 +73,7 @@ namespace Project_127.Overlay.NoteOverlayPages
 			set
 			{
 				_OverlayHeight = value;
+				Overlay_Preview.OP.SetHeight(OverlayHeight);
 			}
 		}
 
@@ -84,6 +86,7 @@ namespace Project_127.Overlay.NoteOverlayPages
 			set
 			{
 				_OverlayTextSize = value;
+				Overlay_Preview.OP.SetTextSize(OverlayTextSize);
 			}
 		}
 
@@ -96,6 +99,7 @@ namespace Project_127.Overlay.NoteOverlayPages
 			set
 			{
 				Settings.OverlayLocation = value;
+				Overlay_Preview.OP.SetLocation();
 				if (NoteOverlay.IsOverlayInit())
 				{
 					NoteOverlay.MyGTAOverlay.Position = Settings.OverlayLocation;
@@ -112,6 +116,7 @@ namespace Project_127.Overlay.NoteOverlayPages
 			set
 			{
 				Settings.OverlayTextFont = value;
+				Overlay_Preview.OP.SetFont();
 				if (NoteOverlay.IsOverlayInit())
 				{
 					NoteOverlay.MyGTAOverlay.setFont(Settings.OverlayTextFont, Settings.OverlayTextSize);
@@ -128,6 +133,7 @@ namespace Project_127.Overlay.NoteOverlayPages
 			set
 			{
 				_OverlayBackground = value;
+				Overlay_Preview.OP.SetBackground(OverlayBackground);
 			}
 		}
 
@@ -140,6 +146,7 @@ namespace Project_127.Overlay.NoteOverlayPages
 			set
 			{
 				_OverlayForeground = value;
+				Overlay_Preview.OP.SetForeground(OverlayForeground);
 			}
 		}
 
@@ -157,6 +164,12 @@ namespace Project_127.Overlay.NoteOverlayPages
 			sl_Margin.Value = OverlayMargin;
 			sl_Height.Value = OverlayHeight;
 			sl_TextSize.Value = OverlayTextSize;
+
+			try { lbl_Width.Content = OverlayWidth.ToString() + " px"; } catch { }
+			try { lbl_Height.Content = OverlayHeight.ToString() + " px"; } catch { }
+			try { lbl_Margin.Content = OverlayMargin.ToString() + " px"; } catch { }
+			try { lbl_TextSize.Content = OverlayTextSize.ToString() + " pt"; } catch { }
+
 
 			ComboBox_Fonts.ItemsSource = Fonts.SystemFontFamilies.ToArray();
 
@@ -177,6 +190,8 @@ namespace Project_127.Overlay.NoteOverlayPages
 			ComboBox_OverlayLocation.ItemsSource = myEnumValues;
 			ComboBox_OverlayLocation.SelectedItem = NoteOverlay_Look.OverlayLocation.ToString();
 
+			MyColorPicker_Background.SelectedColor = Settings.OverlayBackground;
+			MyColorPicker_Foreground.SelectedColor = Settings.OverlayForeground;
 		}
 
 		private void ComboBox_Fonts_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -224,7 +239,7 @@ namespace Project_127.Overlay.NoteOverlayPages
 			Settings.OverlayWidth = OverlayWidth;
 			if (NoteOverlay.IsOverlayInit())
 			{
-				//MyGTAOverlay.Width = Settings.OverlayWidth;
+				NoteOverlay.MyGTAOverlay.width = Settings.OverlayWidth;
 			}
 		}
 
@@ -243,7 +258,7 @@ namespace Project_127.Overlay.NoteOverlayPages
 			Settings.OverlayHeight = OverlayHeight;
 			if (NoteOverlay.IsOverlayInit())
 			{
-				//MyGTAOverlay.Height = Settings.OverlayHeight;
+				NoteOverlay.MyGTAOverlay.height = Settings.OverlayHeight;
 			}
 		}
 
@@ -266,23 +281,32 @@ namespace Project_127.Overlay.NoteOverlayPages
 			}
 		}
 
-
-		private void ColorPicker_Background_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<System.Windows.Media.Color?> e)
+		private void MyColorPicker_Foreground_ColorChanged()
 		{
-
+			OverlayForeground = MyColorPicker_Foreground.SelectedColor;
 		}
 
-		private void ColorPicker_Foreground_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<System.Windows.Media.Color?> e)
+		private void MyColorPicker_Foreground_Closed()
 		{
-			System.Windows.Media.Color? asdf = ColorPicker_Foreground.SelectedColor;
-			// asdf.ToString() is just = "#AARRGGBB";
-			// so easy to deal with I suppose
+			Settings.OverlayForeground = OverlayForeground;
+			if (NoteOverlay.IsOverlayInit())
+			{
+				NoteOverlay.MyGTAOverlay.setTextColors(Settings.OverlayForeground, Color.Transparent);
+			}
 		}
 
-
-		private void DisplayPopup(object sender, RoutedEventArgs e)
+		private void MyColorPicker_Background_ColorChanged()
 		{
-			popup.IsOpen = true;
+			OverlayBackground = MyColorPicker_Background.SelectedColor;
+		}
+
+		private void MyColorPicker_Background_Closed()
+		{
+			Settings.OverlayBackground = OverlayBackground;
+			if (NoteOverlay.IsOverlayInit())
+			{
+				NoteOverlay.MyGTAOverlay.setBackgroundColor(Settings.OverlayBackground);
+			}
 		}
 	}
 

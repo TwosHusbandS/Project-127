@@ -30,19 +30,17 @@
 
         <Border x:Name="bdr_Files" Grid.Row="1" Grid.RowSpan="5" Grid.Column="0" Grid.ColumnSpan="2" BorderThickness="2" Margin="5" BorderBrush="{x:Static local:Globals.MyColorOffWhite}">
             <ScrollViewer x:Name="sv_Files">
-                <DataGrid x:Name="dg_Files" Style="{StaticResource dg}" PreviewMouseWheel="dg_Files_PreviewMouseWheel">
+                <DataGrid x:Name="dg_Files" Style="{StaticResource dg}" PreviewMouseWheel="dg_Files_PreviewMouseWheel" PreviewKeyDown="dg_Files_PreviewKeyDown" SelectionMode="Extended" SelectionUnit="FullRow">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="FileName" Binding="{Binding FileName, Mode=OneWay}" Width="*" FontSize="20" />
+                        <DataGridTextColumn Header="FileNiceName" Binding="{Binding FileNiceName, Mode=OneWay}" Width="*" FontSize="20" />
                     </DataGrid.Columns>
                 </DataGrid>
             </ScrollViewer>
         </Border>
-        
+        <Button Style="{StaticResource btn_SM}" Grid.Row="6" Grid.Column="0" Margin="5" x:Name="btn_Add" Click="btn_Add_Click" Content="Add File" ToolTip="Add File to selection"/>
+        <Button Style="{StaticResource btn_SM}" Grid.Row="6" Grid.Column="1" Margin="5" x:Name="btn_Delete" Click="btn_Delete_Click" Content="Remove File" ToolTip="Remove File from selection"/>
 
 
-
-        <Button Style="{StaticResource btn_SM}" Margin="5" x:Name="btn_Add" Grid.Row="6" Grid.Column="0" Click="btn_Add_Click" Content="Add File"/>
-        <Button Style="{StaticResource btn_SM}" Margin="5" x:Name="btn_Delete" Grid.Row="6" Grid.Column="1" Click="btn_Delete_Click" Content="Delete File"/>
 
 
         <!--<Button Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2" x:Name="btn_Help" Content="Help" Click="btn_Help_Click" Style="{StaticResource btn_SE_Path}"/>-->

@@ -11,12 +11,13 @@ using Image = GameOverlay.Drawing.Image;
 
 namespace Project_127
 {
-	public class GTAOverlay : IDisposable
-	{
+
+    public class GTAOverlay : IDisposable
+    {
 		// If set to false, this starts and keeps KeyboardListenerEvent running 100% of the time.
 		// Automatically set to true if we compile debug
 		public static bool DebugMode = true;
-		public const string targetWindowDebug = "Command Prompt";
+		public const string targetWindowDebug = "TeamSpeak 3";
 		public const string targetWindowNonDebug = "Grand Theft Auto V";
 
 		public static string targetWindow
@@ -78,7 +79,6 @@ namespace Project_127
 
 			return rect;
 		}
-
 
 
 
@@ -175,6 +175,7 @@ namespace Project_127
 			_images = new Dictionary<string, Image>();
 			overlayObjects = new List<overlayObject>();
 			//var wb = new WindowBounds();
+
 			HelperClasses.Logger.Log("Searching for '" + targetWindow + "' window...");
 
 			var windowHandle = WindowHelper.FindWindow(targetWindow);
@@ -336,6 +337,12 @@ namespace Project_127
 		{
 			HelperClasses.Logger.Log("Overlay text updated");
 			NoteText = charWrap(text, WrapCount);
+		}
+
+		// Just have this here, so i have something to call...
+		public void setTitle(string title)
+		{
+
 		}
 
 		/// <summary>

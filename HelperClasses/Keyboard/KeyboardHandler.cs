@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Project_127.Overlay;
 using Project_127;
-using Project_127.SettingsStuff;
+using Project_127.MySettings;
 
 namespace Project_127.HelperClasses
 {
@@ -34,27 +34,27 @@ namespace Project_127.HelperClasses
 
 					// Those are all if and not else if because users might be stupid and use the same key for multiple things
 
-					//if (Settings.EnableAutoStartJumpScript)
-					//{
-					//	if (pKey == Settings.JumpScriptKey1)
-					//	{
-					//		SurpressEventFurther = true;
-					//		if (!JumpKey1Down)
-					//		{
-					//			HelperClasses.KeyboardSender.SendKeyPress(GTAOverlay.targetWindow, Settings.JumpScriptKey2);
-					//		}
-					//		JumpKey1Down = true;
-					//	}
-					//	if (pKey == Settings.JumpScriptKey2)
-					//	{
-					//		SurpressEventFurther = true;
-					//		if (!JumpKey2Down)
-					//		{
-					//			HelperClasses.KeyboardSender.SendKeyPress(GTAOverlay.targetWindow, Settings.JumpScriptKey1);
-					//		}
-					//		JumpKey2Down = true;
-					//	}
-					//}
+					if (Settings.EnableAutoStartJumpScript)
+					{
+						if (pKey == Settings.JumpScriptKey1)
+						{
+							SurpressEventFurther = true;
+							if (!JumpKey1Down)
+							{
+								HelperClasses.KeyboardSender.SendKeyPress(GTAOverlay.targetWindow, Settings.JumpScriptKey2);
+							}
+							JumpKey1Down = true;
+						}
+						if (pKey == Settings.JumpScriptKey2)
+						{
+							SurpressEventFurther = true;
+							if (!JumpKey2Down)
+							{
+								HelperClasses.KeyboardSender.SendKeyPress(GTAOverlay.targetWindow, Settings.JumpScriptKey1);
+							}
+							JumpKey2Down = true;
+						}
+					}
 
 
 					if (Settings.EnableOverlay)
@@ -74,14 +74,14 @@ namespace Project_127.HelperClasses
 							{
 								NoteOverlay.OverlayScrollDown();
 							}
-							if (pKey == Settings.KeyOverlayScrollLeft)
-							{
-								NoteOverlay.OverlayNoteChapterPrev();
-							}
-							if (pKey == Settings.KeyOverlayScrollRight)
-							{
-								NoteOverlay.OverlayNoteChapterNext();
-							}
+							//if (pKey == Settings.KeyOverlayScrollLeft)
+							//{
+							//	NoteOverlay.OverlayNoteChapterPrev();
+							//}
+							//if (pKey == Settings.KeyOverlayScrollRight)
+							//{
+							//	NoteOverlay.OverlayNoteChapterNext();
+							//}
 							if (pKey == Settings.KeyOverlayNotePrev)
 							{
 								NoteOverlay.OverlayNotePrev();
@@ -108,7 +108,7 @@ namespace Project_127.HelperClasses
 
 
 		[STAThread]
-		public static void KeyboardUpEvent(Keys pKey)
+		public static bool KeyboardUpEvent(Keys pKey)
 		{
 			if (Settings.EnableAutoStartJumpScript)
 			{
@@ -121,6 +121,7 @@ namespace Project_127.HelperClasses
 					JumpKey2Down = false;
 				}
 			}
+			return false;
 		}
 
 

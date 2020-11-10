@@ -19,9 +19,9 @@ using Project_127.Auth;
 using Project_127.HelperClasses;
 using Project_127.Overlay;
 using Project_127.Popups;
-using Project_127.SettingsStuff;
+using Project_127.MySettings;
 
-namespace Project_127.SettingsStuff
+namespace Project_127.MySettings
 {
 	/// <summary>
 	/// Class Settings.xaml (Partical class is in SettingsPartial.cs)
@@ -841,18 +841,6 @@ namespace Project_127.SettingsStuff
 			Globals.CheckForUpdate();
 		}
 
-		private void btn_ImportZIP_Click(object sender, RoutedEventArgs e)
-		{
-			string ZipFileLocation = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.File, "Import ZIP File", Globals.ProjectInstallationPath, pFilter: "ZIP Files|*.zip*");
-			if (HelperClasses.FileHandling.doesFileExist(ZipFileLocation))
-			{
-				LauncherLogic.ImportZip(ZipFileLocation);
-			}
-			else
-			{
-				new Popup(Popup.PopupWindowTypes.PopupOk, "No ZIP File selected").ShowDialog();
-			}
-		}
 
 		private void btn_Set_Overlay_Notes_Click(object sender, RoutedEventArgs e)
 		{
@@ -872,26 +860,34 @@ namespace Project_127.SettingsStuff
 			Globals.PageState = Globals.PageStates.NoteOverlay;
 		}
 
-		public void btn_Reset_Everything_Click(object sender, RoutedEventArgs e)
+
+		private void btn_Reset_Everything_Click(object sender, RoutedEventArgs e)
+		{
+			ResetEverything();
+		}
+
+		public static void ResetEverything()
 		{
 			Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "This resets the whole Project 1.27 Client including:\nSettings\nZIP Files Downloaded\nBacked up GTA Files to upgrade when downgraded\n\nYou need to repair GTA V through Steam / Epic / Rockstar after this\n(if its not already Up-To-Date)");
 			yesno.ShowDialog();
 			if (yesno.DialogResult == true)
 			{
+				new Popup(Popup.PopupWindowTypes.PopupOk, "This might take a while, just hit \"OK\" and wait a bit.\nProject 1.27 will Exit once its done.").ShowDialog();
+
 				HelperClasses.Logger.Log("Initiating a full Reset:");
-				
+
 				HelperClasses.Logger.Log("Making an Upgrade.");
 				LauncherLogic.Upgrade();
-				HelperClasses.Logger.Log("Done making an Upgrade.",1);
-				
+				HelperClasses.Logger.Log("Done making an Upgrade.", 1);
+
 				HelperClasses.Logger.Log("Deleting all Regedit Values.");
 				RegeditHandler.DeleteKey();
-				HelperClasses.Logger.Log("Done deleting all Regedit Values.",1);
-				
+				HelperClasses.Logger.Log("Done deleting all Regedit Values.", 1);
+
 				HelperClasses.Logger.Log("Deleting all extracted ZIP Files.");
 				HelperClasses.FileHandling.DeleteFolder(LauncherLogic.ZIPFilePath.TrimEnd('\\') + @"\Project_127_Files");
-				HelperClasses.Logger.Log("Done deleting all extracted ZIP Files.",1);
-				
+				HelperClasses.Logger.Log("Done deleting all extracted ZIP Files.", 1);
+
 				HelperClasses.Logger.Log("Gonna close this now I guess...cya");
 				HelperClasses.Logger.Log("=");
 				HelperClasses.Logger.Log("=");
@@ -907,6 +903,7 @@ namespace Project_127.SettingsStuff
 				Environment.Exit(0);
 			}
 		}
+
 
 		/// <summary>
 		/// Method which gets called when the Update Button is clicked
@@ -949,6 +946,39 @@ namespace Project_127.SettingsStuff
 			MainWindow.MW.UpdateGUIDispatcherTimer();
 		}
 
+		private void btn_UseBackup_Click(object sender, RoutedEventArgs e)
+		{
+			string oldPath = LauncherLogic.ZIPFilePath.TrimEnd('\\') + @"\Project_127_Files\UpgradeFiles\";
+			string newPath = LauncherLogic.ZIPFilePath.TrimEnd('\\') + @"\Project_127_Files\UpgradeFiles_Backup\";
+
+			if (HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(newPath).Length <= 1)
+			{
+				new Popup(Popup.PopupWindowTypes.PopupOk, "No Backup Files available.").ShowDialog();
+				return;
+			}
+			else
+			{
+				HelperClasses.FileHandling.DeleteFolder(oldPath);
+				HelperClasses.FileHandling.movePath(newPath, oldPath);
+
+
+
+				List<MyFileOperation> MyFileOperations = new List<MyFileOperation>();
+
+				MyFileOperations.Add(new MyFileOperation(MyFileOperation.FileOperations.Delete, oldPath, "", "Deleting '" + (oldPath) + "'", 2, MyFileOperation.FileOrFolder.Folder));
+				MyFileOperations.Add(new MyFileOperation(MyFileOperation.FileOperations.Move, newPath, oldPath, "Moving '" + (newPath) + "' to '" + (oldPath) + "'", 2, MyFileOperation.FileOrFolder.Folder));
+
+				new PopupProgress(PopupProgress.ProgressTypes.FileOperation, "Backup", MyFileOperations).ShowDialog();
+
+
+
+
+
+				new Popup(Popup.PopupWindowTypes.PopupOk, "Using backup files now.").ShowDialog();
+			}
+
+
+		}
 
 	} // End of Class
 } // End of Namespace

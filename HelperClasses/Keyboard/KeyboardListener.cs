@@ -11,7 +11,7 @@ using Project_127.Auth;
 using Project_127.HelperClasses;
 using Project_127.Overlay;
 using Project_127.Popups;
-using Project_127.SettingsStuff;
+using Project_127.MySettings;
 
 namespace Project_127.HelperClasses
 {
@@ -37,6 +37,16 @@ namespace Project_127.HelperClasses
 		private static IntPtr _hookID = IntPtr.Zero;
 
 		public static bool IsRunning = false;
+
+		private static IntPtr SetHook(LowLevelKeyboardProc proc)
+		{
+			using (Process curProcess = Process.GetCurrentProcess())
+			using (ProcessModule curModule = curProcess.MainModule)
+			{
+				return SetWindowsHookEx(WH_KEYBOARD_LL, proc,
+					GetModuleHandle(curModule.ModuleName), 0);
+			}
+		}
 
 		public static void Start()
 		{
@@ -81,15 +91,7 @@ namespace Project_127.HelperClasses
 			KeyboardListener.IsRunning = false;
 		}
 
-		private static IntPtr SetHook(LowLevelKeyboardProc proc)
-		{
-			using (Process curProcess = Process.GetCurrentProcess())
-			using (ProcessModule curModule = curProcess.MainModule)
-			{
-				return SetWindowsHookEx(WH_KEYBOARD_LL, proc,
-					GetModuleHandle(curModule.ModuleName), 0);
-			}
-		}
+
 
 		private delegate IntPtr LowLevelKeyboardProc(int nCode, IntPtr wParam, IntPtr lParam);
 
@@ -118,7 +120,6 @@ namespace Project_127.HelperClasses
 		private static IntPtr HookCallback(int nCode, IntPtr wParam, IntPtr lParam)
 		{
 			bool SurpressKeyEvent = false;
-
 			try
 			{
 				if (nCode >= 0)
@@ -126,32 +127,17 @@ namespace Project_127.HelperClasses
 					int vkCode = Marshal.ReadInt32(lParam);
 					if (wParam == (IntPtr)WM_KEYDOWN)
 					{
-						if (Settings.EnableAutoStartJumpScript)
-						{
-							if (((Keys)vkCode == Settings.JumpScriptKey1))
-							{
-								// Call Line Below with IntPtr to the KBDLLHOOKSTRUCT with the uint vkCode: (int)Settings.JumpScriptKey2
-								// return CallNextHookEx(_hookID, nCode, wParam, lParam);
-							}
-							else if (((Keys)vkCode == Settings.JumpScriptKey2))
-							{
-								// Call Line Below with IntPtr to the KBDLLHOOKSTRUCT with the uint vkCode: (int)Settings.JumpScriptKey1
-								// return CallNextHookEx(_hookID, nCode, wParam, lParam);
-							}
-						}
-
 						SurpressKeyEvent = KeyboardHandler.KeyboardDownEvent((Keys)vkCode);
 					}
 					else if (wParam == (IntPtr)WM_KEYUP)
 					{
-						KeyboardHandler.KeyboardUpEvent((Keys)vkCode);
+						SurpressKeyEvent = KeyboardHandler.KeyboardUpEvent((Keys)vkCode);
 					}
 				}
 			}
 			catch (Exception e)
 			{
 				HelperClasses.Logger.Log("Try Catch in KeyboardListener KeyEvent Callback Failed: " + e.ToString());
-				Globals.DebugPopup(e.ToString());
 				return new IntPtr(-1);
 			}
 

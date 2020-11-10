@@ -18,7 +18,7 @@ using Project_127.Auth;
 using Project_127.HelperClasses;
 using Project_127.Overlay;
 using Project_127.Popups;
-using Project_127.SettingsStuff;
+using Project_127.MySettings;
 using System.Windows.Resources;
 using System.Windows.Media.Imaging;
 
@@ -77,6 +77,26 @@ namespace Project_127
 				{
 					return "https://raw.githubusercontent.com/TwosHusbandS/Project-127/master/Installer/Update.xml";
 				}
+			}
+		}
+
+		public static Version GameVersion
+		{
+			get
+			{
+				try
+				{
+					if (HelperClasses.FileHandling.doesFileExist(LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\gta5.exe"))
+					{
+						FileVersionInfo myFVI = FileVersionInfo.GetVersionInfo(LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\gta5.exe");
+						return new Version(myFVI.FileVersion);
+					}
+				}
+				catch
+				{
+					
+				}
+				return new Version("1.0.0.0");
 			}
 		}
 
@@ -149,6 +169,45 @@ namespace Project_127
 		/// Property of the Registry Key we use for our Settings
 		/// </summary>													
 		public static RegistryKey MySettingsKey { get { return RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64).CreateSubKey("SOFTWARE").CreateSubKey("Project_127"); } }
+
+
+		public static Dictionary<string, string> VersionTable { get; private set; } = new Dictionary<string, string>()
+		{
+			{"1.0.323.1", "1.24" },
+			{"1.0.331.1", "1.24" },
+			{"1.0.335.2", "1.24" },
+			{"1.0.350.1", "1.26" },
+			{"1.0.350.2", "1.26" },
+			{"1.0.372.2", "1.27" },
+			{"1.0.393.2", "1.28" },
+			{"1.0.393.4", "1.28.01" },
+			{"1.0.463.1", "1.29" },
+			{"1.0.505.2", "1.30" },
+			{"1.0.573.1", "1.31" },
+			{"1.0.617.1", "1.32" },
+			{"1.0.678.1", "1.33" },
+			{"1.0.757.2", "1.34" },
+			{"1.0.757.4", "1.34" },
+			{"1.0.791.2", "1.35" },
+			{"1.0.877.1", "1.36" },
+			{"1.0.944.2", "1.37" },
+			{"1.0.1011.1", "1.38" },
+			{"1.0.1032.1", "1.39" },
+			{"1.0.1103.2", "1.40" },
+			{"1.0.1180.2", "1.41" },
+			{"1.0.1290.1", "1.42" },
+			{"1.0.1365.1", "1.43" },
+			{"1.0.1493.0", "1.44" },
+			{"1.0.1493.1", "1.44" },
+			{"1.0.1604.0", "1.46" },
+			{"1.0.1734.0", "1.47" },
+			{"1.0.1737.0", "1.48" },
+			{"1.0.1737.6", "1.48" },
+			{"1.0.1868.0", "1.50" },
+			{"1.0.2060.0", "1.51" },
+			{"1.0.2060.1", "1.52" },
+		};
+
 
 		/// <summary>
 		/// Property of our default Settings
@@ -317,6 +376,7 @@ namespace Project_127
 				if (Settings.LastLaunchedVersion < new Version("1.1.0.0"))
 				{
 
+
 					Settings.JumpScriptKey1 = System.Windows.Forms.Keys.Space;
 					Settings.JumpScriptKey2 = System.Windows.Forms.Keys.L;
 
@@ -338,6 +398,12 @@ namespace Project_127
 					FileHandling.deleteFile(LauncherLogic.UpgradeFilePath.TrimEnd('\\') + @"\Readme.txt");
 					FileHandling.deleteFile(LauncherLogic.UpgradeFilePath.TrimEnd('\\') + @"\socialclub.dll");
 					FileHandling.deleteFile(LauncherLogic.UpgradeFilePath.TrimEnd('\\') + @"\tinyxml2.dll");
+
+					string[] tmp = HelperClasses.FileHandling.GetSubFolders(ProjectInstallationPath);
+					foreach (string temp in tmp)
+					{
+						HelperClasses.FileHandling.DeleteFolder(temp);
+					}
 				}
 
 				Settings.LastLaunchedVersion = Globals.ProjectVersion;
@@ -346,6 +412,9 @@ namespace Project_127
 
 			// Deleting all Installer and ZIP Files from own Project Installation Path
 			DeleteOldFiles();
+
+			// Throw annoucements
+			HandleAnnouncements();
 
 			// Auto Updater
 			CheckForUpdate();
@@ -373,6 +442,27 @@ namespace Project_127
 			MainWindow.MW.UpdateGUIDispatcherTimer();
 		}
 
+		public static string GetGameVersionOfBuildNumber(Version BuildNumber)
+		{
+			foreach (KeyValuePair<string, string> KVP in Globals.VersionTable)
+			{
+				if (KVP.Key == BuildNumber.ToString())
+				{
+					return KVP.Value;
+				}
+			}
+
+			if (BuildNumber < new Version("1.0.2060.1"))
+			{
+				return "???";
+			}
+			else
+			{
+				return "> 1.52";
+			}
+		}
+
+
 		/// <summary>
 		/// CommandLineArgumentIntepretation(), currently used for Background Image
 		/// </summary>
@@ -398,6 +488,17 @@ namespace Project_127
 					}
 					catch { }
 				}
+			}
+		}
+
+
+		private static void HandleAnnouncements()
+		{
+			string MyAnnoucment = HelperClasses.FileHandling.GetXMLTagContent(HelperClasses.FileHandling.GetStringFromURL(Globals.URL_AutoUpdate), "announcement");
+			if (MyAnnoucment != "")
+			{
+				MyAnnoucment = MyAnnoucment.Replace(@"\n", "\n");
+				new Popup(Popup.PopupWindowTypes.PopupOk, MyAnnoucment);
 			}
 		}
 
@@ -578,6 +679,48 @@ namespace Project_127
 			}
 		}
 
+		public static string DDL = "";
+
+		public static string GetDDL(string pLink)
+		{
+			ActualGetDDL(pLink);
+			return DDL;
+		}
+
+		public async static void ActualGetDDL(string pLink)
+		{
+			DDL = pLink;
+
+			if (pLink.Contains("anonfiles"))
+			{
+				string NonDDL = pLink;
+
+				//href = "https:\/\/cdn-[0-9]+\.anonfiles\.com\/[a-zA-Z0-9]+\/[a-zA-Z0-9]+-[a-zA-Z0-9]+\/[_\w]+\.zip">
+				string RegexPattern = @"href=""https:\/\/cdn-[0-9]+\.anonfiles\.com\/[a-zA-Z0-9]+\/[a-zA-Z0-9]+-[a-zA-Z0-9]+\/[_\w]+\.zip"">";
+
+				// Setting up some Webclient stuff. 
+				WebClient webClient = new WebClient();
+				string webSource = await webClient.DownloadStringTaskAsync(NonDDL);
+				webSource.Replace(" ", "");
+				webSource.Replace("\n", "");
+				webSource.Replace("\r", "");
+				webSource.Replace("\t", "");
+
+				Regex MyRegex = new Regex(RegexPattern);
+				Match MyMatch = MyRegex.Match(webSource);
+
+				if (MyMatch.Success)
+				{
+					if (MyMatch.Groups.Count > 0)
+					{
+						DDL = MyMatch.Groups[0].ToString();
+						int FirstIndexOfDoubleQuotes = DDL.IndexOf('"');
+						int LastIndexOfDoubleQuotes = DDL.LastIndexOf('"');
+						DDL = DDL.Substring(FirstIndexOfDoubleQuotes + 1, LastIndexOfDoubleQuotes - FirstIndexOfDoubleQuotes - 1);
+					}
+				}
+			}
+		}
 
 		/// <summary>
 		/// Checks for Update of the ZIPFile and extracts it
@@ -623,6 +766,9 @@ namespace Project_127
 
 						// Deleting old ZIPFile
 						HelperClasses.FileHandling.deleteFile(Globals.ZipFileDownloadLocation);
+
+						// Getting actual DDL
+						pathOfNewZip = GetDDL(pathOfNewZip);
 
 						// Downloading the ZIP File
 						new PopupDownload(pathOfNewZip, Globals.ZipFileDownloadLocation, "ZIP-File").ShowDialog();
@@ -715,8 +861,7 @@ namespace Project_127
 
 				if (value != PageStates.NoteOverlay)
 				{
-					MainWindow.MW.Width = 900;
-					MainWindow.MW.Grid_Preview.Visibility = Visibility.Hidden;
+					NoteOverlay.DisposePreview();
 				}
 
 				MainWindow.MW.SetBackground(Globals.GetBackGroundPath());

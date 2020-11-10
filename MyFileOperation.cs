@@ -8,7 +8,7 @@ using Project_127.Auth;
 using Project_127.HelperClasses;
 using Project_127.Overlay;
 using Project_127.Popups;
-using Project_127.SettingsStuff;
+using Project_127.MySettings;
 
 namespace Project_127
 {
@@ -27,6 +27,21 @@ namespace Project_127
 			Hardlink,
 			Delete
 		}
+
+		/// <summary>
+		/// Enum FileOrFolder
+		/// </summary>
+		public enum FileOrFolder
+		{
+			File,
+			Folder
+		}
+
+		/// <summary>
+		/// Property of Class Instance,  FileOrFolder Type
+		/// </summary>
+		public FileOrFolder MyFileOrFolder { get; private set; }
+
 
 		/// <summary>
 		/// Property of Class Instance, File Operation Type
@@ -61,13 +76,14 @@ namespace Project_127
 		/// <param name="pNewFile"></param>
 		/// <param name="pLog"></param>
 		/// <param name="pLogLevel"></param>
-		public MyFileOperation(FileOperations pFileOperation, string pOriginalFile, string pNewFile, string pLog, int pLogLevel)
+		public MyFileOperation(FileOperations pFileOperation, string pOriginalFile, string pNewFile, string pLog, int pLogLevel, FileOrFolder pFileOrFolder = FileOrFolder.File)
 		{
 			FileOperation = pFileOperation;
 			OriginalFile = pOriginalFile;
 			NewFile = pNewFile;
 			Log = pLog;
 			LogLevel = pLogLevel;
+			MyFileOrFolder = pFileOrFolder;
 		}
 
 		/// <summary>
@@ -81,13 +97,27 @@ namespace Project_127
 				case FileOperations.Copy:
 					{
 						HelperClasses.Logger.Log(pMyFileOperation.Log, pMyFileOperation.LogLevel);
-						HelperClasses.FileHandling.copyFile(pMyFileOperation.OriginalFile, pMyFileOperation.NewFile);
+						if (pMyFileOperation.MyFileOrFolder == FileOrFolder.File)
+						{
+							HelperClasses.FileHandling.copyFile(pMyFileOperation.OriginalFile, pMyFileOperation.NewFile);
+						}
+						else
+						{
+
+						}
 						break;
 					}
 				case FileOperations.Move:
 					{
 						HelperClasses.Logger.Log(pMyFileOperation.Log, pMyFileOperation.LogLevel);
-						HelperClasses.FileHandling.moveFile(pMyFileOperation.OriginalFile, pMyFileOperation.NewFile);
+						if (pMyFileOperation.MyFileOrFolder == FileOrFolder.File)
+						{
+							HelperClasses.FileHandling.moveFile(pMyFileOperation.OriginalFile, pMyFileOperation.NewFile);
+						}
+						else
+						{
+							HelperClasses.FileHandling.movePath(pMyFileOperation.OriginalFile, pMyFileOperation.NewFile);
+						}
 						break;
 					}
 				case FileOperations.Hardlink:
@@ -107,7 +137,14 @@ namespace Project_127
 				case FileOperations.Delete:
 					{
 						HelperClasses.Logger.Log(pMyFileOperation.Log, pMyFileOperation.LogLevel);
-						HelperClasses.FileHandling.deleteFile(pMyFileOperation.OriginalFile);
+						if (pMyFileOperation.MyFileOrFolder == FileOrFolder.File)
+						{
+							HelperClasses.FileHandling.deleteFile(pMyFileOperation.OriginalFile);
+						}
+						else
+						{
+							HelperClasses.FileHandling.DeleteFolder(pMyFileOperation.OriginalFile);
+						}
 						break;
 					}
 				default: break;
