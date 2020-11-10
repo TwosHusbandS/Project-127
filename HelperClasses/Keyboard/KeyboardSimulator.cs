@@ -15,14 +15,18 @@ namespace Project_127.HelperClasses.Keyboard
 			INPUT Input = new INPUT();
 			Input.type = 1; // 1 = Keyboard Input
 			Input.U.ki.wScan = a;
-			if (isUp)
-			{
-				Input.U.ki.dwFlags = KEYEVENTF.KEYUP;
-			}
-			else
-			{
-				Input.U.ki.dwFlags = KEYEVENTF.KEYDOWN;
-			}
+			
+			Input.U.ki.dwFlags = KEYEVENTF.SCANCODE;
+			
+			//if (isUp)
+			//{
+			//	Input.U.ki.dwFlags = KEYEVENTF.KEYUP;
+			//}
+			//else
+			//{
+			//	Input.U.ki.dwFlags = KEYEVENTF.KEYDOWN;
+			//}
+			
 			Inputs[0] = Input;
 			SendInput(1, Inputs, INPUT.Size);
 		}

@@ -101,14 +101,15 @@ Main To do:
 
 
 			Quick and dirty notes:
-					Without making anti virus appear again
+				=> Theres currently debuglogs of catching keyboard events
+			
 				- Title from GTAV Overlay is missing (waiting on Dragon for that)
-				- CPU Usage Poll foreground window instead of change listener
-					=> Finish new implementation of hook with Application.Run instead of custom EventLoop
-						>> https://stackoverflow.com/a/32016279
-					=> If that doesnt work, poll every 100 ms, see how CPU usage is
 				- Jumpscript Send Key stuff
-				- [DONE] Split upgrading downgrading into 2 progress popups
+					=> Had some PoC work for simulating keypresses which GTA V picks up.
+					=> It only send keydown and not keyup
+					=> It also got caught in our own keyboard listeners, but i can get around that
+				- [DONE] Took care of all Listeners. Using and keeping track of Threads for it as of right now. Seems to work
+				- [DONE] Split upgrading downgrading into 17 progress popups
 				- [DONE] Finish Readme (Speedrun text + Reset Button + DL of big zip)
 				- [DONE] ZIP Hash for big ZIP
 				- [DONE] Bring back functionality from: https://github.com/TwosHusbandS/Project-127/commit/a5dcbd5c1a4011c8e1845c4f338f6f9ffbe79a92
