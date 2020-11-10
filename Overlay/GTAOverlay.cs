@@ -1,13 +1,17 @@
 ﻿using GameOverlay.Drawing;
 using GameOverlay.Windows;
+using GSF;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 using Image = GameOverlay.Drawing.Image;
 
 namespace Project_127
 {
+
     public class GTAOverlay : IDisposable
     {
 		// If set to false, this starts and keeps KeyboardListenerEvent running 100% of the time.
@@ -77,16 +81,16 @@ namespace Project_127
 		}
 
 
-		
 
 		private readonly Dictionary<string, SolidBrush> _brushes;
 		private readonly Dictionary<string, Font> _fonts;
 		private readonly Dictionary<string, Image> _images;
-        private float bgImageOpac = (float).7;
-        private string bgImagePath = "";
-        private string NoteText = "";
+		private readonly List<overlayObject> overlayObjects;
+		private float bgImageOpac = (float).7;
+		private string bgImagePath = "";
+		private string NoteText = "";
 		private int textOffsetX = 20;
-		private int textOffsetY = 20;
+		private int textOffsetY = 50;
 		private int scrollInitial = 20;
 
 		//// <summary>
@@ -124,20 +128,22 @@ namespace Project_127
 		/// </summary>
 		public bool UseImageFill { get; set; } = false;
 
+		private int _width = 0, _height = 0;
+
 		/// <summary>
 		/// Gets/Sets overlay height.
 		/// </summary>
 		public int height
-        {
-            get
-            {
+		{
+			get
+			{
 				return _window.Height;
-            }
-            set
-            {
-				_window.Resize(width, value);
-            }
-        }
+			}
+			set
+			{
+				_height = value;
+			}
+		}
 
 		/// <summary>
 		/// Gets/Sets overlay width.
@@ -150,7 +156,7 @@ namespace Project_127
 			}
 			set
 			{
-				_window.Resize(value, height);
+				_width = value;
 			}
 		}
 
@@ -167,21 +173,22 @@ namespace Project_127
 			_brushes = new Dictionary<string, SolidBrush>();
 			_fonts = new Dictionary<string, Font>();
 			_images = new Dictionary<string, Image>();
+			overlayObjects = new List<overlayObject>();
+			//var wb = new WindowBounds();
 
-            //var wb = new WindowBounds();
 			HelperClasses.Logger.Log("Searching for '" + targetWindow + "' window...");
 
 			var windowHandle = WindowHelper.FindWindow(targetWindow);
 			if (windowHandle == IntPtr.Zero)
-            {
+			{
 				HelperClasses.Logger.Log("Failed to find '" + targetWindow + "' window.");
-			} 
+			}
 			else
-            {
+			{
 				HelperClasses.Logger.Log("'" + targetWindow + "' window found.");
 			}
 			//WindowHelper.GetWindowBounds(windowHandle, out wb);
-            var gfx = new Graphics()
+			var gfx = new Graphics()
 			{
 				MeasureFPS = true,
 				PerPrimitiveAntiAliasing = true,
@@ -201,6 +208,12 @@ namespace Project_127
 
 			this.Run();
 			this.Visible = false;
+			var title = new overlayTextBox("title");
+			title.text = "test";
+			title.position = new Point(10, 10);
+			title.renderEnabled = true;
+			title.setFont("consolas", 36, true);
+			this.attach(title);
 		}
 
 		private void _window_SetupGraphics(object sender, SetupGraphicsEventArgs e)
@@ -212,7 +225,7 @@ namespace Project_127
 				foreach (var pair in _images) pair.Value.Dispose();
 			}
 
-			_brushes["textBack"] = gfx.CreateSolidBrush(0, 0, 0, (int)(.4*255));
+			_brushes["textBack"] = gfx.CreateSolidBrush(0, 0, 0, (int)(.4 * 255));
 			_brushes["textColor"] = gfx.CreateSolidBrush(0, 255, 0);
 			_brushes["background"] = gfx.CreateSolidBrush(0, 0, 0, 0);
 
@@ -231,37 +244,54 @@ namespace Project_127
 
 		private void _window_DrawGraphics(object sender, DrawGraphicsEventArgs e)
 		{
-            //var wb = new WindowBounds();
-            //WindowHelper.GetWindowBounds(WindowHelper.FindWindow(targetWindow), out wb);
+			//var wb = new WindowBounds();
+			//WindowHelper.GetWindowBounds(WindowHelper.FindWindow(targetWindow), out wb);
 			var pos = coordFromPos(Position, GetWindowRectangle(WindowHelper.FindWindow(targetWindow)), _window.Width, _window.Height);
-            _window.X = pos[0];
-            _window.Y = pos[1];
+			_window.X = pos[0];
+			_window.Y = pos[1];
+			if (width != _width || height != _height)
+			{
+				if (_width == 0)
+				{
+					_width = _window.Width;
+				}
+				if (_height == 0)
+				{
+					_height = _window.Height;
+				}
+				_window.Resize(_width, _height);
+			}
 			var gfx = e.Graphics;
 			gfx.ClearScene(_brushes["background"]);
 			if (UseBackground && _images.ContainsKey("bgImage"))
-            {
+			{
 				if (UseImageFill)
-                {
+				{
 					gfx.DrawImage(_images["bgImage"], new Rectangle(0, 0, e.Graphics.Width, e.Graphics.Height), bgImageOpac, true);
-                }
+				}
 				else
-                {
+				{
 					gfx.DrawImage(_images["bgImage"], 0, 0, bgImageOpac);
 				}
-			} 
+			}
 			else if (bgImagePath != "")
-            {
+			{
 				try
-                {
+				{
 					_images["bgImage"] = new Image(gfx, bgImagePath);
 				}
 				catch
-                {
+				{
 					HelperClasses.Logger.Log("Image loading failed");
 					bgImagePath = "";
-                }
+				}
 			}
 			gfx.DrawTextWithBackground(_fonts["textFont"], _brushes["textColor"], _brushes["textBack"], textOffsetX, textOffsetY, NoteText);
+
+			foreach (var obj in overlayObjects)
+			{
+				obj.render(gfx);
+			}
 
 		}
 
@@ -273,31 +303,31 @@ namespace Project_127
 			await Task.Run(() => _window.Create());
 			//_window.Join();
 		}
-		
+
 		/// <summary>
 		/// Sets the text color & text background color
 		/// </summary>
 		/// <param name="textColor">Color of the text</param>
 		/// <param name="textBG">Color of the text background</param>
 		public async void setTextColors(System.Drawing.Color textColor, System.Drawing.Color textBG)
-        {
+		{
 			await graphicsReady();
 			_brushes["textColor"].Color = Color.FromARGB(textColor.ToArgb());
 			_brushes["textBack"].Color = Color.FromARGB(textBG.ToArgb());
 		}
-		
+
 		/// <summary>
 		/// Sets the path for the background image.
 		/// </summary>
 		/// <param name="path">Path for the background image file</param>
 		public void setBgImage(string path)
-        {
+		{
 			if (System.IO.File.Exists(path))
 			{
 				//bgImage = new Image(_window.Graphics, path);
 				bgImagePath = path;
 			}
-        }
+		}
 
 		/// <summary>
 		/// Sets the text content of the overlay.
@@ -320,7 +350,7 @@ namespace Project_127
 		/// </summary>
 		/// <param name="color">Background color</param>
 		public async void setBackgroundColor(System.Drawing.Color color)
-        {
+		{
 			await graphicsReady();
 			_brushes["background"].Color = Color.FromARGB(color.ToArgb());
 		}
@@ -334,10 +364,10 @@ namespace Project_127
 		/// <param name="italic">Determines if italic</param>
 		/// <param name="wordWrap">Enables auto line wrap</param>
 		public async void setFont(string fontFamily, int fontSize, bool bold = false, bool italic = false, bool wordWrap = true)
-        {
+		{
 			await graphicsReady();
 			_fonts["textFont"] = _window.Graphics.CreateFont(fontFamily, fontSize, bold, italic, wordWrap);
-        }
+		}
 
 		/// <summary>
 		/// Sets the render offset for text.
@@ -345,10 +375,10 @@ namespace Project_127
 		/// <param name="x">X Offset</param>
 		/// <param name="y">Y Offset</param>
 		public void setTextPosition(int x, int y)
-        {
+		{
 			textOffsetX = x;
 			textOffsetY = y;
-        }
+		}
 
 		/// <summary>
 		/// Represents the point at which text is rendered.
@@ -366,7 +396,7 @@ namespace Project_127
 		}
 
 		private async Task<bool> graphicsReady() //Bool is just so it can be an awaitable task
-        {
+		{
 			while (!_window.IsInitialized || !_window.Graphics.IsInitialized)
 			{
 				await Task.Delay(250);
@@ -378,16 +408,16 @@ namespace Project_127
 		/// Determines the opacity of the background image (if it is enabled).
 		/// </summary>
 		public double BackgroundImageOpacity
-        {
+		{
 			get
-            {
+			{
 				return bgImageOpac;
-            }
+			}
 			set
-            {
+			{
 				bgImageOpac = (float)value;
-            }
-        }
+			}
+		}
 
 		/// <summary>
 		/// Sets the initial point for scrolling render.
@@ -402,16 +432,16 @@ namespace Project_127
 		/// </summary>
 		/// <param name="y">Initial scroll y position</param>
 		public void SetInitialScropPosition(int y)
-        {
+		{
 			scrollInitial = y;
-        }
+		}
 
 		/// <summary>
 		/// Scrolls the text by a given number of pixels
 		/// </summary>
 		/// <param name="delta">Number of pixels to scroll</param>
 		public async void scroll(int delta)
-        {
+		{
 			await graphicsReady();
 			var f = _fonts["textFont"];
 			var wtext = charWrap(NoteText, WrapCount);
@@ -419,7 +449,7 @@ namespace Project_127
 			int lineH = 0;
 			int lineCount = 0;
 			foreach (var line in lines)
-            {
+			{
 				var SF = new System.Drawing.Font(f.FontFamilyName,
 					f.FontSize,
 					(f.Bold ? System.Drawing.FontStyle.Bold : 0) |
@@ -429,30 +459,30 @@ namespace Project_127
 				double n = ((double)lineS.Width) / (_window.Graphics.Width - 2 * textOffsetX);
 				var lh = (int)Math.Ceiling((double)lineS.Height);
 				lineH = lh > lineH ? lh : lineH;
-				if (!f.WordWeapping)
-                {
+				if (!f.WordWeapping)//Their typo, not mine
+				{
 					n = 1;
-                }
+				}
 				n = (n > 0) ? n : 1;
 				lineCount += (int)Math.Ceiling(n);
 			}
-			int boundMin = (int)(scrollInitial - lineH * (lineCount-1));
+			int boundMin = (int)(scrollInitial - lineH * (lineCount - 1));
 			_window.Graphics.Height = (int)(lineH * lineCount * 2);
 			textOffsetY += delta;
 			if (textOffsetY > scrollInitial)
-            {
+			{
 				textOffsetY = scrollInitial;
-            }
+			}
 			if (textOffsetY < boundMin)
-            {
+			{
 				textOffsetY = boundMin;
-            }
+			}
 		}
 
-        /// <summary>
-        /// Determines whether or not the overlay is visible.
-        /// </summary>
-        public bool Visible
+		/// <summary>
+		/// Determines whether or not the overlay is visible.
+		/// </summary>
+		public bool Visible
 		{
 			get
 			{
@@ -493,14 +523,14 @@ namespace Project_127
 			return String.Join("\r\n", lines);
 		}
 		private int[] coordFromPos(Positions p, RECT wb, int resx, int resy)
-        {
+		{
 			resx += PaddingSize + XMargin;
 			resy += PaddingSize + YMargin;
 			var coords = new int[2];
-			int xborder = System.Windows.Forms.SystemInformation.FrameBorderSize.Width*2;
-			int yborder = System.Windows.Forms.SystemInformation.FrameBorderSize.Height*2;
+			int xborder = System.Windows.Forms.SystemInformation.FrameBorderSize.Width * 2;
+			int yborder = System.Windows.Forms.SystemInformation.FrameBorderSize.Height * 2;
 			switch (p)
-            {
+			{
 				case Positions.TopLeft:
 					coords[1] = wb.Top + PaddingSize + YMargin;
 					coords[0] = wb.Left + PaddingSize + XMargin + xborder;
@@ -519,16 +549,39 @@ namespace Project_127
 					break;
 				default:
 					goto case Positions.TopLeft;
-            }
+			}
 			return coords;
-        }
+		}
 
-        public enum Positions
+		public enum Positions
 		{
 			TopLeft,
 			TopRight,
 			BottomRight,
 			BottomLeft
+		}
+
+		public bool attach(overlayObject t)
+		{
+			if (t.linked)
+			{
+				return false;
+			}
+			t.link(this, _window.Graphics);
+			overlayObjects.Add(t);
+			return true;
+		}
+
+		public bool detach(string id)
+		{
+			var idx = overlayObjects.FindIndex(x => x.id == id);
+			if (idx == -1)
+			{
+				return false;
+			}
+			overlayObjects[idx].unlink();
+			overlayObjects.RemoveAt(idx);
+			return true;
 		}
 
 		#region IDisposable Support
@@ -550,6 +603,373 @@ namespace Project_127
 			GC.SuppressFinalize(this);
 		}
 		#endregion
-		
+
 	}
+	public interface overlayObject : IDisposable
+	{
+		//interface void render();
+
+		/// <summary>
+		/// Determines the position of the object.
+		/// </summary>
+		Point position { get; set; }
+
+		/// <summary>
+		/// Determines whether or not the object will render.
+		/// </summary>
+		bool renderEnabled { get; set; }
+
+		/// <summary>
+		/// Links the object to the Overlay.
+		/// </summary>
+		/// <param name="O">Overlay Object</param>
+		/// <param name="G">Graphics Object</param>
+		void link(GTAOverlay O, Graphics G);
+
+		/// <summary>
+		/// Unlinks the object from the Overlay.
+		/// </summary>
+		void unlink();
+
+		/// <summary>
+		/// Renders the object.
+		/// </summary>
+		/// <param name="g">Graphics object to render to</param>
+		void render(Graphics g);
+
+		/// <summary>
+		/// Identifier of the object.
+		/// </summary>
+		string id { get; }
+
+		/// <summary>
+		/// Indicates whether the object is linked.
+		/// </summary>
+		bool linked { get; }
+
+	}
+
+	public class overlayTextBox : overlayObject
+	{
+
+		private int _maxLineWidth;
+
+		/// <summary>
+		/// Determines the max width of a line in pixels
+		/// </summary>
+		public int maxLineWidth
+        {
+			get
+            {
+				if ((gfx.Width - position.X) < _maxLineWidth)
+                {
+					return gfx.Width - (int)position.X;
+                }
+				return _maxLineWidth;
+            }
+            set
+            {
+				textUpdate = true;
+				_maxLineWidth = value;
+            }
+        }
+
+		private string _text = "";
+
+		/// <summary>
+		/// Determines the text content of the textbox.
+		/// </summary>
+		public string text { get; set; } = "";
+
+		private bool textUpdate = true;
+
+		private System.Drawing.Font SDFont { 
+			get
+            {
+				return new System.Drawing.Font(storedFont.fontFamily,
+					storedFont.fontSize,
+					(storedFont.bold ? System.Drawing.FontStyle.Bold : 0) |
+					(storedFont.italic ? System.Drawing.FontStyle.Italic : 0),
+					System.Drawing.GraphicsUnit.Pixel);
+			}
+		}
+
+		private string _autowrap;
+		private string autowrap
+        {
+            get
+            {
+				if (textUpdate)
+                {
+					textUpdate = false;
+					var lines = _text.Split('\n');
+					var outLines = new List<string>();
+					foreach (var line in lines)
+                    {
+						outLines.AddRange(autoWrapper(line));
+                    }
+					_autowrap = String.Join("\n", outLines);
+                }
+				return _autowrap;
+            }
+        }
+
+
+
+		private List<string> autoWrapper(string line)
+        {
+			var lines = new List<string>();
+			if (line == "")
+            {
+				return lines;
+            }
+			int blength = line.Length, slength;
+			while (System.Windows.Forms.TextRenderer.MeasureText(line.Substring(0,blength), SDFont).Width > _maxLineWidth)
+			{
+				blength--;
+			}
+			if (blength == line.Length)
+            {
+				lines.Add(line);
+				return lines;
+            }
+			slength = blength;
+			while (!char.IsWhiteSpace(line[slength-1]) && slength > 1)
+            {
+				slength--;
+            }
+			if (slength == 1)
+            {
+				slength = blength;
+            }
+			lines.Add(line.Substring(0, slength));
+			lines.AddRange(autoWrapper(line.Substring(slength)));
+			return lines;
+		}
+		
+		public Point position { get; set; }
+
+		public bool renderEnabled { get; set; }
+
+		private Color _textColor = Color.Green, _bgColor = Color.Transparent;
+
+		private SolidBrush _textBrush = null, _bgBrush = null;
+
+		private SolidBrush textBrush
+		{
+			get
+			{
+				if (gfx == null)
+				{
+					return null;
+				}
+				if (_textBrush == null)
+				{
+					_textBrush = gfx.CreateSolidBrush(_textColor);
+				}
+				_textBrush.Color = _textColor;
+				return _textBrush;
+			}
+		}
+
+		private SolidBrush bgBrush
+		{
+			get
+			{
+				if (gfx == null)
+				{
+					return null;
+				}
+				if (_bgBrush == null)
+				{
+					_bgBrush = gfx.CreateSolidBrush(_bgColor);
+				}
+				_bgBrush.Color = _bgColor;
+				return _bgBrush;
+			}
+		}
+
+		private Font _textFont = null;
+
+		private Font currentFont
+		{
+			get
+			{
+				if (gfx == null)
+				{
+					return null;
+				}
+				if (_textFont == null || storedFont.updated)
+				{
+					if (_textFont != null)
+					{
+						_textFont.Dispose();
+					}
+					_textFont = gfx.CreateFont(storedFont.fontFamily, storedFont.fontSize, storedFont.bold, storedFont.italic, storedFont.italic);
+				}
+				return _textFont;
+			}
+		}
+
+		public bool linked { get; private set; } = false;
+
+		private Graphics gfx { get; set; } = null;
+
+		private fontProperties storedFont = new fontProperties();
+
+		private class fontProperties
+		{
+			private bool _updated = true;
+			public bool updated
+			{
+				get
+				{
+					if (_updated)
+					{
+						_updated = false;
+						return true;
+					}
+					return false;
+				}
+				set
+				{
+					_updated = value;
+				}
+			}
+			public string fontFamily = "Consolas";
+			public int fontSize = 24;
+			public bool bold = false;
+			public bool italic = false;
+			public bool wordWrap = false;
+		}
+
+		/// <summary>
+		/// Determines the color of the text.
+		/// </summary>
+		public System.Drawing.Color textColor
+		{
+			get
+			{
+				return System.Drawing.Color.FromArgb(_textColor.ToARGB());
+			}
+			set
+			{
+				_textColor = Color.FromARGB(value.ToArgb());
+			}
+		}
+
+		/// <summary>
+		/// Determins the color of the text background.
+		/// </summary>
+		public System.Drawing.Color bgColor
+		{
+			get
+			{
+				return System.Drawing.Color.FromArgb(_bgColor.ToARGB());
+			}
+			set
+			{
+				_bgColor = Color.FromARGB(value.ToArgb());
+			}
+		}
+
+
+		public string id { get; private set; }
+
+		private GTAOverlay host { set; get; } = null;
+
+		/// <summary>
+		/// Generates an overlayTextBox object.
+		/// </summary>
+		/// <param name="id">Textbox object id</param>
+		public overlayTextBox(string id)
+		{
+			this.id = id;
+		}
+
+		/// <summary>
+		/// Sets the textbox font
+		/// </summary>
+		/// <param name="fontFamily">Font family</param>
+		/// <param name="fontSize">Font size in px</param>
+		/// <param name="bold">Determines if bold</param>
+		/// <param name="italic">Determines if italic</param>
+		/// <param name="wordWrap">Enables auto line wrap</param>
+		public void setFont(string fontFamily, int fontSize, bool bold = false, bool italic = false, bool wordWrap = true)
+		{
+			storedFont.fontFamily = fontFamily;
+			storedFont.fontSize = fontSize;
+			storedFont.bold = bold;
+			storedFont.italic = italic;
+			storedFont.wordWrap = wordWrap;
+			storedFont.updated = true;
+		}
+
+		public void render(Graphics gfx = null)
+		{
+			//gfx.DrawTextWithBackground(currentFont, tb,
+			if (gfx == null)
+			{
+				return;
+			}
+			if (renderEnabled)
+			{
+				gfx.DrawTextWithBackground(currentFont, textBrush, bgBrush, position, text);
+			}
+		}
+
+		public void link(GTAOverlay host, Graphics gfx)
+		{
+			this.host = host;
+			this.gfx = gfx;
+			linked = true;
+		}
+
+		public void unlink()
+		{
+			linked = false;
+			host = null;
+			gfx = null;
+		}
+
+		/// <summary>
+		/// Provides an approximation for the overlay size.
+		/// </summary>
+		/// <returns>Approximated size</returns>
+		public System.Drawing.Size approxBounds()
+		{
+			return System.Windows.Forms.TextRenderer.MeasureText(
+				text,
+				SDFont,
+				new System.Drawing.Size(maxLineWidth,maxLineWidth), 
+				storedFont.wordWrap ? System.Windows.Forms.TextFormatFlags.WordBreak : 0);
+		}
+
+		#region IDisposable Support
+		private bool disposedValue;
+
+		protected virtual void Dispose(bool disposing)
+		{
+			if (!disposedValue)
+			{
+				_textFont.Dispose();
+				_textBrush.Dispose();
+				_bgBrush.Dispose();
+				if (host != null)
+                {
+					host.detach(id);
+                }
+				disposedValue = true;
+			}
+		}
+
+		public void Dispose()
+		{
+			Dispose(true);
+			GC.SuppressFinalize(this);
+		}
+		#endregion
+
+	}
+
 }
