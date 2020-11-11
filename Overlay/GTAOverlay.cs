@@ -90,7 +90,9 @@ namespace Project_127
 		private float bgImageOpac = (float).7;
 		private string bgImagePath = "";
 		private int scrollInitial = 50;
-		private overlayTextBox mainText;
+		private overlayTextBox mainText, titleBox;
+
+		public positionalText title { get; private set; }
 
 		//// <summary>
 		/// Determines the positioning of the overlay.
@@ -218,13 +220,12 @@ namespace Project_127
 			this.Visible = false;
 			mainText = new overlayTextBox("GTAOVERLAY_MAIN");
 			attach(mainText);
-			mainText.renderEnabled = true;
-			var title = new overlayTextBox("title");
-			title.text = "Project 1.27 GTA Overlay";
-			title.position = new Point(10, 10);
-			title.renderEnabled = true;
-			title.setFont("consolas", 36, true);
-			this.attach(title);
+			mainText.visible = true;
+			titleBox = new overlayTextBox("title");
+			titleBox.text = "Project 1.27 GTA Overlay";
+			titleBox.visible = true;
+			this.attach(titleBox);
+			title = titleBox;
 		}
 
 		private void _window_SetupGraphics(object sender, SetupGraphicsEventArgs e)
@@ -553,6 +554,7 @@ namespace Project_127
 			{
 				_window.Dispose();
 				mainText.Dispose();
+				titleBox.Dispose();
 				disposedValue = true;
 			}
 		}
@@ -577,7 +579,7 @@ namespace Project_127
 		/// <summary>
 		/// Determines whether or not the object will render.
 		/// </summary>
-		bool renderEnabled { get; set; }
+		bool visible { get; set; }
 
 		/// <summary>
 		/// Links the object to the Overlay.
@@ -609,10 +611,59 @@ namespace Project_127
 
 	}
 
-	public class overlayTextBox : overlayObject
+	public interface positionalText
+    {
+		/// <summary>
+		/// Determines the position of the object.
+		/// </summary>
+		Point position { get; set; }
+
+		/// <summary>
+		/// Determines whether or not the text will render.
+		/// </summary>
+		bool visible { get; set; }
+
+		/// <summary>
+		/// Determines the max width of a line in pixels
+		/// </summary>
+		int maxLineWidth { get; set; }
+
+		/// <summary>
+		/// Determines the maximum number of chars before character wrap (<1 disables by-char wrapping)
+		/// </summary>
+		int wrapOnChar { get; set; }
+
+		/// <summary>
+		/// Sets the textbox font
+		/// </summary>
+		/// <param name="fontFamily">Font family</param>
+		/// <param name="fontSize">Font size in px</param>
+		/// <param name="bold">Determines if bold</param>
+		/// <param name="italic">Determines if italic</param>
+		/// <param name="wordWrap">Enables auto line wrap</param>
+		void setFont(string fontFamily, int fontSize, bool bold, bool italic, bool wordWrap);
+
+		/// <summary>
+		/// Determines the text content of the object.
+		/// </summary>
+		string text { get; set; }
+
+		/// <summary>
+		/// Determines the color of the text.
+		/// </summary>
+		System.Drawing.Color textColor { get; set; }
+
+		/// <summary>
+		/// Determines the color of the text background.
+		/// </summary>
+		System.Drawing.Color bgColor { get; set; }
+
+	}
+
+	public class overlayTextBox : overlayObject, positionalText
 	{
 
-		private int _maxLineWidth;
+		private int _maxLineWidth = int.MaxValue;
 
 		/// <summary>
 		/// Determines the maximum number of chars before character wrap (<1 disables by-char wrapping)
@@ -694,7 +745,23 @@ namespace Project_127
             }
         }
 
-		private bool textUpdate = true;
+		private bool _textUpdate = true;
+
+		private bool textUpdate
+        {
+			get
+            {
+				return _textUpdate;
+            }
+            set
+            {
+				_textUpdate = value;
+				if (value)
+                {
+					Task.Run(()=>approxBounds(true));
+                }
+            }
+        }
 
 		private System.Drawing.Font SDFont { 
 			get
@@ -763,7 +830,7 @@ namespace Project_127
 		
 		public Point position { get; set; }
 
-		public bool renderEnabled { get; set; }
+		public bool visible { get; set; }
 
 		private Color _textColor = Color.Green, _bgColor = Color.Transparent;
 
@@ -873,7 +940,7 @@ namespace Project_127
 		}
 
 		/// <summary>
-		/// Determins the color of the text background.
+		/// Determines the color of the text background.
 		/// </summary>
 		public System.Drawing.Color bgColor
 		{
@@ -917,6 +984,7 @@ namespace Project_127
 			storedFont.italic = italic;
 			storedFont.wordWrap = wordWrap;
 			storedFont.updated = true;
+			textUpdate = true;
 		}
 
 		public void render(Graphics gfx = null)
@@ -926,7 +994,7 @@ namespace Project_127
 			{
 				return;
 			}
-			if (renderEnabled)
+			if (visible)
 			{
 				gfx.DrawTextWithBackground(currentFont, textBrush, bgBrush, position, text);
 			}
@@ -946,17 +1014,28 @@ namespace Project_127
 			gfx = null;
 		}
 
+		private System.Drawing.Size _approxBounds = new System.Drawing.Size(-1, -1);
+
 		/// <summary>
 		/// Provides an approximation for the overlay size.
 		/// </summary>
 		/// <returns>Approximated size</returns>
 		public System.Drawing.Size approxBounds()
 		{
-			return System.Windows.Forms.TextRenderer.MeasureText(
-				text,
-				SDFont,
-				new System.Drawing.Size(maxLineWidth,maxLineWidth), 
-				storedFont.wordWrap ? System.Windows.Forms.TextFormatFlags.WordBreak : 0);
+			return approxBounds(_approxBounds.Width == -1);
+		}
+
+		private System.Drawing.Size approxBounds(bool update)
+		{
+			if (update)
+			{
+				_approxBounds = System.Windows.Forms.TextRenderer.MeasureText(
+					text,
+					SDFont,
+					new System.Drawing.Size(maxLineWidth, maxLineWidth),
+					storedFont.wordWrap ? System.Windows.Forms.TextFormatFlags.WordBreak | System.Windows.Forms.TextFormatFlags.TextBoxControl : 0);
+			}
+			return _approxBounds;
 		}
 
 		#region IDisposable Support
