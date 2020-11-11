@@ -663,7 +663,7 @@ namespace Project_127
 	public class overlayTextBox : overlayObject, positionalText
 	{
 
-		private int _maxLineWidth;
+		private int _maxLineWidth = int.MaxValue;
 
 		/// <summary>
 		/// Determines the maximum number of chars before character wrap (<1 disables by-char wrapping)
@@ -745,7 +745,23 @@ namespace Project_127
             }
         }
 
-		private bool textUpdate = true;
+		private bool _textUpdate = true;
+
+		private bool textUpdate
+        {
+			get
+            {
+				return _textUpdate;
+            }
+            set
+            {
+				_textUpdate = value;
+				if (value)
+                {
+					Task.Run(()=>approxBounds(true));
+                }
+            }
+        }
 
 		private System.Drawing.Font SDFont { 
 			get
@@ -968,6 +984,7 @@ namespace Project_127
 			storedFont.italic = italic;
 			storedFont.wordWrap = wordWrap;
 			storedFont.updated = true;
+			textUpdate = true;
 		}
 
 		public void render(Graphics gfx = null)
@@ -997,17 +1014,28 @@ namespace Project_127
 			gfx = null;
 		}
 
+		private System.Drawing.Size _approxBounds = new System.Drawing.Size(-1, -1);
+
 		/// <summary>
 		/// Provides an approximation for the overlay size.
 		/// </summary>
 		/// <returns>Approximated size</returns>
 		public System.Drawing.Size approxBounds()
 		{
-			return System.Windows.Forms.TextRenderer.MeasureText(
-				text,
-				SDFont,
-				new System.Drawing.Size(maxLineWidth,maxLineWidth), 
-				storedFont.wordWrap ? System.Windows.Forms.TextFormatFlags.WordBreak : 0);
+			return approxBounds(_approxBounds.Width == -1);
+		}
+
+		private System.Drawing.Size approxBounds(bool update)
+		{
+			if (update)
+			{
+				_approxBounds = System.Windows.Forms.TextRenderer.MeasureText(
+					text,
+					SDFont,
+					new System.Drawing.Size(maxLineWidth, maxLineWidth),
+					storedFont.wordWrap ? System.Windows.Forms.TextFormatFlags.WordBreak | System.Windows.Forms.TextFormatFlags.TextBoxControl : 0);
+			}
+			return _approxBounds;
 		}
 
 		#region IDisposable Support
