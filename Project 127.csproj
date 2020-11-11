@@ -155,6 +155,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="CEFResourceHandler.cs" />
     <Compile Include="DragHandler.cs" />
     <Compile Include="EntitlementBlock.cs" />
     <Compile Include="EntitlementBlockCipher.cs" />
