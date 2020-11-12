@@ -101,9 +101,13 @@ Main To do:
 
 
 			Quick and dirty notes:
-				=> Theres currently debuglogs of catching keyboard events
-			
-				- Title from GTAV Overlay is missing (waiting on Dragon for that)
+				=> There may be currently debuglogs of catching keyboard events
+				- Integrate Latest working branch. 
+				- Integrate Title from Dragon both as in content and as in customizability
+				- Integrate Dragons Fixes for Rockstar Endpoint change
+				- Fix Garbage Collection on Keylistener (maybe add it to 2.5 sec DispatcherTimer. Reference is there, so it aint getting fucked. If it gets fucked, restart (check if is null, check if it should be running)
+					- This might get fixed by not aborting but gracefully shutting down thread, not sure
+				- Fix Command line args crashing it...
 				- Jumpscript Send Key stuff
 					=> Had some PoC work for simulating keypresses which GTA V picks up.
 					=> It only send keydown and not keyup
