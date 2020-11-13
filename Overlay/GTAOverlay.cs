@@ -990,7 +990,7 @@ namespace Project_127
 		public void render(Graphics gfx = null)
 		{
 			//gfx.DrawTextWithBackground(currentFont, tb,
-			if (gfx == null)
+			if (gfx == null || text == null)
 			{
 				return;
 			}

@@ -971,6 +971,9 @@ namespace Project_127
 			s.BackgroundColor = 0;//0x13 << 16 | 0x15 << 8 | 0x18;
 			s.DisableGpuAcceleration();
 			s.CefCommandLineArgs["autoplay-policy"] = "no-user-gesture-required";
+#if DEBUG
+			s.RemoteDebuggingPort = 8088;
+#endif
 			Cef.Initialize(s);
 		}
 

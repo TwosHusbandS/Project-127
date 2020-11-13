@@ -184,6 +184,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Auth\CEFResourceHandler.cs" />
     <Compile Include="HelperClasses\Jumpscript.cs" />
     <Compile Include="HelperClasses\Keyboard\KeyboardSimulator.cs" />
     <Compile Include="HelperClasses\WindowChangeHander.cs" />

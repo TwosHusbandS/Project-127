@@ -135,6 +135,7 @@ namespace Project_127.Auth
 					HelperClasses.Logger.Log("Remember Me enabled: fetching credentials...");
 					fetchStoredCredentials();
 				}
+				browser.RequestHandler = new CEFRequestHandler();
 				//browser.BrowserSettings.ApplicationCache = CefState.Enabled;
 			}
 		}

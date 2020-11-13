@@ -144,6 +144,7 @@ namespace Project_127.Overlay
 				MyGTAOverlay.YMargin = Settings.OverlayMargin;
 				MyGTAOverlay.width = Settings.OverlayWidth;
 				MyGTAOverlay.height = Settings.OverlayHeight;
+				MyGTAOverlay.title.text = "Generic title";
 				LoadTexts();
 				NotesLoadedIndex = 0;
 				HelperClasses.Logger.Log("GTA Overlay initiated", 1);
