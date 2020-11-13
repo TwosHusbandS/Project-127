@@ -441,6 +441,7 @@ namespace Project_127
 		public void SetInitialScrollPosition(int y)
 		{
 			scrollInitial = y;
+			scroll(9999);
 		}
 
 		/// <summary>
