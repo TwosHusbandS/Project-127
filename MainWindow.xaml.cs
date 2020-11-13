@@ -102,16 +102,18 @@ Main To do:
 
 			Quick and dirty notes:
 				=> There may be currently debuglogs of catching keyboard events
-				- Integrate Latest working branch. 
 				- Integrate Title from Dragon both as in content and as in customizability
-				- Integrate Dragons Fixes for Rockstar Endpoint change
-				- Fix Garbage Collection on Keylistener (maybe add it to 2.5 sec DispatcherTimer. Reference is there, so it aint getting fucked. If it gets fucked, restart (check if is null, check if it should be running)
-					- This might get fixed by not aborting but gracefully shutting down thread, not sure
-				- Fix Command line args crashing it...
+
 				- Jumpscript Send Key stuff
 					=> Had some PoC work for simulating keypresses which GTA V picks up.
 					=> It only send keydown and not keyup
 					=> It also got caught in our own keyboard listeners, but i can get around that
+				- [DONE SOMETHING...] Fix Garbage Collection on Keylistener (maybe add it to 2.5 sec DispatcherTimer. Reference is there, so it aint getting fucked. If it gets fucked, restart (check if is null, check if it should be running)
+					- This might get fixed by not aborting but gracefully shutting down thread, not sure
+				- [DONE] Fix Command line args crashing it...
+				- [DONE] Make "DetectUpgrade" more efficent
+				- [DONE] Integrate Latest working branch. 
+				- [DONE] Integrate Dragons Fixes for Rockstar Endpoint change
 				- [DONE] Took care of all Listeners. Using and keeping track of Threads for it as of right now. Seems to work
 				- [DONE] Split upgrading downgrading into 17 progress popups
 				- [DONE] Finish Readme (Speedrun text + Reset Button + DL of big zip)
@@ -454,6 +456,8 @@ namespace Project_127
 				GTA_Page.btn_GTA_static.Content = "Launch GTA V";
 			}
 			SetButtonMouseOverMagic(btn_Auth);
+			GC.KeepAlive(HelperClasses.KeyboardListener.MyThread);
+			GC.KeepAlive(HelperClasses.WindowChangeListener.myThread);
 		}
 
 

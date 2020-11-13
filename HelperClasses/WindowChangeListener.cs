@@ -19,7 +19,7 @@ namespace Project_127.HelperClasses
 	{
 		public static bool IsRunning = false;
 
-		static Thread myThread;
+		public static Thread myThread;
 
 		public static void _Start()
 		{

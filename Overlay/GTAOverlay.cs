@@ -17,7 +17,7 @@ namespace Project_127
 		// If set to false, this starts and keeps KeyboardListenerEvent running 100% of the time.
 		// Automatically set to true if we compile debug
 
-		public static bool DebugMode = false;
+		public static bool DebugMode = true;
 		public const string targetWindowDebug = "TeamSpeak 3";
 
 		public const string targetWindowNonDebug = "Grand Theft Auto V";
@@ -323,6 +323,8 @@ namespace Project_127
 		{
 			mainText.textColor = textColor;
 			mainText.bgColor = textBG;
+			title.textColor = textColor;
+			title.bgColor = textBG;
 		}
 
 		/// <summary>
@@ -348,12 +350,6 @@ namespace Project_127
 			mainText.text = text;
 		}
 
-		// Just have this here, so i have something to call...
-		public void setTitle(string title)
-		{
-
-		}
-
 		/// <summary>
 		/// Sets the background color of the overlay.
 		/// </summary>
@@ -375,6 +371,7 @@ namespace Project_127
 		public async void setFont(string fontFamily, int fontSize, bool bold = false, bool italic = false, bool wordWrap = true)
 		{
 			mainText.setFont(fontFamily, fontSize, bold, italic, wordWrap);
+			title.setFont(fontFamily, fontSize + 4, true, italic, wordWrap);
 		}
 
 		/// <summary>
