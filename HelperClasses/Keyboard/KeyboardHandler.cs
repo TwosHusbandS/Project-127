@@ -104,6 +104,10 @@ namespace Project_127.HelperClasses
 						if (pKey == Settings.KeyOverlayToggle)
 						{
 							NoteOverlay.OverlayToggle();
+							//LastTry.KeyPress(LastTry.KeyCode.KEY_F);
+							//SendKeys.Send("{ENTER}");
+							//HelperClasses.Keyboard.KeyboardSimulator.Send(KeyboardSimulator.ScanCodeShort.KEY_F);
+							//HelperClasses.Keyboard.KeyboardIS.PressW();
 						}
 
 						if (NoteOverlay.IsOverlayVisible())

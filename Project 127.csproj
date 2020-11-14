@@ -186,8 +186,10 @@
     </ApplicationDefinition>
     <Compile Include="Auth\CEFResourceHandler.cs" />
     <Compile Include="HelperClasses\Jumpscript.cs" />
+    <Compile Include="HelperClasses\Keyboard\KeyboardIS.cs" />
     <Compile Include="HelperClasses\Keyboard\KeyboardListener.cs" />
     <Compile Include="HelperClasses\Keyboard\KeyboardSimulator.cs" />
+    <Compile Include="HelperClasses\Keyboard\LastTry.cs" />
     <Compile Include="HelperClasses\WindowChangeHander.cs" />
     <Compile Include="Overlay\EmptyPage.xaml.cs">
       <DependentUpon>EmptyPage.xaml</DependentUpon>

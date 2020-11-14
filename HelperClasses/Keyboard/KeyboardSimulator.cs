@@ -9,7 +9,7 @@ namespace Project_127.HelperClasses.Keyboard
 {
 	public class KeyboardSimulator
 	{
-		public static void Send(ScanCodeShort a, bool isUp)
+		public static void Send(ScanCodeShort a, bool isUp = false)
 		{
 			INPUT[] Inputs = new INPUT[1];
 			INPUT Input = new INPUT();
