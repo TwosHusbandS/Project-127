@@ -17,7 +17,7 @@ namespace Project_127
 		// If set to false, this starts and keeps KeyboardListenerEvent running 100% of the time.
 		// Automatically set to true if we compile debug
 
-		public static bool DebugMode = true;
+		public static bool DebugMode = false;
 		public const string targetWindowDebug = "Command Prompt";
 
 		public const string targetWindowNonDebug = "Grand Theft Auto V";
@@ -98,6 +98,21 @@ namespace Project_127
 		/// Determines the positioning of the overlay.
 		/// </summary>
 		public Positions Position { get; set; }
+
+		/// <summary>
+		/// Determines the text content of the oberlay.
+		/// </summary>
+		public string text
+        {
+            get
+            {
+				return mainText.text;
+            }
+            set
+            {
+				mainText.text = value;
+            }
+        }
 
 		//// <summary>
 		/// Overrides the positioning of line wrap. (Disabled by vals <1)
@@ -323,6 +338,8 @@ namespace Project_127
 		{
 			mainText.textColor = textColor;
 			mainText.bgColor = textBG;
+			title.textColor = textColor;
+			title.bgColor = textBG;
 		}
 
 		/// <summary>
@@ -345,13 +362,7 @@ namespace Project_127
 		public void setText(string text)
 		{
 			HelperClasses.Logger.Log("Overlay text updated");
-			mainText.text = text;
-		}
-
-		// Just have this here, so i have something to call...
-		public void setTitle(string title)
-		{
-
+			this.text = text;
 		}
 
 		/// <summary>
@@ -375,6 +386,7 @@ namespace Project_127
 		public async void setFont(string fontFamily, int fontSize, bool bold = false, bool italic = false, bool wordWrap = true)
 		{
 			mainText.setFont(fontFamily, fontSize, bold, italic, wordWrap);
+			title.setFont(fontFamily, fontSize + 4, true, italic, wordWrap);
 		}
 
 		/// <summary>
@@ -664,7 +676,7 @@ namespace Project_127
 	public class overlayTextBox : overlayObject, positionalText
 	{
 
-		private int _maxLineWidth = int.MaxValue;
+		private int _maxLineWidth = 0;
 
 		/// <summary>
 		/// Determines the maximum number of chars before character wrap (<1 disables by-char wrapping)
@@ -759,7 +771,7 @@ namespace Project_127
 				_textUpdate = value;
 				if (value)
                 {
-					Task.Run(()=>approxBounds(true));
+					Task.Run(async ()=>approxBounds(true));
                 }
             }
         }
