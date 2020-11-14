@@ -321,7 +321,6 @@ namespace Project_127.Overlay
 					MyGTAOverlay.setText(NotesLoaded[pNotesLoadedNewIndex]);
 					MyGTAOverlay.title.text = NotesLoadedTitle[pNotesLoadedNewIndex];
 					double tmp = (Overlay.NoteOverlayPages.NoteOverlay_Look.OverlayTextSize + 4) * 1.5 + 20;
-					Globals.DebugPopup(tmp.ToString());
 					MyGTAOverlay.SetInitialScrollPosition((int)tmp);
 				}
 			}

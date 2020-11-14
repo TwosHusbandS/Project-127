@@ -186,6 +186,7 @@
     </ApplicationDefinition>
     <Compile Include="Auth\CEFResourceHandler.cs" />
     <Compile Include="HelperClasses\Jumpscript.cs" />
+    <Compile Include="HelperClasses\Keyboard\KeyboardListener.cs" />
     <Compile Include="HelperClasses\Keyboard\KeyboardSimulator.cs" />
     <Compile Include="HelperClasses\WindowChangeHander.cs" />
     <Compile Include="Overlay\EmptyPage.xaml.cs">
@@ -206,7 +207,7 @@
     <Compile Include="HelperClasses\Keyboard\KeyboardHandler.cs" />
     <Compile Include="HelperClasses\Keyboard\KeyboardSender.cs" />
     <Compile Include="MyFileOperation.cs" />
-    <Compile Include="HelperClasses\Keyboard\KeyboardListener.cs" />
+    <Compile Include="HelperClasses\Keyboard\KeyboardListenerOld.cs" />
     <Compile Include="Overlay\NoteOverlay.xaml.cs">
       <DependentUpon>NoteOverlay.xaml</DependentUpon>
     </Compile>

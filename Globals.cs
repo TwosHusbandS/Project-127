@@ -813,10 +813,8 @@ namespace Project_127
 		/// </summary>
 		public static void ProperExit()
 		{
-			KeyboardListener.Stop();
+			HelperClasses.Keyboard.KeyboardListener.Stop();
 			WindowChangeListener.Stop();
-			GC.KeepAlive(HelperClasses.KeyboardListener.MyThread);
-			GC.KeepAlive(HelperClasses.WindowChangeListener.myThread);
 			HelperClasses.Logger.Log("Program closed. Proper Exit. Ended normally");
 		}
 

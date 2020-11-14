@@ -101,15 +101,16 @@ Main To do:
 
 
 			Quick and dirty notes:
-				=> There may be currently debuglogs of catching keyboard events
-				- Integrate Title from Dragon both as in content and as in customizability
-
 				- Jumpscript Send Key stuff
 					=> Had some PoC work for simulating keypresses which GTA V picks up.
 					=> It only send keydown and not keyup
 					=> It also got caught in our own keyboard listeners, but i can get around that
-				- [DONE SOMETHING...] Fix Garbage Collection on Keylistener (maybe add it to 2.5 sec DispatcherTimer. Reference is there, so it aint getting fucked. If it gets fucked, restart (check if is null, check if it should be running)
-					- This might get fixed by not aborting but gracefully shutting down thread, not sure
+				- [DONE] Integrate Title from Dragon both as in content and as in customizability
+				- [DONE] Fixed Both Listeners for the hopefully final time
+				- [DONE] Fixed Update Detection
+				- [DONE] Commented out new SaveFileHandler Code
+				- [DONE] Fixed Process Priority setting too often
+				- [DONE] Fixed ForegroundChangeListener not setting on fullscreen by polling every 2.5 seconds
 				- [DONE] Fix Command line args crashing it...
 				- [DONE] Make "DetectUpgrade" more efficent
 				- [DONE] Integrate Latest working branch. 
@@ -341,14 +342,16 @@ namespace Project_127
 			// Testing Purpose for the overlay shit
 			if (GTAOverlay.DebugMode)
 			{
-				// We currently need this here, normally this will be started by GameState (but this points to GTA V.exe as of right now)
+				//We currently need this here, normally this will be started by GameState(but this points to GTA V.exe as of right now)
 				NoteOverlay.InitGTAOverlay();
 
 				// Same as other two thingies here lolerino
 				HelperClasses.WindowChangeListener.Start();
 
 				// We currently need this here, normally this will be started by WindowEventThingy (but this only starts or stops based on GTA V.exe)
-				KeyboardListener.Start();
+				//HelperClasses.KeyboardListener.Start();
+
+				//KeyboardHandler.TMP();
 			}
 		}
 
@@ -456,8 +459,6 @@ namespace Project_127
 				GTA_Page.btn_GTA_static.Content = "Launch GTA V";
 			}
 			SetButtonMouseOverMagic(btn_Auth);
-			GC.KeepAlive(HelperClasses.KeyboardListener.MyThread);
-			GC.KeepAlive(HelperClasses.WindowChangeListener.myThread);
 		}
 
 
