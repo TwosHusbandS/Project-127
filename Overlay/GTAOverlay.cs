@@ -99,6 +99,21 @@ namespace Project_127
 		/// </summary>
 		public Positions Position { get; set; }
 
+		/// <summary>
+		/// Determines the text content of the oberlay.
+		/// </summary>
+		public string text
+        {
+            get
+            {
+				return mainText.text;
+            }
+            set
+            {
+				mainText.text = value;
+            }
+        }
+
 		//// <summary>
 		/// Overrides the positioning of line wrap. (Disabled by vals <1)
 		/// </summary>
@@ -347,7 +362,12 @@ namespace Project_127
 		public void setText(string text)
 		{
 			HelperClasses.Logger.Log("Overlay text updated");
-			mainText.text = text;
+      this.text = text;
+//<<<<<<< working
+//			this.text = text;
+//=======
+//			mainText.text = text;
+//>>>>>>> dev_ths_new
 		}
 
 		/// <summary>
@@ -661,7 +681,7 @@ namespace Project_127
 	public class overlayTextBox : overlayObject, positionalText
 	{
 
-		private int _maxLineWidth = int.MaxValue;
+		private int _maxLineWidth = 0;
 
 		/// <summary>
 		/// Determines the maximum number of chars before character wrap (<1 disables by-char wrapping)
@@ -756,7 +776,7 @@ namespace Project_127
 				_textUpdate = value;
 				if (value)
                 {
-					Task.Run(()=>approxBounds(true));
+					Task.Run(async ()=>approxBounds(true));
                 }
             }
         }
