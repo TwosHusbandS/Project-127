@@ -144,7 +144,6 @@ namespace Project_127.Overlay
 				MyGTAOverlay.YMargin = Settings.OverlayMargin;
 				MyGTAOverlay.width = Settings.OverlayWidth;
 				MyGTAOverlay.height = Settings.OverlayHeight;
-				MyGTAOverlay.title.text = "Generic title";
 				LoadTexts();
 				NotesLoadedIndex = 0;
 				HelperClasses.Logger.Log("GTA Overlay initiated", 1);
@@ -319,8 +318,10 @@ namespace Project_127.Overlay
 				{
 					HelperClasses.Logger.Log("NotesLoadedIndex is now: " + pNotesLoadedNewIndex);
 					NotesLoadedIndex = pNotesLoadedNewIndex;
-					NoteOverlay.MyGTAOverlay.setText(NotesLoaded[pNotesLoadedNewIndex]);
-					NoteOverlay.MyGTAOverlay.setTitle(NotesLoadedTitle[pNotesLoadedNewIndex]);
+					MyGTAOverlay.setText(NotesLoaded[pNotesLoadedNewIndex]);
+					MyGTAOverlay.title.text = NotesLoadedTitle[pNotesLoadedNewIndex];
+					double tmp = (Overlay.NoteOverlayPages.NoteOverlay_Look.OverlayTextSize + 4) * 1.5 + 20;
+					MyGTAOverlay.SetInitialScrollPosition((int)tmp);
 				}
 			}
 		}

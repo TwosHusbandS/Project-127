@@ -1,76 +1,102 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Project_127;
-using Project_127.Auth;
-using Project_127.HelperClasses;
-using Project_127.Overlay;
-using Project_127.Popups;
-using Project_127.MySettings;
-using System.Threading;
 
-namespace Project_127.HelperClasses
+namespace Project_127.HelperClasses.Keyboard
 {
-	// Copied and Adapted from: https://docs.microsoft.com/en-us/archive/blogs/toub/low-level-keyboard-hook-in-c
-
-	// This gets Started / Stoppeds based on the foreground Window in WindowChangeListener
-	//		(which gets started / stopped on 2.5 Second poll if GTA V is running in GameStates)
-
-
-
 	class KeyboardListener
 	{
-		// Dont need to mess with KeyUp or see how long something is pressed
-		// Since Jumpscript should just "translate" keypressed 1:1 and not act like a auto-spam-script
+		// Credits:
+		// https://github.com/rvknth043/Global-Low-Level-Key-Board-And-Mouse-Hook
+
+		#region pinvoke details
+
+		// usage: system-wide keyboard hook
+		private static KeyboardListener _hook = new KeyboardListener();
 
 
+		public static bool IsRunning = false;
 		public static bool DontStop = false;
 		public static bool WantToStop = false;
 
-		private const int WH_KEYBOARD_LL = 13;
+		private enum HookType : int
+		{
+			WH_JOURNALRECORD = 0,
+			WH_JOURNALPLAYBACK = 1,
+			WH_KEYBOARD = 2,
+			WH_GETMESSAGE = 3,
+			WH_CALLWNDPROC = 4,
+			WH_CBT = 5,
+			WH_SYSMSGFILTER = 6,
+			WH_MOUSE = 7,
+			WH_HARDWARE = 8,
+			WH_DEBUG = 9,
+			WH_SHELL = 10,
+			WH_FOREGROUNDIDLE = 11,
+			WH_CALLWNDPROCRET = 12,
+			WH_KEYBOARD_LL = 13,
+			WH_MOUSE_LL = 14
+		}
+
 		private const int WM_KEYDOWN = 0x0100;
 		private const int WM_KEYUP = 0x0101;
-		private static LowLevelKeyboardProc _proc = HookCallback;
-		private static IntPtr _hookID = IntPtr.Zero;
 
-		public static bool IsRunning = false;
-
-		public static Thread MyThread;
-
-		private static IntPtr SetHook(LowLevelKeyboardProc proc)
+		public struct KBDLLHOOKSTRUCT
 		{
-			using (Process curProcess = Process.GetCurrentProcess())
-			using (ProcessModule curModule = curProcess.MainModule)
-			{
-				return SetWindowsHookEx(WH_KEYBOARD_LL, proc,
-					GetModuleHandle(curModule.ModuleName), 0);
-			}
+			public UInt32 vkCode;
+			public UInt32 scanCode;
+			public UInt32 flags;
+			public UInt32 time;
+			public IntPtr extraInfo;
 		}
+
+		[DllImport("user32.dll")]
+		private static extern IntPtr SetWindowsHookEx(
+			HookType code, HookProc func, IntPtr instance, int threadID);
+
+		[DllImport("user32.dll")]
+		private static extern int UnhookWindowsHookEx(IntPtr hook);
+
+		[DllImport("user32.dll")]
+		private static extern int CallNextHookEx(
+			IntPtr hook, int code, IntPtr wParam, ref KBDLLHOOKSTRUCT lParam);
+
+		#endregion
+
+		HookType _hookType = HookType.WH_KEYBOARD_LL;
+		IntPtr _hookHandle = IntPtr.Zero;
+		HookProc _hookFunction = null;
+
+		// hook method called by system
+		private delegate int HookProc(int code, IntPtr wParam, ref KBDLLHOOKSTRUCT lParam);
+
+		// events
+		//public delegate void HookEventHandler(object sender, HookEventArgs e);
+		//public event HookEventHandler KeyDown;
+		//public event HookEventHandler KeyUp;
+
+		public KeyboardListener()
+		{
+			_hookFunction = new HookProc(HookCallback);
+		}
+
+
 
 		public static void Start()
 		{
 			WantToStop = false;
 
-			if (!KeyboardListener.IsRunning)
+			if (!IsRunning)
 			{
+				_hook._Start();
+				IsRunning = true;
 				HelperClasses.Logger.Log("Started KeyboardListener");
-				KeyboardHandler.JumpKey1Down = false;
-				KeyboardHandler.JumpKey2Down = false;
-				MyThread = new Thread(_Start);
-				MyThread.Start();
 			}
-		}
-
-		private static void _Start()
-		{
-			_hookID = SetHook(_proc);
-			KeyboardListener.IsRunning = true;
-			System.Windows.Forms.Application.Run();
 		}
 
 		public static void Stop()
@@ -80,46 +106,56 @@ namespace Project_127.HelperClasses
 				WantToStop = true;
 				return;
 			}
-			if (KeyboardListener.IsRunning)
+			if (IsRunning)
 			{
-				UnhookWindowsHookEx(_hookID);
-				KeyboardListener.IsRunning = false;
-				MyThread.Abort();
+				_hook._Stop();
+				IsRunning = false;
 				HelperClasses.Logger.Log("Stopped KeyboardListener");
 			}
 		}
 
-		private delegate IntPtr LowLevelKeyboardProc(int nCode, IntPtr wParam, IntPtr lParam);
 
-		[StructLayout(LayoutKind.Sequential)]
-		public class KBDLLHOOKSTRUCT
+		private void _Start()
 		{
-			public uint vkCode;
-			public uint scanCode;
-			public KBDLLHOOKSTRUCTFlags flags;
-			public uint time;
-			public UIntPtr dwExtraInfo;
+			// make sure not already installed
+			if (_hookHandle != IntPtr.Zero)
+				return;
+
+			// need instance handle to module to create a system-wide hook
+			Module[] list = System.Reflection.Assembly.GetExecutingAssembly().GetModules();
+			System.Diagnostics.Debug.Assert(list != null && list.Length > 0);
+
+			// install system-wide hook
+			_hookHandle = SetWindowsHookEx(_hookType, _hookFunction, Marshal.GetHINSTANCE(list[0]), 0);
 		}
 
-		[Flags]
-		public enum KBDLLHOOKSTRUCTFlags : uint
+		private void _Stop()
 		{
-			LLKHF_EXTENDED = 0x01,
-			LLKHF_INJECTED = 0x10,
-			LLKHF_ALTDOWN = 0x20,
-			LLKHF_UP = 0x80,
+			if (_hookHandle != IntPtr.Zero)
+			{
+				// uninstall system-wide hook
+				UnhookWindowsHookEx(_hookHandle);
+				_hookHandle = IntPtr.Zero;
+			}
 		}
 
-
-		[STAThread]
-		private static IntPtr HookCallback(int nCode, IntPtr wParam, IntPtr lParam)
+		~KeyboardListener()
 		{
+			Stop();
+		}
+
+		// hook function called by system
+		//private int HookCallback(int code, IntPtr wParam, ref KBDLLHOOKSTRUCT lParam)
+		//private IntPtr HookCallback(int code, IntPtr wParam, IntPtr lParam)
+		private int HookCallback(int code, IntPtr wParam, ref KBDLLHOOKSTRUCT lParam)
+		{
+			//HelperClasses.Logger.Log("DEBUG: Keypress - detected",2);
 			bool SurpressKeyEvent = false;
 			try
 			{
-				if (nCode >= 0)
+				if (code >= 0)
 				{
-					int vkCode = Marshal.ReadInt32(lParam);
+					uint vkCode = lParam.vkCode;
 					if (wParam == (IntPtr)WM_KEYDOWN)
 					{
 						SurpressKeyEvent = KeyboardHandler.KeyboardDownEvent((Keys)vkCode);
@@ -133,32 +169,61 @@ namespace Project_127.HelperClasses
 			catch (Exception e)
 			{
 				HelperClasses.Logger.Log("Try Catch in KeyboardListener KeyEvent Callback Failed: " + e.ToString());
-				return new IntPtr(-1);
+				return -1;
 			}
 
 			// Surpresses the Key Event 
 			if (SurpressKeyEvent)
 			{
-				return new IntPtr(-1);
+				HelperClasses.Logger.Log("Surpressed: " + ((Keys)lParam.vkCode).ToString());
+				return -1;
 			}
 			else
 			{
-				return CallNextHookEx(_hookID, nCode, wParam, lParam);
+				return CallNextHookEx(_hookHandle, code, wParam, ref lParam);
 			}
 		}
 
 
-		[DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-		private static extern IntPtr SetWindowsHookEx(int idHook, LowLevelKeyboardProc lpfn, IntPtr hMod, uint dwThreadId);
-
-		[DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-		[return: MarshalAs(UnmanagedType.Bool)]
-		private static extern bool UnhookWindowsHookEx(IntPtr hhk);
-
-		[DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-		private static extern IntPtr CallNextHookEx(IntPtr hhk, int nCode, IntPtr wParam, IntPtr lParam);
-
-		[DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-		private static extern IntPtr GetModuleHandle(string lpModuleName);
 	}
+
+	// The callback method converts the low-level keyboard data into something more .NET friendly with the HookEventArgs class.
+
+	public class HookEventArgs : EventArgs
+	{
+		// using Windows.Forms.Keys instead of Input.Key since the Forms.Keys maps
+		// to the Win32 KBDLLHOOKSTRUCT virtual key member, where Input.Key does not
+		public Keys Key;
+		public bool Alt;
+		public bool Control;
+		public bool Shift;
+
+		public HookEventArgs(UInt32 keyCode)
+		{
+			// detect what modifier keys are pressed, using 
+			// Windows.Forms.Control.ModifierKeys instead of Keyboard.Modifiers
+			// since Keyboard.Modifiers does not correctly get the state of the 
+			// modifier keys when the application does not have focus
+			this.Key = (Keys)keyCode;
+			this.Alt = (System.Windows.Forms.Control.ModifierKeys & Keys.Alt) != 0;
+			this.Control = (System.Windows.Forms.Control.ModifierKeys & Keys.Control) != 0;
+			this.Shift = (System.Windows.Forms.Control.ModifierKeys & Keys.Shift) != 0;
+		}
+	}
+
+	//	// usage: system-wide keyboard hook
+	//	private KeyboardHook _hook;
+
+
+	//	// install system-wide keyboard hook
+	//	_hook = new KeyboardHook();
+	//	_hook.KeyDown += new KeyboardHook.HookEventHandler(OnHookKeyDown);
+
+	//// keyboard hook handler
+	//void OnHookKeyDown(object sender, HookEventArgs e)
+	//	{
+	//	}
+
+	//}
+	//}
 }

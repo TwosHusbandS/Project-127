@@ -19,7 +19,7 @@ namespace Project_127.HelperClasses
 	{
 		public static bool IsRunning = false;
 
-		static Thread myThread;
+		//public static Thread myThread;
 
 		public static void _Start()
 		{
@@ -33,9 +33,11 @@ namespace Project_127.HelperClasses
 		{
 			if (!WindowChangeListener.IsRunning)
 			{
-				HelperClasses.Logger.Log("Starting WindowChangeListener");
-				myThread = new Thread(_Start);
-				myThread.Start();
+				Task.Run(() => WindowChangeListener._Start());
+				WindowChangeHander.WindowChangeEvent(GetActiveWindowTitle());
+				HelperClasses.Logger.Log("Started WindowChangeListener");
+				//myThread = new Thread(_Start);
+				//myThread.Start();
 			}
 		}
 
@@ -44,9 +46,15 @@ namespace Project_127.HelperClasses
 			if (WindowChangeListener.IsRunning)
 			{
 				IsRunning = false;
-				myThread.Abort();
+				//myThread.Abort();
+				_Stop();
 				HelperClasses.Logger.Log("Stopped WindowChangeListener");
 			}
+		}
+
+		public static void _Stop()
+		{
+			Application.Exit();
 		}
 
 
@@ -67,7 +75,7 @@ namespace Project_127.HelperClasses
 		[DllImport("user32.dll")]
 		static extern int GetWindowText(IntPtr hWnd, StringBuilder text, int count);
 
-		private static string GetActiveWindowTitle() //STATIC
+		public static string GetActiveWindowTitle() //STATIC
 		{
 			const int nChars = 256;
 			IntPtr handle = IntPtr.Zero;

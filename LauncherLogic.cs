@@ -71,6 +71,8 @@ namespace Project_127
 			}
 		}
 
+		private static bool SetProcessPriorityForGameInstance = false;
+
 		/// <summary>
 		/// Property of our GameState. Gets polled every 2.5 seconds
 		/// </summary>
@@ -83,7 +85,12 @@ namespace Project_127
 				// Check if GTA V is running
 				if (HelperClasses.ProcessHandler.IsGtaRunning())
 				{
-					SetGTAProcessPriority();
+					if (!SetProcessPriorityForGameInstance)
+					{
+						SetGTAProcessPriority();
+					}
+
+					WindowChangeHander.WindowChangeEvent(WindowChangeListener.GetActiveWindowTitle());
 
 					// If one of the Settings which require Hotkeys are enabled
 					if (Settings.EnableAutoStartJumpScript || Settings.EnableOverlay)
@@ -101,7 +108,7 @@ namespace Project_127
 						if (!GTAOverlay.DebugMode)
 						{
 							NoteOverlay.DisposeGTAOverlay();
-							HelperClasses.KeyboardListener.Stop();
+							HelperClasses.Keyboard.KeyboardListener.Stop();
 							HelperClasses.WindowChangeListener.Stop();
 						}
 					}
@@ -112,9 +119,10 @@ namespace Project_127
 					if (!GTAOverlay.DebugMode)
 					{
 						NoteOverlay.DisposeGTAOverlay();
-						HelperClasses.KeyboardListener.Stop();
+						HelperClasses.Keyboard.KeyboardListener.Stop();
 						HelperClasses.WindowChangeListener.Stop();
 					}
+					SetProcessPriorityForGameInstance = false;
 					return GameStates.NonRunning;
 				}
 			}
@@ -345,7 +353,7 @@ namespace Project_127
 
 						MyFileOperations.Add(new MyFileOperation(MyFileOperation.FileOperations.Delete, newPath, "", "Deleting '" + (newPath) + "'", 2, MyFileOperation.FileOrFolder.Folder));
 						MyFileOperations.Add(new MyFileOperation(MyFileOperation.FileOperations.Move, oldPath, newPath, "Moving '" + (oldPath) + "' to '" + (newPath) + "'", 2, MyFileOperation.FileOrFolder.Folder));
-						
+
 						new PopupProgress(PopupProgress.ProgressTypes.FileOperation, "Backup", MyFileOperations).ShowDialog();
 
 						HelperClasses.FileHandling.createPath(LauncherLogic.ZIPFilePath.TrimEnd('\\') + @"\Project_127_Files\UpgradeFiles\");
@@ -511,6 +519,7 @@ namespace Project_127
 						if (processes[0].PriorityClass != ProcessPriorityClass.High)
 						{
 							processes[0].PriorityClass = ProcessPriorityClass.High;
+							SetProcessPriorityForGameInstance = true;
 							HelperClasses.Logger.Log("Set GTA5 Process Priority to High");
 						}
 
