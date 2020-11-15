@@ -105,6 +105,8 @@ Main To do:
 					=> Had some PoC work for simulating keypresses which GTA V picks up.
 					=> It only send keydown and not keyup
 					=> It also got caught in our own keyboard listeners, but i can get around that
+				- [DONE] FIXED command line args internal once and for all
+				- [DONE] Implemented Jumpscript via Autohotkey
 				- [DONE] Integrate Title from Dragon both as in content and as in customizability
 				- [DONE] Fixed Both Listeners for the hopefully final time
 				- [DONE] Fixed Update Detection
@@ -309,15 +311,14 @@ namespace Project_127
 
 			if (Globals.InternalMode)
 			{
-				string msg = "We are in internal mode. I need testing on:\n" +
-					"" + "\n" +
-					"" + "\n" +
-					"" + "\n" +
-					"" + "\n" +
-					"" + "\n" +
-					"" + "\n" +
-					"" + "\n" +
-					"" + "\n" +
+				string msg = "We are in internal mode. I need testing on:\n\n" +
+					"- Upgrading / Downgrading / Repairing" + "\n" +
+					"- Automatically detecting Upgrades" + "\n" +
+					"- Performance (CPU & Ram)" + "\n" +
+					"- Crashes" + "\n" +
+					"- NoteOverlay" + "\n" +
+					"- Jumpscript" + "\n" +
+					"- Bugfixes in general" + "\n" +
 					"\nThanks. Appreciated. Have a great day : )";
 
 				new Popup(Popup.PopupWindowTypes.PopupOk, msg).ShowDialog();
@@ -752,6 +753,8 @@ namespace Project_127
 		{
 			this.Close();
 			Environment.Exit(0);
+			//Globals.DebugPopup(Globals.CommandLineArgs.ToString());
+			//Globals.DebugPopup(Globals.InternalMode.ToString());
 		}
 
 		// Methods of the GTA Clicks are in GTA_Page

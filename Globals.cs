@@ -117,7 +117,17 @@ namespace Project_127
 		{
 			get
 			{
-				if (Globals.CommandLineArgs.ToString().ToLower().Contains("internal")) { return true; }
+				foreach (string tmp in Globals.CommandLineArgs)
+				{
+					if (tmp.ToLower().Contains("internal"))
+					{
+						return true;
+					}
+				}
+				if (HelperClasses.FileHandling.doesFileExist(ProjectInstallationPath.TrimEnd('\\') + @"\internal.txt"))
+				{
+					return true;
+				}
 				return false;
 			}
 		}
