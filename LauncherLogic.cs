@@ -179,16 +179,18 @@ namespace Project_127
 			{
 				long SizeOfGTAV = HelperClasses.FileHandling.GetSizeOfFile(GTAVFilePath.TrimEnd('\\') + @"\GTA5.exe");
 				long SizeOfUpdate = HelperClasses.FileHandling.GetSizeOfFile(GTAVFilePath.TrimEnd('\\') + @"\update\update.rpf");
+				long SizeOfPlayGTAV = HelperClasses.FileHandling.GetSizeOfFile(GTAVFilePath.TrimEnd('\\') + @"\playgtav.exe");
 
 				long SizeOfUpgradedGTAV = HelperClasses.FileHandling.GetSizeOfFile(UpgradeFilePath.TrimEnd('\\') + @"\GTA5.exe");
 				long SizeOfUpgradedUpdate = HelperClasses.FileHandling.GetSizeOfFile(UpgradeFilePath.TrimEnd('\\') + @"\update\update.rpf");
+				long SizeOfUpgradedPlayGTAV = HelperClasses.FileHandling.GetSizeOfFile(UpgradeFilePath.TrimEnd('\\') + @"\playgtav.exe");
 
 
 				// if both Files in the GTA V Install Path exist
-				if (SizeOfGTAV > 0 && SizeOfUpdate > 0)
+				if (SizeOfGTAV > 0 && SizeOfUpdate > 0 && SizeOfPlayGTAV > 0)
 				{
 					// if Sizes in GTA V Installation Path match what files we use from ZIP for downgrading
-					if (SizeOfGTAV == SizeOfDowngradedGTAV && SizeOfUpdate == SizeOfDowngradedUPDATE)
+					if (SizeOfGTAV == SizeOfDowngradedGTAV && SizeOfUpdate == SizeOfDowngradedUPDATE && SizeOfPlayGTAV == SizeOfDowngradedPlayGTAV)
 					{
 						return InstallationStates.Downgraded;
 					}
@@ -197,10 +199,10 @@ namespace Project_127
 					else
 					{
 						// If upgrade files exist
-						if (SizeOfUpgradedGTAV > 0 && SizeOfUpgradedUpdate > 0)
+						if (SizeOfUpgradedGTAV > 0 && SizeOfUpgradedUpdate > 0 && SizeOfUpgradedPlayGTAV > 0)
 						{
 							// If both are NOT downgrad
-							if (SizeOfGTAV == SizeOfUpgradedGTAV && SizeOfUpdate == SizeOfUpgradedUpdate)
+							if (SizeOfGTAV == SizeOfUpgradedGTAV && SizeOfUpdate == SizeOfUpgradedUpdate && SizeOfPlayGTAV == SizeOfUpgradedPlayGTAV)
 							{
 								return InstallationStates.Upgraded;
 							}
@@ -238,6 +240,11 @@ namespace Project_127
 		/// Size of Downgraded upgrade\upgrade.rpf . So I can detect the InstallationState (Upgrade / Downgrade)
 		/// </summary>
 		public static long SizeOfDowngradedUPDATE { get { return HelperClasses.FileHandling.GetSizeOfFile(DowngradeFilePath.TrimEnd('\\') + @"\update\update.rpf"); } }
+
+		/// <summary>
+		/// Size of Downgraded upgrade\upgrade.rpf . So I can detect the InstallationState (Upgrade / Downgrade)
+		/// </summary>
+		public static long SizeOfDowngradedPlayGTAV { get { return HelperClasses.FileHandling.GetSizeOfFile(DowngradeFilePath.TrimEnd('\\') + @"\playgtav.exe"); } }
 
 		/// <summary>
 		/// Path of where the ZIP File is extracted
