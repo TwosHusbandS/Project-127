@@ -94,7 +94,7 @@ namespace Project_127
 				}
 				catch
 				{
-					
+
 				}
 				return new Version("1.0.0.0");
 			}
@@ -130,7 +130,7 @@ namespace Project_127
 		/// <summary>
 		/// Property of other Buildinfo. Will be in the top message of logs
 		/// </summary>
-		public static string BuildInfo = "Build 3";
+		public static string BuildInfo = "Build 1, Internal Testing";
 
 		/// <summary>
 		/// Returns all Command Line Args as StringArray
@@ -279,7 +279,7 @@ namespace Project_127
 			{"OverlayTextFont", "Arial" },
 			{"OverlayTextSize", "24" },
 
-			{"OverlayNotesMain",""},
+			{"OverlayNotesMain","Note1.txt;Note2.txt;Note3.txt;Note4.txt"},
 			{"OverlayNotesPresetA",""},
 			{"OverlayNotesPresetB",""},
 			{"OverlayNotesPresetC",""},
@@ -375,8 +375,6 @@ namespace Project_127
 
 				if (Settings.LastLaunchedVersion < new Version("1.1.0.0"))
 				{
-
-
 					Settings.JumpScriptKey1 = System.Windows.Forms.Keys.Space;
 					Settings.JumpScriptKey2 = System.Windows.Forms.Keys.L;
 
@@ -428,6 +426,11 @@ namespace Project_127
 			// Intepreting all Command Line shit
 			CommandLineArgumentIntepretation();
 
+			if (Settings.EnableAutoStartJumpScript)
+			{
+				Jumpscript.InitJumpscript();
+			}
+
 			// Checks if Update hit
 			LauncherLogic.HandleUpdates();
 
@@ -478,10 +481,10 @@ namespace Project_127
 				string Value = "";
 				try
 				{
-				 Argument = CommandLineArg.Substring(0, CommandLineArg.IndexOf(':'));
-				 Value = CommandLineArg.Substring(CommandLineArg.IndexOf(':') + 1);
+					Argument = CommandLineArg.Substring(0, CommandLineArg.IndexOf(':'));
+					Value = CommandLineArg.Substring(CommandLineArg.IndexOf(':') + 1);
 				}
-				catch 
+				catch
 				{
 				}
 
@@ -687,17 +690,10 @@ namespace Project_127
 			}
 		}
 
-		public static string DDL = "";
 
 		public static string GetDDL(string pLink)
 		{
-			ActualGetDDL(pLink);
-			return DDL;
-		}
-
-		public async static void ActualGetDDL(string pLink)
-		{
-			DDL = pLink;
+			string DDL = pLink;
 
 			if (pLink.Contains("anonfiles"))
 			{
@@ -708,7 +704,8 @@ namespace Project_127
 
 				// Setting up some Webclient stuff. 
 				WebClient webClient = new WebClient();
-				string webSource = await webClient.DownloadStringTaskAsync(NonDDL);
+				string webSource = "";
+				webSource = webClient.DownloadString(NonDDL);
 				webSource.Replace(" ", "");
 				webSource.Replace("\n", "");
 				webSource.Replace("\r", "");
@@ -728,6 +725,7 @@ namespace Project_127
 					}
 				}
 			}
+			return DDL;
 		}
 
 		/// <summary>

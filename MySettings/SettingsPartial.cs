@@ -623,6 +623,15 @@ namespace Project_127.MySettings
 			set
 			{
 				SetSetting("EnableAutoStartJumpScript", value.ToString());
+
+				if (value)
+				{
+					Jumpscript.InitJumpscript();
+				}
+				else
+				{
+					Jumpscript.DisposeJumpscript();
+				}
 			}
 		}
 
@@ -654,6 +663,7 @@ namespace Project_127.MySettings
 			set
 			{
 				SetSetting("JumpScriptKey1", ((int)value).ToString());
+				Jumpscript.StartJumpscript();
 			}
 		}
 
@@ -669,6 +679,7 @@ namespace Project_127.MySettings
 			set
 			{
 				SetSetting("JumpScriptKey2", ((int)value).ToString());
+				Jumpscript.StartJumpscript();
 			}
 		}
 

@@ -172,9 +172,6 @@
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
-    <Reference Include="WindowsInput, Version=1.0.4.0, Culture=neutral, PublicKeyToken=9b287f7dc5073cad, processorArchitecture=MSIL">
-      <HintPath>packages\InputSimulator.1.0.4.0\lib\net20\WindowsInput.dll</HintPath>
-    </Reference>
     <Reference Include="WpfAnimatedGif, Version=2.0.0.0, Culture=neutral, PublicKeyToken=9e7cd3b544a090dc, processorArchitecture=MSIL">
       <HintPath>packages\WpfAnimatedGif.2.0.0\lib\net40\WpfAnimatedGif.dll</HintPath>
     </Reference>
@@ -185,11 +182,12 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Auth\CEFResourceHandler.cs" />
-    <Compile Include="HelperClasses\Jumpscript.cs" />
+    <Compile Include="HelperClasses\Keyboard\Jumpscript.cs" />
     <Compile Include="HelperClasses\Keyboard\KeyboardIS.cs" />
     <Compile Include="HelperClasses\Keyboard\KeyboardListener.cs" />
     <Compile Include="HelperClasses\Keyboard\KeyboardSimulator.cs" />
     <Compile Include="HelperClasses\Keyboard\LastTry.cs" />
+    <Compile Include="HelperClasses\Keyboard\LetsDoThis.cs" />
     <Compile Include="HelperClasses\WindowChangeHander.cs" />
     <Compile Include="Overlay\EmptyPage.xaml.cs">
       <DependentUpon>EmptyPage.xaml</DependentUpon>
@@ -462,6 +460,18 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Auth\authpage.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <NativeReference Include="AutoHotkey, Version=2.0.00.00, Type=win32">
+      <Name>v2_AutoHotkey.dll</Name>
+      <HintPath>bin\DLLs\v2_AutoHotkey.dll</HintPath>
+    </NativeReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="AAA_HybridCode\AutoHotkey\AutoHotkey.Interop\AutoHotkey.Interop.csproj">
+      <Project>{2869dbfe-7762-4930-95ea-2b0c111cf353}</Project>
+      <Name>AutoHotkey.Interop</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

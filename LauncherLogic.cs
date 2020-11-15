@@ -71,7 +71,6 @@ namespace Project_127
 			}
 		}
 
-		private static bool SetProcessPriorityForGameInstance = false;
 
 		/// <summary>
 		/// Property of our GameState. Gets polled every 2.5 seconds
@@ -85,34 +84,35 @@ namespace Project_127
 				// Check if GTA V is running
 				if (HelperClasses.ProcessHandler.IsGtaRunning())
 				{
-					if (!SetProcessPriorityForGameInstance)
-					{
-						SetGTAProcessPriority();
-					}
-
-					WindowChangeHander.WindowChangeEvent(WindowChangeListener.GetActiveWindowTitle());
-
-					// If one of the Settings which require Hotkeys are enabled
-					if (Settings.EnableAutoStartJumpScript || Settings.EnableOverlay)
-					{
-						// Only Start Stop shit here when the overlay is not in debugmode
-						if (!GTAOverlay.DebugMode)
-						{
-							NoteOverlay.InitGTAOverlay();
-							HelperClasses.WindowChangeListener.Start();
-						}
-
-					}
-					else
-					{
-						if (!GTAOverlay.DebugMode)
-						{
-							NoteOverlay.DisposeGTAOverlay();
-							HelperClasses.Keyboard.KeyboardListener.Stop();
-							HelperClasses.WindowChangeListener.Stop();
-						}
-					}
 					return GameStates.Running;
+				}
+				else
+				{
+					return GameStates.NonRunning;
+				}
+			}
+		}
+
+		private static GameStates LastGameState = GameStates.NonRunning;
+
+		public static GameStates PollGameState()
+		{
+			GameStates currGameState = GameState;
+
+			if (currGameState == GameStates.Running)
+			{
+				WindowChangeHander.WindowChangeEvent(WindowChangeListener.GetActiveWindowTitle());
+
+				// If one of the Settings which require Hotkeys are enabled
+				if (Settings.EnableAutoStartJumpScript || Settings.EnableOverlay)
+				{
+					// Only Start Stop shit here when the overlay is not in debugmode
+					if (!GTAOverlay.DebugMode)
+					{
+						NoteOverlay.InitGTAOverlay();
+						HelperClasses.WindowChangeListener.Start();
+					}
+
 				}
 				else
 				{
@@ -122,9 +122,51 @@ namespace Project_127
 						HelperClasses.Keyboard.KeyboardListener.Stop();
 						HelperClasses.WindowChangeListener.Stop();
 					}
-					SetProcessPriorityForGameInstance = false;
-					return GameStates.NonRunning;
 				}
+				
+				if (LastGameState == GameStates.NonRunning)
+				{
+					GTAStarted();
+				}
+			}
+			else
+			{
+				if (!GTAOverlay.DebugMode)
+				{
+					NoteOverlay.DisposeGTAOverlay();
+					HelperClasses.Keyboard.KeyboardListener.Stop();
+					HelperClasses.WindowChangeListener.Stop();
+				}
+
+				if (LastGameState == GameStates.Running)
+				{
+					GTAClosed();
+				}
+			}
+
+			LastGameState = currGameState;
+
+			return currGameState;
+		}
+
+
+		public static void GTAStarted()
+		{
+			SetGTAProcessPriority();
+	
+			// Start Jumpscript
+			if (Settings.EnableAutoStartJumpScript)
+			{
+				Jumpscript.StartJumpscript();
+			}
+		}
+
+		public static void GTAClosed()
+		{
+			// Kill Stop Jumpscript
+			if (Settings.EnableAutoStartJumpScript)
+			{
+				Jumpscript.StopJumpscript();
 			}
 		}
 
@@ -519,7 +561,6 @@ namespace Project_127
 						if (processes[0].PriorityClass != ProcessPriorityClass.High)
 						{
 							processes[0].PriorityClass = ProcessPriorityClass.High;
-							SetProcessPriorityForGameInstance = true;
 							HelperClasses.Logger.Log("Set GTA5 Process Priority to High");
 						}
 

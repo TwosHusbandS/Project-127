@@ -347,11 +347,6 @@ namespace Project_127
 
 				// Same as other two thingies here lolerino
 				HelperClasses.WindowChangeListener.Start();
-
-				// We currently need this here, normally this will be started by WindowEventThingy (but this only starts or stops based on GTA V.exe)
-				//HelperClasses.KeyboardListener.Start();
-
-				//KeyboardHandler.TMP();
 			}
 		}
 
@@ -448,7 +443,7 @@ namespace Project_127
 
 			lbl_GTA.Content += " (" + Globals.GetGameVersionOfBuildNumber(Globals.GameVersion) + ")";
 
-			if (LauncherLogic.GameState == LauncherLogic.GameStates.Running)
+			if (LauncherLogic.PollGameState() == LauncherLogic.GameStates.Running)
 			{
 				GTA_Page.btn_GTA_static.BorderBrush = Globals.MW_ButtonGTAGameRunningBorderBrush;
 				GTA_Page.btn_GTA_static.Content = "Exit GTA V";
