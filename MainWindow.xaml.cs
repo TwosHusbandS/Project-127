@@ -1,13 +1,16 @@
 ﻿/*
+ 
+Main Documentation / Dev Diary here:
 
-Main Documentation:
-Actual code (partially closed source) which authentificates, handles entitlement and launches the game is done by @dr490n with the help of other members of the core team like @Special For and @zCri
+Actual code (partially closed source) which authentificates, handles entitlement and launches the game is done by @dr490n with the help of other members of the core team like @Special For, who also did a lot of testing, brainstorming, information gathering and 2nd level support
+Other members of the team like @JakeMiester (who did some project management, acted as the communication party between the team and the speedrun mods, "invented" trello) and @zCri (did a research, RE and coding in the initial information gathering stage) as well as a number of other members of the team, including but not limited to @MoMo, @Diamondo25, @S.M.G, @gogsi, @Antibones, @Unemployed, @Aperture, @luky, @CrynesSs, @Daniel Kinau contributed to this project one way or another, and my thanks go out to them.
 Artwork, Design of GUI, GUI Behaviourehaviour, Colorchoices etc. by "@Hossel"
-Client by "@thS"
+Project 1.27 Client by "@thS"
 Version: 1.0.0.0
 
 Build Instructions:
 	Press CTRLF + F5, pray that nuget does its magic.
+	If this doesnt work, required DLLs and files can be gotten by running the latest installer
 
 Deploy Instructions:
 	Change Version Number a few Lines Above.
@@ -54,66 +57,145 @@ General Files / Classes:
 		ROSCommunicationBackend.cs // Backend by @d490n
 
 Main To do:
-	- Things changed since last official release (not last commit)
-
-
-	- Could Always Use some Re-Writing, Re-Facturing, and Documenting...
+		SaveFileHandler Folder dectection and display. Dummy Double Click Method done.
+			Gotta implement the actual displaying files from new folder and updating Label
+			Gotta Refresh on Renaming Left side btw (for NiceName Update)
 		
-	- Tell Karsten about Birthday Present Thingy and show him this for work
+	- Changelog past 1.0.0.0 Build 3:
+		=> Changed Polling Rate of GTA V Running or Not from 5 to 2.5 seconds
+		=> Gave Reloe the new Installer Link
+		=> Fixed Spelling Mistake
+		=> Throwing only one nice Network error now, instead of all of them with exception string
+		=> Removed the language selection from firstlaunch and Reset Settings
+		=> Improved Popup Startup Location Code to make it look nicer
+		=> Moved Code around
+		=> Improved GTA V Path detection Logging
+		=> Added Import GTA V Settings Button back
+		=> Moved SourceCodeFiles around to make it easier to find stuff
+		=> Fixed Not launching after pressing Launch when non-auth
+		=> Dragon Implemented the GameOverlay (GTAOverlay)
+		=> KeyboardListener (conntected to Backend)
+		=> WindowChangeForegroundEventListener (connected to Backend)
+		=> "Look for Updates" Button
+		=> Made it generate debugfile and open explorer window of project 1.27 on rightclick of auth button
+		=> Fixed Auth Mouse Over
+		=> Fixed Consistent Margins and BorderThicknesses for Pages
+		=> Made sure Process Priority is set correctly
+		=> Implemented GTA Overlay debugmode which means the rest of that stuff is properly connected to backend
+		=> Hotkeys only work when Overlay is visible
+		=> Made sure GTA Overlay will turn off when not ingame
+		=> Running Core stuff when launching through steam. This might not have any effect
+		=> Design of UX for NoteOverlay.xaml
+		=> Updated Settings with JumpScript and NoteOverlay stuff
+		=> Rolling Log (fixed potential off by one)
+		=> ToolTips on all Icon-Buttons
+		=> Annoucement Feature
+		=> FailSafe Backup System for Upgrade Files
+		=> Auth will no longer crash when not reachable. Well at least we check it on page load...
+		=> [NEEDS TESTING] Overlay + Jumpscript stuff
+		=> [NEEDS TESTING] Auto-Start XYZ on Game Launch working dir fix
+		=> [NEEDS TESTING] Downgrade/Upgrade/Repair improvements:
+			- Detecting Updates automatically (checking for it on start, upgrade, downgrade), throwing one popup per P127 Launch
+			- Throwing Popup with potential Fixes for non-changing InstallationState (upgraded, downgraded, unsure)
+			- Not having own files in GTA V Folder when upgraded
 
-	// PUBLIC RELEASE 1.0
-		
-		-> Make Uninstaller actually call our uninstall Program...for some reason this does not happen...
-		-> Implement all Other features
-			=> JumpscriptStuff
-			=> Core Affinity Fix...
-		-> Implement note thingy from reloes suggestion (https://discordapp.com/channels/758296338222940211/758296338806341684/762023004183461888)
-		-> Save File Handler
-			-ReWrite of SaveFileHandler class with enum for File or Folder
-				=> Add Support for Copy & Move (in Ram) and Paste.
-			- Add Folder Support
-				=> Folders as clickable items in list at the very top with a "[FolderName]
-				=> Top Folder being "[..]" like in WinRar
-			- Multiselect
-			- RightClick on File (Copy, Rename, Delete)
-			- RightClick on Files (Copy, Delete, Delete)
-			- RightClick on Background (new Folder, Paste)
-		-> Develop Concept with makes Repair Button unneeded and check how much time and CPU this needs
-			=> Already see if we can make this to keep "States" of Installation with different Upgraded Versions
-		-> $UpgradeFiles has downgrade files in them. Why? And how to Fix?
-		-> Custom ZIP File Location User Error Checks:
-			=> User might get confused with the Project_127_Files Folder. 
-				Maybe we should actually check parent folders and child folders when User is selecting a Path for ZIP File
-				>> The thing is. This shouldnt be needed since we delete folders on moving ZIP files and stuff
-		-> Regedit Cleanup of everything not in default settings
+
+			Quick and dirty notes:
+				- Jumpscript Send Key stuff
+					=> Had some PoC work for simulating keypresses which GTA V picks up.
+					=> It only send keydown and not keyup
+					=> It also got caught in our own keyboard listeners, but i can get around that
+				- [DONE] Integrate Title from Dragon both as in content and as in customizability
+				- [DONE] Fixed Both Listeners for the hopefully final time
+				- [DONE] Fixed Update Detection
+				- [DONE] Commented out new SaveFileHandler Code
+				- [DONE] Fixed Process Priority setting too often
+				- [DONE] Fixed ForegroundChangeListener not setting on fullscreen by polling every 2.5 seconds
+				- [DONE] Fix Command line args crashing it...
+				- [DONE] Make "DetectUpgrade" more efficent
+				- [DONE] Integrate Latest working branch. 
+				- [DONE] Integrate Dragons Fixes for Rockstar Endpoint change
+				- [DONE] Took care of all Listeners. Using and keeping track of Threads for it as of right now. Seems to work
+				- [DONE] Split upgrading downgrading into 17 progress popups
+				- [DONE] Finish Readme (Speedrun text + Reset Button + DL of big zip)
+				- [DONE] ZIP Hash for big ZIP
+				- [DONE] Bring back functionality from: https://github.com/TwosHusbandS/Project-127/commit/a5dcbd5c1a4011c8e1845c4f338f6f9ffbe79a92
+				- [DONE] Selection after deletion is fucked (Solution in Commit Above)
+				- [DONE] Yoshis Info
+				- [DONE] NoteOverlay Null Reference Fix + CPU Improvements
+				- [DONE] Cache works, there are other cache files tho...argh. ~~Investigate CEF Cache~~
+
+
+		=== Keep in Mind === 
+
+	Still to do for 1.1
+	- Cef no disk cache...
+	- Ask Yoshi, Crapideot, and that other guy from hossels discord
+	- 1.5 seconds delay on downgrade... + warning popup on first downgrade that it takes some time
+	- Comment SaveFileHandler stuff out so we are back to 1.0 SaveFileHandler
+	- Jumpscript
+		-> Find input sender which works in Game and doesnt infinite loop
+		-> OR make pointer to struct work...
+	- Make texts in readme / Information markdown with easy links and scrollbar and stuff. Also reference the resetall button in settings
+	- Uninstaller still is semi-manual...Should be fixed with "Reset" Buttons eliminating the need for custom uninstaller
+	- Add new DLLs to installer (I think at least 2, probably 3...Bottom Line: test installer.
+
+
+	Other stuff:
+	- If i can prevent the keypress from being processed further...I can probably change a param and send a different keypress there...
+	- USE GIT TO KEEP TRACK OF INSTALLATION STATES???
+	- Features still to do:
+		- Native jump Script
+		- [@thS currently working on] Better Save File Handler
+			=> Add Folder Support
+				>> ReWrite of SaveFileHandler class with enum for File or Folder
+				>> Folders as clickable items in list at the very top with a "[FolderName]
+				>> Top Folder being "[..]" like in WinRar
+			=> Add Support for Copy & Move (in Ram) and Paste.
+			=> Multiselect
+			=> RightClick on File (Copy, Rename, Delete)
+			=> RightClick on Files (Copy, Delete, Delete)
+			=> RightClick on Background (new Folder, Paste)
+			=> RightClick on Folder
+		- Auto Start via CSV and custom shit
+		- Note Feature from Reloes suggestion 
 
     - Low Prio:
+		Regedit Cleanup of everything not in default settings
 		Add Audio Effects
 		Fix Code signing so we dont get anti virus error
 
-Weird Beta Reportings:
-	- Reloe and JakeMiester and dr490n had some issues with the GTA V Path Settings
-			Changed a lot of the backend for that. Should all be fixed.
-			If given Path is detected to be wrong, but user has to confirm this three times every startup...
-	- Game wasnt launching for most
-			I actually hardcoded the Path...its now fixed.
-	- People had to run as Admin manually even tho I have the admin relauncher.
-	- ZIP Extraction failed for 2 people when not manually running as admin
-			Added more and better logging, issue can not be reproduced as of right now
-	- Open Twice message (and killing old process) not working for one guy
+
+Bug Reportings:
+	- [RESOLVED][IDC]
+			GTA5.exe being "stuck" in taskmanager...hossels virus shit
+	- [RESOLVED][IDC][Its fine for now, no idea how to improve]
+			Open Twice message (and killing old process) not working for one guy
 			Works for me and on some other testers machines.
-	- Auth Window popup crashed for Hossel in some circumstances. (CredentialManager dll missing)
-	- Investigate oneDrive shit (turned out to be crypto char in document path [or path variable??])
-	- Dragons NAS machine was just doing weird stuff with importing zip.
+			Confirmed funky. Also can not kill Process spawned by VS
+			Works for me...even in VS...
+	- [RESOLVED] Installer Link wrong (gave Reloe new one, it got changed)
+	- [RESOLVED] Changed a lot of that, should be all good now
+			Reloe and JakeMiester and dr490n had some issues with the GTA V Path Settings
+			Changed a lot of the backend for that. Should all be fixed.
+	- [RESOLVED][FIXED] Game wasnt launching for most
+			I actually hardcoded the Path...its now fixed.
+	- [RESOLVED][FIXED] People had to run as Admin manually even tho I have the admin relauncher.
+	- [RESOLVED][FIXED] ZIP Extraction failed for 2 people when not manually running as admin
+			Added more and better logging, issue can not be reproduced as of right now
+	- [RESOLVED][FIXED] Auth Window popup crashed for Hossel in some circumstances. (CredentialManager dll missing)
+	- [RESOLVED] Dragon Fixed that on his end, Investigate oneDrive shit (turned out to be crypto char in document path [or path variable??])
+	- [RESOLVED] Just this one machine being dumb...Dragons NAS machine was just doing weird stuff with importing zip.
 		-> Simple stuff like (If Path doesnt exist, create it) crashed for no reason
 		-> Added logging to extract zip didnt work and failed in weird places
 		-> Complained about STATHread even its there
 		-> "Old" no progressbar zip extracting also failed
 		-> Probably due to NAS
-	- Investigate Specials worry about user getting "Already auth" even when session expired.
+	- [RESOLVED] Investigate Specials worry about user getting "Already auth" even when session expired.
 		=> Took a quick look at the code, this should not happen, but special said it happened before...
 															also Software doing Software things...
 		=> Bottom Line: INVESTIGATE
+		=> Confirmed NON RELEVANT by brainstorm from dragon and ths
 
 */
 
@@ -144,6 +226,13 @@ using System.Xml.Linq;
 using System.Text.RegularExpressions;
 using System.Net;
 using System.ComponentModel;
+using Project_127;
+using Project_127.Auth;
+using Project_127.HelperClasses;
+using Project_127.Overlay;
+using Project_127.Popups;
+using Project_127.MySettings;
+using CefSharp;
 
 namespace Project_127
 {
@@ -165,7 +254,6 @@ namespace Project_127
 		/// Static Property to access Children (mainly Controls) of MainWindow Instance
 		/// </summary>
 		public static MainWindow MW;
-
 
 		/// <summary>
 		/// Constructor of Main Window
@@ -216,29 +304,8 @@ namespace Project_127
 			//	Environment.Exit(3);
 			//}
 
-
-			// Deleting all Installer and ZIP Files from own Project Installation Path
-			DeleteOldFiles();
-
-			// Set Image of Buttons
-			SetButtonMouseOverMagic(btn_Exit);
-			SetButtonMouseOverMagic(btn_Auth);
-			SetButtonMouseOverMagic(btn_Hamburger);
-
-			// Auto Updater
-			CheckForUpdate();
-
-			// Downloads the "big 3" gamefiles from github release
-			CheckForBigThree();
-
-			// Check whats the latest Version of the ZIP File in GITHUB
-			CheckForZipUpdate();
-
 			// Some Background Change based on Date
 			ChangeBackgroundBasedOnSeason();
-
-			// Intepreting all Command Line shit
-			CommandLineArgumentIntepretation();
 
 			if (Globals.InternalMode)
 			{
@@ -256,15 +323,31 @@ namespace Project_127
 				new Popup(Popup.PopupWindowTypes.PopupOk, msg).ShowDialog();
 			}
 
-
-
-
-
+			// GUI SHIT
+			SetButtonMouseOverMagic(btn_Exit);
+			SetButtonMouseOverMagic(btn_Auth);
+			SetButtonMouseOverMagic(btn_Hamburger);
 			Globals.HamburgerMenuState = Globals.HamburgerMenuStates.Hidden;
+
+			CEFInitialize();
 
 			HelperClasses.Logger.Log("Startup procedure (Constructor of MainWindow) completed.");
 			HelperClasses.Logger.Log("--------------------------------------------------------");
 
+#if DEBUG
+   GTAOverlay.DebugMode = true;
+#endif
+
+
+			// Testing Purpose for the overlay shit
+			if (GTAOverlay.DebugMode)
+			{
+				//We currently need this here, normally this will be started by GameState(but this points to GTA V.exe as of right now)
+				NoteOverlay.InitGTAOverlay();
+
+				// Same as other two thingies here lolerino
+				HelperClasses.WindowChangeListener.Start();
+			}
 		}
 
 		/// <summary>
@@ -294,36 +377,6 @@ namespace Project_127
 			}
 		}
 
-
-		/// <summary>
-		/// CommandLineArgumentIntepretation(), currently used for Background Image
-		/// </summary>
-		private void CommandLineArgumentIntepretation()
-		{
-			// Code for internal mode is in Globals.Internalmode Getter
-
-			// Need to be in following Format
-			// "-CommandLineArg:Value"
-			foreach (string CommandLineArg in Globals.CommandLineArgs)
-			{
-				string Argument = CommandLineArg.Substring(0, CommandLineArg.IndexOf(':'));
-				string Value = CommandLineArg.Substring(CommandLineArg.IndexOf(':') + 1);
-
-				if (Argument == "-Background")
-				{
-					Globals.BackgroundImages Tmp = Globals.BackgroundImages.Main;
-					try
-					{
-						Tmp = (Globals.BackgroundImages)System.Enum.Parse(typeof(Globals.BackgroundImages), Value);
-						Globals.BackgroundImage = Tmp;
-						SetControlBackground(this, Globals.GetBackGroundPath());
-					}
-					catch { }
-				}
-			}
-		}
-
-
 		/// <summary>
 		/// Responsible for Re-Launching this App as Admin if it isnt.
 		/// </summary>
@@ -345,7 +398,6 @@ namespace Project_127
 			}
 		}
 
-
 		/// <summary>
 		/// Method which checks if this program is run as admin. Returns one bool
 		/// </summary>
@@ -363,261 +415,6 @@ namespace Project_127
 				return false;
 			}
 		}
-
-
-		/// <summary>
-		/// Deleting all Old Files (Installer and ZIP Files) from the Installation Folder
-		/// </summary>
-		private void DeleteOldFiles()
-		{
-			HelperClasses.Logger.Log("Checking if there is an old Installer or ZIP Files in the Project InstallationPath during startup procedure.");
-
-			// Looping through all Files in the Installation Path
-			foreach (string myFile in HelperClasses.FileHandling.GetFilesFromFolder(Globals.ProjectInstallationPath))
-			{
-				// If it contains the word installer, delete it
-				if (myFile.ToLower().Contains("installer"))
-				{
-					HelperClasses.Logger.Log("Found old installer File ('" + HelperClasses.FileHandling.PathSplitUp(myFile)[1] + "') in the Directory. Will delete it.");
-					HelperClasses.FileHandling.deleteFile(myFile);
-				}
-				// If it is the Name of the ZIP File we download, we delete it
-				if (myFile == Globals.ZipFileDownloadLocation)
-				{
-					HelperClasses.Logger.Log("Found old ZIP File ('" + HelperClasses.FileHandling.PathSplitUp(myFile)[1] + "') in the Directory. Will delete it.");
-					HelperClasses.FileHandling.deleteFile(myFile);
-				}
-			}
-		}
-
-
-		/// <summary>
-		/// Method which does the UpdateCheck on Startup
-		/// </summary>
-		private void CheckForUpdate()
-		{
-			// Check online File for Version.
-			string MyVersionOnlineString = HelperClasses.FileHandling.GetXMLTagContent(HelperClasses.FileHandling.GetStringFromURL(Globals.URL_AutoUpdate), "version");
-
-			// If this is empty,  github returned ""
-			if (!(String.IsNullOrEmpty(MyVersionOnlineString)))
-			{
-				// Building a Version out of the String
-				Version MyVersionOnline = new Version(MyVersionOnlineString);
-
-				// Logging some stuff
-				HelperClasses.Logger.Log("Checking for Project 1.27 Update during start up procedure");
-				HelperClasses.Logger.Log("MyVersionOnline = '" + MyVersionOnline.ToString() + "', Globals.ProjectVersion = '" + Globals.ProjectVersion + "'", 1);
-
-				// If Online Version is "bigger" than our own local Version
-				if (MyVersionOnline > Globals.ProjectVersion)
-				{
-					// Update Found.
-					HelperClasses.Logger.Log("Update found", 1);
-					Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Version: '" + MyVersionOnline.ToString() + "' found on the Server.\nVersion: '" + Globals.ProjectVersion.ToString() + "' found installed.\nDo you want to upgrade?");
-					yesno.ShowDialog();
-					// Asking User if he wants update.
-					if (yesno.DialogResult == true)
-					{
-						// User wants Update
-						HelperClasses.Logger.Log("Update found. User wants it", 1);
-						string DLPath = HelperClasses.FileHandling.GetXMLTagContent(HelperClasses.FileHandling.GetStringFromURL(Globals.URL_AutoUpdate), "url");
-						string DLFilename = DLPath.Substring(DLPath.LastIndexOf('/') + 1);
-						string LocalFileName = Globals.ProjectInstallationPath.TrimEnd('\\') + @"\" + DLFilename;
-
-						new PopupDownload(DLPath, LocalFileName, "Installer").ShowDialog();
-						HelperClasses.ProcessHandler.StartProcess(LocalFileName);
-						Environment.Exit(0);
-					}
-					else
-					{
-						// User doesnt want update
-						HelperClasses.Logger.Log("Update found. User does not wants it", 1);
-					}
-				}
-				else
-				{
-					// No update found
-					HelperClasses.Logger.Log("No Update Found");
-				}
-			}
-			else
-			{
-				// String return is fucked
-				HelperClasses.Logger.Log("Did not get most up to date Project 1.27 Version from Github. Github offline or your PC offline. Probably. Lets hope so.");
-			}
-		}
-
-
-		/// <summary>
-		/// Checks Github for the big 3 files we need
-		/// </summary>
-		public static void CheckForBigThree()
-		{
-			HelperClasses.Logger.Log("Downloading the 'big three' files");
-
-			string DLLinkG = HelperClasses.FileHandling.GetXMLTagContent(HelperClasses.FileHandling.GetStringFromURL(Globals.URL_AutoUpdate), "DLLinkG");
-			string DLLinkGHash = HelperClasses.FileHandling.GetXMLTagContent(HelperClasses.FileHandling.GetStringFromURL(Globals.URL_AutoUpdate), "DLLinkGHash");
-			string DLLinkU = HelperClasses.FileHandling.GetXMLTagContent(HelperClasses.FileHandling.GetStringFromURL(Globals.URL_AutoUpdate), "DLLinkU");
-			string DLLinkUHash = HelperClasses.FileHandling.GetXMLTagContent(HelperClasses.FileHandling.GetStringFromURL(Globals.URL_AutoUpdate), "DLLinkUHash");
-			string DLLinkX = HelperClasses.FileHandling.GetXMLTagContent(HelperClasses.FileHandling.GetStringFromURL(Globals.URL_AutoUpdate), "DLLinkX");
-			string DLLinkXHash = HelperClasses.FileHandling.GetXMLTagContent(HelperClasses.FileHandling.GetStringFromURL(Globals.URL_AutoUpdate), "DLLinkXHash");
-
-			HelperClasses.Logger.Log("Checking if gta5.exe exists locally", 1);
-			if (HelperClasses.FileHandling.doesFileExist(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\GTA5.exe"))
-			{
-				HelperClasses.Logger.Log("It does and we dont need to download anything", 2);
-			}
-			else
-			{
-				HelperClasses.Logger.Log("It does NOT and we DO need to download something", 2);
-				new PopupDownload(DLLinkG, LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\GTA5.exe", "Needed Files (gta5.exe 1/3)").ShowDialog();
-
-				if (!string.IsNullOrWhiteSpace(DLLinkGHash))
-				{
-					HelperClasses.Logger.Log("We do have a Hash for that file. Lets compare it:", 2);
-					HelperClasses.Logger.Log("Hash we want: '" + DLLinkGHash + "'", 3);
-					HelperClasses.Logger.Log("Hash we have: '" + HelperClasses.FileHandling.GetHashFromFile(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\GTA5.exe") + "'", 3);
-					while (HelperClasses.FileHandling.GetHashFromFile(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\GTA5.exe") != DLLinkGHash)
-					{
-						HelperClasses.Logger.Log("Well..hashes dont match shit. Lets try again", 2);
-						HelperClasses.FileHandling.deleteFile(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\GTA5.exe");
-						new PopupDownload(DLLinkG, LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\GTA5.exe", "Needed Files (gta5.exe 1/3)").ShowDialog();
-						HelperClasses.Logger.Log("Hash we want: '" + DLLinkGHash + "'", 3);
-						HelperClasses.Logger.Log("Hash we have: '" + HelperClasses.FileHandling.GetHashFromFile(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\GTA5.exe") + "'", 3);
-					}
-				}
-			}
-
-			HelperClasses.Logger.Log("Checking if x64a.rpf exists locally", 1);
-			if (HelperClasses.FileHandling.doesFileExist(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\x64a.rpf"))
-			{
-				HelperClasses.Logger.Log("It does and we dont need to download anything", 2);
-			}
-			else
-			{
-				HelperClasses.Logger.Log("It does NOT and we DO need to download something", 2);
-				new PopupDownload(DLLinkX, LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\x64a.rpf", "Needed Files (x64a.rpf, 2/3)").ShowDialog();
-
-				if (!string.IsNullOrWhiteSpace(DLLinkXHash))
-				{
-					HelperClasses.Logger.Log("We do have a Hash for that file. Lets compare it:", 2);
-					HelperClasses.Logger.Log("Hash we want: '" + DLLinkXHash + "'", 3);
-					HelperClasses.Logger.Log("Hash we have: '" + HelperClasses.FileHandling.GetHashFromFile(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\x64a.rpf") + "'", 3);
-					while (HelperClasses.FileHandling.GetHashFromFile(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\x64a.rpf") != DLLinkXHash)
-					{
-						HelperClasses.Logger.Log("Well..hashes dont match shit. Lets try again", 2);
-						HelperClasses.FileHandling.deleteFile(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\x64a.rpf");
-						new PopupDownload(DLLinkX, LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\x64a.rpf", "Needed Files (x64a.rpf, 2/3)").ShowDialog();
-						HelperClasses.Logger.Log("Hash we want: '" + DLLinkXHash + "'", 3);
-						HelperClasses.Logger.Log("Hash we have: '" + HelperClasses.FileHandling.GetHashFromFile(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\x64a.rpf") + "'", 3);
-					}
-				}
-			}
-
-			HelperClasses.Logger.Log(@"Checking if update\update.rpf exists locally", 1);
-			if (HelperClasses.FileHandling.doesFileExist(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\update\update.rpf"))
-			{
-				HelperClasses.Logger.Log("It does and we dont need to download anything", 2);
-			}
-			else
-			{
-				HelperClasses.Logger.Log("It does NOT and we DO need to download something", 2);
-				new PopupDownload(DLLinkU, LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\update\update.rpf", "Needed Files (Update.rpf, 3/3)").ShowDialog();
-
-				if (!string.IsNullOrWhiteSpace(DLLinkUHash))
-				{
-					HelperClasses.Logger.Log("We do have a Hash for that file. Lets compare it:", 2);
-					HelperClasses.Logger.Log("Hash we want: '" + DLLinkUHash + "'", 3);
-					HelperClasses.Logger.Log("Hash we have: '" + HelperClasses.FileHandling.GetHashFromFile(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\update\update.rpf") + "'", 3);
-					while (HelperClasses.FileHandling.GetHashFromFile(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\update\update.rpf") != DLLinkUHash)
-					{
-						HelperClasses.Logger.Log("Well..hashes dont match shit. Lets try again", 2);
-						HelperClasses.FileHandling.deleteFile(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\update\update.rpf");
-						new PopupDownload(DLLinkU, LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\update\update.rpf", "Needed Files (update.rpf, 3/3)").ShowDialog();
-						HelperClasses.Logger.Log("Hash we want: '" + DLLinkUHash + "'", 3);
-						HelperClasses.Logger.Log("Hash we have: '" + HelperClasses.FileHandling.GetHashFromFile(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\update\update.rpf") + "'", 3);
-					}
-				}
-			}
-		}
-
-
-		/// <summary>
-		/// Checks for Update of the ZIPFile and extracts it
-		/// </summary>
-		public static void CheckForZipUpdate()
-		{
-			// Check whats the latest Version of the ZIP File in GITHUB
-			int ZipOnlineVersion = 0;
-			Int32.TryParse(HelperClasses.FileHandling.GetXMLTagContent(HelperClasses.FileHandling.GetStringFromURL(Globals.URL_AutoUpdate), "zipversion"), out ZipOnlineVersion);
-
-			HelperClasses.Logger.Log("Checking for ZIP - Update");
-			HelperClasses.Logger.Log("ZipVersion = '" + Globals.ZipVersion + "', ZipOnlineVersion = '" + ZipOnlineVersion + "'");
-
-			// If Zip file from Server is newer
-			if (ZipOnlineVersion > Globals.ZipVersion)
-			{
-				HelperClasses.Logger.Log("Update for ZIP found");
-				Popup yesno;
-				if (Globals.ZipVersion > 0)
-				{
-					yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "ZIP Version: '" + ZipOnlineVersion.ToString() + "' found on the Server.\nZIP Version: '" + Globals.ZipVersion.ToString() + "' found installed.\nDo you want to upgrade?");
-				}
-				else
-				{
-					yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "ZIP Version: '" + ZipOnlineVersion.ToString() + "' found on the Server.\nNo ZIP Version found installed.\nDo you want to install the ZIP?");
-				}
-				yesno.ShowDialog();
-				if (yesno.DialogResult == true)
-				{
-					HelperClasses.Logger.Log("User wants update for ZIP");
-
-					// Getting the Hash of the new ZIPFile
-					string hashNeeded = HelperClasses.FileHandling.GetXMLTagContent(HelperClasses.FileHandling.GetStringFromURL(Globals.URL_AutoUpdate), "zipmd5");
-					HelperClasses.Logger.Log("HashNeeded: " + hashNeeded);
-
-					// Looping 0 through 5
-					for (int i = 0; i <= 5; i++)
-					{
-						// Getting DL Link of zip + i
-						string pathOfNewZip = HelperClasses.FileHandling.GetXMLTagContent(HelperClasses.FileHandling.GetStringFromURL(Globals.URL_AutoUpdate), "zip" + i.ToString());
-						HelperClasses.Logger.Log("Zip-Try: 'zip" + i.ToString() + "'");
-						HelperClasses.Logger.Log("DL Link: '" + pathOfNewZip + "'");
-
-						// Deleting old ZIPFile
-						HelperClasses.FileHandling.deleteFile(Globals.ZipFileDownloadLocation);
-
-						// Downloading the ZIP File
-						new PopupDownload(pathOfNewZip, Globals.ZipFileDownloadLocation, "ZIP-File").ShowDialog();
-
-						// Checking the hash of the Download
-						string HashOfDownload = HelperClasses.FileHandling.GetHashFromFile(Globals.ZipFileDownloadLocation);
-						HelperClasses.Logger.Log("Download Done, Hash of Downloaded File: '" + HashOfDownload + "'");
-
-						// If Hash looks good, we import it
-						if (HashOfDownload == hashNeeded)
-						{
-							HelperClasses.Logger.Log("Hashes Match, will Import");
-							LauncherLogic.ImportZip(Globals.ZipFileDownloadLocation, true);
-							return;
-						}
-						HelperClasses.Logger.Log("Hashes dont match, will move on");
-					}
-					HelperClasses.Logger.Log("Error. Could not find a suitable ZIP File from a FileHoster. Program cannot download new ZIP at the moment.");
-					new Popup(Popup.PopupWindowTypes.PopupOkError, "Update of ZIP File failed (No Suitable ZIP Files Found).\nI suggest restarting the program and opting out of update.");
-				}
-				else
-				{
-					HelperClasses.Logger.Log("User does not want update for ZIP");
-				}
-			}
-			else
-			{
-				HelperClasses.Logger.Log("NO Update for ZIP found");
-			}
-		}
-
 
 		#region GUI Helper Methods
 
@@ -643,7 +440,10 @@ namespace Project_127
 				lbl_GTA.Foreground = Globals.MW_GTALabelUnsureForeground;
 				lbl_GTA.Content = "Unsure";
 			}
-			if (LauncherLogic.GameState == LauncherLogic.GameStates.Running)
+
+			lbl_GTA.Content += " (" + Globals.GetGameVersionOfBuildNumber(Globals.GameVersion) + ")";
+
+			if (LauncherLogic.PollGameState() == LauncherLogic.GameStates.Running)
 			{
 				GTA_Page.btn_GTA_static.BorderBrush = Globals.MW_ButtonGTAGameRunningBorderBrush;
 				GTA_Page.btn_GTA_static.Content = "Exit GTA V";
@@ -743,17 +543,21 @@ namespace Project_127
 					break;
 				case "btn_Auth":
 					string BaseArtworkPath = "";
+
 					if (LauncherLogic.AuthState == LauncherLogic.AuthStates.Auth)
 					{
 						BaseArtworkPath = @"Artwork\lock_closed";
 					}
-					else
+					else if (LauncherLogic.AuthState == LauncherLogic.AuthStates.NotAuth)
 					{
 						BaseArtworkPath = @"Artwork\lock_open";
 					}
-					if (myBtn.IsMouseOver)
+
+					if (Globals.PageState == Globals.PageStates.Auth)
 					{
-						if (Globals.PageState == Globals.PageStates.Auth)
+						// Reverse Mouse Over Effect
+
+						if (myBtn.IsMouseOver)
 						{
 							SetControlBackground(myBtn, BaseArtworkPath + ".png");
 						}
@@ -762,9 +566,11 @@ namespace Project_127
 							SetControlBackground(myBtn, BaseArtworkPath + "_mo.png");
 						}
 					}
-					else
+					else if (Globals.PageState != Globals.PageStates.Auth)
 					{
-						if (Globals.PageState == Globals.PageStates.Auth)
+						// Normal Mouse Over Effect
+
+						if (myBtn.IsMouseOver)
 						{
 							SetControlBackground(myBtn, BaseArtworkPath + "_mo.png");
 						}
@@ -773,6 +579,7 @@ namespace Project_127
 							SetControlBackground(myBtn, BaseArtworkPath + ".png");
 						}
 					}
+
 					break;
 			}
 		}
@@ -796,8 +603,6 @@ namespace Project_127
 		{
 			SetButtonMouseOverMagic((Button)sender);
 		}
-
-
 
 
 
@@ -911,11 +716,7 @@ namespace Project_127
 			// Deletes File, Creates File, Adds to it
 			HelperClasses.FileHandling.WriteStringToFileOverwrite(DebugFile, DebugMessage.ToArray());
 
-			if (Globals.BetaMode || Globals.InternalMode)
-			{
-				// Opens the File
-				HelperClasses.ProcessHandler.StartProcess(@"C:\Windows\System32\notepad.exe", pCommandLineArguments: DebugFile);
-			}
+			HelperClasses.ProcessHandler.StartProcess(@"C:\Windows\explorer.exe", pCommandLineArguments: Globals.ProjectInstallationPath);
 		}
 
 
@@ -982,18 +783,17 @@ namespace Project_127
 				if (LauncherLogic.InstallationState == LauncherLogic.InstallationStates.Downgraded)
 				{
 					HelperClasses.Logger.Log("Gamestate looks OK (Downgraded). Will Proceed to try to Upgrade.", 1);
-					LauncherLogic.Upgrade();
 				}
 				else if (LauncherLogic.InstallationState == LauncherLogic.InstallationStates.Upgraded)
 				{
 					HelperClasses.Logger.Log("This program THINKS you are already Upgraded. Update procedure will be called anyways since it shouldnt break things.", 1);
-					LauncherLogic.Upgrade();
 				}
 				else
 				{
 					HelperClasses.Logger.Log("Installation State Broken.", 1);
-					new Popup(Popup.PopupWindowTypes.PopupOkError, "Installation State is broken. I suggest trying to repair.").ShowDialog();
+					new Popup(Popup.PopupWindowTypes.PopupOkError, "Installation State is broken. I suggest trying to repair.\nWill try to Upgrade anyways.").ShowDialog();
 				}
+				LauncherLogic.Upgrade();
 			}
 			else
 			{
@@ -1020,46 +820,7 @@ namespace Project_127
 			UpdateGUIDispatcherTimer();
 		}
 
-		/// <summary>
-		/// Method which gets called when the Update Button is clicked
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
-		private void btn_Repair_Click(object sender, RoutedEventArgs e)
-		{
-			Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "This Method is supposed to be called when there was a Game Update.\nOr you verified Files through Steam.\nIs that the case?");
-			yesno.ShowDialog();
-			if (yesno.DialogResult == true)
-			{
-				if (LauncherLogic.IsGTAVInstallationPathCorrect() && Globals.ZipVersion != 0)
-				{
-					LauncherLogic.Repair();
-				}
-				else
-				{
 
-					HelperClasses.Logger.Log("GTA V Installation Path not found or incorrect. User will get Popup");
-
-					string msg = "Error: GTA V Installation Path incorrect or ZIP Version == 0.\nGTAV Installation Path: '" + LauncherLogic.GTAVFilePath + "'\nInstallationState (probably): '" + LauncherLogic.InstallationState.ToString() + "'\nZip Version: " + Globals.ZipVersion + ".";
-
-					if (Globals.BetaMode || Globals.InternalMode)
-					{
-						Popup yesno2 = new Popup(Popup.PopupWindowTypes.PopupYesNo, msg + "\n. Force this Repair?");
-						yesno2.ShowDialog();
-						if (yesno2.DialogResult == true)
-						{
-							LauncherLogic.Repair();
-						}
-					}
-					else
-					{
-						new Popup(Popup.PopupWindowTypes.PopupOkError, msg).ShowDialog();
-					}
-				}
-			}
-
-			UpdateGUIDispatcherTimer();
-		}
 
 		/// <summary>
 		/// Method which gets called when the Downgrade Button is clicked
@@ -1083,18 +844,17 @@ namespace Project_127
 				if (LauncherLogic.InstallationState == LauncherLogic.InstallationStates.Upgraded)
 				{
 					HelperClasses.Logger.Log("Gamestate looks OK (Upgraded). Will Proceed to try to Downgrade.", 1);
-					LauncherLogic.Downgrade();
 				}
 				else if (LauncherLogic.InstallationState == LauncherLogic.InstallationStates.Downgraded)
 				{
 					HelperClasses.Logger.Log("This program THINKS you are already Downgraded. Downgrade procedure will be called anyways since it shouldnt break things.", 1);
-					LauncherLogic.Downgrade();
 				}
 				else
 				{
-					HelperClasses.Logger.Log("Installation State Broken.", 1);
-					new Popup(Popup.PopupWindowTypes.PopupOkError, "Installation State is broken. I suggest trying to repair.").ShowDialog();
+					HelperClasses.Logger.Log("Installation State Broken. Downgrade procedure will be called anyways since it shouldnt break things.", 1);
+					new Popup(Popup.PopupWindowTypes.PopupOk, "Installation State is broken. I suggest trying to repair.\nWill try to Downgrade anyways").ShowDialog();
 				}
+				LauncherLogic.Downgrade();
 			}
 			else
 			{
@@ -1174,8 +934,48 @@ namespace Project_127
 
 
 
+
 		#endregion
 
+
+		public void SetBackground(string pArtworkPath)
+		{
+			Uri resourceUri = new Uri(pArtworkPath, UriKind.Relative);
+			StreamResourceInfo streamInfo = Application.GetResourceStream(resourceUri);
+			BitmapFrame temp = BitmapFrame.Create(streamInfo.Stream);
+			var brush = new ImageBrush();
+			brush.ImageSource = temp;
+			MainWindow.MW.GridMain.Background = brush;
+		}
+
+		private void btn_NoteOverlay_Click(object sender, RoutedEventArgs e)
+		{
+			if (Globals.PageState == Globals.PageStates.NoteOverlay)
+			{
+				Globals.PageState = Globals.PageStates.GTA;
+			}
+			else
+			{
+				Globals.PageState = Globals.PageStates.NoteOverlay;
+			}
+		}
+
+		/// <summary>
+		/// Initialzes CEF settings
+		/// </summary>
+		private void CEFInitialize()
+        {
+			HelperClasses.Logger.Log("Initializing CEF...");
+			var s = new CefSharp.Wpf.CefSettings();
+			s.CachePath = Globals.ProjectInstallationPath.TrimEnd('\\') + @"\CEF_CacheFiles";
+			s.BackgroundColor = 0;//0x13 << 16 | 0x15 << 8 | 0x18;
+			s.DisableGpuAcceleration();
+			s.CefCommandLineArgs["autoplay-policy"] = "no-user-gesture-required";
+#if DEBUG
+			s.RemoteDebuggingPort = 8088;
+#endif
+			Cef.Initialize(s);
+		}
 
 	} // End of Class
 } // End of Namespace

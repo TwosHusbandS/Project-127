@@ -1,9 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Project_127;
+using Project_127.Auth;
+using Project_127.HelperClasses;
+using Project_127.Overlay;
+using Project_127.Popups;
+using Project_127.MySettings;
 
 namespace Project_127.HelperClasses
 {
@@ -23,7 +30,7 @@ namespace Project_127.HelperClasses
 			// Since the createFile Method will override an existing file
 			if (!FileHandling.doesFileExist(Globals.Logfile))
 			{
-			HelperClasses.FileHandling.createFile(Globals.Logfile);
+				HelperClasses.FileHandling.createFile(Globals.Logfile);
 			}
 
 
@@ -31,7 +38,7 @@ namespace Project_127.HelperClasses
 
 			HelperClasses.Logger.Log("", true, 0);
 			HelperClasses.Logger.Log("", true, 0);
-			HelperClasses.Logger.Log(" === Project - 127 Started (Version: '" + Globals.ProjectVersion + "' BuildInfo: '" + Globals.BuildInfo + "' Built at: '" + MyCreationDate + "' Central European Time) ===", true,0);
+			HelperClasses.Logger.Log(" === Project - 127 Started (Version: '" + Globals.ProjectVersion + "' BuildInfo: '" + Globals.BuildInfo + "' Built at: '" + MyCreationDate + "' Central European Time) ===", true, 0);
 			HelperClasses.Logger.Log("Logging initiated", true, 0);
 		}
 
@@ -43,14 +50,14 @@ namespace Project_127.HelperClasses
 		{
 			if (pSkipLogSetting)
 			{
-				string LogMessage = "[" + DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss") + "] - "; 
-				
+				string LogMessage = "[" + DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss") + "] - ";
+
 				// Yes this for loop is correct. If Log level 0, we dont add another "- "
 				for (int i = 0; i <= pLogLevel - 1; i++)
 				{
 					LogMessage += "- ";
 				}
-				
+
 				LogMessage += pLogMessage;
 
 				HelperClasses.FileHandling.AddToLog(Globals.Logfile, LogMessage);
@@ -75,6 +82,26 @@ namespace Project_127.HelperClasses
 		{
 			Log(pLogMessage, Settings.EnableLogging, pLogLevel);
 		}
-	
+
+
+		public static void RollingLog()
+		{
+			string[] Logs = HelperClasses.FileHandling.ReadFileEachLine(Globals.Logfile);
+			if (Logs.Length > 2500)
+			{
+				List<string> myNewLog = new List<string>();
+				int i = Logs.Length - 2490;
+				while (i <= Logs.Length - 1)
+				{
+					myNewLog.Add(Logs[i]);
+					i++;
+				}
+				string[] tmp = myNewLog.ToArray();
+				HelperClasses.FileHandling.WriteStringToFileOverwrite(Globals.Logfile, tmp);
+			}
+		}
+
+
+
 	} // End of Class
 } // End of NameSpace

@@ -52,12 +52,14 @@
     <OutputPath>bin\x64\Debug\</OutputPath>
     <DebugType>full</DebugType>
     <DefineConstants>DEBUG</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
     <PlatformTarget>x64</PlatformTarget>
     <DocumentationFile>
     </DocumentationFile>
     <OutputPath>bin\x64\Release\</OutputPath>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>icon.ico</ApplicationIcon>
@@ -85,6 +87,12 @@
     <AssemblyOriginatorKeyFile>
     </AssemblyOriginatorKeyFile>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Antlr3.Runtime, Version=3.5.0.2, Culture=neutral, PublicKeyToken=eb42632606e9261f, processorArchitecture=MSIL">
       <HintPath>packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
@@ -95,16 +103,33 @@
     <Reference Include="ExpressionEvaluator, Version=2.0.4.0, Culture=neutral, PublicKeyToken=90d9f15d622e2348, processorArchitecture=MSIL">
       <HintPath>packages\ExpressionEvaluator.2.0.4.0\lib\net40\ExpressionEvaluator.dll</HintPath>
     </Reference>
+    <Reference Include="GameOverlay, Version=4.3.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\GameOverlay.Net.4.3.0\lib\net45\GameOverlay.dll</HintPath>
+    </Reference>
     <Reference Include="GSF.Core, Version=2.3.302.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>packages\GSF.Core.2.3.302\lib\net46\GSF.Core.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=1.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>packages\Microsoft.Bcl.AsyncInterfaces.1.1.0\lib\net461\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
     </Reference>
+    <Reference Include="PresentationFramework.Aero" />
+    <Reference Include="SharpDX, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
+      <HintPath>packages\SharpDX.4.2.0\lib\net45\SharpDX.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDX.Direct2D1, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
+      <HintPath>packages\SharpDX.Direct2D1.4.2.0\lib\net45\SharpDX.Direct2D1.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDX.DXGI, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
+      <HintPath>packages\SharpDX.DXGI.4.2.0\lib\net45\SharpDX.DXGI.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath>
     </Reference>
+    <Reference Include="System.Collections.Specialized, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\System.Collections.Specialized.4.3.0\lib\net46\System.Collections.Specialized.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Memory, Version=4.0.1.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
@@ -143,6 +168,7 @@
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
+    <Reference Include="UIAutomationProvider" />
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
@@ -155,28 +181,60 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="CEFResourceHandler.cs" />
-    <Compile Include="DragHandler.cs" />
-    <Compile Include="EntitlementBlock.cs" />
-    <Compile Include="EntitlementBlockCipher.cs" />
+    <Compile Include="Auth\CEFResourceHandler.cs" />
+    <Compile Include="HelperClasses\Keyboard\Jumpscript.cs" />
+    <Compile Include="HelperClasses\Keyboard\KeyboardIS.cs" />
+    <Compile Include="HelperClasses\Keyboard\KeyboardListener.cs" />
+    <Compile Include="HelperClasses\Keyboard\KeyboardSimulator.cs" />
+    <Compile Include="HelperClasses\Keyboard\LastTry.cs" />
+    <Compile Include="HelperClasses\Keyboard\LetsDoThis.cs" />
+    <Compile Include="HelperClasses\WindowChangeHander.cs" />
+    <Compile Include="Overlay\EmptyPage.xaml.cs">
+      <DependentUpon>EmptyPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Overlay\MyColorPicker.xaml.cs">
+      <DependentUpon>MyColorPicker.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Overlay\GTAOverlay.cs" />
+    <Compile Include="Auth\EntitlementBlock.cs" />
+    <Compile Include="Auth\EntitlementBlockCipher.cs" />
     <Compile Include="GTA_Page.xaml.cs">
       <DependentUpon>GTA_Page.xaml</DependentUpon>
     </Compile>
     <Compile Include="HelperClasses\OwnOpenFolderDialog\FolderSelectDialog.cs" />
     <Compile Include="HelperClasses\OwnOpenFolderDialog\Reflector.cs" />
+    <Compile Include="HelperClasses\WindowChangeListener.cs" />
+    <Compile Include="HelperClasses\Keyboard\KeyboardHandler.cs" />
+    <Compile Include="HelperClasses\Keyboard\KeyboardSender.cs" />
     <Compile Include="MyFileOperation.cs" />
-    <Compile Include="PopupCombobox.xaml.cs">
+    <Compile Include="HelperClasses\Keyboard\KeyboardListenerOld.cs" />
+    <Compile Include="Overlay\NoteOverlay.xaml.cs">
+      <DependentUpon>NoteOverlay.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Overlay\NoteOverlayPages\NoteOverlay_Keybinds.xaml.cs">
+      <DependentUpon>NoteOverlay_Keybinds.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Overlay\NoteOverlayPages\NoteOverlay_Look.xaml.cs">
+      <DependentUpon>NoteOverlay_Look.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Overlay\NoteOverlayPages\NoteOverlay_NoteFiles.xaml.cs">
+      <DependentUpon>NoteOverlay_NoteFiles.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Overlay\Overlay_Preview.xaml.cs">
+      <DependentUpon>Overlay_Preview.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Popups\PopupCombobox.xaml.cs">
       <DependentUpon>PopupCombobox.xaml</DependentUpon>
     </Compile>
-    <Compile Include="PopupTextbox.xaml.cs">
+    <Compile Include="Popups\PopupTextbox.xaml.cs">
       <DependentUpon>PopupTextbox.xaml</DependentUpon>
     </Compile>
-    <Compile Include="RC4.cs" />
+    <Compile Include="Auth\RC4.cs" />
     <Compile Include="ReadMe.xaml.cs">
       <DependentUpon>ReadMe.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ROSCommunicationBackend.cs" />
-    <Compile Include="PopupProgress.xaml.cs">
+    <Compile Include="Auth\ROSCommunicationBackend.cs" />
+    <Compile Include="Popups\PopupProgress.xaml.cs">
       <DependentUpon>PopupProgress.xaml</DependentUpon>
     </Compile>
     <Compile Include="Globals.cs" />
@@ -184,32 +242,60 @@
     <Compile Include="HelperClasses\Logger.cs" />
     <Compile Include="HelperClasses\ProcessHandler.cs" />
     <Compile Include="HelperClasses\RegeditHandler.cs" />
-    <Compile Include="MySaveFile.cs" />
-    <Compile Include="Popup.xaml.cs">
+    <Compile Include="SaveFileHandler\MySaveFile.cs" />
+    <Compile Include="Popups\Popup.xaml.cs">
       <DependentUpon>Popup.xaml</DependentUpon>
     </Compile>
-    <Compile Include="PopupDownload.xaml.cs">
+    <Compile Include="Popups\PopupDownload.xaml.cs">
       <DependentUpon>PopupDownload.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ROSIntegration.xaml.cs">
+    <Compile Include="Auth\ROSIntegration.xaml.cs">
       <DependentUpon>ROSIntegration.xaml</DependentUpon>
     </Compile>
-    <Compile Include="SaveFileHandler.xaml.cs">
+    <Compile Include="SaveFileHandler\SaveFileHandler.xaml.cs">
       <DependentUpon>SaveFileHandler.xaml</DependentUpon>
     </Compile>
-    <Compile Include="SettingsPartial.cs" />
-    <Compile Include="Settings.xaml.cs">
+    <Compile Include="MySettings\SettingsPartial.cs" />
+    <Compile Include="MySettings\Settings.xaml.cs">
       <DependentUpon>Settings.xaml</DependentUpon>
     </Compile>
     <Page Include="GTA_Page.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="PopupCombobox.xaml">
+    <Page Include="Overlay\EmptyPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="PopupProgress.xaml">
+    <Page Include="Overlay\MyColorPicker.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Overlay\NoteOverlay.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Overlay\NoteOverlayPages\NoteOverlay_Keybinds.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Overlay\NoteOverlayPages\NoteOverlay_Look.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Overlay\NoteOverlayPages\NoteOverlay_NoteFiles.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Overlay\Overlay_Preview.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Popups\PopupCombobox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Popups\PopupProgress.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -226,15 +312,15 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="Popup.xaml">
+    <Page Include="Popups\Popup.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="PopupDownload.xaml">
+    <Page Include="Popups\PopupDownload.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="PopupTextbox.xaml">
+    <Page Include="Popups\PopupTextbox.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -242,15 +328,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="ROSIntegration.xaml">
+    <Page Include="Auth\ROSIntegration.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="SaveFileHandler.xaml">
+    <Page Include="SaveFileHandler\SaveFileHandler.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Settings.xaml">
+    <Page Include="MySettings\Settings.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -353,6 +439,39 @@
     <Resource Include="Artwork\checkbox_false_mo.png" />
     <Resource Include="Artwork\checkbox_true.png" />
     <Resource Include="Artwork\checkbox_true_mo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Artwork\Preview_1.png" />
+    <Resource Include="Artwork\Preview_10.png" />
+    <Resource Include="Artwork\Preview_2.png" />
+    <Resource Include="Artwork\Preview_3.png" />
+    <Resource Include="Artwork\Preview_4.png" />
+    <Resource Include="Artwork\Preview_5.png" />
+    <Resource Include="Artwork\Preview_6.png" />
+    <Resource Include="Artwork\Preview_7.png" />
+    <Resource Include="Artwork\Preview_8.png" />
+    <Resource Include="Artwork\Preview_9.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Artwork\pause.png" />
+    <Resource Include="Artwork\pause_mo.png" />
+    <Resource Include="Artwork\play.png" />
+    <Resource Include="Artwork\play_mo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Auth\authpage.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <NativeReference Include="AutoHotkey, Version=2.0.00.00, Type=win32">
+      <Name>v2_AutoHotkey.dll</Name>
+      <HintPath>bin\DLLs\v2_AutoHotkey.dll</HintPath>
+    </NativeReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="AAA_HybridCode\AutoHotkey\AutoHotkey.Interop\AutoHotkey.Interop.csproj">
+      <Project>{2869dbfe-7762-4930-95ea-2b0c111cf353}</Project>
+      <Name>AutoHotkey.Interop</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

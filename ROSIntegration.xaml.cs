@@ -82,8 +82,6 @@ namespace Project_127
 				fetchStoredCredentials();
 			}
 			//browser.BrowserSettings.ApplicationCache = CefState.Enabled;
-
-			browser.RequestHandler = new CEFRequestHandler();
 		}
 		private string passField;
 		private string emField;

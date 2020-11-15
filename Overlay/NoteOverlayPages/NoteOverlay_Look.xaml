@@ -1,0 +1,88 @@
+﻿<Page x:Class="Project_127.Overlay.NoteOverlayPages.NoteOverlay_Look"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:converters="clr-namespace:Project_127.Overlay.NoteOverlayPages"
+      xmlns:local="clr-namespace:Project_127"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="NoteOverlay_Look">
+      <!--xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"-->
+    <Grid>
+        <Grid.Resources>
+            <converters:PrintableFontFamilyConverter  x:Key="PrintableFontFamilyConverter" />
+        </Grid.Resources>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="4*"/>
+            <ColumnDefinition Width="5*"/>
+            <ColumnDefinition Width="1.2*"/>
+        </Grid.ColumnDefinitions>
+
+        <Rectangle Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Fill="Transparent"/>
+        <Rectangle Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Fill="{x:Static local:Globals.SE_AlternateRowBackground}"/>
+        <Rectangle Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" Fill="Transparent"/>
+        <Rectangle Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3" Fill="{x:Static local:Globals.SE_AlternateRowBackground}"/>
+        <Rectangle Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3" Fill="Transparent"/>
+        <Rectangle Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="3" Fill="{x:Static local:Globals.SE_AlternateRowBackground}"/>
+        <Rectangle Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="3" Fill="Transparent"/>
+        <Rectangle Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="3" Fill="{x:Static local:Globals.SE_AlternateRowBackground}"/>
+
+
+        <!--<xctk:ColorCanvas Grid.Row="1" Grid.Column="1" Background="Transparent"></xctk:ColorCanvas>-->
+
+        <Label Grid.Row="0" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="  Overlay - BackgroundColor"/>
+        <local:MyColorPicker x:Name="MyColorPicker_Background" Margin="10" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" ColorChanged="MyColorPicker_Background_ColorChanged" Closed="MyColorPicker_Background_Closed"/>
+
+        <Label Grid.Row="1" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="  Overlay - TextColor"/>
+        <local:MyColorPicker x:Name="MyColorPicker_Foreground" Margin="10" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" ColorChanged="MyColorPicker_Foreground_ColorChanged" Closed="MyColorPicker_Foreground_Closed"/>
+
+        <Label Grid.Row="2" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="  Overlay - Location"/>
+        <ComboBox Grid.Row="2" Grid.Column="1" Margin="10" Grid.ColumnSpan="2" Style="{StaticResource cobo}" x:Name="ComboBox_OverlayLocation" SelectionChanged="ComboBox_OverlayLocation_SelectionChanged"/>
+
+        <Label Grid.Row="3" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="  Overlay - Margin"/>
+        <Slider Grid.Row="3" Grid.Column="1" Style="{StaticResource SliderStyle}" x:Name="sl_Margin" ValueChanged="sl_Margin_ValueChanged" Minimum="0" Maximum="200" TickFrequency="5" PreviewMouseLeftButtonUp="sl_Margin_PreviewMouseLeftButtonUp"/>
+        <Label Style="{StaticResource lbl_Set_Info}" Grid.Row="3" Grid.Column="2" x:Name="lbl_Margin" Margin="0"/>
+
+        <Label Grid.Row="4" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="  Overlay - Width"/>
+        <Slider Grid.Row="4" Grid.Column="1" Style="{StaticResource SliderStyle}" x:Name="sl_Width" ValueChanged="sl_Width_ValueChanged" Minimum="160" Maximum="1920" TickFrequency="20" PreviewMouseLeftButtonUp="sl_Width_PreviewMouseLeftButtonUp"/>
+        <Label Style="{StaticResource lbl_Set_Info}" Grid.Row="4" Grid.Column="2" x:Name="lbl_Width" Margin="0"/>
+
+
+        <Label Grid.Row="5" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="  Overlay - Height"/>
+        <Slider Grid.Row="5" Grid.Column="1" Style="{StaticResource SliderStyle}" x:Name="sl_Height" ValueChanged="sl_Height_ValueChanged" Minimum="100" Maximum="1080" TickFrequency="20" PreviewMouseLeftButtonUp="sl_Height_PreviewMouseLeftButtonUp"/>
+        <Label Style="{StaticResource lbl_Set_Info}" Grid.Row="5" Grid.Column="2" x:Name="lbl_Height" Margin="0"/>
+
+        <Label Grid.Row="6" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="  Overlay - TextFont"/>
+        <ComboBox Grid.Row="6" Grid.Column="1" Margin="10" Grid.ColumnSpan="2" Style="{StaticResource cobo}" x:Name="ComboBox_Fonts" SelectionChanged="ComboBox_Fonts_SelectionChanged" ItemsSource="{Binding Source={x:Static Fonts.SystemFontFamilies}}">
+            <ComboBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Source}" FontFamily="{Binding Converter={StaticResource PrintableFontFamilyConverter}}" Height="20"></TextBlock>
+                </DataTemplate>
+            </ComboBox.ItemTemplate>
+        </ComboBox>
+
+        <Label Grid.Row="7" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="  Overlay - TextSize"/>
+        <Slider Grid.Row="7" Grid.Column="1" Style="{StaticResource SliderStyle}" x:Name="sl_TextSize" ValueChanged="sl_TextSize_ValueChanged" Minimum="12" Maximum="50" TickFrequency="2" PreviewMouseLeftButtonUp="sl_TextSize_PreviewMouseLeftButtonUp"/>
+        <Label Style="{StaticResource lbl_Set_Info}" Grid.Row="7" Grid.Column="2" x:Name="lbl_TextSize" Margin="0"/>
+
+        <!--Background
+        Foreground
+        OverlayLocation
+        Width
+        Height
+        Font
+        Fontsize-->
+
+    </Grid>
+</Page>

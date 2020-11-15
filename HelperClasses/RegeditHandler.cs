@@ -95,6 +95,29 @@ namespace Project_127.HelperClasses
 			return GetValue(Globals.MySettingsKey, pValue);
 		}
 
+
+		public static void DeleteKey()
+		{
+			DeleteKey(Globals.MySettingsKey);
+		}
+
+
+		public static void DeleteKey(RegistryKey pKey)
+		{
+			try
+			{
+				foreach (KeyValuePair<string,string> kvp in Globals.MyDefaultSettings)
+				{
+					pKey.DeleteValue(kvp.Key);
+				}
+				
+			}
+			catch (Exception e)
+			{
+				HelperClasses.Logger.Log("Deleting Regedit failed: " + e.ToString());
+			}
+		}
+
 		/// <summary>
 		/// Gets one specific Data from one Value of our MyKey RegeditKey. Will return "" if things go boom. 
 		/// </summary>
@@ -109,14 +132,13 @@ namespace Project_127.HelperClasses
 			}
 			catch
 			{
-				HelperClasses.Logger.Log("haha regedit goes boom while reading. Function will return \"\"");
 				if (pRKey == null)
 				{
-					HelperClasses.Logger.Log("pRKey is null");
+					HelperClasses.Logger.Log("haha regedit goes boom while reading. Function will return \"\". pRKey is null");
 				}
 				else
 				{
-				HelperClasses.Logger.Log("pRKey: '" + pRKey.ToString() + "', pValue: '" + pValue + "'", 1);
+				HelperClasses.Logger.Log("haha regedit goes boom while reading. Function will return \"\". pRKey: '" + pRKey.ToString() + "', pValue: '" + pValue + "'", 1);
 				}
 			}
 			return rtrn;
