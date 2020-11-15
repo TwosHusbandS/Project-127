@@ -958,21 +958,12 @@ namespace Project_127.MySettings
 			}
 			else
 			{
-				HelperClasses.FileHandling.DeleteFolder(oldPath);
-				HelperClasses.FileHandling.movePath(newPath, oldPath);
-
-
-
 				List<MyFileOperation> MyFileOperations = new List<MyFileOperation>();
 
 				MyFileOperations.Add(new MyFileOperation(MyFileOperation.FileOperations.Delete, oldPath, "", "Deleting '" + (oldPath) + "'", 2, MyFileOperation.FileOrFolder.Folder));
 				MyFileOperations.Add(new MyFileOperation(MyFileOperation.FileOperations.Move, newPath, oldPath, "Moving '" + (newPath) + "' to '" + (oldPath) + "'", 2, MyFileOperation.FileOrFolder.Folder));
 
 				new PopupProgress(PopupProgress.ProgressTypes.FileOperation, "Backup", MyFileOperations).ShowDialog();
-
-
-
-
 
 				new Popup(Popup.PopupWindowTypes.PopupOk, "Using backup files now.").ShowDialog();
 			}
