@@ -21,6 +21,7 @@ using Project_127.Popups;
 using Project_127.MySettings;
 using System.Windows.Resources;
 using System.Windows.Media.Imaging;
+using CefSharp;
 
 namespace Project_127
 {
@@ -436,6 +437,7 @@ namespace Project_127
 			// Intepreting all Command Line shit
 			CommandLineArgumentIntepretation();
 
+			// Jumpscript
 			if (Settings.EnableAutoStartJumpScript)
 			{
 				Jumpscript.InitJumpscript();
@@ -447,6 +449,9 @@ namespace Project_127
 			// Rolling Log stuff
 			HelperClasses.Logger.RollingLog();
 
+			// CEF Initializing
+			CEFInitialize();
+			
 			// Starting the Dispatcher Timer for the automatic updates of the GTA V Button
 			MyDispatcherTimer = new System.Windows.Threading.DispatcherTimer();
 			MyDispatcherTimer.Tick += new EventHandler(MainWindow.MW.UpdateGUIDispatcherTimer);
@@ -1077,6 +1082,24 @@ namespace Project_127
 			}
 
 			return URL_Path;
+		}
+
+
+		/// <summary>
+		/// Initialzes CEF settings
+		/// </summary>
+		public static void CEFInitialize()
+		{
+			HelperClasses.Logger.Log("Initializing CEF...");
+			var s = new CefSharp.Wpf.CefSettings();
+			s.CachePath = Globals.ProjectInstallationPath.TrimEnd('\\') + @"\CEF_CacheFiles";
+			s.BackgroundColor = 0;//0x13 << 16 | 0x15 << 8 | 0x18;
+			s.DisableGpuAcceleration();
+			s.CefCommandLineArgs["autoplay-policy"] = "no-user-gesture-required";
+#if DEBUG
+			s.RemoteDebuggingPort = 8088;
+#endif
+			Cef.Initialize(s);
 		}
 
 		/// COLOR STUFF
