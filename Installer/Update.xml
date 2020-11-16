@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <item>
-  <version>1.0.9.2</version>
-  <url>https://raw.githubusercontent.com/TwosHusbandS/Project-127/master/Installer/Project_127_Installer_V_1_0_9_2.exe</url>
+  <version>1.0.9.4</version>
+  <url>https://raw.githubusercontent.com/TwosHusbandS/Project-127/Internal/Installer/Project_127_Installer_V_1_0_9_4.exe</url>
   <authuser>https://raw.githubusercontent.com/TwosHusbandS/Project-127/master/Installer/AuthUser.txt</authuser>
   <announcement></announcement>
   <DLLinkG>https://github.com/TwosHusbandS/Project-127/releases/download/V_Final/file.g</DLLinkG>

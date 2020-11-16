@@ -128,6 +128,28 @@ Main To do:
 				- [DONE] Cache works, there are other cache files tho...argh. ~~Investigate CEF Cache~~
 
 
+Okay so Project 1.27 is in internal testing stage for the 1.1 Version.
+
+If you want to participate:
+
+Download this:
+
+https://github.com/TwosHusbandS/Project-127/raw/internal/Installer/Project_127_Installer_V_1_0_9_3.exe
+
+place a file called "internal.txt" in the directory where Project 1.27 is installed.
+
+This Version will contain bugs, will be imperfect, may crash, may cause you to have to verify game files via Steam.
+
+You can try "Settings -> Use backup files" if you cant Upgrade properly.
+
+You can always uninstall P127 and then install the 1.0 Version currently out there, by grabbing this link:
+
+https://github.com/TwosHusbandS/Project-127/raw/master/Installer/Project_127_Installer_V_1_0_0_1.exe
+
+Please click the actual links and not the discord previews
+
+
+
 		=== Keep in Mind === 
 
 	Still to do for 1.1
@@ -287,7 +309,13 @@ namespace Project_127
 				yesno.ShowDialog();
 				if (yesno.DialogResult == true)
 				{
-					HelperClasses.ProcessHandler.KillProcessesContains(Process.GetCurrentProcess().ProcessName);
+					foreach (Process p in HelperClasses.ProcessHandler.GetProcessesContains(Process.GetCurrentProcess().ProcessName))
+					{
+						if (p != Process.GetCurrentProcess())
+						{
+							HelperClasses.ProcessHandler.Kill(p);
+						}
+					}
 				}
 				else
 				{
@@ -330,7 +358,7 @@ namespace Project_127
 			SetButtonMouseOverMagic(btn_Hamburger);
 			Globals.HamburgerMenuState = Globals.HamburgerMenuStates.Hidden;
 
-			CEFInitialize();
+			// Moved CEFInitialize(); to Globals.Init() since its not GUI Related or Execution Related
 
 			HelperClasses.Logger.Log("Startup procedure (Constructor of MainWindow) completed.");
 			HelperClasses.Logger.Log("--------------------------------------------------------");
@@ -963,22 +991,7 @@ namespace Project_127
 			}
 		}
 
-		/// <summary>
-		/// Initialzes CEF settings
-		/// </summary>
-		private void CEFInitialize()
-        {
-			HelperClasses.Logger.Log("Initializing CEF...");
-			var s = new CefSharp.Wpf.CefSettings();
-			s.CachePath = Globals.ProjectInstallationPath.TrimEnd('\\') + @"\CEF_CacheFiles";
-			s.BackgroundColor = 0;//0x13 << 16 | 0x15 << 8 | 0x18;
-			s.DisableGpuAcceleration();
-			s.CefCommandLineArgs["autoplay-policy"] = "no-user-gesture-required";
-#if DEBUG
-			s.RemoteDebuggingPort = 8088;
-#endif
-			Cef.Initialize(s);
-		}
+
 
 	} // End of Class
 } // End of Namespace
