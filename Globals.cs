@@ -450,8 +450,8 @@ namespace Project_127
 			HelperClasses.Logger.RollingLog();
 
 			// CEF Initializing
-			CEFInitialize();
-			
+			//CEFInitialize();
+
 			// Starting the Dispatcher Timer for the automatic updates of the GTA V Button
 			MyDispatcherTimer = new System.Windows.Threading.DispatcherTimer();
 			MyDispatcherTimer.Tick += new EventHandler(MainWindow.MW.UpdateGUIDispatcherTimer);

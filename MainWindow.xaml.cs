@@ -2,11 +2,14 @@
  
 Main Documentation / Dev Diary here:
 
-Actual code (partially closed source) which authentificates, handles entitlement and launches the game is done by @dr490n with the help of other members of the core team like @Special For, who also did a lot of testing, brainstorming, information gathering and 2nd level support
-Other members of the team like @JakeMiester (who did some project management, acted as the communication party between the team and the speedrun mods, "invented" trello) and @zCri (did a research, RE and coding in the initial information gathering stage) as well as a number of other members of the team, including but not limited to @MoMo, @Diamondo25, @S.M.G, @gogsi, @Antibones, @Unemployed, @Aperture, @luky, @CrynesSs, @Daniel Kinau contributed to this project one way or another, and my thanks go out to them.
+Actual code (partially closed source) which authentificates, handles entitlement and launches the game (and Overlay Backend) is done by @dr490n
+@Special For, who also did a lot of RE'ing, testing, brainstorming, information gathering and 2nd level support
+@JakeMiester did some project management, acted as the communication party between the team and the speedrun mods, "invented" trello
+@zCri did a research, RE and coding in the initial information gathering stage
 Artwork, Design of GUI, GUI Behaviourehaviour, Colorchoices etc. by "@Hossel"
 Project 1.27 Client by "@thS"
-Version: 1.0.0.0
+A number of other members of the team, including but not limited to @MoMo, @Diamondo25, @S.M.G, @gogsi, @Antibones, @Unemployed, @Aperture, @luky, @CrynesSs, @Daniel Kinau contributed to this project one way or another, and my thanks go out to them.
+Version: 1.0.9.4
 
 Build Instructions:
 	Press CTRLF + F5, pray that nuget does its magic.
@@ -15,12 +18,17 @@ Build Instructions:
 Deploy Instructions:
 	Change Version Number a few Lines Above.
 	Change Version Number in both of the last lines in AssemblyInfo.cs
-	Check if BetaMode in Globals.cs is correct
+	Check if BetaMode / InternalMode in Globals.cs is correct
 	Check if BuildInfo in Globals.cs is correct
 	Make sure app manifest is set TO require admin
 	Build this program in release
-	Build installer via Innosetup (Script is in \Installer\) [Change Version in Version and OutputName]
-	Change Version number and Installer Location in "\Installer\Update.xml"
+		Verify this by going to Information -> About and check for Version Number and Build Info
+	Build installer via Innosetup (script we use for that is in \Installer\)
+		Change Version in Version
+		Change Version in OutputName
+		Change BuildPath to your local Path of the repo...(make sure it builds in the \Installer Folder
+	Delete Project_127_Installer_Latest.exe. Copy Paste the Installer we just compiled and name the copy of it Project_127_Installer_Latest.exe
+	Change Version number and Installer Path in "\Installer\Update.xml"
 	Push Commit to github branch.
 	Merge branch into master
 
@@ -28,43 +36,10 @@ Comments like "TODO", "TO DO", "CTRLF", "CTRL-F", and "CTRL F" are just ways of 
 
 Hybrid code can be found in AAA_HybridCode.
 
-General Files / Classes:
-	Windows:
-		MainWindow.xaml.cs
-		Settings.xaml.cs
-			SettingsPartial.cs
-		SaveFileHandler.xaml.cs
-		ReadMe.xaml.cs
-		Popup.xaml.cs // Normal Popup (OK & OKERROR & YES/NO)
-		PopupComboBox.xaml.cs // Normal Popup (OK & OKERROR & YES/NO)
-		PopupTextBox.xaml.cs // Normal Popup (OK & OKERROR & YES/NO)
-		PopupDownload.xaml.cs // Popup for Downloading Files
-		PopupProgress.xaml.cs // Popup for large file operation with semi-optinal loading bar
-		ROSIntegration.xaml.cs // Auth window fo @dr490n
-
-	Classes:
-		Globals.cs  // Global Variables and Central Place
-		LauncherLogic.cs // Most of the downgrade, upgrade, repair, launch things
-		MySaveFile.cs // Custom Class for Objects for the SaveFileHandler, Very much subject to change
-		MyFileOperation.cs // One file operation (move/delete/copy/hardlink), used for bigger file operations 
-		HelperClasses\Logger.cs // Own logger
-		HelperClasses\RegeditHandler.cs // Wrappers for used Regedit things
-		HelperClasses\ProcessHandler.cs // Wrappers for process stuff, Subject to change
-		HelperClasses\FileHandler.cs // Wrapers for file stuff
-		EntitlementBlock.cs // Backend by @d490n
-		EntitlementBlockCipher.cs // Backend by @d490n
-		RC4.cs // Backend by @d490n
-		ROSCommunicationBackend.cs // Backend by @d490n
-
-Main To do:
-		SaveFileHandler Folder dectection and display. Dummy Double Click Method done.
-			Gotta implement the actual displaying files from new folder and updating Label
-			Gotta Refresh on Renaming Left side btw (for NiceName Update)
-		
 	- Changelog past 1.0.0.0 Build 3:
 		=> Changed Polling Rate of GTA V Running or Not from 5 to 2.5 seconds
 		=> Gave Reloe the new Installer Link
-		=> Fixed Spelling Mistake
+		=> Fixed Spelling Mistakes
 		=> Throwing only one nice Network error now, instead of all of them with exception string
 		=> Removed the language selection from firstlaunch and Reset Settings
 		=> Improved Popup Startup Location Code to make it look nicer
@@ -92,85 +67,55 @@ Main To do:
 		=> Annoucement Feature
 		=> FailSafe Backup System for Upgrade Files
 		=> Auth will no longer crash when not reachable. Well at least we check it on page load...
-		=> [NEEDS TESTING] Overlay + Jumpscript stuff
-		=> [NEEDS TESTING] Auto-Start XYZ on Game Launch working dir fix
-		=> [NEEDS TESTING] Downgrade/Upgrade/Repair improvements:
+		=> Overlay + Jumpscript stuff
+		=> Auto-Start XYZ on Game Launch working dir fix
+		=> Downgrade/Upgrade/Repair improvements:
 			- Detecting Updates automatically (checking for it on start, upgrade, downgrade), throwing one popup per P127 Launch
 			- Throwing Popup with potential Fixes for non-changing InstallationState (upgraded, downgraded, unsure)
 			- Not having own files in GTA V Folder when upgraded
+		=> FIXED command line args internal once and for all
+		=> Implemented Jumpscript via Autohotkey
+		=> Integrate Title from Dragon both as in content and as in customizability
+		=> Fixed Both Listeners for the hopefully final time
+		=> Fixed Update Detection
+		=> Commented out new SaveFileHandler Code
+		=> Fixed Process Priority setting too often
+		=> Fixed ForegroundChangeListener not setting on fullscreen by polling every 2.5 seconds
+		=> Fix Command line args crashing it...
+		=> Make "DetectUpgrade" more efficent
+		=> Integrate Latest working branch. 
+		=> Integrate Dragons Fixes for Rockstar Endpoint change
+		=> Took care of all Listeners. Using and keeping track of Threads for it as of right now. Seems to work
+		=> Split upgrading downgrading into 17 progress popups
+		=> Finish Readme (Speedrun text + Reset Button + DL of big zip)
+		=> ZIP Hash for big ZIP
+		=> Bring back functionality from: https://github.com/TwosHusbandS/Project-127/commit/a5dcbd5c1a4011c8e1845c4f338f6f9ffbe79a92
+		=> Selection after deletion is fucked (Solution in Commit Above)
+		=> Yoshis Info regarding Versions
+		=> NoteOverlay Null Reference Fix + CPU Improvements
+		=> Cache works, there are other cache files tho...argh. ~~Investigate CEF Cache~~
+		=> Added Logging for AutoStart stuff
+		=> Added Force Option to Downgrade / Upgrade when GTA V Path is detected to be false on Upgrade / Downgrade
+		=> Removed Delay on Downgrade / Upgrade, throwing 3 separate ProgressBar popups for it.
 
+	Release 1.1
 
-			Quick and dirty notes:
-				- Jumpscript Send Key stuff
-					=> Had some PoC work for simulating keypresses which GTA V picks up.
-					=> It only send keydown and not keyup
-					=> It also got caught in our own keyboard listeners, but i can get around that
-				- [DONE] FIXED command line args internal once and for all
-				- [DONE] Implemented Jumpscript via Autohotkey
-				- [DONE] Integrate Title from Dragon both as in content and as in customizability
-				- [DONE] Fixed Both Listeners for the hopefully final time
-				- [DONE] Fixed Update Detection
-				- [DONE] Commented out new SaveFileHandler Code
-				- [DONE] Fixed Process Priority setting too often
-				- [DONE] Fixed ForegroundChangeListener not setting on fullscreen by polling every 2.5 seconds
-				- [DONE] Fix Command line args crashing it...
-				- [DONE] Make "DetectUpgrade" more efficent
-				- [DONE] Integrate Latest working branch. 
-				- [DONE] Integrate Dragons Fixes for Rockstar Endpoint change
-				- [DONE] Took care of all Listeners. Using and keeping track of Threads for it as of right now. Seems to work
-				- [DONE] Split upgrading downgrading into 17 progress popups
-				- [DONE] Finish Readme (Speedrun text + Reset Button + DL of big zip)
-				- [DONE] ZIP Hash for big ZIP
-				- [DONE] Bring back functionality from: https://github.com/TwosHusbandS/Project-127/commit/a5dcbd5c1a4011c8e1845c4f338f6f9ffbe79a92
-				- [DONE] Selection after deletion is fucked (Solution in Commit Above)
-				- [DONE] Yoshis Info
-				- [DONE] NoteOverlay Null Reference Fix + CPU Improvements
-				- [DONE] Cache works, there are other cache files tho...argh. ~~Investigate CEF Cache~~
-
-
-Okay so Project 1.27 is in internal testing stage for the 1.1 Version.
-
-If you want to participate:
-
-Download this:
-
-https://github.com/TwosHusbandS/Project-127/raw/internal/Installer/Project_127_Installer_V_1_0_9_3.exe
-
-place a file called "internal.txt" in the directory where Project 1.27 is installed.
-
-This Version will contain bugs, will be imperfect, may crash, may cause you to have to verify game files via Steam.
-
-You can try "Settings -> Use backup files" if you cant Upgrade properly.
-
-You can always uninstall P127 and then install the 1.0 Version currently out there, by grabbing this link:
-
-https://github.com/TwosHusbandS/Project-127/raw/master/Installer/Project_127_Installer_V_1_0_0_1.exe
-
-Please click the actual links and not the discord previews
-
-
-
-		=== Keep in Mind === 
-
-	Still to do for 1.1
-	- Cef no disk cache...
-	- Ask Yoshi, Crapideot, and that other guy from hossels discord
-	- 1.5 seconds delay on downgrade... + warning popup on first downgrade that it takes some time
-	- Comment SaveFileHandler stuff out so we are back to 1.0 SaveFileHandler
-	- Jumpscript
-		-> Find input sender which works in Game and doesnt infinite loop
-		-> OR make pointer to struct work...
-	- Make texts in readme / Information markdown with easy links and scrollbar and stuff. Also reference the resetall button in settings
-	- Uninstaller still is semi-manual...Should be fixed with "Reset" Buttons eliminating the need for custom uninstaller
-	- Add new DLLs to installer (I think at least 2, probably 3...Bottom Line: test installer.
-
-
-	Other stuff:
-	- If i can prevent the keypress from being processed further...I can probably change a param and send a different keypress there...
-	- USE GIT TO KEEP TRACK OF INSTALLATION STATES???
-	- Features still to do:
-		- Native jump Script
-		- [@thS currently working on] Better Save File Handler
+		- Fullscreen mode for overlay
+			=> With added front-end and mid-end support for that
+				--> add GUI Options
+				--> Making a WPF Window for that.
+					=> ^ Make WPF Window Resizable, indicate in GUI that margin and location have no effect
+					=> ^ Make WPF Window Show up / not show up via hotkeys...make it chagne width and height on look change
+					=> ^ Make WPF Window show up on look subpage of noteoverlay (same when preview appears)
+					=> ^ Making Hotkeys toggle the Window Visibility instead Overlay itself
+					=> ^ Same with the code that makes overlay invisible on game minimize
+		- Overlay Presets Fix (according to burhac, shits broke)
+			=> Confirmed Broken. Regedit settings dont update quick enough.
+				Using newly assigned regedit variable (Settings.OverlayNotesMain = Settings.OverlayNotesPresetA;)
+				is not updated by the time we are refering to it (in LoadMainNotes();)
+		- Use different autohotkey wrapper (https://github.com/brigand/AhkDll-.NET)
+		- Release under MIT license file
+		- SFH Improvements
 			=> Add Folder Support
 				>> ReWrite of SaveFileHandler class with enum for File or Folder
 				>> Folders as clickable items in list at the very top with a "[FolderName]
@@ -181,14 +126,19 @@ Please click the actual links and not the discord previews
 			=> RightClick on Files (Copy, Delete, Delete)
 			=> RightClick on Background (new Folder, Paste)
 			=> RightClick on Folder
-		- Auto Start via CSV and custom shit
-		- Note Feature from Reloes suggestion 
-
-    - Low Prio:
-		Regedit Cleanup of everything not in default settings
-		Add Audio Effects
-		Fix Code signing so we dont get anti virus error
-
+			=> Horizontal Scroll bar
+			=> Search Bar
+			=> Better Hotkey support
+			=> Make selected File act like NoteOverlay_NoteFiles
+		
+		- Add support for Launch XYZ on game launch for Livesplit files (not livesplit executable)
+	
+		- Update ReadMe, to reflect that its not being actively developed and read through it in general. 
+			=> Add credits to new people (hosting, version info, legends of Community)
+		- Comments clean up
+		- Code clean up
+		- Code documentation
+		- Add Logging
 
 Bug Reportings:
 	- [RESOLVED][IDC]
@@ -358,7 +308,11 @@ namespace Project_127
 			SetButtonMouseOverMagic(btn_Hamburger);
 			Globals.HamburgerMenuState = Globals.HamburgerMenuStates.Hidden;
 
+
+			HelperClasses.Logger.Log("Only CEF Init to go...");
+
 			// Moved CEFInitialize(); to Globals.Init() since its not GUI Related or Execution Related
+			CEFInitialize();
 
 			HelperClasses.Logger.Log("Startup procedure (Constructor of MainWindow) completed.");
 			HelperClasses.Logger.Log("--------------------------------------------------------");
@@ -378,6 +332,25 @@ namespace Project_127
 				HelperClasses.WindowChangeListener.Start();
 			}
 		}
+
+
+		/// <summary>
+		/// Initialzes CEF settings
+		/// </summary>
+		public static void CEFInitialize()
+		{
+			HelperClasses.Logger.Log("Initializing CEF...");
+			var s = new CefSharp.Wpf.CefSettings();
+			s.CachePath = Globals.ProjectInstallationPath.TrimEnd('\\') + @"\CEF_CacheFiles";
+			s.BackgroundColor = 0;//0x13 << 16 | 0x15 << 8 | 0x18;
+			s.DisableGpuAcceleration();
+			s.CefCommandLineArgs["autoplay-policy"] = "no-user-gesture-required";
+#if DEBUG
+			s.RemoteDebuggingPort = 8088;
+#endif
+			Cef.Initialize(s);
+		}
+
 
 		/// <summary>
 		/// Changing Background based on current Date
@@ -673,6 +646,7 @@ namespace Project_127
 				// Opens the File
 				HelperClasses.ProcessHandler.StartProcess(@"C:\Windows\System32\notepad.exe", pCommandLineArguments: Globals.Logfile);
 			}
+			new Overlay_MultipleMonitor().Show();
 		}
 
 
@@ -779,6 +753,7 @@ namespace Project_127
 		/// <param name="e"></param>
 		private void btn_Exit_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
 		{
+			e.Handled = true;
 			this.Close();
 			Environment.Exit(0);
 			//Globals.DebugPopup(Globals.CommandLineArgs.ToString());
@@ -823,6 +798,17 @@ namespace Project_127
 				{
 					HelperClasses.Logger.Log("Installation State Broken.", 1);
 					new Popup(Popup.PopupWindowTypes.PopupOkError, "Installation State is broken. I suggest trying to repair.\nWill try to Upgrade anyways.").ShowDialog();
+				}
+
+				if (LauncherLogic.IsGTAVInstallationPathCorrect(false))
+				{
+					Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "GTA Installation Path detected to be wrong.\nForce this Upgrade?");
+					yesno.ShowDialog();
+					if (yesno.DialogResult != true)
+					{
+						HelperClasses.Logger.Log("Will abort Upgrade, since GTA V Installation Path is wrong, and user does not want to force the Upgrade");
+						return;
+					}
 				}
 				LauncherLogic.Upgrade();
 			}
@@ -884,6 +870,17 @@ namespace Project_127
 				{
 					HelperClasses.Logger.Log("Installation State Broken. Downgrade procedure will be called anyways since it shouldnt break things.", 1);
 					new Popup(Popup.PopupWindowTypes.PopupOk, "Installation State is broken. I suggest trying to repair.\nWill try to Downgrade anyways").ShowDialog();
+				}
+
+				if (LauncherLogic.IsGTAVInstallationPathCorrect(false))
+				{
+					Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "GTA Installation Path detected to be wrong.\nForce this Downgrade?");
+					yesno.ShowDialog();
+					if (yesno.DialogResult != true)
+					{
+						HelperClasses.Logger.Log("Will abort Downgrade, since GTA V Installation Path is wrong, and user does not want to force the Downgrade");
+						return;
+					}
 				}
 				LauncherLogic.Downgrade();
 			}

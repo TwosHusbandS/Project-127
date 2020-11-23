@@ -223,6 +223,9 @@
     <Compile Include="Overlay\Overlay_Preview.xaml.cs">
       <DependentUpon>Overlay_Preview.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Overlay\Overlay_MultipleMonitor.xaml.cs">
+      <DependentUpon>Overlay_MultipleMonitor.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Popups\PopupCombobox.xaml.cs">
       <DependentUpon>PopupCombobox.xaml</DependentUpon>
     </Compile>
@@ -288,6 +291,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Overlay\Overlay_Preview.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Overlay\Overlay_MultipleMonitor.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

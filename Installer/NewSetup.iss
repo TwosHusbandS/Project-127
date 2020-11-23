@@ -52,7 +52,6 @@ Source: "C:\Users\ingow\source\repos\Project-127\bin\x64\Release\CefSharp.Wpf.dl
 Source: "C:\Users\ingow\source\repos\Project-127\bin\x64\Release\chrome_elf.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "C:\Users\ingow\source\repos\Project-127\bin\x64\Release\CredentialManagement.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "C:\Users\ingow\source\repos\Project-127\bin\x64\Release\d3dcompiler_47.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\ingow\source\repos\Project-127\bin\x64\Release\debug.log"; DestDir: "{app}"; Flags: ignoreversion
 Source: "C:\Users\ingow\source\repos\Project-127\bin\x64\Release\devtools_resources.pak"; DestDir: "{app}"; Flags: ignoreversion
 Source: "C:\Users\ingow\source\repos\Project-127\bin\x64\Release\ExpressionEvaluator.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "C:\Users\ingow\source\repos\Project-127\bin\x64\Release\GameOverlay.dll"; DestDir: "{app}"; Flags: ignoreversion

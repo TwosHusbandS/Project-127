@@ -1,0 +1,19 @@
+﻿<Window x:Class="Project_127.Overlay_MultipleMonitor"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Project_127"
+        mc:Ignorable="d"
+        Background="Transparent"
+        Title="P127 - GameOverlay" Height="450" Width="800"
+        WindowStyle="None" ResizeMode="CanResizeWithGrip" WindowStartupLocation="CenterScreen" MouseLeftButtonDown="Window_MouseLeftButtonDown"
+        AllowsTransparency="True"
+        SizeChanged="Window_SizeChanged"
+        Icon="/Artwork/icon.png">
+    <Border BorderBrush="{x:Static local:Globals.PU_BorderBrush}" BorderThickness="2">
+        <Grid>
+            <Label Style="{StaticResource lbl}" Foreground="{x:Static local:Globals.PU_BorderBrush}" Background="{x:Static local:Globals.MyColorOffBlack70}" VerticalAlignment="Top" Content="P127 - GameOverlay" Height="40" HorizontalAlignment="Stretch"/>
+        </Grid>
+    </Border>
+</Window>

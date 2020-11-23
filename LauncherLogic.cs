@@ -597,7 +597,7 @@ namespace Project_127
 				HelperClasses.Logger.Log("Either we are Downgraded or EnableOnlyAutoStartProgramsWhenDowngraded is set to false");
 				if (Settings.EnableAutoStartFPSLimiter)
 				{
-					HelperClasses.Logger.Log("We are trying to auto Start FPS Limiter");
+					HelperClasses.Logger.Log("We are trying to auto Start FPS Limiter: '" + Settings.PathFPSLimiter + "'");
 					string ProcessName = HelperClasses.FileHandling.PathSplitUp(Settings.PathFPSLimiter)[1];
 					if (!HelperClasses.ProcessHandler.IsProcessRunning(ProcessName))
 					{
@@ -624,7 +624,7 @@ namespace Project_127
 				}
 				if (Settings.EnableAutoStartLiveSplit)
 				{
-					HelperClasses.Logger.Log("We are trying to auto Start LiveSplit");
+					HelperClasses.Logger.Log("We are trying to auto Start LiveSplit: '" + Settings.PathLiveSplit + "'");
 					string ProcessName = HelperClasses.FileHandling.PathSplitUp(Settings.PathLiveSplit)[1];
 					if (!HelperClasses.ProcessHandler.IsProcessRunning(ProcessName))
 					{
@@ -651,7 +651,7 @@ namespace Project_127
 				}
 				if (Settings.EnableAutoStartStreamProgram)
 				{
-					HelperClasses.Logger.Log("We are trying to auto Start Stream Program");
+					HelperClasses.Logger.Log("We are trying to auto Start Stream Program: '" + Settings.PathStreamProgram + "'");
 					string ProcessName = HelperClasses.FileHandling.PathSplitUp(Settings.PathStreamProgram)[1];
 					if (!HelperClasses.ProcessHandler.IsProcessRunning(ProcessName))
 					{
@@ -678,7 +678,7 @@ namespace Project_127
 				}
 				if (Settings.EnableAutoStartNohboard)
 				{
-					HelperClasses.Logger.Log("We are trying to auto Start Nohboard");
+					HelperClasses.Logger.Log("We are trying to auto Start Nohboard: '" + Settings.PathNohboard + "'");
 					string ProcessName = HelperClasses.FileHandling.PathSplitUp(Settings.PathNohboard)[1];
 					if (!HelperClasses.ProcessHandler.IsProcessRunning(ProcessName))
 					{
@@ -941,9 +941,9 @@ namespace Project_127
 		/// Checks if Settings.GTAVInstallationPath is a correct GTA V Installation Path
 		/// </summary>
 		/// <returns></returns>
-		public static bool IsGTAVInstallationPathCorrect()
+		public static bool IsGTAVInstallationPathCorrect(bool LogAttempt = true)
 		{
-			return IsGTAVInstallationPathCorrect(Settings.GTAVInstallationPath);
+			return IsGTAVInstallationPathCorrect(Settings.GTAVInstallationPath, LogAttempt);
 		}
 
 

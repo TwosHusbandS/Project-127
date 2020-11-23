@@ -214,6 +214,10 @@ namespace Project_127
 			AddParagraph(rtb_Credits, "Special thanks to:\n" +
 "@JakeMiester, @Antibones, @Aperture, @Diamondo25, @MOMO");
 
+			AddParagraph(rtb_Credits, "Special shoutouts to @dr490n, who was responsible for getting the downgraded game to launch, adding patches against in-game triggers, writing the Overlay Backend, authentication backend, decryption and managed to get the preorder entitlement to work.");
+
+			AddParagraph(rtb_Credits, "Special shoutouts to @special for, for being there during the whole development phase, providing valuable insight, being available to bounce ideas off of, being available for brainstorming, and providing valuable help in regards to reverse engineering the GTA V Launch Process. We could not have done this without you.");
+
 			AddParagraph(rtb_Credits, "Shoutout to FiveM and Goldberg, whose Source Code proved to be vital\n" +
 "to understand and reverse engineer the GTA V Launch Process");
 
@@ -224,6 +228,8 @@ namespace Project_127
 			AddHyperlinkText(rtb_Credits, "https://github.com/DaWolf85/GTAVAutoPatcher/", "open-sourcing his Tool", "Shoutout to @DaWolf85 for ", "the Community used to Upgrade / Downgrade previously.It helped us a ton.");
 
 			AddParagraph(rtb_Credits, "Shoutout to @burhac, @Crapideot, @GearsOfW, @rollschuh2282 , @Ollie, @Alfie for being awesome members of the GTA Speedrunning community, always being nice and respectful, and providing Help / Testing. You guys are much appreciated.");
+
+			//AddParagraph(rtb_Credits, "Shoutout to my parents who raised me well enough, so that I am not naming certain People who actively hindered the P127 development and deserved to me mentioned in a negative context here.");
 
 			AddParagraph(rtb_Credits, "");
 		}
@@ -240,8 +246,6 @@ namespace Project_127
 
 
 			AddParagraph(rtb_About, "You are running Project 1.27, a tool for the GTA V Speedrunning Community. This was created for the patch 1.27 downgrade problem, which started in August of 2020. This tool has a number of features, including Downgrading, Upgrading and launching the game.");
-
-			AddParagraph(rtb_About, "Special shoutouts to @dr490n who was responsible for getting the downgraded game to launch, adding patches against in-game triggers, writing the Overlay Backend, authentication backend, decryption and managed to get the preorder entitlement to work.");
 
 			AddParagraph(rtb_About, "If you have any issues with this program or ideas for new features,\n" +
 "feel free to contact me on Discord: @thS#0305");
@@ -288,6 +292,24 @@ namespace Project_127
 			para.Margin = new Thickness(10);
 			para.Inlines.Add(Paragraph);
 			para.TextAlignment = TextAlignment.Center;
+			rtb.Document.Blocks.Add(para);
+		}
+
+		private void AddStrikethroughParagraph(RichTextBox rtb, string textBefore, string textStrike,
+			  string textAfter)
+		{
+			Paragraph para = new Paragraph();
+			para.Margin = new Thickness(10); // remove indent between paragraphs
+
+			Run run1 = new Run(textStrike);
+			run1.TextDecorations = TextDecorations.Strikethrough;
+
+			para.Inlines.Add(textBefore);
+			para.Inlines.Add(run1);
+			para.Inlines.Add(textAfter);
+
+			para.TextAlignment = TextAlignment.Center;
+
 			rtb.Document.Blocks.Add(para);
 		}
 
