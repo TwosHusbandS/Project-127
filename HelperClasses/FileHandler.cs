@@ -248,6 +248,32 @@ namespace Project_127.HelperClasses
 			File.WriteAllLines(pFilePath, pContent);
 		}
 
+		public static void WriteToFile(string pFilePath, string[] pLines)
+		{
+			try
+			{
+				if (doesFileExist(pFilePath))
+				{
+					deleteFile(pFilePath);
+				}
+
+				createFile(pFilePath);
+
+				StreamWriter sw;
+				sw = File.AppendText(pFilePath);
+
+				for (int i = 0; i <= pLines.Length - 1; i++)
+				{
+					sw.Write(pLines[i] + Environment.NewLine);
+				}
+
+				sw.Close();
+			}
+			catch (Exception e)
+			{
+				Logger.Log("Sth failed while writing string array to file: " + e.ToString());
+			}
+		}
 
 		/// <summary>
 		/// Method we use to add one line of text as a new line to a text file

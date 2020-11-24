@@ -245,33 +245,38 @@ namespace Project_127.Overlay.NoteOverlayPages
 
 		private void btn_PresetLoad_Click(object sender, RoutedEventArgs e)
 		{
+			// TODO TO DO CTRLF CTRL F
+			// Currently calling LoadMainNotes() twice instead of one...idk why this is neccesary...
+			// so this is kinda a dirtfix, but it works. Once again, no idea why we have to do it this way
+
+			//	-Overlay Presets Fix(according to burhac, shits broke)
+			//		=> Confirmed Broken.Regedit settings dont update quick enough.
+			//			Using newly assigned regedit variable(Settings.OverlayNotesMain = Settings.OverlayNotesPresetA;)
+			//			is not updated by the time we are refering to it(in LoadMainNotes();)
+
+			LoadMainNotes();
 			switch (((Button)sender).Tag.ToString())
 			{
 				case "A":
 					Settings.OverlayNotesMain = Settings.OverlayNotesPresetA;
-					LoadMainNotes();
 					break;
 				case "B":
 					Settings.OverlayNotesMain = Settings.OverlayNotesPresetB;
-					LoadMainNotes();
 					break;
 				case "C":
 					Settings.OverlayNotesMain = Settings.OverlayNotesPresetC;
-					LoadMainNotes();
 					break;
 				case "D":
 					Settings.OverlayNotesMain = Settings.OverlayNotesPresetD;
-					LoadMainNotes();
 					break;
 				case "E":
 					Settings.OverlayNotesMain = Settings.OverlayNotesPresetE;
-					LoadMainNotes();
 					break;
 				case "F":
 					Settings.OverlayNotesMain = Settings.OverlayNotesPresetF;
-					LoadMainNotes();
 					break;
 			}
+			LoadMainNotes();
 		}
 
 		private void btn_PresetSave_Click(object sender, RoutedEventArgs e)

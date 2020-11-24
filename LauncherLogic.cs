@@ -123,7 +123,7 @@ namespace Project_127
 						HelperClasses.WindowChangeListener.Stop();
 					}
 				}
-				
+
 				if (LastGameState == GameStates.NonRunning)
 				{
 					GTAStarted();
@@ -153,7 +153,7 @@ namespace Project_127
 		public static void GTAStarted()
 		{
 			SetGTAProcessPriority();
-	
+
 			// Start Jumpscript
 			if (Settings.EnableAutoStartJumpScript)
 			{
@@ -163,11 +163,7 @@ namespace Project_127
 
 		public static void GTAClosed()
 		{
-			// Kill Stop Jumpscript
-			if (Settings.EnableAutoStartJumpScript)
-			{
-				Jumpscript.StopJumpscript();
-			}
+			Jumpscript.StopJumpscript();
 		}
 
 		/// <summary>

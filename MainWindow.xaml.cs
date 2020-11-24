@@ -97,6 +97,8 @@ Hybrid code can be found in AAA_HybridCode.
 		=> Added Logging for AutoStart stuff
 		=> Added Force Option to Downgrade / Upgrade when GTA V Path is detected to be false on Upgrade / Downgrade
 		=> Removed Delay on Downgrade / Upgrade, throwing 3 separate ProgressBar popups for it.
+		=> Using Portable AHK now with script written to desk
+		=> Released under MIT
 
 	Release 1.1
 
@@ -109,12 +111,6 @@ Hybrid code can be found in AAA_HybridCode.
 					=> ^ Make WPF Window show up on look subpage of noteoverlay (same when preview appears)
 					=> ^ Making Hotkeys toggle the Window Visibility instead Overlay itself
 					=> ^ Same with the code that makes overlay invisible on game minimize
-		- Overlay Presets Fix (according to burhac, shits broke)
-			=> Confirmed Broken. Regedit settings dont update quick enough.
-				Using newly assigned regedit variable (Settings.OverlayNotesMain = Settings.OverlayNotesPresetA;)
-				is not updated by the time we are refering to it (in LoadMainNotes();)
-		- Use different autohotkey wrapper (https://github.com/brigand/AhkDll-.NET)
-		- Release under MIT license file
 		- SFH Improvements
 			=> Add Folder Support
 				>> ReWrite of SaveFileHandler class with enum for File or Folder
@@ -131,13 +127,12 @@ Hybrid code can be found in AAA_HybridCode.
 			=> Better Hotkey support
 			=> Make selected File act like NoteOverlay_NoteFiles
 		
-		- Add support for Launch XYZ on game launch for Livesplit files (not livesplit executable)
-	
 		- Update ReadMe, to reflect that its not being actively developed and read through it in general. 
 			=> Add credits to new people (hosting, version info, legends of Community)
-		- Comments clean up
+		- NameSpace clean up...
 		- Code clean up
 		- Code documentation
+		- Comments clean up
 		- Add Logging
 
 Bug Reportings:
@@ -395,7 +390,7 @@ namespace Project_127
 				}
 				catch (Exception)
 				{
-					Globals.DebugPopup("This program must be run as an administrator!");
+					System.Windows.Forms.MessageBox.Show("This program must be run as an administrator!");
 				}
 			}
 		}

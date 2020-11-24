@@ -626,11 +626,14 @@ namespace Project_127.MySettings
 
 				if (value)
 				{
-					Jumpscript.InitJumpscript();
+					if (LauncherLogic.GameState == LauncherLogic.GameStates.Running)
+					{
+						Jumpscript.StartJumpscript();
+					}
 				}
 				else
 				{
-					Jumpscript.DisposeJumpscript();
+					Jumpscript.StopJumpscript();
 				}
 			}
 		}

@@ -437,12 +437,6 @@ namespace Project_127
 			// Intepreting all Command Line shit
 			CommandLineArgumentIntepretation();
 
-			// Jumpscript
-			if (Settings.EnableAutoStartJumpScript)
-			{
-				Jumpscript.InitJumpscript();
-			}
-
 			// Checks if Update hit
 			LauncherLogic.HandleUpdates();
 
@@ -828,6 +822,7 @@ namespace Project_127
 		{
 			HelperClasses.Keyboard.KeyboardListener.Stop();
 			WindowChangeListener.Stop();
+			Jumpscript.StopJumpscript();
 			HelperClasses.Logger.Log("Program closed. Proper Exit. Ended normally");
 		}
 

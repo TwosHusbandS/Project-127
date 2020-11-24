@@ -183,11 +183,7 @@
     </ApplicationDefinition>
     <Compile Include="Auth\CEFResourceHandler.cs" />
     <Compile Include="HelperClasses\Keyboard\Jumpscript.cs" />
-    <Compile Include="HelperClasses\Keyboard\KeyboardIS.cs" />
     <Compile Include="HelperClasses\Keyboard\KeyboardListener.cs" />
-    <Compile Include="HelperClasses\Keyboard\KeyboardSimulator.cs" />
-    <Compile Include="HelperClasses\Keyboard\LastTry.cs" />
-    <Compile Include="HelperClasses\Keyboard\LetsDoThis.cs" />
     <Compile Include="HelperClasses\WindowChangeHander.cs" />
     <Compile Include="Overlay\EmptyPage.xaml.cs">
       <DependentUpon>EmptyPage.xaml</DependentUpon>
@@ -205,9 +201,7 @@
     <Compile Include="HelperClasses\OwnOpenFolderDialog\Reflector.cs" />
     <Compile Include="HelperClasses\WindowChangeListener.cs" />
     <Compile Include="HelperClasses\Keyboard\KeyboardHandler.cs" />
-    <Compile Include="HelperClasses\Keyboard\KeyboardSender.cs" />
     <Compile Include="MyFileOperation.cs" />
-    <Compile Include="HelperClasses\Keyboard\KeyboardListenerOld.cs" />
     <Compile Include="Overlay\NoteOverlay.xaml.cs">
       <DependentUpon>NoteOverlay.xaml</DependentUpon>
     </Compile>
@@ -371,10 +365,16 @@
     <None Include="Installer\Changelogs\V_0_0_4_0_Changelog.md" />
     <None Include="Installer\Changelogs\V_0_0_3_1_Changelog.md" />
     <None Include="Installer\Changelogs\V_0_0_3_0_Changelog.md" />
+    <None Include="LICENSE_JUMPSCRIPT">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="LICENSE">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="README.md" />
   </ItemGroup>
@@ -475,10 +475,9 @@
     </NativeReference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="AAA_HybridCode\AutoHotkey\AutoHotkey.Interop\AutoHotkey.Interop.csproj">
-      <Project>{2869dbfe-7762-4930-95ea-2b0c111cf353}</Project>
-      <Name>AutoHotkey.Interop</Name>
-    </ProjectReference>
+    <Content Include="P127_Jumpscript.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

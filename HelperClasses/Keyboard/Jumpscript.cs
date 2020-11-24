@@ -1,5 +1,4 @@
-﻿using AutoHotkey.Interop;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,73 +8,35 @@ namespace Project_127.HelperClasses
 {
 	class Jumpscript
 	{
-		static AutoHotkeyEngine AHEI;
-
-		static bool IsRunning = false;
-		static bool IsInit = false;
-
-		public static void InitJumpscript()
-		{
-			if (!IsInit)
-			{
-				AHEI = AutoHotkeyEngine.Instance;
-				IsInit = true;
-				HelperClasses.Logger.Log("Inited Jumpscript");
-
-				if (LauncherLogic.GameState == LauncherLogic.GameStates.Running || GTAOverlay.DebugMode)
-				{
-					StartJumpscript();
-				}
-			}
-		}
-
-		public static void DisposeJumpscript()
-		{
-			if (IsInit)
-			{
-				StopJumpscript();
-				AHEI.Terminate();
-				AHEI = null;
-				IsInit = false;
-				HelperClasses.Logger.Log("Disposed Jumpscript");
-			}
-		}
-
 		public static void StartJumpscript()
 		{
-			if (IsInit)
-			{
-				StopJumpscript();
+			StopJumpscript();
 
-				AHEI.UnSuspend();
+			List<string> myList = new List<string>();
 
-				AHEI.Reset();
+			myList.Add("#NoTrayIcon");
+			myList.Add("#SingleInstance Force");
+			myList.Add("#MaxHotkeysPerInterval 10000");
+			myList.Add("#UseHook");
+			myList.Add("#IfWinActive " + GTAOverlay.targetWindow);
+			myList.Add(KeyToString(MySettings.Settings.JumpScriptKey1) + "::" + KeyToString(MySettings.Settings.JumpScriptKey2));
+			myList.Add(KeyToString(MySettings.Settings.JumpScriptKey2) + "::" + KeyToString(MySettings.Settings.JumpScriptKey1));
+			myList.Add("#IfWinActive");
 
-				string Command = "";
-				Command += "#SingleInstance Force";
-				Command += "\n\r#MaxHotkeysPerInterval 10000";
-				Command += "\n\r#UseHook";
-				Command += "\n\r#IfWinActive " + GTAOverlay.targetWindow;
-				Command += "\n\r" + KeyToString(MySettings.Settings.JumpScriptKey1) + "::" + KeyToString(MySettings.Settings.JumpScriptKey2);
-				Command += "\n\r" + KeyToString(MySettings.Settings.JumpScriptKey2) + "::" + KeyToString(MySettings.Settings.JumpScriptKey1);
-				Command += "\n\r#IfWinActive";
+			HelperClasses.FileHandling.WriteToFile(Globals.ProjectInstallationPath.TrimEnd('\\') + @"\P127_Jumpscript.ahk", myList.ToArray());
 
-				AHEI.ExecRaw(Command);
+			HelperClasses.ProcessHandler.StartProcess(Globals.ProjectInstallationPath.TrimEnd('\\') + @"\P127_Jumpscript.exe");
 
-				IsRunning = true;
-
-				HelperClasses.Logger.Log("(Re-)Started Jumpscript");
-			}
+			HelperClasses.Logger.Log("(Re-)Started Jumpscript");
 		}
 
 		public static void StopJumpscript()
 		{
-			if (IsInit)
-			{
-				AHEI.Suspend();
-				IsRunning = false;
-				HelperClasses.Logger.Log("Stopped Jumpscript");
-			}
+			HelperClasses.ProcessHandler.KillProcesses("P127_Jumpscript");
+
+			HelperClasses.FileHandling.deleteFile(Globals.ProjectInstallationPath.TrimEnd('\\') + @"\P127_Jumpscript.ahk");
+
+			HelperClasses.Logger.Log("Stopped Jumpscript");
 		}
 
 		public static string KeyToString(System.Windows.Forms.Keys pKey)
