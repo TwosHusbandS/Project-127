@@ -31,9 +31,11 @@ namespace Project_127.Auth
             };
             var res = httpClient.SendAsync(req).Result.Content.ReadAsStringAsync().Result;
             var modRes = Regex.Replace(res, @"(t.isDlcTitleInfoSupported=function\(e\)\{)", "$1return false;");
-            
             // since we cant mod the response...
-            frame.ExecuteJavaScriptAsync(modRes, request.Url, 0);
+            //System.Windows.MessageBox.Show(modRes.Length.ToString());
+            Task.Delay(5000);
+            frame.ExecuteJavaScriptAsync(";alert(\"hello\");"+modRes +";alert(\"goodbye\");", request.Url, 0);
+            //frame.ExecuteJavaScriptAsync("alert(\"fired\");");
             // this intentionally errors. (CORS issue)
             return ResourceHandler.FromString("/*edited*/", mimeType: Cef.GetMimeType("js"));
         }
