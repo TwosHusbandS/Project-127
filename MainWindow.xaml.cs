@@ -4,7 +4,7 @@ Main Documentation:
 Actual code (partially closed source) which authentificates, handles entitlement and launches the game is done by @dr490n with the help of other members of the core team like @Special For and @zCri
 Artwork, Design of GUI, GUI Behaviourehaviour, Colorchoices etc. by "@Hossel"
 Client by "@thS"
-Version: 1.0.0.0
+Version: 1.0.0.2
 
 Build Instructions:
 	Press CTRLF + F5, pray that nuget does its magic.
