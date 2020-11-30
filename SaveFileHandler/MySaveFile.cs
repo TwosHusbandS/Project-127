@@ -19,9 +19,14 @@ namespace Project_127
 		public static ObservableCollection<MySaveFile> BackupSaves = new ObservableCollection<MySaveFile>();
 
 		/// <summary>
-		/// Path for the SaveFiles we provide
+		/// Root Path for the SaveFiles we provide
 		/// </summary>
 		public static string BackupSavesPath = LauncherLogic.SaveFilesPath;
+
+		/// <summary>
+		/// Path of the folder we are currently looking it
+		/// </summary>
+		public static string CurrentBackupSavesPath = BackupSavesPath;
 
 		/// <summary>
 		/// Property. The collection it belongs to.
@@ -130,9 +135,10 @@ namespace Project_127
 		{
 			get
 			{
-				string _FileName = this.FilePath.Substring(this.FilePath.LastIndexOf('\\') + 1);
+				string _FileName = "";
 				if (this.FileOrFolder == FileOrFolders.File)
 				{
+					_FileName = this.FilePath.Substring(this.FilePath.LastIndexOf('\\') + 1);
 					if (!String.IsNullOrEmpty(this.FileNameAddition))
 					{
 						return _FileName + " (" + FileNameAddition + ")";
@@ -144,10 +150,16 @@ namespace Project_127
 				}
 				else
 				{
-					_FileName = _FileName.TrimEnd('\\');
-					if (_FileName.Length == 0)
+					// we get full path of folder here. We want to display foldername if its an layer down (from CurrentBackupPath)
+					// or ".." if its not...
+					if (CurrentBackupSavesPath.StartsWith(FilePath))
 					{
 						_FileName = "..";
+					}
+					else
+					{
+						_FileName = this.FilePath.Substring(this.FilePath.LastIndexOf('\\') + 1);
+
 					}
 					return "  [  " + _FileName + "  ]  ";
 				}
@@ -170,12 +182,6 @@ namespace Project_127
 		public string Path { get { return this.FilePath.Substring(0, this.FilePath.LastIndexOf('\\')); } }
 
 		/// <summary>
-		/// Hash of Content. Currently we get it once on Constructur
-		/// Think getting it on getter would hog resources
-		/// </summary>
-		public string Hash;
-
-		/// <summary>
 		/// Standart Constructor. Dont need to forbid default Constructor since it wont be generated.
 		/// </summary>
 		/// <param name="pFilePath"></param>
@@ -184,20 +190,15 @@ namespace Project_127
 			// Setting the FilePath
 			this.FilePath = pFilePath;
 
-			// Generating the Hash of it
-			this.Hash = HelperClasses.FileHandling.GetHashFromFile(pFilePath);
-
 			// If this is a GTA SaveFileKind
 			if (this.SaveFileKind == SaveFileKinds.GTAV)
 			{
-				// Loop through all Backup Files
-				foreach (MySaveFile MSV in MySaveFile.BackupSaves)
+				foreach (string MySaveFile in HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(BackupSavesPath))
 				{
-					// If it matches a Hash
-					if (MSV.Hash == this.Hash)
+					if (HelperClasses.FileHandling.GetHashFromFile(MySaveFile) == HelperClasses.FileHandling.GetHashFromFile(pFilePath))
 					{
-						// Set the FileNameAddition
-						this.FileNameAddition = MSV.FileName;
+						this.FileNameAddition = HelperClasses.FileHandling.PathSplitUp(MySaveFile)[1];
+						break;
 					}
 				}
 			}
@@ -220,7 +221,7 @@ namespace Project_127
 		{
 			HelperClasses.Logger.Log("Copying SaveFiles '" + this.FileName + "' to Backup Folder under Name '" + pNewName + "'");
 
-			string newFilePath = MySaveFile.BackupSavesPath.TrimEnd('\\') + @"\" + pNewName;
+			string newFilePath = MySaveFile.CurrentBackupSavesPath.TrimEnd('\\') + @"\" + pNewName;
 			HelperClasses.FileHandling.copyFile(this.FilePath, newFilePath);
 			HelperClasses.FileHandling.copyFile(this.FilePathBak, newFilePath + ".bak");
 			BackupSaves.Add(new MySaveFile(newFilePath));
@@ -278,7 +279,7 @@ namespace Project_127
 		{
 			HelperClasses.Logger.Log("Importing SaveFiles '" + pOriginalFilePath + "'");
 
-			string newFilePath = MySaveFile.BackupSavesPath.TrimEnd('\\') + @"\" + pFileName;
+			string newFilePath = MySaveFile.CurrentBackupSavesPath.TrimEnd('\\') + @"\" + pFileName;
 			HelperClasses.FileHandling.copyFile(pOriginalFilePath, newFilePath);
 			HelperClasses.FileHandling.copyFile(pOriginalFilePath + ".bak", newFilePath + ".bak");
 			MySaveFile.BackupSaves.Add(new MySaveFile(newFilePath));

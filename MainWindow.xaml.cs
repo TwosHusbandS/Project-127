@@ -62,12 +62,13 @@ Hybrid code can be found in AAA_HybridCode.
 		=> Running Core stuff when launching through steam. This might not have any effect
 		=> Design of UX for NoteOverlay.xaml
 		=> Updated Settings with JumpScript and NoteOverlay stuff
-		=> Rolling Log (fixed potential off by one)
+		=> Rolling Log (fixed potential off by one very elegantly)
 		=> ToolTips on all Icon-Buttons
 		=> Annoucement Feature
 		=> FailSafe Backup System for Upgrade Files
 		=> Auth will no longer crash when not reachable. Well at least we check it on page load...
-		=> Overlay + Jumpscript stuff
+		=> Overlay for notes and UI for it
+		=> Jumpscript
 		=> Auto-Start XYZ on Game Launch working dir fix
 		=> Downgrade/Upgrade/Repair improvements:
 			- Detecting Updates automatically (checking for it on start, upgrade, downgrade), throwing one popup per P127 Launch
@@ -80,6 +81,7 @@ Hybrid code can be found in AAA_HybridCode.
 		=> Fixed Update Detection
 		=> Commented out new SaveFileHandler Code
 		=> Fixed Process Priority setting too often
+		=> Added GameLaunched and GameExited methods based on the polling
 		=> Fixed ForegroundChangeListener not setting on fullscreen by polling every 2.5 seconds
 		=> Fix Command line args crashing it...
 		=> Make "DetectUpgrade" more efficent
@@ -89,8 +91,10 @@ Hybrid code can be found in AAA_HybridCode.
 		=> Split upgrading downgrading into 17 progress popups
 		=> Finish Readme (Speedrun text + Reset Button + DL of big zip)
 		=> ZIP Hash for big ZIP
-		=> Bring back functionality from: https://github.com/TwosHusbandS/Project-127/commit/a5dcbd5c1a4011c8e1845c4f338f6f9ffbe79a92
-		=> Selection after deletion is fucked (Solution in Commit Above)
+		=> Webscraping for DDLs from anonfiles
+		=> ALL Styles moved to App.xml
+		=> Bring back functionality from which were forgetten in new GUI
+		=> Selection after deletion (datagrid) fixxed
 		=> Yoshis Info regarding Versions
 		=> NoteOverlay Null Reference Fix + CPU Improvements
 		=> Cache works, there are other cache files tho...argh. ~~Investigate CEF Cache~~
@@ -99,9 +103,16 @@ Hybrid code can be found in AAA_HybridCode.
 		=> Removed Delay on Downgrade / Upgrade, throwing 3 separate ProgressBar popups for it.
 		=> Using Portable AHK now with script written to desk
 		=> Released under MIT
+		=> Improved UX overall. Lots of small things.
 
 	Release 1.1
 
+		Quick and Dirty notes:
+			- SFH Below
+			- Clean up Code / Readme / Patchnotes
+			- Release new ZIP
+			- Make it create Folder and Savefile for new release...for SFH Demo
+		
 		- Fullscreen mode for overlay
 			=> With added front-end and mid-end support for that
 				--> add GUI Options
@@ -112,10 +123,16 @@ Hybrid code can be found in AAA_HybridCode.
 					=> ^ Making Hotkeys toggle the Window Visibility instead Overlay itself
 					=> ^ Same with the code that makes overlay invisible on game minimize
 		- SFH Improvements
-			=> Add Folder Support
+			=> [DONE] Add Folder Support
 				>> ReWrite of SaveFileHandler class with enum for File or Folder
 				>> Folders as clickable items in list at the very top with a "[FolderName]
 				>> Top Folder being "[..]" like in WinRar
+				>> Connect to Backend in terms of rename, move around, etc.
+			=> [DONE] Rename left file doesnt update text in brackets on right side...
+			=> [DONE] MouseOver displays full fillename
+			=> [DONE] Make selected File act like NoteOverlay_NoteFiles
+			=> Search Bar
+			=> Better Hotkey support
 			=> Add Support for Copy & Move (in Ram) and Paste.
 			=> Multiselect
 			=> RightClick on File (Copy, Rename, Delete)
@@ -123,9 +140,7 @@ Hybrid code can be found in AAA_HybridCode.
 			=> RightClick on Background (new Folder, Paste)
 			=> RightClick on Folder
 			=> Horizontal Scroll bar
-			=> Search Bar
-			=> Better Hotkey support
-			=> Make selected File act like NoteOverlay_NoteFiles
+			
 		
 		- Update ReadMe, to reflect that its not being actively developed and read through it in general. 
 			=> Add credits to new people (hosting, version info, legends of Community)
@@ -639,8 +654,9 @@ namespace Project_127
 			if (Globals.BetaMode || Globals.InternalMode)
 			{
 				// Opens the File
-				HelperClasses.ProcessHandler.StartProcess(@"C:\Windows\System32\notepad.exe", pCommandLineArguments: Globals.Logfile);
+				//HelperClasses.ProcessHandler.StartProcess(@"C:\Windows\System32\notepad.exe", pCommandLineArguments: Globals.Logfile);
 			}
+			
 			new Overlay_MultipleMonitor().Show();
 		}
 

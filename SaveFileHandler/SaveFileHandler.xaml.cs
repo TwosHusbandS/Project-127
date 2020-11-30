@@ -40,11 +40,13 @@ namespace Project_127
 			// Used for DataBinding
 			this.DataContext = this;
 
-			btn_Refresh_Click(null, null);
 			MouseOverMagic(btn_LeftArrow);
 			MouseOverMagic(btn_RightArrow);
 			MouseOverMagic(btn_Refresh);
 
+			MySaveFile.CurrentBackupSavesPath = MySaveFile.BackupSavesPath;
+
+			Refresh();
 		}
 
 
@@ -89,33 +91,6 @@ namespace Project_127
 			}
 		}
 
-
-		/// <summary>
-		/// Sorts a DataGrid
-		/// </summary>
-		/// <param name="pDataGrid"></param>
-		private void Sort(DataGrid pDataGrid)
-		{
-			// What can I say...
-			// https://stackoverflow.com/a/40395019
-
-			// Since we always add one more MySaveFile to the collection we could 
-			// Loop through the childitems and then move it to the correct index
-			// Pretty much implement our own Sorting Method which uses MySaveFile.BackupSaves.Move(a,b);
-
-			//if (pDataGrid.ItemsSource == null)
-			//	pDataGrid.ItemsSource = MySaveFile.BackupSaves;
-			//CollectionViewSource.GetDefaultView(pDataGrid.ItemsSource).Refresh();
-			//pDataGrid.Items.SortDescriptions.Clear();
-			//pDataGrid.Items.SortDescriptions.Add(new SortDescription(pDataGrid.Columns[0].SortMemberPath, ListSortDirection.Ascending));
-			//foreach (var col in pDataGrid.Columns)
-			//{
-			//	col.SortDirection = null;
-			//}
-			//pDataGrid.Columns[0].SortDirection = ListSortDirection.Ascending;
-			//pDataGrid.Items.Refresh();
-		}
-
 		/// <summary>
 		/// Click on the Refresh Button. Reads files from disk again.
 		/// </summary>
@@ -123,21 +98,25 @@ namespace Project_127
 		/// <param name="e"></param>
 		private void btn_Refresh_Click(object sender = null, RoutedEventArgs e = null)
 		{
+			Refresh();
+		}
+
+		private void Refresh(DataGrid DataGridToSelect = null)
+		{
 			// Resetting the Obvservable Collections:
 			MySaveFile.BackupSaves = new ObservableCollection<MySaveFile>();
 			MySaveFile.GTASaves = new ObservableCollection<MySaveFile>();
 
-
-			//MySaveFile.BackupSaves.Add(new MySaveFile(MySaveFile.BackupSavesPath, true));
-			string[] MySubFolders = HelperClasses.FileHandling.GetSubFolders(MySaveFile.BackupSavesPath);
+			MySaveFile.BackupSaves.Add(new MySaveFile(HelperClasses.FileHandling.PathSplitUp(MySaveFile.CurrentBackupSavesPath.TrimEnd('\\'))[0], true));
+			string[] MySubFolders = HelperClasses.FileHandling.GetSubFolders(MySaveFile.CurrentBackupSavesPath);
 			foreach (string MySubFolder in MySubFolders)
 			{
-				//MySaveFile.BackupSaves.Add(new MySaveFile(MySubFolder, true));
+				MySaveFile.BackupSaves.Add(new MySaveFile(MySubFolder, true));
 			}
 
 
 			// Files in BackupSaves (own File Path)
-			string[] MyBackupSaveFiles = HelperClasses.FileHandling.GetFilesFromFolder(MySaveFile.BackupSavesPath);
+			string[] MyBackupSaveFiles = HelperClasses.FileHandling.GetFilesFromFolder(MySaveFile.CurrentBackupSavesPath);
 			foreach (string MyBackupSaveFile in MyBackupSaveFiles)
 			{
 				if (!MyBackupSaveFile.Contains(".bak"))
@@ -160,6 +139,41 @@ namespace Project_127
 			// Set the ItemSource of Both Datagrids for the DataBinding
 			dg_BackupFiles.ItemsSource = MySaveFile.BackupSaves;
 			dg_GTAFiles.ItemsSource = MySaveFile.GTASaves;
+
+			// Set Label and MouseOverLabel
+			if (MySaveFile.BackupSavesPath.TrimEnd('\\') == MySaveFile.CurrentBackupSavesPath.TrimEnd('\\'))
+			{
+				lbl_BackupFilesHeader.FontSize = 20;
+				lbl_BackupFilesHeader.Content = "Backup Save Files";
+			}
+			else
+			{
+				if (MySaveFile.BackupSavesPath.StartsWith(MySaveFile.CurrentBackupSavesPath))
+				{
+					lbl_BackupFilesHeader.Content = MySaveFile.CurrentBackupSavesPath;
+				}
+				else
+				{
+					string result = MySaveFile.CurrentBackupSavesPath;
+					while (result.StartsWith(MySaveFile.BackupSavesPath))
+					{
+						result = result.Substring(MySaveFile.BackupSavesPath.Length);
+					}
+
+					lbl_BackupFilesHeader.Content = "Backup Save Files" + @"\" + result;
+				}
+				int myFontSize = 20;
+				int AdditionalLength = lbl_BackupFilesHeader.Content.ToString().Length - "Backup Save Files".Length;
+				int removeSize = (int)((AdditionalLength / 4) * 2);
+				lbl_BackupFilesHeader.FontSize = myFontSize - removeSize;
+
+			}
+			lbl_BackupFilesHeader.ToolTip = MySaveFile.CurrentBackupSavesPath;
+
+			if (DataGridToSelect != null)
+			{
+				HelperClasses.DataGridHelper.SelectFirst(DataGridToSelect);
+			}
 		}
 
 
@@ -180,12 +194,12 @@ namespace Project_127
 				MySaveFile tmp = (MySaveFile)dg_GTAFiles.SelectedItem;
 
 				// Get the Name for it
-				string newName = GetNewFileName(tmp.FileName, MySaveFile.BackupSavesPath);
+				string newName = GetNewFileName(tmp.FileName, MySaveFile.CurrentBackupSavesPath);
 				if (!string.IsNullOrWhiteSpace(newName))
 				{
 					// Only do if it the name is not "" or null
 					tmp.CopyToBackup(newName);
-					Sort(dg_BackupFiles);
+					Refresh(dg_GTAFiles);
 				}
 			}
 		}
@@ -230,7 +244,7 @@ namespace Project_127
 					FilePathInsideGTA = MySaveFile.GTAVSavesPath.TrimEnd('\\') + @"\" + NewFileName;
 				}
 				tmp.CopyToGTA(NewFileName);
-				Sort(dg_GTAFiles);
+				Refresh(dg_BackupFiles);
 				new Popup(Popup.PopupWindowTypes.PopupOk, "Copied '" + tmp.FileName + "' to the GTA V Saves Location under the Name '" + NewFileName + "' !").ShowDialog();
 			}
 		}
@@ -244,6 +258,9 @@ namespace Project_127
 		/// <param name="e"></param>
 		private void btn_Rename_Click(object sender, RoutedEventArgs e)
 		{
+			// we use this to refresh the correct DataGrid after operation
+			DataGrid tmp_dg = new DataGrid();
+
 			// Getting the Selecting SaveFile, checking if it aint null
 			MySaveFile tmp = GetSelectedSaveFile();
 			if (tmp != null)
@@ -251,6 +268,8 @@ namespace Project_127
 				// If its inside GTA Save directory
 				if (tmp.SaveFileKind == MySaveFile.SaveFileKinds.GTAV)
 				{
+					tmp_dg = dg_GTAFiles;
+
 					// Asking user if he really wants to rename since its fucked...
 					Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Re-Naming something inside the GTA V Saves Location makes no sense,\nsince it wont get recognized by the game.\nStill want to continue?");
 					yesno.ShowDialog();
@@ -260,6 +279,10 @@ namespace Project_127
 						return;
 					}
 				}
+				else
+				{
+					tmp_dg = dg_BackupFiles;
+				}
 
 				// Popup for new name of File
 				string newName = GetNewFileName(tmp.FileName, tmp.Path);
@@ -267,16 +290,10 @@ namespace Project_127
 				{
 					// Rename File, Sort Datagrid
 					tmp.Rename(newName);
-					if (tmp.SaveFileKind == MySaveFile.SaveFileKinds.GTAV)
-					{
-						Sort(dg_GTAFiles);
-					}
-					else
-					{
-						Sort(dg_BackupFiles);
-					}
 				}
 			}
+
+			Refresh(tmp_dg);
 		}
 
 
@@ -299,13 +316,13 @@ namespace Project_127
 				{
 					// Deleting it and sorting them
 					tmp.Delete();
-					if (tmp.SaveFileKind == MySaveFile.SaveFileKinds.GTAV)
+					if (tmp.SaveFileKind == MySaveFile.SaveFileKinds.Backup)
 					{
-						Sort(dg_GTAFiles);
+						Refresh(dg_BackupFiles);
 					}
 					else
 					{
-						Sort(dg_BackupFiles);
+						Refresh(dg_GTAFiles);
 					}
 				}
 			}
@@ -464,7 +481,7 @@ namespace Project_127
 			}
 			else if (e.Key == Key.F5)
 			{
-				btn_Refresh_Click(null, null);
+				Refresh();
 			}
 		}
 
@@ -522,7 +539,7 @@ namespace Project_127
 					string FileName = MySelectedFiles[i].Substring(MySelectedFiles[i].LastIndexOf('\\') + 1);
 					if (HelperClasses.FileHandling.doesFileExist(MySaveFile.GTAVSavesPath.TrimEnd('\\') + @"\" + FileName))
 					{
-						FileName = GetNewFileName(FileName, MySaveFile.BackupSavesPath);
+						FileName = GetNewFileName(FileName, MySaveFile.CurrentBackupSavesPath);
 					}
 					MySaveFile.Import(MySelectedFiles[i], FileName);
 
@@ -530,16 +547,18 @@ namespace Project_127
 				}
 			}
 
-			Sort(dg_BackupFiles);
+			Refresh();
 		}
 
 		private void Row_DoubleClick(object sender, MouseButtonEventArgs e)
 		{
-			MySaveFile asdff = GetSelectedSaveFile();
-			if (asdff.FileOrFolder == MySaveFile.FileOrFolders.Folder)
+			MySaveFile MSV = GetSelectedSaveFile();
+			if (MSV.FileOrFolder == MySaveFile.FileOrFolders.Folder)
 			{
-				//Globals.DebugPopup(asdff.FilePath);
+				MySaveFile.CurrentBackupSavesPath = MSV.FilePath;
+				Refresh();
 			}
 		}
+
 	} // End of Class
 } // End of Namespace

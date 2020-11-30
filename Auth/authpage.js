@@ -176,8 +176,12 @@ function setPass(pass) {
 }
 
 function rememberMeState(active) {
-    if (document.querySelector('#rememberMeProfile').checked != active) {
-        document.querySelector('#rememberMeProfile').click();
+    try {
+        if (document.querySelector('#rememberMeProfile').checked != active) {
+            document.querySelector('#rememberMeProfile').click();
+        }
+    } catch{
+        location.reload();
     }
 }
 

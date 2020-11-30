@@ -551,29 +551,7 @@ namespace Project_127
 		}
 
 
-		public static void SetGTAProcessPriority()
-		{
-			if (Settings.EnableAutoSetHighPriority)
-			{
-				try
-				{
-					Process[] processes = HelperClasses.ProcessHandler.GetProcesses("gta5");
-					if (processes.Length > 0)
-					{
-						if (processes[0].PriorityClass != ProcessPriorityClass.High)
-						{
-							processes[0].PriorityClass = ProcessPriorityClass.High;
-							HelperClasses.Logger.Log("Set GTA5 Process Priority to High");
-						}
 
-					}
-				}
-				catch
-				{
-					HelperClasses.Logger.Log("Failed to get GTA5 Process...");
-				}
-			}
-		}
 
 		/// <summary>
 		/// Method which gets called after Starting GTAV
@@ -604,7 +582,7 @@ namespace Project_127
 							try
 							{
 								string[] Stufferino = HelperClasses.FileHandling.PathSplitUp(Settings.PathFPSLimiter);
-								HelperClasses.ProcessHandler.StartProcess(Stufferino[0], Stufferino[1]);
+								HelperClasses.ProcessHandler.StartProcess(Settings.PathFPSLimiter, Stufferino[0]);
 							}
 							catch { }
 						}
@@ -631,7 +609,7 @@ namespace Project_127
 							try
 							{
 								string[] Stufferino = HelperClasses.FileHandling.PathSplitUp(Settings.PathLiveSplit);
-								HelperClasses.ProcessHandler.StartProcess(Stufferino[0], Stufferino[1]);
+								HelperClasses.ProcessHandler.StartProcess(Settings.PathLiveSplit,Stufferino[0]);
 							}
 							catch { }
 						}
@@ -658,7 +636,7 @@ namespace Project_127
 							try
 							{
 								string[] Stufferino = HelperClasses.FileHandling.PathSplitUp(Settings.PathStreamProgram);
-								HelperClasses.ProcessHandler.StartProcess(Stufferino[0], Stufferino[1]);
+								HelperClasses.ProcessHandler.StartProcess(Settings.PathStreamProgram, Stufferino[0]);
 							}
 							catch { }
 						}
@@ -685,7 +663,7 @@ namespace Project_127
 							try
 							{
 								string[] Stufferino = HelperClasses.FileHandling.PathSplitUp(Settings.PathNohboard);
-								HelperClasses.ProcessHandler.StartProcess(Stufferino[0], Stufferino[1]);
+								HelperClasses.ProcessHandler.StartProcess(Settings.PathNohboard, Stufferino[0]);
 							}
 							catch { }
 						}
@@ -704,7 +682,29 @@ namespace Project_127
 
 		}
 
+		public static void SetGTAProcessPriority()
+		{
+			if (Settings.EnableAutoSetHighPriority)
+			{
+				try
+				{
+					Process[] processes = HelperClasses.ProcessHandler.GetProcesses("gta5");
+					if (processes.Length > 0)
+					{
+						if (processes[0].PriorityClass != ProcessPriorityClass.High)
+						{
+							processes[0].PriorityClass = ProcessPriorityClass.High;
+							HelperClasses.Logger.Log("Set GTA5 Process Priority to High");
+						}
 
+					}
+				}
+				catch
+				{
+					HelperClasses.Logger.Log("Failed to get GTA5 Process...");
+				}
+			}
+		}
 
 		/// <summary>
 		/// Method to import Zip File

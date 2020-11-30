@@ -324,154 +324,136 @@ namespace Project_127.MySettings
 		/// <param name="IsRightClick"></param>
 		private void btn_Path_Magic(Button myBtn, bool IsRightClick = false)
 		{
+			string explorerStartPath = "";
+
 			switch (myBtn.Name)
 			{
 				case "btn_Set_GTAVInstallationPath":
-					if (IsRightClick)
-					{
-						HelperClasses.ProcessHandler.StartProcess(@"C:\Windows\explorer.exe", pCommandLineArguments: Settings.GTAVInstallationPath);
-					}
-					else
-					{
-						SetGTAVPathManually();
-					}
+					explorerStartPath = Settings.GTAVInstallationPath;
+					SetGTAVPathManually();
 					break;
 				case "btn_Set_ZIPExtractionPath":
-					if (IsRightClick)
+					explorerStartPath = Settings.ZIPExtractionPath;
+
+					// Grabbing the new Path from FolderDialogThingy
+					string StartUpPathZIP = Settings.ZIPExtractionPath;
+					if (String.IsNullOrWhiteSpace(StartUpPathZIP))
 					{
-						HelperClasses.ProcessHandler.StartProcess(@"C:\Windows\explorer.exe", pCommandLineArguments: Settings.ZIPExtractionPath);
+						StartUpPathZIP = @"C:\";
 					}
 					else
 					{
-						// Grabbing the new Path from FolderDialogThingy
-						string StartUpPath = Settings.ZIPExtractionPath;
-						if (String.IsNullOrWhiteSpace(StartUpPath))
-						{
-							StartUpPath = @"C:\";
-						}
-						else
-						{
-							StartUpPath = HelperClasses.FileHandling.PathSplitUp(StartUpPath.TrimEnd('\\'))[0];
-						}
-						string _ZIPExtractionPath = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.Folder, "Pick the Folder where this Program will store its Data.", StartUpPath);
-						HelperClasses.Logger.Log("Changing ZIPExtractionPath.");
-						HelperClasses.Logger.Log("Old ZIPExtractionPath: '" + Settings.ZIPExtractionPath + "'");
-						HelperClasses.Logger.Log("Potential New ZIPExtractionPath: '" + _ZIPExtractionPath + "'");
+						StartUpPathZIP = HelperClasses.FileHandling.PathSplitUp(StartUpPathZIP.TrimEnd('\\'))[0];
+					}
+					string _ZIPExtractionPath = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.Folder, "Pick the Folder where this Program will store its Data.", StartUpPathZIP);
+					HelperClasses.Logger.Log("Changing ZIPExtractionPath.");
+					HelperClasses.Logger.Log("Old ZIPExtractionPath: '" + Settings.ZIPExtractionPath + "'");
+					HelperClasses.Logger.Log("Potential New ZIPExtractionPath: '" + _ZIPExtractionPath + "'");
 
-						// If its a valid Path (no "") and if its a new Path
-						if (ChangeZIPExtractionPath(_ZIPExtractionPath))
-						{
-							HelperClasses.Logger.Log("Changing ZIP Path worked");
-						}
-						else
-						{
-							HelperClasses.Logger.Log("Changing ZIP Path did not work. Probably non existing Path or same Path as before");
-							new Popup(Popup.PopupWindowTypes.PopupOk, "Changing ZIP Path did not work. Probably non existing Path or same Path as before");
-						}
+					// If its a valid Path (no "") and if its a new Path
+					if (ChangeZIPExtractionPath(_ZIPExtractionPath))
+					{
+						HelperClasses.Logger.Log("Changing ZIP Path worked");
+					}
+					else
+					{
+						HelperClasses.Logger.Log("Changing ZIP Path did not work. Probably non existing Path or same Path as before");
+						new Popup(Popup.PopupWindowTypes.PopupOk, "Changing ZIP Path did not work. Probably non existing Path or same Path as before");
 					}
 					break;
 				case "btn_Set_PathLiveSplit":
-					if (IsRightClick)
+					explorerStartPath = HelperClasses.FileHandling.PathSplitUp(Settings.PathLiveSplit)[0].TrimEnd('\\');
+
+					string StartUpPath = Settings.PathLiveSplit;
+					if (!HelperClasses.FileHandling.doesFileExist(StartUpPath))
 					{
-						HelperClasses.ProcessHandler.StartProcess(@"C:\Windows\explorer.exe", pCommandLineArguments: HelperClasses.FileHandling.PathSplitUp(Settings.PathLiveSplit.TrimEnd('\\'))[0]);
+						StartUpPath = @"C:\";
 					}
 					else
 					{
-						string StartUpPath = Settings.PathLiveSplit;
-						if (String.IsNullOrWhiteSpace(StartUpPath))
-						{
-							StartUpPath = @"C:\";
-						}
-						else
-						{
-							StartUpPath = HelperClasses.FileHandling.PathSplitUp(StartUpPath.TrimEnd('\\'))[0];
-						}
+						StartUpPath = HelperClasses.FileHandling.PathSplitUp(StartUpPath.TrimEnd('\\'))[0];
+					}
 
-						string UserChoice = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.File, "Pick your LiveSplit Executable", StartUpPath);
+					string UserChoice = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.File, "Pick your LiveSplit Executable", StartUpPath);
 
-						if (!String.IsNullOrWhiteSpace(UserChoice))
-						{
-							Settings.PathLiveSplit = UserChoice;
-						}
+					if (!String.IsNullOrWhiteSpace(UserChoice))
+					{
+						Settings.PathLiveSplit = UserChoice;
 					}
 					break;
 				case "btn_Set_PathStreamProgram":
-					if (IsRightClick)
+					explorerStartPath = HelperClasses.FileHandling.PathSplitUp(Settings.PathStreamProgram)[0].TrimEnd('\\');
+
+					string StartUpPath2 = Settings.PathStreamProgram;
+					if (!HelperClasses.FileHandling.doesFileExist(StartUpPath2))
 					{
-						HelperClasses.ProcessHandler.StartProcess(@"C:\Windows\explorer.exe", pCommandLineArguments: HelperClasses.FileHandling.PathSplitUp(Settings.PathStreamProgram.TrimEnd('\\'))[0]);
+						StartUpPath2 = @"C:\";
 					}
 					else
 					{
-						string StartUpPath = Settings.PathStreamProgram;
-						if (String.IsNullOrWhiteSpace(StartUpPath))
-						{
-							StartUpPath = @"C:\";
-						}
-						else
-						{
-							StartUpPath = HelperClasses.FileHandling.PathSplitUp(StartUpPath.TrimEnd('\\'))[0];
-						}
+						StartUpPath2 = HelperClasses.FileHandling.PathSplitUp(StartUpPath2.TrimEnd('\\'))[0];
+					}
 
-						string UserChoice = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.File, "Pick your Stream Program Executable", StartUpPath);
+					string UserChoice2 = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.File, "Pick your Stream Program Executable", StartUpPath2);
 
-						if (!String.IsNullOrWhiteSpace(UserChoice))
-						{
-							Settings.PathStreamProgram = UserChoice;
-							RefreshGUI();
-						}
+					if (!String.IsNullOrWhiteSpace(UserChoice2))
+					{
+						Settings.PathStreamProgram = UserChoice2;
+						RefreshGUI();
 					}
 					break;
 				case "btn_Set_PathNohboard":
-					if (IsRightClick)
+					explorerStartPath = HelperClasses.FileHandling.PathSplitUp(Settings.PathNohboard)[0].TrimEnd('\\');
+
+					string StartUpPath3 = Settings.PathNohboard;
+					if (!HelperClasses.FileHandling.doesFileExist(StartUpPath3))
 					{
-						HelperClasses.ProcessHandler.StartProcess(@"C:\Windows\explorer.exe", pCommandLineArguments: HelperClasses.FileHandling.PathSplitUp(Settings.PathNohboard.TrimEnd('\\'))[0]);
+						StartUpPath3 = @"C:\";
 					}
 					else
 					{
-						string StartUpPath = Settings.PathNohboard;
-						if (String.IsNullOrWhiteSpace(StartUpPath))
-						{
-							StartUpPath = @"C:\";
-						}
-						else
-						{
-							StartUpPath = HelperClasses.FileHandling.PathSplitUp(StartUpPath.TrimEnd('\\'))[0];
-						}
+						StartUpPath3 = HelperClasses.FileHandling.PathSplitUp(StartUpPath3.TrimEnd('\\'))[0];
+					}
 
-						string UserChoice = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.File, "Pick your Nohboard Executable", StartUpPath);
+					string UserChoice3 = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.File, "Pick your Nohboard Executable", StartUpPath3);
 
-						if (!String.IsNullOrWhiteSpace(UserChoice))
-						{
-							Settings.PathNohboard = UserChoice;
-						}
+					if (!String.IsNullOrWhiteSpace(UserChoice3))
+					{
+						Settings.PathNohboard = UserChoice3;
 					}
 					break;
 				case "btn_Set_PathFPSLimiter":
-					if (IsRightClick)
+					explorerStartPath = HelperClasses.FileHandling.PathSplitUp(Settings.PathFPSLimiter)[0].TrimEnd('\\');
+
+					string StartUpPath4 = Settings.PathFPSLimiter;
+					if (!HelperClasses.FileHandling.doesFileExist(StartUpPath4))
 					{
-						HelperClasses.ProcessHandler.StartProcess(@"C:\Windows\explorer.exe", pCommandLineArguments: HelperClasses.FileHandling.PathSplitUp(Settings.PathFPSLimiter.TrimEnd('\\'))[0]);
+						StartUpPath4 = @"C:\";
 					}
 					else
 					{
-						string StartUpPath = Settings.PathFPSLimiter;
-						if (String.IsNullOrWhiteSpace(StartUpPath))
-						{
-							StartUpPath = @"C:\";
-						}
-						else
-						{
-							StartUpPath = HelperClasses.FileHandling.PathSplitUp(StartUpPath.TrimEnd('\\'))[0];
-						}
+						StartUpPath = HelperClasses.FileHandling.PathSplitUp(StartUpPath4.TrimEnd('\\'))[0];
+					}
 
-						string UserChoice = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.File, "Pick your FPS Limiter Executable", StartUpPath);
+					string UserChoice4 = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.File, "Pick your FPS Limiter Executable", StartUpPath4);
 
-						if (!String.IsNullOrWhiteSpace(UserChoice))
-						{
-							Settings.PathFPSLimiter = UserChoice;
-						}
+					if (!String.IsNullOrWhiteSpace(UserChoice4))
+					{
+						Settings.PathFPSLimiter = UserChoice4;
 					}
 					break;
 			}
+
+			if (IsRightClick)
+			{
+				if (!HelperClasses.FileHandling.doesPathExist(explorerStartPath))
+				{
+					explorerStartPath = @"C:\";
+				}
+
+				HelperClasses.ProcessHandler.StartProcess(@"C:\Windows\explorer.exe", pWorkingDir: explorerStartPath);
+			}
+
 			RefreshGUI();
 		}
 

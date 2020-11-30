@@ -5,7 +5,7 @@
              Startup="Application_Startup"
              SessionEnding="Application_SessionEnding"
              StartupUri="MainWindow.xaml">
-            <!--xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"-->
+    <!--xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"-->
     <Application.Resources>
 
         <!--<XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls" />-->
@@ -267,13 +267,7 @@
 
 
 
-        <ContextMenu x:Key="ContextMenuKeyDataGrid">
-            <MenuItem Header="HeaderDataGrid"/>
-        </ContextMenu>
 
-        <ContextMenu x:Key="ContextMenuKeyDataGridCell">
-            <MenuItem Header="HeaderDataGridCell"/>
-        </ContextMenu>
 
         <Style x:Key="dg" TargetType="DataGrid">
             <!--<Setter Property="ContextMenu" Value="{StaticResource ContextMenuKeyDataGrid}"/>-->
@@ -306,6 +300,13 @@
             </Style.Resources>
         </Style>
 
+        <ContextMenu x:Key="ContextMenuKeyDataGrid">
+            <MenuItem Header="HeaderDataGrid"/>
+        </ContextMenu>
+
+        <ContextMenu x:Key="ContextMenuKeyDataGridCell">
+            <MenuItem Header="HeaderDataGridCell"/>
+        </ContextMenu>
 
         <Style x:Key="dg_cm" TargetType="DataGrid">
             <Setter Property="ContextMenu" Value="{StaticResource ContextMenuKeyDataGrid}"/>
@@ -323,6 +324,7 @@
             <Setter Property="Background" Value="Transparent"/>
             <Style.Resources>
                 <Style TargetType="{x:Type DataGridCell}">
+                    <Setter Property="ToolTip" Value="{Binding RelativeSource={RelativeSource Self},Path=Content.Text}"/>
                     <Setter Property="BorderBrush" Value="{x:Static local:Globals.SFH_DGCellBorderBrush}"/>
                     <Setter Property="BorderThickness" Value="{x:Static local:Globals.SFH_DGCellBorderThickness}"/>
                     <Setter Property="ContextMenu" Value="{StaticResource ContextMenuKeyDataGridCell}"/>
