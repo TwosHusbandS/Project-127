@@ -309,7 +309,7 @@
         </ContextMenu>
 
         <Style x:Key="dg_cm" TargetType="DataGrid">
-            <Setter Property="ContextMenu" Value="{StaticResource ContextMenuKeyDataGrid}"/>
+            <!--<Setter Property="ContextMenu" Value="{StaticResource ContextMenuKeyDataGrid}"/>-->
             <Setter Property="RowHeight" Value="35"/>
             <Setter Property="CanUserResizeColumns" Value="False"/>
             <Setter Property="BorderThickness" Value="0"/>
@@ -327,7 +327,7 @@
                     <Setter Property="ToolTip" Value="{Binding RelativeSource={RelativeSource Self},Path=Content.Text}"/>
                     <Setter Property="BorderBrush" Value="{x:Static local:Globals.SFH_DGCellBorderBrush}"/>
                     <Setter Property="BorderThickness" Value="{x:Static local:Globals.SFH_DGCellBorderThickness}"/>
-                    <Setter Property="ContextMenu" Value="{StaticResource ContextMenuKeyDataGridCell}"/>
+                    <!--<Setter Property="ContextMenu" Value="{StaticResource ContextMenuKeyDataGridCell}"/>-->
                     <Style.Triggers>
                         <Trigger Property="DataGridCell.IsSelected" Value="True">
                             <Setter Property="Background" Value="{x:Static local:Globals.SFH_DGSelectedBackground}" />

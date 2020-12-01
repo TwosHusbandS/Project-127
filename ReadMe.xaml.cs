@@ -365,13 +365,6 @@ namespace Project_127
 			}
 		}
 
-		private void btn_SpeedRun_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
-		{
-			if (e.ClickCount == 3)
-			{
-				new Popups.Popup(Popups.Popup.PopupWindowTypes.PopupOk, "Shoutouts to @crapideot for being awesome and a\ngreat friend and Helper during Project 1.27 :)\nHope you have a great day buddy").ShowDialog();
-			}
-		}
 
 		private void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e)
 		{

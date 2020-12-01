@@ -23,7 +23,7 @@
 
 
         <Label Style="{StaticResource lbl}" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Left" FontSize="24" Height="60" VerticalAlignment="Bottom" Margin="0,0,0,0" Content="Information"/>
-        <Button x:Name="btn_SpeedRun" Margin="0,10,5,10" Content="Speedrun" Grid.Row="1" Grid.Column="0" Click="btn_SpeedRun_Click" MouseRightButtonDown="btn_SpeedRun_MouseRightButtonDown" Style="{StaticResource btn_hamburgeritem}"/>
+        <Button x:Name="btn_SpeedRun" Margin="0,10,5,10" Content="Speedrun" Grid.Row="1" Grid.Column="0" Click="btn_SpeedRun_Click" Style="{StaticResource btn_hamburgeritem}"/>
         <Button x:Name="btn_About" Margin="5,10,5,10" Content="About" Grid.Row="1" Grid.Column="1" Click="btn_About_Click" MouseRightButtonDown="btn_About_MouseRightButtonDown" Style="{StaticResource btn_hamburgeritem}"/>
         <Button x:Name="btn_Credits" Margin="5,10,5,10" Content="Credits" Grid.Row="1" Grid.Column="2" Click="btn_Credits_Click" Style="{StaticResource btn_hamburgeritem}"/>
         <Button x:Name="btn_Help" Margin="5,10,0,10" Content="Help" Grid.Row="1" Grid.Column="3" Click="btn_Help_Click" Style="{StaticResource btn_hamburgeritem}"/>

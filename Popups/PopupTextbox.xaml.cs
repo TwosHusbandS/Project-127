@@ -46,7 +46,7 @@ namespace Project_127.Popups
 
 			tb_Main.Text = TextBoxDefault;
 
-			btn_Yes.Focus();
+			tb_Main.Focus();
 		}
 
 

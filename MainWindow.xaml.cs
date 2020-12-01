@@ -112,6 +112,7 @@ Hybrid code can be found in AAA_HybridCode.
 			- Clean up Code / Readme / Patchnotes
 			- Release new ZIP
 			- Make it create Folder and Savefile for new release...for SFH Demo
+			- Translte Keys...
 		
 		- Fullscreen mode for overlay
 			=> With added front-end and mid-end support for that
@@ -128,18 +129,23 @@ Hybrid code can be found in AAA_HybridCode.
 				>> Folders as clickable items in list at the very top with a "[FolderName]
 				>> Top Folder being "[..]" like in WinRar
 				>> Connect to Backend in terms of rename, move around, etc.
+			=> Add Support for Copy & Move (in Ram) and Paste.
+				>> [DONE] Backend Properites
+				>> [DONE] Taking care of when we show the contextmenus..
+				>> [DONE] Copy / Cut Methods
+				>> Pasting Methods
+			=> Make it load async...with loading gif
+			=> Search Bar
 			=> [DONE] Rename left file doesnt update text in brackets on right side...
 			=> [DONE] MouseOver displays full fillename
 			=> [DONE] Make selected File act like NoteOverlay_NoteFiles
-			=> Search Bar
-			=> Better Hotkey support
-			=> Add Support for Copy & Move (in Ram) and Paste.
-			=> Multiselect
-			=> RightClick on File (Copy, Rename, Delete)
-			=> RightClick on Files (Copy, Delete, Delete)
-			=> RightClick on Background (new Folder, Paste)
-			=> RightClick on Folder
-			=> Horizontal Scroll bar
+			=> [DONE] Better Hotkey support
+			=> [SCRATCHED] Multiselect
+			=> [DONE] RightClick on File (Copy, Rename, Delete)
+			=> [DONE] RightClick on Files (Copy, Delete, Delete)
+			=> [DONE] RightClick on Background (new Folder, Paste)
+			=> [DONE] RightClick on Folder
+			=> [SCRATCHED] Horizontal Scroll bar
 			
 		
 		- Update ReadMe, to reflect that its not being actively developed and read through it in general. 
@@ -656,7 +662,7 @@ namespace Project_127
 				// Opens the File
 				//HelperClasses.ProcessHandler.StartProcess(@"C:\Windows\System32\notepad.exe", pCommandLineArguments: Globals.Logfile);
 			}
-			
+
 			new Overlay_MultipleMonitor().Show();
 		}
 
@@ -999,7 +1005,13 @@ namespace Project_127
 			}
 		}
 
+		private void btn_Upgrade_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+		{
 
-
+			if (e.ClickCount == 3)
+			{
+				new Popups.Popup(Popups.Popup.PopupWindowTypes.PopupOk, "Shoutouts to @crapideot for being awesome and a\ngreat friend and Helper during Project 1.27 :)\nHope you have a great day buddy").ShowDialog();
+			}
+		}
 	} // End of Class
 } // End of Namespace

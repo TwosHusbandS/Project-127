@@ -20,6 +20,7 @@ using Project_127.HelperClasses;
 using Project_127.Overlay;
 using Project_127.Popups;
 using Project_127.MySettings;
+using System.Runtime.InteropServices;
 
 namespace Project_127
 {
@@ -28,6 +29,17 @@ namespace Project_127
 	/// </summary>
 	public partial class SaveFileHandler : Page
 	{
+
+		public static MySaveFile CopyCutPasteObject = null;
+
+		public enum PasteKinds
+		{
+			Copy,
+			Cut
+		}
+
+		public static PasteKinds PasteKind = PasteKinds.Copy;
+
 		/// <summary>
 		/// Constructor of SaveFileHandler
 		/// </summary>
@@ -45,6 +57,8 @@ namespace Project_127
 			MouseOverMagic(btn_Refresh);
 
 			MySaveFile.CurrentBackupSavesPath = MySaveFile.BackupSavesPath;
+
+			CopyCutPasteObject = null;
 
 			Refresh();
 		}
@@ -101,7 +115,7 @@ namespace Project_127
 			Refresh();
 		}
 
-		private void Refresh(DataGrid DataGridToSelect = null)
+		private async void Refresh(DataGrid DataGridToSelect = null)
 		{
 			// Resetting the Obvservable Collections:
 			MySaveFile.BackupSaves = new ObservableCollection<MySaveFile>();
@@ -165,7 +179,10 @@ namespace Project_127
 				int myFontSize = 20;
 				int AdditionalLength = lbl_BackupFilesHeader.Content.ToString().Length - "Backup Save Files".Length;
 				int removeSize = (int)((AdditionalLength / 4) * 2);
-				lbl_BackupFilesHeader.FontSize = myFontSize - removeSize;
+				int newFontSize = myFontSize - removeSize;
+				if (newFontSize < 8) { newFontSize = 8; }
+				if (newFontSize > 30) { newFontSize = 30; }
+				lbl_BackupFilesHeader.FontSize = newFontSize;
 
 			}
 			lbl_BackupFilesHeader.ToolTip = MySaveFile.CurrentBackupSavesPath;
@@ -173,6 +190,7 @@ namespace Project_127
 			if (DataGridToSelect != null)
 			{
 				HelperClasses.DataGridHelper.SelectFirst(DataGridToSelect);
+				//DataGridToSelect.Focus();
 			}
 		}
 
@@ -309,21 +327,37 @@ namespace Project_127
 			MySaveFile tmp = GetSelectedSaveFile();
 			if (tmp != null)
 			{
-				// Ask user if he wants to remove it
-				Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Are you sure you want to delete this SaveFile?");
-				yesno.ShowDialog();
-				if (yesno.DialogResult == true)
+				if (tmp.FileOrFolder == MySaveFile.FileOrFolders.File)
 				{
-					// Deleting it and sorting them
-					tmp.Delete();
-					if (tmp.SaveFileKind == MySaveFile.SaveFileKinds.Backup)
+					// Ask user if he wants to remove it
+					Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Are you sure you want to delete this SaveFile?");
+					yesno.ShowDialog();
+					if (yesno.DialogResult == true)
 					{
+						// Deleting it and sorting them
+						tmp.Delete();
+						if (tmp.SaveFileKind == MySaveFile.SaveFileKinds.Backup)
+						{
+							Refresh(dg_BackupFiles);
+						}
+						else
+						{
+							Refresh(dg_GTAFiles);
+						}
+					}
+				}
+				else
+				{
+					if (!MySaveFile.CurrentBackupSavesPath.StartsWith(tmp.FilePath))
+					{
+						HelperClasses.FileHandling.DeleteFolder(tmp.FilePath);
 						Refresh(dg_BackupFiles);
 					}
 					else
 					{
-						Refresh(dg_GTAFiles);
+						new Popup(Popup.PopupWindowTypes.PopupOk, "Im not letting you delete the Parent-Folder,\nI know what im doing.").ShowDialog();
 					}
+
 				}
 			}
 		}
@@ -413,6 +447,51 @@ namespace Project_127
 		}
 
 		/// <summary>
+		/// New Folder Name Popup Logic
+		/// </summary>
+		/// <param name="pMySaveFile"></param>
+		/// <param name="pDestination"></param>
+		/// <returns></returns>
+		private string GetNewFolderName(string pPathToCheck)
+		{
+			string newName = "";
+
+			// Asking for Name 
+			PopupTextbox newNamePU = new PopupTextbox("Enter new Folder-Name:", "");
+			newNamePU.ShowDialog();
+			if (newNamePU.DialogResult == true)
+			{
+				// Getting the Name chosen
+				newName = newNamePU.MyReturnString;
+
+				// While name was give OR fikle exists
+				while (String.IsNullOrWhiteSpace(newName) || HelperClasses.FileHandling.doesPathExist(pPathToCheck.TrimEnd('\\') + @"\" + newName))
+				{
+					// Not a Valid FilePath
+					Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Folder does already exists or is not a valid Folder-Name.\n" +
+																					"Click yes if you want to try again.");
+					yesno.ShowDialog();
+					if (yesno.DialogResult == false)
+					{
+						// When you wanna exit
+						return "";
+					}
+					else
+					{
+						// When you wanna stay in while loop
+						PopupTextbox newNamePU2 = new PopupTextbox("Enter new Folder-Name:", "");
+						newNamePU2.ShowDialog();
+						if (newNamePU2.DialogResult == true)
+						{
+							newName = newNamePU2.MyReturnString;
+						}
+					}
+				}
+			}
+			return newName;
+		}
+
+		/// <summary>
 		/// Enables the scrolling behaviour of the DataGrid for Backup Save-Files
 		/// </summary>
 		/// <param name="sender"></param>
@@ -459,13 +538,17 @@ namespace Project_127
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
-		private void dg_KeyDown(object sender, KeyEventArgs e)
+		private void dg_PreviewKeyDown(object sender, KeyEventArgs e)
 		{
 			// This should now just be easy and useable with keyboard only.
 			// KeyDown and KeyUp are already implemented basic DataGrid behaviour
 			if (e.Key == Key.Delete)
 			{
 				btn_Delete_Click(null, null);
+			}
+			else if (e.Key == Key.N)
+			{
+				MI_NewFolder_Click(null, null);
 			}
 			else if (e.Key == Key.F2)
 			{
@@ -482,6 +565,11 @@ namespace Project_127
 			else if (e.Key == Key.F5)
 			{
 				Refresh();
+			}
+			else if (e.Key == Key.Space || e.Key == Key.Enter)
+			{
+				Row_DoubleClick(null, null);
+				e.Handled = true;
 			}
 		}
 
@@ -553,12 +641,237 @@ namespace Project_127
 		private void Row_DoubleClick(object sender, MouseButtonEventArgs e)
 		{
 			MySaveFile MSV = GetSelectedSaveFile();
-			if (MSV.FileOrFolder == MySaveFile.FileOrFolders.Folder)
+			if (MSV != null)
 			{
-				MySaveFile.CurrentBackupSavesPath = MSV.FilePath;
-				Refresh();
+				if (MSV.FileOrFolder == MySaveFile.FileOrFolders.Folder)
+				{
+					MySaveFile.CurrentBackupSavesPath = MSV.FilePath;
+					Refresh(dg_BackupFiles);
+				}
 			}
 		}
 
-	} // End of Class
+		private void dg_PreviewMouseRightButtonDown(object sender, MouseButtonEventArgs e)
+		{
+			DataGrid myDataGrid = (DataGrid)sender;
+
+			if (myDataGrid != null)
+			{
+				e.Handled = false;
+				myDataGrid.SelectedItem = null;
+				HelperClasses.MouseSender.DoMouseClick();
+				GenerateContextMenu(myDataGrid);
+				myDataGrid.Focus();
+			}
+		}
+
+		private async void GenerateContextMenu(DataGrid myDG)
+		{
+			await Task.Delay(50);
+
+			MySaveFile MSV = GetSelectedSaveFile();
+
+			if (myDG == dg_BackupFiles)
+			{
+				if (MSV == null)
+				{
+					ContextMenu cm = new ContextMenu();
+
+					MenuItem mi = new MenuItem();
+					mi.Header = "Create (N)ew Folder";
+					mi.Click += MI_NewFolder_Click;
+					cm.Items.Add(mi);
+
+					if (CopyCutPasteObject != null)
+					{
+						MenuItem mi2 = new MenuItem();
+						mi2.Header = "Paste (V)";
+						mi2.Click += MI_PasteIntoBackup_Click;
+						cm.Items.Add(mi2);
+					}
+
+					cm.IsOpen = true;
+				}
+				else
+				{
+					if (MSV.FileOrFolder == MySaveFile.FileOrFolders.Folder)
+					{
+						ContextMenu cm = new ContextMenu();
+
+						MenuItem mi = new MenuItem();
+						mi.Header = "Create (N)ew Folder";
+						mi.Click += MI_NewFolder_Click;
+						cm.Items.Add(mi);
+
+						MenuItem mi2 = new MenuItem();
+						mi2.Header = "(Del)ete Folder";
+						mi2.Click += MI_DeleteFolder_Click;
+						cm.Items.Add(mi2);
+
+						if (CopyCutPasteObject != null)
+						{
+							MenuItem mi3 = new MenuItem();
+							mi3.Header = "Paste (V)";
+							mi3.Click += MI_PasteIntoBackupFolder_Click;
+							cm.Items.Add(mi3);
+						}
+
+						cm.IsOpen = true;
+					}
+					else
+					{
+						ContextMenu cm = new ContextMenu();
+
+						MenuItem mi = new MenuItem();
+						mi.Header = "Create (N)ew Folder";
+						mi.Click += MI_NewFolder_Click;
+						cm.Items.Add(mi);
+
+						MenuItem mi2 = new MenuItem();
+						mi2.Header = "Move to GTA Saves (->)";
+						mi2.Click += MI_MoveToGTA_Click;
+						cm.Items.Add(mi2);
+
+						MenuItem mi3 = new MenuItem();
+						mi3.Header = "Rename SaveFile (F2)";
+						mi3.Click += MI_Rename_Click;
+						cm.Items.Add(mi3);
+
+						MenuItem mi4 = new MenuItem();
+						mi4.Header = "(Del)ete SaveFile";
+						mi4.Click += MI_Delete_Click;
+						cm.Items.Add(mi4);
+
+						MenuItem mi5 = new MenuItem();
+						mi5.Header = "(C)opy";
+						mi5.Click += MI_Copy_Click;
+						cm.Items.Add(mi5);
+
+						MenuItem mi6 = new MenuItem();
+						mi6.Header = "Cut (X)";
+						mi6.Click += MI_Cut_Click;
+						cm.Items.Add(mi6);
+
+						cm.IsOpen = true;
+
+
+						// Copy File
+						// Cut File
+					}
+				}
+			}
+			else if (myDG == dg_GTAFiles)
+			{
+				if (MSV == null)
+				{
+					if (CopyCutPasteObject != null)
+					{
+						ContextMenu cm = new ContextMenu();
+
+						MenuItem mi = new MenuItem();
+						mi.Header = "Paste (V)";
+						mi.Click += MI_PasteIntoGTA_Click;
+						cm.Items.Add(mi);
+
+						cm.IsOpen = true;
+					}
+				}
+				else
+				{
+					ContextMenu cm = new ContextMenu();
+
+					MenuItem mi = new MenuItem();
+					mi.Header = "Move to Backup Saves (<-)";
+					mi.Click += MI_MoveToBackup_Click;
+					cm.Items.Add(mi);
+
+					cm.IsOpen = true;
+				}
+			}
+		}
+
+		private void MI_Cut_Click(object sender, RoutedEventArgs e)
+		{
+			MySaveFile tmp = GetSelectedSaveFile();
+			if (tmp != null)
+			{
+				PasteKind = PasteKinds.Cut;
+				CopyCutPasteObject = tmp;
+			}
+		}
+
+		private void MI_Copy_Click(object sender, RoutedEventArgs e)
+		{
+			MySaveFile tmp = GetSelectedSaveFile();
+			if (tmp != null)
+			{
+				PasteKind = PasteKinds.Copy;
+				CopyCutPasteObject = tmp;
+			}
+		}
+
+		private void MI_PasteIntoGTA_Click(object sender, RoutedEventArgs e)
+		{
+			// Get CopyPaste Object from CopyCutPasteObject.
+
+			// Build newPath based on GTA Saves Path, or based on currentBackupPath or based on FilePath property of the mySaveFile (folder) object we are on.
+
+			// check if file exists.
+			// ask if we want to overwrite
+			// Get if  its Copy or Cut from PasteKinds PasteKind
+			// Do shit
+			// Refresh
+
+			// I think....
+
+			Globals.DebugPopup("Not implemented you fool");
+		}
+
+		private void MI_PasteIntoBackup_Click(object sender, RoutedEventArgs e)
+		{
+			Globals.DebugPopup("Not implemented you fool");
+		}
+
+		private void MI_PasteIntoBackupFolder_Click(object sender, RoutedEventArgs e)
+		{
+			Globals.DebugPopup("Not implemented you fool");
+		}
+
+
+		private void MI_NewFolder_Click(object sender, RoutedEventArgs e)
+	{
+		string rtrn = GetNewFolderName(MySaveFile.CurrentBackupSavesPath);
+		if (!string.IsNullOrWhiteSpace(rtrn))
+		{
+			HelperClasses.FileHandling.createPath(MySaveFile.CurrentBackupSavesPath.TrimEnd('\\') + @"\" + rtrn);
+			Refresh(dg_BackupFiles);
+		}
+	}
+
+	private void MI_DeleteFolder_Click(object sender, RoutedEventArgs e)
+	{
+		btn_Delete_Click(null, null);
+	}
+
+	private void MI_MoveToGTA_Click(object sender, RoutedEventArgs e)
+	{
+		btn_RightArrow_Click(null, null);
+	}
+
+	private void MI_MoveToBackup_Click(object sender, RoutedEventArgs e)
+	{
+		btn_LeftArrow_Click(null, null);
+	}
+
+	private void MI_Rename_Click(object sender, RoutedEventArgs e)
+	{
+		btn_Rename_Click(null, null);
+	}
+
+	private void MI_Delete_Click(object sender, RoutedEventArgs e)
+	{
+		btn_Delete_Click(null, null);
+	}
+
+} // End of Class
 } // End of Namespace

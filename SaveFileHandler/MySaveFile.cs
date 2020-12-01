@@ -250,7 +250,7 @@ namespace Project_127
 		{
 			HelperClasses.Logger.Log("Renaming SaveFiles '" + this.FileName + "' to Name '" + pNewName + "'");
 
-			string oldFileName = this.FileName;
+			string oldFileName = HelperClasses.FileHandling.PathSplitUp(this.FilePath)[1];
 			string newFilePath = this.FilePath.Replace(oldFileName, pNewName);
 			HelperClasses.FileHandling.moveFile(this.FilePath, newFilePath);
 			HelperClasses.FileHandling.moveFile(this.FilePathBak, newFilePath + ".bak");
