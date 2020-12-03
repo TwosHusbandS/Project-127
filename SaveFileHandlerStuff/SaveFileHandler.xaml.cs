@@ -21,6 +21,7 @@ using Project_127.Overlay;
 using Project_127.Popups;
 using Project_127.MySettings;
 using System.Runtime.InteropServices;
+using WpfAnimatedGif;
 
 namespace Project_127
 {
@@ -60,7 +61,17 @@ namespace Project_127
 
 			CopyCutPasteObject = null;
 
-			Refresh();
+			this.Dispatcher.Invoke(() =>
+			{
+				this.sv_BackupFiles_Loading.Visibility = Visibility.Visible;
+				this.sv_BackupFiles.Visibility = Visibility.Hidden;
+				this.sv_GTAFiles_Loading.Visibility = Visibility.Visible;
+				this.sv_GTAFiles.Visibility = Visibility.Hidden;
+				var controller = ImageBehavior.GetAnimationController(sv_BackupFiles_Loading);
+				controller.Play();
+				var controller2 = ImageBehavior.GetAnimationController(sv_GTAFiles_Loading);
+				controller2.Play();
+			});
 		}
 
 
@@ -115,17 +126,71 @@ namespace Project_127
 			Refresh();
 		}
 
-		private async void Refresh(DataGrid DataGridToSelect = null)
+
+		private void Refresh(DataGrid DataGridToSelect = null)
 		{
+			this.Dispatcher.Invoke(() =>
+			{
+				this.sv_BackupFiles_Loading.Visibility = Visibility.Visible;
+				this.sv_BackupFiles.Visibility = Visibility.Hidden;
+				this.sv_GTAFiles_Loading.Visibility = Visibility.Visible;
+				this.sv_GTAFiles.Visibility = Visibility.Hidden;
+				var controller = ImageBehavior.GetAnimationController(sv_BackupFiles_Loading);
+				controller.Play();
+				var controller2 = ImageBehavior.GetAnimationController(sv_GTAFiles_Loading);
+				controller2.Play();
+			});
+
 			// Resetting the Obvservable Collections:
 			MySaveFile.BackupSaves = new ObservableCollection<MySaveFile>();
 			MySaveFile.GTASaves = new ObservableCollection<MySaveFile>();
 
-			MySaveFile.BackupSaves.Add(new MySaveFile(HelperClasses.FileHandling.PathSplitUp(MySaveFile.CurrentBackupSavesPath.TrimEnd('\\'))[0], true));
+			SaveFileHandlerStuff.RefreshTaskObject myTMP = RefreshLogic();
+
+			MySaveFile.BackupSaves = myTMP.MyBackupSaves;
+			MySaveFile.GTASaves = myTMP.MyGTASaves;
+
+			// Set the ItemSource of Both Datagrids for the DataBinding
+			dg_BackupFiles.ItemsSource = MySaveFile.BackupSaves;
+			dg_GTAFiles.ItemsSource = MySaveFile.GTASaves;
+
+
+			lbl_BackupFilesHeader.Content = myTMP.DisplayPath;
+			lbl_BackupFilesHeader.ToolTip = myTMP.DisplayPath;
+			lbl_BackupFilesHeader.FontSize = myTMP.FontSize;
+
+			if (DataGridToSelect != null)
+			{
+				HelperClasses.DataGridHelper.SelectFirst(DataGridToSelect);
+				//DataGridToSelect.Focus();
+			}
+
+			this.Dispatcher.Invoke(() =>
+			{
+				this.sv_BackupFiles_Loading.Visibility = Visibility.Hidden;
+				this.sv_BackupFiles.Visibility = Visibility.Visible;
+				this.sv_GTAFiles_Loading.Visibility = Visibility.Hidden;
+				this.sv_GTAFiles.Visibility = Visibility.Visible;
+				//var controller = ImageBehavior.GetAnimationController(sv_BackupFiles_Loading);
+				//controller.Pause();
+				//var controller2 = ImageBehavior.GetAnimationController(sv_GTAFiles_Loading);
+				//controller2.Pause();
+			});
+		}
+
+		private SaveFileHandlerStuff.RefreshTaskObject RefreshLogic(DataGrid DataGridToSelect = null)
+		{
+			// Resetting the Obvservable Collections:
+			ObservableCollection<MySaveFile> TMP_BackUpSaves = new ObservableCollection<MySaveFile>();
+			ObservableCollection<MySaveFile> TMP_GTASaves = new ObservableCollection<MySaveFile>();
+			string TMP_BackupPathDisplay = "";
+			int TMP_Fontsize = 20;
+
+			TMP_BackUpSaves.Add(new MySaveFile(HelperClasses.FileHandling.PathSplitUp(MySaveFile.CurrentBackupSavesPath.TrimEnd('\\'))[0], true));
 			string[] MySubFolders = HelperClasses.FileHandling.GetSubFolders(MySaveFile.CurrentBackupSavesPath);
 			foreach (string MySubFolder in MySubFolders)
 			{
-				MySaveFile.BackupSaves.Add(new MySaveFile(MySubFolder, true));
+				TMP_BackUpSaves.Add(new MySaveFile(MySubFolder, true));
 			}
 
 
@@ -135,7 +200,7 @@ namespace Project_127
 			{
 				if (!MyBackupSaveFile.Contains(".bak"))
 				{
-					MySaveFile.BackupSaves.Add(new MySaveFile(MyBackupSaveFile));
+					TMP_BackUpSaves.Add(new MySaveFile(MyBackupSaveFile));
 				}
 			}
 
@@ -145,26 +210,22 @@ namespace Project_127
 			{
 				if (!MyGTAVSaveFile.Contains(".bak") && MyGTAVSaveFile.Contains("SGTA500"))
 				{
-					MySaveFile.GTASaves.Add(new MySaveFile(MyGTAVSaveFile));
+					TMP_GTASaves.Add(new MySaveFile(MyGTAVSaveFile));
 				}
 			}
 
 
-			// Set the ItemSource of Both Datagrids for the DataBinding
-			dg_BackupFiles.ItemsSource = MySaveFile.BackupSaves;
-			dg_GTAFiles.ItemsSource = MySaveFile.GTASaves;
-
 			// Set Label and MouseOverLabel
 			if (MySaveFile.BackupSavesPath.TrimEnd('\\') == MySaveFile.CurrentBackupSavesPath.TrimEnd('\\'))
 			{
-				lbl_BackupFilesHeader.FontSize = 20;
-				lbl_BackupFilesHeader.Content = "Backup Save Files";
+				TMP_Fontsize = 20;
+				TMP_BackupPathDisplay = "Backup Save Files";
 			}
 			else
 			{
 				if (MySaveFile.BackupSavesPath.StartsWith(MySaveFile.CurrentBackupSavesPath))
 				{
-					lbl_BackupFilesHeader.Content = MySaveFile.CurrentBackupSavesPath;
+					TMP_BackupPathDisplay = MySaveFile.CurrentBackupSavesPath;
 				}
 				else
 				{
@@ -174,24 +235,21 @@ namespace Project_127
 						result = result.Substring(MySaveFile.BackupSavesPath.Length);
 					}
 
-					lbl_BackupFilesHeader.Content = "Backup Save Files" + @"\" + result;
+					TMP_BackupPathDisplay = "Backup Save Files" + @"\" + result;
 				}
 				int myFontSize = 20;
-				int AdditionalLength = lbl_BackupFilesHeader.Content.ToString().Length - "Backup Save Files".Length;
+				int AdditionalLength = TMP_BackupPathDisplay.ToString().Length - "Backup Save Files".Length;
 				int removeSize = (int)((AdditionalLength / 4) * 2);
 				int newFontSize = myFontSize - removeSize;
 				if (newFontSize < 8) { newFontSize = 8; }
 				if (newFontSize > 30) { newFontSize = 30; }
-				lbl_BackupFilesHeader.FontSize = newFontSize;
+				TMP_Fontsize = newFontSize;
 
 			}
-			lbl_BackupFilesHeader.ToolTip = MySaveFile.CurrentBackupSavesPath;
 
-			if (DataGridToSelect != null)
-			{
-				HelperClasses.DataGridHelper.SelectFirst(DataGridToSelect);
-				//DataGridToSelect.Focus();
-			}
+			SaveFileHandlerStuff.RefreshTaskObject TMP = new SaveFileHandlerStuff.RefreshTaskObject(TMP_BackUpSaves, TMP_GTASaves, TMP_BackupPathDisplay, TMP_Fontsize);
+
+			return TMP;
 		}
 
 
@@ -785,6 +843,11 @@ namespace Project_127
 					mi.Click += MI_MoveToBackup_Click;
 					cm.Items.Add(mi);
 
+					MenuItem mi2 = new MenuItem();
+					mi2.Header = "Paste (V)";
+					mi2.Click += MI_PasteIntoGTA_Click;
+					cm.Items.Add(mi2);
+
 					cm.IsOpen = true;
 				}
 			}
@@ -812,66 +875,119 @@ namespace Project_127
 
 		private void MI_PasteIntoGTA_Click(object sender, RoutedEventArgs e)
 		{
-			// Get CopyPaste Object from CopyCutPasteObject.
+			int i = 0;
+			string NewFileName = MySaveFile.ProperSaveNameBase + i.ToString("00");
+			string FilePathInsideGTA = MySaveFile.GTAVSavesPath.TrimEnd('\\') + @"\" + NewFileName;
 
-			// Build newPath based on GTA Saves Path, or based on currentBackupPath or based on FilePath property of the mySaveFile (folder) object we are on.
+			// While Loop through all 16 names, breaking out when File does NOT exist or when we reached the manimum
+			while (HelperClasses.FileHandling.doesFileExist(FilePathInsideGTA))
+			{
+				if (i >= 15)
+				{
+					// Save Files with a Number larger than that will not be read by game
+					new Popup(Popup.PopupWindowTypes.PopupOk, "No free SaveSlot (00-15) inside the GTA Save File Path.\nDelete one and try again").ShowDialog();
+					return;
+				}
 
-			// check if file exists.
-			// ask if we want to overwrite
-			// Get if  its Copy or Cut from PasteKinds PasteKind
-			// Do shit
-			// Refresh
+				// Build new theoretical FileName
+				i++;
+				NewFileName = MySaveFile.ProperSaveNameBase + i.ToString("00");
+				FilePathInsideGTA = MySaveFile.GTAVSavesPath.TrimEnd('\\') + @"\" + NewFileName;
+			}
 
-			// I think....
-
-			Globals.DebugPopup("Not implemented you fool");
+			if (CopyCutPasteObject != null)
+			{
+				if (PasteKind == PasteKinds.Copy)
+				{
+					CopyCutPasteObject.CopyToGTA(NewFileName);
+				}
+				else
+				{
+					CopyCutPasteObject.CopyToGTA(NewFileName);
+					CopyCutPasteObject.Delete();
+				}
+				Refresh(dg_BackupFiles);
+			}
 		}
 
 		private void MI_PasteIntoBackup_Click(object sender, RoutedEventArgs e)
 		{
-			Globals.DebugPopup("Not implemented you fool");
+			if (CopyCutPasteObject != null)
+			{
+				if (PasteKind == PasteKinds.Copy)
+				{
+					CopyCutPasteObject.CopyTo(MySaveFile.CurrentBackupSavesPath);
+				}
+				else
+				{
+					CopyCutPasteObject.MoveTo(MySaveFile.CurrentBackupSavesPath);
+				}
+
+				Refresh(dg_BackupFiles);
+			}
 		}
 
 		private void MI_PasteIntoBackupFolder_Click(object sender, RoutedEventArgs e)
 		{
-			Globals.DebugPopup("Not implemented you fool");
+			MySaveFile tmp = GetSelectedSaveFile();
+			if (tmp != null && CopyCutPasteObject != null)
+			{
+				if (tmp.FileOrFolder == MySaveFile.FileOrFolders.Folder)
+				{
+					if (PasteKind == PasteKinds.Copy)
+					{
+						CopyCutPasteObject.CopyTo(tmp.FilePath);
+					}
+					else
+					{
+						CopyCutPasteObject.MoveTo(tmp.FilePath);
+					}
+
+					Refresh(dg_BackupFiles);
+				}
+			}
 		}
 
 
 		private void MI_NewFolder_Click(object sender, RoutedEventArgs e)
-	{
-		string rtrn = GetNewFolderName(MySaveFile.CurrentBackupSavesPath);
-		if (!string.IsNullOrWhiteSpace(rtrn))
 		{
-			HelperClasses.FileHandling.createPath(MySaveFile.CurrentBackupSavesPath.TrimEnd('\\') + @"\" + rtrn);
-			Refresh(dg_BackupFiles);
+			string rtrn = GetNewFolderName(MySaveFile.CurrentBackupSavesPath);
+			if (!string.IsNullOrWhiteSpace(rtrn))
+			{
+				HelperClasses.FileHandling.createPath(MySaveFile.CurrentBackupSavesPath.TrimEnd('\\') + @"\" + rtrn);
+				Refresh(dg_BackupFiles);
+			}
 		}
-	}
 
-	private void MI_DeleteFolder_Click(object sender, RoutedEventArgs e)
-	{
-		btn_Delete_Click(null, null);
-	}
+		private void MI_DeleteFolder_Click(object sender, RoutedEventArgs e)
+		{
+			btn_Delete_Click(null, null);
+		}
 
-	private void MI_MoveToGTA_Click(object sender, RoutedEventArgs e)
-	{
-		btn_RightArrow_Click(null, null);
-	}
+		private void MI_MoveToGTA_Click(object sender, RoutedEventArgs e)
+		{
+			btn_RightArrow_Click(null, null);
+		}
 
-	private void MI_MoveToBackup_Click(object sender, RoutedEventArgs e)
-	{
-		btn_LeftArrow_Click(null, null);
-	}
+		private void MI_MoveToBackup_Click(object sender, RoutedEventArgs e)
+		{
+			btn_LeftArrow_Click(null, null);
+		}
 
-	private void MI_Rename_Click(object sender, RoutedEventArgs e)
-	{
-		btn_Rename_Click(null, null);
-	}
+		private void MI_Rename_Click(object sender, RoutedEventArgs e)
+		{
+			btn_Rename_Click(null, null);
+		}
 
-	private void MI_Delete_Click(object sender, RoutedEventArgs e)
-	{
-		btn_Delete_Click(null, null);
-	}
+		private void MI_Delete_Click(object sender, RoutedEventArgs e)
+		{
+			btn_Delete_Click(null, null);
+		}
 
-} // End of Class
+		private async void Page_Loaded(object sender, RoutedEventArgs e)
+		{
+			await Task.Delay(10);
+			Refresh();
+		}
+	} // End of Class
 } // End of Namespace

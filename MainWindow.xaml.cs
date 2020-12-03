@@ -113,6 +113,8 @@ Hybrid code can be found in AAA_HybridCode.
 			- Release new ZIP
 			- Make it create Folder and Savefile for new release...for SFH Demo
 			- Translte Keys...
+			- Clean up "big three" method. Make users click no, check for size > 0 instead of file exists...
+			- Loading GIF on SaveFileHandler is null referencing on the animation controller (I think...)
 		
 		- Fullscreen mode for overlay
 			=> With added front-end and mid-end support for that
@@ -129,10 +131,10 @@ Hybrid code can be found in AAA_HybridCode.
 				>> Folders as clickable items in list at the very top with a "[FolderName]
 				>> Top Folder being "[..]" like in WinRar
 				>> Connect to Backend in terms of rename, move around, etc.
-			=> Add Support for Copy & Move (in Ram) and Paste.
-				>> [DONE] Backend Properites
-				>> [DONE] Taking care of when we show the contextmenus..
-				>> [DONE] Copy / Cut Methods
+			=> [DONE] Add Support for Copy & Move (in Ram) and Paste.
+				>> Backend Properites
+				>> Taking care of when we show the contextmenus..
+				>> Copy / Cut Methods
 				>> Pasting Methods
 			=> Make it load async...with loading gif
 			=> Search Bar

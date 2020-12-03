@@ -227,6 +227,43 @@ namespace Project_127
 			BackupSaves.Add(new MySaveFile(newFilePath));
 		}
 
+		public void CopyTo(string pPath)
+		{
+			string newFilePath = pPath.TrimEnd('\\') + @"\" + HelperClasses.FileHandling.PathSplitUp(this.FilePath)[1];
+
+			if (HelperClasses.FileHandling.doesFileExist(newFilePath) || HelperClasses.FileHandling.doesFileExist(newFilePath + ".bak"))
+			{
+				Popups.Popup yesno = new Popups.Popup(Popups.Popup.PopupWindowTypes.PopupYesNo, "File already exists.\nDo you wish to overwrite it?");
+				yesno.ShowDialog();
+				if (yesno.DialogResult == false)
+				{
+					return;
+				}
+			}
+
+			HelperClasses.FileHandling.copyFile(this.FilePath, newFilePath);
+			HelperClasses.FileHandling.copyFile(this.FilePathBak, newFilePath + ".bak");
+		}
+
+		public void MoveTo(string pPath)
+		{
+			string newFilePath = pPath.TrimEnd('\\') + @"\" + HelperClasses.FileHandling.PathSplitUp(this.FilePath)[1];
+
+			if (HelperClasses.FileHandling.doesFileExist(newFilePath) || HelperClasses.FileHandling.doesFileExist(newFilePath + ".bak"))
+			{
+				Popups.Popup yesno = new Popups.Popup(Popups.Popup.PopupWindowTypes.PopupYesNo, "File already exists.\nDo you wish to overwrite it?");
+				yesno.ShowDialog();
+				if (yesno.DialogResult == false)
+				{
+					return;
+				}
+			}
+
+			HelperClasses.FileHandling.moveFile(this.FilePath, newFilePath);
+			HelperClasses.FileHandling.moveFile(this.FilePathBak, newFilePath + ".bak");
+		}
+
+
 		/// <summary>
 		/// Copying one SaveFile to GTA Save File Folder, all User error checks already done before
 		/// </summary>

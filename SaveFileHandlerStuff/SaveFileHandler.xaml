@@ -3,10 +3,11 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:gif="http://wpfanimatedgif.codeplex.com"
         xmlns:local="clr-namespace:Project_127"
         mc:Ignorable="d"
         Title="Save File Manager" d:DesignHeight="540" d:DesignWidth="625"        
-        Background="{x:Static local:Globals.App_Submenu_Background}">
+        Background="{x:Static local:Globals.App_Submenu_Background}" Loaded="Page_Loaded">
     <Grid x:Name="Grid_Main" Margin="15,0,15,0" Height="540">
         <Grid.RowDefinitions>
             <RowDefinition Height="70"/>
@@ -38,8 +39,9 @@
                         <RowDefinition Height="8*"/>
                     </Grid.RowDefinitions>
 
-                    <Label Grid.Row="0"  FontSize="20"  Style="{StaticResource lbl}" x:Name="lbl_BackupFilesHeader" ToolTip="Backup Save Files" Margin="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Foreground="{x:Static local:Globals.SFH_DGHeaderForeground}" Background="{x:Static local:Globals.SFH_DGHeaderBackground}"/>
+                    <Label Grid.Row="0"  FontSize="20"  Style="{StaticResource lbl}" x:Name="lbl_BackupFilesHeader" Content="Backup Save Files" ToolTip="Backup Save Files" Margin="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Foreground="{x:Static local:Globals.SFH_DGHeaderForeground}" Background="{x:Static local:Globals.SFH_DGHeaderBackground}"/>
 
+                    <Image x:Name="sv_BackupFiles_Loading" Grid.Row="1" Visibility="Hidden" gif:ImageBehavior.AnimatedSource="../Artwork/loading.gif" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Height="48" Width="48" />
 
                     <ScrollViewer x:Name="sv_BackupFiles" Grid.Row="1">
                         <DataGrid x:Name="dg_BackupFiles" Style="{StaticResource dg_cm}" PreviewMouseWheel="dg_BackupFiles_PreviewMouseWheel" GotFocus="dg_BackupFiles_GotFocus"  PreviewKeyDown="dg_PreviewKeyDown" PreviewMouseRightButtonDown="dg_PreviewMouseRightButtonDown">
@@ -69,6 +71,8 @@
                     </Grid.RowDefinitions>
 
                     <Label Grid.Row="0"  FontSize="20" Content="GTA V Save Files" Style="{StaticResource lbl}" Margin="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Foreground="{x:Static local:Globals.SFH_DGHeaderForeground}" Background="{x:Static local:Globals.SFH_DGHeaderBackground}"/>
+
+                    <Image x:Name="sv_GTAFiles_Loading" Grid.Row="1" Visibility="Hidden" gif:ImageBehavior.AnimatedSource="../Artwork/loading.gif" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Height="48" Width="48" />
 
                     <ScrollViewer x:Name="sv_GTAFiles" Grid.Row="1">
                         <DataGrid x:Name="dg_GTAFiles" Style="{StaticResource dg_cm}" PreviewMouseWheel="dg_GTAFiles_PreviewMouseWheel" GotFocus="dg_GTAFiles_GotFocus" PreviewKeyDown="dg_PreviewKeyDown" PreviewMouseRightButtonDown="dg_PreviewMouseRightButtonDown">

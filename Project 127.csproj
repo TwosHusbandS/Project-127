@@ -241,7 +241,7 @@
     <Compile Include="HelperClasses\Logger.cs" />
     <Compile Include="HelperClasses\ProcessHandler.cs" />
     <Compile Include="HelperClasses\RegeditHandler.cs" />
-    <Compile Include="SaveFileHandler\MySaveFile.cs" />
+    <Compile Include="SaveFileHandlerStuff\MySaveFile.cs" />
     <Compile Include="Popups\Popup.xaml.cs">
       <DependentUpon>Popup.xaml</DependentUpon>
     </Compile>
@@ -251,7 +251,8 @@
     <Compile Include="Auth\ROSIntegration.xaml.cs">
       <DependentUpon>ROSIntegration.xaml</DependentUpon>
     </Compile>
-    <Compile Include="SaveFileHandler\SaveFileHandler.xaml.cs">
+    <Compile Include="SaveFileHandlerStuff\RefreshTaskObject.cs" />
+    <Compile Include="SaveFileHandlerStuff\SaveFileHandler.xaml.cs">
       <DependentUpon>SaveFileHandler.xaml</DependentUpon>
     </Compile>
     <Compile Include="MySettings\SettingsPartial.cs" />
@@ -335,7 +336,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="SaveFileHandler\SaveFileHandler.xaml">
+    <Page Include="SaveFileHandlerStuff\SaveFileHandler.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
