@@ -104,11 +104,11 @@ Hybrid code can be found in AAA_HybridCode.
 		=> Using Portable AHK now with script written to desk
 		=> Released under MIT
 		=> Improved UX overall. Lots of small things.
+		=> Lots of SaveFileHandler Improvments. Really shitty code, really shitty performance, but UX is great.
 
 	Release 1.1
 
 		Quick and Dirty notes:
-			- SFH Below
 			- Clean up Code / Readme / Patchnotes
 			- Release new ZIP
 			- Make it create Folder and Savefile for new release...for SFH Demo
@@ -116,16 +116,28 @@ Hybrid code can be found in AAA_HybridCode.
 			- Clean up "big three" method. Make users click no, check for size > 0 instead of file exists...
 			- Loading GIF on SaveFileHandler is null referencing on the animation controller (I think...)
 		
-		- Fullscreen mode for overlay
-			=> With added front-end and mid-end support for that
-				--> add GUI Options
-				--> Making a WPF Window for that.
-					=> ^ Make WPF Window Resizable, indicate in GUI that margin and location have no effect
-					=> ^ Make WPF Window Show up / not show up via hotkeys...make it chagne width and height on look change
-					=> ^ Make WPF Window show up on look subpage of noteoverlay (same when preview appears)
-					=> ^ Making Hotkeys toggle the Window Visibility instead Overlay itself
-					=> ^ Same with the code that makes overlay invisible on game minimize
-		- SFH Improvements
+	- Fullscreen mode for overlay
+				--> im thinking
+				--> [DONE] Window with just fixed height bar. Fixed Color. Offblack and white boarder and text. Width bound to actual width.
+				--> [DONE] Fullscreen / Multi monitor mode Checkmark on top (under enable) with tooltip
+				--> [DONE] implement settings backend
+				--> Margin and Location greyed out and disabled. With popup. On Enable / Disable overlaw. Method to refresh if those are greyed out or not. Or hook on top UI..
+				--> Implement overlay stuff...thinking of if check inside constructor where to draw on top on, and call it a day.
+				--> WPF Window Size changes with settings change...
+
+				--> Bevor messing with stuff below, check how we hide / show currently...and how to untangle that logic
+				--> WPF Window + Overlay gets init with correct target windows on P127 launch.
+				--> WPF Window Close on P127 close
+				--> WPF Window Closes on Hotkey globally
+				--> WPF Window Closes on Settings Disable
+				--> WPF Window openes on Settings Enable
+				--> WPF Window opens on Hotkey
+				--> WPF Window opens on Look Tab
+				--> WPF Window closes on Look Tab (unless it was shown before open)
+				--> Game Overlay doesnt disappear when alt tabbing and in tabbing
+				--> Unbind Overlay everywhere with GTA Running...
+				--> Make sure shit works when changing settings with GTA Running...
+		- [DONE] SFH Improvements
 			=> [DONE] Add Folder Support
 				>> ReWrite of SaveFileHandler class with enum for File or Folder
 				>> Folders as clickable items in list at the very top with a "[FolderName]
@@ -136,8 +148,8 @@ Hybrid code can be found in AAA_HybridCode.
 				>> Taking care of when we show the contextmenus..
 				>> Copy / Cut Methods
 				>> Pasting Methods
-			=> Make it load async...with loading gif
-			=> Search Bar
+			=> [DONE] Make it load async...with loading gif
+			=> [SCRATCHED] Search Bar
 			=> [DONE] Rename left file doesnt update text in brackets on right side...
 			=> [DONE] MouseOver displays full fillename
 			=> [DONE] Make selected File act like NoteOverlay_NoteFiles
@@ -246,6 +258,8 @@ namespace Project_127
 		/// Static Property to access Children (mainly Controls) of MainWindow Instance
 		/// </summary>
 		public static MainWindow MW;
+
+		public static Overlay_MultipleMonitor OL_MM = null;
 
 		/// <summary>
 		/// Constructor of Main Window
@@ -664,8 +678,6 @@ namespace Project_127
 				// Opens the File
 				//HelperClasses.ProcessHandler.StartProcess(@"C:\Windows\System32\notepad.exe", pCommandLineArguments: Globals.Logfile);
 			}
-
-			new Overlay_MultipleMonitor().Show();
 		}
 
 

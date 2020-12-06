@@ -22,6 +22,7 @@ using Project_127.Popups;
 using Project_127.MySettings;
 using System.Runtime.InteropServices;
 using WpfAnimatedGif;
+using System.Threading;
 
 namespace Project_127
 {
@@ -61,17 +62,17 @@ namespace Project_127
 
 			CopyCutPasteObject = null;
 
-			this.Dispatcher.Invoke(() =>
-			{
-				this.sv_BackupFiles_Loading.Visibility = Visibility.Visible;
-				this.sv_BackupFiles.Visibility = Visibility.Hidden;
-				this.sv_GTAFiles_Loading.Visibility = Visibility.Visible;
-				this.sv_GTAFiles.Visibility = Visibility.Hidden;
-				var controller = ImageBehavior.GetAnimationController(sv_BackupFiles_Loading);
-				controller.Play();
-				var controller2 = ImageBehavior.GetAnimationController(sv_GTAFiles_Loading);
-				controller2.Play();
-			});
+			//this.Dispatcher.Invoke(() =>
+			//{
+			this.sv_BackupFiles_Loading.Visibility = Visibility.Visible;
+			this.sv_BackupFiles.Visibility = Visibility.Hidden;
+			this.sv_GTAFiles_Loading.Visibility = Visibility.Visible;
+			this.sv_GTAFiles.Visibility = Visibility.Hidden;
+			//var controller = ImageBehavior.GetAnimationController(sv_BackupFiles_Loading);
+			//controller.Play();
+			//var controller2 = ImageBehavior.GetAnimationController(sv_GTAFiles_Loading);
+			//controller2.Play();
+			//});
 		}
 
 
@@ -116,6 +117,27 @@ namespace Project_127
 			}
 		}
 
+		// I don't understand why this method must be marked as `async`.
+		private async void button1_Click(object sender, EventArgs e)
+		{
+			Task<int> access = DoSomethingAsync();
+			// task independent stuff here
+
+			// this line is reached after the 5 seconds sleep from 
+			// DoSomethingAsync() method. Shouldn't it be reached immediately? 
+			int a = 1;
+
+			// from my understanding the waiting should be done here.
+			int x = await access;
+		}
+
+		async Task<int> DoSomethingAsync()
+		{
+			// is this executed on a background thread?
+			System.Threading.Thread.Sleep(5000);
+			return 1;
+		}
+
 		/// <summary>
 		/// Click on the Refresh Button. Reads files from disk again.
 		/// </summary>
@@ -127,94 +149,16 @@ namespace Project_127
 		}
 
 
-		private void Refresh(DataGrid DataGridToSelect = null)
+
+		private async void Refresh(DataGrid DataGridToSelect = null)
 		{
-			this.Dispatcher.Invoke(() =>
-			{
-				this.sv_BackupFiles_Loading.Visibility = Visibility.Visible;
-				this.sv_BackupFiles.Visibility = Visibility.Hidden;
-				this.sv_GTAFiles_Loading.Visibility = Visibility.Visible;
-				this.sv_GTAFiles.Visibility = Visibility.Hidden;
-				var controller = ImageBehavior.GetAnimationController(sv_BackupFiles_Loading);
-				controller.Play();
-				var controller2 = ImageBehavior.GetAnimationController(sv_GTAFiles_Loading);
-				controller2.Play();
-			});
+			this.sv_BackupFiles_Loading.Visibility = Visibility.Visible;
+			this.sv_BackupFiles.Visibility = Visibility.Hidden;
+			this.sv_GTAFiles_Loading.Visibility = Visibility.Visible;
+			this.sv_GTAFiles.Visibility = Visibility.Hidden;
 
-			// Resetting the Obvservable Collections:
-			MySaveFile.BackupSaves = new ObservableCollection<MySaveFile>();
-			MySaveFile.GTASaves = new ObservableCollection<MySaveFile>();
-
-			SaveFileHandlerStuff.RefreshTaskObject myTMP = RefreshLogic();
-
-			MySaveFile.BackupSaves = myTMP.MyBackupSaves;
-			MySaveFile.GTASaves = myTMP.MyGTASaves;
-
-			// Set the ItemSource of Both Datagrids for the DataBinding
-			dg_BackupFiles.ItemsSource = MySaveFile.BackupSaves;
-			dg_GTAFiles.ItemsSource = MySaveFile.GTASaves;
-
-
-			lbl_BackupFilesHeader.Content = myTMP.DisplayPath;
-			lbl_BackupFilesHeader.ToolTip = myTMP.DisplayPath;
-			lbl_BackupFilesHeader.FontSize = myTMP.FontSize;
-
-			if (DataGridToSelect != null)
-			{
-				HelperClasses.DataGridHelper.SelectFirst(DataGridToSelect);
-				//DataGridToSelect.Focus();
-			}
-
-			this.Dispatcher.Invoke(() =>
-			{
-				this.sv_BackupFiles_Loading.Visibility = Visibility.Hidden;
-				this.sv_BackupFiles.Visibility = Visibility.Visible;
-				this.sv_GTAFiles_Loading.Visibility = Visibility.Hidden;
-				this.sv_GTAFiles.Visibility = Visibility.Visible;
-				//var controller = ImageBehavior.GetAnimationController(sv_BackupFiles_Loading);
-				//controller.Pause();
-				//var controller2 = ImageBehavior.GetAnimationController(sv_GTAFiles_Loading);
-				//controller2.Pause();
-			});
-		}
-
-		private SaveFileHandlerStuff.RefreshTaskObject RefreshLogic(DataGrid DataGridToSelect = null)
-		{
-			// Resetting the Obvservable Collections:
-			ObservableCollection<MySaveFile> TMP_BackUpSaves = new ObservableCollection<MySaveFile>();
-			ObservableCollection<MySaveFile> TMP_GTASaves = new ObservableCollection<MySaveFile>();
 			string TMP_BackupPathDisplay = "";
 			int TMP_Fontsize = 20;
-
-			TMP_BackUpSaves.Add(new MySaveFile(HelperClasses.FileHandling.PathSplitUp(MySaveFile.CurrentBackupSavesPath.TrimEnd('\\'))[0], true));
-			string[] MySubFolders = HelperClasses.FileHandling.GetSubFolders(MySaveFile.CurrentBackupSavesPath);
-			foreach (string MySubFolder in MySubFolders)
-			{
-				TMP_BackUpSaves.Add(new MySaveFile(MySubFolder, true));
-			}
-
-
-			// Files in BackupSaves (own File Path)
-			string[] MyBackupSaveFiles = HelperClasses.FileHandling.GetFilesFromFolder(MySaveFile.CurrentBackupSavesPath);
-			foreach (string MyBackupSaveFile in MyBackupSaveFiles)
-			{
-				if (!MyBackupSaveFile.Contains(".bak"))
-				{
-					TMP_BackUpSaves.Add(new MySaveFile(MyBackupSaveFile));
-				}
-			}
-
-			// Files in actual GTAV Save File Locations
-			string[] MyGTAVSaveFiles = HelperClasses.FileHandling.GetFilesFromFolder(MySaveFile.GTAVSavesPath);
-			foreach (string MyGTAVSaveFile in MyGTAVSaveFiles)
-			{
-				if (!MyGTAVSaveFile.Contains(".bak") && MyGTAVSaveFile.Contains("SGTA500"))
-				{
-					TMP_GTASaves.Add(new MySaveFile(MyGTAVSaveFile));
-				}
-			}
-
-
 			// Set Label and MouseOverLabel
 			if (MySaveFile.BackupSavesPath.TrimEnd('\\') == MySaveFile.CurrentBackupSavesPath.TrimEnd('\\'))
 			{
@@ -246,8 +190,91 @@ namespace Project_127
 				TMP_Fontsize = newFontSize;
 
 			}
+			lbl_BackupFilesHeader.Content = TMP_BackupPathDisplay;
+			lbl_BackupFilesHeader.ToolTip = TMP_BackupPathDisplay;
+			lbl_BackupFilesHeader.FontSize = TMP_Fontsize;
 
-			SaveFileHandlerStuff.RefreshTaskObject TMP = new SaveFileHandlerStuff.RefreshTaskObject(TMP_BackUpSaves, TMP_GTASaves, TMP_BackupPathDisplay, TMP_Fontsize);
+			SaveFileHandlerStuff.RefreshTaskObject myTMP = await RefreshLogic();
+
+			// Resetting the Obvservable Collections:
+			MySaveFile.BackupSaves = new ObservableCollection<MySaveFile>();
+			MySaveFile.GTASaves = new ObservableCollection<MySaveFile>();
+
+			MySaveFile.BackupSaves = myTMP.MyBackupSaves;
+			MySaveFile.GTASaves = myTMP.MyGTASaves;
+
+			// Set the ItemSource of Both Datagrids for the DataBinding
+			dg_BackupFiles.ItemsSource = MySaveFile.BackupSaves;
+			dg_GTAFiles.ItemsSource = MySaveFile.GTASaves;
+
+
+
+			if (DataGridToSelect != null)
+			{
+				HelperClasses.DataGridHelper.SelectFirst(DataGridToSelect);
+
+				if (GetDataGridCell(DataGridToSelect.SelectedCells[0]) != null)
+				{
+					Keyboard.Focus(GetDataGridCell(DataGridToSelect.SelectedCells[0]));
+				}
+			}
+
+			this.sv_BackupFiles_Loading.Visibility = Visibility.Hidden;
+			this.sv_BackupFiles.Visibility = Visibility.Visible;
+			this.sv_GTAFiles_Loading.Visibility = Visibility.Hidden;
+			this.sv_GTAFiles.Visibility = Visibility.Visible;
+		}
+
+
+		private System.Windows.Controls.DataGridCell GetDataGridCell(System.Windows.Controls.DataGridCellInfo cellInfo)
+		{
+			var cellContent = cellInfo.Column.GetCellContent(cellInfo.Item);
+
+			if (cellContent != null)
+				return ((System.Windows.Controls.DataGridCell)cellContent.Parent);
+
+			return (null);
+		}
+
+		private async Task<SaveFileHandlerStuff.RefreshTaskObject> RefreshLogic(DataGrid DataGridToSelect = null)
+		{
+			SaveFileHandlerStuff.RefreshTaskObject TMP = null;
+
+			await Task.Run(() =>
+			{
+				// Resetting the Obvservable Collections:
+				ObservableCollection<MySaveFile> TMP_BackUpSaves = new ObservableCollection<MySaveFile>();
+				ObservableCollection<MySaveFile> TMP_GTASaves = new ObservableCollection<MySaveFile>();
+
+				TMP_BackUpSaves.Add(new MySaveFile(HelperClasses.FileHandling.PathSplitUp(MySaveFile.CurrentBackupSavesPath.TrimEnd('\\'))[0], true));
+				string[] MySubFolders = HelperClasses.FileHandling.GetSubFolders(MySaveFile.CurrentBackupSavesPath);
+				foreach (string MySubFolder in MySubFolders)
+				{
+					TMP_BackUpSaves.Add(new MySaveFile(MySubFolder, true));
+				}
+
+				// Files in BackupSaves (own File Path)
+				string[] MyBackupSaveFiles = HelperClasses.FileHandling.GetFilesFromFolder(MySaveFile.CurrentBackupSavesPath);
+				foreach (string MyBackupSaveFile in MyBackupSaveFiles)
+				{
+					if (!MyBackupSaveFile.Contains(".bak"))
+					{
+						TMP_BackUpSaves.Add(new MySaveFile(MyBackupSaveFile));
+					}
+				}
+
+				// Files in actual GTAV Save File Locations
+				string[] MyGTAVSaveFiles = HelperClasses.FileHandling.GetFilesFromFolder(MySaveFile.GTAVSavesPath);
+				foreach (string MyGTAVSaveFile in MyGTAVSaveFiles)
+				{
+					if (!MyGTAVSaveFile.Contains(".bak") && MyGTAVSaveFile.Contains("SGTA500"))
+					{
+						TMP_GTASaves.Add(new MySaveFile(MyGTAVSaveFile));
+					}
+				}
+
+				TMP = new SaveFileHandlerStuff.RefreshTaskObject(TMP_BackUpSaves, TMP_GTASaves);
+			});
 
 			return TMP;
 		}

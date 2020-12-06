@@ -11,15 +11,11 @@ namespace Project_127.SaveFileHandlerStuff
 	{
 		public ObservableCollection<MySaveFile> MyBackupSaves = new ObservableCollection<MySaveFile>();
 		public ObservableCollection<MySaveFile> MyGTASaves = new ObservableCollection<MySaveFile>();
-		public string DisplayPath = "";
-		public int FontSize = 20;
 
-		public RefreshTaskObject(ObservableCollection<MySaveFile> _MyBackupSaves, ObservableCollection<MySaveFile> _MyGTASaves, string _DisplayPath, int _FontSize)
+		public RefreshTaskObject(ObservableCollection<MySaveFile> _MyBackupSaves, ObservableCollection<MySaveFile> _MyGTASaves)
 		{
 			this.MyBackupSaves = _MyBackupSaves;
 			this.MyGTASaves = _MyGTASaves;
-			this.DisplayPath = _DisplayPath;
-			this.FontSize = _FontSize;
 		}
 
 	}

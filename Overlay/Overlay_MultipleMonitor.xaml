@@ -6,14 +6,14 @@
         xmlns:local="clr-namespace:Project_127"
         mc:Ignorable="d"
         Background="Transparent"
-        Title="P127 - GameOverlay" Height="450" Width="800"
-        WindowStyle="None" ResizeMode="CanResizeWithGrip" WindowStartupLocation="CenterScreen" MouseLeftButtonDown="Window_MouseLeftButtonDown"
+        ShowInTaskbar="False"
+        Title="P127 - GameOverlay" Height="40" Width="800"
+        WindowStyle="None" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" MouseLeftButtonDown="Window_MouseLeftButtonDown"
         AllowsTransparency="True"
-        SizeChanged="Window_SizeChanged"
         Icon="/Artwork/icon.png">
-    <Border BorderBrush="{x:Static local:Globals.PU_BorderBrush}" BorderThickness="2">
+    <Border BorderBrush="{x:Static local:Globals.PU_BorderBrush}" BorderThickness="2" Background="{x:Static local:Globals.MyColorOffBlack}">
         <Grid>
-            <Label Style="{StaticResource lbl}" Foreground="{x:Static local:Globals.PU_BorderBrush}" Background="{x:Static local:Globals.MyColorOffBlack70}" VerticalAlignment="Top" Content="P127 - GameOverlay" Height="40" HorizontalAlignment="Stretch"/>
+            <Label Style="{StaticResource lbl}" Foreground="{x:Static local:Globals.PU_BorderBrush}" Background="Transparent" VerticalAlignment="Top" Content="P127 - GameOverlay" Height="40" HorizontalAlignment="Stretch"/>
         </Grid>
     </Border>
 </Window>

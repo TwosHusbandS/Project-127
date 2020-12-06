@@ -126,7 +126,7 @@ namespace Project_127.Overlay
 			LoadNoteOverlayWithCustomPage = NoteOverlayPages.NoteFiles;
 
 			ButtonMouseOverMagic(btn_cb_Set_EnableOverlay);
-
+			ButtonMouseOverMagic(btn_cb_Set_OverlayMultiMonitorMode);
 		}
 
 		public static void InitGTAOverlay()
@@ -355,9 +355,22 @@ namespace Project_127.Overlay
 
 		private void btn_cb_Click(object sender, RoutedEventArgs e)
 		{
+			Button myBtn = (Button)sender;
+			switch (myBtn.Name)
+			{
+				case "btn_cb_Set_EnableOverlay":
+					Settings.EnableOverlay = !Settings.EnableOverlay;
+					break;
+				case "btn_cb_Set_OverlayMultiMonitorMode":
+					Settings.OverlayMultiMonitorMode = !Settings.OverlayMultiMonitorMode;
+
+					break;
+			}
 			Settings.EnableOverlay = !Settings.EnableOverlay;
-			ButtonMouseOverMagic((Button)sender);
+			ButtonMouseOverMagic(myBtn);
 		}
+
+	
 
 		private void btn_MouseEnter(object sender, MouseEventArgs e)
 		{
@@ -406,7 +419,16 @@ namespace Project_127.Overlay
 		/// <param name="myBtn"></param>
 		private void ButtonMouseOverMagic(Button myBtn)
 		{
-			SetCheckBoxBackground(myBtn, Settings.EnableOverlay);
+			switch (myBtn.Name)
+			{
+				case "btn_cb_Set_EnableOverlay":
+					SetCheckBoxBackground(myBtn, Settings.EnableOverlay);
+					break;
+				case "btn_cb_Set_OverlayMultiMonitorMode":
+					SetCheckBoxBackground(myBtn, Settings.OverlayMultiMonitorMode);
+					break;
+			}
+
 		}
 
 		private void btn_Notes_Click(object sender, RoutedEventArgs e)

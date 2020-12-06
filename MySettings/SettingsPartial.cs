@@ -612,6 +612,21 @@ namespace Project_127.MySettings
 		}
 
 		/// <summary>
+		/// Settings OverlayMultiMonitorMode. Gets and Sets from the Dictionary.
+		/// </summary>
+		public static bool OverlayMultiMonitorMode
+		{
+			get
+			{
+				return GetBoolFromString(GetSetting("OverlayMultiMonitorMode"));
+			}
+			set
+			{
+				SetSetting("OverlayMultiMonitorMode", value.ToString());
+			}
+		}
+
+		/// <summary>
 		/// Settings EnableAutoStartJumpScript. Gets and Sets from the Dictionary.
 		/// </summary>
 		public static bool EnableAutoStartJumpScript

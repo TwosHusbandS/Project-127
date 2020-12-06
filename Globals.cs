@@ -280,7 +280,7 @@ namespace Project_127
 			{"KeyOverlayNoteNext", "103" },
 			{"KeyOverlayNotePrev", "105" },
 
-
+			{"OverlayMultiMonitorMode", "False" },
 			{"OverlayBackground", "100,0,0,0" },
 			{"OverlayForeground", "255,255,0,255" },
 			{"OverlayLocation", "TopLeft" },
@@ -443,6 +443,8 @@ namespace Project_127
 			// Rolling Log stuff
 			HelperClasses.Logger.RollingLog();
 
+			InitOverlayIfNeeded();
+
 			// CEF Initializing
 			//CEFInitialize();
 
@@ -452,6 +454,19 @@ namespace Project_127
 			MyDispatcherTimer.Interval = TimeSpan.FromMilliseconds(2500);
 			MyDispatcherTimer.Start();
 			MainWindow.MW.UpdateGUIDispatcherTimer();
+		}
+
+		public static void InitOverlayIfNeeded()
+		{
+			if (Settings.EnableOverlay && Settings.OverlayMultiMonitorMode)
+			{
+				if (MainWindow.OL_MM != null)
+				{
+					MainWindow.OL_MM.Close();
+				}
+				MainWindow.OL_MM = new Overlay_MultipleMonitor();
+				MainWindow.OL_MM.Hide();
+			}
 		}
 
 		public static string GetGameVersionOfBuildNumber(Version BuildNumber)
@@ -820,6 +835,10 @@ namespace Project_127
 		/// </summary>
 		public static void ProperExit()
 		{
+			if (MainWindow.OL_MM != null)
+			{
+				MainWindow.OL_MM.Close();
+			}
 			HelperClasses.Keyboard.KeyboardListener.Stop();
 			WindowChangeListener.Stop();
 			Jumpscript.StopJumpscript();

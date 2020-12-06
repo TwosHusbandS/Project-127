@@ -24,7 +24,6 @@ namespace Project_127
 		{
 			InitializeComponent();
 			this.Width = Settings.OverlayWidth;
-			this.Height = Settings.OverlayHeight + 40;
 		}
 
 		private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -32,27 +31,5 @@ namespace Project_127
 			DragMove();
 		}
 
-		private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
-		{
-			if (160 > this.Width) 
-			{
-				this.Width = 160;
-			}
-			else if (this.Width > 1920)
-			{
-				this.Width = 1920;
-			}
-
-			if (100 + 40 > this.Height)
-			{
-				this.Height = 100 + 40;
-			}
-			else if (this.Height > 1080 + 40)
-			{
-				this.Height = 1080 + 40;
-			}
-
-
-		}
 	}
 }
