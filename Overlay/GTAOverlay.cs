@@ -12,15 +12,15 @@ using Image = GameOverlay.Drawing.Image;
 namespace Project_127
 {
 
-    public class GTAOverlay : IDisposable
-    {
+	public class GTAOverlay : IDisposable
+	{
 		// If set to false, this starts and keeps KeyboardListenerEvent running 100% of the time.
 		// Automatically set to true if we compile debug
 
 		public static bool DebugMode = false;
 		public const string targetWindowDebug = "TeamSpeak 3";
-
-		public const string targetWindowNonDebug = "Grand Theft Auto V";
+		public const string targetWindowFullscreen = "Grand Theft Auto V";
+		public const string targetWindowMultiMonitor = "P127 - GameOverlay";
 
 		public static string targetWindow
 		{
@@ -32,10 +32,20 @@ namespace Project_127
 				}
 				else
 				{
-					return targetWindowNonDebug;
+					if (OverlayMode == OverlayModes.Fullscreen)
+					{
+						return targetWindowFullscreen;
+					}
+					else if (OverlayMode == OverlayModes.MultiMonitor)
+					{
+						return targetWindowMultiMonitor;
+					}
+					return targetWindowFullscreen;
 				}
 			}
 		}
+
+
 
 
 		private readonly GraphicsWindow _window;
@@ -94,55 +104,110 @@ namespace Project_127
 
 		public positionalText title { get; private set; }
 
-		//// <summary>
+
+		/// <summary>
+		/// Internal. Determines the positioning of the overlay.
+		/// </summary>
+		private Positions _Position { get; set; } = Positions.TopLeft;
+
+		/// <summary>
 		/// Determines the positioning of the overlay.
 		/// </summary>
-		public Positions Position { get; set; }
+		public Positions Position
+		{
+			get
+			{
+				return _Position;
+			}
+			set
+			{
+				if (OverlayMode == OverlayModes.Fullscreen)
+				{
+					_Position = value;
+				}
+			}
+		}
 
 		/// <summary>
 		/// Determines the text content of the oberlay.
 		/// </summary>
 		public string text
-        {
-            get
-            {
+		{
+			get
+			{
 				return mainText.text;
-            }
-            set
-            {
+			}
+			set
+			{
 				mainText.text = value;
-            }
-        }
+			}
+		}
 
-		//// <summary>
+		/// <summary>
 		/// Overrides the positioning of line wrap. (Disabled by vals <1)
 		/// </summary>
 		public int WrapCount
-        {
-            get
-            {
+		{
+			get
+			{
 				return mainText.wrapOnChar;
-            }
-            set
-            {
+			}
+			set
+			{
 				mainText.wrapOnChar = value;
-            }
-        }
+			}
+		}
 
-		//// <summary>
+		/// <summary>
 		/// Determines the base offset of the overlay.
 		/// </summary>
 		public int PaddingSize { get; set; } = 0;
 
 		/// <summary>
-		/// Determines the X offset of the overlay (from padding position).
+		/// Internal. Determines the X offset of the overlay (from padding position).
 		/// </summary>
-		public int XMargin { get; set; } = 0;
+		private int _XMargin { get; set; } = 0;
 
 		/// <summary>
-		/// Determines the Y offset of the overlay (from padding position.
+		/// Determines the X offset of the overlay (from padding position).
 		/// </summary>
-		public int YMargin { get; set; } = 0;
+		public int XMargin
+		{
+			get
+			{
+				return _XMargin;
+			}
+			set
+			{
+				if (OverlayMode == OverlayModes.Fullscreen)
+				{
+					_XMargin = value;
+				}
+			}
+		}
+
+		/// <summary>
+		/// Internal. Determines the Y offset of the overlay (from padding position.
+		/// </summary>
+		private int _YMargin { get; set; } = 0;
+
+		/// <summary>
+		/// Determines the Y offset of the overlay (from padding position).
+		/// </summary>
+		public int YMargin
+		{
+			get
+			{
+				return _YMargin;
+			}
+			set
+			{
+				if (OverlayMode == OverlayModes.Fullscreen)
+				{
+					_YMargin = value;
+				}
+			}
+		}
 
 		/// <summary>
 		/// Determines whether or not the background image is used.
@@ -187,15 +252,36 @@ namespace Project_127
 		}
 
 		/// <summary>
+		/// Enum for the Parameter which determines if we are a fullscreen overlay or a multi monitor overlay
+		/// </summary>
+		public enum OverlayModes
+		{
+			Fullscreen,
+			MultiMonitor
+		}
+
+		/// <summary>
+		/// determines if we are a fullscreen overlay or a multi monitor overlay
+		/// </summary>
+		static OverlayModes OverlayMode
+		{
+			get; set;
+		}
+
+
+		/// <summary>
 		/// Generates the game overlay
 		/// </summary>
+		/// <param name="overlayMode">Enum if we are fullscreen or MultiMonitor Mode</param>
 		/// <param name="position">The screen positioning (TopLeft, BottomRight, etc.)</param>
 		/// <param name="width">The horizontal resolution</param>
 		/// <param name="height">The vertical resolution</param>
-		/// <param name="wrapNum">The number of characters before a line wrap</param>
-		public GTAOverlay(Positions position = Positions.TopLeft, int width = 560, int height = 380)
+		public GTAOverlay(OverlayModes overlayMode = OverlayModes.Fullscreen, Positions position = Positions.TopLeft, int width = 560, int height = 380)
 		{
 			HelperClasses.Logger.Log("Game Overlay Initiated");
+
+			OverlayMode = overlayMode;
+
 			_brushes = new Dictionary<string, SolidBrush>();
 			_images = new Dictionary<string, Image>();
 			overlayObjects = new List<overlayObject>();
@@ -362,12 +448,12 @@ namespace Project_127
 		public void setText(string text)
 		{
 			HelperClasses.Logger.Log("Overlay text updated");
-      this.text = text;
-//<<<<<<< working
-//			this.text = text;
-//=======
-//			mainText.text = text;
-//>>>>>>> dev_ths_new
+			this.text = text;
+			//<<<<<<< working
+			//			this.text = text;
+			//=======
+			//			mainText.text = text;
+			//>>>>>>> dev_ths_new
 		}
 
 		/// <summary>
@@ -471,7 +557,7 @@ namespace Project_127
 			var aprx = mainText.approxBounds();
 			int boundMin = (int)(scrollInitial - aprx.Height);
 			//System.Windows.MessageBox.Show(aprx.Height.ToString());
-			_window.Graphics.Height = (int)(aprx.Height > _window.Height? aprx.Height * 2.1:_window.Height);
+			_window.Graphics.Height = (int)(aprx.Height > _window.Height ? aprx.Height * 2.1 : _window.Height);
 			//System.Windows.MessageBox.Show(_window.Graphics.Height.ToString());
 			var pos = mainText.position;
 			pos.Y += delta;
@@ -520,7 +606,7 @@ namespace Project_127
 					break;
 				case Positions.BottomLeft:
 					coords[1] = wb.Bottom - resy - yborder;
-					coords[0] = wb.Left + PaddingSize + XMargin +xborder;
+					coords[0] = wb.Left + PaddingSize + XMargin + xborder;
 					break;
 				case Positions.BottomRight:
 					coords[1] = wb.Bottom - resy - yborder;
@@ -630,7 +716,7 @@ namespace Project_127
 	}
 
 	public interface positionalText
-    {
+	{
 		/// <summary>
 		/// Determines the position of the object.
 		/// </summary>
@@ -721,21 +807,21 @@ namespace Project_127
 		/// Determines the max width of a line in pixels
 		/// </summary>
 		public int maxLineWidth
-        {
+		{
 			get
-            {
+			{
 				if ((gfx.Width - position.X) < _maxLineWidth)
-                {
+				{
 					return gfx.Width - (int)position.X;
-                }
+				}
 				return _maxLineWidth;
-            }
-            set
-            {
+			}
+			set
+			{
 				textUpdate = true;
 				_maxLineWidth = value;
-            }
-        }
+			}
+		}
 
 		private string _text = "";
 
@@ -743,47 +829,48 @@ namespace Project_127
 		/// Determines the text content of the textbox.
 		/// </summary>
 		public string text
-        {
+		{
 			get
-            {
+			{
 				if (wrapOnChar > 0)
-                {
+				{
 					return charWrap(_text, wrapOnChar);
-                }
+				}
 				if (maxLineWidth > 0)
-                {
+				{
 					return autowrap;
 				}
 				return _text;
-            }
-            set
-            {
+			}
+			set
+			{
 				_text = value;
 				textUpdate = true;
-            }
-        }
+			}
+		}
 
 		private bool _textUpdate = true;
 
 		private bool textUpdate
-        {
+		{
 			get
-            {
+			{
 				return _textUpdate;
-            }
-            set
-            {
+			}
+			set
+			{
 				_textUpdate = value;
 				if (value)
-                {
-					Task.Run(async ()=>approxBounds(true));
-                }
-            }
-        }
+				{
+					Task.Run(async () => approxBounds(true));
+				}
+			}
+		}
 
-		private System.Drawing.Font SDFont { 
+		private System.Drawing.Font SDFont
+		{
 			get
-            {
+			{
 				return new System.Drawing.Font(storedFont.fontFamily,
 					storedFont.fontSize,
 					(storedFont.bold ? System.Drawing.FontStyle.Bold : 0) |
@@ -795,57 +882,57 @@ namespace Project_127
 		private string _autowrap;
 
 		private string autowrap
-        {
-            get
-            {
+		{
+			get
+			{
 				if (textUpdate)
-                {
+				{
 					textUpdate = false;
 					var lines = _text.Split('\n');
 					var outLines = new List<string>();
 					foreach (var line in lines)
-                    {
+					{
 						outLines.AddRange(autoWrapper(line));
-                    }
+					}
 					_autowrap = String.Join("\n", outLines);
-                }
+				}
 				return _autowrap;
-            }
-        }
+			}
+		}
 
 
 
 		private List<string> autoWrapper(string line)
-        {
+		{
 			var lines = new List<string>();
 			if (line == "")
-            {
+			{
 				return lines;
-            }
+			}
 			int blength = line.Length, slength;
-			while (System.Windows.Forms.TextRenderer.MeasureText(line.Substring(0,blength), SDFont).Width > maxLineWidth)
+			while (System.Windows.Forms.TextRenderer.MeasureText(line.Substring(0, blength), SDFont).Width > maxLineWidth)
 			{
 				blength--;
 			}
 			if (blength == line.Length)
-            {
+			{
 				lines.Add(line);
 				return lines;
-            }
+			}
 			slength = blength;
-			while (!char.IsWhiteSpace(line[slength-1]) && slength > 1)
-            {
+			while (!char.IsWhiteSpace(line[slength - 1]) && slength > 1)
+			{
 				slength--;
-            }
+			}
 			if (slength == 1)
-            {
+			{
 				slength = blength;
-            }
+			}
 			lines.Add(line.Substring(0, slength));
 			lines.AddRange(autoWrapper(line.Substring(slength)));
 			return lines;
 		}
-		
+
 		public Point position { get; set; }
 
 		public bool visible { get; set; }
@@ -1067,9 +1154,9 @@ namespace Project_127
 				_textBrush.Dispose();
 				_bgBrush.Dispose();
 				if (host != null)
-                {
+				{
 					host.detach(id);
-                }
+				}
 				disposedValue = true;
 			}
 		}

@@ -135,13 +135,20 @@ namespace Project_127.Overlay
 			if (MyGTAOverlay == null)
 			{
 				// Set NotesLoaded here based on the
-				MyGTAOverlay = new GTAOverlay();
+				if (Settings.OverlayMultiMonitorMode)
+				{
+					MyGTAOverlay = new GTAOverlay(GTAOverlay.OverlayModes.MultiMonitor);
+				}
+				else
+				{
+					MyGTAOverlay = new GTAOverlay(GTAOverlay.OverlayModes.Fullscreen);
+				}
 				MyGTAOverlay.setTextColors(Settings.OverlayForeground, Color.Transparent);
 				MyGTAOverlay.setBackgroundColor(Settings.OverlayBackground);
 				MyGTAOverlay.setFont(Settings.OverlayTextFont, Settings.OverlayTextSize);
 				MyGTAOverlay.Position = Settings.OverlayLocation;
-				MyGTAOverlay.XMargin = Settings.OverlayMargin;
-				MyGTAOverlay.YMargin = Settings.OverlayMargin;
+				MyGTAOverlay.XMargin = Settings.OverlayMarginX;
+				MyGTAOverlay.YMargin = Settings.OverlayMarginY;
 				MyGTAOverlay.width = Settings.OverlayWidth;
 				MyGTAOverlay.height = Settings.OverlayHeight;
 				LoadTexts();
@@ -208,29 +215,6 @@ namespace Project_127.Overlay
 			}
 		}
 
-		public static void KeyBoardEvent(Keys pKey)
-		{
-			if (pKey == Settings.KeyOverlayToggle)
-			{
-				OverlayToggle();
-			}
-			else if (pKey == Settings.KeyOverlayScrollUp)
-			{
-				OverlayScrollUp();
-			}
-			else if (pKey == Settings.KeyOverlayScrollDown)
-			{
-				OverlayScrollDown();
-			}
-			else if (pKey == Settings.KeyOverlayScrollRight)
-			{
-				OverlayNoteNext();
-			}
-			else if (pKey == Settings.KeyOverlayScrollLeft)
-			{
-				OverlayNotePrev();
-			}
-		}
 
 		public static void OverlaySetVisible()
 		{
@@ -350,7 +334,7 @@ namespace Project_127.Overlay
 
 		}
 
-
+		
 
 
 		private void btn_cb_Click(object sender, RoutedEventArgs e)
@@ -363,14 +347,13 @@ namespace Project_127.Overlay
 					break;
 				case "btn_cb_Set_OverlayMultiMonitorMode":
 					Settings.OverlayMultiMonitorMode = !Settings.OverlayMultiMonitorMode;
-
 					break;
 			}
 			Settings.EnableOverlay = !Settings.EnableOverlay;
 			ButtonMouseOverMagic(myBtn);
 		}
 
-	
+
 
 		private void btn_MouseEnter(object sender, MouseEventArgs e)
 		{

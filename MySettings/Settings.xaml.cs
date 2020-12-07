@@ -47,6 +47,8 @@ namespace Project_127.MySettings
 
 			combox_Set_LanguageSelected.ItemsSource = Enum.GetValues(typeof(Languages)).Cast<Languages>();
 
+			SettingsState = LastSettingsState;
+
 			RefreshGUI();
 
 			this.DataContext = this;
@@ -330,117 +332,135 @@ namespace Project_127.MySettings
 			{
 				case "btn_Set_GTAVInstallationPath":
 					explorerStartPath = Settings.GTAVInstallationPath;
-					SetGTAVPathManually();
+					if (!IsRightClick)
+					{
+						SetGTAVPathManually();
+					}
 					break;
 				case "btn_Set_ZIPExtractionPath":
 					explorerStartPath = Settings.ZIPExtractionPath;
 
-					// Grabbing the new Path from FolderDialogThingy
-					string StartUpPathZIP = Settings.ZIPExtractionPath;
-					if (String.IsNullOrWhiteSpace(StartUpPathZIP))
+					if (!IsRightClick)
 					{
-						StartUpPathZIP = @"C:\";
-					}
-					else
-					{
-						StartUpPathZIP = HelperClasses.FileHandling.PathSplitUp(StartUpPathZIP.TrimEnd('\\'))[0];
-					}
-					string _ZIPExtractionPath = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.Folder, "Pick the Folder where this Program will store its Data.", StartUpPathZIP);
-					HelperClasses.Logger.Log("Changing ZIPExtractionPath.");
-					HelperClasses.Logger.Log("Old ZIPExtractionPath: '" + Settings.ZIPExtractionPath + "'");
-					HelperClasses.Logger.Log("Potential New ZIPExtractionPath: '" + _ZIPExtractionPath + "'");
+						// Grabbing the new Path from FolderDialogThingy
+						string StartUpPathZIP = Settings.ZIPExtractionPath;
+						if (String.IsNullOrWhiteSpace(StartUpPathZIP))
+						{
+							StartUpPathZIP = @"C:\";
+						}
+						else
+						{
+							StartUpPathZIP = HelperClasses.FileHandling.PathSplitUp(StartUpPathZIP.TrimEnd('\\'))[0];
+						}
+						string _ZIPExtractionPath = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.Folder, "Pick the Folder where this Program will store its Data.", StartUpPathZIP);
+						HelperClasses.Logger.Log("Changing ZIPExtractionPath.");
+						HelperClasses.Logger.Log("Old ZIPExtractionPath: '" + Settings.ZIPExtractionPath + "'");
+						HelperClasses.Logger.Log("Potential New ZIPExtractionPath: '" + _ZIPExtractionPath + "'");
 
-					// If its a valid Path (no "") and if its a new Path
-					if (ChangeZIPExtractionPath(_ZIPExtractionPath))
-					{
-						HelperClasses.Logger.Log("Changing ZIP Path worked");
-					}
-					else
-					{
-						HelperClasses.Logger.Log("Changing ZIP Path did not work. Probably non existing Path or same Path as before");
-						new Popup(Popup.PopupWindowTypes.PopupOk, "Changing ZIP Path did not work. Probably non existing Path or same Path as before");
+						// If its a valid Path (no "") and if its a new Path
+						if (ChangeZIPExtractionPath(_ZIPExtractionPath))
+						{
+							HelperClasses.Logger.Log("Changing ZIP Path worked");
+						}
+						else
+						{
+							HelperClasses.Logger.Log("Changing ZIP Path did not work. Probably non existing Path or same Path as before");
+							new Popup(Popup.PopupWindowTypes.PopupOk, "Changing ZIP Path did not work. Probably non existing Path or same Path as before");
+						}
 					}
 					break;
 				case "btn_Set_PathLiveSplit":
 					explorerStartPath = HelperClasses.FileHandling.PathSplitUp(Settings.PathLiveSplit)[0].TrimEnd('\\');
 
-					string StartUpPath = Settings.PathLiveSplit;
-					if (!HelperClasses.FileHandling.doesFileExist(StartUpPath))
+					if (!IsRightClick)
 					{
-						StartUpPath = @"C:\";
-					}
-					else
-					{
-						StartUpPath = HelperClasses.FileHandling.PathSplitUp(StartUpPath.TrimEnd('\\'))[0];
-					}
+						string StartUpPath = Settings.PathLiveSplit;
+						if (!HelperClasses.FileHandling.doesFileExist(StartUpPath))
+						{
+							StartUpPath = @"C:\";
+						}
+						else
+						{
+							StartUpPath = HelperClasses.FileHandling.PathSplitUp(StartUpPath.TrimEnd('\\'))[0];
+						}
 
-					string UserChoice = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.File, "Pick your LiveSplit Executable", StartUpPath);
+						string UserChoice = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.File, "Pick your LiveSplit Executable", StartUpPath);
 
-					if (!String.IsNullOrWhiteSpace(UserChoice))
-					{
-						Settings.PathLiveSplit = UserChoice;
+						if (!String.IsNullOrWhiteSpace(UserChoice))
+						{
+							Settings.PathLiveSplit = UserChoice;
+						}
 					}
 					break;
 				case "btn_Set_PathStreamProgram":
 					explorerStartPath = HelperClasses.FileHandling.PathSplitUp(Settings.PathStreamProgram)[0].TrimEnd('\\');
 
-					string StartUpPath2 = Settings.PathStreamProgram;
-					if (!HelperClasses.FileHandling.doesFileExist(StartUpPath2))
+					if (!IsRightClick)
 					{
-						StartUpPath2 = @"C:\";
-					}
-					else
-					{
-						StartUpPath2 = HelperClasses.FileHandling.PathSplitUp(StartUpPath2.TrimEnd('\\'))[0];
-					}
+						string StartUpPath2 = Settings.PathStreamProgram;
+						if (!HelperClasses.FileHandling.doesFileExist(StartUpPath2))
+						{
+							StartUpPath2 = @"C:\";
+						}
+						else
+						{
+							StartUpPath2 = HelperClasses.FileHandling.PathSplitUp(StartUpPath2.TrimEnd('\\'))[0];
+						}
 
-					string UserChoice2 = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.File, "Pick your Stream Program Executable", StartUpPath2);
+						string UserChoice2 = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.File, "Pick your Stream Program Executable", StartUpPath2);
 
-					if (!String.IsNullOrWhiteSpace(UserChoice2))
-					{
-						Settings.PathStreamProgram = UserChoice2;
-						RefreshGUI();
+						if (!String.IsNullOrWhiteSpace(UserChoice2))
+						{
+							Settings.PathStreamProgram = UserChoice2;
+						}
 					}
 					break;
 				case "btn_Set_PathNohboard":
 					explorerStartPath = HelperClasses.FileHandling.PathSplitUp(Settings.PathNohboard)[0].TrimEnd('\\');
 
-					string StartUpPath3 = Settings.PathNohboard;
-					if (!HelperClasses.FileHandling.doesFileExist(StartUpPath3))
+					if (!IsRightClick)
 					{
-						StartUpPath3 = @"C:\";
-					}
-					else
-					{
-						StartUpPath3 = HelperClasses.FileHandling.PathSplitUp(StartUpPath3.TrimEnd('\\'))[0];
-					}
+						string StartUpPath3 = Settings.PathNohboard;
+						if (!HelperClasses.FileHandling.doesFileExist(StartUpPath3))
+						{
+							StartUpPath3 = @"C:\";
+						}
+						else
+						{
+							StartUpPath3 = HelperClasses.FileHandling.PathSplitUp(StartUpPath3.TrimEnd('\\'))[0];
+						}
 
-					string UserChoice3 = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.File, "Pick your Nohboard Executable", StartUpPath3);
+						string UserChoice3 = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.File, "Pick your Nohboard Executable", StartUpPath3);
 
-					if (!String.IsNullOrWhiteSpace(UserChoice3))
-					{
-						Settings.PathNohboard = UserChoice3;
+						if (!String.IsNullOrWhiteSpace(UserChoice3))
+						{
+							Settings.PathNohboard = UserChoice3;
+						}
 					}
 					break;
 				case "btn_Set_PathFPSLimiter":
 					explorerStartPath = HelperClasses.FileHandling.PathSplitUp(Settings.PathFPSLimiter)[0].TrimEnd('\\');
 
-					string StartUpPath4 = Settings.PathFPSLimiter;
-					if (!HelperClasses.FileHandling.doesFileExist(StartUpPath4))
+					if (!IsRightClick)
 					{
-						StartUpPath4 = @"C:\";
-					}
-					else
-					{
-						StartUpPath = HelperClasses.FileHandling.PathSplitUp(StartUpPath4.TrimEnd('\\'))[0];
+						string StartUpPath4 = Settings.PathFPSLimiter;
+						if (!HelperClasses.FileHandling.doesFileExist(StartUpPath4))
+						{
+							StartUpPath4 = @"C:\";
+						}
+						else
+						{
+							StartUpPath4 = HelperClasses.FileHandling.PathSplitUp(StartUpPath4.TrimEnd('\\'))[0];
+						}
+
+						string UserChoice4 = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.File, "Pick your FPS Limiter Executable", StartUpPath4);
+
+						if (!String.IsNullOrWhiteSpace(UserChoice4))
+						{
+							Settings.PathFPSLimiter = UserChoice4;
+						}
 					}
 
-					string UserChoice4 = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.File, "Pick your FPS Limiter Executable", StartUpPath4);
-
-					if (!String.IsNullOrWhiteSpace(UserChoice4))
-					{
-						Settings.PathFPSLimiter = UserChoice4;
-					}
 					break;
 			}
 
@@ -451,7 +471,7 @@ namespace Project_127.MySettings
 					explorerStartPath = @"C:\";
 				}
 
-				HelperClasses.ProcessHandler.StartProcess(@"C:\Windows\explorer.exe", pWorkingDir: explorerStartPath);
+				HelperClasses.ProcessHandler.StartProcess(@"C:\Windows\explorer.exe", pCommandLineArguments: explorerStartPath);
 			}
 
 			RefreshGUI();
@@ -634,6 +654,7 @@ namespace Project_127.MySettings
 			ButtonMouseOverMagic(btn_cb_Set_EnableAutoStartLiveSplit);
 			ButtonMouseOverMagic(btn_cb_Set_EnableAutoStartNohboard);
 			ButtonMouseOverMagic(btn_cb_Set_EnableOverlay);
+			ButtonMouseOverMagic(btn_cb_Set_EnableOverlayMultiMonitor);
 			ButtonMouseOverMagic(btn_cb_Set_EnableAutoStartStreamProgram);
 			ButtonMouseOverMagic(btn_cb_Set_AutoSetHighPriority);
 			ButtonMouseOverMagic(btn_cb_Set_OnlyAutoStartProgramsWhenDowngraded);
@@ -646,6 +667,81 @@ namespace Project_127.MySettings
 			//cb_Set_EnableNohboardBurhac.IsChecked = Settings.EnableNohboardBurhac;
 		}
 
+
+		/// <summary>
+		/// Enum for all ReadMeStates
+		/// </summary>
+		public enum SettingsStates
+		{
+			General,
+			GTA,
+			Extra
+		}
+
+		/// <summary>
+		/// Internal Value
+		/// </summary>
+		private SettingsStates _SettingsState = SettingsStates.General;
+
+		private static SettingsStates LastSettingsState = SettingsStates.General;
+
+		/// <summary>
+		/// Value we get and set. Setters are gucci. 
+		/// </summary>
+		public SettingsStates SettingsState
+		{
+			get
+			{
+				return _SettingsState;
+			}
+			set
+			{
+				_SettingsState = value;
+
+				// Saving it in LastReadMeState
+				Settings.LastSettingsState = value;
+
+				if (value == SettingsStates.General)
+				{
+					sv_Settings_General.Visibility = Visibility.Visible;
+					sv_Settings_GTA.Visibility = Visibility.Hidden;
+					sv_Settings_Extra.Visibility = Visibility.Hidden;
+
+					btn_SettingsGeneral.Style = Application.Current.FindResource("btn_hamburgeritem_selected") as Style;
+					btn_SettingsGTA.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
+					btn_SettingsExtra.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
+
+					lbl_SettingsHeader.Content = "General P127 Settings";
+					sv_Settings_General.ScrollToVerticalOffset(0);
+				}
+				else if (value == SettingsStates.GTA)
+				{
+					sv_Settings_General.Visibility = Visibility.Hidden;
+					sv_Settings_GTA.Visibility = Visibility.Visible;
+					sv_Settings_Extra.Visibility = Visibility.Hidden;
+
+					btn_SettingsGeneral.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
+					btn_SettingsGTA.Style = Application.Current.FindResource("btn_hamburgeritem_selected") as Style;
+					btn_SettingsExtra.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
+
+					lbl_SettingsHeader.Content = "GTA Settings";
+					sv_Settings_GTA.ScrollToVerticalOffset(0);
+				}
+				else if (value == SettingsStates.Extra)
+				{
+					sv_Settings_General.Visibility = Visibility.Hidden;
+					sv_Settings_GTA.Visibility = Visibility.Hidden;
+					sv_Settings_Extra.Visibility = Visibility.Visible;
+
+					btn_SettingsGeneral.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
+					btn_SettingsGTA.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
+					btn_SettingsExtra.Style = Application.Current.FindResource("btn_hamburgeritem_selected") as Style;
+
+					lbl_SettingsHeader.Content = "Settings of Extra Features";
+					sv_Settings_Extra.ScrollToVerticalOffset(0);
+				}
+			}
+		}
 
 		/// <summary>
 		/// MouseEnter event for all Buttons which use Images (Refresh and Checkboxes)
@@ -747,6 +843,9 @@ namespace Project_127.MySettings
 				case "btn_cb_Set_EnableOverlay":
 					SetCheckBoxBackground(myBtn, Settings.EnableOverlay);
 					break;
+				case "btn_cb_Set_EnableOverlayMultiMonitor":
+					SetCheckBoxBackground(myBtn, Settings.OverlayMultiMonitorMode);
+					break;
 				case "btn_cb_Set_EnableAutoStartJumpScript":
 					SetCheckBoxBackground(myBtn, Settings.EnableAutoStartJumpScript);
 					break;
@@ -808,6 +907,9 @@ namespace Project_127.MySettings
 					break;
 				case "btn_cb_Set_EnableOverlay":
 					Settings.EnableOverlay = !Settings.EnableOverlay;
+					break;
+				case "btn_cb_Set_EnableOverlayMultiMonitor":
+					Settings.OverlayMultiMonitorMode = !Settings.OverlayMultiMonitorMode;
 					break;
 				case "btn_cb_Set_EnableAutoStartJumpScript":
 					Settings.EnableAutoStartJumpScript = !Settings.EnableAutoStartJumpScript;
@@ -953,5 +1055,19 @@ namespace Project_127.MySettings
 
 		}
 
+		private void btn_SettingsGeneral_Click(object sender, RoutedEventArgs e)
+		{
+			SettingsState = SettingsStates.General;
+		}
+
+		private void btn_SettingsGTA_Click(object sender, RoutedEventArgs e)
+		{
+			SettingsState = SettingsStates.GTA;
+		}
+
+		private void btn_SettingsExtra_Click(object sender, RoutedEventArgs e)
+		{
+			SettingsState = SettingsStates.Extra;
+		}
 	} // End of Class
 } // End of Namespace

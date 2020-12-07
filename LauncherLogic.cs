@@ -252,6 +252,10 @@ namespace Project_127
 		public static string UpgradeFilePath { get { return LauncherLogic.ZIPFilePath.TrimEnd('\\') + @"\Project_127_Files\UpgradeFiles\"; } }
 
 		/// <summary>
+		/// Property of often used variable. (UpgradeFilePathBackup)
+		/// </summary>
+		public static string UpgradeFilePathBackup {get { return LauncherLogic.ZIPFilePath.TrimEnd('\\') + @"\Project_127_Files\UpgradeFiles_Backup\"; } }
+		/// <summary>
 		/// Property of often used variable. (DowngradeFilePath)
 		/// </summary>
 		public static string DowngradeFilePath { get { return LauncherLogic.ZIPFilePath.TrimEnd('\\') + @"\Project_127_Files\DowngradeFiles\"; } }

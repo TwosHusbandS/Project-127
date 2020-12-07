@@ -35,6 +35,11 @@ namespace Project_127.Overlay
 		private static int PreviewIndexMin = 1;
 		private static int PreviewIndexMax = 10;
 
+		
+
+		private int PreviewMarginX;
+		private int PreviewMarginY;
+
 		public Overlay_Preview()
 		{
 			InitializeComponent();
@@ -48,7 +53,8 @@ namespace Project_127.Overlay
 			SetBackground();
 			SetForeground();
 			SetLocation();
-			SetMargin();
+			SetMarginX();
+			SetMarginY();
 			SetWidth();
 			SetHeight();
 			SetFont();
@@ -209,6 +215,29 @@ namespace Project_127.Overlay
 					Preview.VerticalAlignment = VerticalAlignment.Bottom;
 					break;
 			}
+
+			int MarginX = PreviewMarginX;
+			int MarginY = PreviewMarginY;
+			Thickness newMargin = new Thickness(0);
+
+			if (Settings.OverlayLocation == GTAOverlay.Positions.TopLeft)
+			{
+				newMargin = new Thickness(MarginX, MarginY, 0, 0);
+			}
+			else if (Settings.OverlayLocation == GTAOverlay.Positions.TopRight)
+			{
+				newMargin = new Thickness(0, MarginY, MarginX, 0);
+			}
+			else if (Settings.OverlayLocation == GTAOverlay.Positions.BottomLeft)
+			{
+				newMargin = new Thickness(MarginX, 0, 0, MarginY);
+			}
+			else if (Settings.OverlayLocation == GTAOverlay.Positions.BottomRight)
+			{
+				newMargin = new Thickness(0, 0, MarginX, MarginY);
+			}
+
+			Preview.Margin = newMargin;
 		}
 
 		public void SetTextSize(int FontSize = -1)
@@ -241,15 +270,29 @@ namespace Project_127.Overlay
 			Preview.Width = Width;
 		}
 
-		public void SetMargin (int Margin = -1)
+		public void SetMarginX (int MarginX = -1)
 		{
-			if (Margin == -1)
+			if (MarginX == -1)
 			{
-				Margin = Settings.OverlayMargin;
+				MarginX = Settings.OverlayMarginX;
 			}
-			Margin = Margin / 3;
-			Preview.Margin = new Thickness(Margin);
+			MarginX = MarginX / 3;
+			this.PreviewMarginX = MarginX;
+			SetLocation();
 		}
+
+
+		public void SetMarginY(int MarginY = -1)
+		{
+			if (MarginY == -1)
+			{
+				MarginY = Settings.OverlayMarginY;
+			}
+			MarginY = MarginY / 3;
+			this.PreviewMarginY = MarginY;
+			SetLocation();
+		}
+
 
 		public void SetPreviewBackgroundNext()
 		{

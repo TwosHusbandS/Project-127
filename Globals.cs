@@ -284,7 +284,8 @@ namespace Project_127
 			{"OverlayBackground", "100,0,0,0" },
 			{"OverlayForeground", "255,255,0,255" },
 			{"OverlayLocation", "TopLeft" },
-			{"OverlayMargin", "10" },
+			{"OverlayMarginX", "10" },
+			{"OverlayMarginY", "10" },
 			{"OverlayWidth", "580" },
 			{"OverlayHeight", "500" },
 			{"OverlayTextFont", "Arial" },
@@ -479,14 +480,24 @@ namespace Project_127
 				}
 			}
 
-			if (BuildNumber < new Version("1.0.2060.1"))
+			if (BuildNumber > new Version(Globals.VersionTable.ElementAt(Globals.VersionTable.Count - 1).Key))
 			{
-				return "???";
+				return ("> " + Globals.VersionTable.ElementAt(Globals.VersionTable.Count - 1).Value);
 			}
 			else
 			{
-				return "> 1.52";
+				return "???";
 			}
+		}
+
+		public static string GetGameInfoForDebug(string pFilePath)
+		{
+			if (HelperClasses.FileHandling.doesFileExist(pFilePath))
+			{
+				FileVersionInfo FVI = FileVersionInfo.GetVersionInfo(pFilePath);
+				return " (" + new Version(FVI.FileVersion).ToString() + " - " + new Version(Globals.GetGameVersionOfBuildNumber(new Version(FVI.FileVersion))) + ")";
+			}
+			return "";
 		}
 
 
@@ -628,6 +639,8 @@ namespace Project_127
 		{
 			HelperClasses.Logger.Log("Downloading the 'big three' files");
 
+			bool PopupThrownAlready = false;
+
 			string DLLinkG = HelperClasses.FileHandling.GetXMLTagContent(HelperClasses.FileHandling.GetStringFromURL(Globals.URL_AutoUpdate), "DLLinkG");
 			string DLLinkGHash = HelperClasses.FileHandling.GetXMLTagContent(HelperClasses.FileHandling.GetStringFromURL(Globals.URL_AutoUpdate), "DLLinkGHash");
 			string DLLinkU = HelperClasses.FileHandling.GetXMLTagContent(HelperClasses.FileHandling.GetStringFromURL(Globals.URL_AutoUpdate), "DLLinkU");
@@ -636,13 +649,26 @@ namespace Project_127
 			string DLLinkXHash = HelperClasses.FileHandling.GetXMLTagContent(HelperClasses.FileHandling.GetStringFromURL(Globals.URL_AutoUpdate), "DLLinkXHash");
 
 			HelperClasses.Logger.Log("Checking if gta5.exe exists locally", 1);
-			if (HelperClasses.FileHandling.doesFileExist(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\GTA5.exe"))
+			if (HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\GTA5.exe") > 100)
 			{
 				HelperClasses.Logger.Log("It does and we dont need to download anything", 2);
 			}
 			else
 			{
 				HelperClasses.Logger.Log("It does NOT and we DO need to download something", 2);
+
+				if (PopupThrownAlready == false)
+				{
+					Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "You are missing Files required for Downgrading.\nDo you want to download these now?\nI recommend clicking 'Yes'");
+					yesno.ShowDialog();
+					PopupThrownAlready = true;
+					if (yesno.DialogResult == false)
+					{
+						HelperClasses.Logger.Log("Well user doesnt want to Download Files...alright then");
+						return;
+					}
+				}
+
 				new PopupDownload(DLLinkG, LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\GTA5.exe", "Needed Files (gta5.exe 1/3)").ShowDialog();
 
 				if (!string.IsNullOrWhiteSpace(DLLinkGHash))
@@ -662,13 +688,26 @@ namespace Project_127
 			}
 
 			HelperClasses.Logger.Log("Checking if x64a.rpf exists locally", 1);
-			if (HelperClasses.FileHandling.doesFileExist(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\x64a.rpf"))
+			if (HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\x64a.rpf") > 100)
 			{
 				HelperClasses.Logger.Log("It does and we dont need to download anything", 2);
 			}
 			else
 			{
 				HelperClasses.Logger.Log("It does NOT and we DO need to download something", 2);
+
+				if (PopupThrownAlready == false)
+				{
+					Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "You are missing Files required for Downgrading.\nDo you want to download these now?\nI recommend clicking 'Yes'");
+					yesno.ShowDialog();
+					PopupThrownAlready = true;
+					if (yesno.DialogResult == false)
+					{
+						HelperClasses.Logger.Log("Well user doesnt want to Download Files...alright then");
+						return;
+					}
+				}
+
 				new PopupDownload(DLLinkX, LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\x64a.rpf", "Needed Files (x64a.rpf, 2/3)").ShowDialog();
 
 				if (!string.IsNullOrWhiteSpace(DLLinkXHash))
@@ -688,13 +727,26 @@ namespace Project_127
 			}
 
 			HelperClasses.Logger.Log(@"Checking if update\update.rpf exists locally", 1);
-			if (HelperClasses.FileHandling.doesFileExist(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\update\update.rpf"))
+			if (HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\update\update.rpf") > 100)
 			{
 				HelperClasses.Logger.Log("It does and we dont need to download anything", 2);
 			}
 			else
 			{
 				HelperClasses.Logger.Log("It does NOT and we DO need to download something", 2);
+
+				if (PopupThrownAlready == false)
+				{
+					Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "You are missing Files required for Downgrading.\nDo you want to download these now?\nI recommend clicking 'Yes'");
+					yesno.ShowDialog();
+					PopupThrownAlready = true;
+					if (yesno.DialogResult == false)
+					{
+						HelperClasses.Logger.Log("Well user doesnt want to Download Files...alright then");
+						return;
+					}
+				}
+
 				new PopupDownload(DLLinkU, LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\update\update.rpf", "Needed Files (Update.rpf, 3/3)").ShowDialog();
 
 				if (!string.IsNullOrWhiteSpace(DLLinkUHash))
@@ -1125,6 +1177,7 @@ namespace Project_127
 		/// </summary>
 		public static Brush MyColorWhite { get; private set; } = (Brush)new BrushConverter().ConvertFromString("#FFFFFF");
 		public static Brush MyColorOffWhite { get; private set; } = (Brush)new BrushConverter().ConvertFromString("#c1ced1");
+		public static Brush MyColorOffWhite85 { get; private set; } = SetOpacity((Brush)new BrushConverter().ConvertFromString("#c1ced1"), 85);
 		public static Brush MyColorBlack { get; private set; } = (Brush)new BrushConverter().ConvertFromString("#000000");
 		public static Brush MyColorOffBlack { get; private set; } = (Brush)new BrushConverter().ConvertFromString("#1a1a1a");
 		public static Brush MyColorOffBlack70 { get; private set; } = SetOpacity((Brush)new BrushConverter().ConvertFromString("#1a1a1a"), 70);

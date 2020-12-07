@@ -623,6 +623,7 @@ namespace Project_127.MySettings
 			set
 			{
 				SetSetting("OverlayMultiMonitorMode", value.ToString());
+				Overlay.NoteOverlayPages.NoteOverlay_Look.RefreshIfHideOrNot();
 			}
 		}
 
@@ -902,15 +903,28 @@ namespace Project_127.MySettings
 			return rtrn;
 		}
 
-		public static int OverlayMargin
+		public static int OverlayMarginX
 		{
 			get
 			{
-				return GetIntFromString(GetSetting("OverlayMargin"));
+				return GetIntFromString(GetSetting("OverlayMarginX"));
 			}
 			set
 			{
-				SetSetting("OverlayMargin", value.ToString());
+				SetSetting("OverlayMarginX", value.ToString());
+			}
+		}
+
+
+		public static int OverlayMarginY
+		{
+			get
+			{
+				return GetIntFromString(GetSetting("OverlayMarginY"));
+			}
+			set
+			{
+				SetSetting("OverlayMarginY", value.ToString());
 			}
 		}
 

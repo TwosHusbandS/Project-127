@@ -112,30 +112,46 @@ Hybrid code can be found in AAA_HybridCode.
 			- Clean up Code / Readme / Patchnotes
 			- Release new ZIP
 			- Make it create Folder and Savefile for new release...for SFH Demo
-			- Translte Keys...
-			- Clean up "big three" method. Make users click no, check for size > 0 instead of file exists...
-			- Loading GIF on SaveFileHandler is null referencing on the animation controller (I think...)
+			- [DONE] Translate Keys... 
+			- [DONE] Clean up "big three" method. Make users click no, check for size > 0 instead of file exists...
+			- [DONE] Add Fullscreen mode to settings. Added other stuff to settings. Fixed settings bugs.
+			- [DONE] Split settings into 3 subpages
+			- Add Jumpscript and Overlay to "only when downgraded". Just check in start methods of those things, check on Setting to true OfSettings what should be done based on settings
+			- Tray Icon and rightclick on exit stuff for Minimize 
+				=> Main PoC written. Still some choices to make on UX. 
+				=> Need ability to show itself and bring itself to foreground. Both from different P127 exe. 
+
 		
 	- Fullscreen mode for overlay
 				--> im thinking
 				--> [DONE] Window with just fixed height bar. Fixed Color. Offblack and white boarder and text. Width bound to actual width.
 				--> [DONE] Fullscreen / Multi monitor mode Checkmark on top (under enable) with tooltip
 				--> [DONE] implement settings backend
-				--> Margin and Location greyed out and disabled. With popup. On Enable / Disable overlaw. Method to refresh if those are greyed out or not. Or hook on top UI..
-				--> Implement overlay stuff...thinking of if check inside constructor where to draw on top on, and call it a day.
-				--> WPF Window Size changes with settings change...
+				--> [DONE] Margin and Location greyed out and disabled. With popup. On Enable / Disable overlaw. Method to refresh if those are greyed out or not. Or hook on top UI..
+				--> [DONE] Implement overlay stuff...thinking of if check inside constructor where to draw on top on, and call it a day.
+					- Enum param on Overlay object with gets checked on changing stuff
+				--> [DONE] Y and X Margin sepperate settings. 
+				--> [DONE] Options scrollable there...
 
+				--> Debug tests POC of showing / stopping showing Overlay hooked to our WPF Window
+				--> make WPF WIndow size width accordingly
+				--> check if we need to add Y Margin to it because of WPF Overlay "Titlebar"
+				--> Check if it works with our hidden WPF WIndow...
 				--> Bevor messing with stuff below, check how we hide / show currently...and how to untangle that logic
+						=> Maybe use OverlayMode for that?
+						=> we may be referencing DebugMode of GTAOverlay for that...how can we use that.
+						=> Rethink KeyboardListener. Might have to run it 24/7. Maybe already tied to debugmode? 
 				--> WPF Window + Overlay gets init with correct target windows on P127 launch.
 				--> WPF Window Close on P127 close
 				--> WPF Window Closes on Hotkey globally
 				--> WPF Window Closes on Settings Disable
 				--> WPF Window openes on Settings Enable
 				--> WPF Window opens on Hotkey
+				--> WPF Window Size changes with settings change...
 				--> WPF Window opens on Look Tab
 				--> WPF Window closes on Look Tab (unless it was shown before open)
 				--> Game Overlay doesnt disappear when alt tabbing and in tabbing
-				--> Unbind Overlay everywhere with GTA Running...
+				--> Unbind Logic of Overlay Visibility everywhere its tied to GTA Running...
 				--> Make sure shit works when changing settings with GTA Running...
 		- [DONE] SFH Improvements
 			=> [DONE] Add Folder Support
@@ -237,6 +253,7 @@ using Project_127.Overlay;
 using Project_127.Popups;
 using Project_127.MySettings;
 using CefSharp;
+using System.Drawing;
 
 namespace Project_127
 {
@@ -260,6 +277,8 @@ namespace Project_127
 		public static MainWindow MW;
 
 		public static Overlay_MultipleMonitor OL_MM = null;
+
+		private System.Windows.Forms.NotifyIcon notifyIcon = null;
 
 		/// <summary>
 		/// Constructor of Main Window
@@ -340,6 +359,8 @@ namespace Project_127
 			SetButtonMouseOverMagic(btn_Hamburger);
 			Globals.HamburgerMenuState = Globals.HamburgerMenuStates.Hidden;
 
+			// Init NotifyIcon does not need to be called, its called on Loaded()
+			// InitNotifyIcon();
 
 			HelperClasses.Logger.Log("Only CEF Init to go...");
 
@@ -363,6 +384,8 @@ namespace Project_127
 				// Same as other two thingies here lolerino
 				HelperClasses.WindowChangeListener.Start();
 			}
+
+
 		}
 
 
@@ -676,7 +699,7 @@ namespace Project_127
 			if (Globals.BetaMode || Globals.InternalMode)
 			{
 				// Opens the File
-				//HelperClasses.ProcessHandler.StartProcess(@"C:\Windows\System32\notepad.exe", pCommandLineArguments: Globals.Logfile);
+				HelperClasses.ProcessHandler.StartProcess(@"C:\Windows\System32\notepad.exe", pCommandLineArguments: Globals.Logfile);
 			}
 		}
 
@@ -710,6 +733,7 @@ namespace Project_127
 		}
 
 
+
 		/// <summary>
 		/// Right click on Auth button. Gives proper Debug Output
 		/// </summary>
@@ -735,9 +759,23 @@ namespace Project_127
 			DebugMessage.Add("Detected GameState: '" + LauncherLogic.GameState + "'");
 			DebugMessage.Add("Detected InstallationState: '" + LauncherLogic.InstallationState + "'");
 			DebugMessage.Add("    Size of GTA5.exe in GTAV Installation Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\GTA5.exe"));
-			DebugMessage.Add("    Size of GTA5.exe in Downgrade Files Folder: " + LauncherLogic.SizeOfDowngradedGTAV);
+
+
+			DebugMessage.Add("    Size of GTA5.exe in GTAV Installation Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\GTA5.exe") + Globals.GetGameInfoForDebug(LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\GTA5.exe"));
 			DebugMessage.Add("    Size of update.rpf in GTAV Installation Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\update\update.rpf"));
-			DebugMessage.Add("    Size of update.rpf in Downgrade Files Folder: " + LauncherLogic.SizeOfDowngradedUPDATE);
+			DebugMessage.Add("    Size of playgtav.exe in GTAV Installation Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\playgtav.exe"));
+			DebugMessage.Add("    ------------------------------------------------");
+			DebugMessage.Add("    Size of GTA5.exe in DowngradeFiles Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\GTA5.exe") + Globals.GetGameInfoForDebug(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\GTA5.exe"));
+			DebugMessage.Add("    Size of update.rpf in DowngradeFiles Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\update\update.rpf"));
+			DebugMessage.Add("    Size of playgtav.exe in DowngradeFiles Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\playgtav.exe"));
+			DebugMessage.Add("    ------------------------------------------------");
+			DebugMessage.Add("    Size of GTA5.exe in UpdateFiles Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.UpgradeFilePath.TrimEnd('\\') + @"\GTA5.exe") + Globals.GetGameInfoForDebug(LauncherLogic.UpgradeFilePath.TrimEnd('\\') + @"\GTA5.exe"));
+			DebugMessage.Add("    Size of update.rpf in UpdateFiles Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.UpgradeFilePath.TrimEnd('\\') + @"\update\update.rpf"));
+			DebugMessage.Add("    Size of playgtav.exe in UpdateFiles Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.UpgradeFilePath.TrimEnd('\\') + @"\playgtav.exe"));
+			DebugMessage.Add("    ------------------------------------------------");
+			DebugMessage.Add("    Size of GTA5.exe in BACKUP UpdateFiles Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.UpgradeFilePathBackup.TrimEnd('\\') + @"\GTA5.exe") + Globals.GetGameInfoForDebug(LauncherLogic.UpgradeFilePathBackup.TrimEnd('\\') + @"\GTA5.exe"));
+			DebugMessage.Add("    Size of update.rpf in BACKUP UpdateFiles Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.UpgradeFilePathBackup.TrimEnd('\\') + @"\update\update.rpf"));
+			DebugMessage.Add("    Size of playgtav.exe in BACKUP UpdateFiles Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.UpgradeFilePathBackup.TrimEnd('\\') + @"\playgtav.exe"));
 			DebugMessage.Add("Settings: ");
 			foreach (KeyValuePair<string, string> KVP in Globals.MySettings)
 			{
@@ -1027,5 +1065,69 @@ namespace Project_127
 				new Popups.Popup(Popups.Popup.PopupWindowTypes.PopupOk, "Shoutouts to @crapideot for being awesome and a\ngreat friend and Helper during Project 1.27 :)\nHope you have a great day buddy").ShowDialog();
 			}
 		}
+
+		private void Window_Loaded(object sender, RoutedEventArgs e)
+		{
+			InitNotifyIcon();
+		}
+
+
+		private void notifyIcon_DoubleClick(object sender, EventArgs e)
+		{
+
+		}
+
+		private void notifyIcon_Click(object sender, EventArgs e)
+		{
+
+		}
+
+
+		private void InitNotifyIcon()
+		{
+			notifyIcon = new System.Windows.Forms.NotifyIcon();
+			notifyIcon.Click += new EventHandler(notifyIcon_Click);
+			notifyIcon.DoubleClick += new EventHandler(notifyIcon_DoubleClick);
+			notifyIcon.Visible = true;
+
+
+			Uri resourceUri = new Uri(@"Artwork\icon.ico", UriKind.Relative);
+			System.Windows.Forms.NotifyIcon icon = new System.Windows.Forms.NotifyIcon();
+			using (Stream iconStream = Application.GetResourceStream(resourceUri).Stream)
+			{
+				icon.Icon = new System.Drawing.Icon(iconStream);
+				notifyIcon.Icon = icon.Icon;
+				iconStream.Dispose();
+			}
+
+			System.Windows.Forms.ContextMenu cm = new System.Windows.Forms.ContextMenu();
+
+			System.Windows.Forms.MenuItem mi = new System.Windows.Forms.MenuItem();
+			mi.Text = "Move to Backup Saves (<-)";
+			mi.Click += new System.EventHandler(this.menuItem1_Click);
+			cm.MenuItems.Add(mi);
+
+			System.Windows.Forms.MenuItem mi2 = new System.Windows.Forms.MenuItem();
+			mi2.Text = "Paste (V)";
+			mi2.Click += new System.EventHandler(this.menuItem2_Click);
+			cm.MenuItems.Add(mi2);
+
+			notifyIcon.ContextMenu = cm;
+			this.Visibility = Visibility.Visible;
+		}
+
+		private void menuItem1_Click(object Sender, EventArgs e)
+		{
+			// Close the form, which closes the application.
+			this.Visibility = Visibility.Visible;
+		}
+
+		private void menuItem2_Click(object Sender, EventArgs e)
+		{
+			// Close the form, which closes the application.
+			this.Visibility = Visibility.Hidden;
+		}
+
+
 	} // End of Class
 } // End of Namespace

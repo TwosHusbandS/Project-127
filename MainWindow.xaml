@@ -11,6 +11,7 @@
         WindowStyle="None" 
         ResizeMode="CanMinimize"
         AllowsTransparency="False" 
+        Loaded="Window_Loaded"
         MouseLeftButtonDown="Window_MouseLeftButtonDown" 
         WindowStartupLocation="CenterScreen"
         Icon="/Artwork/icon.png">
