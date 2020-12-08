@@ -47,6 +47,10 @@ namespace Project_127.MySettings
 
 			combox_Set_LanguageSelected.ItemsSource = Enum.GetValues(typeof(Languages)).Cast<Languages>();
 
+			combox_Set_ExitWays.ItemsSource = Enum.GetValues(typeof(ExitWays)).Cast<ExitWays>();
+
+			combox_Set_StartWays.ItemsSource = Enum.GetValues(typeof(StartWays)).Cast<StartWays>();
+
 			SettingsState = LastSettingsState;
 
 			RefreshGUI();
@@ -294,7 +298,15 @@ namespace Project_127.MySettings
 			LanguageSelected = (Languages)System.Enum.Parse(typeof(Languages), combox_Set_LanguageSelected.SelectedItem.ToString());
 		}
 
+		private void combox_Set_StartWays_SelectionChanged(object sender, SelectionChangedEventArgs e)
+		{
+			StartWay = (StartWays)System.Enum.Parse(typeof(StartWays), combox_Set_StartWays.SelectedItem.ToString());
+		}
 
+		private void combox_Set_ExitWays_SelectionChanged(object sender, SelectionChangedEventArgs e)
+		{
+			ExitWay = (ExitWays)System.Enum.Parse(typeof(ExitWays), combox_Set_ExitWays.SelectedItem.ToString());
+		}
 
 
 		/// <summary>
@@ -639,6 +651,8 @@ namespace Project_127.MySettings
 
 			combox_Set_Retail.SelectedItem = Settings.Retailer;
 			combox_Set_LanguageSelected.SelectedItem = Settings.LanguageSelected;
+			combox_Set_ExitWays.SelectedItem = Settings.ExitWay;
+			combox_Set_StartWays.SelectedItem = Settings.StartWay;
 
 			tb_Set_InGameName.Text = Settings.InGameName;
 
@@ -1069,5 +1083,8 @@ namespace Project_127.MySettings
 		{
 			SettingsState = SettingsStates.Extra;
 		}
+
+	
+
 	} // End of Class
 } // End of Namespace

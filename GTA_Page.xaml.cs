@@ -52,17 +52,23 @@ namespace Project_127
 		/// <param name="e"></param>
 		private void btn_GTA_Click(object sender, RoutedEventArgs e)
 		{
+			btn_GTA_Click_Static();
+
+		}
+
+		public static void btn_GTA_Click_Static()
+		{
 			if (LauncherLogic.GameState == LauncherLogic.GameStates.Running)
 			{
 				HelperClasses.Logger.Log("Game deteced running.", 1);
-				btn_GTA_MouseRightButtonDown(null, null);
+				btn_GTA_MouseRightButtonDown_Static();
 			}
 			else
 			{
 				HelperClasses.Logger.Log("User wantst to Launch", 1);
 				LauncherLogic.Launch();
 			}
-			FocusManager.SetFocusedElement(this, null);
+			//FocusManager.SetFocusedElement(this, null);
 			MainWindow.MW.UpdateGUIDispatcherTimer();
 		}
 
@@ -74,13 +80,18 @@ namespace Project_127
 		/// <param name="e"></param>
 		private void btn_GTA_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
 		{
+			btn_GTA_MouseRightButtonDown_Static();
+		}
+
+		public static void btn_GTA_MouseRightButtonDown_Static()
+		{
 			Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Do you want to close GTAV?");
 			yesno.ShowDialog();
 			if (yesno.DialogResult == true)
 			{
 				LauncherLogic.KillRelevantProcesses();
 			}
-			FocusManager.SetFocusedElement(this, null);
+			//FocusManager.SetFocusedElement(this, null);
 			MainWindow.MW.UpdateGUIDispatcherTimer();
 		}
 

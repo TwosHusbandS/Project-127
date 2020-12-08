@@ -448,6 +448,25 @@ namespace Project_127.MySettings
 
 
 		/// <summary>
+		/// Enum for all Ways to Start
+		/// </summary>
+		public enum StartWays
+		{
+			Maximized,
+			Tray
+		}
+
+		/// <summary>
+		/// Enum for all Ways to Exit
+		/// </summary>
+		public enum ExitWays
+		{
+			Minimize,
+			ExitToTray,
+			Close
+		}
+
+		/// <summary>
 		/// Settings Retailer. Gets and Sets from Dictionary.
 		/// </summary>
 		public static Languages LanguageSelected
@@ -486,6 +505,36 @@ namespace Project_127.MySettings
 			set
 			{
 				SetSetting("Retailer", value.ToString());
+			}
+		}
+
+		/// <summary>
+		/// Settings StartWay. Gets and Sets from Dictionary.
+		/// </summary>
+		public static StartWays StartWay
+		{
+			get
+			{
+				return (StartWays)System.Enum.Parse(typeof(StartWays), GetSetting("StartWay"));
+			}
+			set
+			{
+				SetSetting("StartWay", value.ToString());
+			}
+		}
+
+		/// <summary>
+		/// Settings ExitWay. Gets and Sets from Dictionary.
+		/// </summary>
+		public static ExitWays ExitWay
+		{
+			get
+			{
+				return (ExitWays)System.Enum.Parse(typeof(ExitWays), GetSetting("ExitWay"));
+			}
+			set
+			{
+				SetSetting("ExitWay", value.ToString());
 			}
 		}
 

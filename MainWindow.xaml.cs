@@ -120,7 +120,7 @@ Hybrid code can be found in AAA_HybridCode.
 			- Tray Icon and rightclick on exit stuff for Minimize 
 				=> Main PoC written. Still some choices to make on UX. 
 				=> Need ability to show itself and bring itself to foreground. Both from different P127 exe. 
-
+	 
 		
 	- Fullscreen mode for overlay
 				--> im thinking
@@ -254,6 +254,7 @@ using Project_127.Popups;
 using Project_127.MySettings;
 using CefSharp;
 using System.Drawing;
+using System.Threading;
 
 namespace Project_127
 {
@@ -303,25 +304,36 @@ namespace Project_127
 			}
 
 
-			// Checks if a Process with the same ProcessName is already running
-			if (HelperClasses.ProcessHandler.GetProcesses(Process.GetCurrentProcess().ProcessName).Length > 1)
+			//// Checks if a Process with the same ProcessName is already running
+			//if (HelperClasses.ProcessHandler.GetProcesses(Process.GetCurrentProcess().ProcessName).Length > 1)
+			//{
+			//	Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Program is open twice. Do you want to force close the old Instance?");
+			//	yesno.ShowDialog();
+			//	if (yesno.DialogResult == true)
+			//	{
+			//		foreach (Process p in HelperClasses.ProcessHandler.GetProcessesContains(Process.GetCurrentProcess().ProcessName))
+			//		{
+			//			if (p != Process.GetCurrentProcess())
+			//			{
+			//				HelperClasses.ProcessHandler.Kill(p);
+			//			}
+			//		}
+			//	}
+			//	else
+			//	{
+			//		Environment.Exit(2);
+			//	}
+			//}
+
+			Mutex mutex = new Mutex(true, "{09b13947-d5ce-4d9f-af9a-9c6404c1b065}");
+			if (mutex.WaitOne(TimeSpan.Zero, true))
 			{
-				Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Program is open twice. Do you want to force close the old Instance?");
-				yesno.ShowDialog();
-				if (yesno.DialogResult == true)
-				{
-					foreach (Process p in HelperClasses.ProcessHandler.GetProcessesContains(Process.GetCurrentProcess().ProcessName))
-					{
-						if (p != Process.GetCurrentProcess())
-						{
-							HelperClasses.ProcessHandler.Kill(p);
-						}
-					}
-				}
-				else
-				{
-					Environment.Exit(2);
-				}
+				mutex.ReleaseMutex();
+			}
+			else
+			{
+				// communicate with running Process
+				MessageBox.Show("only one instance at a time");
 			}
 
 			// Start the Init Process of Logger, Settings, Globals, Regedit here, since we need the Logger in the next Line if it fails...
@@ -545,7 +557,9 @@ namespace Project_127
 		/// <param name="e"></param>
 		private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
 		{
-			Globals.ProperExit();
+			e.Cancel = true;
+			menuItem_Hide_Click(null, null);
+			//Globals.ProperExit();
 		}
 
 		/// <summary>
@@ -758,9 +772,6 @@ namespace Project_127
 			DebugMessage.Add("Detected AuthState: '" + LauncherLogic.AuthState + "'");
 			DebugMessage.Add("Detected GameState: '" + LauncherLogic.GameState + "'");
 			DebugMessage.Add("Detected InstallationState: '" + LauncherLogic.InstallationState + "'");
-			DebugMessage.Add("    Size of GTA5.exe in GTAV Installation Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\GTA5.exe"));
-
-
 			DebugMessage.Add("    Size of GTA5.exe in GTAV Installation Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\GTA5.exe") + Globals.GetGameInfoForDebug(LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\GTA5.exe"));
 			DebugMessage.Add("    Size of update.rpf in GTAV Installation Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\update\update.rpf"));
 			DebugMessage.Add("    Size of playgtav.exe in GTAV Installation Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\playgtav.exe"));
@@ -801,12 +812,22 @@ namespace Project_127
 		{
 			if (Globals.PageState == Globals.PageStates.GTA)
 			{
-				Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Do you really want to quit?");
-				yesno.ShowDialog();
-				if (yesno.DialogResult == true)
+				if (Settings.ExitWay == Settings.ExitWays.Close)
 				{
-					this.Close();
-					Environment.Exit(0);
+					Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Do you really want to quit?");
+					yesno.ShowDialog();
+					if (yesno.DialogResult == true)
+					{
+						MI_Close_Click(null, null);
+					}
+				}
+				else if (Settings.ExitWay == Settings.ExitWays.ExitToTray)
+				{
+					MI_ExitToTray_Click(null, null);
+				}
+				else if (Settings.ExitWay == Settings.ExitWays.Minimize)
+				{
+					MI_Minimize_Click(null, null);
 				}
 			}
 			else
@@ -822,12 +843,45 @@ namespace Project_127
 		/// <param name="e"></param>
 		private void btn_Exit_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
 		{
-			e.Handled = true;
-			this.Close();
-			Environment.Exit(0);
+			ContextMenu cm = new ContextMenu();
+
+			MenuItem mi = new MenuItem();
+			mi.Header = "Minimize";
+			mi.Click += MI_Minimize_Click;
+			cm.Items.Add(mi);
+
+			MenuItem mi2 = new MenuItem();
+			mi2.Header = "Exit to Tray";
+			mi2.Click += MI_ExitToTray_Click;
+			cm.Items.Add(mi2);
+
+			MenuItem mi3 = new MenuItem();
+			mi3.Header = "Close P127";
+			mi3.Click += MI_Close_Click;
+			cm.Items.Add(mi3);
+
+			cm.IsOpen = true;
+
 			//Globals.DebugPopup(Globals.CommandLineArgs.ToString());
 			//Globals.DebugPopup(Globals.InternalMode.ToString());
 		}
+
+
+		private void MI_Minimize_Click(object sender, RoutedEventArgs e)
+		{
+			this.WindowState = WindowState.Minimized;
+		}
+
+		private void MI_ExitToTray_Click(object sender, RoutedEventArgs e)
+		{
+			this.Visibility = Visibility.Hidden;
+		}
+
+		private void MI_Close_Click(object sender, RoutedEventArgs e)
+		{
+			Globals.ProperExit();
+		}
+
 
 		// Methods of the GTA Clicks are in GTA_Page
 
@@ -1074,12 +1128,12 @@ namespace Project_127
 
 		private void notifyIcon_DoubleClick(object sender, EventArgs e)
 		{
-
+			menuItem_Show_Click(null, null);
 		}
 
 		private void notifyIcon_Click(object sender, EventArgs e)
 		{
-
+			menuItem_Show_Click(null, null);
 		}
 
 
@@ -1102,30 +1156,129 @@ namespace Project_127
 
 			System.Windows.Forms.ContextMenu cm = new System.Windows.Forms.ContextMenu();
 
-			System.Windows.Forms.MenuItem mi = new System.Windows.Forms.MenuItem();
-			mi.Text = "Move to Backup Saves (<-)";
-			mi.Click += new System.EventHandler(this.menuItem1_Click);
-			cm.MenuItems.Add(mi);
+			System.Windows.Forms.MenuItem mi1 = new System.Windows.Forms.MenuItem();
+			mi1.Text = "Show P127";
+			mi1.Click += new System.EventHandler(this.menuItem_Show_Click);
+			cm.MenuItems.Add(mi1);
 
 			System.Windows.Forms.MenuItem mi2 = new System.Windows.Forms.MenuItem();
-			mi2.Text = "Paste (V)";
-			mi2.Click += new System.EventHandler(this.menuItem2_Click);
+			mi2.Text = "Hide P127";
+			mi2.Click += new System.EventHandler(this.menuItem_Hide_Click);
 			cm.MenuItems.Add(mi2);
 
+			cm.MenuItems.Add("-");
+
+			System.Windows.Forms.MenuItem mi3 = new System.Windows.Forms.MenuItem();
+			mi3.Text = "Upgrade";
+			mi3.Click += new System.EventHandler(this.menuItem_Upgrade_Click);
+			cm.MenuItems.Add(mi3);
+
+			System.Windows.Forms.MenuItem mi4 = new System.Windows.Forms.MenuItem();
+			mi4.Text = "Downgrade";
+			mi4.Click += new System.EventHandler(this.menuItem_Downgrade_Click);
+			cm.MenuItems.Add(mi4);
+
+			System.Windows.Forms.MenuItem mi5 = new System.Windows.Forms.MenuItem();
+			mi5.Text = "Launch Game";
+			mi5.Click += new System.EventHandler(this.menuItem_LaunchGame_Click);
+			cm.MenuItems.Add(mi5);
+
+			cm.MenuItems.Add("-");
+
+			System.Windows.Forms.MenuItem mi6 = new System.Windows.Forms.MenuItem();
+			mi6.Text = "SaveFileHandler";
+			mi6.Click += new System.EventHandler(this.menuItem_SaveFileHandler_Click);
+			cm.MenuItems.Add(mi6);
+
+			System.Windows.Forms.MenuItem mi7 = new System.Windows.Forms.MenuItem();
+			mi7.Text = "NoteOverlay";
+			mi7.Click += new System.EventHandler(this.menuItem_NoteOverlay_Click);
+			cm.MenuItems.Add(mi7);
+
+			System.Windows.Forms.MenuItem mi8 = new System.Windows.Forms.MenuItem();
+			mi8.Text = "Settings";
+			mi8.Click += new System.EventHandler(this.menuItem_Settings_Click);
+			cm.MenuItems.Add(mi8);
+
+			System.Windows.Forms.MenuItem mi9 = new System.Windows.Forms.MenuItem();
+			mi9.Text = "Information";
+			mi9.Click += new System.EventHandler(this.menuItem_Information_Click);
+			cm.MenuItems.Add(mi9);
+
+			cm.MenuItems.Add("-");
+
+			System.Windows.Forms.MenuItem mi10 = new System.Windows.Forms.MenuItem();
+			mi10.Text = "Close P127";
+			mi10.Click += new System.EventHandler(this.menuItem_Close_Click);
+			cm.MenuItems.Add(mi10);
+
 			notifyIcon.ContextMenu = cm;
-			this.Visibility = Visibility.Visible;
+
+			if (Settings.StartWay == Settings.StartWays.Maximized)
+			{
+				this.Visibility = Visibility.Visible;
+			}
+			else
+			{
+				this.Visibility = Visibility.Hidden;
+			}
 		}
 
-		private void menuItem1_Click(object Sender, EventArgs e)
+		private void menuItem_Show_Click(object Sender, EventArgs e)
 		{
-			// Close the form, which closes the application.
 			this.Visibility = Visibility.Visible;
+			this.WindowState = WindowState.Normal;
 		}
 
-		private void menuItem2_Click(object Sender, EventArgs e)
+		private void menuItem_Hide_Click(object Sender, EventArgs e)
 		{
-			// Close the form, which closes the application.
 			this.Visibility = Visibility.Hidden;
+		}
+
+		private void menuItem_Upgrade_Click(object Sender, EventArgs e)
+		{
+			this.btn_Upgrade_Click(null, null);
+		}
+
+		private void menuItem_Downgrade_Click(object Sender, EventArgs e)
+		{
+			this.btn_Downgrade_Click(null, null);
+		}
+
+		private void menuItem_LaunchGame_Click(object Sender, EventArgs e)
+		{
+			menuItem_Show_Click(null, null);
+			Globals.PageState = Globals.PageStates.GTA;
+			GTA_Page.btn_GTA_Click_Static();
+		}
+
+		private void menuItem_SaveFileHandler_Click(object Sender, EventArgs e)
+		{
+			menuItem_Show_Click(null, null);
+			Globals.PageState = Globals.PageStates.SaveFileHandler;
+		}
+
+		private void menuItem_NoteOverlay_Click(object Sender, EventArgs e)
+		{
+			menuItem_Show_Click(null, null);
+			Globals.PageState = Globals.PageStates.NoteOverlay;
+		}
+
+		private void menuItem_Settings_Click(object Sender, EventArgs e)
+		{
+			menuItem_Show_Click(null, null);
+			Globals.PageState = Globals.PageStates.Settings;
+		}
+
+		private void menuItem_Information_Click(object Sender, EventArgs e)
+		{
+			menuItem_Show_Click(null, null);
+			Globals.PageState = Globals.PageStates.ReadMe;
+		}
+
+		private void menuItem_Close_Click(object Sender, EventArgs e)
+		{
+			Globals.ProperExit();
 		}
 
 

@@ -245,6 +245,8 @@ namespace Project_127
 			{"ZIPExtractionPath", Process.GetCurrentProcess().MainModule.FileName.Substring(0, Process.GetCurrentProcess().MainModule.FileName.LastIndexOf('\\')) },
 			{"EnableLogging", "True"},
 			{"EnableCopyFilesInsteadOfHardlinking", "False"},
+			{"ExitWay", "Close"},
+			{"StartWay", "Maximized"},
 			
 			// GTA V Settings
 			{"Retailer", "Steam"},
@@ -895,6 +897,8 @@ namespace Project_127
 			WindowChangeListener.Stop();
 			Jumpscript.StopJumpscript();
 			HelperClasses.Logger.Log("Program closed. Proper Exit. Ended normally");
+			MainWindow.MW.Close();
+			Environment.Exit(0);
 		}
 
 
