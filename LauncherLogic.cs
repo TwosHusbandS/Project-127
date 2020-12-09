@@ -97,6 +97,15 @@ namespace Project_127
 
 		public static GameStates PollGameState()
 		{
+			//if (Globals.FSW != null)
+			//{
+			//	//HelperClasses.FileHandling.AddToDebug("Still alive, is NOT null");
+			//}
+			//else
+			//{
+			//	//HelperClasses.FileHandling.AddToDebug("Still alive, is null tho...");
+			//}
+
 			GameStates currGameState = GameState;
 
 			if (currGameState == GameStates.Running)

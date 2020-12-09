@@ -462,7 +462,7 @@ namespace Project_127.MySettings
 		public enum ExitWays
 		{
 			Minimize,
-			ExitToTray,
+			HideInTray,
 			Close
 		}
 

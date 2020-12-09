@@ -22,6 +22,7 @@ using Project_127.MySettings;
 using System.Windows.Resources;
 using System.Windows.Media.Imaging;
 using CefSharp;
+using System.IO;
 
 namespace Project_127
 {
@@ -34,6 +35,12 @@ namespace Project_127
 		/// Property of our own Installation Path
 		/// </summary>
 		public static string ProjectInstallationPath { get { return Process.GetCurrentProcess().MainModule.FileName.Substring(0, Process.GetCurrentProcess().MainModule.FileName.LastIndexOf('\\')); } }
+
+		/// <summary>
+		/// Property of our own Installation Path Binary
+		/// </summary>
+		public static string ProjectInstallationPathBinary { get { return Process.GetCurrentProcess().MainModule.FileName.Substring(0, Process.GetCurrentProcess().MainModule.FileName.LastIndexOf('\\')); } }
+
 
 		/// <summary>
 		/// Property of our ProjectName (for Folders, Regedit, etc.)
@@ -247,7 +254,7 @@ namespace Project_127
 			{"EnableCopyFilesInsteadOfHardlinking", "False"},
 			{"ExitWay", "Close"},
 			{"StartWay", "Maximized"},
-			
+	
 			// GTA V Settings
 			{"Retailer", "Steam"},
 			{"LanguageSelected", "English"},
@@ -416,6 +423,8 @@ namespace Project_127
 					{
 						HelperClasses.FileHandling.DeleteFolder(temp);
 					}
+
+					HelperClasses.FileHandling.createPath(MySaveFile.BackupSavesPath.TrimEnd('\\') + @"\New Folder");
 				}
 
 				Settings.LastLaunchedVersion = Globals.ProjectVersion;
@@ -448,6 +457,8 @@ namespace Project_127
 
 			InitOverlayIfNeeded();
 
+			InitFileWatcher();
+
 			// CEF Initializing
 			//CEFInitialize();
 
@@ -458,6 +469,56 @@ namespace Project_127
 			MyDispatcherTimer.Start();
 			MainWindow.MW.UpdateGUIDispatcherTimer();
 		}
+
+		public static FileSystemWatcher FSW = new FileSystemWatcher();
+
+		public static void InitFileWatcher()
+		{
+			//HelperClasses.FileHandling.AddToDebug("In InitFileWatcher() Creating FileSystemWatcher");
+
+			FSW = new FileSystemWatcher();
+
+			FSW.Path = ProjectInstallationPath;
+
+			// Watch for changes in LastAccess and LastWrite times, and
+			// the renaming of files or directories.
+			FSW.NotifyFilter = NotifyFilters.LastAccess
+								 | NotifyFilters.LastWrite
+								 | NotifyFilters.FileName
+								 | NotifyFilters.DirectoryName
+								 | NotifyFilters.Attributes
+								 | NotifyFilters.Size
+								 | NotifyFilters.CreationTime;
+
+			// Only watch text files.
+			//FSW.Filter = "PleaseShow.txt";
+
+			// Add event handlers.
+			FSW.Renamed += OnRename;
+			//FSW.Changed += OnCreated;
+
+			// Begin watching.
+			FSW.EnableRaisingEvents = true;
+			//HelperClasses.FileHandling.AddToDebug("In InitFileWatcher() Done with everything");
+
+		}
+
+		private static async void OnRename(object source, RenamedEventArgs e)
+		{
+			//HelperClasses.FileHandling.AddToDebug("In OnRename() - " + $"File: {e.OldFullPath} renamed to {e.FullPath}");
+
+			if (e.Name == "pleaseshow")
+			{
+				//HelperClasses.FileHandling.AddToDebug("In OnRename(). IT IS OUR FILE  YEAH");
+				HelperClasses.FileHandling.RenameFile(HelperClasses.FileHandling.PathCombine(Globals.ProjectInstallationPath, "pleaseshow"), "dirtyprogramming");
+				await Task.Delay(100);
+				MainWindow.MW.Dispatcher.Invoke(() =>
+				{
+					MainWindow.MW.menuItem_Show_Click(null, null);
+				});
+			}
+		}
+
 
 		public static void InitOverlayIfNeeded()
 		{
@@ -572,6 +633,17 @@ namespace Project_127
 					HelperClasses.Logger.Log("Found old ZIP File ('" + HelperClasses.FileHandling.PathSplitUp(myFile)[1] + "') in the Directory. Will delete it.");
 					HelperClasses.FileHandling.deleteFile(myFile);
 				}
+				if (myFile.ToLower().Contains("pleaseshow"))
+				{
+					HelperClasses.Logger.Log("Found pleaseshow File in the Directory. Will delete it.");
+					HelperClasses.FileHandling.deleteFile(myFile);
+				}
+				if (myFile.ToLower().Contains("dirtyprogramming"))
+				{
+					HelperClasses.Logger.Log("Found dirtyprogramming File in the Directory. Will delete it.");
+					HelperClasses.FileHandling.deleteFile(myFile);
+				}
+				File.Create(Globals.ProjectInstallationPath.TrimEnd('\\') + @"\dirtyprogramming").Dispose();
 			}
 		}
 
@@ -897,7 +969,7 @@ namespace Project_127
 			WindowChangeListener.Stop();
 			Jumpscript.StopJumpscript();
 			HelperClasses.Logger.Log("Program closed. Proper Exit. Ended normally");
-			MainWindow.MW.Close();
+			//MainWindow.MW.Close();
 			Environment.Exit(0);
 		}
 

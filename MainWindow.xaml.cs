@@ -111,16 +111,13 @@ Hybrid code can be found in AAA_HybridCode.
 		Quick and Dirty notes:
 			- Clean up Code / Readme / Patchnotes
 			- Release new ZIP
-			- Make it create Folder and Savefile for new release...for SFH Demo
+			- Binary Folder and stuff
+			- [DONE] Make it create Folder and Savefile for new release...for SFH Demo
 			- [DONE] Translate Keys... 
 			- [DONE] Clean up "big three" method. Make users click no, check for size > 0 instead of file exists...
 			- [DONE] Add Fullscreen mode to settings. Added other stuff to settings. Fixed settings bugs.
 			- [DONE] Split settings into 3 subpages
 			- Add Jumpscript and Overlay to "only when downgraded". Just check in start methods of those things, check on Setting to true OfSettings what should be done based on settings
-			- Tray Icon and rightclick on exit stuff for Minimize 
-				=> Main PoC written. Still some choices to make on UX. 
-				=> Need ability to show itself and bring itself to foreground. Both from different P127 exe. 
-	 
 		
 	- Fullscreen mode for overlay
 				--> im thinking
@@ -281,6 +278,8 @@ namespace Project_127
 
 		private System.Windows.Forms.NotifyIcon notifyIcon = null;
 
+		private Mutex myMutex;
+
 		/// <summary>
 		/// Constructor of Main Window
 		/// </summary>
@@ -303,38 +302,30 @@ namespace Project_127
 				Environment.Exit(1);
 			}
 
-
-			//// Checks if a Process with the same ProcessName is already running
-			//if (HelperClasses.ProcessHandler.GetProcesses(Process.GetCurrentProcess().ProcessName).Length > 1)
-			//{
-			//	Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Program is open twice. Do you want to force close the old Instance?");
-			//	yesno.ShowDialog();
-			//	if (yesno.DialogResult == true)
-			//	{
-			//		foreach (Process p in HelperClasses.ProcessHandler.GetProcessesContains(Process.GetCurrentProcess().ProcessName))
-			//		{
-			//			if (p != Process.GetCurrentProcess())
-			//			{
-			//				HelperClasses.ProcessHandler.Kill(p);
-			//			}
-			//		}
-			//	}
-			//	else
-			//	{
-			//		Environment.Exit(2);
-			//	}
-			//}
-
-			Mutex mutex = new Mutex(true, "{09b13947-d5ce-4d9f-af9a-9c6404c1b065}");
-			if (mutex.WaitOne(TimeSpan.Zero, true))
+			// Checking if Mutex is already running
+			Mutex m = new Mutex(false, "P127_Mutex");
+			if (m.WaitOne(100))
 			{
-				mutex.ReleaseMutex();
+				// When it isnt
+
+				//HelperClasses.FileHandling.AddToDebug("This is our first instance");
+				// Globals.DebugPopup("This is our first instance");
 			}
 			else
 			{
-				// communicate with running Process
-				MessageBox.Show("only one instance at a time");
+				// It is already running
+
+				//HelperClasses.FileHandling.AddToDebug("This is NOT our first instance");
+				// Globals.DebugPopup("This is NOT our first instance");
+				//HelperClasses.FileHandling.AddToDebug("P127 already open, calling AlreadyRunning()");
+				AlreadyRunning();
+				//HelperClasses.FileHandling.AddToDebug("After calling AlreadyRunning()");
 			}
+
+			// Starting Mutex
+			myMutex = new Mutex(false, "P127_Mutex");
+			myMutex.WaitOne();
+
 
 			// Start the Init Process of Logger, Settings, Globals, Regedit here, since we need the Logger in the next Line if it fails...
 			Globals.Init(this);
@@ -400,10 +391,52 @@ namespace Project_127
 
 		}
 
+		public async void AlreadyRunning()
+		{
+			//HelperClasses.FileHandling.AddToDebug("In AlreadyRunning(), renaming file now");
+
+			string myPath = Globals.ProjectInstallationPath.TrimEnd('\\') + @"\dirtyprogramming";
+			string myPathNew = Globals.ProjectInstallationPath.TrimEnd('\\') + @"\pleaseshow";
+			// create file. 
+
+			HelperClasses.FileHandling.RenameFile(myPath, "pleaseshow");
+
+			//HelperClasses.FileHandling.AddToDebug("In AlreadyRunning(), File created, before Sleeps");
+
+			await Task.Delay(2000);
+
+			//HelperClasses.FileHandling.AddToDebug("In AlreadyRunning(), After Sleeps");
+
+			if (HelperClasses.FileHandling.doesFileExist(myPathNew))
+			{
+				Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Program is open twice.\nAttempt to talk to already running instance failed.\nForce Close Everything?");
+				yesno.ShowDialog();
+				if (yesno.DialogResult == true)
+				{
+					foreach (Process p in HelperClasses.ProcessHandler.GetProcessesContains(Process.GetCurrentProcess().ProcessName))
+					{
+						if (p != Process.GetCurrentProcess())
+						{
+							HelperClasses.ProcessHandler.Kill(p);
+						}
+					}
+				}
+
+
+				//HelperClasses.FileHandling.AddToDebug("In AlreadyRunning(), renamed File exists");
+			}
+			else
+			{
+				//HelperClasses.FileHandling.AddToDebug("In AlreadyRunning(), renamed File doesnt exist. Closing this instance");
+			}
+			
+			Globals.ProperExit();
+
+		}
 
 		/// <summary>
 		/// Initialzes CEF settings
-		/// </summary>
+		/// </summary>R
 		public static void CEFInitialize()
 		{
 			HelperClasses.Logger.Log("Initializing CEF...");
@@ -558,8 +591,14 @@ namespace Project_127
 		private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
 		{
 			e.Cancel = true;
-			menuItem_Hide_Click(null, null);
-			//Globals.ProperExit();
+			if (Settings.ExitWay == Settings.ExitWays.HideInTray)
+			{
+				menuItem_Hide_Click(null, null);
+			}
+			else
+			{
+				Globals.ProperExit();
+			}
 		}
 
 		/// <summary>
@@ -821,7 +860,7 @@ namespace Project_127
 						MI_Close_Click(null, null);
 					}
 				}
-				else if (Settings.ExitWay == Settings.ExitWays.ExitToTray)
+				else if (Settings.ExitWay == Settings.ExitWays.HideInTray)
 				{
 					MI_ExitToTray_Click(null, null);
 				}
@@ -851,7 +890,7 @@ namespace Project_127
 			cm.Items.Add(mi);
 
 			MenuItem mi2 = new MenuItem();
-			mi2.Header = "Exit to Tray";
+			mi2.Header = "Hide in Tray";
 			mi2.Click += MI_ExitToTray_Click;
 			cm.Items.Add(mi2);
 
@@ -874,7 +913,7 @@ namespace Project_127
 
 		private void MI_ExitToTray_Click(object sender, RoutedEventArgs e)
 		{
-			this.Visibility = Visibility.Hidden;
+			this.Hide();
 		}
 
 		private void MI_Close_Click(object sender, RoutedEventArgs e)
@@ -1128,7 +1167,7 @@ namespace Project_127
 
 		private void notifyIcon_DoubleClick(object sender, EventArgs e)
 		{
-			menuItem_Show_Click(null, null);
+			menuItem_Hide_Click(null, null);
 		}
 
 		private void notifyIcon_Click(object sender, EventArgs e)
@@ -1216,23 +1255,30 @@ namespace Project_127
 
 			if (Settings.StartWay == Settings.StartWays.Maximized)
 			{
-				this.Visibility = Visibility.Visible;
+				this.Show();
 			}
 			else
 			{
-				this.Visibility = Visibility.Hidden;
+				this.Hide();
 			}
 		}
 
-		private void menuItem_Show_Click(object Sender, EventArgs e)
+		public void menuItem_Show_Click(object Sender, EventArgs e)
 		{
-			this.Visibility = Visibility.Visible;
 			this.WindowState = WindowState.Normal;
+			this.Show();
 		}
 
 		private void menuItem_Hide_Click(object Sender, EventArgs e)
 		{
-			this.Visibility = Visibility.Hidden;
+			try
+			{
+				this.Hide();
+			}
+			catch (Exception ex)
+			{
+				Globals.DebugPopup(ex.ToString());
+			}
 		}
 
 		private void menuItem_Upgrade_Click(object Sender, EventArgs e)

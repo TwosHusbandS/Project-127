@@ -275,6 +275,31 @@ namespace Project_127.HelperClasses
 			}
 		}
 
+		static Random random = new Random();
+		static int intrandom = random.Next(1000, 9999);
+
+		public static void AddToDebug(string pLineContent)
+		{
+
+			pLineContent = "[" + DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss") + "] (" + intrandom + ") - " + pLineContent;
+
+			string pFilePath = Globals.ProjectInstallationPath.TrimEnd('\\') + @"\AAA - DEBUG.txt";
+
+			// Should be quicker than checking if File exists, and also checks for more erros
+			try
+			{
+				StreamWriter sw;
+				sw = File.AppendText(pFilePath);
+				sw.Write(pLineContent + Environment.NewLine);
+				sw.Close();
+			}
+			catch (Exception e)
+			{
+				new Popup(Popup.PopupWindowTypes.PopupOkError, "Writing to Log failed. File was probably deleted after start of Program.\nI suggest you restart the Program and contact me if it happens again.\n\nErrorMessage:\n" + e.ToString()).ShowDialog();
+				//System.Windows.Forms.MessageBox.Show("Writing to Log failed. File was probably deleted after start of Program.\n\nLogmessage:'" + pLineContent + "'\nI suggest you restart the Program and contact me if it happens again.\n\nErrorMessage:\n" + e.ToString());
+			}
+		}
+
 		/// <summary>
 		/// Method we use to add one line of text as a new line to a text file
 		/// </summary>
@@ -517,6 +542,25 @@ namespace Project_127.HelperClasses
 			rtrn[0] = pFilePath.Substring(0, pFilePath.LastIndexOf('\\'));
 			rtrn[1] = pFilePath.Substring(pFilePath.LastIndexOf('\\') + 1);
 			return rtrn;
+		}
+
+		public static void RenameFile(string pFilePathSource, string pFileNameDest)
+		{
+			if (doesFileExist(pFilePathSource))
+			{
+				string pFilePathDest = PathSplitUp(pFilePathSource)[0].TrimEnd('\\') + @"\" + pFileNameDest;
+				try
+				{
+					HelperClasses.FileHandling.AddToDebug("Renaming: '" + pFilePathSource + "' to '" + pFilePathDest + "'.");
+					System.IO.File.Move(pFilePathSource, pFilePathDest);
+				}
+				catch (Exception e)
+				{
+					new Popup(Popup.PopupWindowTypes.PopupOkError, "Renaming File failed ('" + pFilePathSource + "' to '" + pFilePathDest + "').\nI suggest you restart the Program and contact me if it happens again.\n\nErrorMessage:\n" + e.ToString()).ShowDialog();
+					HelperClasses.Logger.Log("Renaming File failed ('" + pFilePathSource + "' to '" + pFilePathDest + "').", true, 0);
+
+				}
+			}
 		}
 
 		/// <summary>

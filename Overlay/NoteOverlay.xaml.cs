@@ -74,7 +74,7 @@ namespace Project_127.Overlay
 						btn_Keybindings.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
 						break;
 					case NoteOverlayPages.Keybinds:
-
+						NoteOverlay.DisposePreview();
 
 						// Set actual Frame_Main Content to the correct Page
 						Frame_Notes.Content = new Project_127.Overlay.NoteOverlayPages.NoteOverlay_Keybinds();

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,6 +10,8 @@ namespace Project_127.HelperClasses
 {
 	class Jumpscript
 	{
+		static Process myJumpscript;
+
 		public static void StartJumpscript()
 		{
 			StopJumpscript();
@@ -26,14 +29,17 @@ namespace Project_127.HelperClasses
 
 			HelperClasses.FileHandling.WriteToFile(Globals.ProjectInstallationPath.TrimEnd('\\') + @"\P127_Jumpscript.ahk", myList.ToArray());
 
-			HelperClasses.ProcessHandler.StartProcess(Globals.ProjectInstallationPath.TrimEnd('\\') + @"\P127_Jumpscript.exe");
+			myJumpscript = HelperClasses.ProcessHandler.StartProcess(Globals.ProjectInstallationPath.TrimEnd('\\') + @"\P127_Jumpscript.exe");
 
 			HelperClasses.Logger.Log("(Re-)Started Jumpscript");
 		}
 
 		public static void StopJumpscript()
 		{
-			HelperClasses.ProcessHandler.KillProcesses("P127_Jumpscript");
+			if (myJumpscript != null)
+			{
+				HelperClasses.ProcessHandler.Kill(myJumpscript);
+			}
 
 			HelperClasses.FileHandling.deleteFile(Globals.ProjectInstallationPath.TrimEnd('\\') + @"\P127_Jumpscript.ahk");
 

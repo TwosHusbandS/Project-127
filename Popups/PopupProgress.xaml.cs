@@ -237,6 +237,7 @@ namespace Project_127.Popups
 				HelperClasses.Logger.Log("Initiating Downgrade", 0);
 				HelperClasses.Logger.Log("GTAV Installation Path: " + LauncherLogic.GTAVFilePath, 1);
 				HelperClasses.Logger.Log("InstallationLocation: " + Globals.ProjectInstallationPath, 1);
+				HelperClasses.Logger.Log("InstallationLocationBinary: " + Globals.ProjectInstallationPathBinary, 1);
 				HelperClasses.Logger.Log("ZIP File Location: " + LauncherLogic.ZIPFilePath, 1);
 				HelperClasses.Logger.Log("DowngradeFilePath: " + LauncherLogic.DowngradeFilePath, 1);
 				HelperClasses.Logger.Log("UpgradeFilePath: " + LauncherLogic.UpgradeFilePath, 1);
