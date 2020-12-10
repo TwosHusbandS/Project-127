@@ -138,6 +138,7 @@ Hybrid code can be found in AAA_HybridCode.
 				--> [DONE] check if we need to add Y Margin to it because of WPF Overlay "Titlebar"
 				--> [DONE] Check if it works with our hidden WPF Window...
 				--> [DONE] Semi-Connected to backend. With all settings correct on P127 launch, shit works.
+				--> ReWrite Looks stuff...it should update the actual overlay, but just write to settings on mouseLeftUp
 				--> make WPF WIndow size width accordingly
 				--> Bevor messing with stuff below, check how we hide / show currently...and how to untangle that logic
 						=> Maybe use OverlayMode for that?

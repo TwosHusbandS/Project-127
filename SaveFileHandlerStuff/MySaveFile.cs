@@ -21,7 +21,7 @@ namespace Project_127
 		/// <summary>
 		/// Root Path for the SaveFiles we provide
 		/// </summary>
-		public static string BackupSavesPath = LauncherLogic.SaveFilesPath;
+		public static string BackupSavesPath { get { return LauncherLogic.SaveFilesPath; } }
 
 		/// <summary>
 		/// Path of the folder we are currently looking it
