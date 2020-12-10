@@ -111,12 +111,16 @@ Hybrid code can be found in AAA_HybridCode.
 		Quick and Dirty notes:
 			- Clean up Code / Readme / Patchnotes
 			- Release new ZIP
-			- Binary Folder and stuff
+			- [DONE] Binary Folder and stuff
+			- [DONE] Make Launcher Built on Main Built
+			- [DONE] Copy (Build event) License File to Proper directory
+			- [DONE] Copy (Build event) Jumpscript Exe
 			- [DONE] Make it create Folder and Savefile for new release...for SFH Demo
 			- [DONE] Translate Keys... 
 			- [DONE] Clean up "big three" method. Make users click no, check for size > 0 instead of file exists...
 			- [DONE] Add Fullscreen mode to settings. Added other stuff to settings. Fixed settings bugs.
 			- [DONE] Split settings into 3 subpages
+			- Command Line args...pass from Launcher to main executable. Check code on main executable.
 			- Add Jumpscript and Overlay to "only when downgraded". Just check in start methods of those things, check on Setting to true OfSettings what should be done based on settings
 		
 	- Fullscreen mode for overlay
@@ -441,7 +445,7 @@ namespace Project_127
 		{
 			HelperClasses.Logger.Log("Initializing CEF...");
 			var s = new CefSharp.Wpf.CefSettings();
-			s.CachePath = Globals.ProjectInstallationPath.TrimEnd('\\') + @"\CEF_CacheFiles";
+			s.CachePath = Globals.ProjectInstallationPathBinary.TrimEnd('\\') + @"\CEF_CacheFiles";
 			s.BackgroundColor = 0;//0x13 << 16 | 0x15 << 8 | 0x18;
 			s.DisableGpuAcceleration();
 			s.CefCommandLineArgs["autoplay-policy"] = "no-user-gesture-required";
@@ -803,6 +807,7 @@ namespace Project_127
 			DebugMessage.Add("BetaMode: '" + Globals.BetaMode + "'");
 			DebugMessage.Add("InternalMode: '" + Globals.InternalMode + "'");
 			DebugMessage.Add("Project 1.27 Installation Path '" + Globals.ProjectInstallationPath + "'");
+			DebugMessage.Add("Project 1.27 Installation Path Binary '" + Globals.ProjectInstallationPathBinary + "'");
 			DebugMessage.Add("ZIP Extraction Path '" + LauncherLogic.ZIPFilePath + "'");
 			DebugMessage.Add("LauncherLogic.GTAVFilePath: '" + LauncherLogic.GTAVFilePath + "'");
 			DebugMessage.Add("LauncherLogic.UpgradeFilePath: '" + LauncherLogic.UpgradeFilePath + "'");

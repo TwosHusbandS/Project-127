@@ -34,7 +34,13 @@ namespace Project_127
 		/// <summary>
 		/// Property of our own Installation Path
 		/// </summary>
-		public static string ProjectInstallationPath { get { return Process.GetCurrentProcess().MainModule.FileName.Substring(0, Process.GetCurrentProcess().MainModule.FileName.LastIndexOf('\\')); } }
+		public static string ProjectInstallationPath
+		{
+			get
+			{
+				return (Directory.GetParent(ProjectInstallationPathBinary).ToString());
+			}
+		}
 
 		/// <summary>
 		/// Property of our own Installation Path Binary
@@ -45,6 +51,7 @@ namespace Project_127
 		/// <summary>
 		/// Property of our ProjectName (for Folders, Regedit, etc.)
 		/// </summary>
+		/// 
 		public static string ProjectName = "Project_127";
 
 		/// <summary>
@@ -418,7 +425,7 @@ namespace Project_127
 					FileHandling.deleteFile(LauncherLogic.UpgradeFilePath.TrimEnd('\\') + @"\socialclub.dll");
 					FileHandling.deleteFile(LauncherLogic.UpgradeFilePath.TrimEnd('\\') + @"\tinyxml2.dll");
 
-					string[] tmp = HelperClasses.FileHandling.GetSubFolders(ProjectInstallationPath);
+					string[] tmp = HelperClasses.FileHandling.GetSubFolders(ProjectInstallationPathBinary);
 					foreach (string temp in tmp)
 					{
 						HelperClasses.FileHandling.DeleteFolder(temp);
@@ -1234,7 +1241,7 @@ namespace Project_127
 		{
 			HelperClasses.Logger.Log("Initializing CEF...");
 			var s = new CefSharp.Wpf.CefSettings();
-			s.CachePath = Globals.ProjectInstallationPath.TrimEnd('\\') + @"\CEF_CacheFiles";
+			s.CachePath = Globals.ProjectInstallationPathBinary.TrimEnd('\\') + @"\CEF_CacheFiles";
 			s.BackgroundColor = 0;//0x13 << 16 | 0x15 << 8 | 0x18;
 			s.DisableGpuAcceleration();
 			s.CefCommandLineArgs["autoplay-policy"] = "no-user-gesture-required";

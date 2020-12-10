@@ -272,6 +272,7 @@ namespace Project_127.HelperClasses
 			catch (Exception e)
 			{
 				Logger.Log("Sth failed while writing string array to file: " + e.ToString());
+
 			}
 		}
 
@@ -551,7 +552,7 @@ namespace Project_127.HelperClasses
 				string pFilePathDest = PathSplitUp(pFilePathSource)[0].TrimEnd('\\') + @"\" + pFileNameDest;
 				try
 				{
-					HelperClasses.FileHandling.AddToDebug("Renaming: '" + pFilePathSource + "' to '" + pFilePathDest + "'.");
+					//HelperClasses.FileHandling.AddToDebug("Renaming: '" + pFilePathSource + "' to '" + pFilePathDest + "'.");
 					System.IO.File.Move(pFilePathSource, pFilePathDest);
 				}
 				catch (Exception e)

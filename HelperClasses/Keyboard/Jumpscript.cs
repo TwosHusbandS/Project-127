@@ -27,9 +27,9 @@ namespace Project_127.HelperClasses
 			myList.Add(KeyToString(MySettings.Settings.JumpScriptKey2) + "::" + KeyToString(MySettings.Settings.JumpScriptKey1));
 			myList.Add("#IfWinActive");
 
-			HelperClasses.FileHandling.WriteToFile(Globals.ProjectInstallationPath.TrimEnd('\\') + @"\P127_Jumpscript.ahk", myList.ToArray());
+			HelperClasses.FileHandling.WriteToFile(Globals.ProjectInstallationPathBinary.TrimEnd('\\') + @"\P127_Jumpscript.ahk", myList.ToArray());
 
-			myJumpscript = HelperClasses.ProcessHandler.StartProcess(Globals.ProjectInstallationPath.TrimEnd('\\') + @"\P127_Jumpscript.exe");
+			myJumpscript = HelperClasses.ProcessHandler.StartProcess(Globals.ProjectInstallationPathBinary.TrimEnd('\\') + @"\P127_Jumpscript.exe");
 
 			HelperClasses.Logger.Log("(Re-)Started Jumpscript");
 		}
@@ -41,7 +41,7 @@ namespace Project_127.HelperClasses
 				HelperClasses.ProcessHandler.Kill(myJumpscript);
 			}
 
-			HelperClasses.FileHandling.deleteFile(Globals.ProjectInstallationPath.TrimEnd('\\') + @"\P127_Jumpscript.ahk");
+			HelperClasses.FileHandling.deleteFile(Globals.ProjectInstallationPathBinary.TrimEnd('\\') + @"\P127_Jumpscript.ahk");
 
 			HelperClasses.Logger.Log("Stopped Jumpscript");
 		}
