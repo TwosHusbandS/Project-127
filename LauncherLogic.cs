@@ -113,10 +113,10 @@ namespace Project_127
 				WindowChangeHander.WindowChangeEvent(WindowChangeListener.GetActiveWindowTitle());
 
 				// If one of the Settings which require Hotkeys are enabled
-				if (Settings.EnableAutoStartJumpScript || Settings.EnableOverlay)
+				if (Settings.EnableOverlay)
 				{
 					// Only Start Stop shit here when the overlay is not in debugmode
-					if (!GTAOverlay.DebugMode)
+					if (!GTAOverlay.DebugMode && GTAOverlay.OverlayMode == GTAOverlay.OverlayModes.Fullscreen)
 					{
 						NoteOverlay.InitGTAOverlay();
 						HelperClasses.WindowChangeListener.Start();
@@ -125,7 +125,7 @@ namespace Project_127
 				}
 				else
 				{
-					if (!GTAOverlay.DebugMode)
+					if (!GTAOverlay.DebugMode && GTAOverlay.OverlayMode == GTAOverlay.OverlayModes.Fullscreen)
 					{
 						NoteOverlay.DisposeGTAOverlay();
 						HelperClasses.Keyboard.KeyboardListener.Stop();
@@ -140,7 +140,7 @@ namespace Project_127
 			}
 			else
 			{
-				if (!GTAOverlay.DebugMode)
+				if (!GTAOverlay.DebugMode && GTAOverlay.OverlayMode == GTAOverlay.OverlayModes.Fullscreen)
 				{
 					NoteOverlay.DisposeGTAOverlay();
 					HelperClasses.Keyboard.KeyboardListener.Stop();

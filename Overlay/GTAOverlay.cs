@@ -189,7 +189,7 @@ namespace Project_127
 		/// <summary>
 		/// Internal. Determines the Y offset of the overlay (from padding position.
 		/// </summary>
-		private int _YMargin { get; set; } = 0;
+		private int _YMargin { get; set; } = 40;
 
 		/// <summary>
 		/// Determines the Y offset of the overlay (from padding position).
@@ -263,11 +263,16 @@ namespace Project_127
 		/// <summary>
 		/// determines if we are a fullscreen overlay or a multi monitor overlay
 		/// </summary>
-		static OverlayModes OverlayMode
+		public static OverlayModes OverlayMode
 		{
 			get; set;
 		}
 
+
+		public OverlayModes currOverlayMode
+		{
+			get;
+		}
 
 		/// <summary>
 		/// Generates the game overlay
@@ -281,6 +286,7 @@ namespace Project_127
 			HelperClasses.Logger.Log("Game Overlay Initiated");
 
 			OverlayMode = overlayMode;
+			currOverlayMode = OverlayMode;
 
 			_brushes = new Dictionary<string, SolidBrush>();
 			_images = new Dictionary<string, Image>();

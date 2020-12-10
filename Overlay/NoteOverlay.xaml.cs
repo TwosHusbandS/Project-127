@@ -260,13 +260,24 @@ namespace Project_127.Overlay
 
 		public static void OverlayToggle()
 		{
-			if (IsOverlayVisible())
+			if (IsOverlayInit())
 			{
-				OverlaySetInvisible();
-			}
-			else
-			{
-				OverlaySetVisible();
+				if (IsOverlayVisible())
+				{
+					if (MyGTAOverlay.currOverlayMode == GTAOverlay.OverlayModes.MultiMonitor)
+					{
+						MainWindow.OL_MM.Hide();
+					}
+					OverlaySetInvisible();
+				}
+				else
+				{
+					if (MyGTAOverlay.currOverlayMode == GTAOverlay.OverlayModes.MultiMonitor)
+					{
+						MainWindow.OL_MM.Show();
+					}
+					OverlaySetVisible();
+				}
 			}
 		}
 
@@ -334,7 +345,7 @@ namespace Project_127.Overlay
 
 		}
 
-		
+
 
 
 		private void btn_cb_Click(object sender, RoutedEventArgs e)
@@ -349,7 +360,6 @@ namespace Project_127.Overlay
 					Settings.OverlayMultiMonitorMode = !Settings.OverlayMultiMonitorMode;
 					break;
 			}
-			Settings.EnableOverlay = !Settings.EnableOverlay;
 			ButtonMouseOverMagic(myBtn);
 		}
 

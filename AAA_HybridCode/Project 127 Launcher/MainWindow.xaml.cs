@@ -24,10 +24,17 @@ namespace Project_127_Launcher
 		public MainWindow()
 		{
 			InitializeComponent();
+
 			string ProjectInstallationPath = Process.GetCurrentProcess().MainModule.FileName.Substring(0, Process.GetCurrentProcess().MainModule.FileName.LastIndexOf('\\'));
-			//MessageBox.Show(ProjectInstallationPath.TrimEnd('\\') + @"\UglyFiles\Project 1.27.exe");
-			Process.Start(ProjectInstallationPath.TrimEnd('\\') + @"\UglyFiles\Project 1.27.exe");
-			System.Threading.Thread.Sleep(5);
+
+			string filePath = ProjectInstallationPath.TrimEnd('\\') + @"\UglyFiles\Project 1.27.exe";
+
+			string[] args = Environment.GetCommandLineArgs();
+
+			string arg = string.Join(" ", args.Skip(1).ToArray());    
+
+			Process.Start(filePath, arg);
+
 			this.Close();
 		}
 	}

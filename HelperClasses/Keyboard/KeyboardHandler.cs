@@ -14,37 +14,6 @@ namespace Project_127.HelperClasses
 {
 	class KeyboardHandler
 	{
-
-		// usage: system-wide keyboard hook
-		//private static KeyboardListenerTwo _hook;
-
-
-
-		//public static void TMP()
-		//{
-
-		//	// install system-wide keyboard hook
-		//	_hook = new KeyboardListenerTwo();
-		//	_hook.KeyDown += new KeyboardListenerTwo.HookEventHandler(OnHookKeyDown);
-		//}
-
-
-		//// keyboard hook handler
-		//static void OnHookKeyDown(object sender, HookEventArgs e)
-		//{
-		//	Globals.DebugPopup(e.Key.ToString());
-		//}
-
-
-
-
-
-
-
-
-		public static bool JumpKey1Down = false;
-		public static bool JumpKey2Down = false;
-
 		public static Keys LastKeyPress = Keys.None;
 
 		[STAThread]
@@ -156,17 +125,6 @@ namespace Project_127.HelperClasses
 		[STAThread]
 		public static bool KeyboardUpEvent(Keys pKey)
 		{
-			if (Settings.EnableAutoStartJumpScript)
-			{
-				if (pKey == Settings.JumpScriptKey1)
-				{
-					JumpKey1Down = false;
-				}
-				else if (pKey == Settings.JumpScriptKey2)
-				{
-					JumpKey2Down = false;
-				}
-			}
 			return false;
 		}
 

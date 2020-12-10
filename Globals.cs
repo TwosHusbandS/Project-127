@@ -23,6 +23,7 @@ using System.Windows.Resources;
 using System.Windows.Media.Imaging;
 using CefSharp;
 using System.IO;
+using System.Timers;
 
 namespace Project_127
 {
@@ -453,9 +454,6 @@ namespace Project_127
 			// Check whats the latest Version of the ZIP File in GITHUB
 			CheckForZipUpdate();
 
-			// Intepreting all Command Line shit
-			CommandLineArgumentIntepretation();
-
 			// Checks if Update hit
 			LauncherLogic.HandleUpdates();
 
@@ -536,6 +534,7 @@ namespace Project_127
 					MainWindow.OL_MM.Close();
 				}
 				MainWindow.OL_MM = new Overlay_MultipleMonitor();
+				NoteOverlay.InitGTAOverlay();
 				MainWindow.OL_MM.Hide();
 			}
 		}
@@ -574,35 +573,32 @@ namespace Project_127
 		/// <summary>
 		/// CommandLineArgumentIntepretation(), currently used for Background Image
 		/// </summary>
-		private static void CommandLineArgumentIntepretation()
+		public static void CommandLineArgumentIntepretation()
 		{
 			// Code for internal mode is in Globals.Internalmode Getter
 
 			// Need to be in following Format
-			// "-CommandLineArg:Value"
-			foreach (string CommandLineArg in Globals.CommandLineArgs)
-			{
-				string Argument = "";
-				string Value = "";
-				try
-				{
-					Argument = CommandLineArg.Substring(0, CommandLineArg.IndexOf(':'));
-					Value = CommandLineArg.Substring(CommandLineArg.IndexOf(':') + 1);
-				}
-				catch
-				{
-				}
+			// "-CommandLineArg Value"
+			string[] args = Globals.CommandLineArgs;
 
-				if (Argument == "-Background")
+			for (int i = 0; i <= args.Length - 1; i++)
+			{
+				if (args[i].ToLower() == "-background")
 				{
-					Globals.BackgroundImages Tmp = Globals.BackgroundImages.Main;
-					try
+					// i+1 exists
+					if (i < args.Length - 1)
 					{
-						Tmp = (Globals.BackgroundImages)System.Enum.Parse(typeof(Globals.BackgroundImages), Value);
-						Globals.BackgroundImage = Tmp;
-						MainWindow.MW.SetBackground(Globals.GetBackGroundPath());
+						Globals.BackgroundImages Tmp = Globals.BackgroundImages.Main;
+						try
+						{
+							Tmp = (Globals.BackgroundImages)System.Enum.Parse(typeof(Globals.BackgroundImages), args[i+1]);
+							Globals.BackgroundImage = Tmp;
+						}
+						catch (Exception e) 
+						{
+							new Popup(Popup.PopupWindowTypes.PopupOkError, "Error converting Command Line Argument to Background Image.\n" + e.ToString()).ShowDialog();
+						}
 					}
-					catch { }
 				}
 			}
 		}
@@ -973,10 +969,19 @@ namespace Project_127
 				MainWindow.OL_MM.Close();
 			}
 			HelperClasses.Keyboard.KeyboardListener.Stop();
+			NoteOverlay.DisposeGTAOverlay();
+			NoteOverlay.DisposePreview();
 			WindowChangeListener.Stop();
 			Jumpscript.StopJumpscript();
+			Globals.FSW.Dispose();
+			Globals.MyDispatcherTimer.Stop();
 			HelperClasses.Logger.Log("Program closed. Proper Exit. Ended normally");
-			//MainWindow.MW.Close();
+			try
+			{
+				MainWindow.MW.Close();
+			}
+			catch {	}
+			Application.Current.Shutdown();
 			Environment.Exit(0);
 		}
 

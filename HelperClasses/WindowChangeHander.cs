@@ -14,30 +14,35 @@ namespace Project_127.HelperClasses
 		public static void WindowChangeEvent(string WindowTitle)
 		{
 			//HelperClasses.Logger.Log("DEBUG: '" + WindowTitle + "'", 2);
-			if (WindowTitle == GTAOverlay.targetWindow && LastWindowTitle != GTAOverlay.targetWindow)
+
+			if (MySettings.Settings.EnableOverlay && GTAOverlay.OverlayMode == GTAOverlay.OverlayModes.Fullscreen)
 			{
-				HelperClasses.Logger.Log("'" + GTAOverlay.targetWindow + "' Foreground Change Event detected. It is now in Foreground.");
-				HelperClasses.Keyboard.KeyboardListener.Start();
-				if (Overlay.NoteOverlay.OverlayWasVisible)
+				if (WindowTitle == GTAOverlay.targetWindow && LastWindowTitle != GTAOverlay.targetWindow)
 				{
-					Overlay.NoteOverlay.OverlaySetVisible();
-					Overlay.NoteOverlay.OverlayWasVisible = false;
+					HelperClasses.Logger.Log("'" + GTAOverlay.targetWindow + "' Foreground Change Event detected. It is now in Foreground.");
+					HelperClasses.Keyboard.KeyboardListener.Start();
+					if (Overlay.NoteOverlay.OverlayWasVisible)
+					{
+						Overlay.NoteOverlay.OverlaySetVisible();
+						Overlay.NoteOverlay.OverlayWasVisible = false;
+					}
+				}
+				else if (WindowTitle != GTAOverlay.targetWindow)
+				{
+					if (HelperClasses.Keyboard.KeyboardListener.IsRunning)
+					{
+						// So we dont spam log with that.
+						HelperClasses.Logger.Log("'" + GTAOverlay.targetWindow + "' no longer foreground");
+						HelperClasses.Keyboard.KeyboardListener.Stop();
+					}
+					if (Overlay.NoteOverlay.IsOverlayVisible())
+					{
+						Overlay.NoteOverlay.OverlayWasVisible = true;
+						Overlay.NoteOverlay.OverlaySetInvisible();
+					}
 				}
 			}
-			else if (WindowTitle != GTAOverlay.targetWindow)
-			{
-				if (HelperClasses.Keyboard.KeyboardListener.IsRunning)
-				{
-					// So we dont spam log with that.
-					HelperClasses.Logger.Log("'" + GTAOverlay.targetWindow + "' no longer foreground");
-					HelperClasses.Keyboard.KeyboardListener.Stop();
-				}
-				if (Overlay.NoteOverlay.IsOverlayVisible())
-				{
-					Overlay.NoteOverlay.OverlayWasVisible = true;
-					Overlay.NoteOverlay.OverlaySetInvisible();
-				}
-			}
+
 			LastWindowTitle = WindowTitle;
 		}
 

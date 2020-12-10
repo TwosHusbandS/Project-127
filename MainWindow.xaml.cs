@@ -120,24 +120,25 @@ Hybrid code can be found in AAA_HybridCode.
 			- [DONE] Clean up "big three" method. Make users click no, check for size > 0 instead of file exists...
 			- [DONE] Add Fullscreen mode to settings. Added other stuff to settings. Fixed settings bugs.
 			- [DONE] Split settings into 3 subpages
-			- Command Line args...pass from Launcher to main executable. Check code on main executable.
+			- [DONE] Command Line args...pass from Launcher to main executable. Check code on main executable.
 			- Add Jumpscript and Overlay to "only when downgraded". Just check in start methods of those things, check on Setting to true OfSettings what should be done based on settings
 		
 	- Fullscreen mode for overlay
 				--> im thinking
-				--> [DONE] Window with just fixed height bar. Fixed Color. Offblack and white boarder and text. Width bound to actual width.
+				--> [DONE] Window with just fixed height bar. Fixed Color. Offblack and white boarder and text.
 				--> [DONE] Fullscreen / Multi monitor mode Checkmark on top (under enable) with tooltip
 				--> [DONE] implement settings backend
 				--> [DONE] Margin and Location greyed out and disabled. With popup. On Enable / Disable overlaw. Method to refresh if those are greyed out or not. Or hook on top UI..
 				--> [DONE] Implement overlay stuff...thinking of if check inside constructor where to draw on top on, and call it a day.
-					- Enum param on Overlay object with gets checked on changing stuff
+					- Enum param on Overlay object which gets checked on changing stuff
 				--> [DONE] Y and X Margin sepperate settings. 
 				--> [DONE] Options scrollable there...
 
-				--> Debug tests POC of showing / stopping showing Overlay hooked to our WPF Window
+				--> [DONE] Debug tests POC of showing / stopping showing Overlay hooked to our WPF Window
+				--> [DONE] check if we need to add Y Margin to it because of WPF Overlay "Titlebar"
+				--> [DONE] Check if it works with our hidden WPF Window...
+				--> [DONE] Semi-Connected to backend. With all settings correct on P127 launch, shit works.
 				--> make WPF WIndow size width accordingly
-				--> check if we need to add Y Margin to it because of WPF Overlay "Titlebar"
-				--> Check if it works with our hidden WPF WIndow...
 				--> Bevor messing with stuff below, check how we hide / show currently...and how to untangle that logic
 						=> Maybe use OverlayMode for that?
 						=> we may be referencing DebugMode of GTAOverlay for that...how can we use that.
@@ -345,6 +346,9 @@ namespace Project_127
 			// Some Background Change based on Date
 			ChangeBackgroundBasedOnSeason();
 
+			// Intepreting all Command Line shit
+			Globals.CommandLineArgumentIntepretation();
+
 			if (Globals.InternalMode)
 			{
 				string msg = "We are in internal mode. I need testing on:\n\n" +
@@ -390,6 +394,12 @@ namespace Project_127
 
 				// Same as other two thingies here lolerino
 				HelperClasses.WindowChangeListener.Start();
+			}
+			else if (Settings.EnableOverlay && GTAOverlay.OverlayMode == GTAOverlay.OverlayModes.MultiMonitor)
+			{
+				NoteOverlay.InitGTAOverlay();
+				//HelperClasses.WindowChangeListener.Start();
+				HelperClasses.Keyboard.KeyboardListener.Start();
 			}
 
 
@@ -862,7 +872,7 @@ namespace Project_127
 					yesno.ShowDialog();
 					if (yesno.DialogResult == true)
 					{
-						MI_Close_Click(null, null);
+						Globals.ProperExit();
 					}
 				}
 				else if (Settings.ExitWay == Settings.ExitWays.HideInTray)
