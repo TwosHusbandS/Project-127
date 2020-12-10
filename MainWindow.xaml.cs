@@ -140,6 +140,9 @@ Hybrid code can be found in AAA_HybridCode.
 				--> [DONE] Semi-Connected to backend. With all settings correct on P127 launch, shit works.
 				--> ReWrite Looks stuff...it should update the actual overlay, but just write to settings on mouseLeftUp
 				--> make WPF WIndow size width accordingly
+				--> When we click into the monitor to the side of our WPF Window, it will get back to background, but overlay will stay
+				--> Theres this thing where you force stuff to be in foreground...that could help.
+				
 				--> Bevor messing with stuff below, check how we hide / show currently...and how to untangle that logic
 						=> Maybe use OverlayMode for that?
 						=> we may be referencing DebugMode of GTAOverlay for that...how can we use that.
