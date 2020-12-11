@@ -31,9 +31,14 @@ namespace Project_127_Launcher
 
 			string[] args = Environment.GetCommandLineArgs();
 
-			string arg = string.Join(" ", args.Skip(1).ToArray());    
+			string arg = string.Join(" ", args.Skip(1).ToArray());
 
-			Process.Start(filePath, arg);
+			Process p = new Process();
+			p.StartInfo.FileName = filePath;
+			p.StartInfo.Arguments = arg;
+			p.StartInfo.UseShellExecute = true;
+			p.StartInfo.Verb = "runas";
+			p.Start();
 
 			this.Close();
 		}

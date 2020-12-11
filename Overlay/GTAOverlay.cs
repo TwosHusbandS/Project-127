@@ -32,7 +32,7 @@ namespace Project_127
 				}
 				else
 				{
-					if (OverlayMode == OverlayModes.Fullscreen)
+					if (OverlayMode == OverlayModes.Borderless)
 					{
 						return targetWindowFullscreen;
 					}
@@ -121,7 +121,7 @@ namespace Project_127
 			}
 			set
 			{
-				if (OverlayMode == OverlayModes.Fullscreen)
+				if (OverlayMode == OverlayModes.Borderless)
 				{
 					_Position = value;
 				}
@@ -179,7 +179,7 @@ namespace Project_127
 			}
 			set
 			{
-				if (OverlayMode == OverlayModes.Fullscreen)
+				if (OverlayMode == OverlayModes.Borderless)
 				{
 					_XMargin = value;
 				}
@@ -202,7 +202,7 @@ namespace Project_127
 			}
 			set
 			{
-				if (OverlayMode == OverlayModes.Fullscreen)
+				if (OverlayMode == OverlayModes.Borderless)
 				{
 					_YMargin = value;
 				}
@@ -263,7 +263,7 @@ namespace Project_127
 		/// </summary>
 		public enum OverlayModes
 		{
-			Fullscreen,
+			Borderless,
 			MultiMonitor
 		}
 
@@ -272,7 +272,17 @@ namespace Project_127
 		/// </summary>
 		public static OverlayModes OverlayMode
 		{
-			get; set;
+			get
+			{
+				if (MySettings.Settings.OverlayMultiMonitorMode)
+				{
+					return GTAOverlay.OverlayModes.MultiMonitor;
+				}
+				else
+				{
+					return GTAOverlay.OverlayModes.Borderless;
+				}
+			}
 		}
 
 		/// <summary>

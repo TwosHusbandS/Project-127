@@ -146,7 +146,7 @@ namespace Project_127
 			if (Settings.EnableOverlay)
 			{
 				// Only Start Stop shit here when the overlay is not in debugmode
-				if (!GTAOverlay.DebugMode && GTAOverlay.OverlayMode == GTAOverlay.OverlayModes.Fullscreen)
+				if (!GTAOverlay.DebugMode && GTAOverlay.OverlayMode == GTAOverlay.OverlayModes.Borderless)
 				{
 					NoteOverlay.InitGTAOverlay();
 					HelperClasses.WindowChangeListener.Start();
@@ -158,7 +158,7 @@ namespace Project_127
 		{
 			Jumpscript.StopJumpscript();
 
-			if (!GTAOverlay.DebugMode && GTAOverlay.OverlayMode == GTAOverlay.OverlayModes.Fullscreen)
+			if (!GTAOverlay.DebugMode && GTAOverlay.OverlayMode == GTAOverlay.OverlayModes.Borderless)
 			{
 				NoteOverlay.DisposeGTAOverlay();
 				HelperClasses.Keyboard.KeyboardListener.Stop();

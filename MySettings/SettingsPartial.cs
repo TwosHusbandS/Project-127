@@ -673,14 +673,6 @@ namespace Project_127.MySettings
 			set
 			{
 				SetSetting("OverlayMultiMonitorMode", value.ToString());
-				if (value)
-				{
-					GTAOverlay.OverlayMode = GTAOverlay.OverlayModes.MultiMonitor;
-				}
-				else
-				{
-					GTAOverlay.OverlayMode = GTAOverlay.OverlayModes.Fullscreen;
-				}
 				NoteOverlay.OverlaySettingsChanged();
 			}
 		}

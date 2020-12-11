@@ -327,7 +327,7 @@ namespace Project_127.Overlay
 				{
 					DisposeAllOverlayStuff();
 
-					if (Settings.OverlayMultiMonitorMode)
+					if (GTAOverlay.OverlayMode == GTAOverlay.OverlayModes.MultiMonitor)
 					{
 						if (MainWindow.OL_MM != null)
 						{
@@ -346,7 +346,7 @@ namespace Project_127.Overlay
 						if (LauncherLogic.GameState == LauncherLogic.GameStates.Running)
 						{
 							// Only Start Stop shit here when the overlay is not in debugmode
-							if (!GTAOverlay.DebugMode && GTAOverlay.OverlayMode == GTAOverlay.OverlayModes.Fullscreen)
+							if (!GTAOverlay.DebugMode && GTAOverlay.OverlayMode == GTAOverlay.OverlayModes.Borderless)
 							{
 								NoteOverlay.InitGTAOverlay();
 								HelperClasses.WindowChangeListener.Start();

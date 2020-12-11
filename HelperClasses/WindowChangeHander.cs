@@ -15,7 +15,7 @@ namespace Project_127.HelperClasses
 		{
 			//HelperClasses.Logger.Log("DEBUG: '" + WindowTitle + "'", 2);
 
-			if (MySettings.Settings.EnableOverlay && GTAOverlay.OverlayMode == GTAOverlay.OverlayModes.Fullscreen)
+			if (MySettings.Settings.EnableOverlay && GTAOverlay.OverlayMode == GTAOverlay.OverlayModes.Borderless)
 			{
 				if (WindowTitle == GTAOverlay.targetWindow && LastWindowTitle != GTAOverlay.targetWindow)
 				{

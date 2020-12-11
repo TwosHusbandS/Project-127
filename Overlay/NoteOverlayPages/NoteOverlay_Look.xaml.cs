@@ -45,7 +45,7 @@ namespace Project_127.Overlay.NoteOverlayPages
 		{
 			if (NO_L != null)
 			{
-				if (Settings.OverlayMultiMonitorMode)
+				if (GTAOverlay.OverlayMode == GTAOverlay.OverlayModes.MultiMonitor)
 				{
 					NO_L.Rect_HideOptions.Visibility = Visibility.Visible;
 				}

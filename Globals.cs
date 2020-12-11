@@ -156,7 +156,7 @@ namespace Project_127
 		/// <summary>
 		/// Property of other Buildinfo. Will be in the top message of logs
 		/// </summary>
-		public static string BuildInfo = "Build -1, Crapideot has a crush XD";
+		public static string BuildInfo = "Build 1, Internal Testing for 1.1";
 
 		/// <summary>
 		/// Returns all Command Line Args as StringArray
