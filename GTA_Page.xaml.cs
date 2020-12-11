@@ -41,6 +41,17 @@ namespace Project_127
 		{
 			InitializeComponent();
 			btn_GTA_static = btn_GTA;
+
+			if (LauncherLogic.GameState == LauncherLogic.GameStates.Running)
+			{
+				GTA_Page.btn_GTA_static.BorderBrush = Globals.MW_ButtonGTAGameRunningBorderBrush;
+				GTA_Page.btn_GTA_static.Content = "Exit GTA V";
+			}
+			else
+			{
+				GTA_Page.btn_GTA_static.BorderBrush = Globals.MW_ButtonGTAGameNotRunningBorderBrush;
+				GTA_Page.btn_GTA_static.Content = "Launch GTA V";
+			}
 		}
 
 
@@ -52,17 +63,23 @@ namespace Project_127
 		/// <param name="e"></param>
 		private void btn_GTA_Click(object sender, RoutedEventArgs e)
 		{
+			btn_GTA_Click_Static();
+
+		}
+
+		public static void btn_GTA_Click_Static()
+		{
 			if (LauncherLogic.GameState == LauncherLogic.GameStates.Running)
 			{
 				HelperClasses.Logger.Log("Game deteced running.", 1);
-				btn_GTA_MouseRightButtonDown(null, null);
+				btn_GTA_MouseRightButtonDown_Static();
 			}
 			else
 			{
 				HelperClasses.Logger.Log("User wantst to Launch", 1);
 				LauncherLogic.Launch();
 			}
-			FocusManager.SetFocusedElement(this, null);
+			//FocusManager.SetFocusedElement(this, null);
 			MainWindow.MW.UpdateGUIDispatcherTimer();
 		}
 
@@ -74,13 +91,18 @@ namespace Project_127
 		/// <param name="e"></param>
 		private void btn_GTA_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
 		{
+			btn_GTA_MouseRightButtonDown_Static();
+		}
+
+		public static void btn_GTA_MouseRightButtonDown_Static()
+		{
 			Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Do you want to close GTAV?");
 			yesno.ShowDialog();
 			if (yesno.DialogResult == true)
 			{
 				LauncherLogic.KillRelevantProcesses();
 			}
-			FocusManager.SetFocusedElement(this, null);
+			//FocusManager.SetFocusedElement(this, null);
 			MainWindow.MW.UpdateGUIDispatcherTimer();
 		}
 

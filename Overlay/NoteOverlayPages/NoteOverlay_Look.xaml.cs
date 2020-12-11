@@ -31,23 +31,54 @@ namespace Project_127.Overlay.NoteOverlayPages
 		// Setting those 4 getters setters below all the time
 		// and writing it to settings on close / mouseleftup events
 
-		private static int _OverlayMargin = Settings.OverlayMargin;
+		private static int _OverlayMarginX = Settings.OverlayMarginX;
+		private static int _OverlayMarginY = Settings.OverlayMarginY;
 		private static int _OverlayWidth = Settings.OverlayWidth;
 		private static int _OverlayHeight = Settings.OverlayHeight;
 		private static int _OverlayTextSize = Settings.OverlayTextSize;
 		private static Color _OverlayBackground = Settings.OverlayBackground;
 		private static Color _OverlayForeground = Settings.OverlayForeground;
 
-		public static int OverlayMargin
+		private static NoteOverlay_Look NO_L;
+
+		public static void RefreshIfHideOrNot()
+		{
+			if (NO_L != null)
+			{
+				if (GTAOverlay.OverlayMode == GTAOverlay.OverlayModes.MultiMonitor)
+				{
+					NO_L.Rect_HideOptions.Visibility = Visibility.Visible;
+				}
+				else
+				{
+					NO_L.Rect_HideOptions.Visibility = Visibility.Hidden;
+				}
+			}
+		}
+
+		public static int OverlayMarginX
 		{
 			get
 			{
-				return _OverlayMargin;
+				return _OverlayMarginX;
 			}
 			set
 			{
-				_OverlayMargin = value;
-				Overlay_Preview.OP.SetMargin(OverlayMargin);
+				_OverlayMarginX = value;
+				Overlay_Preview.OP.SetMarginX(OverlayMarginX);
+			}
+		}
+
+		public static int OverlayMarginY
+		{
+			get
+			{
+				return _OverlayMarginY;
+			}
+			set
+			{
+				_OverlayMarginY = value;
+				Overlay_Preview.OP.SetMarginY(OverlayMarginY);
 			}
 		}
 
@@ -155,21 +186,26 @@ namespace Project_127.Overlay.NoteOverlayPages
 		public NoteOverlay_Look()
 		{
 			InitializeComponent();
+
+			NO_L = this;
+
 			_OverlayHeight = Settings.OverlayHeight;
-			_OverlayMargin = Settings.OverlayMargin;
+			_OverlayMarginX = Settings.OverlayMarginX;
+			_OverlayMarginY = Settings.OverlayMarginY;
 			_OverlayWidth = Settings.OverlayWidth;
 			_OverlayTextSize = Settings.OverlayTextSize;
 
 			sl_Width.Value = OverlayWidth;
-			sl_Margin.Value = OverlayMargin;
+			sl_MarginX.Value = OverlayMarginX;
+			sl_MarginY.Value = OverlayMarginY;
 			sl_Height.Value = OverlayHeight;
 			sl_TextSize.Value = OverlayTextSize;
 
 			try { lbl_Width.Content = OverlayWidth.ToString() + " px"; } catch { }
 			try { lbl_Height.Content = OverlayHeight.ToString() + " px"; } catch { }
-			try { lbl_Margin.Content = OverlayMargin.ToString() + " px"; } catch { }
+			try { lbl_MarginX.Content = OverlayMarginX.ToString() + " px"; } catch { }
+			try { lbl_MarginY.Content = OverlayMarginY.ToString() + " px"; } catch { }
 			try { lbl_TextSize.Content = OverlayTextSize.ToString() + " pt"; } catch { }
-
 
 			ComboBox_Fonts.ItemsSource = Fonts.SystemFontFamilies.ToArray();
 
@@ -192,6 +228,8 @@ namespace Project_127.Overlay.NoteOverlayPages
 
 			MyColorPicker_Background.SelectedColor = Settings.OverlayBackground;
 			MyColorPicker_Foreground.SelectedColor = Settings.OverlayForeground;
+
+			RefreshIfHideOrNot();
 		}
 
 		private void ComboBox_Fonts_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -204,23 +242,41 @@ namespace Project_127.Overlay.NoteOverlayPages
 			NoteOverlay_Look.OverlayLocation = (GTAOverlay.Positions)System.Enum.Parse(typeof(GTAOverlay.Positions), ComboBox_OverlayLocation.SelectedItem.ToString());
 		}
 
-		private void sl_Margin_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+		private void sl_MarginX_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
 		{
-			OverlayMargin = (int)(((Slider)sender).Value);
-			string myNewContent = OverlayMargin.ToString() + " px";
-			if (lbl_Margin != null)
+			OverlayMarginX = (int)(((Slider)sender).Value);
+			string myNewContent = OverlayMarginX.ToString() + " px";
+			if (lbl_MarginX != null)
 			{
-				lbl_Margin.Content = myNewContent;
+				lbl_MarginX.Content = myNewContent;
 			}
 		}
 
-		private void sl_Margin_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+		private void sl_MarginY_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
 		{
-			Settings.OverlayMargin = OverlayMargin;
+			OverlayMarginY = (int)(((Slider)sender).Value);
+			string myNewContent = OverlayMarginY.ToString() + " px";
+			if (lbl_MarginY != null)
+			{
+				lbl_MarginY.Content = myNewContent;
+			}
+		}
+
+		private void sl_MarginX_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+		{
+			Settings.OverlayMarginX = OverlayMarginX;
 			if (NoteOverlay.IsOverlayInit())
 			{
-				NoteOverlay.MyGTAOverlay.XMargin = Settings.OverlayMargin;
-				NoteOverlay.MyGTAOverlay.YMargin = Settings.OverlayMargin;
+				NoteOverlay.MyGTAOverlay.XMargin = Settings.OverlayMarginX;
+			}
+		}
+
+		private void sl_MarginY_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+		{
+			Settings.OverlayMarginY = OverlayMarginY;
+			if (NoteOverlay.IsOverlayInit())
+			{
+				NoteOverlay.MyGTAOverlay.YMargin = Settings.OverlayMarginY;
 			}
 		}
 
@@ -232,15 +288,15 @@ namespace Project_127.Overlay.NoteOverlayPages
 			{
 				lbl_Width.Content = myNewContent;
 			}
+			if (NoteOverlay.IsOverlayInit())
+			{
+				NoteOverlay.MyGTAOverlay.width = OverlayWidth;
+			}
 		}
 
 		private void sl_Width_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
 		{
 			Settings.OverlayWidth = OverlayWidth;
-			if (NoteOverlay.IsOverlayInit())
-			{
-				NoteOverlay.MyGTAOverlay.width = Settings.OverlayWidth;
-			}
 		}
 
 		private void sl_Height_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
@@ -251,15 +307,15 @@ namespace Project_127.Overlay.NoteOverlayPages
 			{
 				lbl_Height.Content = myNewContent;
 			}
+			if (NoteOverlay.IsOverlayInit())
+			{
+				NoteOverlay.MyGTAOverlay.height = OverlayHeight;
+			}
 		}
 
 		private void sl_Height_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
 		{
 			Settings.OverlayHeight = OverlayHeight;
-			if (NoteOverlay.IsOverlayInit())
-			{
-				NoteOverlay.MyGTAOverlay.height = Settings.OverlayHeight;
-			}
 		}
 
 		private void sl_TextSize_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
@@ -270,43 +326,43 @@ namespace Project_127.Overlay.NoteOverlayPages
 			{
 				lbl_TextSize.Content = myNewContent;
 			}
+			if (NoteOverlay.IsOverlayInit())
+			{
+				NoteOverlay.MyGTAOverlay.setFont(OverlayTextFont, OverlayTextSize);
+			}
 		}
 
 		private void sl_TextSize_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
 		{
 			Settings.OverlayTextSize = OverlayTextSize;
-			if (NoteOverlay.IsOverlayInit())
-			{
-				NoteOverlay.MyGTAOverlay.setFont(Settings.OverlayTextFont, Settings.OverlayTextSize);
-			}
 		}
 
 		private void MyColorPicker_Foreground_ColorChanged()
 		{
 			OverlayForeground = MyColorPicker_Foreground.SelectedColor;
+			if (NoteOverlay.IsOverlayInit())
+			{
+				NoteOverlay.MyGTAOverlay.setTextColors(OverlayForeground, Color.Transparent);
+			}
 		}
 
 		private void MyColorPicker_Foreground_Closed()
 		{
 			Settings.OverlayForeground = OverlayForeground;
-			if (NoteOverlay.IsOverlayInit())
-			{
-				NoteOverlay.MyGTAOverlay.setTextColors(Settings.OverlayForeground, Color.Transparent);
-			}
 		}
 
 		private void MyColorPicker_Background_ColorChanged()
 		{
 			OverlayBackground = MyColorPicker_Background.SelectedColor;
+			if (NoteOverlay.IsOverlayInit())
+			{
+				NoteOverlay.MyGTAOverlay.setBackgroundColor(OverlayBackground);
+			}
 		}
 
 		private void MyColorPicker_Background_Closed()
 		{
 			Settings.OverlayBackground = OverlayBackground;
-			if (NoteOverlay.IsOverlayInit())
-			{
-				NoteOverlay.MyGTAOverlay.setBackgroundColor(Settings.OverlayBackground);
-			}
 		}
 	}
 

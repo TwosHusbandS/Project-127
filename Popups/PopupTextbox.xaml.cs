@@ -45,6 +45,8 @@ namespace Project_127.Popups
 			lbl_Main.FontSize = pFontSize;
 
 			tb_Main.Text = TextBoxDefault;
+
+			tb_Main.Focus();
 		}
 
 

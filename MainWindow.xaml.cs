@@ -2,11 +2,14 @@
  
 Main Documentation / Dev Diary here:
 
-Actual code (partially closed source) which authentificates, handles entitlement and launches the game is done by @dr490n with the help of other members of the core team like @Special For, who also did a lot of testing, brainstorming, information gathering and 2nd level support
-Other members of the team like @JakeMiester (who did some project management, acted as the communication party between the team and the speedrun mods, "invented" trello) and @zCri (did a research, RE and coding in the initial information gathering stage) as well as a number of other members of the team, including but not limited to @MoMo, @Diamondo25, @S.M.G, @gogsi, @Antibones, @Unemployed, @Aperture, @luky, @CrynesSs, @Daniel Kinau contributed to this project one way or another, and my thanks go out to them.
+Actual code (partially closed source) which authentificates, handles entitlement and launches the game (and Overlay Backend) is done by @dr490n
+@Special For, who also did a lot of RE'ing, testing, brainstorming, information gathering and 2nd level support
+@JakeMiester did some project management, acted as the communication party between the team and the speedrun mods, "invented" trello
+@zCri did a research, RE and coding in the initial information gathering stage
 Artwork, Design of GUI, GUI Behaviourehaviour, Colorchoices etc. by "@Hossel"
 Project 1.27 Client by "@thS"
-Version: 1.0.0.0
+A number of other members of the team, including but not limited to @MoMo, @Diamondo25, @S.M.G, @gogsi, @Antibones, @Unemployed, @Aperture, @luky, @CrynesSs, @Daniel Kinau contributed to this project one way or another, and my thanks go out to them.
+Version: 1.0.9.4
 
 Build Instructions:
 	Press CTRLF + F5, pray that nuget does its magic.
@@ -15,12 +18,17 @@ Build Instructions:
 Deploy Instructions:
 	Change Version Number a few Lines Above.
 	Change Version Number in both of the last lines in AssemblyInfo.cs
-	Check if BetaMode in Globals.cs is correct
+	Check if BetaMode / InternalMode in Globals.cs is correct
 	Check if BuildInfo in Globals.cs is correct
 	Make sure app manifest is set TO require admin
 	Build this program in release
-	Build installer via Innosetup (Script is in \Installer\) [Change Version in Version and OutputName]
-	Change Version number and Installer Location in "\Installer\Update.xml"
+		Verify this by going to Information -> About and check for Version Number and Build Info
+	Build installer via Innosetup (script we use for that is in \Installer\)
+		Change Version in Version
+		Change Version in OutputName
+		Change BuildPath to your local Path of the repo...(make sure it builds in the \Installer Folder
+	Delete Project_127_Installer_Latest.exe. Copy Paste the Installer we just compiled and name the copy of it Project_127_Installer_Latest.exe
+	Change Version number and Installer Path in "\Installer\Update.xml"
 	Push Commit to github branch.
 	Merge branch into master
 
@@ -28,43 +36,10 @@ Comments like "TODO", "TO DO", "CTRLF", "CTRL-F", and "CTRL F" are just ways of 
 
 Hybrid code can be found in AAA_HybridCode.
 
-General Files / Classes:
-	Windows:
-		MainWindow.xaml.cs
-		Settings.xaml.cs
-			SettingsPartial.cs
-		SaveFileHandler.xaml.cs
-		ReadMe.xaml.cs
-		Popup.xaml.cs // Normal Popup (OK & OKERROR & YES/NO)
-		PopupComboBox.xaml.cs // Normal Popup (OK & OKERROR & YES/NO)
-		PopupTextBox.xaml.cs // Normal Popup (OK & OKERROR & YES/NO)
-		PopupDownload.xaml.cs // Popup for Downloading Files
-		PopupProgress.xaml.cs // Popup for large file operation with semi-optinal loading bar
-		ROSIntegration.xaml.cs // Auth window fo @dr490n
-
-	Classes:
-		Globals.cs  // Global Variables and Central Place
-		LauncherLogic.cs // Most of the downgrade, upgrade, repair, launch things
-		MySaveFile.cs // Custom Class for Objects for the SaveFileHandler, Very much subject to change
-		MyFileOperation.cs // One file operation (move/delete/copy/hardlink), used for bigger file operations 
-		HelperClasses\Logger.cs // Own logger
-		HelperClasses\RegeditHandler.cs // Wrappers for used Regedit things
-		HelperClasses\ProcessHandler.cs // Wrappers for process stuff, Subject to change
-		HelperClasses\FileHandler.cs // Wrapers for file stuff
-		EntitlementBlock.cs // Backend by @d490n
-		EntitlementBlockCipher.cs // Backend by @d490n
-		RC4.cs // Backend by @d490n
-		ROSCommunicationBackend.cs // Backend by @d490n
-
-Main To do:
-		SaveFileHandler Folder dectection and display. Dummy Double Click Method done.
-			Gotta implement the actual displaying files from new folder and updating Label
-			Gotta Refresh on Renaming Left side btw (for NiceName Update)
-		
 	- Changelog past 1.0.0.0 Build 3:
 		=> Changed Polling Rate of GTA V Running or Not from 5 to 2.5 seconds
 		=> Gave Reloe the new Installer Link
-		=> Fixed Spelling Mistake
+		=> Fixed Spelling Mistakes
 		=> Throwing only one nice Network error now, instead of all of them with exception string
 		=> Removed the language selection from firstlaunch and Reset Settings
 		=> Improved Popup Startup Location Code to make it look nicer
@@ -87,108 +62,136 @@ Main To do:
 		=> Running Core stuff when launching through steam. This might not have any effect
 		=> Design of UX for NoteOverlay.xaml
 		=> Updated Settings with JumpScript and NoteOverlay stuff
-		=> Rolling Log (fixed potential off by one)
+		=> Rolling Log (fixed potential off by one very elegantly)
 		=> ToolTips on all Icon-Buttons
 		=> Annoucement Feature
 		=> FailSafe Backup System for Upgrade Files
 		=> Auth will no longer crash when not reachable. Well at least we check it on page load...
-		=> [NEEDS TESTING] Overlay + Jumpscript stuff
-		=> [NEEDS TESTING] Auto-Start XYZ on Game Launch working dir fix
-		=> [NEEDS TESTING] Downgrade/Upgrade/Repair improvements:
+		=> Overlay for notes and UI for it
+		=> Jumpscript
+		=> Auto-Start XYZ on Game Launch working dir fix
+		=> Downgrade/Upgrade/Repair improvements:
 			- Detecting Updates automatically (checking for it on start, upgrade, downgrade), throwing one popup per P127 Launch
 			- Throwing Popup with potential Fixes for non-changing InstallationState (upgraded, downgraded, unsure)
 			- Not having own files in GTA V Folder when upgraded
+		=> FIXED command line args internal once and for all
+		=> Implemented Jumpscript via Autohotkey
+		=> Integrate Title from Dragon both as in content and as in customizability
+		=> Fixed Both Listeners for the hopefully final time
+		=> Fixed Update Detection
+		=> Commented out new SaveFileHandler Code
+		=> Fixed Process Priority setting too often
+		=> Added GameLaunched and GameExited methods based on the polling
+		=> Fixed ForegroundChangeListener not setting on fullscreen by polling every 2.5 seconds
+		=> Fix Command line args crashing it...
+		=> Make "DetectUpgrade" more efficent
+		=> Integrate Latest working branch. 
+		=> Integrate Dragons Fixes for Rockstar Endpoint change
+		=> Took care of all Listeners. Using and keeping track of Threads for it as of right now. Seems to work
+		=> Split upgrading downgrading into 17 progress popups
+		=> Finish Readme (Speedrun text + Reset Button + DL of big zip)
+		=> ZIP Hash for big ZIP
+		=> Webscraping for DDLs from anonfiles
+		=> ALL Styles moved to App.xml
+		=> Bring back functionality from which were forgetten in new GUI
+		=> Selection after deletion (datagrid) fixxed
+		=> Yoshis Info regarding Versions
+		=> NoteOverlay Null Reference Fix + CPU Improvements
+		=> Cache works, there are other cache files tho...argh. ~~Investigate CEF Cache~~
+		=> Added Logging for AutoStart stuff
+		=> Added Force Option to Downgrade / Upgrade when GTA V Path is detected to be false on Upgrade / Downgrade
+		=> Removed Delay on Downgrade / Upgrade, throwing 3 separate ProgressBar popups for it.
+		=> Using Portable AHK now with script written to desk
+		=> Released under MIT
+		=> Improved UX overall. Lots of small things.
+		=> Lots of SaveFileHandler Improvments. Really shitty code, really shitty performance, but UX is great.
 
+	Release 1.1
 
-			Quick and dirty notes:
-				- Jumpscript Send Key stuff
-					=> Had some PoC work for simulating keypresses which GTA V picks up.
-					=> It only send keydown and not keyup
-					=> It also got caught in our own keyboard listeners, but i can get around that
-				- [DONE] FIXED command line args internal once and for all
-				- [DONE] Implemented Jumpscript via Autohotkey
-				- [DONE] Integrate Title from Dragon both as in content and as in customizability
-				- [DONE] Fixed Both Listeners for the hopefully final time
-				- [DONE] Fixed Update Detection
-				- [DONE] Commented out new SaveFileHandler Code
-				- [DONE] Fixed Process Priority setting too often
-				- [DONE] Fixed ForegroundChangeListener not setting on fullscreen by polling every 2.5 seconds
-				- [DONE] Fix Command line args crashing it...
-				- [DONE] Make "DetectUpgrade" more efficent
-				- [DONE] Integrate Latest working branch. 
-				- [DONE] Integrate Dragons Fixes for Rockstar Endpoint change
-				- [DONE] Took care of all Listeners. Using and keeping track of Threads for it as of right now. Seems to work
-				- [DONE] Split upgrading downgrading into 17 progress popups
-				- [DONE] Finish Readme (Speedrun text + Reset Button + DL of big zip)
-				- [DONE] ZIP Hash for big ZIP
-				- [DONE] Bring back functionality from: https://github.com/TwosHusbandS/Project-127/commit/a5dcbd5c1a4011c8e1845c4f338f6f9ffbe79a92
-				- [DONE] Selection after deletion is fucked (Solution in Commit Above)
-				- [DONE] Yoshis Info
-				- [DONE] NoteOverlay Null Reference Fix + CPU Improvements
-				- [DONE] Cache works, there are other cache files tho...argh. ~~Investigate CEF Cache~~
+		Quick and Dirty notes:
+			- Clean up Code / Readme / Patchnotes
+			- [DONE] Release new ZIP
+			- [DONE] Binary Folder and stuff
+			- [DONE] Make Launcher Built on Main Built
+			- [DONE] Copy (Build event) License File to Proper directory
+			- [DONE] Copy (Build event) Jumpscript Exe
+			- [DONE] Make it create Folder and Savefile for new release...for SFH Demo
+			- [DONE] Translate Keys... 
+			- [DONE] Delete Internal File for everyone.
+			- [DONE] Clean up "big three" method. Make users click no, check for size > 0 instead of file exists...
+			- [DONE] Add Fullscreen mode to settings. Added other stuff to settings. Fixed settings bugs.
+			- [DONE] Split settings into 3 subpages
+			- [DONE] Command Line args...pass from Launcher to main executable. Check code on main executable.
+			- [DONE] Add Jumpscript and Overlay to "only when downgraded". Just check in start methods of those things, check on Setting to true OfSettings what should be done based on settings
+			- [DONE] Cant do Overlay "only when downgraded" since we dont tie it to game running or game window when multi monitor mode...
+		
+	- [DONE] Fullscreen mode for overlay
+				--> [DONE] Window with just fixed height bar. Fixed Color. Offblack and white boarder and text.
+				--> [DONE] Fullscreen / Multi monitor mode Checkmark on top (under enable) with tooltip
+				--> [DONE] implement settings backend
+				--> [DONE] Margin and Location greyed out and disabled. With popup. On Enable / Disable overlaw. Method to refresh if those are greyed out or not. Or hook on top UI..
+				--> [DONE] Implement overlay stuff...thinking of if check inside constructor where to draw on top on, and call it a day.
+						- Enum param on Overlay object which gets checked on changing stuff
+				--> [DONE] Y and X Margin sepperate settings. 
+				--> [DONE] Options scrollable there...
 
-
-Okay so Project 1.27 is in internal testing stage for the 1.1 Version.
-
-If you want to participate:
-
-Download this:
-
-https://github.com/TwosHusbandS/Project-127/raw/internal/Installer/Project_127_Installer_V_1_0_9_3.exe
-
-place a file called "internal.txt" in the directory where Project 1.27 is installed.
-
-This Version will contain bugs, will be imperfect, may crash, may cause you to have to verify game files via Steam.
-
-You can try "Settings -> Use backup files" if you cant Upgrade properly.
-
-You can always uninstall P127 and then install the 1.0 Version currently out there, by grabbing this link:
-
-https://github.com/TwosHusbandS/Project-127/raw/master/Installer/Project_127_Installer_V_1_0_0_1.exe
-
-Please click the actual links and not the discord previews
-
-
-
-		=== Keep in Mind === 
-
-	Still to do for 1.1
-	- Cef no disk cache...
-	- Ask Yoshi, Crapideot, and that other guy from hossels discord
-	- 1.5 seconds delay on downgrade... + warning popup on first downgrade that it takes some time
-	- Comment SaveFileHandler stuff out so we are back to 1.0 SaveFileHandler
-	- Jumpscript
-		-> Find input sender which works in Game and doesnt infinite loop
-		-> OR make pointer to struct work...
-	- Make texts in readme / Information markdown with easy links and scrollbar and stuff. Also reference the resetall button in settings
-	- Uninstaller still is semi-manual...Should be fixed with "Reset" Buttons eliminating the need for custom uninstaller
-	- Add new DLLs to installer (I think at least 2, probably 3...Bottom Line: test installer.
-
-
-	Other stuff:
-	- If i can prevent the keypress from being processed further...I can probably change a param and send a different keypress there...
-	- USE GIT TO KEEP TRACK OF INSTALLATION STATES???
-	- Features still to do:
-		- Native jump Script
-		- [@thS currently working on] Better Save File Handler
-			=> Add Folder Support
+				--> [DONE] Debug tests POC of showing / stopping showing Overlay hooked to our WPF Window
+				--> [DONE] check if we need to add Y Margin to it because of WPF Overlay "Titlebar"
+				--> [DONE] Check if it works with our hidden WPF Window...
+				--> [DONE] Semi-Connected to backend. With all settings correct on P127 launch, shit works.
+				--> [DONE] ReWrite Looks stuff...it should update the actual overlay, but just write to settings on mouseLeftUp
+				--> [DONE] make WPF WIndow size width accordingly
+				--> [DONE] When we click into the monitor to the side of our WPF Window, it will get back to background, but overlay will stay
+				--> [DONE] Theres this thing where you force stuff to be in foreground...that could help. (WPF.Window.Instance.TopMost)
+				--> [DONE] WPF Window + Overlay gets init with correct target windows on P127 launch.
+				--> [DONE] WPF Window Closes on Hotkey globally
+				--> [DONE] WPF Window Close on P127 close
+				--> [DONE] WPF Window opens on Hotkey
+				--> [DONE] WPF Window Size changes with settings change...
+				--> [DONE] Changing Settings of OverlayMode and OverlayEnable work while P127 is running and while GTA is running and non running
+				--> [DONE] Display Logic on Look tab. 
+				--> [DONE] Bevor messing with stuff below, check how we hide / show currently...and how to untangle that logic
+						=> Maybe use OverlayMode for that?
+						=> we may be referencing DebugMode of GTAOverlay for that...how can we use that.
+						=> Rethink KeyboardListener. Might have to run it 24/7. Maybe already tied to debugmode? 
+				--> [DONE] WPF Window Closes on Settings Disable
+				--> [DONE] WPF Window openes on Settings Enable
+				--> [DONE] WPF Window opens on Look Tab
+				--> [DONE] WPF Window closes on Look Tab (unless it was shown before open)
+				--> [DONE] Game Overlay doesnt disappear when alt tabbing and in tabbing
+				--> [DONE] Make sure shit works when changing settings with GTA Running...
+		- [DONE] SFH Improvements
+			=> [DONE] Add Folder Support
 				>> ReWrite of SaveFileHandler class with enum for File or Folder
 				>> Folders as clickable items in list at the very top with a "[FolderName]
 				>> Top Folder being "[..]" like in WinRar
-			=> Add Support for Copy & Move (in Ram) and Paste.
-			=> Multiselect
-			=> RightClick on File (Copy, Rename, Delete)
-			=> RightClick on Files (Copy, Delete, Delete)
-			=> RightClick on Background (new Folder, Paste)
-			=> RightClick on Folder
-		- Auto Start via CSV and custom shit
-		- Note Feature from Reloes suggestion 
-
-    - Low Prio:
-		Regedit Cleanup of everything not in default settings
-		Add Audio Effects
-		Fix Code signing so we dont get anti virus error
-
+				>> Connect to Backend in terms of rename, move around, etc.
+			=> [DONE] Add Support for Copy & Move (in Ram) and Paste.
+				>> Backend Properites
+				>> Taking care of when we show the contextmenus..
+				>> Copy / Cut Methods
+				>> Pasting Methods
+			=> [DONE] Make it load async...with loading gif
+			=> [SCRATCHED] Search Bar
+			=> [DONE] Rename left file doesnt update text in brackets on right side...
+			=> [DONE] MouseOver displays full fillename
+			=> [DONE] Make selected File act like NoteOverlay_NoteFiles
+			=> [DONE] Better Hotkey support
+			=> [SCRATCHED] Multiselect
+			=> [DONE] RightClick on File (Copy, Rename, Delete)
+			=> [DONE] RightClick on Files (Copy, Delete, Delete)
+			=> [DONE] RightClick on Background (new Folder, Paste)
+			=> [DONE] RightClick on Folder
+			=> [SCRATCHED] Horizontal Scroll bar
+			
+		
+		- Update ReadMe, to reflect that its not being actively developed and read through it in general. 
+			=> Add credits to new people (hosting, version info, legends of Community)
+		- NameSpace clean up...
+		- Code clean up
+		- Code documentation
+		- Comments clean up
+		- Add Logging
 
 Bug Reportings:
 	- [RESOLVED][IDC]
@@ -257,6 +260,8 @@ using Project_127.Overlay;
 using Project_127.Popups;
 using Project_127.MySettings;
 using CefSharp;
+using System.Drawing;
+using System.Threading;
 
 namespace Project_127
 {
@@ -278,6 +283,12 @@ namespace Project_127
 		/// Static Property to access Children (mainly Controls) of MainWindow Instance
 		/// </summary>
 		public static MainWindow MW;
+
+		public static Overlay_MultipleMonitor OL_MM = null;
+
+		private System.Windows.Forms.NotifyIcon notifyIcon = null;
+
+		public static Mutex myMutex;
 
 		/// <summary>
 		/// Constructor of Main Window
@@ -301,27 +312,30 @@ namespace Project_127
 				Environment.Exit(1);
 			}
 
-
-			// Checks if a Process with the same ProcessName is already running
-			if (HelperClasses.ProcessHandler.GetProcesses(Process.GetCurrentProcess().ProcessName).Length > 1)
+			// Checking if Mutex is already running
+			Mutex m = new Mutex(false, "P127_Mutex");
+			if (m.WaitOne(100))
 			{
-				Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Program is open twice. Do you want to force close the old Instance?");
-				yesno.ShowDialog();
-				if (yesno.DialogResult == true)
-				{
-					foreach (Process p in HelperClasses.ProcessHandler.GetProcessesContains(Process.GetCurrentProcess().ProcessName))
-					{
-						if (p != Process.GetCurrentProcess())
-						{
-							HelperClasses.ProcessHandler.Kill(p);
-						}
-					}
-				}
-				else
-				{
-					Environment.Exit(2);
-				}
+				// When it isnt
+
+				//HelperClasses.FileHandling.AddToDebug("This is our first instance");
+				// Globals.DebugPopup("This is our first instance");
 			}
+			else
+			{
+				// It is already running
+
+				//HelperClasses.FileHandling.AddToDebug("This is NOT our first instance");
+				// Globals.DebugPopup("This is NOT our first instance");
+				//HelperClasses.FileHandling.AddToDebug("P127 already open, calling AlreadyRunning()");
+				AlreadyRunning();
+				//HelperClasses.FileHandling.AddToDebug("After calling AlreadyRunning()");
+			}
+
+			// Starting Mutex
+			myMutex = new Mutex(false, "P127_Mutex");
+			myMutex.WaitOne();
+
 
 			// Start the Init Process of Logger, Settings, Globals, Regedit here, since we need the Logger in the next Line if it fails...
 			Globals.Init(this);
@@ -336,6 +350,9 @@ namespace Project_127
 
 			// Some Background Change based on Date
 			ChangeBackgroundBasedOnSeason();
+
+			// Intepreting all Command Line shit
+			Globals.CommandLineArgumentIntepretation();
 
 			if (Globals.InternalMode)
 			{
@@ -358,7 +375,13 @@ namespace Project_127
 			SetButtonMouseOverMagic(btn_Hamburger);
 			Globals.HamburgerMenuState = Globals.HamburgerMenuStates.Hidden;
 
+			// Init NotifyIcon does not need to be called, its called on Loaded()
+			// InitNotifyIcon();
+
+			HelperClasses.Logger.Log("Only CEF Init to go...");
+
 			// Moved CEFInitialize(); to Globals.Init() since its not GUI Related or Execution Related
+			CEFInitialize();
 
 			HelperClasses.Logger.Log("Startup procedure (Constructor of MainWindow) completed.");
 			HelperClasses.Logger.Log("--------------------------------------------------------");
@@ -378,6 +401,67 @@ namespace Project_127
 				HelperClasses.WindowChangeListener.Start();
 			}
 		}
+
+		public async void AlreadyRunning()
+		{
+			//HelperClasses.FileHandling.AddToDebug("In AlreadyRunning(), renaming file now");
+
+			string myPath = Globals.ProjectInstallationPath.TrimEnd('\\') + @"\dirtyprogramming";
+			string myPathNew = Globals.ProjectInstallationPath.TrimEnd('\\') + @"\pleaseshow";
+			// create file. 
+
+			HelperClasses.FileHandling.RenameFile(myPath, "pleaseshow");
+
+			//HelperClasses.FileHandling.AddToDebug("In AlreadyRunning(), File created, before Sleeps");
+
+			await Task.Delay(2000);
+
+			//HelperClasses.FileHandling.AddToDebug("In AlreadyRunning(), After Sleeps");
+
+			if (HelperClasses.FileHandling.doesFileExist(myPathNew))
+			{
+				Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Program is open twice.\nAttempt to talk to already running instance failed.\nForce Close Everything?");
+				yesno.ShowDialog();
+				if (yesno.DialogResult == true)
+				{
+					foreach (Process p in HelperClasses.ProcessHandler.GetProcessesContains(Process.GetCurrentProcess().ProcessName))
+					{
+						if (p != Process.GetCurrentProcess())
+						{
+							HelperClasses.ProcessHandler.Kill(p);
+						}
+					}
+				}
+
+
+				//HelperClasses.FileHandling.AddToDebug("In AlreadyRunning(), renamed File exists");
+			}
+			else
+			{
+				//HelperClasses.FileHandling.AddToDebug("In AlreadyRunning(), renamed File doesnt exist. Closing this instance");
+			}
+			
+			Globals.ProperExit();
+
+		}
+
+		/// <summary>
+		/// Initialzes CEF settings
+		/// </summary>R
+		public static void CEFInitialize()
+		{
+			HelperClasses.Logger.Log("Initializing CEF...");
+			var s = new CefSharp.Wpf.CefSettings();
+			s.CachePath = Globals.ProjectInstallationPathBinary.TrimEnd('\\') + @"\CEF_CacheFiles";
+			s.BackgroundColor = 0;//0x13 << 16 | 0x15 << 8 | 0x18;
+			s.DisableGpuAcceleration();
+			s.CefCommandLineArgs["autoplay-policy"] = "no-user-gesture-required";
+#if DEBUG
+			s.RemoteDebuggingPort = 8088;
+#endif
+			Cef.Initialize(s);
+		}
+
 
 		/// <summary>
 		/// Changing Background based on current Date
@@ -422,7 +506,7 @@ namespace Project_127
 				}
 				catch (Exception)
 				{
-					Globals.DebugPopup("This program must be run as an administrator!");
+					System.Windows.Forms.MessageBox.Show("This program must be run as an administrator!");
 				}
 			}
 		}
@@ -517,7 +601,15 @@ namespace Project_127
 		/// <param name="e"></param>
 		private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
 		{
-			Globals.ProperExit();
+			e.Cancel = true;
+			if (Settings.ExitWay == Settings.ExitWays.HideInTray)
+			{
+				menuItem_Hide_Click(null, null);
+			}
+			else
+			{
+				Globals.ProperExit();
+			}
 		}
 
 		/// <summary>
@@ -705,6 +797,7 @@ namespace Project_127
 		}
 
 
+
 		/// <summary>
 		/// Right click on Auth button. Gives proper Debug Output
 		/// </summary>
@@ -721,6 +814,7 @@ namespace Project_127
 			DebugMessage.Add("BetaMode: '" + Globals.BetaMode + "'");
 			DebugMessage.Add("InternalMode: '" + Globals.InternalMode + "'");
 			DebugMessage.Add("Project 1.27 Installation Path '" + Globals.ProjectInstallationPath + "'");
+			DebugMessage.Add("Project 1.27 Installation Path Binary '" + Globals.ProjectInstallationPathBinary + "'");
 			DebugMessage.Add("ZIP Extraction Path '" + LauncherLogic.ZIPFilePath + "'");
 			DebugMessage.Add("LauncherLogic.GTAVFilePath: '" + LauncherLogic.GTAVFilePath + "'");
 			DebugMessage.Add("LauncherLogic.UpgradeFilePath: '" + LauncherLogic.UpgradeFilePath + "'");
@@ -729,10 +823,21 @@ namespace Project_127
 			DebugMessage.Add("Detected AuthState: '" + LauncherLogic.AuthState + "'");
 			DebugMessage.Add("Detected GameState: '" + LauncherLogic.GameState + "'");
 			DebugMessage.Add("Detected InstallationState: '" + LauncherLogic.InstallationState + "'");
-			DebugMessage.Add("    Size of GTA5.exe in GTAV Installation Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\GTA5.exe"));
-			DebugMessage.Add("    Size of GTA5.exe in Downgrade Files Folder: " + LauncherLogic.SizeOfDowngradedGTAV);
+			DebugMessage.Add("    Size of GTA5.exe in GTAV Installation Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\GTA5.exe") + Globals.GetGameInfoForDebug(LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\GTA5.exe"));
 			DebugMessage.Add("    Size of update.rpf in GTAV Installation Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\update\update.rpf"));
-			DebugMessage.Add("    Size of update.rpf in Downgrade Files Folder: " + LauncherLogic.SizeOfDowngradedUPDATE);
+			DebugMessage.Add("    Size of playgtav.exe in GTAV Installation Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\playgtav.exe"));
+			DebugMessage.Add("    ------------------------------------------------");
+			DebugMessage.Add("    Size of GTA5.exe in DowngradeFiles Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\GTA5.exe") + Globals.GetGameInfoForDebug(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\GTA5.exe"));
+			DebugMessage.Add("    Size of update.rpf in DowngradeFiles Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\update\update.rpf"));
+			DebugMessage.Add("    Size of playgtav.exe in DowngradeFiles Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\playgtav.exe"));
+			DebugMessage.Add("    ------------------------------------------------");
+			DebugMessage.Add("    Size of GTA5.exe in UpdateFiles Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.UpgradeFilePath.TrimEnd('\\') + @"\GTA5.exe") + Globals.GetGameInfoForDebug(LauncherLogic.UpgradeFilePath.TrimEnd('\\') + @"\GTA5.exe"));
+			DebugMessage.Add("    Size of update.rpf in UpdateFiles Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.UpgradeFilePath.TrimEnd('\\') + @"\update\update.rpf"));
+			DebugMessage.Add("    Size of playgtav.exe in UpdateFiles Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.UpgradeFilePath.TrimEnd('\\') + @"\playgtav.exe"));
+			DebugMessage.Add("    ------------------------------------------------");
+			DebugMessage.Add("    Size of GTA5.exe in BACKUP UpdateFiles Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.UpgradeFilePathBackup.TrimEnd('\\') + @"\GTA5.exe") + Globals.GetGameInfoForDebug(LauncherLogic.UpgradeFilePathBackup.TrimEnd('\\') + @"\GTA5.exe"));
+			DebugMessage.Add("    Size of update.rpf in BACKUP UpdateFiles Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.UpgradeFilePathBackup.TrimEnd('\\') + @"\update\update.rpf"));
+			DebugMessage.Add("    Size of playgtav.exe in BACKUP UpdateFiles Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.UpgradeFilePathBackup.TrimEnd('\\') + @"\playgtav.exe"));
 			DebugMessage.Add("Settings: ");
 			foreach (KeyValuePair<string, string> KVP in Globals.MySettings)
 			{
@@ -758,12 +863,22 @@ namespace Project_127
 		{
 			if (Globals.PageState == Globals.PageStates.GTA)
 			{
-				Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Do you really want to quit?");
-				yesno.ShowDialog();
-				if (yesno.DialogResult == true)
+				if (Settings.ExitWay == Settings.ExitWays.Close)
 				{
-					this.Close();
-					Environment.Exit(0);
+					Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Do you really want to quit?");
+					yesno.ShowDialog();
+					if (yesno.DialogResult == true)
+					{
+						Globals.ProperExit();
+					}
+				}
+				else if (Settings.ExitWay == Settings.ExitWays.HideInTray)
+				{
+					MI_ExitToTray_Click(null, null);
+				}
+				else if (Settings.ExitWay == Settings.ExitWays.Minimize)
+				{
+					MI_Minimize_Click(null, null);
 				}
 			}
 			else
@@ -779,11 +894,45 @@ namespace Project_127
 		/// <param name="e"></param>
 		private void btn_Exit_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
 		{
-			this.Close();
-			Environment.Exit(0);
+			ContextMenu cm = new ContextMenu();
+
+			MenuItem mi = new MenuItem();
+			mi.Header = "Minimize";
+			mi.Click += MI_Minimize_Click;
+			cm.Items.Add(mi);
+
+			MenuItem mi2 = new MenuItem();
+			mi2.Header = "Hide in Tray";
+			mi2.Click += MI_ExitToTray_Click;
+			cm.Items.Add(mi2);
+
+			MenuItem mi3 = new MenuItem();
+			mi3.Header = "Close P127";
+			mi3.Click += MI_Close_Click;
+			cm.Items.Add(mi3);
+
+			cm.IsOpen = true;
+
 			//Globals.DebugPopup(Globals.CommandLineArgs.ToString());
 			//Globals.DebugPopup(Globals.InternalMode.ToString());
 		}
+
+
+		private void MI_Minimize_Click(object sender, RoutedEventArgs e)
+		{
+			this.WindowState = WindowState.Minimized;
+		}
+
+		private void MI_ExitToTray_Click(object sender, RoutedEventArgs e)
+		{
+			this.Hide();
+		}
+
+		private void MI_Close_Click(object sender, RoutedEventArgs e)
+		{
+			Globals.ProperExit();
+		}
+
 
 		// Methods of the GTA Clicks are in GTA_Page
 
@@ -823,6 +972,17 @@ namespace Project_127
 				{
 					HelperClasses.Logger.Log("Installation State Broken.", 1);
 					new Popup(Popup.PopupWindowTypes.PopupOkError, "Installation State is broken. I suggest trying to repair.\nWill try to Upgrade anyways.").ShowDialog();
+				}
+
+				if (LauncherLogic.IsGTAVInstallationPathCorrect(false))
+				{
+					Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "GTA Installation Path detected to be wrong.\nForce this Upgrade?");
+					yesno.ShowDialog();
+					if (yesno.DialogResult != true)
+					{
+						HelperClasses.Logger.Log("Will abort Upgrade, since GTA V Installation Path is wrong, and user does not want to force the Upgrade");
+						return;
+					}
 				}
 				LauncherLogic.Upgrade();
 			}
@@ -884,6 +1044,17 @@ namespace Project_127
 				{
 					HelperClasses.Logger.Log("Installation State Broken. Downgrade procedure will be called anyways since it shouldnt break things.", 1);
 					new Popup(Popup.PopupWindowTypes.PopupOk, "Installation State is broken. I suggest trying to repair.\nWill try to Downgrade anyways").ShowDialog();
+				}
+
+				if (LauncherLogic.IsGTAVInstallationPathCorrect(false))
+				{
+					Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "GTA Installation Path detected to be wrong.\nForce this Downgrade?");
+					yesno.ShowDialog();
+					if (yesno.DialogResult != true)
+					{
+						HelperClasses.Logger.Log("Will abort Downgrade, since GTA V Installation Path is wrong, and user does not want to force the Downgrade");
+						return;
+					}
 				}
 				LauncherLogic.Downgrade();
 			}
@@ -991,6 +1162,182 @@ namespace Project_127
 			}
 		}
 
+		private void btn_Upgrade_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+		{
+
+			if (e.ClickCount == 3)
+			{
+				new Popups.Popup(Popups.Popup.PopupWindowTypes.PopupOk, "Shoutouts to @crapideot for being awesome and a\ngreat friend and Helper during Project 1.27 :)\nHope you have a great day buddy").ShowDialog();
+			}
+		}
+
+		private void Window_Loaded(object sender, RoutedEventArgs e)
+		{
+			InitNotifyIcon();
+		}
+
+
+		private void notifyIcon_DoubleClick(object sender, EventArgs e)
+		{
+			menuItem_Hide_Click(null, null);
+		}
+
+		private void notifyIcon_Click(object sender, EventArgs e)
+		{
+			menuItem_Show_Click(null, null);
+		}
+
+
+		private void InitNotifyIcon()
+		{
+			notifyIcon = new System.Windows.Forms.NotifyIcon();
+			notifyIcon.Click += new EventHandler(notifyIcon_Click);
+			notifyIcon.DoubleClick += new EventHandler(notifyIcon_DoubleClick);
+			notifyIcon.Visible = true;
+
+
+			Uri resourceUri = new Uri(@"Artwork\icon.ico", UriKind.Relative);
+			System.Windows.Forms.NotifyIcon icon = new System.Windows.Forms.NotifyIcon();
+			using (Stream iconStream = Application.GetResourceStream(resourceUri).Stream)
+			{
+				icon.Icon = new System.Drawing.Icon(iconStream);
+				notifyIcon.Icon = icon.Icon;
+				iconStream.Dispose();
+			}
+
+			System.Windows.Forms.ContextMenu cm = new System.Windows.Forms.ContextMenu();
+
+			System.Windows.Forms.MenuItem mi1 = new System.Windows.Forms.MenuItem();
+			mi1.Text = "Show P127";
+			mi1.Click += new System.EventHandler(this.menuItem_Show_Click);
+			cm.MenuItems.Add(mi1);
+
+			System.Windows.Forms.MenuItem mi2 = new System.Windows.Forms.MenuItem();
+			mi2.Text = "Hide P127";
+			mi2.Click += new System.EventHandler(this.menuItem_Hide_Click);
+			cm.MenuItems.Add(mi2);
+
+			cm.MenuItems.Add("-");
+
+			System.Windows.Forms.MenuItem mi3 = new System.Windows.Forms.MenuItem();
+			mi3.Text = "Upgrade";
+			mi3.Click += new System.EventHandler(this.menuItem_Upgrade_Click);
+			cm.MenuItems.Add(mi3);
+
+			System.Windows.Forms.MenuItem mi4 = new System.Windows.Forms.MenuItem();
+			mi4.Text = "Downgrade";
+			mi4.Click += new System.EventHandler(this.menuItem_Downgrade_Click);
+			cm.MenuItems.Add(mi4);
+
+			System.Windows.Forms.MenuItem mi5 = new System.Windows.Forms.MenuItem();
+			mi5.Text = "Launch Game";
+			mi5.Click += new System.EventHandler(this.menuItem_LaunchGame_Click);
+			cm.MenuItems.Add(mi5);
+
+			cm.MenuItems.Add("-");
+
+			System.Windows.Forms.MenuItem mi6 = new System.Windows.Forms.MenuItem();
+			mi6.Text = "SaveFileHandler";
+			mi6.Click += new System.EventHandler(this.menuItem_SaveFileHandler_Click);
+			cm.MenuItems.Add(mi6);
+
+			System.Windows.Forms.MenuItem mi7 = new System.Windows.Forms.MenuItem();
+			mi7.Text = "NoteOverlay";
+			mi7.Click += new System.EventHandler(this.menuItem_NoteOverlay_Click);
+			cm.MenuItems.Add(mi7);
+
+			System.Windows.Forms.MenuItem mi8 = new System.Windows.Forms.MenuItem();
+			mi8.Text = "Settings";
+			mi8.Click += new System.EventHandler(this.menuItem_Settings_Click);
+			cm.MenuItems.Add(mi8);
+
+			System.Windows.Forms.MenuItem mi9 = new System.Windows.Forms.MenuItem();
+			mi9.Text = "Information";
+			mi9.Click += new System.EventHandler(this.menuItem_Information_Click);
+			cm.MenuItems.Add(mi9);
+
+			cm.MenuItems.Add("-");
+
+			System.Windows.Forms.MenuItem mi10 = new System.Windows.Forms.MenuItem();
+			mi10.Text = "Close P127";
+			mi10.Click += new System.EventHandler(this.menuItem_Close_Click);
+			cm.MenuItems.Add(mi10);
+
+			notifyIcon.ContextMenu = cm;
+
+			if (Settings.StartWay == Settings.StartWays.Maximized)
+			{
+				this.Show();
+			}
+			else
+			{
+				this.Hide();
+			}
+		}
+
+		public void menuItem_Show_Click(object Sender, EventArgs e)
+		{
+			this.WindowState = WindowState.Normal;
+			this.Show();
+		}
+
+		private void menuItem_Hide_Click(object Sender, EventArgs e)
+		{
+			try
+			{
+				this.Hide();
+			}
+			catch (Exception ex)
+			{
+				Globals.DebugPopup(ex.ToString());
+			}
+		}
+
+		private void menuItem_Upgrade_Click(object Sender, EventArgs e)
+		{
+			this.btn_Upgrade_Click(null, null);
+		}
+
+		private void menuItem_Downgrade_Click(object Sender, EventArgs e)
+		{
+			this.btn_Downgrade_Click(null, null);
+		}
+
+		private void menuItem_LaunchGame_Click(object Sender, EventArgs e)
+		{
+			menuItem_Show_Click(null, null);
+			Globals.PageState = Globals.PageStates.GTA;
+			GTA_Page.btn_GTA_Click_Static();
+		}
+
+		private void menuItem_SaveFileHandler_Click(object Sender, EventArgs e)
+		{
+			menuItem_Show_Click(null, null);
+			Globals.PageState = Globals.PageStates.SaveFileHandler;
+		}
+
+		private void menuItem_NoteOverlay_Click(object Sender, EventArgs e)
+		{
+			menuItem_Show_Click(null, null);
+			Globals.PageState = Globals.PageStates.NoteOverlay;
+		}
+
+		private void menuItem_Settings_Click(object Sender, EventArgs e)
+		{
+			menuItem_Show_Click(null, null);
+			Globals.PageState = Globals.PageStates.Settings;
+		}
+
+		private void menuItem_Information_Click(object Sender, EventArgs e)
+		{
+			menuItem_Show_Click(null, null);
+			Globals.PageState = Globals.PageStates.ReadMe;
+		}
+
+		private void menuItem_Close_Click(object Sender, EventArgs e)
+		{
+			Globals.ProperExit();
+		}
 
 
 	} // End of Class

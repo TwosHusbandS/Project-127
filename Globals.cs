@@ -22,6 +22,8 @@ using Project_127.MySettings;
 using System.Windows.Resources;
 using System.Windows.Media.Imaging;
 using CefSharp;
+using System.IO;
+using System.Timers;
 
 namespace Project_127
 {
@@ -33,11 +35,24 @@ namespace Project_127
 		/// <summary>
 		/// Property of our own Installation Path
 		/// </summary>
-		public static string ProjectInstallationPath { get { return Process.GetCurrentProcess().MainModule.FileName.Substring(0, Process.GetCurrentProcess().MainModule.FileName.LastIndexOf('\\')); } }
+		public static string ProjectInstallationPath
+		{
+			get
+			{
+				return (Directory.GetParent(ProjectInstallationPathBinary).ToString());
+			}
+		}
+
+		/// <summary>
+		/// Property of our own Installation Path Binary
+		/// </summary>
+		public static string ProjectInstallationPathBinary { get { return Process.GetCurrentProcess().MainModule.FileName.Substring(0, Process.GetCurrentProcess().MainModule.FileName.LastIndexOf('\\')); } }
+
 
 		/// <summary>
 		/// Property of our ProjectName (for Folders, Regedit, etc.)
 		/// </summary>
+		/// 
 		public static string ProjectName = "Project_127";
 
 		/// <summary>
@@ -141,7 +156,7 @@ namespace Project_127
 		/// <summary>
 		/// Property of other Buildinfo. Will be in the top message of logs
 		/// </summary>
-		public static string BuildInfo = "Build 1, Internal Testing";
+		public static string BuildInfo = "Build 1, Internal Testing for 1.1";
 
 		/// <summary>
 		/// Returns all Command Line Args as StringArray
@@ -245,7 +260,9 @@ namespace Project_127
 			{"ZIPExtractionPath", Process.GetCurrentProcess().MainModule.FileName.Substring(0, Process.GetCurrentProcess().MainModule.FileName.LastIndexOf('\\')) },
 			{"EnableLogging", "True"},
 			{"EnableCopyFilesInsteadOfHardlinking", "False"},
-			
+			{"ExitWay", "Close"},
+			{"StartWay", "Maximized"},
+	
 			// GTA V Settings
 			{"Retailer", "Steam"},
 			{"LanguageSelected", "English"},
@@ -277,18 +294,21 @@ namespace Project_127
 			{"KeyOverlayScrollDown", "107" },
 			{"KeyOverlayScrollRight", "106" },
 			{"KeyOverlayScrollLeft", "111" },
-			{"KeyOverlayNoteNext", "103" },
-			{"KeyOverlayNotePrev", "105" },
+			{"KeyOverlayNoteNext", "105" },
+			{"KeyOverlayNotePrev", "103" },
 
-
+			{"OverlayMultiMonitorMode", "False" },
 			{"OverlayBackground", "100,0,0,0" },
 			{"OverlayForeground", "255,255,0,255" },
 			{"OverlayLocation", "TopLeft" },
-			{"OverlayMargin", "10" },
+			{"OverlayMarginX", "10" },
+			{"OverlayMarginY", "10" },
 			{"OverlayWidth", "580" },
 			{"OverlayHeight", "500" },
 			{"OverlayTextFont", "Arial" },
 			{"OverlayTextSize", "24" },
+			{"OL_MM_Left", "0" },
+			{"OL_MM_Top", "0" },
 
 			{"OverlayNotesMain","Note1.txt;Note2.txt;Note3.txt;Note4.txt"},
 			{"OverlayNotesPresetA",""},
@@ -408,10 +428,22 @@ namespace Project_127
 					FileHandling.deleteFile(LauncherLogic.UpgradeFilePath.TrimEnd('\\') + @"\socialclub.dll");
 					FileHandling.deleteFile(LauncherLogic.UpgradeFilePath.TrimEnd('\\') + @"\tinyxml2.dll");
 
-					string[] tmp = HelperClasses.FileHandling.GetSubFolders(ProjectInstallationPath);
+					string[] tmp = HelperClasses.FileHandling.GetSubFolders(ProjectInstallationPathBinary);
 					foreach (string temp in tmp)
 					{
 						HelperClasses.FileHandling.DeleteFolder(temp);
+					}
+
+					HelperClasses.FileHandling.createPath(MySaveFile.BackupSavesPath.TrimEnd('\\') + @"\New Folder");
+					HelperClasses.FileHandling.createPath(MySaveFile.BackupSavesPath.TrimEnd('\\') + @"\YouCanRightclick");
+
+					string[] Files = HelperClasses.FileHandling.GetFilesFromFolder(ProjectInstallationPath);
+					foreach (string file in Files)
+					{
+						if (HelperClasses.FileHandling.PathSplitUp(file)[1].Contains("internal"))
+						{
+							HelperClasses.FileHandling.deleteFile(file);
+						}
 					}
 				}
 
@@ -434,24 +466,19 @@ namespace Project_127
 			// Check whats the latest Version of the ZIP File in GITHUB
 			CheckForZipUpdate();
 
-			// Intepreting all Command Line shit
-			CommandLineArgumentIntepretation();
-
-			// Jumpscript
-			if (Settings.EnableAutoStartJumpScript)
-			{
-				Jumpscript.InitJumpscript();
-			}
-
 			// Checks if Update hit
 			LauncherLogic.HandleUpdates();
 
 			// Rolling Log stuff
 			HelperClasses.Logger.RollingLog();
 
+			NoteOverlay.OverlaySettingsChanged();
+
+			InitFileWatcher();
+
 			// CEF Initializing
-			CEFInitialize();
-			
+			//CEFInitialize();
+
 			// Starting the Dispatcher Timer for the automatic updates of the GTA V Button
 			MyDispatcherTimer = new System.Windows.Threading.DispatcherTimer();
 			MyDispatcherTimer.Tick += new EventHandler(MainWindow.MW.UpdateGUIDispatcherTimer);
@@ -459,6 +486,57 @@ namespace Project_127
 			MyDispatcherTimer.Start();
 			MainWindow.MW.UpdateGUIDispatcherTimer();
 		}
+
+		public static FileSystemWatcher FSW = new FileSystemWatcher();
+
+		public static void InitFileWatcher()
+		{
+			//HelperClasses.FileHandling.AddToDebug("In InitFileWatcher() Creating FileSystemWatcher");
+
+			FSW = new FileSystemWatcher();
+
+			FSW.Path = ProjectInstallationPath;
+
+			// Watch for changes in LastAccess and LastWrite times, and
+			// the renaming of files or directories.
+			FSW.NotifyFilter = NotifyFilters.LastAccess
+								 | NotifyFilters.LastWrite
+								 | NotifyFilters.FileName
+								 | NotifyFilters.DirectoryName
+								 | NotifyFilters.Attributes
+								 | NotifyFilters.Size
+								 | NotifyFilters.CreationTime;
+
+			// Only watch text files.
+			//FSW.Filter = "PleaseShow.txt";
+
+			// Add event handlers.
+			FSW.Renamed += OnRename;
+			//FSW.Changed += OnCreated;
+
+			// Begin watching.
+			FSW.EnableRaisingEvents = true;
+			//HelperClasses.FileHandling.AddToDebug("In InitFileWatcher() Done with everything");
+
+		}
+
+		private static async void OnRename(object source, RenamedEventArgs e)
+		{
+			//HelperClasses.FileHandling.AddToDebug("In OnRename() - " + $"File: {e.OldFullPath} renamed to {e.FullPath}");
+
+			if (e.Name == "pleaseshow")
+			{
+				//HelperClasses.FileHandling.AddToDebug("In OnRename(). IT IS OUR FILE  YEAH");
+				HelperClasses.FileHandling.RenameFile(HelperClasses.FileHandling.PathCombine(Globals.ProjectInstallationPath, "pleaseshow"), "dirtyprogramming");
+				await Task.Delay(100);
+				MainWindow.MW.Dispatcher.Invoke(() =>
+				{
+					MainWindow.MW.menuItem_Show_Click(null, null);
+				});
+			}
+		}
+
+
 
 		public static string GetGameVersionOfBuildNumber(Version BuildNumber)
 		{
@@ -470,49 +548,56 @@ namespace Project_127
 				}
 			}
 
-			if (BuildNumber < new Version("1.0.2060.1"))
+			if (BuildNumber > new Version(Globals.VersionTable.ElementAt(Globals.VersionTable.Count - 1).Key))
 			{
-				return "???";
+				return ("> " + Globals.VersionTable.ElementAt(Globals.VersionTable.Count - 1).Value);
 			}
 			else
 			{
-				return "> 1.52";
+				return "???";
 			}
+		}
+
+		public static string GetGameInfoForDebug(string pFilePath)
+		{
+			if (HelperClasses.FileHandling.doesFileExist(pFilePath))
+			{
+				FileVersionInfo FVI = FileVersionInfo.GetVersionInfo(pFilePath);
+				return " (" + new Version(FVI.FileVersion).ToString() + " - " + new Version(Globals.GetGameVersionOfBuildNumber(new Version(FVI.FileVersion))) + ")";
+			}
+			return "";
 		}
 
 
 		/// <summary>
 		/// CommandLineArgumentIntepretation(), currently used for Background Image
 		/// </summary>
-		private static void CommandLineArgumentIntepretation()
+		public static void CommandLineArgumentIntepretation()
 		{
 			// Code for internal mode is in Globals.Internalmode Getter
 
 			// Need to be in following Format
-			// "-CommandLineArg:Value"
-			foreach (string CommandLineArg in Globals.CommandLineArgs)
-			{
-				string Argument = "";
-				string Value = "";
-				try
-				{
-					Argument = CommandLineArg.Substring(0, CommandLineArg.IndexOf(':'));
-					Value = CommandLineArg.Substring(CommandLineArg.IndexOf(':') + 1);
-				}
-				catch
-				{
-				}
+			// "-CommandLineArg Value"
+			string[] args = Globals.CommandLineArgs;
 
-				if (Argument == "-Background")
+			for (int i = 0; i <= args.Length - 1; i++)
+			{
+				if (args[i].ToLower() == "-background")
 				{
-					Globals.BackgroundImages Tmp = Globals.BackgroundImages.Main;
-					try
+					// i+1 exists
+					if (i < args.Length - 1)
 					{
-						Tmp = (Globals.BackgroundImages)System.Enum.Parse(typeof(Globals.BackgroundImages), Value);
-						Globals.BackgroundImage = Tmp;
-						MainWindow.MW.SetBackground(Globals.GetBackGroundPath());
+						Globals.BackgroundImages Tmp = Globals.BackgroundImages.Main;
+						try
+						{
+							Tmp = (Globals.BackgroundImages)System.Enum.Parse(typeof(Globals.BackgroundImages), args[i+1]);
+							Globals.BackgroundImage = Tmp;
+						}
+						catch (Exception e) 
+						{
+							new Popup(Popup.PopupWindowTypes.PopupOkError, "Error converting Command Line Argument to Background Image.\n" + e.ToString()).ShowDialog();
+						}
 					}
-					catch { }
 				}
 			}
 		}
@@ -550,6 +635,17 @@ namespace Project_127
 					HelperClasses.Logger.Log("Found old ZIP File ('" + HelperClasses.FileHandling.PathSplitUp(myFile)[1] + "') in the Directory. Will delete it.");
 					HelperClasses.FileHandling.deleteFile(myFile);
 				}
+				if (myFile.ToLower().Contains("pleaseshow"))
+				{
+					HelperClasses.Logger.Log("Found pleaseshow File in the Directory. Will delete it.");
+					HelperClasses.FileHandling.deleteFile(myFile);
+				}
+				if (myFile.ToLower().Contains("dirtyprogramming"))
+				{
+					HelperClasses.Logger.Log("Found dirtyprogramming File in the Directory. Will delete it.");
+					HelperClasses.FileHandling.deleteFile(myFile);
+				}
+				File.Create(Globals.ProjectInstallationPath.TrimEnd('\\') + @"\dirtyprogramming").Dispose();
 			}
 		}
 
@@ -619,6 +715,8 @@ namespace Project_127
 		{
 			HelperClasses.Logger.Log("Downloading the 'big three' files");
 
+			bool PopupThrownAlready = false;
+
 			string DLLinkG = HelperClasses.FileHandling.GetXMLTagContent(HelperClasses.FileHandling.GetStringFromURL(Globals.URL_AutoUpdate), "DLLinkG");
 			string DLLinkGHash = HelperClasses.FileHandling.GetXMLTagContent(HelperClasses.FileHandling.GetStringFromURL(Globals.URL_AutoUpdate), "DLLinkGHash");
 			string DLLinkU = HelperClasses.FileHandling.GetXMLTagContent(HelperClasses.FileHandling.GetStringFromURL(Globals.URL_AutoUpdate), "DLLinkU");
@@ -627,13 +725,26 @@ namespace Project_127
 			string DLLinkXHash = HelperClasses.FileHandling.GetXMLTagContent(HelperClasses.FileHandling.GetStringFromURL(Globals.URL_AutoUpdate), "DLLinkXHash");
 
 			HelperClasses.Logger.Log("Checking if gta5.exe exists locally", 1);
-			if (HelperClasses.FileHandling.doesFileExist(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\GTA5.exe"))
+			if (HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\GTA5.exe") > 100)
 			{
 				HelperClasses.Logger.Log("It does and we dont need to download anything", 2);
 			}
 			else
 			{
 				HelperClasses.Logger.Log("It does NOT and we DO need to download something", 2);
+
+				if (PopupThrownAlready == false)
+				{
+					Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "You are missing Files required for Downgrading.\nDo you want to download these now?\nI recommend clicking 'Yes'");
+					yesno.ShowDialog();
+					PopupThrownAlready = true;
+					if (yesno.DialogResult == false)
+					{
+						HelperClasses.Logger.Log("Well user doesnt want to Download Files...alright then");
+						return;
+					}
+				}
+
 				new PopupDownload(DLLinkG, LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\GTA5.exe", "Needed Files (gta5.exe 1/3)").ShowDialog();
 
 				if (!string.IsNullOrWhiteSpace(DLLinkGHash))
@@ -653,13 +764,26 @@ namespace Project_127
 			}
 
 			HelperClasses.Logger.Log("Checking if x64a.rpf exists locally", 1);
-			if (HelperClasses.FileHandling.doesFileExist(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\x64a.rpf"))
+			if (HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\x64a.rpf") > 100)
 			{
 				HelperClasses.Logger.Log("It does and we dont need to download anything", 2);
 			}
 			else
 			{
 				HelperClasses.Logger.Log("It does NOT and we DO need to download something", 2);
+
+				if (PopupThrownAlready == false)
+				{
+					Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "You are missing Files required for Downgrading.\nDo you want to download these now?\nI recommend clicking 'Yes'");
+					yesno.ShowDialog();
+					PopupThrownAlready = true;
+					if (yesno.DialogResult == false)
+					{
+						HelperClasses.Logger.Log("Well user doesnt want to Download Files...alright then");
+						return;
+					}
+				}
+
 				new PopupDownload(DLLinkX, LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\x64a.rpf", "Needed Files (x64a.rpf, 2/3)").ShowDialog();
 
 				if (!string.IsNullOrWhiteSpace(DLLinkXHash))
@@ -679,13 +803,26 @@ namespace Project_127
 			}
 
 			HelperClasses.Logger.Log(@"Checking if update\update.rpf exists locally", 1);
-			if (HelperClasses.FileHandling.doesFileExist(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\update\update.rpf"))
+			if (HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\update\update.rpf") > 100)
 			{
 				HelperClasses.Logger.Log("It does and we dont need to download anything", 2);
 			}
 			else
 			{
 				HelperClasses.Logger.Log("It does NOT and we DO need to download something", 2);
+
+				if (PopupThrownAlready == false)
+				{
+					Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "You are missing Files required for Downgrading.\nDo you want to download these now?\nI recommend clicking 'Yes'");
+					yesno.ShowDialog();
+					PopupThrownAlready = true;
+					if (yesno.DialogResult == false)
+					{
+						HelperClasses.Logger.Log("Well user doesnt want to Download Files...alright then");
+						return;
+					}
+				}
+
 				new PopupDownload(DLLinkU, LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\update\update.rpf", "Needed Files (Update.rpf, 3/3)").ShowDialog();
 
 				if (!string.IsNullOrWhiteSpace(DLLinkUHash))
@@ -826,9 +963,26 @@ namespace Project_127
 		/// </summary>
 		public static void ProperExit()
 		{
+			if (MainWindow.OL_MM != null)
+			{
+				MainWindow.OL_MM.Close();
+			}
 			HelperClasses.Keyboard.KeyboardListener.Stop();
+			NoteOverlay.DisposeGTAOverlay();
+			NoteOverlay.DisposePreview();
 			WindowChangeListener.Stop();
+			Jumpscript.StopJumpscript();
+			Globals.FSW.Dispose();
+			Globals.MyDispatcherTimer.Stop();
+			MainWindow.myMutex.ReleaseMutex();
 			HelperClasses.Logger.Log("Program closed. Proper Exit. Ended normally");
+			try
+			{
+				MainWindow.MW.Close();
+			}
+			catch {	}
+			Application.Current.Shutdown();
+			Environment.Exit(0);
 		}
 
 
@@ -1092,7 +1246,7 @@ namespace Project_127
 		{
 			HelperClasses.Logger.Log("Initializing CEF...");
 			var s = new CefSharp.Wpf.CefSettings();
-			s.CachePath = Globals.ProjectInstallationPath.TrimEnd('\\') + @"\CEF_CacheFiles";
+			s.CachePath = Globals.ProjectInstallationPathBinary.TrimEnd('\\') + @"\CEF_CacheFiles";
 			s.BackgroundColor = 0;//0x13 << 16 | 0x15 << 8 | 0x18;
 			s.DisableGpuAcceleration();
 			s.CefCommandLineArgs["autoplay-policy"] = "no-user-gesture-required";
@@ -1111,6 +1265,7 @@ namespace Project_127
 		/// </summary>
 		public static Brush MyColorWhite { get; private set; } = (Brush)new BrushConverter().ConvertFromString("#FFFFFF");
 		public static Brush MyColorOffWhite { get; private set; } = (Brush)new BrushConverter().ConvertFromString("#c1ced1");
+		public static Brush MyColorOffWhite85 { get; private set; } = SetOpacity((Brush)new BrushConverter().ConvertFromString("#c1ced1"), 85);
 		public static Brush MyColorBlack { get; private set; } = (Brush)new BrushConverter().ConvertFromString("#000000");
 		public static Brush MyColorOffBlack { get; private set; } = (Brush)new BrushConverter().ConvertFromString("#1a1a1a");
 		public static Brush MyColorOffBlack70 { get; private set; } = SetOpacity((Brush)new BrushConverter().ConvertFromString("#1a1a1a"), 70);

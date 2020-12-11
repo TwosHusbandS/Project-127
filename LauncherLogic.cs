@@ -103,27 +103,6 @@ namespace Project_127
 			{
 				WindowChangeHander.WindowChangeEvent(WindowChangeListener.GetActiveWindowTitle());
 
-				// If one of the Settings which require Hotkeys are enabled
-				if (Settings.EnableAutoStartJumpScript || Settings.EnableOverlay)
-				{
-					// Only Start Stop shit here when the overlay is not in debugmode
-					if (!GTAOverlay.DebugMode)
-					{
-						NoteOverlay.InitGTAOverlay();
-						HelperClasses.WindowChangeListener.Start();
-					}
-
-				}
-				else
-				{
-					if (!GTAOverlay.DebugMode)
-					{
-						NoteOverlay.DisposeGTAOverlay();
-						HelperClasses.Keyboard.KeyboardListener.Stop();
-						HelperClasses.WindowChangeListener.Stop();
-					}
-				}
-				
 				if (LastGameState == GameStates.NonRunning)
 				{
 					GTAStarted();
@@ -131,13 +110,6 @@ namespace Project_127
 			}
 			else
 			{
-				if (!GTAOverlay.DebugMode)
-				{
-					NoteOverlay.DisposeGTAOverlay();
-					HelperClasses.Keyboard.KeyboardListener.Stop();
-					HelperClasses.WindowChangeListener.Stop();
-				}
-
 				if (LastGameState == GameStates.Running)
 				{
 					GTAClosed();
@@ -153,20 +125,44 @@ namespace Project_127
 		public static void GTAStarted()
 		{
 			SetGTAProcessPriority();
-	
+
 			// Start Jumpscript
 			if (Settings.EnableAutoStartJumpScript)
 			{
-				Jumpscript.StartJumpscript();
+				if (Settings.EnableOnlyAutoStartProgramsWhenDowngraded)
+				{
+					if (LauncherLogic.InstallationState == LauncherLogic.InstallationStates.Downgraded)
+					{
+						Jumpscript.StartJumpscript();
+					}
+				}
+				else
+				{
+					Jumpscript.StartJumpscript();
+				}
+			}
+
+			// If one of the Settings which require Hotkeys are enabled
+			if (Settings.EnableOverlay)
+			{
+				// Only Start Stop shit here when the overlay is not in debugmode
+				if (!GTAOverlay.DebugMode && GTAOverlay.OverlayMode == GTAOverlay.OverlayModes.Borderless)
+				{
+					NoteOverlay.InitGTAOverlay();
+					HelperClasses.WindowChangeListener.Start();
+				}
 			}
 		}
 
 		public static void GTAClosed()
 		{
-			// Kill Stop Jumpscript
-			if (Settings.EnableAutoStartJumpScript)
+			Jumpscript.StopJumpscript();
+
+			if (!GTAOverlay.DebugMode && GTAOverlay.OverlayMode == GTAOverlay.OverlayModes.Borderless)
 			{
-				Jumpscript.StopJumpscript();
+				NoteOverlay.DisposeGTAOverlay();
+				HelperClasses.Keyboard.KeyboardListener.Stop();
+				HelperClasses.WindowChangeListener.Stop();
 			}
 		}
 
@@ -255,6 +251,10 @@ namespace Project_127
 		/// </summary>
 		public static string UpgradeFilePath { get { return LauncherLogic.ZIPFilePath.TrimEnd('\\') + @"\Project_127_Files\UpgradeFiles\"; } }
 
+		/// <summary>
+		/// Property of often used variable. (UpgradeFilePathBackup)
+		/// </summary>
+		public static string UpgradeFilePathBackup { get { return LauncherLogic.ZIPFilePath.TrimEnd('\\') + @"\Project_127_Files\UpgradeFiles_Backup\"; } }
 		/// <summary>
 		/// Property of often used variable. (DowngradeFilePath)
 		/// </summary>
@@ -555,6 +555,137 @@ namespace Project_127
 		}
 
 
+
+
+		/// <summary>
+		/// Method which gets called after Starting GTAV
+		/// </summary>
+		public async static void PostLaunchEvents()
+		{
+			HelperClasses.Logger.Log("Post Launch Events started");
+			await Task.Delay(2500);
+			HelperClasses.Logger.Log("Waited a good bit");
+
+			HelperClasses.Logger.Log("Trying to Set GTAV Process Priority to High");
+			SetGTAProcessPriority();
+
+			// If we DONT only auto start when downgraded OR if we are downgraded
+			if (Settings.EnableOnlyAutoStartProgramsWhenDowngraded == false || LauncherLogic.InstallationState == InstallationStates.Downgraded)
+			{
+				HelperClasses.Logger.Log("Either we are Downgraded or EnableOnlyAutoStartProgramsWhenDowngraded is set to false");
+				if (Settings.EnableAutoStartFPSLimiter)
+				{
+					HelperClasses.Logger.Log("We are trying to auto Start FPS Limiter: '" + Settings.PathFPSLimiter + "'");
+					string ProcessName = HelperClasses.FileHandling.PathSplitUp(Settings.PathFPSLimiter)[1];
+					if (!HelperClasses.ProcessHandler.IsProcessRunning(ProcessName))
+					{
+						HelperClasses.Logger.Log("Process is not already running...", 1);
+						if (HelperClasses.FileHandling.doesFileExist(Settings.PathFPSLimiter))
+						{
+							HelperClasses.Logger.Log("File does exist, lets start it...", 1);
+							try
+							{
+								string[] Stufferino = HelperClasses.FileHandling.PathSplitUp(Settings.PathFPSLimiter);
+								HelperClasses.ProcessHandler.StartProcess(Settings.PathFPSLimiter, Stufferino[0]);
+							}
+							catch { }
+						}
+						else
+						{
+							HelperClasses.Logger.Log("Path (File) seems to not exist.", 1);
+						}
+					}
+					else
+					{
+						HelperClasses.Logger.Log("Seems to be running already", 1);
+					}
+				}
+				if (Settings.EnableAutoStartLiveSplit)
+				{
+					HelperClasses.Logger.Log("We are trying to auto Start LiveSplit: '" + Settings.PathLiveSplit + "'");
+					string ProcessName = HelperClasses.FileHandling.PathSplitUp(Settings.PathLiveSplit)[1];
+					if (!HelperClasses.ProcessHandler.IsProcessRunning(ProcessName))
+					{
+						HelperClasses.Logger.Log("Process is not already running...", 1);
+						if (HelperClasses.FileHandling.doesFileExist(Settings.PathLiveSplit))
+						{
+							HelperClasses.Logger.Log("File does exist, lets start it...", 1);
+							try
+							{
+								string[] Stufferino = HelperClasses.FileHandling.PathSplitUp(Settings.PathLiveSplit);
+								HelperClasses.ProcessHandler.StartProcess(Settings.PathLiveSplit, Stufferino[0]);
+							}
+							catch { }
+						}
+						else
+						{
+							HelperClasses.Logger.Log("Path (File) seems to not exist.", 1);
+						}
+					}
+					else
+					{
+						HelperClasses.Logger.Log("Seems to be running already", 1);
+					}
+				}
+				if (Settings.EnableAutoStartStreamProgram)
+				{
+					HelperClasses.Logger.Log("We are trying to auto Start Stream Program: '" + Settings.PathStreamProgram + "'");
+					string ProcessName = HelperClasses.FileHandling.PathSplitUp(Settings.PathStreamProgram)[1];
+					if (!HelperClasses.ProcessHandler.IsProcessRunning(ProcessName))
+					{
+						HelperClasses.Logger.Log("Process is not already running...", 1);
+						if (HelperClasses.FileHandling.doesFileExist(Settings.PathStreamProgram))
+						{
+							HelperClasses.Logger.Log("File does exist, lets start it...", 1);
+							try
+							{
+								string[] Stufferino = HelperClasses.FileHandling.PathSplitUp(Settings.PathStreamProgram);
+								HelperClasses.ProcessHandler.StartProcess(Settings.PathStreamProgram, Stufferino[0]);
+							}
+							catch { }
+						}
+						else
+						{
+							HelperClasses.Logger.Log("Path (File) seems to not exist.", 1);
+						}
+					}
+					else
+					{
+						HelperClasses.Logger.Log("Seems to be running already", 1);
+					}
+				}
+				if (Settings.EnableAutoStartNohboard)
+				{
+					HelperClasses.Logger.Log("We are trying to auto Start Nohboard: '" + Settings.PathNohboard + "'");
+					string ProcessName = HelperClasses.FileHandling.PathSplitUp(Settings.PathNohboard)[1];
+					if (!HelperClasses.ProcessHandler.IsProcessRunning(ProcessName))
+					{
+						HelperClasses.Logger.Log("Process is not already running...", 1);
+						if (HelperClasses.FileHandling.doesFileExist(Settings.PathNohboard))
+						{
+							HelperClasses.Logger.Log("File does exist, lets start it...", 1);
+							try
+							{
+								string[] Stufferino = HelperClasses.FileHandling.PathSplitUp(Settings.PathNohboard);
+								HelperClasses.ProcessHandler.StartProcess(Settings.PathNohboard, Stufferino[0]);
+							}
+							catch { }
+						}
+						else
+						{
+							HelperClasses.Logger.Log("Path (File) seems to not exist.", 1);
+						}
+					}
+					else
+					{
+						HelperClasses.Logger.Log("Seems to be running already", 1);
+					}
+				}
+			}
+
+
+		}
+
 		public static void SetGTAProcessPriority()
 		{
 			if (Settings.EnableAutoSetHighPriority)
@@ -578,137 +709,6 @@ namespace Project_127
 				}
 			}
 		}
-
-		/// <summary>
-		/// Method which gets called after Starting GTAV
-		/// </summary>
-		public async static void PostLaunchEvents()
-		{
-			HelperClasses.Logger.Log("Post Launch Events started");
-			await Task.Delay(2500);
-			HelperClasses.Logger.Log("Waited a good bit");
-
-			HelperClasses.Logger.Log("Trying to Set GTAV Process Priority to High");
-			SetGTAProcessPriority();
-
-			// If we DONT only auto start when downgraded OR if we are downgraded
-			if (Settings.EnableOnlyAutoStartProgramsWhenDowngraded == false || LauncherLogic.InstallationState == InstallationStates.Downgraded)
-			{
-				HelperClasses.Logger.Log("Either we are Downgraded or EnableOnlyAutoStartProgramsWhenDowngraded is set to false");
-				if (Settings.EnableAutoStartFPSLimiter)
-				{
-					HelperClasses.Logger.Log("We are trying to auto Start FPS Limiter");
-					string ProcessName = HelperClasses.FileHandling.PathSplitUp(Settings.PathFPSLimiter)[1];
-					if (!HelperClasses.ProcessHandler.IsProcessRunning(ProcessName))
-					{
-						HelperClasses.Logger.Log("Process is not already running...", 1);
-						if (HelperClasses.FileHandling.doesFileExist(Settings.PathFPSLimiter))
-						{
-							HelperClasses.Logger.Log("File does exist, lets start it...", 1);
-							try
-							{
-								string[] Stufferino = HelperClasses.FileHandling.PathSplitUp(Settings.PathFPSLimiter);
-								HelperClasses.ProcessHandler.StartProcess(Stufferino[0], Stufferino[1]);
-							}
-							catch { }
-						}
-						else
-						{
-							HelperClasses.Logger.Log("Path (File) seems to not exist.", 1);
-						}
-					}
-					else
-					{
-						HelperClasses.Logger.Log("Seems to be running already", 1);
-					}
-				}
-				if (Settings.EnableAutoStartLiveSplit)
-				{
-					HelperClasses.Logger.Log("We are trying to auto Start LiveSplit");
-					string ProcessName = HelperClasses.FileHandling.PathSplitUp(Settings.PathLiveSplit)[1];
-					if (!HelperClasses.ProcessHandler.IsProcessRunning(ProcessName))
-					{
-						HelperClasses.Logger.Log("Process is not already running...", 1);
-						if (HelperClasses.FileHandling.doesFileExist(Settings.PathLiveSplit))
-						{
-							HelperClasses.Logger.Log("File does exist, lets start it...", 1);
-							try
-							{
-								string[] Stufferino = HelperClasses.FileHandling.PathSplitUp(Settings.PathLiveSplit);
-								HelperClasses.ProcessHandler.StartProcess(Stufferino[0], Stufferino[1]);
-							}
-							catch { }
-						}
-						else
-						{
-							HelperClasses.Logger.Log("Path (File) seems to not exist.", 1);
-						}
-					}
-					else
-					{
-						HelperClasses.Logger.Log("Seems to be running already", 1);
-					}
-				}
-				if (Settings.EnableAutoStartStreamProgram)
-				{
-					HelperClasses.Logger.Log("We are trying to auto Start Stream Program");
-					string ProcessName = HelperClasses.FileHandling.PathSplitUp(Settings.PathStreamProgram)[1];
-					if (!HelperClasses.ProcessHandler.IsProcessRunning(ProcessName))
-					{
-						HelperClasses.Logger.Log("Process is not already running...", 1);
-						if (HelperClasses.FileHandling.doesFileExist(Settings.PathStreamProgram))
-						{
-							HelperClasses.Logger.Log("File does exist, lets start it...", 1);
-							try
-							{
-								string[] Stufferino = HelperClasses.FileHandling.PathSplitUp(Settings.PathStreamProgram);
-								HelperClasses.ProcessHandler.StartProcess(Stufferino[0], Stufferino[1]);
-							}
-							catch { }
-						}
-						else
-						{
-							HelperClasses.Logger.Log("Path (File) seems to not exist.", 1);
-						}
-					}
-					else
-					{
-						HelperClasses.Logger.Log("Seems to be running already", 1);
-					}
-				}
-				if (Settings.EnableAutoStartNohboard)
-				{
-					HelperClasses.Logger.Log("We are trying to auto Start Nohboard");
-					string ProcessName = HelperClasses.FileHandling.PathSplitUp(Settings.PathNohboard)[1];
-					if (!HelperClasses.ProcessHandler.IsProcessRunning(ProcessName))
-					{
-						HelperClasses.Logger.Log("Process is not already running...", 1);
-						if (HelperClasses.FileHandling.doesFileExist(Settings.PathNohboard))
-						{
-							HelperClasses.Logger.Log("File does exist, lets start it...", 1);
-							try
-							{
-								string[] Stufferino = HelperClasses.FileHandling.PathSplitUp(Settings.PathNohboard);
-								HelperClasses.ProcessHandler.StartProcess(Stufferino[0], Stufferino[1]);
-							}
-							catch { }
-						}
-						else
-						{
-							HelperClasses.Logger.Log("Path (File) seems to not exist.", 1);
-						}
-					}
-					else
-					{
-						HelperClasses.Logger.Log("Seems to be running already", 1);
-					}
-				}
-			}
-
-
-		}
-
-
 
 		/// <summary>
 		/// Method to import Zip File
@@ -941,9 +941,9 @@ namespace Project_127
 		/// Checks if Settings.GTAVInstallationPath is a correct GTA V Installation Path
 		/// </summary>
 		/// <returns></returns>
-		public static bool IsGTAVInstallationPathCorrect()
+		public static bool IsGTAVInstallationPathCorrect(bool LogAttempt = true)
 		{
-			return IsGTAVInstallationPathCorrect(Settings.GTAVInstallationPath);
+			return IsGTAVInstallationPathCorrect(Settings.GTAVInstallationPath, LogAttempt);
 		}
 
 

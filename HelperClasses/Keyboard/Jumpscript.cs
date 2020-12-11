@@ -1,81 +1,55 @@
-﻿using AutoHotkey.Interop;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Keys = System.Windows.Forms.Keys;
 
 namespace Project_127.HelperClasses
 {
 	class Jumpscript
 	{
-		static AutoHotkeyEngine AHEI;
+		static Process myJumpscript;
 
-		static bool IsRunning = false;
-		static bool IsInit = false;
-
-		public static void InitJumpscript()
-		{
-			if (!IsInit)
-			{
-				AHEI = AutoHotkeyEngine.Instance;
-				IsInit = true;
-				HelperClasses.Logger.Log("Inited Jumpscript");
-
-				if (LauncherLogic.GameState == LauncherLogic.GameStates.Running || GTAOverlay.DebugMode)
-				{
-					StartJumpscript();
-				}
-			}
-		}
-
-		public static void DisposeJumpscript()
-		{
-			if (IsInit)
-			{
-				StopJumpscript();
-				AHEI.Terminate();
-				AHEI = null;
-				IsInit = false;
-				HelperClasses.Logger.Log("Disposed Jumpscript");
-			}
-		}
+		public static bool IsRunning;
 
 		public static void StartJumpscript()
 		{
-			if (IsInit)
-			{
-				StopJumpscript();
+			StopJumpscript();
 
-				AHEI.UnSuspend();
+			List<string> myList = new List<string>();
 
-				AHEI.Reset();
+			myList.Add("#NoTrayIcon");
+			myList.Add("#SingleInstance Force");
+			myList.Add("#MaxHotkeysPerInterval 10000");
+			myList.Add("#UseHook");
+			myList.Add("#IfWinActive " + GTAOverlay.targetWindowFullscreen);
+			myList.Add(KeyToString(MySettings.Settings.JumpScriptKey1) + "::" + KeyToString(MySettings.Settings.JumpScriptKey2));
+			myList.Add(KeyToString(MySettings.Settings.JumpScriptKey2) + "::" + KeyToString(MySettings.Settings.JumpScriptKey1));
+			myList.Add("#IfWinActive");
 
-				string Command = "";
-				Command += "#SingleInstance Force";
-				Command += "\n\r#MaxHotkeysPerInterval 10000";
-				Command += "\n\r#UseHook";
-				Command += "\n\r#IfWinActive " + GTAOverlay.targetWindow;
-				Command += "\n\r" + KeyToString(MySettings.Settings.JumpScriptKey1) + "::" + KeyToString(MySettings.Settings.JumpScriptKey2);
-				Command += "\n\r" + KeyToString(MySettings.Settings.JumpScriptKey2) + "::" + KeyToString(MySettings.Settings.JumpScriptKey1);
-				Command += "\n\r#IfWinActive";
+			HelperClasses.FileHandling.WriteToFile(Globals.ProjectInstallationPathBinary.TrimEnd('\\') + @"\P127_Jumpscript.ahk", myList.ToArray());
 
-				AHEI.ExecRaw(Command);
+			myJumpscript = HelperClasses.ProcessHandler.StartProcess(Globals.ProjectInstallationPathBinary.TrimEnd('\\') + @"\P127_Jumpscript.exe");
 
-				IsRunning = true;
+			HelperClasses.Logger.Log("(Re-)Started Jumpscript");
 
-				HelperClasses.Logger.Log("(Re-)Started Jumpscript");
-			}
+			IsRunning = true;
 		}
 
 		public static void StopJumpscript()
 		{
-			if (IsInit)
+			if (myJumpscript != null)
 			{
-				AHEI.Suspend();
-				IsRunning = false;
-				HelperClasses.Logger.Log("Stopped Jumpscript");
+				HelperClasses.ProcessHandler.Kill(myJumpscript);
 			}
+
+			HelperClasses.FileHandling.deleteFile(Globals.ProjectInstallationPathBinary.TrimEnd('\\') + @"\P127_Jumpscript.ahk");
+
+			HelperClasses.Logger.Log("Stopped Jumpscript");
+
+			IsRunning = false;
 		}
 
 		public static string KeyToString(System.Windows.Forms.Keys pKey)
@@ -85,6 +59,99 @@ namespace Project_127.HelperClasses
 			rtrn = pKey.ToString().ToLower();
 
 			// TO DO FOR ALL KEYS...this breaks with numpad keys, num keys in general i think
+
+			if (pKey == Keys.Back)
+			{
+				rtrn = "BackSpace";
+			}
+			else if (pKey == Keys.Scroll)
+			{
+				rtrn = "ScrollLock";
+			}
+			else if (pKey == Keys.PageUp)
+			{
+				rtrn = "PgUp";
+			}
+			else if (pKey == Keys.PageDown)
+			{
+				rtrn = "PgDn";
+			}
+			else if (96 <= (int)pKey || (int)pKey <= 105)
+			{
+				rtrn = rtrn.Replace("NumPad", "Numpad");
+			}
+			else if (pKey == Keys.Multiply)
+			{
+				rtrn = "NumpadMult";
+			}
+			else if (pKey == Keys.Divide)
+			{
+				rtrn = "NumpadDiv";
+			}
+			else if (pKey == Keys.Add)
+			{
+				rtrn = "NumpadAdd";
+			}
+			else if (pKey == Keys.Subtract)
+			{
+				rtrn = "NumpadSub";
+			}
+			else if (pKey == Keys.ControlKey)
+			{
+				rtrn = "Control";
+			}
+			else if (pKey == Keys.ShiftKey)
+			{
+				rtrn = "Shift";
+			}
+			else if (pKey == Keys.RShiftKey)
+			{
+				rtrn = "RShift";
+			}
+			else if (pKey == Keys.LShiftKey)
+			{
+				rtrn = "LShift";
+			}
+			else if (pKey == Keys.RControlKey)
+			{
+				rtrn = "RControl";
+			}
+			else if (pKey == Keys.LControlKey)
+			{
+				rtrn = "LControl";
+			}
+			else if (pKey == Keys.RMenu)
+			{
+				rtrn = "RAlt";
+			}
+			else if (pKey == Keys.LMenu)
+			{
+				rtrn = "LAlt";
+			}
+			else if (166 <= (int)pKey || (int)pKey <= 172)
+			{
+				rtrn = rtrn.Replace("Browser", "Browser_");
+			}
+			else if (173 <= (int)pKey || (int)pKey <= 175)
+			{
+				rtrn = rtrn.Replace("Volume", "Volume_");
+			}
+			else if (pKey == Keys.MediaNextTrack)
+			{
+				rtrn = "Media_Next";
+			}
+			else if (pKey == Keys.MediaPlayPause)
+			{
+				rtrn = "Media_Play_Pause";
+			}
+			else if (pKey == Keys.MediaPreviousTrack)
+			{
+				rtrn = "Media_Prev";
+			}
+			else if (pKey == Keys.MediaStop)
+			{
+				rtrn = "Media_Stop";
+			}
 
 			// Translate this:
 			// https://docs.microsoft.com/en-us/dotnet/api/system.windows.forms.keys?view=netcore-3.1
