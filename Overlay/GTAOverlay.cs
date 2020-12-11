@@ -248,6 +248,13 @@ namespace Project_127
 			set
 			{
 				_width = value;
+				if (OverlayMode == OverlayModes.MultiMonitor)
+				{
+					if (MainWindow.OL_MM != null)
+					{
+						MainWindow.OL_MM.Width = value;
+					}
+				}
 			}
 		}
 
@@ -268,12 +275,6 @@ namespace Project_127
 			get; set;
 		}
 
-
-		public OverlayModes currOverlayMode
-		{
-			get;
-		}
-
 		/// <summary>
 		/// Generates the game overlay
 		/// </summary>
@@ -281,12 +282,9 @@ namespace Project_127
 		/// <param name="position">The screen positioning (TopLeft, BottomRight, etc.)</param>
 		/// <param name="width">The horizontal resolution</param>
 		/// <param name="height">The vertical resolution</param>
-		public GTAOverlay(OverlayModes overlayMode = OverlayModes.Fullscreen, Positions position = Positions.TopLeft, int width = 560, int height = 380)
+		public GTAOverlay(Positions position = Positions.TopLeft, int width = 560, int height = 380)
 		{
 			HelperClasses.Logger.Log("Game Overlay Initiated");
-
-			OverlayMode = overlayMode;
-			currOverlayMode = OverlayMode;
 
 			_brushes = new Dictionary<string, SolidBrush>();
 			_images = new Dictionary<string, Image>();

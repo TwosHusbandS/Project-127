@@ -294,8 +294,8 @@ namespace Project_127
 			{"KeyOverlayScrollDown", "107" },
 			{"KeyOverlayScrollRight", "106" },
 			{"KeyOverlayScrollLeft", "111" },
-			{"KeyOverlayNoteNext", "103" },
-			{"KeyOverlayNotePrev", "105" },
+			{"KeyOverlayNoteNext", "105" },
+			{"KeyOverlayNotePrev", "103" },
 
 			{"OverlayMultiMonitorMode", "False" },
 			{"OverlayBackground", "100,0,0,0" },
@@ -307,6 +307,8 @@ namespace Project_127
 			{"OverlayHeight", "500" },
 			{"OverlayTextFont", "Arial" },
 			{"OverlayTextSize", "24" },
+			{"OL_MM_Left", "0" },
+			{"OL_MM_Top", "0" },
 
 			{"OverlayNotesMain","Note1.txt;Note2.txt;Note3.txt;Note4.txt"},
 			{"OverlayNotesPresetA",""},
@@ -433,6 +435,16 @@ namespace Project_127
 					}
 
 					HelperClasses.FileHandling.createPath(MySaveFile.BackupSavesPath.TrimEnd('\\') + @"\New Folder");
+					HelperClasses.FileHandling.createPath(MySaveFile.BackupSavesPath.TrimEnd('\\') + @"\YouCanRightclick");
+
+					string[] Files = HelperClasses.FileHandling.GetFilesFromFolder(ProjectInstallationPath);
+					foreach (string file in Files)
+					{
+						if (HelperClasses.FileHandling.PathSplitUp(file)[1].Contains("internal"))
+						{
+							HelperClasses.FileHandling.deleteFile(file);
+						}
+					}
 				}
 
 				Settings.LastLaunchedVersion = Globals.ProjectVersion;
@@ -460,7 +472,7 @@ namespace Project_127
 			// Rolling Log stuff
 			HelperClasses.Logger.RollingLog();
 
-			InitOverlayIfNeeded();
+			NoteOverlay.OverlaySettingsChanged();
 
 			InitFileWatcher();
 
@@ -525,19 +537,6 @@ namespace Project_127
 		}
 
 
-		public static void InitOverlayIfNeeded()
-		{
-			if (Settings.EnableOverlay && Settings.OverlayMultiMonitorMode)
-			{
-				if (MainWindow.OL_MM != null)
-				{
-					MainWindow.OL_MM.Close();
-				}
-				MainWindow.OL_MM = new Overlay_MultipleMonitor();
-				NoteOverlay.InitGTAOverlay();
-				MainWindow.OL_MM.Hide();
-			}
-		}
 
 		public static string GetGameVersionOfBuildNumber(Version BuildNumber)
 		{
@@ -975,6 +974,7 @@ namespace Project_127
 			Jumpscript.StopJumpscript();
 			Globals.FSW.Dispose();
 			Globals.MyDispatcherTimer.Stop();
+			MainWindow.myMutex.ReleaseMutex();
 			HelperClasses.Logger.Log("Program closed. Proper Exit. Ended normally");
 			try
 			{

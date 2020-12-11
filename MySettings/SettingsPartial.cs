@@ -657,6 +657,7 @@ namespace Project_127.MySettings
 			set
 			{
 				SetSetting("EnableOverlay", value.ToString());
+				NoteOverlay.OverlaySettingsChanged();
 			}
 		}
 
@@ -672,7 +673,15 @@ namespace Project_127.MySettings
 			set
 			{
 				SetSetting("OverlayMultiMonitorMode", value.ToString());
-				Overlay.NoteOverlayPages.NoteOverlay_Look.RefreshIfHideOrNot();
+				if (value)
+				{
+					GTAOverlay.OverlayMode = GTAOverlay.OverlayModes.MultiMonitor;
+				}
+				else
+				{
+					GTAOverlay.OverlayMode = GTAOverlay.OverlayModes.Fullscreen;
+				}
+				NoteOverlay.OverlaySettingsChanged();
 			}
 		}
 
@@ -693,7 +702,17 @@ namespace Project_127.MySettings
 				{
 					if (LauncherLogic.GameState == LauncherLogic.GameStates.Running)
 					{
-						Jumpscript.StartJumpscript();
+						if (Settings.EnableOnlyAutoStartProgramsWhenDowngraded)
+						{
+							if (LauncherLogic.InstallationState == LauncherLogic.InstallationStates.Downgraded)
+							{
+								Jumpscript.StartJumpscript();
+							}
+						}
+						else
+						{
+							Jumpscript.StartJumpscript();
+						}
 					}
 				}
 				else
@@ -731,7 +750,10 @@ namespace Project_127.MySettings
 			set
 			{
 				SetSetting("JumpScriptKey1", ((int)value).ToString());
-				Jumpscript.StartJumpscript();
+				if (Jumpscript.IsRunning)
+				{
+					Jumpscript.StartJumpscript();
+				}
 			}
 		}
 
@@ -747,7 +769,10 @@ namespace Project_127.MySettings
 			set
 			{
 				SetSetting("JumpScriptKey2", ((int)value).ToString());
-				Jumpscript.StartJumpscript();
+				if (Jumpscript.IsRunning)
+				{
+					Jumpscript.StartJumpscript();
+				}
 			}
 		}
 
@@ -950,6 +975,37 @@ namespace Project_127.MySettings
 				new Popups.Popup(Popup.PopupWindowTypes.PopupOkError, "Something broke while getting the a Number from the Settings.\n Try Resetting Settings").ShowDialog();
 			}
 			return rtrn;
+		}
+
+
+		public static double GetDoubleFromString(string pString)
+		{
+			return GetIntFromString(pString);
+		}
+
+
+		public static double OL_MM_Left
+		{
+			get
+			{
+				return GetDoubleFromString(GetSetting("OL_MM_Left"));
+			}
+			set
+			{
+				SetSetting("OL_MM_Left", ((int)value).ToString());
+			}
+		}
+
+		public static double OL_MM_Top
+		{
+			get
+			{
+				return GetDoubleFromString(GetSetting("OL_MM_Top"));
+			}
+			set
+			{
+				SetSetting("OL_MM_Top", ((int)value).ToString());
+			}
 		}
 
 		public static int OverlayMarginX

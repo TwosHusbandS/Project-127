@@ -12,6 +12,8 @@ namespace Project_127.HelperClasses
 	{
 		static Process myJumpscript;
 
+		public static bool IsRunning;
+
 		public static void StartJumpscript()
 		{
 			StopJumpscript();
@@ -22,7 +24,7 @@ namespace Project_127.HelperClasses
 			myList.Add("#SingleInstance Force");
 			myList.Add("#MaxHotkeysPerInterval 10000");
 			myList.Add("#UseHook");
-			myList.Add("#IfWinActive " + GTAOverlay.targetWindow);
+			myList.Add("#IfWinActive " + GTAOverlay.targetWindowFullscreen);
 			myList.Add(KeyToString(MySettings.Settings.JumpScriptKey1) + "::" + KeyToString(MySettings.Settings.JumpScriptKey2));
 			myList.Add(KeyToString(MySettings.Settings.JumpScriptKey2) + "::" + KeyToString(MySettings.Settings.JumpScriptKey1));
 			myList.Add("#IfWinActive");
@@ -32,6 +34,8 @@ namespace Project_127.HelperClasses
 			myJumpscript = HelperClasses.ProcessHandler.StartProcess(Globals.ProjectInstallationPathBinary.TrimEnd('\\') + @"\P127_Jumpscript.exe");
 
 			HelperClasses.Logger.Log("(Re-)Started Jumpscript");
+
+			IsRunning = true;
 		}
 
 		public static void StopJumpscript()
@@ -44,6 +48,8 @@ namespace Project_127.HelperClasses
 			HelperClasses.FileHandling.deleteFile(Globals.ProjectInstallationPathBinary.TrimEnd('\\') + @"\P127_Jumpscript.ahk");
 
 			HelperClasses.Logger.Log("Stopped Jumpscript");
+
+			IsRunning = false;
 		}
 
 		public static string KeyToString(System.Windows.Forms.Keys pKey)

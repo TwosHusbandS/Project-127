@@ -23,7 +23,6 @@ namespace Project_127
 		public Overlay_MultipleMonitor()
 		{
 			InitializeComponent();
-			this.Width = Settings.OverlayWidth;
 		}
 
 		private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -31,5 +30,31 @@ namespace Project_127
 			DragMove();
 		}
 
+		public void MyShow()
+		{
+			this.border_main.Visibility = Visibility.Visible;
+		}
+
+		public void MyHide()
+		{
+			this.border_main.Visibility = Visibility.Hidden;
+		}
+
+		private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+		{
+			Settings.OL_MM_Top = this.Top;
+			Settings.OL_MM_Left = this.Left;
+		}
+
+		private void Window_Loaded(object sender, RoutedEventArgs e)
+		{
+			this.Width = Settings.OverlayWidth;
+
+			if (Settings.OL_MM_Left > 0 && Settings.OL_MM_Top > 0)
+			{
+				this.Top = Settings.OL_MM_Top;
+				this.Left = Settings.OL_MM_Left;
+			}
+		}
 	}
 }

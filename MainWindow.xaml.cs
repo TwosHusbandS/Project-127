@@ -110,27 +110,28 @@ Hybrid code can be found in AAA_HybridCode.
 
 		Quick and Dirty notes:
 			- Clean up Code / Readme / Patchnotes
-			- Release new ZIP
+			- [DONE] Release new ZIP
 			- [DONE] Binary Folder and stuff
 			- [DONE] Make Launcher Built on Main Built
 			- [DONE] Copy (Build event) License File to Proper directory
 			- [DONE] Copy (Build event) Jumpscript Exe
 			- [DONE] Make it create Folder and Savefile for new release...for SFH Demo
 			- [DONE] Translate Keys... 
+			- [DONE] Delete Internal File for everyone.
 			- [DONE] Clean up "big three" method. Make users click no, check for size > 0 instead of file exists...
 			- [DONE] Add Fullscreen mode to settings. Added other stuff to settings. Fixed settings bugs.
 			- [DONE] Split settings into 3 subpages
 			- [DONE] Command Line args...pass from Launcher to main executable. Check code on main executable.
-			- Add Jumpscript and Overlay to "only when downgraded". Just check in start methods of those things, check on Setting to true OfSettings what should be done based on settings
+			- [DONE] Add Jumpscript and Overlay to "only when downgraded". Just check in start methods of those things, check on Setting to true OfSettings what should be done based on settings
+			- [DONE] Cant do Overlay "only when downgraded" since we dont tie it to game running or game window when multi monitor mode...
 		
-	- Fullscreen mode for overlay
-				--> im thinking
+	- [DONE] Fullscreen mode for overlay
 				--> [DONE] Window with just fixed height bar. Fixed Color. Offblack and white boarder and text.
 				--> [DONE] Fullscreen / Multi monitor mode Checkmark on top (under enable) with tooltip
 				--> [DONE] implement settings backend
 				--> [DONE] Margin and Location greyed out and disabled. With popup. On Enable / Disable overlaw. Method to refresh if those are greyed out or not. Or hook on top UI..
 				--> [DONE] Implement overlay stuff...thinking of if check inside constructor where to draw on top on, and call it a day.
-					- Enum param on Overlay object which gets checked on changing stuff
+						- Enum param on Overlay object which gets checked on changing stuff
 				--> [DONE] Y and X Margin sepperate settings. 
 				--> [DONE] Options scrollable there...
 
@@ -138,27 +139,27 @@ Hybrid code can be found in AAA_HybridCode.
 				--> [DONE] check if we need to add Y Margin to it because of WPF Overlay "Titlebar"
 				--> [DONE] Check if it works with our hidden WPF Window...
 				--> [DONE] Semi-Connected to backend. With all settings correct on P127 launch, shit works.
-				--> ReWrite Looks stuff...it should update the actual overlay, but just write to settings on mouseLeftUp
-				--> make WPF WIndow size width accordingly
-				--> When we click into the monitor to the side of our WPF Window, it will get back to background, but overlay will stay
-				--> Theres this thing where you force stuff to be in foreground...that could help.
-				
-				--> Bevor messing with stuff below, check how we hide / show currently...and how to untangle that logic
+				--> [DONE] ReWrite Looks stuff...it should update the actual overlay, but just write to settings on mouseLeftUp
+				--> [DONE] make WPF WIndow size width accordingly
+				--> [DONE] When we click into the monitor to the side of our WPF Window, it will get back to background, but overlay will stay
+				--> [DONE] Theres this thing where you force stuff to be in foreground...that could help. (WPF.Window.Instance.TopMost)
+				--> [DONE] WPF Window + Overlay gets init with correct target windows on P127 launch.
+				--> [DONE] WPF Window Closes on Hotkey globally
+				--> [DONE] WPF Window Close on P127 close
+				--> [DONE] WPF Window opens on Hotkey
+				--> [DONE] WPF Window Size changes with settings change...
+				--> [DONE] Changing Settings of OverlayMode and OverlayEnable work while P127 is running and while GTA is running and non running
+				--> [DONE] Display Logic on Look tab. 
+				--> [DONE] Bevor messing with stuff below, check how we hide / show currently...and how to untangle that logic
 						=> Maybe use OverlayMode for that?
 						=> we may be referencing DebugMode of GTAOverlay for that...how can we use that.
 						=> Rethink KeyboardListener. Might have to run it 24/7. Maybe already tied to debugmode? 
-				--> WPF Window + Overlay gets init with correct target windows on P127 launch.
-				--> WPF Window Close on P127 close
-				--> WPF Window Closes on Hotkey globally
-				--> WPF Window Closes on Settings Disable
-				--> WPF Window openes on Settings Enable
-				--> WPF Window opens on Hotkey
-				--> WPF Window Size changes with settings change...
-				--> WPF Window opens on Look Tab
-				--> WPF Window closes on Look Tab (unless it was shown before open)
-				--> Game Overlay doesnt disappear when alt tabbing and in tabbing
-				--> Unbind Logic of Overlay Visibility everywhere its tied to GTA Running...
-				--> Make sure shit works when changing settings with GTA Running...
+				--> [DONE] WPF Window Closes on Settings Disable
+				--> [DONE] WPF Window openes on Settings Enable
+				--> [DONE] WPF Window opens on Look Tab
+				--> [DONE] WPF Window closes on Look Tab (unless it was shown before open)
+				--> [DONE] Game Overlay doesnt disappear when alt tabbing and in tabbing
+				--> [DONE] Make sure shit works when changing settings with GTA Running...
 		- [DONE] SFH Improvements
 			=> [DONE] Add Folder Support
 				>> ReWrite of SaveFileHandler class with enum for File or Folder
@@ -287,7 +288,7 @@ namespace Project_127
 
 		private System.Windows.Forms.NotifyIcon notifyIcon = null;
 
-		private Mutex myMutex;
+		public static Mutex myMutex;
 
 		/// <summary>
 		/// Constructor of Main Window
@@ -399,14 +400,6 @@ namespace Project_127
 				// Same as other two thingies here lolerino
 				HelperClasses.WindowChangeListener.Start();
 			}
-			else if (Settings.EnableOverlay && GTAOverlay.OverlayMode == GTAOverlay.OverlayModes.MultiMonitor)
-			{
-				NoteOverlay.InitGTAOverlay();
-				//HelperClasses.WindowChangeListener.Start();
-				HelperClasses.Keyboard.KeyboardListener.Start();
-			}
-
-
 		}
 
 		public async void AlreadyRunning()

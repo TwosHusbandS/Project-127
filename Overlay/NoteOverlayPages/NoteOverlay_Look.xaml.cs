@@ -288,15 +288,15 @@ namespace Project_127.Overlay.NoteOverlayPages
 			{
 				lbl_Width.Content = myNewContent;
 			}
+			if (NoteOverlay.IsOverlayInit())
+			{
+				NoteOverlay.MyGTAOverlay.width = OverlayWidth;
+			}
 		}
 
 		private void sl_Width_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
 		{
 			Settings.OverlayWidth = OverlayWidth;
-			if (NoteOverlay.IsOverlayInit())
-			{
-				NoteOverlay.MyGTAOverlay.width = Settings.OverlayWidth;
-			}
 		}
 
 		private void sl_Height_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
@@ -307,15 +307,15 @@ namespace Project_127.Overlay.NoteOverlayPages
 			{
 				lbl_Height.Content = myNewContent;
 			}
+			if (NoteOverlay.IsOverlayInit())
+			{
+				NoteOverlay.MyGTAOverlay.height = OverlayHeight;
+			}
 		}
 
 		private void sl_Height_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
 		{
 			Settings.OverlayHeight = OverlayHeight;
-			if (NoteOverlay.IsOverlayInit())
-			{
-				NoteOverlay.MyGTAOverlay.height = Settings.OverlayHeight;
-			}
 		}
 
 		private void sl_TextSize_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
@@ -326,43 +326,43 @@ namespace Project_127.Overlay.NoteOverlayPages
 			{
 				lbl_TextSize.Content = myNewContent;
 			}
+			if (NoteOverlay.IsOverlayInit())
+			{
+				NoteOverlay.MyGTAOverlay.setFont(OverlayTextFont, OverlayTextSize);
+			}
 		}
 
 		private void sl_TextSize_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
 		{
 			Settings.OverlayTextSize = OverlayTextSize;
-			if (NoteOverlay.IsOverlayInit())
-			{
-				NoteOverlay.MyGTAOverlay.setFont(Settings.OverlayTextFont, Settings.OverlayTextSize);
-			}
 		}
 
 		private void MyColorPicker_Foreground_ColorChanged()
 		{
 			OverlayForeground = MyColorPicker_Foreground.SelectedColor;
+			if (NoteOverlay.IsOverlayInit())
+			{
+				NoteOverlay.MyGTAOverlay.setTextColors(OverlayForeground, Color.Transparent);
+			}
 		}
 
 		private void MyColorPicker_Foreground_Closed()
 		{
 			Settings.OverlayForeground = OverlayForeground;
-			if (NoteOverlay.IsOverlayInit())
-			{
-				NoteOverlay.MyGTAOverlay.setTextColors(Settings.OverlayForeground, Color.Transparent);
-			}
 		}
 
 		private void MyColorPicker_Background_ColorChanged()
 		{
 			OverlayBackground = MyColorPicker_Background.SelectedColor;
+			if (NoteOverlay.IsOverlayInit())
+			{
+				NoteOverlay.MyGTAOverlay.setBackgroundColor(OverlayBackground);
+			}
 		}
 
 		private void MyColorPicker_Background_Closed()
 		{
 			Settings.OverlayBackground = OverlayBackground;
-			if (NoteOverlay.IsOverlayInit())
-			{
-				NoteOverlay.MyGTAOverlay.setBackgroundColor(Settings.OverlayBackground);
-			}
 		}
 	}
 

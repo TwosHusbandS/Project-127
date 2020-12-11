@@ -10,8 +10,11 @@
         Title="P127 - GameOverlay" Height="40" Width="800"
         WindowStyle="None" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" MouseLeftButtonDown="Window_MouseLeftButtonDown"
         AllowsTransparency="True"
+        Topmost="True"
+        Loaded="Window_Loaded"
+        Closing="Window_Closing"
         Icon="/Artwork/icon.png">
-    <Border BorderBrush="{x:Static local:Globals.PU_BorderBrush}" BorderThickness="2" Background="{x:Static local:Globals.MyColorOffBlack}">
+    <Border x:Name="border_main" BorderBrush="{x:Static local:Globals.PU_BorderBrush}" BorderThickness="2" Background="{x:Static local:Globals.MyColorOffBlack}">
         <Grid>
             <Label Style="{StaticResource lbl}" Foreground="{x:Static local:Globals.PU_BorderBrush}" Background="Transparent" VerticalAlignment="Top" Content="P127 - GameOverlay" Height="40" HorizontalAlignment="Stretch"/>
         </Grid>

@@ -97,41 +97,11 @@ namespace Project_127
 
 		public static GameStates PollGameState()
 		{
-			//if (Globals.FSW != null)
-			//{
-			//	//HelperClasses.FileHandling.AddToDebug("Still alive, is NOT null");
-			//}
-			//else
-			//{
-			//	//HelperClasses.FileHandling.AddToDebug("Still alive, is null tho...");
-			//}
-
 			GameStates currGameState = GameState;
 
 			if (currGameState == GameStates.Running)
 			{
 				WindowChangeHander.WindowChangeEvent(WindowChangeListener.GetActiveWindowTitle());
-
-				// If one of the Settings which require Hotkeys are enabled
-				if (Settings.EnableOverlay)
-				{
-					// Only Start Stop shit here when the overlay is not in debugmode
-					if (!GTAOverlay.DebugMode && GTAOverlay.OverlayMode == GTAOverlay.OverlayModes.Fullscreen)
-					{
-						NoteOverlay.InitGTAOverlay();
-						HelperClasses.WindowChangeListener.Start();
-					}
-
-				}
-				else
-				{
-					if (!GTAOverlay.DebugMode && GTAOverlay.OverlayMode == GTAOverlay.OverlayModes.Fullscreen)
-					{
-						NoteOverlay.DisposeGTAOverlay();
-						HelperClasses.Keyboard.KeyboardListener.Stop();
-						HelperClasses.WindowChangeListener.Stop();
-					}
-				}
 
 				if (LastGameState == GameStates.NonRunning)
 				{
@@ -140,13 +110,6 @@ namespace Project_127
 			}
 			else
 			{
-				if (!GTAOverlay.DebugMode && GTAOverlay.OverlayMode == GTAOverlay.OverlayModes.Fullscreen)
-				{
-					NoteOverlay.DisposeGTAOverlay();
-					HelperClasses.Keyboard.KeyboardListener.Stop();
-					HelperClasses.WindowChangeListener.Stop();
-				}
-
 				if (LastGameState == GameStates.Running)
 				{
 					GTAClosed();
@@ -166,13 +129,41 @@ namespace Project_127
 			// Start Jumpscript
 			if (Settings.EnableAutoStartJumpScript)
 			{
-				Jumpscript.StartJumpscript();
+				if (Settings.EnableOnlyAutoStartProgramsWhenDowngraded)
+				{
+					if (LauncherLogic.InstallationState == LauncherLogic.InstallationStates.Downgraded)
+					{
+						Jumpscript.StartJumpscript();
+					}
+				}
+				else
+				{
+					Jumpscript.StartJumpscript();
+				}
+			}
+
+			// If one of the Settings which require Hotkeys are enabled
+			if (Settings.EnableOverlay)
+			{
+				// Only Start Stop shit here when the overlay is not in debugmode
+				if (!GTAOverlay.DebugMode && GTAOverlay.OverlayMode == GTAOverlay.OverlayModes.Fullscreen)
+				{
+					NoteOverlay.InitGTAOverlay();
+					HelperClasses.WindowChangeListener.Start();
+				}
 			}
 		}
 
 		public static void GTAClosed()
 		{
 			Jumpscript.StopJumpscript();
+
+			if (!GTAOverlay.DebugMode && GTAOverlay.OverlayMode == GTAOverlay.OverlayModes.Fullscreen)
+			{
+				NoteOverlay.DisposeGTAOverlay();
+				HelperClasses.Keyboard.KeyboardListener.Stop();
+				HelperClasses.WindowChangeListener.Stop();
+			}
 		}
 
 		/// <summary>
@@ -263,7 +254,7 @@ namespace Project_127
 		/// <summary>
 		/// Property of often used variable. (UpgradeFilePathBackup)
 		/// </summary>
-		public static string UpgradeFilePathBackup {get { return LauncherLogic.ZIPFilePath.TrimEnd('\\') + @"\Project_127_Files\UpgradeFiles_Backup\"; } }
+		public static string UpgradeFilePathBackup { get { return LauncherLogic.ZIPFilePath.TrimEnd('\\') + @"\Project_127_Files\UpgradeFiles_Backup\"; } }
 		/// <summary>
 		/// Property of often used variable. (DowngradeFilePath)
 		/// </summary>
@@ -622,7 +613,7 @@ namespace Project_127
 							try
 							{
 								string[] Stufferino = HelperClasses.FileHandling.PathSplitUp(Settings.PathLiveSplit);
-								HelperClasses.ProcessHandler.StartProcess(Settings.PathLiveSplit,Stufferino[0]);
+								HelperClasses.ProcessHandler.StartProcess(Settings.PathLiveSplit, Stufferino[0]);
 							}
 							catch { }
 						}

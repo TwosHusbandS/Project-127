@@ -41,6 +41,17 @@ namespace Project_127
 		{
 			InitializeComponent();
 			btn_GTA_static = btn_GTA;
+
+			if (LauncherLogic.GameState == LauncherLogic.GameStates.Running)
+			{
+				GTA_Page.btn_GTA_static.BorderBrush = Globals.MW_ButtonGTAGameRunningBorderBrush;
+				GTA_Page.btn_GTA_static.Content = "Exit GTA V";
+			}
+			else
+			{
+				GTA_Page.btn_GTA_static.BorderBrush = Globals.MW_ButtonGTAGameNotRunningBorderBrush;
+				GTA_Page.btn_GTA_static.Content = "Launch GTA V";
+			}
 		}
 
 

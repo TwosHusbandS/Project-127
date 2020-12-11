@@ -45,7 +45,7 @@ namespace Project_127.Overlay
 			Look
 		}
 
-		private NoteOverlayPages _NoteOverlayPage = NoteOverlayPages.NoteFiles;
+		private static NoteOverlayPages _NoteOverlayPage = NoteOverlayPages.NoteFiles;
 
 		public NoteOverlayPages NoteOverlayPage
 		{
@@ -106,15 +106,44 @@ namespace Project_127.Overlay
 			MainWindow.MW.Frame_Game.Content = new Overlay_Preview();
 			MainWindow.MW.Width = 1600;
 			MainWindow.MW.Grid_Preview.Visibility = Visibility.Visible;
+
+			MM_WasOpen = false;
+
+			if (IsOverlayInit())
+			{
+				if (GTAOverlay.OverlayMode == GTAOverlay.OverlayModes.MultiMonitor)
+				{
+					bool tmp = IsOverlayVisible();
+					OverlaySetVisible();
+					MM_WasOpen = tmp;
+				}
+			}
+
 			Overlay_Preview.StartDispatcherTimer();
 		}
+
+		private static bool MM_WasOpen = true;
 
 		public static void DisposePreview()
 		{
 			MainWindow.MW.Width = 900;
 			MainWindow.MW.Grid_Preview.Visibility = Visibility.Hidden;
 			MainWindow.MW.Frame_Game.Content = new EmptyPage();
+
+			if (IsOverlayInit())
+			{
+				if (GTAOverlay.OverlayMode == GTAOverlay.OverlayModes.MultiMonitor)
+				{
+					if (!MM_WasOpen)
+					{
+						OverlaySetInvisible();
+					}
+				}
+			}
+
 			Overlay_Preview.StopDispatcherTimer();
+
+			MM_WasOpen = true;
 		}
 
 
@@ -134,15 +163,7 @@ namespace Project_127.Overlay
 			//HelperClasses.Logger.Log("Trying to Init GTA Overlay");
 			if (MyGTAOverlay == null)
 			{
-				// Set NotesLoaded here based on the
-				if (Settings.OverlayMultiMonitorMode)
-				{
-					MyGTAOverlay = new GTAOverlay(GTAOverlay.OverlayModes.MultiMonitor);
-				}
-				else
-				{
-					MyGTAOverlay = new GTAOverlay(GTAOverlay.OverlayModes.Fullscreen);
-				}
+				MyGTAOverlay = new GTAOverlay();
 				MyGTAOverlay.setTextColors(Settings.OverlayForeground, Color.Transparent);
 				MyGTAOverlay.setBackgroundColor(Settings.OverlayBackground);
 				MyGTAOverlay.setFont(Settings.OverlayTextFont, Settings.OverlayTextSize);
@@ -220,6 +241,17 @@ namespace Project_127.Overlay
 		{
 			if (IsOverlayInit())
 			{
+				if (GTAOverlay.OverlayMode == GTAOverlay.OverlayModes.MultiMonitor)
+				{
+					if (MainWindow.OL_MM != null)
+					{
+						MainWindow.OL_MM.MyShow();
+						if (_NoteOverlayPage == NoteOverlayPages.Look)
+						{
+							MM_WasOpen = true;
+						}
+					}
+				}
 				HelperClasses.Logger.Log("Setting Visibility to true");
 				MyGTAOverlay.Visible = true;
 			}
@@ -229,6 +261,18 @@ namespace Project_127.Overlay
 		{
 			if (IsOverlayInit())
 			{
+				if (GTAOverlay.OverlayMode == GTAOverlay.OverlayModes.MultiMonitor)
+				{
+					if (MainWindow.OL_MM != null)
+					{
+						MainWindow.OL_MM.MyHide();
+						if (_NoteOverlayPage == NoteOverlayPages.Look)
+						{
+							MM_WasOpen = true;
+						}
+					}
+				}
+
 				HelperClasses.Logger.Log("Setting Visibility to false");
 				MyGTAOverlay.Visible = false;
 			}
@@ -258,24 +302,82 @@ namespace Project_127.Overlay
 			}
 		}
 
+
+		public static void DisposeAllOverlayStuff()
+		{
+			NoteOverlay.DisposeGTAOverlay();
+			if (MainWindow.OL_MM != null)
+			{
+				MainWindow.OL_MM.Close();
+				MainWindow.OL_MM = null;
+			}
+			HelperClasses.Keyboard.KeyboardListener.Stop();
+			HelperClasses.WindowChangeListener.Stop();
+		}
+
+		public static void OverlaySettingsChanged()
+		{
+			if (!GTAOverlay.DebugMode)
+			{
+				if (Settings.EnableOverlay == false)
+				{
+					DisposeAllOverlayStuff();
+				}
+				else if (Settings.EnableOverlay == true)
+				{
+					DisposeAllOverlayStuff();
+
+					if (Settings.OverlayMultiMonitorMode)
+					{
+						if (MainWindow.OL_MM != null)
+						{
+							MainWindow.OL_MM.Close();
+						}
+						MainWindow.OL_MM = new Overlay_MultipleMonitor();
+						MainWindow.OL_MM.Show();
+						MainWindow.MW.Show();
+						MainWindow.MW.Focus();
+						NoteOverlay.InitGTAOverlay();
+						MainWindow.OL_MM.MyHide();
+						HelperClasses.Keyboard.KeyboardListener.Start();
+					}
+					else
+					{
+						if (LauncherLogic.GameState == LauncherLogic.GameStates.Running)
+						{
+							// Only Start Stop shit here when the overlay is not in debugmode
+							if (!GTAOverlay.DebugMode && GTAOverlay.OverlayMode == GTAOverlay.OverlayModes.Fullscreen)
+							{
+								NoteOverlay.InitGTAOverlay();
+								HelperClasses.WindowChangeListener.Start();
+							}
+						}
+					}
+
+					if (_NoteOverlayPage == NoteOverlayPages.Look)
+					{
+						if (GTAOverlay.OverlayMode == GTAOverlay.OverlayModes.MultiMonitor)
+						{
+							OverlaySetVisible();
+							MM_WasOpen = false;
+						}
+					}
+				}
+				Overlay.NoteOverlayPages.NoteOverlay_Look.RefreshIfHideOrNot();
+			}
+		}
+
+
 		public static void OverlayToggle()
 		{
 			if (IsOverlayInit())
 			{
 				if (IsOverlayVisible())
 				{
-					if (MyGTAOverlay.currOverlayMode == GTAOverlay.OverlayModes.MultiMonitor)
-					{
-						MainWindow.OL_MM.Hide();
-					}
 					OverlaySetInvisible();
 				}
 				else
 				{
-					if (MyGTAOverlay.currOverlayMode == GTAOverlay.OverlayModes.MultiMonitor)
-					{
-						MainWindow.OL_MM.Show();
-					}
 					OverlaySetVisible();
 				}
 			}
