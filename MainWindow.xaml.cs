@@ -108,6 +108,16 @@ Hybrid code can be found in AAA_HybridCode.
 
 	Release 1.1
 
+		- Internal Testing Reports Bugs:
+			=> Broken InstallationState (says Unsure) when UpgradeFiles is empty. That may have been caused by the stupid Backup being broken. Might want to copy if other shit didnt work. Or CMD?
+			=> Automatic Update of Files detected broken (when update.rpf missing. Maybe check other file attributes instead of size? Mhm.
+			=> [FIXED] popup that path is wrong and you have to force downgrade
+			=> [FIXED] long freeze on check if update hit...actually as efficent as can be
+			=> [FIXED] Using Backup broken (folder locked...Fixed when explorer closed. Kinda weird-ish)
+			=> launching through rockstar when upgraded broken
+			=> Change Popup Text from "if Update hit"
+			=> Change Popup Text from "AutostartBelow"
+
 		Quick and Dirty notes:
 			- Clean up Code / Readme / Patchnotes
 			- [DONE] Release new ZIP
@@ -440,7 +450,7 @@ namespace Project_127
 			{
 				//HelperClasses.FileHandling.AddToDebug("In AlreadyRunning(), renamed File doesnt exist. Closing this instance");
 			}
-			
+
 			Globals.ProperExit();
 
 		}
@@ -974,7 +984,7 @@ namespace Project_127
 					new Popup(Popup.PopupWindowTypes.PopupOkError, "Installation State is broken. I suggest trying to repair.\nWill try to Upgrade anyways.").ShowDialog();
 				}
 
-				if (LauncherLogic.IsGTAVInstallationPathCorrect(false))
+				if (!LauncherLogic.IsGTAVInstallationPathCorrect(false))
 				{
 					Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "GTA Installation Path detected to be wrong.\nForce this Upgrade?");
 					yesno.ShowDialog();
@@ -1046,7 +1056,7 @@ namespace Project_127
 					new Popup(Popup.PopupWindowTypes.PopupOk, "Installation State is broken. I suggest trying to repair.\nWill try to Downgrade anyways").ShowDialog();
 				}
 
-				if (LauncherLogic.IsGTAVInstallationPathCorrect(false))
+				if (!LauncherLogic.IsGTAVInstallationPathCorrect(false))
 				{
 					Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "GTA Installation Path detected to be wrong.\nForce this Downgrade?");
 					yesno.ShowDialog();
@@ -1179,12 +1189,18 @@ namespace Project_127
 
 		private void notifyIcon_DoubleClick(object sender, EventArgs e)
 		{
-			menuItem_Hide_Click(null, null);
 		}
 
 		private void notifyIcon_Click(object sender, EventArgs e)
 		{
-			menuItem_Show_Click(null, null);
+			if (this.Visibility == Visibility.Visible)
+			{
+				menuItem_Hide_Click(null, null);
+			}
+			else
+			{
+				menuItem_Show_Click(null, null);
+			}
 		}
 
 
@@ -1279,6 +1295,7 @@ namespace Project_127
 		{
 			this.WindowState = WindowState.Normal;
 			this.Show();
+			this.Activate();
 		}
 
 		private void menuItem_Hide_Click(object Sender, EventArgs e)
@@ -1289,7 +1306,7 @@ namespace Project_127
 			}
 			catch (Exception ex)
 			{
-				Globals.DebugPopup(ex.ToString());
+				//Globals.DebugPopup(ex.ToString());
 			}
 		}
 
@@ -1308,6 +1325,12 @@ namespace Project_127
 			menuItem_Show_Click(null, null);
 			Globals.PageState = Globals.PageStates.GTA;
 			GTA_Page.btn_GTA_Click_Static();
+
+			//string oldPath = LauncherLogic.ZIPFilePath.TrimEnd('\\') + @"\Project_127_Files\UpgradeFiles";
+			//string newPath = LauncherLogic.ZIPFilePath.TrimEnd('\\') + @"\Project_127_Files\UpgradeFiles_Backup";
+			//Globals.DebugPopup("yep");
+			//HelperClasses.FileHandling.movePath(newPath, oldPath);
+			//Globals.DebugPopup("nay");
 		}
 
 		private void menuItem_SaveFileHandler_Click(object Sender, EventArgs e)

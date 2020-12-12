@@ -177,6 +177,10 @@ namespace Project_127
 				long SizeOfUpdate = HelperClasses.FileHandling.GetSizeOfFile(GTAVFilePath.TrimEnd('\\') + @"\update\update.rpf");
 				long SizeOfPlayGTAV = HelperClasses.FileHandling.GetSizeOfFile(GTAVFilePath.TrimEnd('\\') + @"\playgtav.exe");
 
+				string Message = "GTAV: '" + SizeOfGTAV + "'\nUpdate: '" + SizeOfUpdate + "'\nPlayGTAV: '" + SizeOfPlayGTAV + "'";
+
+				//Globals.DebugPopup(Message);
+
 				long SizeOfUpgradedGTAV = HelperClasses.FileHandling.GetSizeOfFile(UpgradeFilePath.TrimEnd('\\') + @"\GTA5.exe");
 				long SizeOfUpgradedUpdate = HelperClasses.FileHandling.GetSizeOfFile(UpgradeFilePath.TrimEnd('\\') + @"\update\update.rpf");
 				long SizeOfUpgradedPlayGTAV = HelperClasses.FileHandling.GetSizeOfFile(UpgradeFilePath.TrimEnd('\\') + @"\playgtav.exe");
@@ -189,7 +193,6 @@ namespace Project_127
 					{
 						return InstallationStates.Downgraded;
 					}
-
 					// if not downgraded
 					else
 					{
@@ -212,7 +215,10 @@ namespace Project_127
 						}
 					}
 				}
-				return InstallationStates.Unsure;
+				else
+				{
+					return InstallationStates.Unsure;
+				}
 			}
 		}
 

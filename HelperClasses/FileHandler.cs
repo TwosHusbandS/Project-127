@@ -370,9 +370,9 @@ namespace Project_127.HelperClasses
 		{
 			if (FileHandling.doesFileExist(pFilePathA) && FileHandling.doesFileExist(pFilePathB))
 			{
-				if (FileHandling.GetSizeOfFile(pFilePathA) == FileHandling.GetSizeOfFile(pFilePathB))
+				if (FileHandling.GetRawCertDataString(pFilePathA) == FileHandling.GetRawCertDataString(pFilePathB))
 				{
-					if (FileHandling.GetRawCertDataString(pFilePathA) == FileHandling.GetRawCertDataString(pFilePathB))
+					if (FileHandling.GetSizeOfFile(pFilePathA) == FileHandling.GetSizeOfFile(pFilePathB))
 					{
 						return true;
 					}
