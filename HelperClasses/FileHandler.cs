@@ -790,6 +790,8 @@ namespace Project_127.HelperClasses
 			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files");
 			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\DowngradeFiles");
 			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\DowngradeFiles\update");
+			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\UpgradeFiles_Backup");
+			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\UpgradeFiles_Backup\update");
 			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\UpgradeFiles");
 			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\UpgradeFiles\update");
 			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\SupportFiles\");

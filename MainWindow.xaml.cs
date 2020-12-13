@@ -110,13 +110,20 @@ Hybrid code can be found in AAA_HybridCode.
 
 		- Internal Testing Reports Bugs:
 			=> Broken InstallationState (says Unsure) when UpgradeFiles is empty. That may have been caused by the stupid Backup being broken. Might want to copy if other shit didnt work. Or CMD?
-			=> Automatic Update of Files detected broken (when update.rpf missing. Maybe check other file attributes instead of size? Mhm.
+			=> Automatic Update of Files detected broken (when update.rpf missing. Maybe check other file attributes instead of size? Mhm. Or different faster method to detect if files are the same
 			=> [FIXED] popup that path is wrong and you have to force downgrade
 			=> [FIXED] long freeze on check if update hit...actually as efficent as can be
 			=> [FIXED] Using Backup broken (folder locked...Fixed when explorer closed. Kinda weird-ish)
+			=> Investigate Jumpscript with Logs for crapideot.
+			=> More efficent isEqual method.
+			=> Add "internal mode" and "buildinfo" and "buildtime" to debug
+			=> Make settings not write enums to settins on startup. Maybe check on Settings property if its the same as current before setting?
+			=> Mode (internal, beta, crapideot etc.)
 			=> launching through rockstar when upgraded broken
 			=> Change Popup Text from "if Update hit"
 			=> Change Popup Text from "AutostartBelow"
+			=> Think about integrating new lauch version
+			=> Think about what files we need, how we get them, with Optional stuff etc, how we get them, how we name them etc.
 
 		Quick and Dirty notes:
 			- Clean up Code / Readme / Patchnotes
