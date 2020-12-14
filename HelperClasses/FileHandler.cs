@@ -15,6 +15,7 @@ using Project_127.HelperClasses;
 using Project_127.Overlay;
 using Project_127.Popups;
 using Project_127.MySettings;
+using System.Diagnostics;
 
 namespace Project_127.HelperClasses
 {
@@ -368,41 +369,70 @@ namespace Project_127.HelperClasses
 
 		public static bool AreFilesEqual(string pFilePathA, string pFilePathB)
 		{
-			if (FileHandling.doesFileExist(pFilePathA) && FileHandling.doesFileExist(pFilePathB))
+			Stopwatch sw = new Stopwatch();
+			sw.Start();
+			bool Sth = AreFilesEqualReal(pFilePathA, pFilePathB);
+			sw.Stop();
+			HelperClasses.Logger.Log("AAAA - It took '" + sw.ElapsedMilliseconds + "' ms to compare: '" + pFilePathA + "' and '" + pFilePathB + "'. Result is: " + Sth.ToString());
+			return Sth;
+		}
+
+		private static bool StreamsContentsAreEqual(Stream stream1, Stream stream2)
+		{
+			const int bufferSize = 1024 * sizeof(Int64);
+			var buffer1 = new byte[bufferSize];
+			var buffer2 = new byte[bufferSize];
+
+			while (true)
 			{
-				if (FileHandling.GetRawCertDataString(pFilePathA) == FileHandling.GetRawCertDataString(pFilePathB))
+				int count1 = stream1.Read(buffer1, 0, bufferSize);
+				int count2 = stream2.Read(buffer2, 0, bufferSize);
+
+				if (count1 != count2)
 				{
-					if (FileHandling.GetSizeOfFile(pFilePathA) == FileHandling.GetSizeOfFile(pFilePathB))
-					{
-						return true;
-					}
-					else
+					return false;
+				}
+
+				if (count1 == 0)
+				{
+					return true;
+				}
+
+				int iterations = (int)Math.Ceiling((double)count1 / sizeof(Int64));
+				for (int i = 0; i < iterations; i++)
+				{
+					if (BitConverter.ToInt64(buffer1, i * sizeof(Int64)) != BitConverter.ToInt64(buffer2, i * sizeof(Int64)))
 					{
 						return false;
 					}
 				}
-				else
-				{
-					return false;
-				}
-			}
-			else
-			{
-				return false;
 			}
 		}
 
 
-		public static string GetRawCertDataString(string pFilePath)
+
+		public static bool AreFilesEqualReal(string pFilePathA, string pFilePathB)
 		{
-			try
+			FileInfo fileInfo1 = new FileInfo(pFilePathA);
+			FileInfo fileInfo2 = new FileInfo(pFilePathB);
+
+			if (!fileInfo1.Exists || !fileInfo2.Exists)
 			{
-				X509Certificate theSigner = X509Certificate.CreateFromSignedFile(pFilePath);
-				return theSigner.GetRawCertDataString();
+				return false;
 			}
-			catch
+			if (fileInfo1.Length != fileInfo2.Length)
 			{
-				return "";
+				return false;
+			}
+			else
+			{
+				using (var file1 = fileInfo1.OpenRead())
+				{
+					using (var file2 = fileInfo2.OpenRead())
+					{
+						return StreamsContentsAreEqual(file1, file2);
+					}
+				}
 			}
 		}
 
@@ -798,7 +828,11 @@ namespace Project_127.HelperClasses
 			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\SupportFiles\Notes");
 			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\SupportFiles\Installer");
 			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\SupportFiles\SaveFiles");
-		}
+			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\DowngradeFiles_Alternative_Steam\");
+			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\DowngradeFiles_Alternative_Rockstar\");
+			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\SocialClubFiles_Steam");
+			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\SocialClubFiles_Rockstar");
+	}
 
 
 

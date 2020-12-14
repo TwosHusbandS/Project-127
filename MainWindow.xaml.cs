@@ -108,22 +108,39 @@ Hybrid code can be found in AAA_HybridCode.
 
 	Release 1.1
 
+		PRIO PRIO CTRLF
+		I think i tracked down a huge bug...
+			=> Be upgraded, empty Upgrade_Files folder.
+			=> Downgrade, CLOSE P127
+			=> Copy over Upgrade_Files folder into GTA. 
+			=> Open P127
+			=> "Downgraded (1.52)"
+		We are hardlinking...changing link will change source
+
 		- Internal Testing Reports Bugs:
-			=> Broken InstallationState (says Unsure) when UpgradeFiles is empty. That may have been caused by the stupid Backup being broken. Might want to copy if other shit didnt work. Or CMD?
-			=> Automatic Update of Files detected broken (when update.rpf missing. Maybe check other file attributes instead of size? Mhm. Or different faster method to detect if files are the same
+			=> [DOESNT MATTER] Broken InstallationState (says Unsure) when UpgradeFiles is empty. That may have been caused by the stupid Backup being broken. Might want to copy if other shit didnt work. Or CMD?
+			=> [FIXED] Automatic Update of Files detected broken (when update.rpf missing. Maybe check other file attributes instead of size? Mhm. Or different faster method to detect if files are the same
+			=> [FIXED] More efficent isEqual method for checking if gta update hit
 			=> [FIXED] popup that path is wrong and you have to force downgrade
 			=> [FIXED] long freeze on check if update hit...actually as efficent as can be
 			=> [FIXED] Using Backup broken (folder locked...Fixed when explorer closed. Kinda weird-ish)
+			=> Dragons stuff. Both paths, Settings
+			=> No "new files blabla popup when upgrade_files is empty
+			=> Create Backup method
+			=> Re-Downmload ZIP Popup on Check for updates
 			=> Investigate Jumpscript with Logs for crapideot.
-			=> More efficent isEqual method.
-			=> Add "internal mode" and "buildinfo" and "buildtime" to debug
+			=> Reset settings is wonky UX
+			=> Do actual Modes (internal, beta, master etc.) on some hidden UI shit, "default", textbox, "set new", cancel
+			=> Add "internal mode" and "buildinfo" and "buildtime" to debug info
 			=> Make settings not write enums to settins on startup. Maybe check on Settings property if its the same as current before setting?
-			=> Mode (internal, beta, crapideot etc.)
 			=> launching through rockstar when upgraded broken
-			=> Change Popup Text from "if Update hit"
-			=> Change Popup Text from "AutostartBelow"
+			=> Change Popup Text from "if Update hit" to something better
+			=> Change Popup Text from "AutostartBelow" to something better
 			=> Think about integrating new lauch version
-			=> Think about what files we need, how we get them, with Optional stuff etc, how we get them, how we name them etc.
+					- what files we need, how we get them, with Optional stuff
+					- where do we keep social club files? How are we messing with them.
+					- what do we need to do if user checks the checkmark and wants new way of launching. Etc.
+			=> DebugFile async task,  check if what we are overwriting isnt larger than our message, popup then
 
 		Quick and Dirty notes:
 			- Clean up Code / Readme / Patchnotes
@@ -928,10 +945,68 @@ namespace Project_127
 			mi3.Click += MI_Close_Click;
 			cm.Items.Add(mi3);
 
+			//MenuItem mi4 = new MenuItem();
+			//mi4.Header = "Compare 2 Files";
+			//mi4.Click += MI_Debug_Click;
+			//cm.Items.Add(mi4);
+
+			//MenuItem mi5 = new MenuItem();
+			//mi5.Header = "Did Update Hit";
+			//mi5.Click += MI_Debug2_Click;
+			//cm.Items.Add(mi5);
+
+			//MenuItem mi6 = new MenuItem();
+			//mi6.Header = "ResetBtn";
+			//mi6.Click += MI_Debug3_Click;
+			//cm.Items.Add(mi6);
+
 			cm.IsOpen = true;
 
 			//Globals.DebugPopup(Globals.CommandLineArgs.ToString());
 			//Globals.DebugPopup(Globals.InternalMode.ToString());
+		}
+
+		private void MI_Debug3_Click(object sender, RoutedEventArgs e)
+		{
+			btn_Downgrade.Content = "Downgrade";
+			HelperClasses.FileHandling.HardLinkFiles(Globals.ProjectInstallationPath.TrimEnd('\\') + @"\LICENSE_LINK", Globals.ProjectInstallationPath.TrimEnd('\\') + @"\LICENSE");
+		}
+
+		private void MI_Debug2_Click(object sender, RoutedEventArgs e)
+		{
+			bool areTheyEqual = LauncherLogic.DidUpdateHit();
+			btn_Downgrade.Content = "Downgrade: Did Update Hit: '" + areTheyEqual.ToString() + "'";
+		}
+
+		private void MI_Debug_Click(object sender, RoutedEventArgs e)
+		{
+			btn_Downgrade.Content = "Checking...";
+
+			string GTA_GTA5 = Settings.GTAVInstallationPath.TrimEnd('\\') + @"\gta5.exe";
+			string GTA_PlayGTAV = Settings.GTAVInstallationPath.TrimEnd('\\') + @"\playgtav.exe";
+			string GTA_UpdateRPF = Settings.GTAVInstallationPath.TrimEnd('\\') + @"\update\update.rpf";
+
+			string Upgrade_GTA5 = LauncherLogic.UpgradeFilePath.TrimEnd('\\') + @"\gta5.exe";
+			string Upgrade_PlayGTAV = LauncherLogic.UpgradeFilePath.TrimEnd('\\') + @"\playgtav.exe";
+			string Upgrade_UpdateRPF = LauncherLogic.UpgradeFilePath.TrimEnd('\\') + @"\update\update.rpf";
+
+			string Downgrade_GTA5 = LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\gta5.exe";
+			string Downgrade_PlayGTAV = LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\playgtav.exe";
+			string Downgrade_UpdateRPF = LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\update\update.rpf";
+
+			bool areTheyEqual = HelperClasses.FileHandling.AreFilesEqual(GTA_UpdateRPF, Upgrade_UpdateRPF);
+
+			//if (FileHandling.GetSizeOfFile(GTA_UpdateRPF) == FileHandling.GetSizeOfFile(Downgrade_UpdateRPF))
+			//{
+			//	areTheyEqual = true;
+			//}
+			//else
+			//{
+			//	areTheyEqual = false;
+			//}
+
+			btn_Downgrade.Content = "Update Files are equal: '" + areTheyEqual.ToString() + "'";
+
 		}
 
 

@@ -187,6 +187,7 @@
     <Compile Include="HelperClasses\Keyboard\KeyboardListener.cs" />
     <Compile Include="HelperClasses\MouseSender.cs" />
     <Compile Include="HelperClasses\WindowChangeHander.cs" />
+    <Compile Include="LaunchAlternative.cs" />
     <Compile Include="Overlay\EmptyPage.xaml.cs">
       <DependentUpon>EmptyPage.xaml</DependentUpon>
     </Compile>

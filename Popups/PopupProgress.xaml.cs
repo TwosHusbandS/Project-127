@@ -409,8 +409,8 @@ namespace Project_127.Popups
 					//SetProgress("Checking if Update hit", 3, 8);
 					//if (!HelperClasses.FileHandling.AreFilesEqual(GTA_GTA5, Downgrade_GTA5))
 					//{
-						RtrnBool = true;
-						return;
+					RtrnBool = true;
+					return;
 					//}
 				}
 
@@ -420,8 +420,8 @@ namespace Project_127.Popups
 					//SetProgress("Checking if Update hit", 5, 8);
 					//if (!HelperClasses.FileHandling.AreFilesEqual(GTA_PlayGTAV, Downgrade_PlayGTAV))
 					//{
-						RtrnBool = true;
-						return;
+					RtrnBool = true;
+					return;
 					//}
 				}
 
@@ -431,8 +431,8 @@ namespace Project_127.Popups
 					//SetProgress("Checking if Update hit", 7, 8);
 					//if (!HelperClasses.FileHandling.AreFilesEqual(GTA_UpdateRPF, Downgrade_UpdateRPF))
 					//{
-						RtrnBool = true;
-						return;
+					RtrnBool = true;
+					return;
 					//}
 				}
 

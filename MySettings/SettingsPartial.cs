@@ -380,6 +380,37 @@ namespace Project_127.MySettings
 			}
 		}
 
+
+		/// <summary>
+		/// Settings EnableCopyFilesInsteadOfHardlinking_SocialClub. Gets and Sets from the Dictionary.
+		/// </summary>
+		public static bool EnableCopyFilesInsteadOfHardlinking_SocialClub
+		{
+			get
+			{
+				return GetBoolFromString(GetSetting("EnableCopyFilesInsteadOfHardlinking_SocialClub"));
+			}
+			set
+			{
+				SetSetting("EnableCopyFilesInsteadOfHardlinking_SocialClub", value.ToString());
+			}
+		}
+
+		/// <summary>
+		/// Settings EnableAlternativeLaunch. Gets and Sets from the Dictionary.
+		/// </summary>
+		public static bool EnableAlternativeLaunch
+		{
+			get
+			{
+				return GetBoolFromString(GetSetting("EnableAlternativeLaunch"));
+			}
+			set
+			{
+				SetSetting("EnableAlternativeLaunch", value.ToString());
+			}
+		}
+
 		/// <summary>
 		/// Settings EnablePreOrderBonus. Gets and Sets from the Dictionary.
 		/// </summary>

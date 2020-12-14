@@ -259,7 +259,9 @@ namespace Project_127
 			{"GTAVInstallationPath", ""},
 			{"ZIPExtractionPath", Process.GetCurrentProcess().MainModule.FileName.Substring(0, Process.GetCurrentProcess().MainModule.FileName.LastIndexOf('\\')) },
 			{"EnableLogging", "True"},
+			{"EnableAlternativeLaunch", "False"},
 			{"EnableCopyFilesInsteadOfHardlinking", "False"},
+			{"EnableCopyFilesInsteadOfHardlinking_SocialClub", "False"},
 			{"ExitWay", "Close"},
 			{"StartWay", "Maximized"},
 	

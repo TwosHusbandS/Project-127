@@ -185,11 +185,27 @@ namespace Project_127
 				long SizeOfUpgradedUpdate = HelperClasses.FileHandling.GetSizeOfFile(UpgradeFilePath.TrimEnd('\\') + @"\update\update.rpf");
 				long SizeOfUpgradedPlayGTAV = HelperClasses.FileHandling.GetSizeOfFile(UpgradeFilePath.TrimEnd('\\') + @"\playgtav.exe");
 
+				long SizeOfDowngradeAlternativeSteamGTAV = HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeAlternativeFilePathSteam.TrimEnd('\\') + @"\GTA5.exe");
+				long SizeOfDowngradeAlternativeSteamUpdate = HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeAlternativeFilePathSteam.TrimEnd('\\') + @"\update\update.rpf");
+				long SizeOfDowngradeAlternativeSteamPlayGTAV = HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeAlternativeFilePathSteam.TrimEnd('\\') + @"\playgtav.exe");
+
+				long SizeOfDowngradeAlternativeRockstarGTAV = HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeAlternativeFilePathRockstar.TrimEnd('\\') + @"\GTA5.exe");
+				long SizeOfDowngradeAlternativeRockstarUpdate = HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeAlternativeFilePathRockstar.TrimEnd('\\') + @"\update\update.rpf");
+				long SizeOfDowngradeAlternativeRockstarPlayGTAV = HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeAlternativeFilePathRockstar.TrimEnd('\\') + @"\playgtav.exe");
+
 				// if both Files in the GTA V Install Path exist
 				if (SizeOfGTAV > 0 && SizeOfUpdate > 0 && SizeOfPlayGTAV > 0)
 				{
 					// if Sizes in GTA V Installation Path match what files we use from ZIP for downgrading
 					if (SizeOfGTAV == SizeOfDowngradedGTAV && SizeOfUpdate == SizeOfDowngradedUPDATE && SizeOfPlayGTAV == SizeOfDowngradedPlayGTAV)
+					{
+						return InstallationStates.Downgraded;
+					}
+					if (SizeOfGTAV == SizeOfDowngradeAlternativeSteamGTAV && SizeOfUpdate == SizeOfDowngradeAlternativeSteamUpdate && SizeOfPlayGTAV == SizeOfDowngradeAlternativeSteamPlayGTAV)
+					{
+						return InstallationStates.Downgraded;
+					}
+					if (SizeOfGTAV == SizeOfDowngradeAlternativeRockstarGTAV && SizeOfUpdate == SizeOfDowngradeAlternativeRockstarUpdate && SizeOfPlayGTAV == SizeOfDowngradeAlternativeRockstarPlayGTAV)
 					{
 						return InstallationStates.Downgraded;
 					}
@@ -261,10 +277,32 @@ namespace Project_127
 		/// Property of often used variable. (UpgradeFilePathBackup)
 		/// </summary>
 		public static string UpgradeFilePathBackup { get { return LauncherLogic.ZIPFilePath.TrimEnd('\\') + @"\Project_127_Files\UpgradeFiles_Backup\"; } }
+
 		/// <summary>
 		/// Property of often used variable. (DowngradeFilePath)
 		/// </summary>
 		public static string DowngradeFilePath { get { return LauncherLogic.ZIPFilePath.TrimEnd('\\') + @"\Project_127_Files\DowngradeFiles\"; } }
+
+		/// <summary>
+		/// Property of often used variable. (DowngradeAlternativeFilePathSteam)
+		/// </summary>
+		public static string DowngradeAlternativeFilePathSteam { get { return LauncherLogic.ZIPFilePath.TrimEnd('\\') + @"\Project_127_Files\DowngradeFiles_Alternative_Steam\"; } }
+
+		/// <summary>
+		/// Property of often used variable. (SocialClubFilePathSteam)
+		/// </summary>
+		public static string SocialClubFilePathSteam { get { return LauncherLogic.ZIPFilePath.TrimEnd('\\') + @"\Project_127_Files\SocialClubFiles_Steam\"; } }
+
+		/// <summary>
+		/// Property of often used variable. (DowngradeAlternativeFilePathRockstar)
+		/// </summary>
+		public static string DowngradeAlternativeFilePathRockstar { get { return LauncherLogic.ZIPFilePath.TrimEnd('\\') + @"\Project_127_Files\DowngradeFiles_Alternative_Rockstar\"; } }
+
+		/// <summary>
+		/// Property of often used variable. (SocialClubRockstarFilePath)
+		/// </summary>
+		public static string SocialClubFilePathRockstar { get { return LauncherLogic.ZIPFilePath.TrimEnd('\\') + @"\Project_127_Files\SocialClubFiles_Rockstar\"; } }
+
 
 		/// <summary>
 		/// Property of often used variable. (SupportFilePath)
@@ -455,45 +493,89 @@ namespace Project_127
 			if (LauncherLogic.InstallationState == InstallationStates.Upgraded)
 			{
 				HelperClasses.Logger.Log("Installation State Upgraded Detected.", 1);
+
+				// If Steam
+				if (GameVersion == Settings.Retailers.Steam)
+				{
+					// If we dont want to launch through Steam
+					if (Settings.EnableDontLaunchThroughSteam)
+					{
+						HelperClasses.Logger.Log("Trying to start Game non-retail.", 1);
+						// Launch through non retail
+						HelperClasses.ProcessHandler.StartGameNonRetail();
+					}
+					else
+					{
+						HelperClasses.Logger.Log("Trying to start Game normally through Steam.", 1);
+						// Launch through steam
+						HelperClasses.ProcessHandler.StartProcess(Globals.SteamInstallPath.TrimEnd('\\') + @"\steam.exe", pCommandLineArguments: "-applaunch 271590 -uilanguage " + Settings.ToMyLanguageString(Settings.LanguageSelected).ToLower());
+					}
+
+				}
+				// If Epic Games
+				else if (GameVersion == Settings.Retailers.Epic)
+				{
+
+					HelperClasses.Logger.Log("Trying to start Game normally through EpicGames.", 1);
+
+					// This does not work with custom wrapper StartProcess in ProcessHandler...i guess this is fine
+					Process.Start(@"com.epicgames.launcher://apps/9d2d0eb64d5c44529cece33fe2a46482?action=launch&silent=true");
+				}
+				// If Rockstar
+				else
+				{
+					// Launch through Non Retail re
+					HelperClasses.ProcessHandler.StartGameNonRetail();
+				}
 			}
 			else if (LauncherLogic.InstallationState == InstallationStates.Downgraded)
 			{
 				HelperClasses.Logger.Log("Installation State Downgraded Detected.", 1);
 
-				// If already Authed
-				if (AuthState == AuthStates.Auth)
+				if (!Settings.EnableAlternativeLaunch)
 				{
-					HelperClasses.Logger.Log("You are already Authenticated. Will Launch Game Now");
-				}
+					// If already Authed
+					if (AuthState == AuthStates.Auth)
+					{
+						HelperClasses.Logger.Log("You are already Authenticated. Will Launch Game Now");
+					}
 
-				// If not Authed
+					// If not Authed
+					else
+					{
+						HelperClasses.Logger.Log("You are NOT already Authenticated. Throwing up Window now.");
+
+						// Trying to Auth User
+						Globals.LaunchAfterAuth = true;
+						Globals.PageState = Globals.PageStates.Auth;
+						return;
+					}
+
+					// Generates Token needed to Launch Downgraded GTAV
+					HelperClasses.Logger.Log("Letting Dragon work his magic");
+					await ROSCommunicationBackend.GenToken();
+
+
+					// If Steam
+					if (GameVersion == Settings.Retailers.Steam && !Settings.EnableDontLaunchThroughSteam)
+					{
+							HelperClasses.Logger.Log("Trying to start Game normally through Steam.", 1);
+							// Launch through steam
+							HelperClasses.ProcessHandler.StartProcess(Globals.SteamInstallPath.TrimEnd('\\') + @"\steam.exe", pCommandLineArguments: "-applaunch 271590 -uilanguage " + Settings.ToMyLanguageString(Settings.LanguageSelected).ToLower());
+
+					}
+					else
+					{
+						HelperClasses.Logger.Log("Trying to start Game normally non retail.", 1);
+						// Launch through Non Retail re
+						HelperClasses.ProcessHandler.StartGameNonRetail();
+					}
+				}
 				else
 				{
-					HelperClasses.Logger.Log("You are NOT already Authenticated. Throwing up Window now.");
-
-					// Trying to Auth User
-					Globals.LaunchAfterAuth = true;
-					Globals.PageState = Globals.PageStates.Auth;
-					return;
-
-					//// If still not authed
-					//if (AuthState == AuthStates.NotAuth)
-					//{
-					//	// Throw Error and Quick
-					//	HelperClasses.Logger.Log("Manual User Auth on Launch click did not work. Launch method will exit");
-					//	new Popup(Popup.PopupWindowTypes.PopupOk, "Authentication not sucessfull. Will abort Launch Function. Please Try again");
-					//	return;
-					//}
-					//else
-					//{
-					//	HelperClasses.Logger.Log("Auth inside of Launch Click worked");
-					//}
+					LaunchAlternative.Launch();
 				}
 
-
-				// Generates Token needed to Launch Downgraded GTAV
-				HelperClasses.Logger.Log("Letting Dragon work his magic");
-				await ROSCommunicationBackend.GenToken();
 			}
 			else
 			{
@@ -508,52 +590,7 @@ namespace Project_127
 			}
 
 
-			// If Steam
-			if (GameVersion == Settings.Retailers.Steam)
-			{
 
-				// If we dont want to launch through Steam
-				if (Settings.EnableDontLaunchThroughSteam)
-				{
-					HelperClasses.Logger.Log("Trying to start Game non-retail.", 1);
-					// Launch through non retail
-					HelperClasses.ProcessHandler.StartGameNonRetail();
-				}
-				else
-				{
-					HelperClasses.Logger.Log("Trying to start Game normally through Steam.", 1);
-					// Launch through steam
-					HelperClasses.ProcessHandler.StartGameNonRetail(true);
-
-					//HelperClasses.ProcessHandler.StartProcess(Globals.SteamInstallPath.TrimEnd('\\') + @"\steam.exe", pCommandLineArguments: "-applaunch 271590 -uilanguage " + Settings.ToMyLanguageString(Settings.LanguageSelected).ToLower());
-				}
-
-			}
-
-			// If Epic Games
-			else if (GameVersion == Settings.Retailers.Epic)
-			{
-				// If upgraded, launch through epic
-				if (InstallationState == InstallationStates.Upgraded)
-				{
-					HelperClasses.Logger.Log("Trying to start Game normally through EpicGames.", 1);
-
-					// This does not work with custom wrapper StartProcess in ProcessHandler...i guess this is fine
-					Process.Start(@"com.epicgames.launcher://apps/9d2d0eb64d5c44529cece33fe2a46482?action=launch&silent=true");
-				}
-				// If downgraded launch through non retail
-				else
-				{
-					HelperClasses.ProcessHandler.StartGameNonRetail();
-				}
-			}
-
-			// If Rockstar
-			else
-			{
-				// Launch through Non Retail re
-				HelperClasses.ProcessHandler.StartGameNonRetail();
-			}
 
 			HelperClasses.Logger.Log("Game should be launched");
 
