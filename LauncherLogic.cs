@@ -286,22 +286,22 @@ namespace Project_127
 		/// <summary>
 		/// Property of often used variable. (DowngradeAlternativeFilePathSteam)
 		/// </summary>
-		public static string DowngradeAlternativeFilePathSteam { get { return LauncherLogic.ZIPFilePath.TrimEnd('\\') + @"\Project_127_Files\DowngradeFiles_Alternative_Steam\"; } }
+		public static string DowngradeAlternativeFilePathSteam { get { return LauncherLogic.ZIPFilePath.TrimEnd('\\') + @"\Project_127_Files\DowngradeFiles_Alternative\steam\"; } }
 
 		/// <summary>
 		/// Property of often used variable. (SocialClubFilePathSteam)
 		/// </summary>
-		public static string SocialClubFilePathSteam { get { return LauncherLogic.ZIPFilePath.TrimEnd('\\') + @"\Project_127_Files\SocialClubFiles_Steam\"; } }
+		public static string SocialClubFilePathSteam { get { return LauncherLogic.ZIPFilePath.TrimEnd('\\') + @"\Project_127_Files\SocialClubFiles\steam\"; } }
 
 		/// <summary>
 		/// Property of often used variable. (DowngradeAlternativeFilePathRockstar)
 		/// </summary>
-		public static string DowngradeAlternativeFilePathRockstar { get { return LauncherLogic.ZIPFilePath.TrimEnd('\\') + @"\Project_127_Files\DowngradeFiles_Alternative_Rockstar\"; } }
+		public static string DowngradeAlternativeFilePathRockstar { get { return LauncherLogic.ZIPFilePath.TrimEnd('\\') + @"\Project_127_Files\DowngradeFiles_Alternative\rockstar"; } }
 
 		/// <summary>
 		/// Property of often used variable. (SocialClubRockstarFilePath)
 		/// </summary>
-		public static string SocialClubFilePathRockstar { get { return LauncherLogic.ZIPFilePath.TrimEnd('\\') + @"\Project_127_Files\SocialClubFiles_Rockstar\"; } }
+		public static string SocialClubFilePathRockstar { get { return LauncherLogic.ZIPFilePath.TrimEnd('\\') + @"\Project_127_Files\SocialClubFiles\rockstar"; } }
 
 
 		/// <summary>
@@ -423,49 +423,47 @@ namespace Project_127
 		public static bool HandleUpdates()
 		{
 			HelperClasses.Logger.Log("Checking if an Update hit");
-			if (DidUpdateHit())
+			if (HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(LauncherLogic.UpgradeFilePath).Length > 1)
 			{
-				if (ThrewUpdateDetectedMessageAlready == false)
+				if (DidUpdateHit())
 				{
-					ThrewUpdateDetectedMessageAlready = true;
-
-					HelperClasses.Logger.Log("Apparently it did. Lets see if the user wants a repair");
-					Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Detected an automatic Update of GTA.\nDo you want to use your current state of GTA V\nas your new \"Upgraded\" Files?\nI recommend \"Yes\"\nThis will create a Backup of the Files P127 uses for Upgrading");
-					yesno.ShowDialog();
-					if (yesno.DialogResult == true)
+					if (ThrewUpdateDetectedMessageAlready == false)
 					{
-						HelperClasses.Logger.Log("User does want it. Initiating Repair");
+						ThrewUpdateDetectedMessageAlready = true;
 
-						KillRelevantProcesses();
+						HelperClasses.Logger.Log("Apparently it did. Lets see if the user wants a repair");
+						Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Detected an automatic Update of GTA.\nDo you want to use your current state of GTA V\nas your new \"Upgraded\" Files?\nI recommend \"Yes\"\nThis will create a Backup of the Files P127 uses for Upgrading");
+						yesno.ShowDialog();
+						if (yesno.DialogResult == true)
+						{
+							HelperClasses.Logger.Log("User does want it. Initiating CreateBackup() and Repair()");
 
-						string oldPath = LauncherLogic.ZIPFilePath.TrimEnd('\\') + @"\Project_127_Files\UpgradeFiles\";
-						string newPath = LauncherLogic.ZIPFilePath.TrimEnd('\\') + @"\Project_127_Files\UpgradeFiles_Backup\";
+							KillRelevantProcesses();
 
-						List<MyFileOperation> MyFileOperations = new List<MyFileOperation>();
+							LauncherLogic.CreateBackup();
 
-						MyFileOperations.Add(new MyFileOperation(MyFileOperation.FileOperations.Delete, newPath, "", "Deleting '" + (newPath) + "'", 2, MyFileOperation.FileOrFolder.Folder));
-						MyFileOperations.Add(new MyFileOperation(MyFileOperation.FileOperations.Move, oldPath, newPath, "Moving '" + (oldPath) + "' to '" + (newPath) + "'", 2, MyFileOperation.FileOrFolder.Folder));
+							LauncherLogic.Repair();
 
-						new PopupProgress(PopupProgress.ProgressTypes.FileOperation, "Backup", MyFileOperations).ShowDialog();
-
-						HelperClasses.FileHandling.createPath(LauncherLogic.ZIPFilePath.TrimEnd('\\') + @"\Project_127_Files\UpgradeFiles\");
-						HelperClasses.FileHandling.createPath(LauncherLogic.ZIPFilePath.TrimEnd('\\') + @"\Project_127_Files\UpgradeFiles\update");
-
-						return true;
+							return true;
+						}
+						else
+						{
+							HelperClasses.Logger.Log("User doesnt want it. Alright then");
+						}
 					}
 					else
 					{
-						HelperClasses.Logger.Log("User doesnt want it. Alright then");
+						HelperClasses.Logger.Log("Update detected but we threw a popup already");
 					}
 				}
 				else
 				{
-					HelperClasses.Logger.Log("Update detected but we threw a popup already");
+					HelperClasses.Logger.Log("No update detected");
 				}
 			}
 			else
 			{
-				HelperClasses.Logger.Log("No update detected");
+				HelperClasses.Logger.Log("No Files in $Upgrade_Files, so im not even checking if update hit");
 			}
 			return false;
 		}
@@ -559,9 +557,9 @@ namespace Project_127
 					// If Steam
 					if (GameVersion == Settings.Retailers.Steam && !Settings.EnableDontLaunchThroughSteam)
 					{
-							HelperClasses.Logger.Log("Trying to start Game normally through Steam.", 1);
-							// Launch through steam
-							HelperClasses.ProcessHandler.StartProcess(Globals.SteamInstallPath.TrimEnd('\\') + @"\steam.exe", pCommandLineArguments: "-applaunch 271590 -uilanguage " + Settings.ToMyLanguageString(Settings.LanguageSelected).ToLower());
+						HelperClasses.Logger.Log("Trying to start Game normally through Steam.", 1);
+						// Launch through steam
+						HelperClasses.ProcessHandler.StartProcess(Globals.SteamInstallPath.TrimEnd('\\') + @"\steam.exe", pCommandLineArguments: "-applaunch 271590 -uilanguage " + Settings.ToMyLanguageString(Settings.LanguageSelected).ToLower());
 
 					}
 					else
@@ -752,6 +750,57 @@ namespace Project_127
 				}
 			}
 		}
+
+
+		public static void CreateBackup(string SecondPath = "Backup")
+		{
+			string FirstPath = LauncherLogic.UpgradeFilePath.TrimEnd('\\');
+			SecondPath = Directory.GetParent(LauncherLogic.UpgradeFilePath.TrimEnd('\\')).ToString().TrimEnd('\\') + @"\UpgradeFiles_" + SecondPath.TrimEnd('\\');
+
+			if (HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(FirstPath).Length <= 1)
+			{
+				new Popup(Popup.PopupWindowTypes.PopupOk, "No Upgrade Files available to back up.").ShowDialog();
+				return;
+			}
+			else
+			{
+				List<MyFileOperation> MyFileOperations = new List<MyFileOperation>();
+
+				MyFileOperations.Add(new MyFileOperation(MyFileOperation.FileOperations.Delete, SecondPath, "", "Deleting '" + (SecondPath) + "'", 2, MyFileOperation.FileOrFolder.Folder));
+				MyFileOperations.Add(new MyFileOperation(MyFileOperation.FileOperations.Copy, FirstPath, SecondPath, "Copying '" + (FirstPath) + "' to '" + (SecondPath) + "'", 2, MyFileOperation.FileOrFolder.Folder));
+
+				new PopupProgress(PopupProgress.ProgressTypes.FileOperation, "Saving Backup", MyFileOperations).ShowDialog();
+
+				new Popup(Popup.PopupWindowTypes.PopupOk, "Files are now backed up.").ShowDialog();
+			}
+		}
+
+		public static void UseBackup(string SecondPath = "Backup")
+		{
+			string FirstPath = LauncherLogic.UpgradeFilePath.TrimEnd('\\');
+			SecondPath = Directory.GetParent(LauncherLogic.UpgradeFilePath.TrimEnd('\\')).ToString().TrimEnd('\\') + @"\UpgradeFiles_" + SecondPath.TrimEnd('\\');
+
+			if (HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(SecondPath).Length <= 1)
+			{
+				new Popup(Popup.PopupWindowTypes.PopupOk, "No Backup Files available.").ShowDialog();
+				return;
+			}
+			else
+			{
+				List<MyFileOperation> MyFileOperations = new List<MyFileOperation>();
+
+				MyFileOperations.Add(new MyFileOperation(MyFileOperation.FileOperations.Delete, FirstPath, "", "Deleting '" + (FirstPath) + "'", 2, MyFileOperation.FileOrFolder.Folder));
+				MyFileOperations.Add(new MyFileOperation(MyFileOperation.FileOperations.Copy, SecondPath, FirstPath, "Copy '" + (SecondPath) + "' to '" + (FirstPath) + "'", 2, MyFileOperation.FileOrFolder.Folder));
+
+				new PopupProgress(PopupProgress.ProgressTypes.FileOperation, "Appliyng Backup", MyFileOperations).ShowDialog();
+
+				new Popup(Popup.PopupWindowTypes.PopupOk, "Using backup files now.").ShowDialog();
+			}
+
+		}
+
+
+
 
 		/// <summary>
 		/// Method to import Zip File

@@ -512,7 +512,7 @@ namespace Project_127.HelperClasses
 		/// </summary>
 		/// <param name="pURL"></param>
 		/// <returns></returns>
-		public static string GetStringFromURL(string pURL)
+		public static string GetStringFromURL(string pURL, string surpressPopup = false)
 		{
 			string rtrn = "";
 
@@ -522,7 +522,7 @@ namespace Project_127.HelperClasses
 			}
 			catch (Exception e)
 			{
-				if (Globals.OfflineErrorThrown == false)
+				if (Globals.OfflineErrorThrown == false && surpressPopup == false)
 				{
 					new Popup(Popup.PopupWindowTypes.PopupOkError, "Project 1.27 can not connect to Github and check for Latest Files or Updates.\nThis might cause some things to not work." + e.ToString()).ShowDialog();
 					Globals.OfflineErrorThrown = true;
@@ -813,6 +813,46 @@ namespace Project_127.HelperClasses
 			}
 		}
 
+		/// <summary>
+		/// Deletes target dir...
+		/// </summary>
+		/// <param name="sourceDirectory"></param>
+		/// <param name="targetDirectory"></param>
+		public static void CopyPath(string sourceDirectory, string targetDirectory)
+		{
+			if (doesPathExist(sourceDirectory))
+			{
+				if (doesPathExist(targetDirectory))
+				{
+					DeleteFolder(targetDirectory);
+				}
+				var diTarget = new DirectoryInfo(targetDirectory);
+				var diSource = new DirectoryInfo(sourceDirectory);
+
+				CopyAll(diSource, diTarget);
+			}
+
+
+		}
+
+		private static void CopyAll(DirectoryInfo source, DirectoryInfo target)
+		{
+			Directory.CreateDirectory(target.FullName);
+
+			// Copy each file into the new directory.
+			foreach (FileInfo fi in source.GetFiles())
+			{
+				fi.CopyTo(Path.Combine(target.FullName, fi.Name), true);
+			}
+
+			// Copy each subdirectory using recursion.
+			foreach (DirectoryInfo diSourceSubDir in source.GetDirectories())
+			{
+				DirectoryInfo nextTargetSubDir =
+					target.CreateSubdirectory(diSourceSubDir.Name);
+				CopyAll(diSourceSubDir, nextTargetSubDir);
+			}
+		}
 
 		public static void CreateAllZIPPaths(string pZIPFileExtractLocation)
 		{
@@ -828,11 +868,17 @@ namespace Project_127.HelperClasses
 			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\SupportFiles\Notes");
 			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\SupportFiles\Installer");
 			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\SupportFiles\SaveFiles");
-			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\DowngradeFiles_Alternative_Steam\");
-			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\DowngradeFiles_Alternative_Rockstar\");
-			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\SocialClubFiles_Steam");
-			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\SocialClubFiles_Rockstar");
-	}
+			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\DowngradeFiles_Alternative\");
+			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\DowngradeFiles_Alternative\steam");
+			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\DowngradeFiles_Alternative\steam\update");
+			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\DowngradeFiles_Alternative\rockstar");
+			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\DowngradeFiles_Alternative\rockstar\update");
+			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\SocialClubFiles");
+			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\SocialClubFiles\steam");
+			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\SocialClubFiles\steam\update");
+			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\SocialClubFiles\rockstar");
+			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\SocialClubFiles\rockstar\update");
+		}
 
 
 

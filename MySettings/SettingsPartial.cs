@@ -336,6 +336,21 @@ namespace Project_127.MySettings
 		}
 
 		/// <summary>
+		/// Settings Mode. Gets and Sets from the Dictionary.
+		/// </summary>
+		public static string Mode
+		{
+			get
+			{
+				return GetSetting("Mode");
+			}
+			set
+			{
+				SetSetting("Mode", value);
+			}
+		}
+
+		/// <summary>
 		/// Settings EnableOnlyAutoStartProgramsWhenDowngraded. Gets and Sets from the Dictionary.
 		/// </summary>
 		public static bool EnableOnlyAutoStartProgramsWhenDowngraded
@@ -382,17 +397,17 @@ namespace Project_127.MySettings
 
 
 		/// <summary>
-		/// Settings EnableCopyFilesInsteadOfHardlinking_SocialClub. Gets and Sets from the Dictionary.
+		/// Settings EnableCopyFilesInsteadOfSyslinking_SocialClub. Gets and Sets from the Dictionary.
 		/// </summary>
-		public static bool EnableCopyFilesInsteadOfHardlinking_SocialClub
+		public static bool EnableCopyFilesInsteadOfSyslinking_SocialClub
 		{
 			get
 			{
-				return GetBoolFromString(GetSetting("EnableCopyFilesInsteadOfHardlinking_SocialClub"));
+				return GetBoolFromString(GetSetting("EnableCopyFilesInsteadOfSyslinking_SocialClub"));
 			}
 			set
 			{
-				SetSetting("EnableCopyFilesInsteadOfHardlinking_SocialClub", value.ToString());
+				SetSetting("EnableCopyFilesInsteadOfSyslinking_SocialClub", value.ToString());
 			}
 		}
 
@@ -508,7 +523,10 @@ namespace Project_127.MySettings
 			}
 			set
 			{
-				SetSetting("LanguageSelected", value.ToString());
+				if (value != LanguageSelected)
+				{
+					SetSetting("LanguageSelected", value.ToString());
+				}
 			}
 		}
 
@@ -535,7 +553,10 @@ namespace Project_127.MySettings
 			}
 			set
 			{
-				SetSetting("Retailer", value.ToString());
+				if (value != Retailer)
+				{
+					SetSetting("Retailer", value.ToString());
+				}
 			}
 		}
 
@@ -550,7 +571,10 @@ namespace Project_127.MySettings
 			}
 			set
 			{
-				SetSetting("StartWay", value.ToString());
+				if (value != StartWay)
+				{
+					SetSetting("StartWay", value.ToString());
+				}
 			}
 		}
 
@@ -565,7 +589,10 @@ namespace Project_127.MySettings
 			}
 			set
 			{
-				SetSetting("ExitWay", value.ToString());
+				if (value != ExitWay)
+				{
+					SetSetting("ExitWay", value.ToString());
+				}
 			}
 		}
 

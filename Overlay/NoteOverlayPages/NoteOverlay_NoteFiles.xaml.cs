@@ -74,10 +74,15 @@ namespace Project_127.Overlay.NoteOverlayPages
 				MyNoteFiles.MyRemove(0);
 			}
 
+
+			List<MyNoteFile> MyLNF = new List<MyNoteFile>();
+
 			foreach (string mystring in Settings.OverlayNotesMain)
 			{
-				MyNoteFiles.MyAdd(new MyNoteFile(mystring));
+				MyLNF.Add(new MyNoteFile(mystring));
 			}
+
+			MyNoteFiles.MyAdd(MyLNF);
 
 			HelperClasses.DataGridHelper.SelectFirst(dg_Files);
 		}
@@ -97,6 +102,8 @@ namespace Project_127.Overlay.NoteOverlayPages
 				return;
 			}
 			List<string> files = rtrn.Split(',').ToList();
+
+			List<MyNoteFile> MNFL = new List<MyNoteFile>();
 			for (int i = 0; i <= files.Count - 1; i++)
 			{
 				string filename = HelperClasses.FileHandling.PathSplitUp(files[i])[1];
@@ -119,11 +126,9 @@ namespace Project_127.Overlay.NoteOverlayPages
 					}
 				}
 				MyNoteFile tmp = new MyNoteFile(filename);
-				if (!MyNoteFiles.Contains(tmp))
-				{
-					MyNoteFiles.MyAdd(tmp);
-				}
+				MNFL.Add(tmp);
 			}
+			MyNoteFiles.MyAdd(MNFL);
 		}
 
 
@@ -146,10 +151,8 @@ namespace Project_127.Overlay.NoteOverlayPages
 
 		private void btn_Delete_Click(object sender, RoutedEventArgs e)
 		{
-			foreach (MyNoteFile MNF in GetSelectedNoteFiles())
-			{
-				MyNoteFiles.MyRemove(MNF);
-			}
+
+			MyNoteFiles.MyRemove(GetSelectedNoteFiles());
 			HelperClasses.DataGridHelper.SelectFirst(dg_Files);
 		}
 
@@ -242,16 +245,26 @@ namespace Project_127.Overlay.NoteOverlayPages
 		}
 
 
-		public static void MyAdd(this ObservableCollection<MyNoteFile> OC, MyNoteFile MNF)
+
+		public static void MyAdd(this ObservableCollection<MyNoteFile> OC, List<MyNoteFile> MNFL)
 		{
-			OC.Add(MNF);
+			foreach (MyNoteFile MNF in MNFL)
+			{
+				if (!OC.Contains(MNF))
+				{
+					OC.Add(MNF);
+				}
+			}
 
 			Refresh(OC);
 		}
 
-		public static void MyRemove(this ObservableCollection<MyNoteFile> OC, MyNoteFile MNF)
+		public static void MyRemove(this ObservableCollection<MyNoteFile> OC, List<MyNoteFile> MNFL)
 		{
-			OC.Remove(MNF);
+			foreach (MyNoteFile MNF in MNFL)
+			{
+				OC.Remove(MNF);
+			}
 
 			Refresh(OC);
 		}
@@ -263,7 +276,7 @@ namespace Project_127.Overlay.NoteOverlayPages
 				OC.RemoveAt(Index);
 			}
 
-			Refresh(OC);
+			// THIS DOESNT REFRESH
 		}
 	}
 

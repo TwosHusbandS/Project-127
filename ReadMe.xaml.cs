@@ -385,14 +385,16 @@ namespace Project_127
 
 		private void TryBigZip()
 		{
-			string BigZipDownloadLink = HelperClasses.FileHandling.GetXMLTagContent(HelperClasses.FileHandling.GetStringFromURL(Globals.URL_AutoUpdate), "zip");
+			string TMP_UpdateXML = Globals.XML_AutoUpdate;
+
+			string BigZipDownloadLink = HelperClasses.FileHandling.GetXMLTagContent(TMP_UpdateXML, "zip");
 			BigZipDownloadLink = Globals.GetDDL(BigZipDownloadLink);
 
 			Popups.Popup yesno = new Popups.Popup(Popups.Popup.PopupWindowTypes.PopupYesNo, "Do you want Project 1.27 to automatically handle the Download and Import?\n\nIf this keeps crashing / not working, feel free to press NO and try to do it manually.");
 			yesno.ShowDialog();
 			if (yesno.DialogResult == true)
 			{
-				string hashNeeded = HelperClasses.FileHandling.GetXMLTagContent(HelperClasses.FileHandling.GetStringFromURL(Globals.URL_AutoUpdate), "bigzipmd5");
+				string hashNeeded = HelperClasses.FileHandling.GetXMLTagContent(TMP_UpdateXML, "bigzipmd5");
 
 				HelperClasses.Logger.Log("DL Link: '" + BigZipDownloadLink + "'");
 				HelperClasses.Logger.Log("HashNeeded: " + hashNeeded);

@@ -103,7 +103,7 @@ namespace Project_127
 						}
 						else
 						{
-
+							HelperClasses.FileHandling.CopyPath(pMyFileOperation.OriginalFile, pMyFileOperation.NewFile);
 						}
 						break;
 					}
@@ -122,15 +122,30 @@ namespace Project_127
 					}
 				case FileOperations.Hardlink:
 					{
-						if (Settings.EnableCopyFilesInsteadOfHardlinking)
+						if (pMyFileOperation.MyFileOrFolder == FileOrFolder.File)
 						{
-							HelperClasses.Logger.Log(Globals.ReplaceCaseInsensitive(pMyFileOperation.Log, "hardlink", "Copy"), pMyFileOperation.LogLevel);
-							HelperClasses.FileHandling.copyFile(pMyFileOperation.OriginalFile, pMyFileOperation.NewFile);
+							if (pMyFileOperation.NewFile.ToLower().Contains(Settings.GTAVInstallationPath.ToLower().TrimEnd('\\')))
+							{
+								if (Settings.EnableCopyFilesInsteadOfHardlinking)
+								{
+									HelperClasses.Logger.Log(Globals.ReplaceCaseInsensitive(pMyFileOperation.Log, "hardlink", "Copy"), pMyFileOperation.LogLevel);
+									HelperClasses.FileHandling.copyFile(pMyFileOperation.OriginalFile, pMyFileOperation.NewFile);
+								}
+								else
+								{
+									HelperClasses.Logger.Log(pMyFileOperation.Log, pMyFileOperation.LogLevel);
+									HelperClasses.FileHandling.HardLinkFiles(pMyFileOperation.NewFile, pMyFileOperation.OriginalFile);
+								}
+							}
+							else
+							{
+								HelperClasses.Logger.Log(pMyFileOperation.Log, pMyFileOperation.LogLevel);
+								HelperClasses.FileHandling.HardLinkFiles(pMyFileOperation.NewFile, pMyFileOperation.OriginalFile);
+							}
 						}
 						else
 						{
-							HelperClasses.Logger.Log(pMyFileOperation.Log, pMyFileOperation.LogLevel);
-							HelperClasses.FileHandling.HardLinkFiles(pMyFileOperation.NewFile, pMyFileOperation.OriginalFile);
+							new Popup(Popup.PopupWindowTypes.PopupOkError, "No idea what happened here...MyFileOperation Execute Hardlink Folder");
 						}
 						break;
 					}

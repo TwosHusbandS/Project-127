@@ -118,29 +118,36 @@ Hybrid code can be found in AAA_HybridCode.
 		We are hardlinking...changing link will change source
 
 		- Internal Testing Reports Bugs:
-			=> [DOESNT MATTER] Broken InstallationState (says Unsure) when UpgradeFiles is empty. That may have been caused by the stupid Backup being broken. Might want to copy if other shit didnt work. Or CMD?
+			=> Something removed update.rpf from my game directory...lets hope it wasnt my code...
+			=> [WANTED BEHAVIOUR] Broken InstallationState (says Unsure) when UpgradeFiles is empty.
 			=> [FIXED] Automatic Update of Files detected broken (when update.rpf missing. Maybe check other file attributes instead of size? Mhm. Or different faster method to detect if files are the same
 			=> [FIXED] More efficent isEqual method for checking if gta update hit
 			=> [FIXED] popup that path is wrong and you have to force downgrade
 			=> [FIXED] long freeze on check if update hit...actually as efficent as can be
 			=> [FIXED] Using Backup broken (folder locked...Fixed when explorer closed. Kinda weird-ish)
-			=> Dragons stuff. Both paths, Settings
-			=> No "new files blabla popup when upgrade_files is empty
-			=> Create Backup method
-			=> Re-Downmload ZIP Popup on Check for updates
-			=> Investigate Jumpscript with Logs for crapideot.
-			=> Reset settings is wonky UX
+			=> [NOT CONNECTED TO ANY FILE RELATED LOGIC] Dragons stuff. Both paths, Settings
+			=> [DONE] No "new files blabla popup when upgrade_files is empty
+			=> [DONE] Make settings not write enums to settins on startup. Maybe check on Settings property if its the same as current before setting?
+			=> [DONE] Change Popup Text from "if Update hit" to something better
+			=> [DONE] Change Popup Text from "AutostartBelow" to something better
+			=> [DONE] Create Backup method
+			=> [DONE] Re-Downmload ZIP Popup on Check for updates
 			=> Do actual Modes (internal, beta, master etc.) on some hidden UI shit, "default", textbox, "set new", cancel
 			=> Add "internal mode" and "buildinfo" and "buildtime" to debug info
-			=> Make settings not write enums to settins on startup. Maybe check on Settings property if its the same as current before setting?
-			=> launching through rockstar when upgraded broken
-			=> Change Popup Text from "if Update hit" to something better
-			=> Change Popup Text from "AutostartBelow" to something better
+			=> DebugFile async task,  check if what we are overwriting isnt larger than our message, popup then
+			=> Release installer for a few people to test update on 2020-12-15
+
+			=> Rightclick on create and use backup to give options to name it in a specific way. For mods and shit
+			=> Reset settings is wonky UX
+			=> Investigate Jumpscript with Logs for crapideot.
+			=> [Working for Special] launching through rockstar when upgraded broken
+			=> Deployment system with branches like above
+				--> XML Tag for link to specific build.
+				--> Download the build, then call Launcher with command line args to swap the files out correctly, so we have the new build.
 			=> Think about integrating new lauch version
 					- what files we need, how we get them, with Optional stuff
 					- where do we keep social club files? How are we messing with them.
 					- what do we need to do if user checks the checkmark and wants new way of launching. Etc.
-			=> DebugFile async task,  check if what we are overwriting isnt larger than our message, popup then
 
 		Quick and Dirty notes:
 			- Clean up Code / Readme / Patchnotes
@@ -388,7 +395,7 @@ namespace Project_127
 			// Intepreting all Command Line shit
 			Globals.CommandLineArgumentIntepretation();
 
-			if (Globals.InternalMode)
+			if (Globals.Mode == "internal")
 			{
 				string msg = "We are in internal mode. I need testing on:\n\n" +
 					"- Upgrading / Downgrading / Repairing" + "\n" +
@@ -535,7 +542,11 @@ namespace Project_127
 				try
 				{
 					// CTRLF TODO // THIS MIGHT BE BROKEN WITH COMMAND LINE ARGS THAT CONTAIN SPACES
-					HelperClasses.ProcessHandler.StartProcess(Assembly.GetEntryAssembly().CodeBase, Environment.CurrentDirectory, string.Join(" ", Globals.CommandLineArgs.ToString()), true, true, false);
+					string[] args = Environment.GetCommandLineArgs();
+					string arg = string.Join(" ", args.Skip(1).ToArray());
+
+
+					HelperClasses.ProcessHandler.StartProcess(Assembly.GetEntryAssembly().CodeBase, Environment.CurrentDirectory, arg, true, true, false);
 					Application.Current.Shutdown();
 				}
 				catch (Exception)
@@ -794,7 +805,7 @@ namespace Project_127
 		/// <param name="e"></param>
 		private void btn_Hamburger_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
 		{
-			if (Globals.BetaMode || Globals.InternalMode)
+			if (Globals.Mode == "internal" || Globals.Mode == "beta")
 			{
 				// Opens the File
 				HelperClasses.ProcessHandler.StartProcess(@"C:\Windows\System32\notepad.exe", pCommandLineArguments: Globals.Logfile);
@@ -845,8 +856,8 @@ namespace Project_127
 
 			DebugMessage.Add("Project 1.27 Version: '" + Globals.ProjectVersion + "'");
 			DebugMessage.Add("ZIP Version: '" + Globals.ZipVersion + "'");
-			DebugMessage.Add("BetaMode: '" + Globals.BetaMode + "'");
-			DebugMessage.Add("InternalMode: '" + Globals.InternalMode + "'");
+			DebugMessage.Add("Mode / Branch: '" + Globals.Mode + "'");
+			DebugMessage.Add("InternalMode (Overwites, mode / branch): '" + Globals.InternalMode + "'");
 			DebugMessage.Add("Project 1.27 Installation Path '" + Globals.ProjectInstallationPath + "'");
 			DebugMessage.Add("Project 1.27 Installation Path Binary '" + Globals.ProjectInstallationPathBinary + "'");
 			DebugMessage.Add("ZIP Extraction Path '" + LauncherLogic.ZIPFilePath + "'");
@@ -1084,7 +1095,7 @@ namespace Project_127
 
 				string msg = "Error: GTA V Installation Path incorrect or ZIP Version == 0.\nGTAV Installation Path: '" + LauncherLogic.GTAVFilePath + "'\nInstallationState (probably): '" + LauncherLogic.InstallationState.ToString() + "'\nZip Version: " + Globals.ZipVersion + ".";
 
-				if (Globals.BetaMode || Globals.InternalMode)
+				if (Globals.Mode == "internal" || Globals.Mode == "beta")
 				{
 					Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, msg + "\n. Force this Upgrade?");
 					yesno.ShowDialog();
@@ -1156,7 +1167,7 @@ namespace Project_127
 
 				string msg = "Error: GTA V Installation Path incorrect or ZIP Version == 0.\nGTAV Installation Path: '" + LauncherLogic.GTAVFilePath + "'\nInstallationState (probably): '" + LauncherLogic.InstallationState.ToString() + "'\nZip Version: " + Globals.ZipVersion + ".";
 
-				if (Globals.BetaMode || Globals.InternalMode)
+				if (Globals.Mode == "internal" || Globals.Mode == "beta")
 				{
 					Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, msg + "\n. Force this Downgrade?");
 					yesno.ShowDialog();
