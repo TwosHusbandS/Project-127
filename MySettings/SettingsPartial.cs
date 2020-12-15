@@ -347,6 +347,18 @@ namespace Project_127.MySettings
 			set
 			{
 				SetSetting("Mode", value);
+
+				if (value.ToLower() != "default")
+				{
+					MainWindow.MW.btn_lbl_Mode.Content = "Curr Mode: '" + MySettings.Settings.Mode.ToLower() + "'";
+					MainWindow.MW.btn_lbl_Mode.Visibility = Visibility.Visible;
+				}
+				else
+				{
+					MainWindow.MW.btn_lbl_Mode.Content = "";
+					MainWindow.MW.btn_lbl_Mode.Visibility = Visibility.Hidden;
+				}
+				MainWindow.MW.btn_lbl_Mode.ToolTip = MainWindow.MW.btn_lbl_Mode.Content;
 			}
 		}
 

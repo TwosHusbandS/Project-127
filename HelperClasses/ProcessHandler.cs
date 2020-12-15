@@ -244,6 +244,7 @@ namespace Project_127.HelperClasses
 			{
 				cmdLineArgs = @"/c cd /d " + "\"" + LauncherLogic.GTAVFilePath + "\"" + @" && start /affinity " + MyHex + " playgtav.exe -uilanguage " + Settings.ToMyLanguageString(Settings.LanguageSelected).ToLower() + " && exit";
 			}
+
 			Process tmp = GSF.Identity.UserAccountControl.CreateProcessAsStandardUser(@"cmd.exe", cmdLineArgs);
 
 		}

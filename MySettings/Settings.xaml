@@ -37,7 +37,7 @@
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
-                <Label Grid.Row="0" x:Name="lbl_SettingsHeader" Content="Project 1.27 Settings" Style="{StaticResource lbl_Set_Header}"/>
+                <Button Grid.Row="0" x:Name="lbl_SettingsHeader" Content="Project 1.27 Settings" Style="{StaticResource btn_Set_Header}" MouseRightButtonDown="lbl_SettingsHeader_MouseRightButtonDown"/>
 
                 <ScrollViewer Grid.Row="1" x:Name="sv_Settings_General">
                     <StackPanel x:Name="sp_Settings_General">

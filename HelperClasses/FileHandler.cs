@@ -512,7 +512,7 @@ namespace Project_127.HelperClasses
 		/// </summary>
 		/// <param name="pURL"></param>
 		/// <returns></returns>
-		public static string GetStringFromURL(string pURL, string surpressPopup = false)
+		public static string GetStringFromURL(string pURL, bool surpressPopup = false)
 		{
 			string rtrn = "";
 

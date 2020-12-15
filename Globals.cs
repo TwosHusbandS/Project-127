@@ -136,6 +136,10 @@ namespace Project_127
 				{
 					return "internal";
 				}
+				if (Project_127.MySettings.Settings.Mode.ToLower() == "default")
+				{
+					return "master";
+				}
 				return Project_127.MySettings.Settings.Mode.ToLower();
 			}
 		}
@@ -200,7 +204,7 @@ namespace Project_127
 		/// <summary>
 		/// Property of other Buildinfo. Will be in the top message of logs
 		/// </summary>
-		public static string BuildInfo = "Build 1, Internal Testing for 1.1";
+		public static string BuildInfo = "Build 2, test for autoupdate logic..., Internal Testing for 1.1";
 
 		/// <summary>
 		/// Returns all Command Line Args as StringArray
@@ -308,7 +312,7 @@ namespace Project_127
 			{"EnableCopyFilesInsteadOfSyslinking_SocialClub", "False"},
 			{"ExitWay", "Close"},
 			{"StartWay", "Maximized"},
-			{"Mode", "master"},
+			{"Mode", "default"},
 	
 			// GTA V Settings
 			{"Retailer", "Steam"},
@@ -511,7 +515,7 @@ namespace Project_127
 			CheckForBigThree();
 
 			// Check whats the latest Version of the ZIP File in GITHUB
-			CheckForZipUpdate();
+			CheckForZipUpdate(); 
 
 			// Checks if Update hit
 			LauncherLogic.HandleUpdates();
@@ -519,7 +523,9 @@ namespace Project_127
 			// Rolling Log stuff
 			HelperClasses.Logger.RollingLog();
 
-			NoteOverlay.OverlaySettingsChanged();
+			// Called on Window Loaded from MainWindow, since this shows Overlay_MM WPF Window
+			// this makes its parent window show super early, which is ugly.
+			// NoteOverlay.OverlaySettingsChanged();
 
 			InitFileWatcher();
 
@@ -1329,6 +1335,7 @@ namespace Project_127
 		public static Brush MyColorBlack { get; private set; } = (Brush)new BrushConverter().ConvertFromString("#000000");
 		public static Brush MyColorOffBlack { get; private set; } = (Brush)new BrushConverter().ConvertFromString("#1a1a1a");
 		public static Brush MyColorOffBlack70 { get; private set; } = SetOpacity((Brush)new BrushConverter().ConvertFromString("#1a1a1a"), 70);
+		public static Brush MyColorOffBlack50 { get; private set; } = SetOpacity((Brush)new BrushConverter().ConvertFromString("#1a1a1a"), 50);
 		public static Brush MyColorOrange { get; private set; } = (Brush)new BrushConverter().ConvertFromString("#E35627");
 		public static Brush MyColorGreen { get; private set; } = (Brush)new BrushConverter().ConvertFromString("#4cd213");
 

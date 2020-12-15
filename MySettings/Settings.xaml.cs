@@ -1128,6 +1128,12 @@ namespace Project_127.MySettings
 			SettingsState = SettingsStates.Extra;
 		}
 
-
+		private void lbl_SettingsHeader_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+		{
+			if (SettingsState == SettingsStates.General)
+			{
+				new PopupMode().ShowDialog();
+			}
+		}
 	} // End of Class
 } // End of Namespace

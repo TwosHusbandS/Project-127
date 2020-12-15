@@ -335,10 +335,10 @@ namespace Project_127.Overlay
 						}
 						MainWindow.OL_MM = new Overlay_MultipleMonitor();
 						MainWindow.OL_MM.Show();
-						MainWindow.MW.Show();
+						//MainWindow.MW.Show();
 						MainWindow.MW.Focus();
+						MainWindow.MW.Activate();
 						NoteOverlay.InitGTAOverlay();
-						MainWindow.OL_MM.MyHide();
 						HelperClasses.Keyboard.KeyboardListener.Start();
 					}
 					else
