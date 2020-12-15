@@ -23,6 +23,7 @@ namespace Project_127
 		public Overlay_MultipleMonitor()
 		{
 			InitializeComponent();
+			MyHide();
 		}
 
 		private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)

@@ -336,6 +336,33 @@ namespace Project_127.MySettings
 		}
 
 		/// <summary>
+		/// Settings Mode. Gets and Sets from the Dictionary.
+		/// </summary>
+		public static string Mode
+		{
+			get
+			{
+				return GetSetting("Mode");
+			}
+			set
+			{
+				SetSetting("Mode", value);
+
+				if (value.ToLower() != "default")
+				{
+					MainWindow.MW.btn_lbl_Mode.Content = "Curr Mode: '" + MySettings.Settings.Mode.ToLower() + "'";
+					MainWindow.MW.btn_lbl_Mode.Visibility = Visibility.Visible;
+				}
+				else
+				{
+					MainWindow.MW.btn_lbl_Mode.Content = "";
+					MainWindow.MW.btn_lbl_Mode.Visibility = Visibility.Hidden;
+				}
+				MainWindow.MW.btn_lbl_Mode.ToolTip = MainWindow.MW.btn_lbl_Mode.Content;
+			}
+		}
+
+		/// <summary>
 		/// Settings EnableOnlyAutoStartProgramsWhenDowngraded. Gets and Sets from the Dictionary.
 		/// </summary>
 		public static bool EnableOnlyAutoStartProgramsWhenDowngraded
@@ -377,6 +404,37 @@ namespace Project_127.MySettings
 			set
 			{
 				SetSetting("EnableCopyFilesInsteadOfHardlinking", value.ToString());
+			}
+		}
+
+
+		/// <summary>
+		/// Settings EnableCopyFilesInsteadOfSyslinking_SocialClub. Gets and Sets from the Dictionary.
+		/// </summary>
+		public static bool EnableCopyFilesInsteadOfSyslinking_SocialClub
+		{
+			get
+			{
+				return GetBoolFromString(GetSetting("EnableCopyFilesInsteadOfSyslinking_SocialClub"));
+			}
+			set
+			{
+				SetSetting("EnableCopyFilesInsteadOfSyslinking_SocialClub", value.ToString());
+			}
+		}
+
+		/// <summary>
+		/// Settings EnableAlternativeLaunch. Gets and Sets from the Dictionary.
+		/// </summary>
+		public static bool EnableAlternativeLaunch
+		{
+			get
+			{
+				return GetBoolFromString(GetSetting("EnableAlternativeLaunch"));
+			}
+			set
+			{
+				SetSetting("EnableAlternativeLaunch", value.ToString());
 			}
 		}
 
@@ -477,7 +535,10 @@ namespace Project_127.MySettings
 			}
 			set
 			{
-				SetSetting("LanguageSelected", value.ToString());
+				if (value != LanguageSelected)
+				{
+					SetSetting("LanguageSelected", value.ToString());
+				}
 			}
 		}
 
@@ -504,7 +565,10 @@ namespace Project_127.MySettings
 			}
 			set
 			{
-				SetSetting("Retailer", value.ToString());
+				if (value != Retailer)
+				{
+					SetSetting("Retailer", value.ToString());
+				}
 			}
 		}
 
@@ -519,7 +583,10 @@ namespace Project_127.MySettings
 			}
 			set
 			{
-				SetSetting("StartWay", value.ToString());
+				if (value != StartWay)
+				{
+					SetSetting("StartWay", value.ToString());
+				}
 			}
 		}
 
@@ -534,7 +601,10 @@ namespace Project_127.MySettings
 			}
 			set
 			{
-				SetSetting("ExitWay", value.ToString());
+				if (value != ExitWay)
+				{
+					SetSetting("ExitWay", value.ToString());
+				}
 			}
 		}
 

@@ -107,7 +107,7 @@ namespace Project_127.Popups
 			else if (ProgressType == ProgressTypes.DidUpdateHit)
 			{
 				myPB.Value = 0;
-				myLBL.Content = "Checking if Update hit";
+				myLBL.Content = "Checking if GTA Update hit";
 			}
 
 			// Lets do some shit
@@ -138,6 +138,7 @@ namespace Project_127.Popups
 				for (int i = 0; i <= MyFileOperations.Count - 1; i++)
 				{
 					MyFileOperation.Execute(MyFileOperations[i]);
+
 					j++;
 					this.Dispatcher.Invoke(() =>
 					{
@@ -382,7 +383,7 @@ namespace Project_127.Popups
 
 				*/
 
-				SetProgress("Checking if Update hit", 1, 5);
+				SetProgress("Checking if GTA Update hit", 1, 5);
 
 				if (LauncherLogic.InstallationState == LauncherLogic.InstallationStates.Downgraded)
 				{
@@ -402,40 +403,40 @@ namespace Project_127.Popups
 				string Downgrade_PlayGTAV = LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\playgtav.exe";
 				string Downgrade_UpdateRPF = LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\update\update.rpf";
 
-				SetProgress("Checking if Update hit", 2, 5);
+				SetProgress("Checking if GTA Update hit", 2, 5);
 				if (!HelperClasses.FileHandling.AreFilesEqual(GTA_GTA5, Upgrade_GTA5))
 				{
 					//SetProgress("Checking if Update hit", 3, 8);
 					//if (!HelperClasses.FileHandling.AreFilesEqual(GTA_GTA5, Downgrade_GTA5))
 					//{
-						RtrnBool = true;
-						return;
+					RtrnBool = true;
+					return;
 					//}
 				}
 
-				SetProgress("Checking if Update hit", 3, 5);
+				SetProgress("Checking if GTA Update hit", 3, 5);
 				if (!HelperClasses.FileHandling.AreFilesEqual(GTA_PlayGTAV, Upgrade_PlayGTAV))
 				{
 					//SetProgress("Checking if Update hit", 5, 8);
 					//if (!HelperClasses.FileHandling.AreFilesEqual(GTA_PlayGTAV, Downgrade_PlayGTAV))
 					//{
-						RtrnBool = true;
-						return;
+					RtrnBool = true;
+					return;
 					//}
 				}
 
-				SetProgress("Checking if Update hit", 4, 5);
+				SetProgress("Checking if GTA Update hit", 4, 5);
 				if (!HelperClasses.FileHandling.AreFilesEqual(GTA_UpdateRPF, Upgrade_UpdateRPF))
 				{
 					//SetProgress("Checking if Update hit", 7, 8);
 					//if (!HelperClasses.FileHandling.AreFilesEqual(GTA_UpdateRPF, Downgrade_UpdateRPF))
 					//{
-						RtrnBool = true;
-						return;
+					RtrnBool = true;
+					return;
 					//}
 				}
 
-				SetProgress("Checking if Update hit", 5, 5);
+				SetProgress("Checking if GTA Update hit", 5, 5);
 				RtrnBool = false;
 				return;
 			}

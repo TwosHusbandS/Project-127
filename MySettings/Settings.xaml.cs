@@ -605,17 +605,24 @@ namespace Project_127.MySettings
 			string correctControlUserXmlPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) +
 											@"\Rockstar Games\GTA V\Profiles\Project127\GTA V\0F74F4C4\control\user.xml";
 
+
+			int copiedFiles = 0;
+
 			if (HelperClasses.FileHandling.doesFileExist(ExistingPCSettingsBinPath))
 			{
 				HelperClasses.FileHandling.deleteFile(correctPCSettingsBinPath);
 				HelperClasses.FileHandling.copyFile(ExistingPCSettingsBinPath, correctPCSettingsBinPath);
+				copiedFiles += 1;
 			}
 
 			if (HelperClasses.FileHandling.doesFileExist(ExistingControlUserXmlPath))
 			{
 				HelperClasses.FileHandling.deleteFile(correctControlUserXmlPath);
 				HelperClasses.FileHandling.copyFile(ExistingControlUserXmlPath, correctControlUserXmlPath);
+				copiedFiles += 1;
 			}
+
+			new Popup(Popup.PopupWindowTypes.PopupOk, copiedFiles + " Files were imported from the selected Folder").ShowDialog();
 		}
 
 
@@ -659,10 +666,12 @@ namespace Project_127.MySettings
 			btn_Set_JumpScriptKey1.Content = Settings.JumpScriptKey1;
 			btn_Set_JumpScriptKey2.Content = Settings.JumpScriptKey2;
 
-			ButtonMouseOverMagic(btn_Refresh);
 
+			ButtonMouseOverMagic(btn_Refresh);
 			ButtonMouseOverMagic(btn_cb_Set_EnableLogging);
 			ButtonMouseOverMagic(btn_cb_Set_CopyFilesInsteadOfHardlinking);
+			ButtonMouseOverMagic(btn_cb_Set_EnableAlternativeLaunch);
+			ButtonMouseOverMagic(btn_cb_Set_CopyFilesInsteadOfSyslinking_SocialClub);
 			ButtonMouseOverMagic(btn_cb_Set_EnablePreOrderBonus);
 			ButtonMouseOverMagic(btn_cb_Set_EnableAutoStartFPSLimiter);
 			ButtonMouseOverMagic(btn_cb_Set_EnableAutoStartLiveSplit);
@@ -675,6 +684,8 @@ namespace Project_127.MySettings
 			ButtonMouseOverMagic(btn_cb_Set_EnableDontLaunchThroughSteam);
 			ButtonMouseOverMagic(btn_cb_Set_EnableAutoStartJumpScript);
 
+			RefreshIfOptionsHide();
+			
 			//btn_Set_JumpScriptKey1.Content = Settings.JumpScriptKey1;
 			//btn_Set_JumpScriptKey2.Content = Settings.JumpScriptKey2;
 			//cb_Set_EnableAutoStartJumpScript.IsChecked = Settings.EnableAutoStartJumpScript;
@@ -830,6 +841,12 @@ namespace Project_127.MySettings
 				case "btn_cb_Set_CopyFilesInsteadOfHardlinking":
 					SetCheckBoxBackground(myBtn, Settings.EnableCopyFilesInsteadOfHardlinking);
 					break;
+				case "btn_cb_Set_EnableAlternativeLaunch":
+					SetCheckBoxBackground(myBtn, Settings.EnableAlternativeLaunch);
+					break;
+				case "btn_cb_Set_CopyFilesInsteadOfSyslinking_SocialClub":
+					SetCheckBoxBackground(myBtn, Settings.EnableCopyFilesInsteadOfSyslinking_SocialClub);
+					break;
 				case "btn_cb_Set_EnablePreOrderBonus":
 					SetCheckBoxBackground(myBtn, Settings.EnablePreOrderBonus);
 					break;
@@ -877,6 +894,19 @@ namespace Project_127.MySettings
 		}
 
 
+		private void RefreshIfOptionsHide()
+		{
+			if (Settings.EnableAlternativeLaunch)
+			{
+				Rect_HideOptions.Visibility = Visibility.Hidden;
+			}
+			else
+			{
+				Rect_HideOptions.Visibility = Visibility.Visible;
+			}
+		}
+
+
 		/// <summary>
 		/// Click on ANY checkbox
 		/// </summary>
@@ -891,9 +921,16 @@ namespace Project_127.MySettings
 				case "btn_cb_Set_EnableLogging":
 					Settings.EnableLogging = !Settings.EnableLogging;
 					break;
+				case "btn_cb_Set_EnableAlternativeLaunch":
+					Settings.EnableAlternativeLaunch = !Settings.EnableAlternativeLaunch;
+					RefreshIfOptionsHide();
+					break;
 				case "btn_cb_Set_CopyFilesInsteadOfHardlinking":
 					Settings.EnableCopyFilesInsteadOfHardlinking = !Settings.EnableCopyFilesInsteadOfHardlinking;
 					SetDefaultEnableCopyingHardlinking();
+					break;
+				case "btn_cb_Set_CopyFilesInsteadOfSyslinking_SocialClub":
+					Settings.EnableCopyFilesInsteadOfSyslinking_SocialClub = !Settings.EnableCopyFilesInsteadOfSyslinking_SocialClub;
 					break;
 				case "btn_cb_Set_EnablePreOrderBonus":
 					Settings.EnablePreOrderBonus = !Settings.EnablePreOrderBonus;
@@ -937,6 +974,12 @@ namespace Project_127.MySettings
 			Globals.CheckForBigThree();
 			Globals.CheckForZipUpdate();
 			Globals.CheckForUpdate();
+			Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Update check complete. All updates handled.\nDo you want to re-download the ZIP File?");
+			yesno.ShowDialog();
+			if (yesno.DialogResult == true)
+			{
+				Globals.ZipUpdate();
+			}
 		}
 
 
@@ -1025,7 +1068,7 @@ namespace Project_127.MySettings
 
 					string msg = "Error: GTA V Installation Path incorrect or ZIP Version == 0.\nGTAV Installation Path: '" + LauncherLogic.GTAVFilePath + "'\nInstallationState (probably): '" + LauncherLogic.InstallationState.ToString() + "'\nZip Version: " + Globals.ZipVersion + ".";
 
-					if (Globals.BetaMode || Globals.InternalMode)
+					if (Globals.Mode == "internal" || Globals.Mode == "beta")
 					{
 						Popup yesno2 = new Popup(Popup.PopupWindowTypes.PopupYesNo, msg + "\n. Force this Repair?");
 						yesno2.ShowDialog();
@@ -1044,30 +1087,31 @@ namespace Project_127.MySettings
 			MainWindow.MW.UpdateGUIDispatcherTimer();
 		}
 
-		private void btn_UseBackup_Click(object sender, RoutedEventArgs e)
+
+
+
+		private void btn_CreateBackup_Click(object sender, RoutedEventArgs e)
 		{
-			string oldPath = LauncherLogic.ZIPFilePath.TrimEnd('\\') + @"\Project_127_Files\UpgradeFiles\";
-			string newPath = LauncherLogic.ZIPFilePath.TrimEnd('\\') + @"\Project_127_Files\UpgradeFiles_Backup\";
+			LauncherLogic.CreateBackup();
+		}
 
-			if (HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(newPath).Length <= 1)
-			{
-				new Popup(Popup.PopupWindowTypes.PopupOk, "No Backup Files available.").ShowDialog();
-				return;
-			}
-			else
-			{
-				List<MyFileOperation> MyFileOperations = new List<MyFileOperation>();
-
-				MyFileOperations.Add(new MyFileOperation(MyFileOperation.FileOperations.Delete, oldPath, "", "Deleting '" + (oldPath) + "'", 2, MyFileOperation.FileOrFolder.Folder));
-				MyFileOperations.Add(new MyFileOperation(MyFileOperation.FileOperations.Move, newPath, oldPath, "Moving '" + (newPath) + "' to '" + (oldPath) + "'", 2, MyFileOperation.FileOrFolder.Folder));
-
-				new PopupProgress(PopupProgress.ProgressTypes.FileOperation, "Backup", MyFileOperations).ShowDialog();
-
-				new Popup(Popup.PopupWindowTypes.PopupOk, "Using backup files now.").ShowDialog();
-			}
-
+		private void btn_CreateBackup_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+		{
 
 		}
+
+		private void btn_UseBackup_Click(object sender, RoutedEventArgs e)
+		{
+			LauncherLogic.UseBackup();
+		}
+
+
+
+		private void btn_UseBackup_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+		{
+
+		}
+
 
 		private void btn_SettingsGeneral_Click(object sender, RoutedEventArgs e)
 		{
@@ -1084,7 +1128,12 @@ namespace Project_127.MySettings
 			SettingsState = SettingsStates.Extra;
 		}
 
-	
-
+		private void lbl_SettingsHeader_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+		{
+			if (SettingsState == SettingsStates.General)
+			{
+				new PopupMode().ShowDialog();
+			}
+		}
 	} // End of Class
 } // End of Namespace

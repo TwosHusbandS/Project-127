@@ -1,0 +1,43 @@
+﻿<Window x:Class="Project_127.Popups.PopupMode"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Project_127"
+        mc:Ignorable="d"
+    Title="Popup" 
+        Background="{x:Static local:Globals.PU_Background}"
+        WindowStyle="None" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" MouseLeftButtonDown="Window_MouseLeftButtonDown"
+        Height="200"
+        Width="400"
+        SizeToContent="Manual"
+        Icon="/Artwork/icon.png">
+    <Border BorderBrush="{x:Static local:Globals.PU_BorderBrush}" BorderThickness="2" >
+        <Grid x:Name="myGrid" Margin="10,5">
+            <Grid.RowDefinitions>
+                <RowDefinition x:Name="myRow0" Height="*"/>
+                <RowDefinition x:Name="myRow1" Height="*"/>
+                <RowDefinition x:Name="myRow2" Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition x:Name="myColumn0" Width="*"/>
+                <ColumnDefinition x:Name="myColumn1" Width="*"/>
+                <ColumnDefinition x:Name="myColumn2" Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Label x:Name="lbl_Static" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="1" Style="{StaticResource lbl}" Content="Current Mode:"/>
+            <Label x:Name="lbl_CurrMode" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" Style="{StaticResource lbl}" Content="''"/>
+
+            <Label x:Name="lbl_Static2" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="1" Style="{StaticResource lbl}" Content="New Mode:"/>
+            <TextBox x:Name="tb_Main" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Style="{StaticResource tb}" TextChanged="tb_Main_TextChanged" KeyDown="MyTextBox_KeyDown"/>
+
+            <Button x:Name="btn_Reset" Grid.Row="2" Grid.Column="0" Style="{StaticResource PU_btn}" Content="Reset" Click="btn_Reset_Click"/>
+            <Button x:Name="btn_SetNew" Grid.Row="2" Grid.Column="1" Style="{StaticResource PU_btn}" Content="Set Mode" Click="btn_SetNew_Click"/>
+            <Button x:Name="btn_Exit" Grid.Row="2" Grid.Column="2" Style="{StaticResource PU_btn}" Content="Exit" Click="btn_Exit_Click"/>
+
+        </Grid>
+
+    </Border>
+</Window>
+
+

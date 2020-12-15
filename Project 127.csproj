@@ -187,6 +187,7 @@
     <Compile Include="HelperClasses\Keyboard\KeyboardListener.cs" />
     <Compile Include="HelperClasses\MouseSender.cs" />
     <Compile Include="HelperClasses\WindowChangeHander.cs" />
+    <Compile Include="LaunchAlternative.cs" />
     <Compile Include="Overlay\EmptyPage.xaml.cs">
       <DependentUpon>EmptyPage.xaml</DependentUpon>
     </Compile>
@@ -224,6 +225,9 @@
     </Compile>
     <Compile Include="Popups\PopupCombobox.xaml.cs">
       <DependentUpon>PopupCombobox.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Popups\PopupMode.xaml.cs">
+      <DependentUpon>PopupMode.xaml</DependentUpon>
     </Compile>
     <Compile Include="Popups\PopupTextbox.xaml.cs">
       <DependentUpon>PopupTextbox.xaml</DependentUpon>
@@ -296,6 +300,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Popups\PopupCombobox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Popups\PopupMode.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

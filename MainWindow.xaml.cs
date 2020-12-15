@@ -9,7 +9,7 @@ Actual code (partially closed source) which authentificates, handles entitlement
 Artwork, Design of GUI, GUI Behaviourehaviour, Colorchoices etc. by "@Hossel"
 Project 1.27 Client by "@thS"
 A number of other members of the team, including but not limited to @MoMo, @Diamondo25, @S.M.G, @gogsi, @Antibones, @Unemployed, @Aperture, @luky, @CrynesSs, @Daniel Kinau contributed to this project one way or another, and my thanks go out to them.
-Version: 1.0.9.4
+Version: 1.0.9.6
 
 Build Instructions:
 	Press CTRLF + F5, pray that nuget does its magic.
@@ -107,6 +107,48 @@ Hybrid code can be found in AAA_HybridCode.
 		=> Lots of SaveFileHandler Improvments. Really shitty code, really shitty performance, but UX is great.
 
 	Release 1.1
+
+		PRIO PRIO CTRLF
+		I think i tracked down a huge bug...
+			=> Be upgraded, empty Upgrade_Files folder.
+			=> Downgrade, CLOSE P127
+			=> Copy over Upgrade_Files folder into GTA. 
+			=> Open P127
+			=> "Downgraded (1.52)"
+		We are hardlinking...changing link will change source
+
+		- Internal Testing Reports Bugs:
+			=> Something removed update.rpf from my game directory...lets hope it wasnt my code...
+			=> [WANTED BEHAVIOUR] Broken InstallationState (says Unsure) when UpgradeFiles is empty.
+			=> [FIXED] Automatic Update of Files detected broken (when update.rpf missing. Maybe check other file attributes instead of size? Mhm. Or different faster method to detect if files are the same
+			=> [FIXED] More efficent isEqual method for checking if gta update hit
+			=> [FIXED] popup that path is wrong and you have to force downgrade
+			=> [FIXED] long freeze on check if update hit...actually as efficent as can be
+			=> [FIXED] Using Backup broken (folder locked...Fixed when explorer closed. Kinda weird-ish)
+			=> [NOT CONNECTED TO ANY FILE RELATED LOGIC] Dragons stuff. Both paths, Settings
+			=> [DONE] No "new files blabla popup when upgrade_files is empty
+			=> [DONE] Make settings not write enums to settins on startup. Maybe check on Settings property if its the same as current before setting?
+			=> [DONE] Change Popup Text from "if Update hit" to something better
+			=> [DONE] Change Popup Text from "AutostartBelow" to something better
+			=> [DONE] Create Backup method
+			=> [DONE] Re-Downmload ZIP Popup on Check for updates
+			=> [DONE] Do actual Modes (internal, beta, master etc.) on some hidden UI shit, "default", textbox, "set new", cancel
+			=> [DONE] Add "internal mode" and "buildinfo" and "buildtime" to debug info
+			=> [DONE] DebugFile async task,  check if what we are overwriting isnt larger than our message, popup then
+			=> Ugly startup
+			=> Release installer for a few people to test update on 2020-12-15
+
+			=> Rightclick on create and use backup to give options to name it in a specific way. For mods and shit
+			=> Reset settings is wonky UX
+			=> Investigate Jumpscript with Logs for crapideot.
+			=> [Working for Special] launching through rockstar when upgraded broken
+			=> Deployment system with modes / branches like above
+				--> XML Tag for link to specific build.
+				--> Download the build, then call Launcher with command line args to swap the files out correctly, so we have the new build.
+			=> Think about integrating new lauch version
+					- what files we need, how we get them, with Optional stuff
+					- where do we keep social club files? How are we messing with them.
+					- what do we need to do if user checks the checkmark and wants new way of launching. Etc.
 
 		Quick and Dirty notes:
 			- Clean up Code / Readme / Patchnotes
@@ -312,6 +354,8 @@ namespace Project_127
 				Environment.Exit(1);
 			}
 
+			this.Width = 900;
+
 			// Checking if Mutex is already running
 			Mutex m = new Mutex(false, "P127_Mutex");
 			if (m.WaitOne(100))
@@ -325,11 +369,7 @@ namespace Project_127
 			{
 				// It is already running
 
-				//HelperClasses.FileHandling.AddToDebug("This is NOT our first instance");
-				// Globals.DebugPopup("This is NOT our first instance");
-				//HelperClasses.FileHandling.AddToDebug("P127 already open, calling AlreadyRunning()");
 				AlreadyRunning();
-				//HelperClasses.FileHandling.AddToDebug("After calling AlreadyRunning()");
 			}
 
 			// Starting Mutex
@@ -354,7 +394,7 @@ namespace Project_127
 			// Intepreting all Command Line shit
 			Globals.CommandLineArgumentIntepretation();
 
-			if (Globals.InternalMode)
+			if (Globals.Mode == "internal")
 			{
 				string msg = "We are in internal mode. I need testing on:\n\n" +
 					"- Upgrading / Downgrading / Repairing" + "\n" +
@@ -374,6 +414,17 @@ namespace Project_127
 			SetButtonMouseOverMagic(btn_Auth);
 			SetButtonMouseOverMagic(btn_Hamburger);
 			Globals.HamburgerMenuState = Globals.HamburgerMenuStates.Hidden;
+			if (Settings.Mode.ToLower() != "default")
+			{
+				MainWindow.MW.btn_lbl_Mode.Content = "Curr Mode: '" + MySettings.Settings.Mode.ToLower() + "'";
+				MainWindow.MW.btn_lbl_Mode.Visibility = Visibility.Visible;
+			}
+			else
+			{
+				MainWindow.MW.btn_lbl_Mode.Content = "";
+				MainWindow.MW.btn_lbl_Mode.Visibility = Visibility.Hidden;
+			}
+			MainWindow.MW.btn_lbl_Mode.ToolTip = MainWindow.MW.btn_lbl_Mode.Content;
 
 			// Init NotifyIcon does not need to be called, its called on Loaded()
 			// InitNotifyIcon();
@@ -440,7 +491,7 @@ namespace Project_127
 			{
 				//HelperClasses.FileHandling.AddToDebug("In AlreadyRunning(), renamed File doesnt exist. Closing this instance");
 			}
-			
+
 			Globals.ProperExit();
 
 		}
@@ -500,8 +551,9 @@ namespace Project_127
 			{
 				try
 				{
-					// CTRLF TODO // THIS MIGHT BE BROKEN WITH COMMAND LINE ARGS THAT CONTAIN SPACES
-					HelperClasses.ProcessHandler.StartProcess(Assembly.GetEntryAssembly().CodeBase, Environment.CurrentDirectory, string.Join(" ", Globals.CommandLineArgs.ToString()), true, true, false);
+					string[] args = Environment.GetCommandLineArgs();
+					string arg = string.Join(" ", args.Skip(1).ToArray());
+					HelperClasses.ProcessHandler.StartProcess(Assembly.GetEntryAssembly().CodeBase, Environment.CurrentDirectory, arg, true, true, false);
 					Application.Current.Shutdown();
 				}
 				catch (Exception)
@@ -566,9 +618,19 @@ namespace Project_127
 				GTA_Page.btn_GTA_static.BorderBrush = Globals.MW_ButtonGTAGameNotRunningBorderBrush;
 				GTA_Page.btn_GTA_static.Content = "Launch GTA V";
 			}
+
 			SetButtonMouseOverMagic(btn_Auth);
 		}
 
+
+
+		private void btn_lbl_Mode_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+		{
+			if (Settings.Mode.ToLower() != "default")
+			{
+				new PopupMode().ShowDialog();
+			}
+		}
 
 		/// <summary>
 		/// Method which makes the Window draggable, which moves the whole window when holding down Mouse1 on the background
@@ -760,7 +822,7 @@ namespace Project_127
 		/// <param name="e"></param>
 		private void btn_Hamburger_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
 		{
-			if (Globals.BetaMode || Globals.InternalMode)
+			if (Globals.Mode == "internal" || Globals.Mode == "beta")
 			{
 				// Opens the File
 				HelperClasses.ProcessHandler.StartProcess(@"C:\Windows\System32\notepad.exe", pCommandLineArguments: Globals.Logfile);
@@ -805,53 +867,79 @@ namespace Project_127
 		/// <param name="e"></param>
 		private void btn_Auth_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
 		{
-
-			// Debug Info users can give me easily...
-			List<string> DebugMessage = new List<string>();
-
-			DebugMessage.Add("Project 1.27 Version: '" + Globals.ProjectVersion + "'");
-			DebugMessage.Add("ZIP Version: '" + Globals.ZipVersion + "'");
-			DebugMessage.Add("BetaMode: '" + Globals.BetaMode + "'");
-			DebugMessage.Add("InternalMode: '" + Globals.InternalMode + "'");
-			DebugMessage.Add("Project 1.27 Installation Path '" + Globals.ProjectInstallationPath + "'");
-			DebugMessage.Add("Project 1.27 Installation Path Binary '" + Globals.ProjectInstallationPathBinary + "'");
-			DebugMessage.Add("ZIP Extraction Path '" + LauncherLogic.ZIPFilePath + "'");
-			DebugMessage.Add("LauncherLogic.GTAVFilePath: '" + LauncherLogic.GTAVFilePath + "'");
-			DebugMessage.Add("LauncherLogic.UpgradeFilePath: '" + LauncherLogic.UpgradeFilePath + "'");
-			DebugMessage.Add("LauncherLogic.DowngradeFilePath: '" + LauncherLogic.DowngradeFilePath + "'");
-			DebugMessage.Add("LauncherLogic.SupportFilePath: '" + LauncherLogic.SupportFilePath + "'");
-			DebugMessage.Add("Detected AuthState: '" + LauncherLogic.AuthState + "'");
-			DebugMessage.Add("Detected GameState: '" + LauncherLogic.GameState + "'");
-			DebugMessage.Add("Detected InstallationState: '" + LauncherLogic.InstallationState + "'");
-			DebugMessage.Add("    Size of GTA5.exe in GTAV Installation Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\GTA5.exe") + Globals.GetGameInfoForDebug(LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\GTA5.exe"));
-			DebugMessage.Add("    Size of update.rpf in GTAV Installation Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\update\update.rpf"));
-			DebugMessage.Add("    Size of playgtav.exe in GTAV Installation Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\playgtav.exe"));
-			DebugMessage.Add("    ------------------------------------------------");
-			DebugMessage.Add("    Size of GTA5.exe in DowngradeFiles Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\GTA5.exe") + Globals.GetGameInfoForDebug(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\GTA5.exe"));
-			DebugMessage.Add("    Size of update.rpf in DowngradeFiles Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\update\update.rpf"));
-			DebugMessage.Add("    Size of playgtav.exe in DowngradeFiles Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\playgtav.exe"));
-			DebugMessage.Add("    ------------------------------------------------");
-			DebugMessage.Add("    Size of GTA5.exe in UpdateFiles Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.UpgradeFilePath.TrimEnd('\\') + @"\GTA5.exe") + Globals.GetGameInfoForDebug(LauncherLogic.UpgradeFilePath.TrimEnd('\\') + @"\GTA5.exe"));
-			DebugMessage.Add("    Size of update.rpf in UpdateFiles Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.UpgradeFilePath.TrimEnd('\\') + @"\update\update.rpf"));
-			DebugMessage.Add("    Size of playgtav.exe in UpdateFiles Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.UpgradeFilePath.TrimEnd('\\') + @"\playgtav.exe"));
-			DebugMessage.Add("    ------------------------------------------------");
-			DebugMessage.Add("    Size of GTA5.exe in BACKUP UpdateFiles Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.UpgradeFilePathBackup.TrimEnd('\\') + @"\GTA5.exe") + Globals.GetGameInfoForDebug(LauncherLogic.UpgradeFilePathBackup.TrimEnd('\\') + @"\GTA5.exe"));
-			DebugMessage.Add("    Size of update.rpf in BACKUP UpdateFiles Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.UpgradeFilePathBackup.TrimEnd('\\') + @"\update\update.rpf"));
-			DebugMessage.Add("    Size of playgtav.exe in BACKUP UpdateFiles Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.UpgradeFilePathBackup.TrimEnd('\\') + @"\playgtav.exe"));
-			DebugMessage.Add("Settings: ");
-			foreach (KeyValuePair<string, string> KVP in Globals.MySettings)
-			{
-				DebugMessage.Add("    " + KVP.Key + ": '" + KVP.Value + "'");
-			}
-
-			// Building DebugPath
-			string DebugFile = Globals.ProjectInstallationPath.TrimEnd('\\') + @"\AAA - DEBUG.txt";
-
-			// Deletes File, Creates File, Adds to it
-			HelperClasses.FileHandling.WriteStringToFileOverwrite(DebugFile, DebugMessage.ToArray());
-
-			HelperClasses.ProcessHandler.StartProcess(@"C:\Windows\explorer.exe", pCommandLineArguments: Globals.ProjectInstallationPath);
+			GenerateDebug();
 		}
+
+		private async void GenerateDebug()
+		{
+			await Task.Run(() =>
+			{
+				string MyCreationDate = HelperClasses.FileHandling.GetCreationDate(Process.GetCurrentProcess().MainModule.FileName);
+
+				// Debug Info users can give me easily...
+				List<string> DebugMessage = new List<string>();
+
+				DebugMessage.Add("Project 1.27 Version: '" + Globals.ProjectVersion + "'");
+				DebugMessage.Add("BuildInfo: '" + Globals.BuildInfo + "'");
+				DebugMessage.Add("BuildTime: '" + MyCreationDate + "'");
+				DebugMessage.Add("Time Now: '" + DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss") + "'");
+				DebugMessage.Add("ZIP Version: '" + Globals.ZipVersion + "'");
+				DebugMessage.Add("Mode (Branch): '" + Globals.Mode + "'");
+				DebugMessage.Add("InternalMode (Overwites, mode / branch): '" + Globals.InternalMode + "'");
+				DebugMessage.Add("Project 1.27 Installation Path '" + Globals.ProjectInstallationPath + "'");
+				DebugMessage.Add("Project 1.27 Installation Path Binary '" + Globals.ProjectInstallationPathBinary + "'");
+				DebugMessage.Add("ZIP Extraction Path '" + LauncherLogic.ZIPFilePath + "'");
+				DebugMessage.Add("LauncherLogic.GTAVFilePath: '" + LauncherLogic.GTAVFilePath + "'");
+				DebugMessage.Add("LauncherLogic.UpgradeFilePath: '" + LauncherLogic.UpgradeFilePath + "'");
+				DebugMessage.Add("LauncherLogic.DowngradeFilePath: '" + LauncherLogic.DowngradeFilePath + "'");
+				DebugMessage.Add("LauncherLogic.SupportFilePath: '" + LauncherLogic.SupportFilePath + "'");
+				DebugMessage.Add("Detected AuthState: '" + LauncherLogic.AuthState + "'");
+				DebugMessage.Add("Detected GameState: '" + LauncherLogic.GameState + "'");
+				DebugMessage.Add("Detected InstallationState: '" + LauncherLogic.InstallationState + "'");
+				DebugMessage.Add("    Size of GTA5.exe in GTAV Installation Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\GTA5.exe") + Globals.GetGameInfoForDebug(LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\GTA5.exe"));
+				DebugMessage.Add("    Size of update.rpf in GTAV Installation Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\update\update.rpf"));
+				DebugMessage.Add("    Size of playgtav.exe in GTAV Installation Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\playgtav.exe"));
+				DebugMessage.Add("    ------------------------------------------------");
+				DebugMessage.Add("    Size of GTA5.exe in DowngradeFiles Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\GTA5.exe") + Globals.GetGameInfoForDebug(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\GTA5.exe"));
+				DebugMessage.Add("    Size of update.rpf in DowngradeFiles Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\update\update.rpf"));
+				DebugMessage.Add("    Size of playgtav.exe in DowngradeFiles Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\playgtav.exe"));
+				DebugMessage.Add("    ------------------------------------------------");
+				DebugMessage.Add("    Size of GTA5.exe in UpdateFiles Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.UpgradeFilePath.TrimEnd('\\') + @"\GTA5.exe") + Globals.GetGameInfoForDebug(LauncherLogic.UpgradeFilePath.TrimEnd('\\') + @"\GTA5.exe"));
+				DebugMessage.Add("    Size of update.rpf in UpdateFiles Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.UpgradeFilePath.TrimEnd('\\') + @"\update\update.rpf"));
+				DebugMessage.Add("    Size of playgtav.exe in UpdateFiles Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.UpgradeFilePath.TrimEnd('\\') + @"\playgtav.exe"));
+				DebugMessage.Add("    ------------------------------------------------");
+				DebugMessage.Add("    Size of GTA5.exe in BACKUP UpdateFiles Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.UpgradeFilePathBackup.TrimEnd('\\') + @"\GTA5.exe") + Globals.GetGameInfoForDebug(LauncherLogic.UpgradeFilePathBackup.TrimEnd('\\') + @"\GTA5.exe"));
+				DebugMessage.Add("    Size of update.rpf in BACKUP UpdateFiles Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.UpgradeFilePathBackup.TrimEnd('\\') + @"\update\update.rpf"));
+				DebugMessage.Add("    Size of playgtav.exe in BACKUP UpdateFiles Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.UpgradeFilePathBackup.TrimEnd('\\') + @"\playgtav.exe"));
+				DebugMessage.Add("Settings: ");
+				foreach (KeyValuePair<string, string> KVP in Globals.MySettings)
+				{
+					DebugMessage.Add("    " + KVP.Key + ": '" + KVP.Value + "'");
+				}
+
+				// Building DebugPath
+				string DebugFile = Globals.ProjectInstallationPath.TrimEnd('\\') + @"\AAA - DEBUG.txt";
+
+				// Deletes File, Creates File, Adds to it
+
+				string[] currContents = HelperClasses.FileHandling.ReadFileEachLine(DebugFile);
+
+				if (currContents.Length > DebugMessage.Count + 1)
+				{
+					Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "The file we are trying to overwrite contains more Lines than we want to write it it.\nBy overwriting it, we might lose information in the debugfile.\nDo you want to overwrite?");
+					yesno.ShowDialog();
+					if (yesno.DialogResult == false)
+					{
+						return;
+					}
+				}
+
+				HelperClasses.FileHandling.WriteStringToFileOverwrite(DebugFile, DebugMessage.ToArray());
+
+				HelperClasses.ProcessHandler.StartProcess(@"C:\Windows\explorer.exe", pCommandLineArguments: Globals.ProjectInstallationPath);
+			});
+		}
+
 
 
 		/// <summary>
@@ -911,10 +999,70 @@ namespace Project_127
 			mi3.Click += MI_Close_Click;
 			cm.Items.Add(mi3);
 
+			//MenuItem mi4 = new MenuItem();
+			//mi4.Header = "Compare 2 Files";
+			//mi4.Click += MI_Debug_Click;
+			//cm.Items.Add(mi4);
+
+			//MenuItem mi5 = new MenuItem();
+			//mi5.Header = "Did Update Hit";
+			//mi5.Click += MI_Debug2_Click;
+			//cm.Items.Add(mi5);
+
+			//MenuItem mi6 = new MenuItem();
+			//mi6.Header = "ResetBtn";
+			//mi6.Click += MI_Debug3_Click;
+			//cm.Items.Add(mi6);
+
 			cm.IsOpen = true;
 
 			//Globals.DebugPopup(Globals.CommandLineArgs.ToString());
 			//Globals.DebugPopup(Globals.InternalMode.ToString());
+		}
+
+		private void MI_Debug3_Click(object sender, RoutedEventArgs e)
+		{
+			//Globals.DebugPopup(Globals.XML_AutoUpdate);
+
+			btn_Downgrade.Content = "Downgrade";
+			HelperClasses.FileHandling.HardLinkFiles(Globals.ProjectInstallationPath.TrimEnd('\\') + @"\LICENSE_LINK", Globals.ProjectInstallationPath.TrimEnd('\\') + @"\LICENSE");
+		}
+
+		private void MI_Debug2_Click(object sender, RoutedEventArgs e)
+		{
+			bool areTheyEqual = LauncherLogic.DidUpdateHit();
+			btn_Downgrade.Content = "Downgrade: Did Update Hit: '" + areTheyEqual.ToString() + "'";
+		}
+
+		private void MI_Debug_Click(object sender, RoutedEventArgs e)
+		{
+			btn_Downgrade.Content = "Checking...";
+
+			string GTA_GTA5 = Settings.GTAVInstallationPath.TrimEnd('\\') + @"\gta5.exe";
+			string GTA_PlayGTAV = Settings.GTAVInstallationPath.TrimEnd('\\') + @"\playgtav.exe";
+			string GTA_UpdateRPF = Settings.GTAVInstallationPath.TrimEnd('\\') + @"\update\update.rpf";
+
+			string Upgrade_GTA5 = LauncherLogic.UpgradeFilePath.TrimEnd('\\') + @"\gta5.exe";
+			string Upgrade_PlayGTAV = LauncherLogic.UpgradeFilePath.TrimEnd('\\') + @"\playgtav.exe";
+			string Upgrade_UpdateRPF = LauncherLogic.UpgradeFilePath.TrimEnd('\\') + @"\update\update.rpf";
+
+			string Downgrade_GTA5 = LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\gta5.exe";
+			string Downgrade_PlayGTAV = LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\playgtav.exe";
+			string Downgrade_UpdateRPF = LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\update\update.rpf";
+
+			bool areTheyEqual = HelperClasses.FileHandling.AreFilesEqual(GTA_UpdateRPF, Upgrade_UpdateRPF);
+
+			//if (FileHandling.GetSizeOfFile(GTA_UpdateRPF) == FileHandling.GetSizeOfFile(Downgrade_UpdateRPF))
+			//{
+			//	areTheyEqual = true;
+			//}
+			//else
+			//{
+			//	areTheyEqual = false;
+			//}
+
+			btn_Downgrade.Content = "Update Files are equal: '" + areTheyEqual.ToString() + "'";
+
 		}
 
 
@@ -974,7 +1122,7 @@ namespace Project_127
 					new Popup(Popup.PopupWindowTypes.PopupOkError, "Installation State is broken. I suggest trying to repair.\nWill try to Upgrade anyways.").ShowDialog();
 				}
 
-				if (LauncherLogic.IsGTAVInstallationPathCorrect(false))
+				if (!LauncherLogic.IsGTAVInstallationPathCorrect(false))
 				{
 					Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "GTA Installation Path detected to be wrong.\nForce this Upgrade?");
 					yesno.ShowDialog();
@@ -992,7 +1140,7 @@ namespace Project_127
 
 				string msg = "Error: GTA V Installation Path incorrect or ZIP Version == 0.\nGTAV Installation Path: '" + LauncherLogic.GTAVFilePath + "'\nInstallationState (probably): '" + LauncherLogic.InstallationState.ToString() + "'\nZip Version: " + Globals.ZipVersion + ".";
 
-				if (Globals.BetaMode || Globals.InternalMode)
+				if (Globals.Mode == "internal" || Globals.Mode == "beta")
 				{
 					Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, msg + "\n. Force this Upgrade?");
 					yesno.ShowDialog();
@@ -1046,7 +1194,7 @@ namespace Project_127
 					new Popup(Popup.PopupWindowTypes.PopupOk, "Installation State is broken. I suggest trying to repair.\nWill try to Downgrade anyways").ShowDialog();
 				}
 
-				if (LauncherLogic.IsGTAVInstallationPathCorrect(false))
+				if (!LauncherLogic.IsGTAVInstallationPathCorrect(false))
 				{
 					Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "GTA Installation Path detected to be wrong.\nForce this Downgrade?");
 					yesno.ShowDialog();
@@ -1064,7 +1212,7 @@ namespace Project_127
 
 				string msg = "Error: GTA V Installation Path incorrect or ZIP Version == 0.\nGTAV Installation Path: '" + LauncherLogic.GTAVFilePath + "'\nInstallationState (probably): '" + LauncherLogic.InstallationState.ToString() + "'\nZip Version: " + Globals.ZipVersion + ".";
 
-				if (Globals.BetaMode || Globals.InternalMode)
+				if (Globals.Mode == "internal" || Globals.Mode == "beta")
 				{
 					Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, msg + "\n. Force this Downgrade?");
 					yesno.ShowDialog();
@@ -1174,17 +1322,25 @@ namespace Project_127
 		private void Window_Loaded(object sender, RoutedEventArgs e)
 		{
 			InitNotifyIcon();
+
+			NoteOverlay.OverlaySettingsChanged();
 		}
 
 
 		private void notifyIcon_DoubleClick(object sender, EventArgs e)
 		{
-			menuItem_Hide_Click(null, null);
 		}
 
 		private void notifyIcon_Click(object sender, EventArgs e)
 		{
-			menuItem_Show_Click(null, null);
+			if (this.Visibility == Visibility.Visible)
+			{
+				menuItem_Hide_Click(null, null);
+			}
+			else
+			{
+				menuItem_Show_Click(null, null);
+			}
 		}
 
 
@@ -1279,6 +1435,7 @@ namespace Project_127
 		{
 			this.WindowState = WindowState.Normal;
 			this.Show();
+			this.Activate();
 		}
 
 		private void menuItem_Hide_Click(object Sender, EventArgs e)
@@ -1289,7 +1446,7 @@ namespace Project_127
 			}
 			catch (Exception ex)
 			{
-				Globals.DebugPopup(ex.ToString());
+				//Globals.DebugPopup(ex.ToString());
 			}
 		}
 
@@ -1308,6 +1465,12 @@ namespace Project_127
 			menuItem_Show_Click(null, null);
 			Globals.PageState = Globals.PageStates.GTA;
 			GTA_Page.btn_GTA_Click_Static();
+
+			//string oldPath = LauncherLogic.ZIPFilePath.TrimEnd('\\') + @"\Project_127_Files\UpgradeFiles";
+			//string newPath = LauncherLogic.ZIPFilePath.TrimEnd('\\') + @"\Project_127_Files\UpgradeFiles_Backup";
+			//Globals.DebugPopup("yep");
+			//HelperClasses.FileHandling.movePath(newPath, oldPath);
+			//Globals.DebugPopup("nay");
 		}
 
 		private void menuItem_SaveFileHandler_Click(object Sender, EventArgs e)
@@ -1339,6 +1502,9 @@ namespace Project_127
 			Globals.ProperExit();
 		}
 
+		private void Window_Loaded_1(object sender, RoutedEventArgs e)
+		{
 
+		}
 	} // End of Class
 } // End of Namespace

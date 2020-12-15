@@ -78,6 +78,36 @@ namespace Project_127
 		/// </summary>
 		public static Version ProjectVersion = Assembly.GetExecutingAssembly().GetName().Version;
 
+
+
+
+
+		/// <summary>
+		/// XML for AutoUpdaterFile
+		/// </summary>
+		public static string XML_AutoUpdate
+		{
+			get
+			{
+				string masterURL = "https://raw.githubusercontent.com/TwosHusbandS/Project-127/master/Installer/Update.xml";
+				string modeURL = "https://raw.githubusercontent.com/TwosHusbandS/Project-127/" + Mode.ToLower() + "/Installer/Update.xml";
+
+				string modeXML = HelperClasses.FileHandling.GetStringFromURL(modeURL, true);
+
+				if (!String.IsNullOrWhiteSpace(modeXML))
+				{
+					return modeXML;
+				}
+				else
+				{
+					return HelperClasses.FileHandling.GetStringFromURL(masterURL);
+				}
+			}
+		}
+
+
+
+
 		/// <summary>
 		/// URL for AutoUpdaterFile
 		/// </summary>
@@ -85,14 +115,32 @@ namespace Project_127
 		{
 			get
 			{
-				if (InternalMode)
+				string masterURL = "https://raw.githubusercontent.com/TwosHusbandS/Project-127/master/Installer/Update.xml";
+				string modeURL = "https://raw.githubusercontent.com/TwosHusbandS/Project-127/" + Mode + "/Installer/Update.xml";
+				if (String.IsNullOrWhiteSpace(HelperClasses.FileHandling.GetStringFromURL(modeURL, true)))
 				{
-					return "https://raw.githubusercontent.com/TwosHusbandS/Project-127/internal/Installer/Update.xml";
+					return masterURL;
 				}
 				else
 				{
-					return "https://raw.githubusercontent.com/TwosHusbandS/Project-127/master/Installer/Update.xml";
+					return modeURL;
 				}
+			}
+		}
+
+		public static string Mode
+		{
+			get
+			{
+				if (InternalMode)
+				{
+					return "internal";
+				}
+				if (Project_127.MySettings.Settings.Mode.ToLower() == "default")
+				{
+					return "master";
+				}
+				return Project_127.MySettings.Settings.Mode.ToLower();
 			}
 		}
 
@@ -156,7 +204,7 @@ namespace Project_127
 		/// <summary>
 		/// Property of other Buildinfo. Will be in the top message of logs
 		/// </summary>
-		public static string BuildInfo = "Build 1, Internal Testing for 1.1";
+		public static string BuildInfo = "Build 2, test for autoupdate logic..., Internal Testing for 1.1";
 
 		/// <summary>
 		/// Returns all Command Line Args as StringArray
@@ -259,9 +307,12 @@ namespace Project_127
 			{"GTAVInstallationPath", ""},
 			{"ZIPExtractionPath", Process.GetCurrentProcess().MainModule.FileName.Substring(0, Process.GetCurrentProcess().MainModule.FileName.LastIndexOf('\\')) },
 			{"EnableLogging", "True"},
+			{"EnableAlternativeLaunch", "False"},
 			{"EnableCopyFilesInsteadOfHardlinking", "False"},
+			{"EnableCopyFilesInsteadOfSyslinking_SocialClub", "False"},
 			{"ExitWay", "Close"},
 			{"StartWay", "Maximized"},
+			{"Mode", "default"},
 	
 			// GTA V Settings
 			{"Retailer", "Steam"},
@@ -464,7 +515,7 @@ namespace Project_127
 			CheckForBigThree();
 
 			// Check whats the latest Version of the ZIP File in GITHUB
-			CheckForZipUpdate();
+			CheckForZipUpdate(); 
 
 			// Checks if Update hit
 			LauncherLogic.HandleUpdates();
@@ -472,7 +523,9 @@ namespace Project_127
 			// Rolling Log stuff
 			HelperClasses.Logger.RollingLog();
 
-			NoteOverlay.OverlaySettingsChanged();
+			// Called on Window Loaded from MainWindow, since this shows Overlay_MM WPF Window
+			// this makes its parent window show super early, which is ugly.
+			// NoteOverlay.OverlaySettingsChanged();
 
 			InitFileWatcher();
 
@@ -590,10 +643,10 @@ namespace Project_127
 						Globals.BackgroundImages Tmp = Globals.BackgroundImages.Main;
 						try
 						{
-							Tmp = (Globals.BackgroundImages)System.Enum.Parse(typeof(Globals.BackgroundImages), args[i+1]);
+							Tmp = (Globals.BackgroundImages)System.Enum.Parse(typeof(Globals.BackgroundImages), args[i + 1]);
 							Globals.BackgroundImage = Tmp;
 						}
-						catch (Exception e) 
+						catch (Exception e)
 						{
 							new Popup(Popup.PopupWindowTypes.PopupOkError, "Error converting Command Line Argument to Background Image.\n" + e.ToString()).ShowDialog();
 						}
@@ -605,7 +658,7 @@ namespace Project_127
 
 		private static void HandleAnnouncements()
 		{
-			string MyAnnoucment = HelperClasses.FileHandling.GetXMLTagContent(HelperClasses.FileHandling.GetStringFromURL(Globals.URL_AutoUpdate), "announcement");
+			string MyAnnoucment = HelperClasses.FileHandling.GetXMLTagContent(XML_AutoUpdate, "announcement");
 			if (MyAnnoucment != "")
 			{
 				MyAnnoucment = MyAnnoucment.Replace(@"\n", "\n");
@@ -655,8 +708,11 @@ namespace Project_127
 		/// </summary>
 		public static void CheckForUpdate()
 		{
+			string XML_Autoupdate_Temp = XML_AutoUpdate;
+
+
 			// Check online File for Version.
-			string MyVersionOnlineString = HelperClasses.FileHandling.GetXMLTagContent(HelperClasses.FileHandling.GetStringFromURL(Globals.URL_AutoUpdate), "version");
+			string MyVersionOnlineString = HelperClasses.FileHandling.GetXMLTagContent(XML_Autoupdate_Temp, "version");
 
 			// If this is empty,  github returned ""
 			if (!(String.IsNullOrEmpty(MyVersionOnlineString)))
@@ -680,7 +736,7 @@ namespace Project_127
 					{
 						// User wants Update
 						HelperClasses.Logger.Log("Update found. User wants it", 1);
-						string DLPath = HelperClasses.FileHandling.GetXMLTagContent(HelperClasses.FileHandling.GetStringFromURL(Globals.URL_AutoUpdate), "url");
+						string DLPath = HelperClasses.FileHandling.GetXMLTagContent(XML_Autoupdate_Temp, "url");
 						string DLFilename = DLPath.Substring(DLPath.LastIndexOf('/') + 1);
 						string LocalFileName = Globals.ProjectInstallationPath.TrimEnd('\\') + @"\" + DLFilename;
 
@@ -717,12 +773,14 @@ namespace Project_127
 
 			bool PopupThrownAlready = false;
 
-			string DLLinkG = HelperClasses.FileHandling.GetXMLTagContent(HelperClasses.FileHandling.GetStringFromURL(Globals.URL_AutoUpdate), "DLLinkG");
-			string DLLinkGHash = HelperClasses.FileHandling.GetXMLTagContent(HelperClasses.FileHandling.GetStringFromURL(Globals.URL_AutoUpdate), "DLLinkGHash");
-			string DLLinkU = HelperClasses.FileHandling.GetXMLTagContent(HelperClasses.FileHandling.GetStringFromURL(Globals.URL_AutoUpdate), "DLLinkU");
-			string DLLinkUHash = HelperClasses.FileHandling.GetXMLTagContent(HelperClasses.FileHandling.GetStringFromURL(Globals.URL_AutoUpdate), "DLLinkUHash");
-			string DLLinkX = HelperClasses.FileHandling.GetXMLTagContent(HelperClasses.FileHandling.GetStringFromURL(Globals.URL_AutoUpdate), "DLLinkX");
-			string DLLinkXHash = HelperClasses.FileHandling.GetXMLTagContent(HelperClasses.FileHandling.GetStringFromURL(Globals.URL_AutoUpdate), "DLLinkXHash");
+			string UpdateXML = XML_AutoUpdate;
+
+			string DLLinkG = HelperClasses.FileHandling.GetXMLTagContent(UpdateXML, "DLLinkG");
+			string DLLinkGHash = HelperClasses.FileHandling.GetXMLTagContent(UpdateXML, "DLLinkGHash");
+			string DLLinkU = HelperClasses.FileHandling.GetXMLTagContent(UpdateXML, "DLLinkU");
+			string DLLinkUHash = HelperClasses.FileHandling.GetXMLTagContent(UpdateXML, "DLLinkUHash");
+			string DLLinkX = HelperClasses.FileHandling.GetXMLTagContent(UpdateXML, "DLLinkX");
+			string DLLinkXHash = HelperClasses.FileHandling.GetXMLTagContent(UpdateXML, "DLLinkXHash");
 
 			HelperClasses.Logger.Log("Checking if gta5.exe exists locally", 1);
 			if (HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\GTA5.exe") > 100)
@@ -887,7 +945,7 @@ namespace Project_127
 		{
 			// Check whats the latest Version of the ZIP File in GITHUB
 			int ZipOnlineVersion = 0;
-			Int32.TryParse(HelperClasses.FileHandling.GetXMLTagContent(HelperClasses.FileHandling.GetStringFromURL(Globals.URL_AutoUpdate), "zipversion"), out ZipOnlineVersion);
+			Int32.TryParse(HelperClasses.FileHandling.GetXMLTagContent(XML_AutoUpdate, "zipversion"), out ZipOnlineVersion);
 
 			HelperClasses.Logger.Log("Checking for ZIP - Update");
 			HelperClasses.Logger.Log("ZipVersion = '" + Globals.ZipVersion + "', ZipOnlineVersion = '" + ZipOnlineVersion + "'");
@@ -910,42 +968,7 @@ namespace Project_127
 				{
 					HelperClasses.Logger.Log("User wants update for ZIP");
 
-					// Getting the Hash of the new ZIPFile
-					string hashNeeded = HelperClasses.FileHandling.GetXMLTagContent(HelperClasses.FileHandling.GetStringFromURL(Globals.URL_AutoUpdate), "zipmd5");
-					HelperClasses.Logger.Log("HashNeeded: " + hashNeeded);
-
-					// Looping 0 through 5
-					for (int i = 0; i <= 5; i++)
-					{
-						// Getting DL Link of zip + i
-						string pathOfNewZip = HelperClasses.FileHandling.GetXMLTagContent(HelperClasses.FileHandling.GetStringFromURL(Globals.URL_AutoUpdate), "zip" + i.ToString());
-						HelperClasses.Logger.Log("Zip-Try: 'zip" + i.ToString() + "'");
-						HelperClasses.Logger.Log("DL Link: '" + pathOfNewZip + "'");
-
-						// Deleting old ZIPFile
-						HelperClasses.FileHandling.deleteFile(Globals.ZipFileDownloadLocation);
-
-						// Getting actual DDL
-						pathOfNewZip = GetDDL(pathOfNewZip);
-
-						// Downloading the ZIP File
-						new PopupDownload(pathOfNewZip, Globals.ZipFileDownloadLocation, "ZIP-File").ShowDialog();
-
-						// Checking the hash of the Download
-						string HashOfDownload = HelperClasses.FileHandling.GetHashFromFile(Globals.ZipFileDownloadLocation);
-						HelperClasses.Logger.Log("Download Done, Hash of Downloaded File: '" + HashOfDownload + "'");
-
-						// If Hash looks good, we import it
-						if (HashOfDownload == hashNeeded)
-						{
-							HelperClasses.Logger.Log("Hashes Match, will Import");
-							LauncherLogic.ImportZip(Globals.ZipFileDownloadLocation, true);
-							return;
-						}
-						HelperClasses.Logger.Log("Hashes dont match, will move on");
-					}
-					HelperClasses.Logger.Log("Error. Could not find a suitable ZIP File from a FileHoster. Program cannot download new ZIP at the moment.");
-					new Popup(Popup.PopupWindowTypes.PopupOkError, "Update of ZIP File failed (No Suitable ZIP Files Found).\nI suggest restarting the program and opting out of update.");
+					ZipUpdate();
 				}
 				else
 				{
@@ -956,6 +979,49 @@ namespace Project_127
 			{
 				HelperClasses.Logger.Log("NO Update for ZIP found");
 			}
+		}
+
+
+		public static void ZipUpdate()
+		{
+			string TMP_AutoupdateXML = Globals.XML_AutoUpdate;
+
+			// Getting the Hash of the new ZIPFile
+			string hashNeeded = HelperClasses.FileHandling.GetXMLTagContent(TMP_AutoupdateXML, "zipmd5");
+			HelperClasses.Logger.Log("HashNeeded: " + hashNeeded);
+
+			// Looping 0 through 5
+			for (int i = 0; i <= 5; i++)
+			{
+				// Getting DL Link of zip + i
+				string pathOfNewZip = HelperClasses.FileHandling.GetXMLTagContent(TMP_AutoupdateXML, "zip" + i.ToString());
+				HelperClasses.Logger.Log("Zip-Try: 'zip" + i.ToString() + "'");
+				HelperClasses.Logger.Log("DL Link: '" + pathOfNewZip + "'");
+
+				// Deleting old ZIPFile
+				HelperClasses.FileHandling.deleteFile(Globals.ZipFileDownloadLocation);
+
+				// Getting actual DDL
+				pathOfNewZip = GetDDL(pathOfNewZip);
+
+				// Downloading the ZIP File
+				new PopupDownload(pathOfNewZip, Globals.ZipFileDownloadLocation, "ZIP-File").ShowDialog();
+
+				// Checking the hash of the Download
+				string HashOfDownload = HelperClasses.FileHandling.GetHashFromFile(Globals.ZipFileDownloadLocation);
+				HelperClasses.Logger.Log("Download Done, Hash of Downloaded File: '" + HashOfDownload + "'");
+
+				// If Hash looks good, we import it
+				if (HashOfDownload == hashNeeded)
+				{
+					HelperClasses.Logger.Log("Hashes Match, will Import");
+					LauncherLogic.ImportZip(Globals.ZipFileDownloadLocation, true);
+					return;
+				}
+				HelperClasses.Logger.Log("Hashes dont match, will move on");
+			}
+			HelperClasses.Logger.Log("Error. Could not find a suitable ZIP File from a FileHoster. Program cannot download new ZIP at the moment.");
+			new Popup(Popup.PopupWindowTypes.PopupOkError, "Update of ZIP File failed (No Suitable ZIP Files Found).\nI suggest restarting the program.");
 		}
 
 		/// <summary>
@@ -980,7 +1046,7 @@ namespace Project_127
 			{
 				MainWindow.MW.Close();
 			}
-			catch {	}
+			catch { }
 			Application.Current.Shutdown();
 			Environment.Exit(0);
 		}
@@ -1269,6 +1335,7 @@ namespace Project_127
 		public static Brush MyColorBlack { get; private set; } = (Brush)new BrushConverter().ConvertFromString("#000000");
 		public static Brush MyColorOffBlack { get; private set; } = (Brush)new BrushConverter().ConvertFromString("#1a1a1a");
 		public static Brush MyColorOffBlack70 { get; private set; } = SetOpacity((Brush)new BrushConverter().ConvertFromString("#1a1a1a"), 70);
+		public static Brush MyColorOffBlack50 { get; private set; } = SetOpacity((Brush)new BrushConverter().ConvertFromString("#1a1a1a"), 50);
 		public static Brush MyColorOrange { get; private set; } = (Brush)new BrushConverter().ConvertFromString("#E35627");
 		public static Brush MyColorGreen { get; private set; } = (Brush)new BrushConverter().ConvertFromString("#4cd213");
 
