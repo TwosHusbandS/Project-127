@@ -101,14 +101,22 @@ Main To do:
 
 
 			Quick and dirty notes:
-					Without making anti virus appear again
-				- Title from GTAV Overlay is missing (waiting on Dragon for that)
-				- CPU Usage Poll foreground window instead of change listener
-					=> Finish new implementation of hook with Application.Run instead of custom EventLoop
-						>> https://stackoverflow.com/a/32016279
-					=> If that doesnt work, poll every 100 ms, see how CPU usage is
 				- Jumpscript Send Key stuff
-				- [DONE] Split upgrading downgrading into 2 progress popups
+					=> Had some PoC work for simulating keypresses which GTA V picks up.
+					=> It only send keydown and not keyup
+					=> It also got caught in our own keyboard listeners, but i can get around that
+				- [DONE] Integrate Title from Dragon both as in content and as in customizability
+				- [DONE] Fixed Both Listeners for the hopefully final time
+				- [DONE] Fixed Update Detection
+				- [DONE] Commented out new SaveFileHandler Code
+				- [DONE] Fixed Process Priority setting too often
+				- [DONE] Fixed ForegroundChangeListener not setting on fullscreen by polling every 2.5 seconds
+				- [DONE] Fix Command line args crashing it...
+				- [DONE] Make "DetectUpgrade" more efficent
+				- [DONE] Integrate Latest working branch. 
+				- [DONE] Integrate Dragons Fixes for Rockstar Endpoint change
+				- [DONE] Took care of all Listeners. Using and keeping track of Threads for it as of right now. Seems to work
+				- [DONE] Split upgrading downgrading into 17 progress popups
 				- [DONE] Finish Readme (Speedrun text + Reset Button + DL of big zip)
 				- [DONE] ZIP Hash for big ZIP
 				- [DONE] Bring back functionality from: https://github.com/TwosHusbandS/Project-127/commit/a5dcbd5c1a4011c8e1845c4f338f6f9ffbe79a92
@@ -334,14 +342,16 @@ namespace Project_127
 			// Testing Purpose for the overlay shit
 			if (GTAOverlay.DebugMode)
 			{
-				// We currently need this here, normally this will be started by GameState (but this points to GTA V.exe as of right now)
+				//We currently need this here, normally this will be started by GameState(but this points to GTA V.exe as of right now)
 				NoteOverlay.InitGTAOverlay();
 
 				// Same as other two thingies here lolerino
 				HelperClasses.WindowChangeListener.Start();
 
 				// We currently need this here, normally this will be started by WindowEventThingy (but this only starts or stops based on GTA V.exe)
-				KeyboardListener.Start();
+				//HelperClasses.KeyboardListener.Start();
+
+				//KeyboardHandler.TMP();
 			}
 		}
 

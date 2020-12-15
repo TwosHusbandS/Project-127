@@ -128,11 +128,11 @@ namespace Project_127
 			MySaveFile.GTASaves = new ObservableCollection<MySaveFile>();
 
 
-			MySaveFile.BackupSaves.Add(new MySaveFile(MySaveFile.BackupSavesPath, true));
+			//MySaveFile.BackupSaves.Add(new MySaveFile(MySaveFile.BackupSavesPath, true));
 			string[] MySubFolders = HelperClasses.FileHandling.GetSubFolders(MySaveFile.BackupSavesPath);
 			foreach (string MySubFolder in MySubFolders)
 			{
-				MySaveFile.BackupSaves.Add(new MySaveFile(MySubFolder, true));
+				//MySaveFile.BackupSaves.Add(new MySaveFile(MySubFolder, true));
 			}
 
 

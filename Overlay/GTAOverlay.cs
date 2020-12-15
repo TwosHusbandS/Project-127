@@ -17,8 +17,8 @@ namespace Project_127
 		// If set to false, this starts and keeps KeyboardListenerEvent running 100% of the time.
 		// Automatically set to true if we compile debug
 
-		public static bool DebugMode = false;
-		public const string targetWindowDebug = "Command Prompt";
+		public static bool DebugMode = true;
+		public const string targetWindowDebug = "TeamSpeak 3";
 
 		public const string targetWindowNonDebug = "Grand Theft Auto V";
 
@@ -362,7 +362,12 @@ namespace Project_127
 		public void setText(string text)
 		{
 			HelperClasses.Logger.Log("Overlay text updated");
-			this.text = text;
+      this.text = text;
+//<<<<<<< working
+//			this.text = text;
+//=======
+//			mainText.text = text;
+//>>>>>>> dev_ths_new
 		}
 
 		/// <summary>

@@ -358,14 +358,30 @@ namespace Project_127.Popups
 			}
 			else if (ProgressType == ProgressTypes.DidUpdateHit)
 			{
-				// Check if the file matches the one in downgrade files...
-				// Update GUI
-				Application.Current.Dispatcher.Invoke((Action)delegate
+				/* 
+				
+				This is basically a more complicated written (so more optimized) version of this:
+
+				if (HelperClasses.FileHandling.AreFilesEqual(GTA_GTA5, Upgrade_GTA5) &&
+				HelperClasses.FileHandling.AreFilesEqual(GTA_PlayGTAV, Upgrade_PlayGTAV) &&
+				HelperClasses.FileHandling.AreFilesEqual(GTA_UpdateRPF, Upgrade_UpdateRPF))
 				{
-					long progress = (100 * 0 / 8);
-					myPB.Value = progress;
-					myLBL.Content = "Checking if Update hit (0/8)";
-				});
+					return false;
+				}
+				else
+				{
+						if (HelperClasses.FileHandling.AreFilesEqual(GTA_GTA5, Downgrade_GTA5) &&
+						HelperClasses.FileHandling.AreFilesEqual(GTA_PlayGTAV, Downgrade_PlayGTAV) &&
+						HelperClasses.FileHandling.AreFilesEqual(GTA_UpdateRPF, Downgrade_UpdateRPF))
+						{
+							return false;
+						}
+					return true;
+				}
+
+				*/
+
+				SetProgress("Checking if Update hit", 1, 8);
 
 				string GTA_GTA5 = Settings.GTAVInstallationPath.TrimEnd('\\') + @"\gta5.exe";
 				string GTA_PlayGTAV = Settings.GTAVInstallationPath.TrimEnd('\\') + @"\playgtav.exe";
@@ -379,109 +395,54 @@ namespace Project_127.Popups
 				string Downgrade_PlayGTAV = LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\playgtav.exe";
 				string Downgrade_UpdateRPF = LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\update\update.rpf";
 
-				bool eq_GTA_Downgrade_GTA5 = HelperClasses.FileHandling.AreFilesEqual(GTA_GTA5, Downgrade_GTA5);
-
-				Application.Current.Dispatcher.Invoke((Action)delegate
+				SetProgress("Checking if Update hit", 2, 8);
+				if (!HelperClasses.FileHandling.AreFilesEqual(GTA_GTA5, Upgrade_GTA5))
 				{
-					long progress = (100 * 1 / 8);
-					myPB.Value = progress;
-					myLBL.Content = "Checking if Update hit (1/8)";
-				});
-
-				bool eq_GTA_Downgrade_PlayGTAV = HelperClasses.FileHandling.AreFilesEqual(GTA_PlayGTAV, Downgrade_PlayGTAV);
-
-				Application.Current.Dispatcher.Invoke((Action)delegate
-				{
-					long progress = (100 * 2 / 8);
-					myPB.Value = progress;
-					myLBL.Content = "Checking if Update hit (2/8)";
-				});
-
-				bool eq_GTA_Downgrade_UpdateRPF = HelperClasses.FileHandling.AreFilesEqual(GTA_UpdateRPF, Downgrade_UpdateRPF);
-
-				Application.Current.Dispatcher.Invoke((Action)delegate
-				{
-					long progress = (100 * 3 / 8);
-					myPB.Value = progress;
-					myLBL.Content = "Checking if Update hit (3/8)";
-				});
-
-
-
-				if (eq_GTA_Downgrade_GTA5 &&
-					eq_GTA_Downgrade_PlayGTAV &&
-					eq_GTA_Downgrade_UpdateRPF)
-				{
-					RtrnBool = false;
-					return;
-				}
-				else
-				{
-					Application.Current.Dispatcher.Invoke((Action)delegate
+					SetProgress("Checking if Update hit", 3, 8);
+					if (!HelperClasses.FileHandling.AreFilesEqual(GTA_GTA5, Downgrade_GTA5))
 					{
-						long progress = (100 * 4 / 8);
-						myPB.Value = progress;
-						myLBL.Content = "Checking if Update hit (4/8)";
-					});
-
-
-					bool eq_GTA_Upgrade_GTA5 = HelperClasses.FileHandling.AreFilesEqual(GTA_GTA5, Upgrade_GTA5);
-
-					Application.Current.Dispatcher.Invoke((Action)delegate
-					{
-						long progress = (100 * 5 / 8);
-						myPB.Value = progress;
-						myLBL.Content = "Checking if Update hit (5/8)";
-					});
-
-					bool eq_GTA_Upgrade_PlayGTAV = HelperClasses.FileHandling.AreFilesEqual(GTA_PlayGTAV, Upgrade_PlayGTAV);
-
-					Application.Current.Dispatcher.Invoke((Action)delegate
-					{
-						long progress = (100 * 6 / 8);
-						myPB.Value = progress;
-						myLBL.Content = "Checking if Update hit (6/8)";
-					});
-
-					bool eq_GTA_Upgrade_UpdateRPF = HelperClasses.FileHandling.AreFilesEqual(GTA_UpdateRPF, Upgrade_UpdateRPF);
-
-					Application.Current.Dispatcher.Invoke((Action)delegate
-					{
-						long progress = (100 * 7 / 8);
-						myPB.Value = progress;
-						myLBL.Content = "Checking if Update hit (7/8)";
-					});
-
-
-					if (HelperClasses.FileHandling.doesFileExist(Upgrade_GTA5) &&
-						HelperClasses.FileHandling.doesFileExist(Upgrade_PlayGTAV) &&
-						HelperClasses.FileHandling.doesFileExist(Upgrade_UpdateRPF))
-					{
-						Application.Current.Dispatcher.Invoke((Action)delegate
-						{
-							long progress = (100 * 8 / 8);
-							myPB.Value = progress;
-							myLBL.Content = "Checking if Update hit (8/8)";
-						});
-
-
-						if (eq_GTA_Upgrade_GTA5 &&
-						eq_GTA_Upgrade_PlayGTAV &&
-						eq_GTA_Upgrade_UpdateRPF)
-						{
-							RtrnBool = false;
-						}
-						else
-						{
-							RtrnBool = true;
-						}
-					}
-					else
-					{
-						RtrnBool = false;
+						RtrnBool = true;
+						return;
 					}
 				}
+
+				SetProgress("Checking if Update hit", 4, 8);
+				if (!HelperClasses.FileHandling.AreFilesEqual(GTA_PlayGTAV, Upgrade_PlayGTAV))
+				{
+					SetProgress("Checking if Update hit", 5, 8);
+					if (!HelperClasses.FileHandling.AreFilesEqual(GTA_PlayGTAV, Downgrade_PlayGTAV))
+					{
+						RtrnBool = true;
+						return;
+					}
+				}
+
+				SetProgress("Checking if Update hit", 6, 8);
+				if (!HelperClasses.FileHandling.AreFilesEqual(GTA_UpdateRPF, Upgrade_UpdateRPF))
+				{
+					SetProgress("Checking if Update hit", 7, 8);
+					if (!HelperClasses.FileHandling.AreFilesEqual(GTA_UpdateRPF, Downgrade_UpdateRPF))
+					{
+						RtrnBool = true;
+						return;
+					}
+				}
+
+				SetProgress("Checking if Update hit", 8, 8);
+				RtrnBool = false;
+				return;
 			}
+		}
+
+
+		private void SetProgress(string pText, int x, int n)
+		{
+			Application.Current.Dispatcher.Invoke((Action)delegate
+			{
+				long progress = (100 * x / n);
+				myPB.Value = progress;
+				myLBL.Content = pText + " (" + x + "/" + n + ")";
+			});
 		}
 
 		////////////////////////////////////////////////////////////////////

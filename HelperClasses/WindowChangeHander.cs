@@ -9,26 +9,28 @@ namespace Project_127.HelperClasses
 {
 	class WindowChangeHander
 	{
+		private static string LastWindowTitle = "";
+
 		public static void WindowChangeEvent(string WindowTitle)
 		{
-			if (WindowTitle == GTAOverlay.targetWindow)
+			//HelperClasses.Logger.Log("DEBUG: '" + WindowTitle + "'", 2);
+			if (WindowTitle == GTAOverlay.targetWindow && LastWindowTitle != GTAOverlay.targetWindow)
 			{
-
 				HelperClasses.Logger.Log("'" + GTAOverlay.targetWindow + "' Foreground Change Event detected. It is now in Foreground.");
-				KeyboardListener.Start();
+				HelperClasses.Keyboard.KeyboardListener.Start();
 				if (Overlay.NoteOverlay.OverlayWasVisible)
 				{
 					Overlay.NoteOverlay.OverlaySetVisible();
 					Overlay.NoteOverlay.OverlayWasVisible = false;
 				}
 			}
-			else
+			else if (WindowTitle != GTAOverlay.targetWindow)
 			{
-				if (KeyboardListener.IsRunning)
+				if (HelperClasses.Keyboard.KeyboardListener.IsRunning)
 				{
 					// So we dont spam log with that.
 					HelperClasses.Logger.Log("'" + GTAOverlay.targetWindow + "' no longer foreground");
-					KeyboardListener.Stop();
+					HelperClasses.Keyboard.KeyboardListener.Stop();
 				}
 				if (Overlay.NoteOverlay.IsOverlayVisible())
 				{
@@ -36,6 +38,7 @@ namespace Project_127.HelperClasses
 					Overlay.NoteOverlay.OverlaySetInvisible();
 				}
 			}
+			LastWindowTitle = WindowTitle;
 		}
 
 	}

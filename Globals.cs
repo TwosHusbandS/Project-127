@@ -474,8 +474,16 @@ namespace Project_127
 			// "-CommandLineArg:Value"
 			foreach (string CommandLineArg in Globals.CommandLineArgs)
 			{
-				string Argument = CommandLineArg.Substring(0, CommandLineArg.IndexOf(':'));
-				string Value = CommandLineArg.Substring(CommandLineArg.IndexOf(':') + 1);
+				string Argument = "";
+				string Value = "";
+				try
+				{
+				 Argument = CommandLineArg.Substring(0, CommandLineArg.IndexOf(':'));
+				 Value = CommandLineArg.Substring(CommandLineArg.IndexOf(':') + 1);
+				}
+				catch 
+				{
+				}
 
 				if (Argument == "-Background")
 				{
@@ -805,7 +813,7 @@ namespace Project_127
 		/// </summary>
 		public static void ProperExit()
 		{
-			KeyboardListener.Stop();
+			HelperClasses.Keyboard.KeyboardListener.Stop();
 			WindowChangeListener.Stop();
 			HelperClasses.Logger.Log("Program closed. Proper Exit. Ended normally");
 		}
