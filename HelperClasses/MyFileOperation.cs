@@ -113,7 +113,7 @@ namespace Project_127
 						HelperClasses.Logger.Log(pMyFileOperation.Log, pMyFileOperation.LogLevel);
 						if (pMyFileOperation.MyFileOrFolder == FileOrFolder.File)
 						{
-							// Not implemented
+							HelperClasses.FileHandling.createFile(pMyFileOperation.OriginalFile);
 						}
 						else
 						{

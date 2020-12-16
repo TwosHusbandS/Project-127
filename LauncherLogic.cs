@@ -181,13 +181,13 @@ namespace Project_127
 				long SizeOfUpgradedUpdate = HelperClasses.FileHandling.GetSizeOfFile(UpgradeFilePath.TrimEnd('\\') + @"\update\update.rpf");
 				long SizeOfUpgradedPlayGTAV = HelperClasses.FileHandling.GetSizeOfFile(UpgradeFilePath.TrimEnd('\\') + @"\playgtav.exe");
 
-				long SizeOfDowngradeAlternativeSteamGTAV = HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeAlternativeFilePathSteam.TrimEnd('\\') + @"\GTA5.exe");
-				long SizeOfDowngradeAlternativeSteamUpdate = HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeAlternativeFilePathSteam.TrimEnd('\\') + @"\update\update.rpf");
-				long SizeOfDowngradeAlternativeSteamPlayGTAV = HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeAlternativeFilePathSteam.TrimEnd('\\') + @"\playgtav.exe");
+				long SizeOfDowngradeAlternativeSteamGTAV = HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeAlternativeFilePathSteam127.TrimEnd('\\') + @"\GTA5.exe");
+				long SizeOfDowngradeAlternativeSteamUpdate = HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeAlternativeFilePathSteam127.TrimEnd('\\') + @"\update\update.rpf");
+				long SizeOfDowngradeAlternativeSteamPlayGTAV = HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeAlternativeFilePathSteam127.TrimEnd('\\') + @"\playgtav.exe");
 
-				long SizeOfDowngradeAlternativeRockstarGTAV = HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeAlternativeFilePathRockstar.TrimEnd('\\') + @"\GTA5.exe");
-				long SizeOfDowngradeAlternativeRockstarUpdate = HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeAlternativeFilePathRockstar.TrimEnd('\\') + @"\update\update.rpf");
-				long SizeOfDowngradeAlternativeRockstarPlayGTAV = HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeAlternativeFilePathRockstar.TrimEnd('\\') + @"\playgtav.exe");
+				long SizeOfDowngradeAlternativeRockstarGTAV = HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeAlternativeFilePathRockstar127.TrimEnd('\\') + @"\GTA5.exe");
+				long SizeOfDowngradeAlternativeRockstarUpdate = HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeAlternativeFilePathRockstar127.TrimEnd('\\') + @"\update\update.rpf");
+				long SizeOfDowngradeAlternativeRockstarPlayGTAV = HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeAlternativeFilePathRockstar127.TrimEnd('\\') + @"\playgtav.exe");
 
 				//string Message = "GTAV: '" + SizeOfGTAV + "'\nUpdate: '" + SizeOfUpdate + "'\nPlayGTAV: '" + SizeOfPlayGTAV + "'";
 				//Globals.DebugPopup(Message);
@@ -309,24 +309,32 @@ namespace Project_127
 		public static string DowngradeFilePath { get { return LauncherLogic.ZIPFilePath.TrimEnd('\\') + @"\Project_127_Files\DowngradeFiles\"; } }
 
 		/// <summary>
-		/// Property of often used variable. (DowngradeAlternativeFilePathSteam)
+		/// Property of often used variable. (DowngradeAlternativeFilePathSteam127)
 		/// </summary>
-		public static string DowngradeAlternativeFilePathSteam { get { return LauncherLogic.ZIPFilePath.TrimEnd('\\') + @"\Project_127_Files\DowngradeFiles_Alternative\steam\"; } }
+		public static string DowngradeAlternativeFilePathSteam127 { get { return LauncherLogic.ZIPFilePath.TrimEnd('\\') + @"\Project_127_Files\DowngradeFiles_Alternative\steam\127\"; } }
 
 		/// <summary>
-		/// Property of often used variable. (SocialClubFilePathSteam)
+		/// Property of often used variable. (DowngradeAlternativeFilePathRockstar127)
 		/// </summary>
-		public static string SocialClubFilePathSteam { get { return LauncherLogic.ZIPFilePath.TrimEnd('\\') + @"\Project_127_Files\SocialClubFiles\steam\"; } }
+		public static string DowngradeAlternativeFilePathRockstar127 { get { return LauncherLogic.ZIPFilePath.TrimEnd('\\') + @"\Project_127_Files\DowngradeFiles_Alternative\rockstar\127\"; } }
+
 
 		/// <summary>
-		/// Property of often used variable. (DowngradeAlternativeFilePathRockstar)
+		/// Property of often used variable. (DowngradeAlternativeFilePathSteam124)
 		/// </summary>
-		public static string DowngradeAlternativeFilePathRockstar { get { return LauncherLogic.ZIPFilePath.TrimEnd('\\') + @"\Project_127_Files\DowngradeFiles_Alternative\rockstar"; } }
+		public static string DowngradeAlternativeFilePathSteam124 { get { return LauncherLogic.ZIPFilePath.TrimEnd('\\') + @"\Project_127_Files\DowngradeFiles_Alternative\steam\124\"; } }
 
 		/// <summary>
-		/// Property of often used variable. (SocialClubRockstarFilePath)
+		/// Property of often used variable. (DowngradeAlternativeFilePathRockstar124)
 		/// </summary>
-		public static string SocialClubFilePathRockstar { get { return LauncherLogic.ZIPFilePath.TrimEnd('\\') + @"\Project_127_Files\SocialClubFiles\rockstar"; } }
+		public static string DowngradeAlternativeFilePathRockstar124 { get { return LauncherLogic.ZIPFilePath.TrimEnd('\\') + @"\Project_127_Files\DowngradeFiles_Alternative\rockstar\124\"; } }
+
+
+		/// <summary>
+		/// Property of often used variable. (DowngradedSocialClub)
+		/// </summary>
+		public static string DowngradedSocialClub { get { return LauncherLogic.ZIPFilePath.TrimEnd('\\') + @"\Project_127_Files\SupportFiles\DowngradedSocialClub\"; } }
+
 
 
 		/// <summary>

@@ -181,8 +181,8 @@ namespace Project_127.Popups
 								HelperClasses.FileHandling.createPathOfFile(PathOnDisk); // 99% Chance I fixed this with the createZipPaths Method. Lets keep this to make sure...
 								if (HelperClasses.FileHandling.doesFileExist(PathOnDisk))
 								{
-									if (PathOnDisk.Contains("UpgradeFiles") ||
-										PathOnDisk.Contains("SupportFiles"))
+									if (PathOnDisk.Contains("UpgradeFiles"))
+									//	PathOnDisk.Contains("SupportFiles"))
 									//PathOnDisk.Contains(@"DowngradeFiles\GTA5.exe") ||
 									//PathOnDisk.Contains(@"DowngradeFiles\x64a.rpf") ||
 									//PathOnDisk.Contains(@"DowngradeFiles\update\update.rpf"))

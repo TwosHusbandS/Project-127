@@ -273,7 +273,6 @@ namespace Project_127.HelperClasses
 			catch (Exception e)
 			{
 				Logger.Log("Sth failed while writing string array to file: " + e.ToString());
-
 			}
 		}
 
@@ -684,7 +683,7 @@ namespace Project_127.HelperClasses
 
 
 		/// <summary>
-		/// Copy File A to file B. Does not overwrite
+		/// Copy File A to file B. DOES overwrite
 		/// </summary>
 		/// <param name="pSource"></param>
 		/// <param name="pDestination"></param>
@@ -697,11 +696,11 @@ namespace Project_127.HelperClasses
 			}
 			if (File.Exists(pDestination))
 			{
-				HelperClasses.Logger.Log("Copying File ['" + pSource + "' to '" + pDestination + "'] failed since DestinationFile ('" + pDestination + "') DOES exist.", true, 0);
-				return;
+				FileHandling.deleteFile(pDestination);
 			}
 			try
 			{
+				FileHandling.createPathOfFile(pDestination);
 				File.Copy(pSource, pDestination);
 			}
 			catch (Exception e)
