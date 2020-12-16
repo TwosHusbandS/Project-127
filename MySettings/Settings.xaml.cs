@@ -285,6 +285,7 @@ namespace Project_127.MySettings
 		private void combox_Set_Retail_SelectionChanged(object sender, SelectionChangedEventArgs e)
 		{
 			Retailer = (Retailers)System.Enum.Parse(typeof(Retailers), combox_Set_Retail.SelectedItem.ToString());
+			RefreshIfOptionsHide();
 		}
 
 
@@ -558,6 +559,7 @@ namespace Project_127.MySettings
 				HelperClasses.Logger.Log("Resetting Settings STARTED, this will explain the following messages");
 				Settings.ResetSettings();
 				Settings.InitImportantSettings();
+				Settings.FirstLaunch = false;
 				RefreshGUI();
 			}
 		}
@@ -685,7 +687,7 @@ namespace Project_127.MySettings
 			ButtonMouseOverMagic(btn_cb_Set_EnableAutoStartJumpScript);
 
 			RefreshIfOptionsHide();
-			
+
 			//btn_Set_JumpScriptKey1.Content = Settings.JumpScriptKey1;
 			//btn_Set_JumpScriptKey2.Content = Settings.JumpScriptKey2;
 			//cb_Set_EnableAutoStartJumpScript.IsChecked = Settings.EnableAutoStartJumpScript;
@@ -896,13 +898,27 @@ namespace Project_127.MySettings
 
 		private void RefreshIfOptionsHide()
 		{
-			if (Settings.EnableAlternativeLaunch)
+			if (Settings.Retailer == Retailers.Epic)
 			{
+				Rect_HideOptions3.Visibility = Visibility.Visible;
 				Rect_HideOptions.Visibility = Visibility.Hidden;
+				Rect_HideOptions2.Visibility = Visibility.Hidden;
 			}
 			else
 			{
-				Rect_HideOptions.Visibility = Visibility.Visible;
+
+				if (Settings.EnableAlternativeLaunch)
+				{
+					Rect_HideOptions.Visibility = Visibility.Hidden;
+					Rect_HideOptions2.Visibility = Visibility.Visible;
+					Rect_HideOptions3.Visibility = Visibility.Hidden;
+				}
+				else
+				{
+					Rect_HideOptions.Visibility = Visibility.Visible;
+					Rect_HideOptions2.Visibility = Visibility.Hidden;
+					Rect_HideOptions3.Visibility = Visibility.Hidden;
+				}
 			}
 		}
 

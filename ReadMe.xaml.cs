@@ -227,7 +227,7 @@ namespace Project_127
 
 			AddHyperlinkText(rtb_Credits, "https://github.com/DaWolf85/GTAVAutoPatcher/", "open-sourcing his Tool", "Shoutout to @DaWolf85 for ", " the Community used to Upgrade / Downgrade previously.It helped us a ton.");
 
-			AddParagraph(rtb_Credits, "Shoutout to @burhac, @Crapideot, @GearsOfW, @rollschuh2282 , @Ollie, @Alfie for being awesome members of the GTA Speedrunning community, always being nice and respectful, and providing Help / Testing. You guys are much appreciated.");
+			AddParagraph(rtb_Credits, "Shoutout to @burhac, @Crapideot, @GearsOfW, @rollschuh2282 , @Ollie, @Alfie, @AntherXx for being awesome members of the GTA Speedrunning community, always being nice and respectful, and providing Help / Testing. You guys are much appreciated.");
 
 			//AddParagraph(rtb_Credits, "Shoutout to my parents who raised me well enough, so that I am not naming certain People who actively hindered the P127 development and deserved to me mentioned in a negative context here.");
 

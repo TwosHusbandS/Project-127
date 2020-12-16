@@ -204,7 +204,7 @@ namespace Project_127
 		/// <summary>
 		/// Property of other Buildinfo. Will be in the top message of logs
 		/// </summary>
-		public static string BuildInfo = "Build 2, test for autoupdate logic..., Internal Testing for 1.1";
+		public static string BuildInfo = "Build 3, test for autoupdate logic..., Internal Testing for 1.1. Special";
 
 		/// <summary>
 		/// Returns all Command Line Args as StringArray
@@ -616,7 +616,19 @@ namespace Project_127
 			if (HelperClasses.FileHandling.doesFileExist(pFilePath))
 			{
 				FileVersionInfo FVI = FileVersionInfo.GetVersionInfo(pFilePath);
-				return " (" + new Version(FVI.FileVersion).ToString() + " - " + new Version(Globals.GetGameVersionOfBuildNumber(new Version(FVI.FileVersion))) + ")";
+				string rtrn = " (" + new Version(FVI.FileVersion).ToString();
+				
+				try
+				{
+					rtrn += " - " + new Version(Globals.GetGameVersionOfBuildNumber(new Version(FVI.FileVersion))) + ")";
+				}
+				catch 
+				{
+					rtrn += ")";
+				}
+
+				return rtrn;
+
 			}
 			return "";
 		}

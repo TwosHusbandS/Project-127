@@ -322,7 +322,7 @@ namespace Project_127
 			var pos = coordFromPos(position, GetWindowRectangle(windowHandle), width, height);
 			_window = new GraphicsWindow(pos[0], pos[1], width, height, gfx)
 			{
-				FPS = 10,
+				FPS = 30,
 				IsTopmost = true,
 				IsVisible = true
 			};

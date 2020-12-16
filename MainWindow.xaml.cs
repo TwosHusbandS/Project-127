@@ -105,27 +105,19 @@ Hybrid code can be found in AAA_HybridCode.
 		=> Released under MIT
 		=> Improved UX overall. Lots of small things.
 		=> Lots of SaveFileHandler Improvments. Really shitty code, really shitty performance, but UX is great.
+		=> Overlay (Borderless + MultiMonitor) done.
+		=> Jumpscrip done
+		=> Fixed Starting other programs with P127
 
 	Release 1.1
 
-		PRIO PRIO CTRLF
-		I think i tracked down a huge bug...
-			=> Be upgraded, empty Upgrade_Files folder.
-			=> Downgrade, CLOSE P127
-			=> Copy over Upgrade_Files folder into GTA. 
-			=> Open P127
-			=> "Downgraded (1.52)"
-		We are hardlinking...changing link will change source
-
 		- Internal Testing Reports Bugs:
-			=> Something removed update.rpf from my game directory...lets hope it wasnt my code...
-			=> [WANTED BEHAVIOUR] Broken InstallationState (says Unsure) when UpgradeFiles is empty.
-			=> [FIXED] Automatic Update of Files detected broken (when update.rpf missing. Maybe check other file attributes instead of size? Mhm. Or different faster method to detect if files are the same
-			=> [FIXED] More efficent isEqual method for checking if gta update hit
-			=> [FIXED] popup that path is wrong and you have to force downgrade
-			=> [FIXED] long freeze on check if update hit...actually as efficent as can be
-			=> [FIXED] Using Backup broken (folder locked...Fixed when explorer closed. Kinda weird-ish)
-			=> [NOT CONNECTED TO ANY FILE RELATED LOGIC] Dragons stuff. Both paths, Settings
+			
+			=> [DONE] Automatic Update of Files detected broken (when update.rpf missing. Maybe check other file attributes instead of size? Mhm. Or different faster method to detect if files are the same
+			=> [DONE] More efficent isEqual method for checking if gta update hit
+			=> [DONE] popup that path is wrong and you have to force downgrade
+			=> [DONE] long freeze on check if update hit...actually as efficent as can be
+			=> [DONE] Using Backup broken (folder locked...Fixed when explorer closed. Kinda weird-ish)
 			=> [DONE] No "new files blabla popup when upgrade_files is empty
 			=> [DONE] Make settings not write enums to settins on startup. Maybe check on Settings property if its the same as current before setting?
 			=> [DONE] Change Popup Text from "if Update hit" to something better
@@ -135,16 +127,39 @@ Hybrid code can be found in AAA_HybridCode.
 			=> [DONE] Do actual Modes (internal, beta, master etc.) on some hidden UI shit, "default", textbox, "set new", cancel
 			=> [DONE] Add "internal mode" and "buildinfo" and "buildtime" to debug info
 			=> [DONE] DebugFile async task,  check if what we are overwriting isnt larger than our message, popup then
-			=> Ugly startup
-			=> Release installer for a few people to test update on 2020-12-15
-
+			=> [DONE] Ugly startup
+			=> [DONE] Release installer for a few people to test update on 2020-12-15
+			=> [DONE] Hide options when launching through socialclub (GTA V ingame name, pre order bonus, hide from steam)
+			=> [DONE] Hide options (launch through social club and shit) when on epic retailer.
+			=> [DONE] Add blue face guy to credits. (AntherXx)
+			=> [DONE] Scroll faster
+			=> [DONE] Launching retailer steam, hide from steam enabled, when upgraded, launches into rockstar launcher...argh
+			=> [DONE] Reset settings is wonky UX
+			=> [DONE] (Download Manager popup gonna replace that Check for update button) Button to "reset" and get $DowngradeFiles new, since Rockstar fucks us..
+			=> [DONE] Better ProgressBar on CreatingBackup...
+			=> [DONE] Fix grammar from dragons screen + Other Text Improvements.
 			=> Rightclick on create and use backup to give options to name it in a specific way. For mods and shit
-			=> Reset settings is wonky UX
-			=> Investigate Jumpscript with Logs for crapideot.
-			=> [Working for Special] launching through rockstar when upgraded broken
+				>> Create: Custom Control Popup (not new Window)
+						Header
+						Textbox name popup,
+						2 buttons "Create", "Cancel"
+				>> Use: Custom Control Popup (not new Window)
+						Header
+						Select available Backuos from Dropdown / Combobox, delete empty back ups when reading in the info
+						Think of rename and exit functions...
+						Buttons "Use, "Exit". 
+			=> Overlay cant be toggled when multi monitor mode set before GTA started.
+			=> New SafeFile Export / Import
+			=> [APPARENTLY FIXED???] Investigate Jumpscript with Logs for crapideot.
+			=> [APPARENTLY DONE???] May not need DidUpdateHit Method...Its not called anywhere...
+			
 			=> Deployment system with modes / branches like above
 				--> XML Tag for link to specific build.
 				--> Download the build, then call Launcher with command line args to swap the files out correctly, so we have the new build.
+			=> [NOT CONNECTED TO ANY FILE RELATED LOGIC] Dragons stuff. Both paths, Settings
+			=> Download Manager keeping track of componments
+			=> Support for 1.24
+			=> Safe File Handler path switch because of social club switch
 			=> Think about integrating new lauch version
 					- what files we need, how we get them, with Optional stuff
 					- where do we keep social club files? How are we messing with them.
@@ -1502,9 +1517,5 @@ namespace Project_127
 			Globals.ProperExit();
 		}
 
-		private void Window_Loaded_1(object sender, RoutedEventArgs e)
-		{
-
-		}
 	} // End of Class
 } // End of Namespace

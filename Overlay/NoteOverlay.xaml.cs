@@ -385,12 +385,12 @@ namespace Project_127.Overlay
 
 		public static void OverlayScrollUp()
 		{
-			MyGTAOverlay.scroll(5);
+			MyGTAOverlay.scroll(15);
 		}
 
 		public static void OverlayScrollDown()
 		{
-			MyGTAOverlay.scroll(-5);
+			MyGTAOverlay.scroll(-15);
 		}
 
 		public static void OverlayNoteNext()
