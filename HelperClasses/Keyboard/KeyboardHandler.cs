@@ -14,37 +14,6 @@ namespace Project_127.HelperClasses
 {
 	class KeyboardHandler
 	{
-
-		// usage: system-wide keyboard hook
-		//private static KeyboardListenerTwo _hook;
-
-
-
-		//public static void TMP()
-		//{
-
-		//	// install system-wide keyboard hook
-		//	_hook = new KeyboardListenerTwo();
-		//	_hook.KeyDown += new KeyboardListenerTwo.HookEventHandler(OnHookKeyDown);
-		//}
-
-
-		//// keyboard hook handler
-		//static void OnHookKeyDown(object sender, HookEventArgs e)
-		//{
-		//	Globals.DebugPopup(e.Key.ToString());
-		//}
-
-
-
-
-
-
-
-
-		public static bool JumpKey1Down = false;
-		public static bool JumpKey2Down = false;
-
 		public static Keys LastKeyPress = Keys.None;
 
 		[STAThread]
@@ -65,38 +34,38 @@ namespace Project_127.HelperClasses
 
 					// Those are all if and not else if because users might be stupid and use the same key for multiple things
 
-					if (Settings.EnableAutoStartJumpScript)
-					{
-						if (pKey == Settings.JumpScriptKey1)
-						{
-							SurpressEventFurther = true;
-							if (!JumpKey1Down)
-							{
-								//new Task(() => { KeyboardSimulator.Send(KeyboardSimulator.ScanCodeShort.KEY_A, false); }).Start();
-								//new Task(() => { KeyboardSimulator.Send(KeyboardSimulator.ScanCodeShort.KEY_A, true); }).Start();
+					//if (Settings.EnableAutoStartJumpScript)
+					//{
+					//	if (pKey == Settings.JumpScriptKey1)
+					//	{
+					//		SurpressEventFurther = true;
+					//		if (!JumpKey1Down)
+					//		{
+					//			//new Task(() => { KeyboardSimulator.Send(KeyboardSimulator.ScanCodeShort.KEY_A, false); }).Start();
+					//			//new Task(() => { KeyboardSimulator.Send(KeyboardSimulator.ScanCodeShort.KEY_A, true); }).Start();
 
-								//KeyboardSimulator.Send(KeyboardSimulator.ScanCodeShort.KEY_A);
-								//HelperClasses.KeyboardSender.SendKeyPress(GTAOverlay.targetWindow, Settings.JumpScriptKey2);
-								//InputSimulator asdf = new InputSimulator();
-								//asdf.Keyboard.KeyPress(WindowsInput.Native.VirtualKeyCode.VK_A);
-							}
-							JumpKey1Down = true;
-						}
-						if (pKey == Settings.JumpScriptKey2)
-						{
-							SurpressEventFurther = true;
-							if (!JumpKey2Down)
-							{
-								//new Task(() => { KeyboardSimulator.Send(KeyboardSimulator.ScanCodeShort.SPACE, false); }).Start();
-								//new Task(() => { KeyboardSimulator.Send(KeyboardSimulator.ScanCodeShort.SPACE, true); }).Start();
-								//HelperClasses.KeyboardSender.SendKeyPress(GTAOverlay.targetWindow, Settings.JumpScriptKey1);
-								//HelperClasses.Keyboard.Keyboard.Send(Keyboard.Keyboard.ScanCodeShort.KEY_B);
-								//InputSimulator asdf = new InputSimulator();
-								//asdf.Keyboard.KeyPress(WindowsInput.Native.VirtualKeyCode.VK_B);
-							}
-							JumpKey2Down = true;
-						}
-					}
+					//			//KeyboardSimulator.Send(KeyboardSimulator.ScanCodeShort.KEY_A);
+					//			//HelperClasses.KeyboardSender.SendKeyPress(GTAOverlay.targetWindow, Settings.JumpScriptKey2);
+					//			//InputSimulator asdf = new InputSimulator();
+					//			//asdf.Keyboard.KeyPress(WindowsInput.Native.VirtualKeyCode.VK_A);
+					//		}
+					//		JumpKey1Down = true;
+					//	}
+					//	if (pKey == Settings.JumpScriptKey2)
+					//	{
+					//		SurpressEventFurther = true;
+					//		if (!JumpKey2Down)
+					//		{
+					//			//new Task(() => { KeyboardSimulator.Send(KeyboardSimulator.ScanCodeShort.SPACE, false); }).Start();
+					//			//new Task(() => { KeyboardSimulator.Send(KeyboardSimulator.ScanCodeShort.SPACE, true); }).Start();
+					//			//HelperClasses.KeyboardSender.SendKeyPress(GTAOverlay.targetWindow, Settings.JumpScriptKey1);
+					//			//HelperClasses.Keyboard.Keyboard.Send(Keyboard.Keyboard.ScanCodeShort.KEY_B);
+					//			//InputSimulator asdf = new InputSimulator();
+					//			//asdf.Keyboard.KeyPress(WindowsInput.Native.VirtualKeyCode.VK_B);
+					//		}
+					//		JumpKey2Down = true;
+					//	}
+					//}
 
 
 					if (Settings.EnableOverlay)
@@ -156,17 +125,6 @@ namespace Project_127.HelperClasses
 		[STAThread]
 		public static bool KeyboardUpEvent(Keys pKey)
 		{
-			if (Settings.EnableAutoStartJumpScript)
-			{
-				if (pKey == Settings.JumpScriptKey1)
-				{
-					JumpKey1Down = false;
-				}
-				else if (pKey == Settings.JumpScriptKey2)
-				{
-					JumpKey2Down = false;
-				}
-			}
 			return false;
 		}
 

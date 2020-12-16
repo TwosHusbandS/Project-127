@@ -139,11 +139,6 @@ namespace Project_127.HelperClasses.Keyboard
 			}
 		}
 
-		~KeyboardListener()
-		{
-			Stop();
-		}
-
 		// hook function called by system
 		//private int HookCallback(int code, IntPtr wParam, ref KBDLLHOOKSTRUCT lParam)
 		//private IntPtr HookCallback(int code, IntPtr wParam, IntPtr lParam)

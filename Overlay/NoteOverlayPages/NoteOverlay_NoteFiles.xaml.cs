@@ -74,12 +74,17 @@ namespace Project_127.Overlay.NoteOverlayPages
 				MyNoteFiles.MyRemove(0);
 			}
 
+
+			List<MyNoteFile> MyLNF = new List<MyNoteFile>();
+
 			foreach (string mystring in Settings.OverlayNotesMain)
 			{
-				MyNoteFiles.MyAdd(new MyNoteFile(mystring));
+				MyLNF.Add(new MyNoteFile(mystring));
 			}
 
-			SelectFirst();
+			MyNoteFiles.MyAdd(MyLNF);
+
+			HelperClasses.DataGridHelper.SelectFirst(dg_Files);
 		}
 
 
@@ -97,6 +102,8 @@ namespace Project_127.Overlay.NoteOverlayPages
 				return;
 			}
 			List<string> files = rtrn.Split(',').ToList();
+
+			List<MyNoteFile> MNFL = new List<MyNoteFile>();
 			for (int i = 0; i <= files.Count - 1; i++)
 			{
 				string filename = HelperClasses.FileHandling.PathSplitUp(files[i])[1];
@@ -119,11 +126,9 @@ namespace Project_127.Overlay.NoteOverlayPages
 					}
 				}
 				MyNoteFile tmp = new MyNoteFile(filename);
-				if (!MyNoteFiles.Contains(tmp))
-				{
-					MyNoteFiles.MyAdd(tmp);
-				}
+				MNFL.Add(tmp);
 			}
+			MyNoteFiles.MyAdd(MNFL);
 		}
 
 
@@ -146,132 +151,46 @@ namespace Project_127.Overlay.NoteOverlayPages
 
 		private void btn_Delete_Click(object sender, RoutedEventArgs e)
 		{
-			foreach (MyNoteFile MNF in GetSelectedNoteFiles())
-			{
-				MyNoteFiles.MyRemove(MNF);
-			}
-			SelectFirst();
+
+			MyNoteFiles.MyRemove(GetSelectedNoteFiles());
+			HelperClasses.DataGridHelper.SelectFirst(dg_Files);
 		}
 
-		private void SelectFirst()
-		{
-			if (dg_Files.Items.Count > 0)
-			{
-				//dg_Files.SelectedItems.Add(dg_Files.Items[0]);
-
-				//dg_Files.CurrentCell = new DataGridCellInfo(dg_Files.Items[0], dg_Files.Columns[0]);
-				//dg_Files.SelectedItems.Clear();
-				//dg_Files.SelectedCells.Add(dg_Files.CurrentCell);
-
-				SelectRowByIndex(dg_Files, 0);
-			}
-
-		}
-
-		public static void SelectRowByIndex(DataGrid dataGrid, int rowIndex)
-		{
-			if (!dataGrid.SelectionUnit.Equals(DataGridSelectionUnit.FullRow))
-				//throw new ArgumentException("The SelectionUnit of the DataGrid must be set to FullRow.");
-
-				if (rowIndex < 0 || rowIndex > (dataGrid.Items.Count - 1))
-					//throw new ArgumentException(string.Format("{0} is an invalid row index.", rowIndex));
-
-					dataGrid.SelectedItems.Clear();
-			/* set the SelectedItem property */
-			object item = dataGrid.Items[rowIndex]; // = Product X
-			dataGrid.SelectedItem = item;
-
-			DataGridRow row = dataGrid.ItemContainerGenerator.ContainerFromIndex(rowIndex) as DataGridRow;
-			if (row == null)
-			{
-				/* bring the data item (Product object) into view
-				 * in case it has been virtualized away */
-				dataGrid.ScrollIntoView(item);
-				row = dataGrid.ItemContainerGenerator.ContainerFromIndex(rowIndex) as DataGridRow;
-			}
-			if (row != null)
-			{
-				DataGridCell cell = GetCell(dataGrid, row, 0);
-				if (cell != null)
-					cell.Focus();
-			}
-		}
-
-		public static T FindVisualChild<T>(DependencyObject obj) where T : DependencyObject
-		{
-			for (int i = 0; i < VisualTreeHelper.GetChildrenCount(obj); i++)
-			{
-				DependencyObject child = VisualTreeHelper.GetChild(obj, i);
-				if (child != null && child is T)
-					return (T)child;
-				else
-				{
-					T childOfChild = FindVisualChild<T>(child);
-					if (childOfChild != null)
-						return childOfChild;
-				}
-			}
-			return null;
-		}
-
-		public static DataGridCell GetCell(DataGrid dataGrid, DataGridRow rowContainer, int column)
-		{
-			if (rowContainer != null)
-			{
-				DataGridCellsPresenter presenter = FindVisualChild<DataGridCellsPresenter>(rowContainer);
-				if (presenter == null)
-				{
-					/* if the row has been virtualized away, call its ApplyTemplate() method 
-					 * to build its visual tree in order for the DataGridCellsPresenter
-					 * and the DataGridCells to be created */
-					rowContainer.ApplyTemplate();
-					presenter = FindVisualChild<DataGridCellsPresenter>(rowContainer);
-				}
-				if (presenter != null)
-				{
-					DataGridCell cell = presenter.ItemContainerGenerator.ContainerFromIndex(column) as DataGridCell;
-					if (cell == null)
-					{
-						/* bring the column into view
-						 * in case it has been virtualized away */
-						dataGrid.ScrollIntoView(rowContainer, dataGrid.Columns[column]);
-						cell = presenter.ItemContainerGenerator.ContainerFromIndex(column) as DataGridCell;
-					}
-					return cell;
-				}
-			}
-			return null;
-		}
 
 		private void btn_PresetLoad_Click(object sender, RoutedEventArgs e)
 		{
+			// TODO TO DO CTRLF CTRL F
+			// Currently calling LoadMainNotes() twice instead of one...idk why this is neccesary...
+			// so this is kinda a dirtfix, but it works. Once again, no idea why we have to do it this way
+
+			//	-Overlay Presets Fix(according to burhac, shits broke)
+			//		=> Confirmed Broken.Regedit settings dont update quick enough.
+			//			Using newly assigned regedit variable(Settings.OverlayNotesMain = Settings.OverlayNotesPresetA;)
+			//			is not updated by the time we are refering to it(in LoadMainNotes();)
+
+			LoadMainNotes();
 			switch (((Button)sender).Tag.ToString())
 			{
 				case "A":
 					Settings.OverlayNotesMain = Settings.OverlayNotesPresetA;
-					LoadMainNotes();
 					break;
 				case "B":
 					Settings.OverlayNotesMain = Settings.OverlayNotesPresetB;
-					LoadMainNotes();
 					break;
 				case "C":
 					Settings.OverlayNotesMain = Settings.OverlayNotesPresetC;
-					LoadMainNotes();
 					break;
 				case "D":
 					Settings.OverlayNotesMain = Settings.OverlayNotesPresetD;
-					LoadMainNotes();
 					break;
 				case "E":
 					Settings.OverlayNotesMain = Settings.OverlayNotesPresetE;
-					LoadMainNotes();
 					break;
 				case "F":
 					Settings.OverlayNotesMain = Settings.OverlayNotesPresetF;
-					LoadMainNotes();
 					break;
 			}
+			LoadMainNotes();
 		}
 
 		private void btn_PresetSave_Click(object sender, RoutedEventArgs e)
@@ -326,16 +245,26 @@ namespace Project_127.Overlay.NoteOverlayPages
 		}
 
 
-		public static void MyAdd(this ObservableCollection<MyNoteFile> OC, MyNoteFile MNF)
+
+		public static void MyAdd(this ObservableCollection<MyNoteFile> OC, List<MyNoteFile> MNFL)
 		{
-			OC.Add(MNF);
+			foreach (MyNoteFile MNF in MNFL)
+			{
+				if (!OC.Contains(MNF))
+				{
+					OC.Add(MNF);
+				}
+			}
 
 			Refresh(OC);
 		}
 
-		public static void MyRemove(this ObservableCollection<MyNoteFile> OC, MyNoteFile MNF)
+		public static void MyRemove(this ObservableCollection<MyNoteFile> OC, List<MyNoteFile> MNFL)
 		{
-			OC.Remove(MNF);
+			foreach (MyNoteFile MNF in MNFL)
+			{
+				OC.Remove(MNF);
+			}
 
 			Refresh(OC);
 		}
@@ -347,7 +276,7 @@ namespace Project_127.Overlay.NoteOverlayPages
 				OC.RemoveAt(Index);
 			}
 
-			Refresh(OC);
+			// THIS DOESNT REFRESH
 		}
 	}
 

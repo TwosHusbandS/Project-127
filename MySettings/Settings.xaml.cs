@@ -47,6 +47,12 @@ namespace Project_127.MySettings
 
 			combox_Set_LanguageSelected.ItemsSource = Enum.GetValues(typeof(Languages)).Cast<Languages>();
 
+			combox_Set_ExitWays.ItemsSource = Enum.GetValues(typeof(ExitWays)).Cast<ExitWays>();
+
+			combox_Set_StartWays.ItemsSource = Enum.GetValues(typeof(StartWays)).Cast<StartWays>();
+
+			SettingsState = LastSettingsState;
+
 			RefreshGUI();
 
 			this.DataContext = this;
@@ -279,6 +285,7 @@ namespace Project_127.MySettings
 		private void combox_Set_Retail_SelectionChanged(object sender, SelectionChangedEventArgs e)
 		{
 			Retailer = (Retailers)System.Enum.Parse(typeof(Retailers), combox_Set_Retail.SelectedItem.ToString());
+			RefreshIfOptionsHide();
 		}
 
 
@@ -292,7 +299,15 @@ namespace Project_127.MySettings
 			LanguageSelected = (Languages)System.Enum.Parse(typeof(Languages), combox_Set_LanguageSelected.SelectedItem.ToString());
 		}
 
+		private void combox_Set_StartWays_SelectionChanged(object sender, SelectionChangedEventArgs e)
+		{
+			StartWay = (StartWays)System.Enum.Parse(typeof(StartWays), combox_Set_StartWays.SelectedItem.ToString());
+		}
 
+		private void combox_Set_ExitWays_SelectionChanged(object sender, SelectionChangedEventArgs e)
+		{
+			ExitWay = (ExitWays)System.Enum.Parse(typeof(ExitWays), combox_Set_ExitWays.SelectedItem.ToString());
+		}
 
 
 		/// <summary>
@@ -324,36 +339,33 @@ namespace Project_127.MySettings
 		/// <param name="IsRightClick"></param>
 		private void btn_Path_Magic(Button myBtn, bool IsRightClick = false)
 		{
+			string explorerStartPath = "";
+
 			switch (myBtn.Name)
 			{
 				case "btn_Set_GTAVInstallationPath":
-					if (IsRightClick)
-					{
-						HelperClasses.ProcessHandler.StartProcess(@"C:\Windows\explorer.exe", pCommandLineArguments: Settings.GTAVInstallationPath);
-					}
-					else
+					explorerStartPath = Settings.GTAVInstallationPath;
+					if (!IsRightClick)
 					{
 						SetGTAVPathManually();
 					}
 					break;
 				case "btn_Set_ZIPExtractionPath":
-					if (IsRightClick)
-					{
-						HelperClasses.ProcessHandler.StartProcess(@"C:\Windows\explorer.exe", pCommandLineArguments: Settings.ZIPExtractionPath);
-					}
-					else
+					explorerStartPath = Settings.ZIPExtractionPath;
+
+					if (!IsRightClick)
 					{
 						// Grabbing the new Path from FolderDialogThingy
-						string StartUpPath = Settings.ZIPExtractionPath;
-						if (String.IsNullOrWhiteSpace(StartUpPath))
+						string StartUpPathZIP = Settings.ZIPExtractionPath;
+						if (String.IsNullOrWhiteSpace(StartUpPathZIP))
 						{
-							StartUpPath = @"C:\";
+							StartUpPathZIP = @"C:\";
 						}
 						else
 						{
-							StartUpPath = HelperClasses.FileHandling.PathSplitUp(StartUpPath.TrimEnd('\\'))[0];
+							StartUpPathZIP = HelperClasses.FileHandling.PathSplitUp(StartUpPathZIP.TrimEnd('\\'))[0];
 						}
-						string _ZIPExtractionPath = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.Folder, "Pick the Folder where this Program will store its Data.", StartUpPath);
+						string _ZIPExtractionPath = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.Folder, "Pick the Folder where this Program will store its Data.", StartUpPathZIP);
 						HelperClasses.Logger.Log("Changing ZIPExtractionPath.");
 						HelperClasses.Logger.Log("Old ZIPExtractionPath: '" + Settings.ZIPExtractionPath + "'");
 						HelperClasses.Logger.Log("Potential New ZIPExtractionPath: '" + _ZIPExtractionPath + "'");
@@ -371,14 +383,12 @@ namespace Project_127.MySettings
 					}
 					break;
 				case "btn_Set_PathLiveSplit":
-					if (IsRightClick)
-					{
-						HelperClasses.ProcessHandler.StartProcess(@"C:\Windows\explorer.exe", pCommandLineArguments: HelperClasses.FileHandling.PathSplitUp(Settings.PathLiveSplit.TrimEnd('\\'))[0]);
-					}
-					else
+					explorerStartPath = HelperClasses.FileHandling.PathSplitUp(Settings.PathLiveSplit)[0].TrimEnd('\\');
+
+					if (!IsRightClick)
 					{
 						string StartUpPath = Settings.PathLiveSplit;
-						if (String.IsNullOrWhiteSpace(StartUpPath))
+						if (!HelperClasses.FileHandling.doesFileExist(StartUpPath))
 						{
 							StartUpPath = @"C:\";
 						}
@@ -396,82 +406,87 @@ namespace Project_127.MySettings
 					}
 					break;
 				case "btn_Set_PathStreamProgram":
-					if (IsRightClick)
+					explorerStartPath = HelperClasses.FileHandling.PathSplitUp(Settings.PathStreamProgram)[0].TrimEnd('\\');
+
+					if (!IsRightClick)
 					{
-						HelperClasses.ProcessHandler.StartProcess(@"C:\Windows\explorer.exe", pCommandLineArguments: HelperClasses.FileHandling.PathSplitUp(Settings.PathStreamProgram.TrimEnd('\\'))[0]);
-					}
-					else
-					{
-						string StartUpPath = Settings.PathStreamProgram;
-						if (String.IsNullOrWhiteSpace(StartUpPath))
+						string StartUpPath2 = Settings.PathStreamProgram;
+						if (!HelperClasses.FileHandling.doesFileExist(StartUpPath2))
 						{
-							StartUpPath = @"C:\";
+							StartUpPath2 = @"C:\";
 						}
 						else
 						{
-							StartUpPath = HelperClasses.FileHandling.PathSplitUp(StartUpPath.TrimEnd('\\'))[0];
+							StartUpPath2 = HelperClasses.FileHandling.PathSplitUp(StartUpPath2.TrimEnd('\\'))[0];
 						}
 
-						string UserChoice = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.File, "Pick your Stream Program Executable", StartUpPath);
+						string UserChoice2 = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.File, "Pick your Stream Program Executable", StartUpPath2);
 
-						if (!String.IsNullOrWhiteSpace(UserChoice))
+						if (!String.IsNullOrWhiteSpace(UserChoice2))
 						{
-							Settings.PathStreamProgram = UserChoice;
-							RefreshGUI();
+							Settings.PathStreamProgram = UserChoice2;
 						}
 					}
 					break;
 				case "btn_Set_PathNohboard":
-					if (IsRightClick)
+					explorerStartPath = HelperClasses.FileHandling.PathSplitUp(Settings.PathNohboard)[0].TrimEnd('\\');
+
+					if (!IsRightClick)
 					{
-						HelperClasses.ProcessHandler.StartProcess(@"C:\Windows\explorer.exe", pCommandLineArguments: HelperClasses.FileHandling.PathSplitUp(Settings.PathNohboard.TrimEnd('\\'))[0]);
-					}
-					else
-					{
-						string StartUpPath = Settings.PathNohboard;
-						if (String.IsNullOrWhiteSpace(StartUpPath))
+						string StartUpPath3 = Settings.PathNohboard;
+						if (!HelperClasses.FileHandling.doesFileExist(StartUpPath3))
 						{
-							StartUpPath = @"C:\";
+							StartUpPath3 = @"C:\";
 						}
 						else
 						{
-							StartUpPath = HelperClasses.FileHandling.PathSplitUp(StartUpPath.TrimEnd('\\'))[0];
+							StartUpPath3 = HelperClasses.FileHandling.PathSplitUp(StartUpPath3.TrimEnd('\\'))[0];
 						}
 
-						string UserChoice = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.File, "Pick your Nohboard Executable", StartUpPath);
+						string UserChoice3 = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.File, "Pick your Nohboard Executable", StartUpPath3);
 
-						if (!String.IsNullOrWhiteSpace(UserChoice))
+						if (!String.IsNullOrWhiteSpace(UserChoice3))
 						{
-							Settings.PathNohboard = UserChoice;
+							Settings.PathNohboard = UserChoice3;
 						}
 					}
 					break;
 				case "btn_Set_PathFPSLimiter":
-					if (IsRightClick)
+					explorerStartPath = HelperClasses.FileHandling.PathSplitUp(Settings.PathFPSLimiter)[0].TrimEnd('\\');
+
+					if (!IsRightClick)
 					{
-						HelperClasses.ProcessHandler.StartProcess(@"C:\Windows\explorer.exe", pCommandLineArguments: HelperClasses.FileHandling.PathSplitUp(Settings.PathFPSLimiter.TrimEnd('\\'))[0]);
-					}
-					else
-					{
-						string StartUpPath = Settings.PathFPSLimiter;
-						if (String.IsNullOrWhiteSpace(StartUpPath))
+						string StartUpPath4 = Settings.PathFPSLimiter;
+						if (!HelperClasses.FileHandling.doesFileExist(StartUpPath4))
 						{
-							StartUpPath = @"C:\";
+							StartUpPath4 = @"C:\";
 						}
 						else
 						{
-							StartUpPath = HelperClasses.FileHandling.PathSplitUp(StartUpPath.TrimEnd('\\'))[0];
+							StartUpPath4 = HelperClasses.FileHandling.PathSplitUp(StartUpPath4.TrimEnd('\\'))[0];
 						}
 
-						string UserChoice = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.File, "Pick your FPS Limiter Executable", StartUpPath);
+						string UserChoice4 = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.File, "Pick your FPS Limiter Executable", StartUpPath4);
 
-						if (!String.IsNullOrWhiteSpace(UserChoice))
+						if (!String.IsNullOrWhiteSpace(UserChoice4))
 						{
-							Settings.PathFPSLimiter = UserChoice;
+							Settings.PathFPSLimiter = UserChoice4;
 						}
 					}
+
 					break;
 			}
+
+			if (IsRightClick)
+			{
+				if (!HelperClasses.FileHandling.doesPathExist(explorerStartPath))
+				{
+					explorerStartPath = @"C:\";
+				}
+
+				HelperClasses.ProcessHandler.StartProcess(@"C:\Windows\explorer.exe", pCommandLineArguments: explorerStartPath);
+			}
+
 			RefreshGUI();
 		}
 
@@ -544,6 +559,7 @@ namespace Project_127.MySettings
 				HelperClasses.Logger.Log("Resetting Settings STARTED, this will explain the following messages");
 				Settings.ResetSettings();
 				Settings.InitImportantSettings();
+				Settings.FirstLaunch = false;
 				RefreshGUI();
 			}
 		}
@@ -591,17 +607,24 @@ namespace Project_127.MySettings
 			string correctControlUserXmlPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) +
 											@"\Rockstar Games\GTA V\Profiles\Project127\GTA V\0F74F4C4\control\user.xml";
 
+
+			int copiedFiles = 0;
+
 			if (HelperClasses.FileHandling.doesFileExist(ExistingPCSettingsBinPath))
 			{
 				HelperClasses.FileHandling.deleteFile(correctPCSettingsBinPath);
 				HelperClasses.FileHandling.copyFile(ExistingPCSettingsBinPath, correctPCSettingsBinPath);
+				copiedFiles += 1;
 			}
 
 			if (HelperClasses.FileHandling.doesFileExist(ExistingControlUserXmlPath))
 			{
 				HelperClasses.FileHandling.deleteFile(correctControlUserXmlPath);
 				HelperClasses.FileHandling.copyFile(ExistingControlUserXmlPath, correctControlUserXmlPath);
+				copiedFiles += 1;
 			}
+
+			new Popup(Popup.PopupWindowTypes.PopupOk, copiedFiles + " Files were imported from the selected Folder").ShowDialog();
 		}
 
 
@@ -637,26 +660,33 @@ namespace Project_127.MySettings
 
 			combox_Set_Retail.SelectedItem = Settings.Retailer;
 			combox_Set_LanguageSelected.SelectedItem = Settings.LanguageSelected;
+			combox_Set_ExitWays.SelectedItem = Settings.ExitWay;
+			combox_Set_StartWays.SelectedItem = Settings.StartWay;
 
 			tb_Set_InGameName.Text = Settings.InGameName;
 
 			btn_Set_JumpScriptKey1.Content = Settings.JumpScriptKey1;
 			btn_Set_JumpScriptKey2.Content = Settings.JumpScriptKey2;
 
-			ButtonMouseOverMagic(btn_Refresh);
 
+			ButtonMouseOverMagic(btn_Refresh);
 			ButtonMouseOverMagic(btn_cb_Set_EnableLogging);
 			ButtonMouseOverMagic(btn_cb_Set_CopyFilesInsteadOfHardlinking);
+			ButtonMouseOverMagic(btn_cb_Set_EnableAlternativeLaunch);
+			ButtonMouseOverMagic(btn_cb_Set_CopyFilesInsteadOfSyslinking_SocialClub);
 			ButtonMouseOverMagic(btn_cb_Set_EnablePreOrderBonus);
 			ButtonMouseOverMagic(btn_cb_Set_EnableAutoStartFPSLimiter);
 			ButtonMouseOverMagic(btn_cb_Set_EnableAutoStartLiveSplit);
 			ButtonMouseOverMagic(btn_cb_Set_EnableAutoStartNohboard);
 			ButtonMouseOverMagic(btn_cb_Set_EnableOverlay);
+			ButtonMouseOverMagic(btn_cb_Set_EnableOverlayMultiMonitor);
 			ButtonMouseOverMagic(btn_cb_Set_EnableAutoStartStreamProgram);
 			ButtonMouseOverMagic(btn_cb_Set_AutoSetHighPriority);
 			ButtonMouseOverMagic(btn_cb_Set_OnlyAutoStartProgramsWhenDowngraded);
 			ButtonMouseOverMagic(btn_cb_Set_EnableDontLaunchThroughSteam);
 			ButtonMouseOverMagic(btn_cb_Set_EnableAutoStartJumpScript);
+
+			RefreshIfOptionsHide();
 
 			//btn_Set_JumpScriptKey1.Content = Settings.JumpScriptKey1;
 			//btn_Set_JumpScriptKey2.Content = Settings.JumpScriptKey2;
@@ -664,6 +694,81 @@ namespace Project_127.MySettings
 			//cb_Set_EnableNohboardBurhac.IsChecked = Settings.EnableNohboardBurhac;
 		}
 
+
+		/// <summary>
+		/// Enum for all ReadMeStates
+		/// </summary>
+		public enum SettingsStates
+		{
+			General,
+			GTA,
+			Extra
+		}
+
+		/// <summary>
+		/// Internal Value
+		/// </summary>
+		private SettingsStates _SettingsState = SettingsStates.General;
+
+		private static SettingsStates LastSettingsState = SettingsStates.General;
+
+		/// <summary>
+		/// Value we get and set. Setters are gucci. 
+		/// </summary>
+		public SettingsStates SettingsState
+		{
+			get
+			{
+				return _SettingsState;
+			}
+			set
+			{
+				_SettingsState = value;
+
+				// Saving it in LastReadMeState
+				Settings.LastSettingsState = value;
+
+				if (value == SettingsStates.General)
+				{
+					sv_Settings_General.Visibility = Visibility.Visible;
+					sv_Settings_GTA.Visibility = Visibility.Hidden;
+					sv_Settings_Extra.Visibility = Visibility.Hidden;
+
+					btn_SettingsGeneral.Style = Application.Current.FindResource("btn_hamburgeritem_selected") as Style;
+					btn_SettingsGTA.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
+					btn_SettingsExtra.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
+
+					lbl_SettingsHeader.Content = "General P127 Settings";
+					sv_Settings_General.ScrollToVerticalOffset(0);
+				}
+				else if (value == SettingsStates.GTA)
+				{
+					sv_Settings_General.Visibility = Visibility.Hidden;
+					sv_Settings_GTA.Visibility = Visibility.Visible;
+					sv_Settings_Extra.Visibility = Visibility.Hidden;
+
+					btn_SettingsGeneral.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
+					btn_SettingsGTA.Style = Application.Current.FindResource("btn_hamburgeritem_selected") as Style;
+					btn_SettingsExtra.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
+
+					lbl_SettingsHeader.Content = "GTA Settings";
+					sv_Settings_GTA.ScrollToVerticalOffset(0);
+				}
+				else if (value == SettingsStates.Extra)
+				{
+					sv_Settings_General.Visibility = Visibility.Hidden;
+					sv_Settings_GTA.Visibility = Visibility.Hidden;
+					sv_Settings_Extra.Visibility = Visibility.Visible;
+
+					btn_SettingsGeneral.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
+					btn_SettingsGTA.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
+					btn_SettingsExtra.Style = Application.Current.FindResource("btn_hamburgeritem_selected") as Style;
+
+					lbl_SettingsHeader.Content = "Settings of Extra Features";
+					sv_Settings_Extra.ScrollToVerticalOffset(0);
+				}
+			}
+		}
 
 		/// <summary>
 		/// MouseEnter event for all Buttons which use Images (Refresh and Checkboxes)
@@ -738,6 +843,12 @@ namespace Project_127.MySettings
 				case "btn_cb_Set_CopyFilesInsteadOfHardlinking":
 					SetCheckBoxBackground(myBtn, Settings.EnableCopyFilesInsteadOfHardlinking);
 					break;
+				case "btn_cb_Set_EnableAlternativeLaunch":
+					SetCheckBoxBackground(myBtn, Settings.EnableAlternativeLaunch);
+					break;
+				case "btn_cb_Set_CopyFilesInsteadOfSyslinking_SocialClub":
+					SetCheckBoxBackground(myBtn, Settings.EnableCopyFilesInsteadOfSyslinking_SocialClub);
+					break;
 				case "btn_cb_Set_EnablePreOrderBonus":
 					SetCheckBoxBackground(myBtn, Settings.EnablePreOrderBonus);
 					break;
@@ -765,6 +876,9 @@ namespace Project_127.MySettings
 				case "btn_cb_Set_EnableOverlay":
 					SetCheckBoxBackground(myBtn, Settings.EnableOverlay);
 					break;
+				case "btn_cb_Set_EnableOverlayMultiMonitor":
+					SetCheckBoxBackground(myBtn, Settings.OverlayMultiMonitorMode);
+					break;
 				case "btn_cb_Set_EnableAutoStartJumpScript":
 					SetCheckBoxBackground(myBtn, Settings.EnableAutoStartJumpScript);
 					break;
@@ -782,6 +896,33 @@ namespace Project_127.MySettings
 		}
 
 
+		private void RefreshIfOptionsHide()
+		{
+			if (Settings.Retailer == Retailers.Epic)
+			{
+				Rect_HideOptions3.Visibility = Visibility.Visible;
+				Rect_HideOptions.Visibility = Visibility.Hidden;
+				Rect_HideOptions2.Visibility = Visibility.Hidden;
+			}
+			else
+			{
+
+				if (Settings.EnableAlternativeLaunch)
+				{
+					Rect_HideOptions.Visibility = Visibility.Hidden;
+					Rect_HideOptions2.Visibility = Visibility.Visible;
+					Rect_HideOptions3.Visibility = Visibility.Hidden;
+				}
+				else
+				{
+					Rect_HideOptions.Visibility = Visibility.Visible;
+					Rect_HideOptions2.Visibility = Visibility.Hidden;
+					Rect_HideOptions3.Visibility = Visibility.Hidden;
+				}
+			}
+		}
+
+
 		/// <summary>
 		/// Click on ANY checkbox
 		/// </summary>
@@ -796,9 +937,16 @@ namespace Project_127.MySettings
 				case "btn_cb_Set_EnableLogging":
 					Settings.EnableLogging = !Settings.EnableLogging;
 					break;
+				case "btn_cb_Set_EnableAlternativeLaunch":
+					Settings.EnableAlternativeLaunch = !Settings.EnableAlternativeLaunch;
+					RefreshIfOptionsHide();
+					break;
 				case "btn_cb_Set_CopyFilesInsteadOfHardlinking":
 					Settings.EnableCopyFilesInsteadOfHardlinking = !Settings.EnableCopyFilesInsteadOfHardlinking;
 					SetDefaultEnableCopyingHardlinking();
+					break;
+				case "btn_cb_Set_CopyFilesInsteadOfSyslinking_SocialClub":
+					Settings.EnableCopyFilesInsteadOfSyslinking_SocialClub = !Settings.EnableCopyFilesInsteadOfSyslinking_SocialClub;
 					break;
 				case "btn_cb_Set_EnablePreOrderBonus":
 					Settings.EnablePreOrderBonus = !Settings.EnablePreOrderBonus;
@@ -827,6 +975,9 @@ namespace Project_127.MySettings
 				case "btn_cb_Set_EnableOverlay":
 					Settings.EnableOverlay = !Settings.EnableOverlay;
 					break;
+				case "btn_cb_Set_EnableOverlayMultiMonitor":
+					Settings.OverlayMultiMonitorMode = !Settings.OverlayMultiMonitorMode;
+					break;
 				case "btn_cb_Set_EnableAutoStartJumpScript":
 					Settings.EnableAutoStartJumpScript = !Settings.EnableAutoStartJumpScript;
 					break;
@@ -839,6 +990,12 @@ namespace Project_127.MySettings
 			Globals.CheckForBigThree();
 			Globals.CheckForZipUpdate();
 			Globals.CheckForUpdate();
+			Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Update check complete. All updates handled.\nDo you want to re-download the ZIP File?");
+			yesno.ShowDialog();
+			if (yesno.DialogResult == true)
+			{
+				Globals.ZipUpdate();
+			}
 		}
 
 
@@ -927,7 +1084,7 @@ namespace Project_127.MySettings
 
 					string msg = "Error: GTA V Installation Path incorrect or ZIP Version == 0.\nGTAV Installation Path: '" + LauncherLogic.GTAVFilePath + "'\nInstallationState (probably): '" + LauncherLogic.InstallationState.ToString() + "'\nZip Version: " + Globals.ZipVersion + ".";
 
-					if (Globals.BetaMode || Globals.InternalMode)
+					if (Globals.Mode == "internal" || Globals.Mode == "beta")
 					{
 						Popup yesno2 = new Popup(Popup.PopupWindowTypes.PopupYesNo, msg + "\n. Force this Repair?");
 						yesno2.ShowDialog();
@@ -946,39 +1103,53 @@ namespace Project_127.MySettings
 			MainWindow.MW.UpdateGUIDispatcherTimer();
 		}
 
-		private void btn_UseBackup_Click(object sender, RoutedEventArgs e)
+
+
+
+		private void btn_CreateBackup_Click(object sender, RoutedEventArgs e)
 		{
-			string oldPath = LauncherLogic.ZIPFilePath.TrimEnd('\\') + @"\Project_127_Files\UpgradeFiles\";
-			string newPath = LauncherLogic.ZIPFilePath.TrimEnd('\\') + @"\Project_127_Files\UpgradeFiles_Backup\";
+			LauncherLogic.CreateBackup();
+		}
 
-			if (HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(newPath).Length <= 1)
-			{
-				new Popup(Popup.PopupWindowTypes.PopupOk, "No Backup Files available.").ShowDialog();
-				return;
-			}
-			else
-			{
-				HelperClasses.FileHandling.DeleteFolder(oldPath);
-				HelperClasses.FileHandling.movePath(newPath, oldPath);
-
-
-
-				List<MyFileOperation> MyFileOperations = new List<MyFileOperation>();
-
-				MyFileOperations.Add(new MyFileOperation(MyFileOperation.FileOperations.Delete, oldPath, "", "Deleting '" + (oldPath) + "'", 2, MyFileOperation.FileOrFolder.Folder));
-				MyFileOperations.Add(new MyFileOperation(MyFileOperation.FileOperations.Move, newPath, oldPath, "Moving '" + (newPath) + "' to '" + (oldPath) + "'", 2, MyFileOperation.FileOrFolder.Folder));
-
-				new PopupProgress(PopupProgress.ProgressTypes.FileOperation, "Backup", MyFileOperations).ShowDialog();
-
-
-
-
-
-				new Popup(Popup.PopupWindowTypes.PopupOk, "Using backup files now.").ShowDialog();
-			}
-
+		private void btn_CreateBackup_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+		{
 
 		}
 
+		private void btn_UseBackup_Click(object sender, RoutedEventArgs e)
+		{
+			LauncherLogic.UseBackup();
+		}
+
+
+
+		private void btn_UseBackup_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+		{
+
+		}
+
+
+		private void btn_SettingsGeneral_Click(object sender, RoutedEventArgs e)
+		{
+			SettingsState = SettingsStates.General;
+		}
+
+		private void btn_SettingsGTA_Click(object sender, RoutedEventArgs e)
+		{
+			SettingsState = SettingsStates.GTA;
+		}
+
+		private void btn_SettingsExtra_Click(object sender, RoutedEventArgs e)
+		{
+			SettingsState = SettingsStates.Extra;
+		}
+
+		private void lbl_SettingsHeader_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+		{
+			if (SettingsState == SettingsStates.General)
+			{
+				new PopupMode().ShowDialog();
+			}
+		}
 	} // End of Class
 } // End of Namespace

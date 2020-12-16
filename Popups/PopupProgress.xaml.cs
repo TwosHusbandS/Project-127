@@ -87,7 +87,7 @@ namespace Project_127.Popups
 			{
 				Operation = pParam1;
 				MyFileOperations = pMyFileOperations;
-				myLBL.Content = "Doing a " + Operation + "...(0%)";
+				myLBL.Content = Operation + "...(0%)";
 			}
 			else if (ProgressType == ProgressTypes.ZIPFile)
 			{
@@ -107,7 +107,7 @@ namespace Project_127.Popups
 			else if (ProgressType == ProgressTypes.DidUpdateHit)
 			{
 				myPB.Value = 0;
-				myLBL.Content = "Checking if Update hit";
+				myLBL.Content = "Checking if GTA Update hit";
 			}
 
 			// Lets do some shit
@@ -138,6 +138,7 @@ namespace Project_127.Popups
 				for (int i = 0; i <= MyFileOperations.Count - 1; i++)
 				{
 					MyFileOperation.Execute(MyFileOperations[i]);
+
 					j++;
 					this.Dispatcher.Invoke(() =>
 					{
@@ -227,16 +228,15 @@ namespace Project_127.Popups
 			}
 			else if (ProgressType == ProgressTypes.Downgrade)
 			{
+				bool UpdatePopupThrownAlready = false;
+
 				// Saving all the File Operations I want to do, executing this at the end of this Method
 				List<MyFileOperation> MyFileOperationsTmp = new List<MyFileOperation>();
 
-				// Creates Hardlink Link in GTAV Installation Folder to all the files of Downgrade Folder
-				// If they exist in GTAV Installation Folder, and in Upgrade Folder, we delete them from GTAV Installation folder
-				// If they exist in GTAV Installation Folder, and NOT in Upgrade Folder, we move them there
-
-				HelperClasses.Logger.Log("Initiating Downgrade", 0);
+				HelperClasses.Logger.Log("Initiating DOWNGRADE", 0);
 				HelperClasses.Logger.Log("GTAV Installation Path: " + LauncherLogic.GTAVFilePath, 1);
 				HelperClasses.Logger.Log("InstallationLocation: " + Globals.ProjectInstallationPath, 1);
+				HelperClasses.Logger.Log("InstallationLocationBinary: " + Globals.ProjectInstallationPathBinary, 1);
 				HelperClasses.Logger.Log("ZIP File Location: " + LauncherLogic.ZIPFilePath, 1);
 				HelperClasses.Logger.Log("DowngradeFilePath: " + LauncherLogic.DowngradeFilePath, 1);
 				HelperClasses.Logger.Log("UpgradeFilePath: " + LauncherLogic.UpgradeFilePath, 1);
@@ -247,6 +247,7 @@ namespace Project_127.Popups
 				string[] CorrespondingFilePathInUpgradeFiles = new string[FilesInDowngradeFiles.Length];
 
 				HelperClasses.Logger.Log("Found " + FilesInDowngradeFiles.Length.ToString() + " Files in Downgrade Folder.");
+				HelperClasses.Logger.Log("Found " + HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(LauncherLogic.UpgradeFilePath).Length.ToString() + " Files in Upgrade Folder.");
 
 				// Loop through all Files in Downgrade Files Folder
 				for (int i = 0; i <= FilesInDowngradeFiles.Length - 1; i++)
@@ -267,26 +268,60 @@ namespace Project_127.Popups
 					// If the File exists in GTA V Installation Path
 					if (HelperClasses.FileHandling.doesFileExist(CorrespondingFilePathInGTALocation[i]))
 					{
-						// If the File Exists in Upgrade Folder
-						if (HelperClasses.FileHandling.doesFileExist(CorrespondingFilePathInUpgradeFiles[i]))
+						// If the File we are replacing is the same as in DowngradeFiles
+						if (HelperClasses.FileHandling.AreFilesEqual(CorrespondingFilePathInGTALocation[i], FilesInDowngradeFiles[i]))
 						{
 							// Delete from GTA V Installation Path
-							MyFileOperationsTmp.Add(new MyFileOperation(MyFileOperation.FileOperations.Delete, CorrespondingFilePathInGTALocation[i], "", "Found '" + CorrespondingFilePathInGTALocation[i] + "' in GTA V Installation Path and $UpgradeFiles. Will delelte from GTA V Installation", 1));
+							MyFileOperationsTmp.Add(new MyFileOperation(MyFileOperation.FileOperations.Delete, CorrespondingFilePathInGTALocation[i], "", "Found '" + CorrespondingFilePathInGTALocation[i] + "' in GTA V Installation Path and its the same file as from $Downgrade_Files. Will delelte from GTA V Installation", 1));
 						}
+
+						// If the File we are replacing is the same as in UpgradeFiles
+						else if (HelperClasses.FileHandling.AreFilesEqual(CorrespondingFilePathInGTALocation[i], CorrespondingFilePathInUpgradeFiles[i]))
+						{
+							// Delete from GTA V Installation Path
+							MyFileOperationsTmp.Add(new MyFileOperation(MyFileOperation.FileOperations.Delete, CorrespondingFilePathInGTALocation[i], "", "Found '" + CorrespondingFilePathInGTALocation[i] + "' in GTA V Installation Path and its the same file as from $Upgrade_Files. Will delelte from GTA V Installation", 1));
+						}
+
+						// If the file we are replacing matches no file from UpgradeFiles or DowngradeFiles
 						else
 						{
-							// If its not the same file as in DownGradeFiles
-							if (!HelperClasses.FileHandling.AreFilesEqual(CorrespondingFilePathInGTALocation[i], FilesInDowngradeFiles[i]))
+
+							// If it exists in UpgradeFiles (but is an outdated Upgrade...)
+							if (HelperClasses.FileHandling.doesFileExist(CorrespondingFilePathInUpgradeFiles[i]))
 							{
-								// Move File from GTA V Installation Path to Upgrade Folder
-								MyFileOperationsTmp.Add(new MyFileOperation(MyFileOperation.FileOperations.Move, CorrespondingFilePathInGTALocation[i], CorrespondingFilePathInUpgradeFiles[i], "Found '" + CorrespondingFilePathInGTALocation[i] + "' in GTA V Installation Path and NOT in $UpgradeFiles. Will move it from GTA V Installation to $UpgradeFiles", 1));
+								if (!UpdatePopupThrownAlready)
+								{
+									Application.Current.Dispatcher.Invoke((Action)delegate
+									{
+										Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Detected new Files inside your GTA Installation.\nP127 will use these as the files you revert to when Upgrading.\nDo you want me to back up your previous Upgrade - Files?");
+										yesno.ShowDialog();
+										if (yesno.DialogResult == true)
+										{
+											HelperClasses.Logger.Log("User does want it. Initiating CreateBackup()");
+
+											LauncherLogic.KillRelevantProcesses();
+
+											LauncherLogic.CreateBackup();
+										}
+										else
+										{
+											HelperClasses.Logger.Log("User doesnt want it. Alright then");
+										}
+									});
+									UpdatePopupThrownAlready = true;
+								}
+
+								// Delte from $UpgradeFiles
+								MyFileOperationsTmp.Add(new MyFileOperation(MyFileOperation.FileOperations.Delete, CorrespondingFilePathInUpgradeFiles[i], "", "We are overwriting a file which is not equal to the existing files in $Downgrade_Files and $Upgrade_Files. Deleting '" + CorrespondingFilePathInUpgradeFiles[i] + "' from $Upgrade_Files to use the existing File as new Backup", 1));
 							}
+
+							// Move to $UpgradeFiles
+							MyFileOperationsTmp.Add(new MyFileOperation(MyFileOperation.FileOperations.Move, CorrespondingFilePathInGTALocation[i], CorrespondingFilePathInUpgradeFiles[i], "Backing up '" + CorrespondingFilePathInGTALocation[i] + "' from GTA V Installation Path to $UpgradeFiles via Moving, since it either doenst exist there yet, or the file from $GTA_Installation_Path is a new one", 1));
 						}
 					}
 
 					// Creates actual Hard Link (this will further down check if we should copy based on settings in MyFileOperation.Execute())
 					MyFileOperationsTmp.Add(new MyFileOperation(MyFileOperation.FileOperations.Hardlink, FilesInDowngradeFiles[i], CorrespondingFilePathInGTALocation[i], "Will create HardLink in '" + CorrespondingFilePathInGTALocation[i] + "' to the file in '" + FilesInDowngradeFiles[i] + "'", 1));
-
 				}
 
 				RtrnMyFileOperations = MyFileOperationsTmp;
@@ -294,14 +329,13 @@ namespace Project_127.Popups
 			else if (ProgressType == ProgressTypes.Upgrade)
 			{
 				// Saving all the File Operations I want to do, executing this at the end of this Method
-				List<MyFileOperation> MyFileOperationsTMP = new List<MyFileOperation>();
+				List<MyFileOperation> MyFileOperationsTmp = new List<MyFileOperation>();
+				bool UpdatePopupThrownAlready = false;
 
-				// Creates Hardlink Link in GTAV Installation Folder to all the files of Upgrade Folder
-				// If they exist in GTAV Installation Folder,  we delete them from GTAV Installation folder
-
-				HelperClasses.Logger.Log("Initiating Upgrade", 0);
+				HelperClasses.Logger.Log("Initiating UPGRADE", 0);
 				HelperClasses.Logger.Log("GTAV Installation Path: " + LauncherLogic.GTAVFilePath, 1);
 				HelperClasses.Logger.Log("InstallationLocation: " + Globals.ProjectInstallationPath, 1);
+				HelperClasses.Logger.Log("InstallationLocationBinary: " + Globals.ProjectInstallationPathBinary, 1);
 				HelperClasses.Logger.Log("ZIP File Location: " + LauncherLogic.ZIPFilePath, 1);
 				HelperClasses.Logger.Log("DowngradeFilePath: " + LauncherLogic.DowngradeFilePath, 1);
 				HelperClasses.Logger.Log("UpgradeFilePath: " + LauncherLogic.UpgradeFilePath, 1);
@@ -310,9 +344,12 @@ namespace Project_127.Popups
 				string[] FilesInDowngradeFiles = HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(LauncherLogic.DowngradeFilePath);
 				string[] CorrespondingFilePathInGTALocation = new string[FilesInDowngradeFiles.Length];
 				string[] CorrespondingFilePathInUpgradeFiles = new string[FilesInDowngradeFiles.Length];
+				List<string> ListOfFilePathsAboutToBeInUpgradeFiles = new List<string>();
+
+				HelperClasses.Logger.Log("Found " + FilesInDowngradeFiles.Length.ToString() + " Files in Downgrade Folder.");
+				HelperClasses.Logger.Log("Found " + HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(LauncherLogic.UpgradeFilePath).Length.ToString() + " Files in Upgrade Folder.");
 
 				// Loop through all Files in Downgrade Files Folder
-				// Looping through Downgrade Files here, since that gives info if we need to delete the file afterwards
 				for (int i = 0; i <= FilesInDowngradeFiles.Length - 1; i++)
 				{
 					// Update GUI
@@ -323,6 +360,7 @@ namespace Project_127.Popups
 						myLBL.Content = "Gathering Information(" + i.ToString() + "/" + (FilesInDowngradeFiles.Length - 1).ToString() + ")";
 					});
 
+
 					// Build the Corresponding theoretical Filenames for Upgrade Folder and GTA V Installation Folder
 					CorrespondingFilePathInGTALocation[i] = LauncherLogic.GTAVFilePath + FilesInDowngradeFiles[i].Substring(LauncherLogic.DowngradeFilePath.Length);
 					CorrespondingFilePathInUpgradeFiles[i] = LauncherLogic.UpgradeFilePath + FilesInDowngradeFiles[i].Substring(LauncherLogic.DowngradeFilePath.Length);
@@ -330,31 +368,66 @@ namespace Project_127.Popups
 					// If the File exists in GTA V Installation Path
 					if (HelperClasses.FileHandling.doesFileExist(CorrespondingFilePathInGTALocation[i]))
 					{
-
-						// if it also exists in upgrade files
-						if (HelperClasses.FileHandling.doesFileExist(CorrespondingFilePathInUpgradeFiles[i]))
+						// If the File we are replacing is the same as in DowngradeFiles
+						if (HelperClasses.FileHandling.AreFilesEqual(CorrespondingFilePathInGTALocation[i], FilesInDowngradeFiles[i]))
 						{
 							// Delete from GTA V Installation Path
-							MyFileOperationsTMP.Add(new MyFileOperation(MyFileOperation.FileOperations.Delete, CorrespondingFilePathInGTALocation[i], "", "File found in GTA V Installation Path and the Upgrade Folder. Game File we overwrite. Will delete '" + CorrespondingFilePathInGTALocation[i] + "'", 1));
+							MyFileOperationsTmp.Add(new MyFileOperation(MyFileOperation.FileOperations.Delete, CorrespondingFilePathInGTALocation[i], "", "Found '" + CorrespondingFilePathInGTALocation[i] + "' in GTA V Installation Path and its the same file as from $Downgrade_Files. Will delelte from GTA V Installation", 1));
 						}
+
+						// If the File we are replacing is the same as in UpgradeFiles
+						else if (HelperClasses.FileHandling.AreFilesEqual(CorrespondingFilePathInGTALocation[i], CorrespondingFilePathInUpgradeFiles[i]))
+						{
+							// Delete from GTA V Installation Path
+							MyFileOperationsTmp.Add(new MyFileOperation(MyFileOperation.FileOperations.Delete, CorrespondingFilePathInGTALocation[i], "", "Found '" + CorrespondingFilePathInGTALocation[i] + "' in GTA V Installation Path and its the same file as from $Upgrade_Files. Will delelte from GTA V Installation", 1));
+						}
+
+						// If the file inside GTA Installation Directory matches no file from UpgradeFiles or DowngradeFiles
 						else
 						{
-							// Exists in GTAV, not in Upgrades
-
-							// But exists in Downgrades
-							if (HelperClasses.FileHandling.doesFileExist(FilesInDowngradeFiles[i]))
+							// If it exists in UpgradeFiles (but is an outdated Upgrade...)
+							if (HelperClasses.FileHandling.doesFileExist(CorrespondingFilePathInUpgradeFiles[i]))
 							{
-								MyFileOperationsTMP.Add(new MyFileOperation(MyFileOperation.FileOperations.Delete, CorrespondingFilePathInGTALocation[i], "", "File found in GTA V Installation Path, in Downgrade Folder but NOT in Upgrade Folder. Leftover Downgrade File. Will delete '" + CorrespondingFilePathInGTALocation[i] + "'", 1));
+								if (!UpdatePopupThrownAlready)
+								{
+									Application.Current.Dispatcher.Invoke((Action)delegate
+									{
+										Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Detected new Files inside your GTA Installation.\nP127 will use these as the files you revert to when Upgrading.\nDo you want me to back up your previous Upgrade - Files?");
+										yesno.ShowDialog(); if (yesno.DialogResult == true)
+										{
+											HelperClasses.Logger.Log("User does want it. Initiating CreateBackup()");
+
+											LauncherLogic.KillRelevantProcesses();
+
+											LauncherLogic.CreateBackup();
+										}
+										else
+										{
+											HelperClasses.Logger.Log("User doesnt want it. Alright then");
+										}
+									});
+									UpdatePopupThrownAlready = true;
+								}
+								// Delte from $UpgradeFiles
+								MyFileOperationsTmp.Add(new MyFileOperation(MyFileOperation.FileOperations.Delete, CorrespondingFilePathInUpgradeFiles[i], "", "We are overwriting a file which is not equal to the existing files in $Downgrade_Files and $Upgrade_Files. Deleting '" + CorrespondingFilePathInUpgradeFiles[i] + "' from $Upgrade_Files to use the existing File as new Backup", 1));
 							}
+
+							// Move to $UpgradeFiles
+							MyFileOperationsTmp.Add(new MyFileOperation(MyFileOperation.FileOperations.Move, CorrespondingFilePathInGTALocation[i], CorrespondingFilePathInUpgradeFiles[i], "Backing up '" + CorrespondingFilePathInGTALocation[i] + "' from GTA V Installation Path to $UpgradeFiles via Moving, since it either doenst exist there yet, or the file from $GTA_Installation_Path is a new one", 1));
+							ListOfFilePathsAboutToBeInUpgradeFiles.Add(CorrespondingFilePathInUpgradeFiles[i]);
 						}
 					}
 
-					// Creates actual Hard Link (this will further down check if we should copy based on settings in MyFileOperation.Execute())
-					MyFileOperationsTMP.Add(new MyFileOperation(MyFileOperation.FileOperations.Hardlink, CorrespondingFilePathInUpgradeFiles[i], CorrespondingFilePathInGTALocation[i], "Will create HardLink in '" + CorrespondingFilePathInGTALocation[i] + "' to the file in '" + CorrespondingFilePathInUpgradeFiles[i] + "'", 1));
+					// file we are moving there if file inside GTA matches no files is non existing at this point
+					if (HelperClasses.FileHandling.doesFileExist(CorrespondingFilePathInUpgradeFiles[i]) || ListOfFilePathsAboutToBeInUpgradeFiles.Contains(CorrespondingFilePathInUpgradeFiles[i]))
+					{
+						// Creates actual Hard Link (this will further down check if we should copy based on settings in MyFileOperation.Execute())
+						MyFileOperationsTmp.Add(new MyFileOperation(MyFileOperation.FileOperations.Hardlink, CorrespondingFilePathInUpgradeFiles[i], CorrespondingFilePathInGTALocation[i], "Will create HardLink in '" + CorrespondingFilePathInGTALocation[i] + "' to the file in '" + CorrespondingFilePathInUpgradeFiles[i] + "'", 1));
+					}
+
 				}
 
-				RtrnMyFileOperations = MyFileOperationsTMP;
-
+				RtrnMyFileOperations = MyFileOperationsTmp;
 			}
 			else if (ProgressType == ProgressTypes.DidUpdateHit)
 			{
@@ -381,7 +454,13 @@ namespace Project_127.Popups
 
 				*/
 
-				SetProgress("Checking if Update hit", 1, 8);
+				SetProgress("Checking if GTA Update hit", 1, 5);
+
+				if (LauncherLogic.InstallationState == LauncherLogic.InstallationStates.Downgraded)
+				{
+					RtrnBool = false;
+					return;
+				}
 
 				string GTA_GTA5 = Settings.GTAVInstallationPath.TrimEnd('\\') + @"\gta5.exe";
 				string GTA_PlayGTAV = Settings.GTAVInstallationPath.TrimEnd('\\') + @"\playgtav.exe";
@@ -395,40 +474,40 @@ namespace Project_127.Popups
 				string Downgrade_PlayGTAV = LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\playgtav.exe";
 				string Downgrade_UpdateRPF = LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\update\update.rpf";
 
-				SetProgress("Checking if Update hit", 2, 8);
+				SetProgress("Checking if GTA Update hit", 2, 5);
 				if (!HelperClasses.FileHandling.AreFilesEqual(GTA_GTA5, Upgrade_GTA5))
 				{
-					SetProgress("Checking if Update hit", 3, 8);
-					if (!HelperClasses.FileHandling.AreFilesEqual(GTA_GTA5, Downgrade_GTA5))
-					{
-						RtrnBool = true;
-						return;
-					}
+					//SetProgress("Checking if Update hit", 3, 8);
+					//if (!HelperClasses.FileHandling.AreFilesEqual(GTA_GTA5, Downgrade_GTA5))
+					//{
+					RtrnBool = true;
+					return;
+					//}
 				}
 
-				SetProgress("Checking if Update hit", 4, 8);
+				SetProgress("Checking if GTA Update hit", 3, 5);
 				if (!HelperClasses.FileHandling.AreFilesEqual(GTA_PlayGTAV, Upgrade_PlayGTAV))
 				{
-					SetProgress("Checking if Update hit", 5, 8);
-					if (!HelperClasses.FileHandling.AreFilesEqual(GTA_PlayGTAV, Downgrade_PlayGTAV))
-					{
-						RtrnBool = true;
-						return;
-					}
+					//SetProgress("Checking if Update hit", 5, 8);
+					//if (!HelperClasses.FileHandling.AreFilesEqual(GTA_PlayGTAV, Downgrade_PlayGTAV))
+					//{
+					RtrnBool = true;
+					return;
+					//}
 				}
 
-				SetProgress("Checking if Update hit", 6, 8);
+				SetProgress("Checking if GTA Update hit", 4, 5);
 				if (!HelperClasses.FileHandling.AreFilesEqual(GTA_UpdateRPF, Upgrade_UpdateRPF))
 				{
-					SetProgress("Checking if Update hit", 7, 8);
-					if (!HelperClasses.FileHandling.AreFilesEqual(GTA_UpdateRPF, Downgrade_UpdateRPF))
-					{
-						RtrnBool = true;
-						return;
-					}
+					//SetProgress("Checking if Update hit", 7, 8);
+					//if (!HelperClasses.FileHandling.AreFilesEqual(GTA_UpdateRPF, Downgrade_UpdateRPF))
+					//{
+					RtrnBool = true;
+					return;
+					//}
 				}
 
-				SetProgress("Checking if Update hit", 8, 8);
+				SetProgress("Checking if GTA Update hit", 5, 5);
 				RtrnBool = false;
 				return;
 			}

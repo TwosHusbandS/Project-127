@@ -15,6 +15,7 @@ using Project_127.HelperClasses;
 using Project_127.Overlay;
 using Project_127.Popups;
 using Project_127.MySettings;
+using System.Diagnostics;
 
 namespace Project_127.HelperClasses
 {
@@ -248,6 +249,58 @@ namespace Project_127.HelperClasses
 			File.WriteAllLines(pFilePath, pContent);
 		}
 
+		public static void WriteToFile(string pFilePath, string[] pLines)
+		{
+			try
+			{
+				if (doesFileExist(pFilePath))
+				{
+					deleteFile(pFilePath);
+				}
+
+				createFile(pFilePath);
+
+				StreamWriter sw;
+				sw = File.AppendText(pFilePath);
+
+				for (int i = 0; i <= pLines.Length - 1; i++)
+				{
+					sw.Write(pLines[i] + Environment.NewLine);
+				}
+
+				sw.Close();
+			}
+			catch (Exception e)
+			{
+				Logger.Log("Sth failed while writing string array to file: " + e.ToString());
+
+			}
+		}
+
+		static Random random = new Random();
+		static int intrandom = random.Next(1000, 9999);
+
+		public static void AddToDebug(string pLineContent)
+		{
+
+			pLineContent = "[" + DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss") + "] (" + intrandom + ") - " + pLineContent;
+
+			string pFilePath = Globals.ProjectInstallationPath.TrimEnd('\\') + @"\AAA - DEBUG.txt";
+
+			// Should be quicker than checking if File exists, and also checks for more erros
+			try
+			{
+				StreamWriter sw;
+				sw = File.AppendText(pFilePath);
+				sw.Write(pLineContent + Environment.NewLine);
+				sw.Close();
+			}
+			catch (Exception e)
+			{
+				new Popup(Popup.PopupWindowTypes.PopupOkError, "Writing to Log failed. File was probably deleted after start of Program.\nI suggest you restart the Program and contact me if it happens again.\n\nErrorMessage:\n" + e.ToString()).ShowDialog();
+				//System.Windows.Forms.MessageBox.Show("Writing to Log failed. File was probably deleted after start of Program.\n\nLogmessage:'" + pLineContent + "'\nI suggest you restart the Program and contact me if it happens again.\n\nErrorMessage:\n" + e.ToString());
+			}
+		}
 
 		/// <summary>
 		/// Method we use to add one line of text as a new line to a text file
@@ -316,41 +369,70 @@ namespace Project_127.HelperClasses
 
 		public static bool AreFilesEqual(string pFilePathA, string pFilePathB)
 		{
-			if (FileHandling.doesFileExist(pFilePathA) && FileHandling.doesFileExist(pFilePathB))
+			Stopwatch sw = new Stopwatch();
+			sw.Start();
+			bool Sth = AreFilesEqualReal(pFilePathA, pFilePathB);
+			sw.Stop();
+			HelperClasses.Logger.Log("AAAA - It took '" + sw.ElapsedMilliseconds + "' ms to compare: '" + pFilePathA + "' and '" + pFilePathB + "'. Result is: " + Sth.ToString());
+			return Sth;
+		}
+
+		private static bool StreamsContentsAreEqual(Stream stream1, Stream stream2)
+		{
+			const int bufferSize = 1024 * sizeof(Int64);
+			var buffer1 = new byte[bufferSize];
+			var buffer2 = new byte[bufferSize];
+
+			while (true)
 			{
-				if (FileHandling.GetSizeOfFile(pFilePathA) == FileHandling.GetSizeOfFile(pFilePathB))
+				int count1 = stream1.Read(buffer1, 0, bufferSize);
+				int count2 = stream2.Read(buffer2, 0, bufferSize);
+
+				if (count1 != count2)
 				{
-					if (FileHandling.GetRawCertDataString(pFilePathA) == FileHandling.GetRawCertDataString(pFilePathB))
-					{
-						return true;
-					}
-					else
+					return false;
+				}
+
+				if (count1 == 0)
+				{
+					return true;
+				}
+
+				int iterations = (int)Math.Ceiling((double)count1 / sizeof(Int64));
+				for (int i = 0; i < iterations; i++)
+				{
+					if (BitConverter.ToInt64(buffer1, i * sizeof(Int64)) != BitConverter.ToInt64(buffer2, i * sizeof(Int64)))
 					{
 						return false;
 					}
 				}
-				else
-				{
-					return false;
-				}
-			}
-			else
-			{
-				return false;
 			}
 		}
 
 
-		public static string GetRawCertDataString(string pFilePath)
+
+		public static bool AreFilesEqualReal(string pFilePathA, string pFilePathB)
 		{
-			try
+			FileInfo fileInfo1 = new FileInfo(pFilePathA);
+			FileInfo fileInfo2 = new FileInfo(pFilePathB);
+
+			if (!fileInfo1.Exists || !fileInfo2.Exists)
 			{
-				X509Certificate theSigner = X509Certificate.CreateFromSignedFile(pFilePath);
-				return theSigner.GetRawCertDataString();
+				return false;
 			}
-			catch
+			if (fileInfo1.Length != fileInfo2.Length)
 			{
-				return "";
+				return false;
+			}
+			else
+			{
+				using (var file1 = fileInfo1.OpenRead())
+				{
+					using (var file2 = fileInfo2.OpenRead())
+					{
+						return StreamsContentsAreEqual(file1, file2);
+					}
+				}
 			}
 		}
 
@@ -430,7 +512,7 @@ namespace Project_127.HelperClasses
 		/// </summary>
 		/// <param name="pURL"></param>
 		/// <returns></returns>
-		public static string GetStringFromURL(string pURL)
+		public static string GetStringFromURL(string pURL, bool surpressPopup = false)
 		{
 			string rtrn = "";
 
@@ -440,7 +522,7 @@ namespace Project_127.HelperClasses
 			}
 			catch (Exception e)
 			{
-				if (Globals.OfflineErrorThrown == false)
+				if (Globals.OfflineErrorThrown == false && surpressPopup == false)
 				{
 					new Popup(Popup.PopupWindowTypes.PopupOkError, "Project 1.27 can not connect to Github and check for Latest Files or Updates.\nThis might cause some things to not work." + e.ToString()).ShowDialog();
 					Globals.OfflineErrorThrown = true;
@@ -491,6 +573,25 @@ namespace Project_127.HelperClasses
 			rtrn[0] = pFilePath.Substring(0, pFilePath.LastIndexOf('\\'));
 			rtrn[1] = pFilePath.Substring(pFilePath.LastIndexOf('\\') + 1);
 			return rtrn;
+		}
+
+		public static void RenameFile(string pFilePathSource, string pFileNameDest)
+		{
+			if (doesFileExist(pFilePathSource))
+			{
+				string pFilePathDest = PathSplitUp(pFilePathSource)[0].TrimEnd('\\') + @"\" + pFileNameDest;
+				try
+				{
+					//HelperClasses.FileHandling.AddToDebug("Renaming: '" + pFilePathSource + "' to '" + pFilePathDest + "'.");
+					System.IO.File.Move(pFilePathSource, pFilePathDest);
+				}
+				catch (Exception e)
+				{
+					new Popup(Popup.PopupWindowTypes.PopupOkError, "Renaming File failed ('" + pFilePathSource + "' to '" + pFilePathDest + "').\nI suggest you restart the Program and contact me if it happens again.\n\nErrorMessage:\n" + e.ToString()).ShowDialog();
+					HelperClasses.Logger.Log("Renaming File failed ('" + pFilePathSource + "' to '" + pFilePathDest + "').", true, 0);
+
+				}
+			}
 		}
 
 		/// <summary>
@@ -712,6 +813,46 @@ namespace Project_127.HelperClasses
 			}
 		}
 
+		/// <summary>
+		/// Deletes target dir...
+		/// </summary>
+		/// <param name="sourceDirectory"></param>
+		/// <param name="targetDirectory"></param>
+		public static void CopyPath(string sourceDirectory, string targetDirectory)
+		{
+			if (doesPathExist(sourceDirectory))
+			{
+				if (doesPathExist(targetDirectory))
+				{
+					DeleteFolder(targetDirectory);
+				}
+				var diTarget = new DirectoryInfo(targetDirectory);
+				var diSource = new DirectoryInfo(sourceDirectory);
+
+				CopyAll(diSource, diTarget);
+			}
+
+
+		}
+
+		private static void CopyAll(DirectoryInfo source, DirectoryInfo target)
+		{
+			Directory.CreateDirectory(target.FullName);
+
+			// Copy each file into the new directory.
+			foreach (FileInfo fi in source.GetFiles())
+			{
+				fi.CopyTo(Path.Combine(target.FullName, fi.Name), true);
+			}
+
+			// Copy each subdirectory using recursion.
+			foreach (DirectoryInfo diSourceSubDir in source.GetDirectories())
+			{
+				DirectoryInfo nextTargetSubDir =
+					target.CreateSubdirectory(diSourceSubDir.Name);
+				CopyAll(diSourceSubDir, nextTargetSubDir);
+			}
+		}
 
 		public static void CreateAllZIPPaths(string pZIPFileExtractLocation)
 		{
@@ -719,12 +860,24 @@ namespace Project_127.HelperClasses
 			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files");
 			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\DowngradeFiles");
 			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\DowngradeFiles\update");
+			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\UpgradeFiles_Backup");
+			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\UpgradeFiles_Backup\update");
 			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\UpgradeFiles");
 			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\UpgradeFiles\update");
 			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\SupportFiles\");
 			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\SupportFiles\Notes");
 			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\SupportFiles\Installer");
 			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\SupportFiles\SaveFiles");
+			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\DowngradeFiles_Alternative\");
+			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\DowngradeFiles_Alternative\steam");
+			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\DowngradeFiles_Alternative\steam\update");
+			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\DowngradeFiles_Alternative\rockstar");
+			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\DowngradeFiles_Alternative\rockstar\update");
+			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\SocialClubFiles");
+			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\SocialClubFiles\steam");
+			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\SocialClubFiles\steam\update");
+			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\SocialClubFiles\rockstar");
+			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\SocialClubFiles\rockstar\update");
 		}
 
 

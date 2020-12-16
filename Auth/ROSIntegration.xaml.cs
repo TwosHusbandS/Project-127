@@ -86,9 +86,9 @@ namespace Project_127.Auth
 			Uri jsfURI = new Uri(@"Auth\authpage.js", UriKind.Relative);
 			var jsfStream = System.Windows.Application.GetResourceStream(jsfURI);
 			using (var reader = new StreamReader(jsfStream.Stream))
-            {
+			{
 				jsf = reader.ReadToEnd();
-            }
+			}
 			// this if else is new, just to check if we can reach the website
 			if (!WebSiteIsAvailable(@"https://rgl.rockstargames.com/launcher"))
 			{
@@ -260,7 +260,7 @@ namespace Project_127.Auth
 					var RockstarID = UInt64.Parse(nav.SelectSingleNode("//*[local-name()='Response']/*[local-name()='RockstarAccount']/*[local-name()='RockstarId']").Value);
 					var ctime = Int64.Parse(nav.SelectSingleNode("//*[local-name()='Response']/*[local-name()='PosixTime']").Value);
 					var RockstarNick = nav.SelectSingleNode("//*[local-name()='Response']/*[local-name()='RockstarAccount']/*[local-name()='Nickname']").Value; //For (future?) use
-					// Call our version of validate
+																																								// Call our version of validate
 					bool valsucess = await ROSCommunicationBackend.Login(ticket, sessionKey, sessionTicket, RockstarID, ctime, RockstarNick);
 					// Do something with valsuccess (true if ownership is valid)
 #if DEBUG
@@ -350,6 +350,7 @@ namespace Project_127.Auth
 					break;
 			}
 		}
+
 
 
 		/// <summary>

@@ -336,6 +336,33 @@ namespace Project_127.MySettings
 		}
 
 		/// <summary>
+		/// Settings Mode. Gets and Sets from the Dictionary.
+		/// </summary>
+		public static string Mode
+		{
+			get
+			{
+				return GetSetting("Mode");
+			}
+			set
+			{
+				SetSetting("Mode", value);
+
+				if (value.ToLower() != "default")
+				{
+					MainWindow.MW.btn_lbl_Mode.Content = "Curr Mode: '" + MySettings.Settings.Mode.ToLower() + "'";
+					MainWindow.MW.btn_lbl_Mode.Visibility = Visibility.Visible;
+				}
+				else
+				{
+					MainWindow.MW.btn_lbl_Mode.Content = "";
+					MainWindow.MW.btn_lbl_Mode.Visibility = Visibility.Hidden;
+				}
+				MainWindow.MW.btn_lbl_Mode.ToolTip = MainWindow.MW.btn_lbl_Mode.Content;
+			}
+		}
+
+		/// <summary>
 		/// Settings EnableOnlyAutoStartProgramsWhenDowngraded. Gets and Sets from the Dictionary.
 		/// </summary>
 		public static bool EnableOnlyAutoStartProgramsWhenDowngraded
@@ -377,6 +404,37 @@ namespace Project_127.MySettings
 			set
 			{
 				SetSetting("EnableCopyFilesInsteadOfHardlinking", value.ToString());
+			}
+		}
+
+
+		/// <summary>
+		/// Settings EnableCopyFilesInsteadOfSyslinking_SocialClub. Gets and Sets from the Dictionary.
+		/// </summary>
+		public static bool EnableCopyFilesInsteadOfSyslinking_SocialClub
+		{
+			get
+			{
+				return GetBoolFromString(GetSetting("EnableCopyFilesInsteadOfSyslinking_SocialClub"));
+			}
+			set
+			{
+				SetSetting("EnableCopyFilesInsteadOfSyslinking_SocialClub", value.ToString());
+			}
+		}
+
+		/// <summary>
+		/// Settings EnableAlternativeLaunch. Gets and Sets from the Dictionary.
+		/// </summary>
+		public static bool EnableAlternativeLaunch
+		{
+			get
+			{
+				return GetBoolFromString(GetSetting("EnableAlternativeLaunch"));
+			}
+			set
+			{
+				SetSetting("EnableAlternativeLaunch", value.ToString());
 			}
 		}
 
@@ -448,6 +506,25 @@ namespace Project_127.MySettings
 
 
 		/// <summary>
+		/// Enum for all Ways to Start
+		/// </summary>
+		public enum StartWays
+		{
+			Maximized,
+			Tray
+		}
+
+		/// <summary>
+		/// Enum for all Ways to Exit
+		/// </summary>
+		public enum ExitWays
+		{
+			Minimize,
+			HideInTray,
+			Close
+		}
+
+		/// <summary>
 		/// Settings Retailer. Gets and Sets from Dictionary.
 		/// </summary>
 		public static Languages LanguageSelected
@@ -458,7 +535,10 @@ namespace Project_127.MySettings
 			}
 			set
 			{
-				SetSetting("LanguageSelected", value.ToString());
+				if (value != LanguageSelected)
+				{
+					SetSetting("LanguageSelected", value.ToString());
+				}
 			}
 		}
 
@@ -485,7 +565,46 @@ namespace Project_127.MySettings
 			}
 			set
 			{
-				SetSetting("Retailer", value.ToString());
+				if (value != Retailer)
+				{
+					SetSetting("Retailer", value.ToString());
+				}
+			}
+		}
+
+		/// <summary>
+		/// Settings StartWay. Gets and Sets from Dictionary.
+		/// </summary>
+		public static StartWays StartWay
+		{
+			get
+			{
+				return (StartWays)System.Enum.Parse(typeof(StartWays), GetSetting("StartWay"));
+			}
+			set
+			{
+				if (value != StartWay)
+				{
+					SetSetting("StartWay", value.ToString());
+				}
+			}
+		}
+
+		/// <summary>
+		/// Settings ExitWay. Gets and Sets from Dictionary.
+		/// </summary>
+		public static ExitWays ExitWay
+		{
+			get
+			{
+				return (ExitWays)System.Enum.Parse(typeof(ExitWays), GetSetting("ExitWay"));
+			}
+			set
+			{
+				if (value != ExitWay)
+				{
+					SetSetting("ExitWay", value.ToString());
+				}
 			}
 		}
 
@@ -608,6 +727,23 @@ namespace Project_127.MySettings
 			set
 			{
 				SetSetting("EnableOverlay", value.ToString());
+				NoteOverlay.OverlaySettingsChanged();
+			}
+		}
+
+		/// <summary>
+		/// Settings OverlayMultiMonitorMode. Gets and Sets from the Dictionary.
+		/// </summary>
+		public static bool OverlayMultiMonitorMode
+		{
+			get
+			{
+				return GetBoolFromString(GetSetting("OverlayMultiMonitorMode"));
+			}
+			set
+			{
+				SetSetting("OverlayMultiMonitorMode", value.ToString());
+				NoteOverlay.OverlaySettingsChanged();
 			}
 		}
 
@@ -623,6 +759,28 @@ namespace Project_127.MySettings
 			set
 			{
 				SetSetting("EnableAutoStartJumpScript", value.ToString());
+
+				if (value)
+				{
+					if (LauncherLogic.GameState == LauncherLogic.GameStates.Running)
+					{
+						if (Settings.EnableOnlyAutoStartProgramsWhenDowngraded)
+						{
+							if (LauncherLogic.InstallationState == LauncherLogic.InstallationStates.Downgraded)
+							{
+								Jumpscript.StartJumpscript();
+							}
+						}
+						else
+						{
+							Jumpscript.StartJumpscript();
+						}
+					}
+				}
+				else
+				{
+					Jumpscript.StopJumpscript();
+				}
 			}
 		}
 
@@ -654,6 +812,10 @@ namespace Project_127.MySettings
 			set
 			{
 				SetSetting("JumpScriptKey1", ((int)value).ToString());
+				if (Jumpscript.IsRunning)
+				{
+					Jumpscript.StartJumpscript();
+				}
 			}
 		}
 
@@ -669,6 +831,10 @@ namespace Project_127.MySettings
 			set
 			{
 				SetSetting("JumpScriptKey2", ((int)value).ToString());
+				if (Jumpscript.IsRunning)
+				{
+					Jumpscript.StartJumpscript();
+				}
 			}
 		}
 
@@ -873,15 +1039,59 @@ namespace Project_127.MySettings
 			return rtrn;
 		}
 
-		public static int OverlayMargin
+
+		public static double GetDoubleFromString(string pString)
+		{
+			return GetIntFromString(pString);
+		}
+
+
+		public static double OL_MM_Left
 		{
 			get
 			{
-				return GetIntFromString(GetSetting("OverlayMargin"));
+				return GetDoubleFromString(GetSetting("OL_MM_Left"));
 			}
 			set
 			{
-				SetSetting("OverlayMargin", value.ToString());
+				SetSetting("OL_MM_Left", ((int)value).ToString());
+			}
+		}
+
+		public static double OL_MM_Top
+		{
+			get
+			{
+				return GetDoubleFromString(GetSetting("OL_MM_Top"));
+			}
+			set
+			{
+				SetSetting("OL_MM_Top", ((int)value).ToString());
+			}
+		}
+
+		public static int OverlayMarginX
+		{
+			get
+			{
+				return GetIntFromString(GetSetting("OverlayMarginX"));
+			}
+			set
+			{
+				SetSetting("OverlayMarginX", value.ToString());
+			}
+		}
+
+
+		public static int OverlayMarginY
+		{
+			get
+			{
+				return GetIntFromString(GetSetting("OverlayMarginY"));
+			}
+			set
+			{
+				SetSetting("OverlayMarginY", value.ToString());
 			}
 		}
 

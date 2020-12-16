@@ -58,8 +58,8 @@
     <PlatformTarget>x64</PlatformTarget>
     <DocumentationFile>
     </DocumentationFile>
-    <OutputPath>bin\x64\Release\</OutputPath>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <OutputPath>bin\x64\Release\UglyFiles\</OutputPath>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>icon.ico</ApplicationIcon>
@@ -172,9 +172,6 @@
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
-    <Reference Include="WindowsInput, Version=1.0.4.0, Culture=neutral, PublicKeyToken=9b287f7dc5073cad, processorArchitecture=MSIL">
-      <HintPath>packages\InputSimulator.1.0.4.0\lib\net20\WindowsInput.dll</HintPath>
-    </Reference>
     <Reference Include="WpfAnimatedGif, Version=2.0.0.0, Culture=neutral, PublicKeyToken=9e7cd3b544a090dc, processorArchitecture=MSIL">
       <HintPath>packages\WpfAnimatedGif.2.0.0\lib\net40\WpfAnimatedGif.dll</HintPath>
     </Reference>
@@ -185,12 +182,12 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Auth\CEFResourceHandler.cs" />
-    <Compile Include="HelperClasses\Jumpscript.cs" />
-    <Compile Include="HelperClasses\Keyboard\KeyboardIS.cs" />
+    <Compile Include="HelperClasses\DataGridHelper.cs" />
+    <Compile Include="HelperClasses\Keyboard\Jumpscript.cs" />
     <Compile Include="HelperClasses\Keyboard\KeyboardListener.cs" />
-    <Compile Include="HelperClasses\Keyboard\KeyboardSimulator.cs" />
-    <Compile Include="HelperClasses\Keyboard\LastTry.cs" />
+    <Compile Include="HelperClasses\MouseSender.cs" />
     <Compile Include="HelperClasses\WindowChangeHander.cs" />
+    <Compile Include="LaunchAlternative.cs" />
     <Compile Include="Overlay\EmptyPage.xaml.cs">
       <DependentUpon>EmptyPage.xaml</DependentUpon>
     </Compile>
@@ -207,9 +204,7 @@
     <Compile Include="HelperClasses\OwnOpenFolderDialog\Reflector.cs" />
     <Compile Include="HelperClasses\WindowChangeListener.cs" />
     <Compile Include="HelperClasses\Keyboard\KeyboardHandler.cs" />
-    <Compile Include="HelperClasses\Keyboard\KeyboardSender.cs" />
-    <Compile Include="MyFileOperation.cs" />
-    <Compile Include="HelperClasses\Keyboard\KeyboardListenerOld.cs" />
+    <Compile Include="HelperClasses\MyFileOperation.cs" />
     <Compile Include="Overlay\NoteOverlay.xaml.cs">
       <DependentUpon>NoteOverlay.xaml</DependentUpon>
     </Compile>
@@ -225,8 +220,14 @@
     <Compile Include="Overlay\Overlay_Preview.xaml.cs">
       <DependentUpon>Overlay_Preview.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Overlay\Overlay_MultipleMonitor.xaml.cs">
+      <DependentUpon>Overlay_MultipleMonitor.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Popups\PopupCombobox.xaml.cs">
       <DependentUpon>PopupCombobox.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Popups\PopupMode.xaml.cs">
+      <DependentUpon>PopupMode.xaml</DependentUpon>
     </Compile>
     <Compile Include="Popups\PopupTextbox.xaml.cs">
       <DependentUpon>PopupTextbox.xaml</DependentUpon>
@@ -244,7 +245,7 @@
     <Compile Include="HelperClasses\Logger.cs" />
     <Compile Include="HelperClasses\ProcessHandler.cs" />
     <Compile Include="HelperClasses\RegeditHandler.cs" />
-    <Compile Include="SaveFileHandler\MySaveFile.cs" />
+    <Compile Include="SaveFileHandlerStuff\MySaveFile.cs" />
     <Compile Include="Popups\Popup.xaml.cs">
       <DependentUpon>Popup.xaml</DependentUpon>
     </Compile>
@@ -254,7 +255,8 @@
     <Compile Include="Auth\ROSIntegration.xaml.cs">
       <DependentUpon>ROSIntegration.xaml</DependentUpon>
     </Compile>
-    <Compile Include="SaveFileHandler\SaveFileHandler.xaml.cs">
+    <Compile Include="SaveFileHandlerStuff\RefreshTaskObject.cs" />
+    <Compile Include="SaveFileHandlerStuff\SaveFileHandler.xaml.cs">
       <DependentUpon>SaveFileHandler.xaml</DependentUpon>
     </Compile>
     <Compile Include="MySettings\SettingsPartial.cs" />
@@ -293,7 +295,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Overlay\Overlay_MultipleMonitor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Popups\PopupCombobox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Popups\PopupMode.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -334,7 +344,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="SaveFileHandler\SaveFileHandler.xaml">
+    <Page Include="SaveFileHandlerStuff\SaveFileHandler.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -366,10 +376,16 @@
     <None Include="Installer\Changelogs\V_0_0_4_0_Changelog.md" />
     <None Include="Installer\Changelogs\V_0_0_3_1_Changelog.md" />
     <None Include="Installer\Changelogs\V_0_0_3_0_Changelog.md" />
+    <None Include="LICENSE_JUMPSCRIPT">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="LICENSE">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="README.md" />
   </ItemGroup>
@@ -463,6 +479,12 @@
   <ItemGroup>
     <Resource Include="Auth\authpage.js" />
   </ItemGroup>
+  <ItemGroup>
+    <NativeReference Include="AutoHotkey, Version=2.0.00.00, Type=win32">
+      <Name>v2_AutoHotkey.dll</Name>
+      <HintPath>bin\DLLs\v2_AutoHotkey.dll</HintPath>
+    </NativeReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
@@ -480,5 +502,10 @@
   <PropertyGroup>
     <PreBuildEvent>
     </PreBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PostBuildEvent>copy "$(TargetDir)LICENSE" "$(ProjectDir)\bin\x64\Release\LICENSE"
+copy "$(TargetDir)LICENSE_JUMPSCRIPT" "$(ProjectDir)\bin\x64\Release\LICENSE_JUMPSCRIPT"
+copy "$(ProjectDir)AAA_HybridCode\Jumpscript\P127_Jumpscript.exe" "$(TargetDir)P127_Jumpscript.exe"</PostBuildEvent>
   </PropertyGroup>
 </Project>

@@ -45,7 +45,7 @@ namespace Project_127.Overlay
 			Look
 		}
 
-		private NoteOverlayPages _NoteOverlayPage = NoteOverlayPages.NoteFiles;
+		private static NoteOverlayPages _NoteOverlayPage = NoteOverlayPages.NoteFiles;
 
 		public NoteOverlayPages NoteOverlayPage
 		{
@@ -74,7 +74,7 @@ namespace Project_127.Overlay
 						btn_Keybindings.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
 						break;
 					case NoteOverlayPages.Keybinds:
-
+						NoteOverlay.DisposePreview();
 
 						// Set actual Frame_Main Content to the correct Page
 						Frame_Notes.Content = new Project_127.Overlay.NoteOverlayPages.NoteOverlay_Keybinds();
@@ -106,15 +106,44 @@ namespace Project_127.Overlay
 			MainWindow.MW.Frame_Game.Content = new Overlay_Preview();
 			MainWindow.MW.Width = 1600;
 			MainWindow.MW.Grid_Preview.Visibility = Visibility.Visible;
+
+			MM_WasOpen = false;
+
+			if (IsOverlayInit())
+			{
+				if (GTAOverlay.OverlayMode == GTAOverlay.OverlayModes.MultiMonitor)
+				{
+					bool tmp = IsOverlayVisible();
+					OverlaySetVisible();
+					MM_WasOpen = tmp;
+				}
+			}
+
 			Overlay_Preview.StartDispatcherTimer();
 		}
+
+		private static bool MM_WasOpen = true;
 
 		public static void DisposePreview()
 		{
 			MainWindow.MW.Width = 900;
 			MainWindow.MW.Grid_Preview.Visibility = Visibility.Hidden;
 			MainWindow.MW.Frame_Game.Content = new EmptyPage();
+
+			if (IsOverlayInit())
+			{
+				if (GTAOverlay.OverlayMode == GTAOverlay.OverlayModes.MultiMonitor)
+				{
+					if (!MM_WasOpen)
+					{
+						OverlaySetInvisible();
+					}
+				}
+			}
+
 			Overlay_Preview.StopDispatcherTimer();
+
+			MM_WasOpen = true;
 		}
 
 
@@ -126,7 +155,7 @@ namespace Project_127.Overlay
 			LoadNoteOverlayWithCustomPage = NoteOverlayPages.NoteFiles;
 
 			ButtonMouseOverMagic(btn_cb_Set_EnableOverlay);
-
+			ButtonMouseOverMagic(btn_cb_Set_OverlayMultiMonitorMode);
 		}
 
 		public static void InitGTAOverlay()
@@ -134,14 +163,13 @@ namespace Project_127.Overlay
 			//HelperClasses.Logger.Log("Trying to Init GTA Overlay");
 			if (MyGTAOverlay == null)
 			{
-				// Set NotesLoaded here based on the
 				MyGTAOverlay = new GTAOverlay();
 				MyGTAOverlay.setTextColors(Settings.OverlayForeground, Color.Transparent);
 				MyGTAOverlay.setBackgroundColor(Settings.OverlayBackground);
 				MyGTAOverlay.setFont(Settings.OverlayTextFont, Settings.OverlayTextSize);
 				MyGTAOverlay.Position = Settings.OverlayLocation;
-				MyGTAOverlay.XMargin = Settings.OverlayMargin;
-				MyGTAOverlay.YMargin = Settings.OverlayMargin;
+				MyGTAOverlay.XMargin = Settings.OverlayMarginX;
+				MyGTAOverlay.YMargin = Settings.OverlayMarginY;
 				MyGTAOverlay.width = Settings.OverlayWidth;
 				MyGTAOverlay.height = Settings.OverlayHeight;
 				LoadTexts();
@@ -208,34 +236,22 @@ namespace Project_127.Overlay
 			}
 		}
 
-		public static void KeyBoardEvent(Keys pKey)
-		{
-			if (pKey == Settings.KeyOverlayToggle)
-			{
-				OverlayToggle();
-			}
-			else if (pKey == Settings.KeyOverlayScrollUp)
-			{
-				OverlayScrollUp();
-			}
-			else if (pKey == Settings.KeyOverlayScrollDown)
-			{
-				OverlayScrollDown();
-			}
-			else if (pKey == Settings.KeyOverlayScrollRight)
-			{
-				OverlayNoteNext();
-			}
-			else if (pKey == Settings.KeyOverlayScrollLeft)
-			{
-				OverlayNotePrev();
-			}
-		}
 
 		public static void OverlaySetVisible()
 		{
 			if (IsOverlayInit())
 			{
+				if (GTAOverlay.OverlayMode == GTAOverlay.OverlayModes.MultiMonitor)
+				{
+					if (MainWindow.OL_MM != null)
+					{
+						MainWindow.OL_MM.MyShow();
+						if (_NoteOverlayPage == NoteOverlayPages.Look)
+						{
+							MM_WasOpen = true;
+						}
+					}
+				}
 				HelperClasses.Logger.Log("Setting Visibility to true");
 				MyGTAOverlay.Visible = true;
 			}
@@ -245,6 +261,18 @@ namespace Project_127.Overlay
 		{
 			if (IsOverlayInit())
 			{
+				if (GTAOverlay.OverlayMode == GTAOverlay.OverlayModes.MultiMonitor)
+				{
+					if (MainWindow.OL_MM != null)
+					{
+						MainWindow.OL_MM.MyHide();
+						if (_NoteOverlayPage == NoteOverlayPages.Look)
+						{
+							MM_WasOpen = true;
+						}
+					}
+				}
+
 				HelperClasses.Logger.Log("Setting Visibility to false");
 				MyGTAOverlay.Visible = false;
 			}
@@ -274,26 +302,95 @@ namespace Project_127.Overlay
 			}
 		}
 
+
+		public static void DisposeAllOverlayStuff()
+		{
+			NoteOverlay.DisposeGTAOverlay();
+			if (MainWindow.OL_MM != null)
+			{
+				MainWindow.OL_MM.Close();
+				MainWindow.OL_MM = null;
+			}
+			HelperClasses.Keyboard.KeyboardListener.Stop();
+			HelperClasses.WindowChangeListener.Stop();
+		}
+
+		public static void OverlaySettingsChanged()
+		{
+			if (!GTAOverlay.DebugMode)
+			{
+				if (Settings.EnableOverlay == false)
+				{
+					DisposeAllOverlayStuff();
+				}
+				else if (Settings.EnableOverlay == true)
+				{
+					DisposeAllOverlayStuff();
+
+					if (GTAOverlay.OverlayMode == GTAOverlay.OverlayModes.MultiMonitor)
+					{
+						if (MainWindow.OL_MM != null)
+						{
+							MainWindow.OL_MM.Close();
+						}
+						MainWindow.OL_MM = new Overlay_MultipleMonitor();
+						MainWindow.OL_MM.Show();
+						//MainWindow.MW.Show();
+						MainWindow.MW.Focus();
+						MainWindow.MW.Activate();
+						NoteOverlay.InitGTAOverlay();
+						HelperClasses.Keyboard.KeyboardListener.Start();
+					}
+					else
+					{
+						if (LauncherLogic.GameState == LauncherLogic.GameStates.Running)
+						{
+							// Only Start Stop shit here when the overlay is not in debugmode
+							if (!GTAOverlay.DebugMode && GTAOverlay.OverlayMode == GTAOverlay.OverlayModes.Borderless)
+							{
+								NoteOverlay.InitGTAOverlay();
+								HelperClasses.WindowChangeListener.Start();
+							}
+						}
+					}
+
+					if (_NoteOverlayPage == NoteOverlayPages.Look)
+					{
+						if (GTAOverlay.OverlayMode == GTAOverlay.OverlayModes.MultiMonitor)
+						{
+							OverlaySetVisible();
+							MM_WasOpen = false;
+						}
+					}
+				}
+				Overlay.NoteOverlayPages.NoteOverlay_Look.RefreshIfHideOrNot();
+			}
+		}
+
+
 		public static void OverlayToggle()
 		{
-			if (IsOverlayVisible())
+			if (IsOverlayInit())
 			{
-				OverlaySetInvisible();
-			}
-			else
-			{
-				OverlaySetVisible();
+				if (IsOverlayVisible())
+				{
+					OverlaySetInvisible();
+				}
+				else
+				{
+					OverlaySetVisible();
+				}
 			}
 		}
 
 		public static void OverlayScrollUp()
 		{
-			MyGTAOverlay.scroll(5);
+			MyGTAOverlay.scroll(15);
 		}
 
 		public static void OverlayScrollDown()
 		{
-			MyGTAOverlay.scroll(-5);
+			MyGTAOverlay.scroll(-15);
 		}
 
 		public static void OverlayNoteNext()
@@ -355,9 +452,20 @@ namespace Project_127.Overlay
 
 		private void btn_cb_Click(object sender, RoutedEventArgs e)
 		{
-			Settings.EnableOverlay = !Settings.EnableOverlay;
-			ButtonMouseOverMagic((Button)sender);
+			Button myBtn = (Button)sender;
+			switch (myBtn.Name)
+			{
+				case "btn_cb_Set_EnableOverlay":
+					Settings.EnableOverlay = !Settings.EnableOverlay;
+					break;
+				case "btn_cb_Set_OverlayMultiMonitorMode":
+					Settings.OverlayMultiMonitorMode = !Settings.OverlayMultiMonitorMode;
+					break;
+			}
+			ButtonMouseOverMagic(myBtn);
 		}
+
+
 
 		private void btn_MouseEnter(object sender, MouseEventArgs e)
 		{
@@ -406,7 +514,16 @@ namespace Project_127.Overlay
 		/// <param name="myBtn"></param>
 		private void ButtonMouseOverMagic(Button myBtn)
 		{
-			SetCheckBoxBackground(myBtn, Settings.EnableOverlay);
+			switch (myBtn.Name)
+			{
+				case "btn_cb_Set_EnableOverlay":
+					SetCheckBoxBackground(myBtn, Settings.EnableOverlay);
+					break;
+				case "btn_cb_Set_OverlayMultiMonitorMode":
+					SetCheckBoxBackground(myBtn, Settings.OverlayMultiMonitorMode);
+					break;
+			}
+
 		}
 
 		private void btn_Notes_Click(object sender, RoutedEventArgs e)
