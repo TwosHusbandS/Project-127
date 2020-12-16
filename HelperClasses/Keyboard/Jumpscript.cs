@@ -152,6 +152,10 @@ namespace Project_127.HelperClasses
 			{
 				rtrn = "Media_Stop";
 			}
+			else if (pKey == Keys.Space)
+			{
+				rtrn = "Space";
+			}
 
 			// Translate this:
 			// https://docs.microsoft.com/en-us/dotnet/api/system.windows.forms.keys?view=netcore-3.1

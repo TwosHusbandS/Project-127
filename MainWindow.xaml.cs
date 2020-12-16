@@ -150,13 +150,15 @@ Hybrid code can be found in AAA_HybridCode.
 						Buttons "Use, "Exit". 
 			=> Overlay cant be toggled when multi monitor mode set before GTA started.
 			=> New SafeFile Export / Import
-			=> [APPARENTLY FIXED???] Investigate Jumpscript with Logs for crapideot.
+			=> Launching dragon Emu through steam broken?
+			=> Back up DowngradeFiles because of rockstar update...
+			=> Investigate Jumpscript with Logs for crapideot.
 			=> [APPARENTLY DONE???] May not need DidUpdateHit Method...Its not called anywhere...
-			
-			=> Deployment system with modes / branches like above
+=> Deployment system with modes / branches like above
 				--> XML Tag for link to specific build.
 				--> Download the build, then call Launcher with command line args to swap the files out correctly, so we have the new build.
 			=> [NOT CONNECTED TO ANY FILE RELATED LOGIC] Dragons stuff. Both paths, Settings
+
 			=> Download Manager keeping track of componments
 			=> Support for 1.24
 			=> Safe File Handler path switch because of social club switch
