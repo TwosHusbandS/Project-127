@@ -34,7 +34,7 @@ namespace Project_127.Auth
             // since we cant mod the response...
             //System.Windows.MessageBox.Show(modRes.Length.ToString());
             Task.Delay(5000);
-            frame.ExecuteJavaScriptAsync(";alert(\"hello\");"+modRes +";alert(\"goodbye\");", request.Url, 0);
+            frame.ExecuteJavaScriptAsync(modRes, request.Url, 0);
             //frame.ExecuteJavaScriptAsync("alert(\"fired\");");
             // this intentionally errors. (CORS issue)
             return ResourceHandler.FromString("/*edited*/", mimeType: Cef.GetMimeType("js"));
