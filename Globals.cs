@@ -309,6 +309,8 @@ namespace Project_127
 			{"EnableLogging", "True"},
 			{"EnableAlternativeLaunch", "False"},
 			{"EnableCopyFilesInsteadOfHardlinking", "False"},
+			{"EnableSlowCompare", "False"},
+			{"Version", "127"},
 			{"EnableCopyFilesInsteadOfSyslinking_SocialClub", "False"},
 			{"ExitWay", "Close"},
 			{"StartWay", "Maximized"},

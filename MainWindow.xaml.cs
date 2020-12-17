@@ -138,7 +138,7 @@ Hybrid code can be found in AAA_HybridCode.
 			=> [DONE] (Download Manager popup gonna replace that Check for update button) Button to "reset" and get $DowngradeFiles new, since Rockstar fucks us..
 			=> [DONE] Better ProgressBar on CreatingBackup...
 			=> [DONE] Fix grammar from dragons screen + Other Text Improvements.
-			=> Rightclick on create and use backup to give options to name it in a specific way. For mods and shit
+			=> [DONE] Rightclick on create and use backup to give options to name it in a specific way. For mods and shit
 				>> Create: Custom Control Popup (not new Window)
 						Header
 						Textbox name popup,
@@ -147,18 +147,26 @@ Hybrid code can be found in AAA_HybridCode.
 						Header
 						Select available Backuos from Dropdown / Combobox, delete empty back ups when reading in the info
 						Think of rename and exit functions...
-						Buttons "Use, "Exit". 
+						Buttons "Use, "Exit".
+			=> [DONE] Check if rolling log works.
+			=> [DONE] Less accurate but faster Method for detecting upgrades
+			=> [DONE] New SafeFile Export / Import
+			=> [Working for me] Launching dragon Emu through steam broken?
+			=> [APPARENTLY DONE???] May not need DidUpdateHit Method...Its not called anywhere...
+
+			=> More efficent compare of files...
+			=> Check if Backup Methods (use / create) need to call Upgrade or Downgrade after or before...
 			=> Overlay cant be toggled when multi monitor mode set before GTA started.
-			=> New SafeFile Export / Import
-			=> Launching dragon Emu through steam broken?
 			=> Back up DowngradeFiles because of rockstar update...
 			=> Investigate Jumpscript with Logs for crapideot.
-			=> [APPARENTLY DONE???] May not need DidUpdateHit Method...Its not called anywhere...
-=> Deployment system with modes / branches like above
+			=> Deployment system with modes / branches like above
 				--> XML Tag for link to specific build.
 				--> Download the build, then call Launcher with command line args to swap the files out correctly, so we have the new build.
-			=> [NOT CONNECTED TO ANY FILE RELATED LOGIC] Dragons stuff. Both paths, Settings
 
+
+
+
+			=> [NOT CONNECTED TO ANY FILE RELATED LOGIC] Dragons stuff. Both paths, Settings
 			=> Download Manager keeping track of componments
 			=> Support for 1.24
 			=> Safe File Handler path switch because of social club switch
@@ -1067,7 +1075,8 @@ namespace Project_127
 			string Downgrade_PlayGTAV = LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\playgtav.exe";
 			string Downgrade_UpdateRPF = LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\update\update.rpf";
 
-			bool areTheyEqual = HelperClasses.FileHandling.AreFilesEqual(GTA_UpdateRPF, Upgrade_UpdateRPF);
+			//bool areTheyEqual = HelperClasses.FileHandling.AreFilesEqual(GTA_UpdateRPF, Upgrade_UpdateRPF, );
+			//btn_Downgrade.Content = "Update Files are equal: '" + areTheyEqual.ToString() + "'";
 
 			//if (FileHandling.GetSizeOfFile(GTA_UpdateRPF) == FileHandling.GetSizeOfFile(Downgrade_UpdateRPF))
 			//{
@@ -1078,7 +1087,6 @@ namespace Project_127
 			//	areTheyEqual = false;
 			//}
 
-			btn_Downgrade.Content = "Update Files are equal: '" + areTheyEqual.ToString() + "'";
 
 		}
 

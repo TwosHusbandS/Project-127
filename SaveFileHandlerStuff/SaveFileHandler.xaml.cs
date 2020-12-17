@@ -23,6 +23,7 @@ using Project_127.MySettings;
 using System.Runtime.InteropServices;
 using WpfAnimatedGif;
 using System.Threading;
+using System.IO.Compression;
 
 namespace Project_127
 {
@@ -635,6 +636,10 @@ namespace Project_127
 			{
 				MI_NewFolder_Click(null, null);
 			}
+			else if (e.Key == Key.E)
+			{
+				MI_ExportFolder_Click(null, null);
+			}
 			else if (e.Key == Key.F2)
 			{
 				btn_Rename_Click(null, null);
@@ -666,7 +671,7 @@ namespace Project_127
 		/// <param name="e"></param>
 		private void btn_Import_Click(object sender, RoutedEventArgs e)
 		{
-			string MySelectedFilesRtrn = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.File, "Pick the SaveFiles you want to import", Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) +
+			string MySelectedFilesRtrn = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.File, "Pick the SaveFiles (or a ZIP File) you want to import", Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) +
 											@"\Rockstar Games\GTA V\Profiles", true);
 
 			// Close this if return is empty or ""
@@ -682,41 +687,53 @@ namespace Project_127
 			// Looping through all Selected Files
 			for (int i = 0; i <= MySelectedFiles.Count - 1; i++)
 			{
-				// if is .bak
-				if (MySelectedFiles[i].Substring(MySelectedFiles[i].Length - 4) == ".bak")
+				// if is .zip
+				if (MySelectedFiles[i].Substring(MySelectedFiles[i].Length - 4) == ".zip")
 				{
-					string correspondingNonBakFile = MySelectedFiles[i].Substring(0, MySelectedFiles[i].Length - 4);
-					if (!HelperClasses.FileHandling.doesFileExist(correspondingNonBakFile))
-					{
-						// Create correspondingNonBakFile if it doesnt exist
-						HelperClasses.FileHandling.copyFile(MySelectedFiles[i], correspondingNonBakFile);
-					}
+					new PopupProgress(PopupProgress.ProgressTypes.ZIPFile, MySelectedFiles[i], null, MySaveFile.CurrentBackupSavesPath).ShowDialog();
 				}
-				// Non .bak
 				else
 				{
-					string correspondingBakFile = MySelectedFiles[i] + ".bak";
-					if (!HelperClasses.FileHandling.doesFileExist(correspondingBakFile))
+					// if is .bak
+					if (MySelectedFiles[i].Substring(MySelectedFiles[i].Length - 4) == ".bak")
 					{
-						// Create correspondingBakFile if it doesnt exist
-						HelperClasses.FileHandling.copyFile(MySelectedFiles[i], correspondingBakFile);
+						string correspondingNonBakFile = MySelectedFiles[i].Substring(0, MySelectedFiles[i].Length - 4);
+						if (!HelperClasses.FileHandling.doesFileExist(correspondingNonBakFile))
+						{
+							// Create correspondingNonBakFile if it doesnt exist
+							List<MyFileOperation> tmp = new List<MyFileOperation>();
+							tmp.Add(new MyFileOperation(MyFileOperation.FileOperations.Copy, MySelectedFiles[i], correspondingNonBakFile, "Copying SaveFiles in Source Folder", 1, MyFileOperation.FileOrFolder.File));
+							new PopupProgress(PopupProgress.ProgressTypes.FileOperation, "Copying", tmp).ShowDialog();
+						}
 					}
-				}
-
-				// Making the FileName non Bak
-				MySelectedFiles[i] = HelperClasses.FileHandling.TrimEnd(MySelectedFiles[i], ".bak");
-
-				// Adding it to new list if it doesnt contain it yet
-				if (!MySelectedFilesUnique.Contains(MySelectedFiles[i]))
-				{
-					string FileName = MySelectedFiles[i].Substring(MySelectedFiles[i].LastIndexOf('\\') + 1);
-					if (HelperClasses.FileHandling.doesFileExist(MySaveFile.GTAVSavesPath.TrimEnd('\\') + @"\" + FileName))
+					// Non .bak
+					else
 					{
-						FileName = GetNewFileName(FileName, MySaveFile.CurrentBackupSavesPath);
+						string correspondingBakFile = MySelectedFiles[i] + ".bak";
+						if (!HelperClasses.FileHandling.doesFileExist(correspondingBakFile))
+						{
+							// Create correspondingBakFile if it doesnt exist
+							List<MyFileOperation> tmp = new List<MyFileOperation>();
+							tmp.Add(new MyFileOperation(MyFileOperation.FileOperations.Copy, MySelectedFiles[i], correspondingBakFile, "Copying SaveFiles in Source Folder", 1, MyFileOperation.FileOrFolder.File));
+							new PopupProgress(PopupProgress.ProgressTypes.FileOperation, "Copying", tmp).ShowDialog();
+						}
 					}
-					MySaveFile.Import(MySelectedFiles[i], FileName);
 
-					MySelectedFilesUnique.Add(MySelectedFiles[i]);
+					// Making the FileName non Bak
+					MySelectedFiles[i] = HelperClasses.FileHandling.TrimEnd(MySelectedFiles[i], ".bak");
+
+					// Adding it to new list if it doesnt contain it yet
+					if (!MySelectedFilesUnique.Contains(MySelectedFiles[i]))
+					{
+						string FileName = MySelectedFiles[i].Substring(MySelectedFiles[i].LastIndexOf('\\') + 1);
+						if (HelperClasses.FileHandling.doesFileExist(MySaveFile.GTAVSavesPath.TrimEnd('\\') + @"\" + FileName))
+						{
+							FileName = GetNewFileName(FileName, MySaveFile.CurrentBackupSavesPath);
+						}
+						MySaveFile.Import(MySelectedFiles[i], FileName);
+
+						MySelectedFilesUnique.Add(MySelectedFiles[i]);
+					}
 				}
 			}
 
@@ -793,12 +810,17 @@ namespace Project_127
 						mi2.Click += MI_DeleteFolder_Click;
 						cm.Items.Add(mi2);
 
+						MenuItem mi3 = new MenuItem();
+						mi3.Header = "(E)xport Folder";
+						mi3.Click += MI_ExportFolder_Click;
+						cm.Items.Add(mi3);
+
 						if (CopyCutPasteObject != null)
 						{
-							MenuItem mi3 = new MenuItem();
-							mi3.Header = "Paste (V)";
-							mi3.Click += MI_PasteIntoBackupFolder_Click;
-							cm.Items.Add(mi3);
+							MenuItem mi4 = new MenuItem();
+							mi4.Header = "Paste (V)";
+							mi4.Click += MI_PasteIntoBackupFolder_Click;
+							cm.Items.Add(mi4);
 						}
 
 						cm.IsOpen = true;
@@ -989,6 +1011,38 @@ namespace Project_127
 		private void MI_DeleteFolder_Click(object sender, RoutedEventArgs e)
 		{
 			btn_Delete_Click(null, null);
+		}
+
+		private void MI_ExportFolder_Click(object sender, RoutedEventArgs e)
+		{
+			MySaveFile tmp = GetSelectedSaveFile();
+			if (tmp != null)
+			{
+				if (tmp.FileOrFolder == MySaveFile.FileOrFolders.Folder)
+				{
+					// SaveFile ZIP...get zip savepath
+					string outputPath = HelperClasses.FileHandling.SaveFileDialog("Select ZIP File Save Location", "ZIP file (*.zip)|*.zip");
+
+					if (!String.IsNullOrEmpty(outputPath))
+					{
+						if (HelperClasses.FileHandling.doesFileExist(outputPath))
+						{
+							Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "File already exists.\nDo you want to replace the existing File?");
+							yesno.ShowDialog();
+							if (yesno.DialogResult == true)
+							{
+								HelperClasses.FileHandling.deleteFile(outputPath);
+							}
+							else
+							{
+								return;
+							}
+						}
+						ZipFile.CreateFromDirectory(tmp.FilePath, outputPath);
+						new Popup(Popup.PopupWindowTypes.PopupOk, "ZIP file created in:\n'" + outputPath + "'").ShowDialog();
+					}
+				}
+			}
 		}
 
 		private void MI_MoveToGTA_Click(object sender, RoutedEventArgs e)

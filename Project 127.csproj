@@ -183,6 +183,7 @@
     </ApplicationDefinition>
     <Compile Include="Auth\CEFResourceHandler.cs" />
     <Compile Include="HelperClasses\DataGridHelper.cs" />
+    <Compile Include="HelperClasses\DownloadManager.cs" />
     <Compile Include="HelperClasses\Keyboard\Jumpscript.cs" />
     <Compile Include="HelperClasses\Keyboard\KeyboardListener.cs" />
     <Compile Include="HelperClasses\MouseSender.cs" />

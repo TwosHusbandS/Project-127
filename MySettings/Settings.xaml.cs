@@ -51,6 +51,9 @@ namespace Project_127.MySettings
 
 			combox_Set_StartWays.ItemsSource = Enum.GetValues(typeof(StartWays)).Cast<StartWays>();
 
+			combox_Set_SocialClubGameVersion.Items.Add("127");
+			combox_Set_SocialClubGameVersion.Items.Add("124");
+
 			SettingsState = LastSettingsState;
 
 			RefreshGUI();
@@ -663,6 +666,8 @@ namespace Project_127.MySettings
 			combox_Set_ExitWays.SelectedItem = Settings.ExitWay;
 			combox_Set_StartWays.SelectedItem = Settings.StartWay;
 
+			combox_Set_SocialClubGameVersion.SelectedItem = Settings.Version;
+
 			tb_Set_InGameName.Text = Settings.InGameName;
 
 			btn_Set_JumpScriptKey1.Content = Settings.JumpScriptKey1;
@@ -685,6 +690,7 @@ namespace Project_127.MySettings
 			ButtonMouseOverMagic(btn_cb_Set_OnlyAutoStartProgramsWhenDowngraded);
 			ButtonMouseOverMagic(btn_cb_Set_EnableDontLaunchThroughSteam);
 			ButtonMouseOverMagic(btn_cb_Set_EnableAutoStartJumpScript);
+			ButtonMouseOverMagic(btn_cb_Set_SlowCompare);
 
 			RefreshIfOptionsHide();
 
@@ -840,6 +846,9 @@ namespace Project_127.MySettings
 				case "btn_cb_Set_EnableLogging":
 					SetCheckBoxBackground(myBtn, Settings.EnableLogging);
 					break;
+				case "btn_cb_Set_SlowCompare":
+					SetCheckBoxBackground(myBtn, Settings.EnableSlowCompare);
+					break;
 				case "btn_cb_Set_CopyFilesInsteadOfHardlinking":
 					SetCheckBoxBackground(myBtn, Settings.EnableCopyFilesInsteadOfHardlinking);
 					break;
@@ -898,6 +907,13 @@ namespace Project_127.MySettings
 
 		private void RefreshIfOptionsHide()
 		{
+			// Remove this...
+			Rect_HideOptions_Tease.Visibility = Visibility.Visible;
+			Rect_HideOptions.Visibility = Visibility.Hidden;
+			Rect_HideOptions2.Visibility = Visibility.Hidden;
+			Rect_HideOptions3.Visibility = Visibility.Hidden;
+			return;
+
 			if (Settings.Retailer == Retailers.Epic)
 			{
 				Rect_HideOptions3.Visibility = Visibility.Visible;
@@ -936,6 +952,9 @@ namespace Project_127.MySettings
 			{
 				case "btn_cb_Set_EnableLogging":
 					Settings.EnableLogging = !Settings.EnableLogging;
+					break;
+				case "btn_cb_Set_SlowCompare":
+					Settings.EnableSlowCompare = !Settings.EnableSlowCompare;
 					break;
 				case "btn_cb_Set_EnableAlternativeLaunch":
 					Settings.EnableAlternativeLaunch = !Settings.EnableAlternativeLaunch;
@@ -1113,7 +1132,7 @@ namespace Project_127.MySettings
 
 		private void btn_CreateBackup_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
 		{
-
+			PopupCreateBackup.IsOpen = true;
 		}
 
 		private void btn_UseBackup_Click(object sender, RoutedEventArgs e)
@@ -1121,11 +1140,9 @@ namespace Project_127.MySettings
 			LauncherLogic.UseBackup();
 		}
 
-
-
 		private void btn_UseBackup_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
 		{
-
+			PopupUseBackup.IsOpen = true;
 		}
 
 
@@ -1151,5 +1168,137 @@ namespace Project_127.MySettings
 				new PopupMode().ShowDialog();
 			}
 		}
+
+		private void combox_Set_SocialClubGameVersion_SelectionChanged(object sender, SelectionChangedEventArgs e)
+		{
+			Settings.Version = combox_Set_SocialClubGameVersion.SelectedItem.ToString();
+		}
+
+		private void PopupCreateBackup_Closed(object sender, EventArgs e)
+		{
+
+		}
+
+		private void PopupCreateBackup_Opened(object sender, EventArgs e)
+		{
+			tb_Set_BackupName.Text = "BackupName";
+		}
+
+		private void tb_Set_BackupName_KeyDown(object sender, KeyEventArgs e)
+		{
+			if (e.Key == Key.Enter)
+			{
+				btn_CreateBackupName_Click(null, null);
+			}
+		}
+
+		private async void btn_CreateBackupName_Click(object sender, RoutedEventArgs e)
+		{
+			if (String.IsNullOrEmpty(tb_Set_BackupName.Text))
+			{
+				string prevName = btn_CreateBackupName.Content.ToString();
+				btn_CreateBackupName.Content = "Invalid Name";
+				await Task.Delay(750);
+				btn_CreateBackupName.Content = prevName;
+			}
+			else
+			{
+				string newPath = LauncherLogic.UpgradeFilePath.TrimEnd('\\') + @"_Backup_" + tb_Set_BackupName.Text;
+				if (HelperClasses.FileHandling.doesPathExist(newPath))
+				{
+					Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Backup with that name ('" + tb_Set_BackupName.Text + "') already exists.\nDo you want to delete it?");
+					yesno.ShowDialog();
+					if (yesno.DialogResult == true)
+					{
+						HelperClasses.FileHandling.DeleteFolder(newPath);
+					}
+					else
+					{
+						return;
+					}
+				}
+				HelperClasses.FileHandling.createPath(newPath);
+				if (HelperClasses.FileHandling.doesPathExist(newPath))
+				{
+					LauncherLogic.CreateBackup(tb_Set_BackupName.Text);
+				}
+				else
+				{
+					string prevName = btn_CreateBackupName.Content.ToString();
+					btn_CreateBackupName.Content = "Cant create that Folder.";
+					await Task.Delay(750);
+					btn_CreateBackupName.Content = prevName;
+				}
+			}
+		}
+
+		private void Border_MouseLeave(object sender, MouseEventArgs e)
+		{
+			PopupCreateBackup.IsOpen = false;
+			PopupUseBackup.IsOpen = false;
+		}
+
+		private void PopupUseBackup_Closed(object sender, EventArgs e)
+		{
+
+		}
+
+		private void PopupUseBackup_Opened(object sender, EventArgs e)
+		{
+			combox_UseBackup.Items.Clear();
+
+
+			foreach (string MyFolder in HelperClasses.FileHandling.GetSubFolders(LauncherLogic.ZIPFilePath.TrimEnd('\\') + @"\Project_127_Files\"))
+			{
+				if (MyFolder.Contains(LauncherLogic.ZIPFilePath.TrimEnd('\\') + @"\Project_127_Files\UpgradeFiles_Backup_"))
+				{
+					string NiceName = MyFolder.Substring(MyFolder.LastIndexOf('_') + 1);
+					combox_UseBackup.Items.Add(NiceName);
+				}
+			}
+
+		}
+
+		private async void btn_UseBackupName_Click(object sender, RoutedEventArgs e)
+		{
+			if (combox_UseBackup.SelectedItem == null)
+			{
+				string prevName = btn_UseBackupName.Content.ToString();
+				btn_UseBackupName.Content = "Invalid Selection";
+				await Task.Delay(750);
+				btn_UseBackupName.Content = prevName;
+				return;
+			}
+
+
+			if (String.IsNullOrEmpty(combox_UseBackup.SelectedItem.ToString()))
+			{
+				string prevName = btn_UseBackupName.Content.ToString();
+				btn_UseBackupName.Content = "Invalid Selection";
+				await Task.Delay(750);
+				btn_UseBackupName.Content = prevName;
+				return;
+			}
+
+			string newName = LauncherLogic.ZIPFilePath.TrimEnd('\\') + @"\Project_127_Files\UpgradeFiles_Backup_" + combox_UseBackup.SelectedItem.ToString();
+			if (HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(newName).Length <= 1)
+			{
+				string prevName = btn_UseBackupName.Content.ToString();
+				btn_UseBackupName.Content = "No Files in that Folder";
+				await Task.Delay(750);
+				btn_UseBackupName.Content = prevName;
+				return;
+			}
+
+
+			Globals.DebugPopup(newName);
+
+			LauncherLogic.UseBackup(combox_UseBackup.SelectedItem.ToString());
+		}
+
+		private void combox_UseBackup_SelectionChanged(object sender, SelectionChangedEventArgs e)
+		{
+
+		}
 	} // End of Class
-} // End of Namespace
+} // End of Namespace 

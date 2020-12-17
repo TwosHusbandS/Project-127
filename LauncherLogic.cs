@@ -780,10 +780,17 @@ namespace Project_127
 
 
 
-		public static void CreateBackup(string NewPath = "Backup")
+		public static void CreateBackup(string NewPath = "")
 		{
 			string OrigPath = LauncherLogic.UpgradeFilePath.TrimEnd('\\');
-			NewPath = Directory.GetParent(OrigPath).ToString().TrimEnd('\\') + @"\UpgradeFiles_" + NewPath.TrimEnd('\\');
+			if (NewPath == "")
+			{
+				NewPath = Directory.GetParent(OrigPath).ToString().TrimEnd('\\') + @"\UpgradeFiles_Backup";
+			}
+			else
+			{
+				NewPath = Directory.GetParent(OrigPath).ToString().TrimEnd('\\') + @"\UpgradeFiles_Backup_" + NewPath.TrimEnd('\\');
+			}
 
 			if (HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(OrigPath).Length <= 1)
 			{
@@ -814,10 +821,17 @@ namespace Project_127
 			}
 		}
 
-		public static void UseBackup(string NewPath = "Backup")
+		public static void UseBackup(string NewPath = "")
 		{
 			string OrigPath = LauncherLogic.UpgradeFilePath.TrimEnd('\\');
-			NewPath = Directory.GetParent(OrigPath).ToString().TrimEnd('\\') + @"\UpgradeFiles_" + NewPath.TrimEnd('\\');
+			if (NewPath == "")
+			{
+				NewPath = Directory.GetParent(OrigPath).ToString().TrimEnd('\\') + @"\UpgradeFiles_Backup";
+			}
+			else
+			{
+				NewPath = Directory.GetParent(OrigPath).ToString().TrimEnd('\\') + @"\UpgradeFiles_Backup_" + NewPath.TrimEnd('\\');
+			}
 
 			if (HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(NewPath).Length <= 1)
 			{
@@ -845,12 +859,11 @@ namespace Project_127
 
 				new Popup(Popup.PopupWindowTypes.PopupOk, "Using backup files now.").ShowDialog();
 
-				if (InstallationState == InstallationStates.Unsure)
+				// Keep this here...
+				string asdf = InstallationState.ToString();
+				if (asdf.Length > 10000)
 				{
-					if (MainWindow.MW == null)
-					{
-						Globals.DebugPopup("Pretend to do something");
-					}
+					Globals.DebugPopup(asdf);
 				}
 			}
 
