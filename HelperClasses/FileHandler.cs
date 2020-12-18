@@ -75,6 +75,16 @@ namespace Project_127.HelperClasses
 			return "";
 		}
 
+		public static string SaveFileDialog(string Title, string Filter)
+		{
+			SaveFileDialog saveFileDialog = new SaveFileDialog();
+			saveFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+			saveFileDialog.Filter = Filter;
+			saveFileDialog.Title = Title; 
+			saveFileDialog.ShowDialog();
+			return saveFileDialog.FileName;
+		}
+
 
 
 
@@ -366,11 +376,11 @@ namespace Project_127.HelperClasses
 			return rtrn;
 		}
 
-		public static bool AreFilesEqual(string pFilePathA, string pFilePathB)
+		public static bool AreFilesEqual(string pFilePathA, string pFilePathB, bool SlowButStable)
 		{
 			Stopwatch sw = new Stopwatch();
 			sw.Start();
-			bool Sth = AreFilesEqualReal(pFilePathA, pFilePathB);
+			bool Sth = AreFilesEqualReal(pFilePathA, pFilePathB, SlowButStable);
 			sw.Stop();
 			HelperClasses.Logger.Log("AAAA - It took '" + sw.ElapsedMilliseconds + "' ms to compare: '" + pFilePathA + "' and '" + pFilePathB + "'. Result is: " + Sth.ToString());
 			return Sth;
@@ -410,7 +420,7 @@ namespace Project_127.HelperClasses
 
 
 
-		public static bool AreFilesEqualReal(string pFilePathA, string pFilePathB)
+		public static bool AreFilesEqualReal(string pFilePathA, string pFilePathB, bool SlowButStable)
 		{
 			FileInfo fileInfo1 = new FileInfo(pFilePathA);
 			FileInfo fileInfo2 = new FileInfo(pFilePathB);
@@ -423,7 +433,7 @@ namespace Project_127.HelperClasses
 			{
 				return false;
 			}
-			else
+			else if (SlowButStable)
 			{
 				using (var file1 = fileInfo1.OpenRead())
 				{
@@ -432,6 +442,10 @@ namespace Project_127.HelperClasses
 						return StreamsContentsAreEqual(file1, file2);
 					}
 				}
+			}
+			else
+			{
+				return true;
 			}
 		}
 
@@ -798,7 +812,7 @@ namespace Project_127.HelperClasses
 		/// </summary>
 		/// <param name="pFolderPath"></param>
 		public static void createPath(string pFolderPath)
-		{
+		{ 
 			try
 			{
 				if (!doesPathExist(pFolderPath))

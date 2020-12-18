@@ -63,6 +63,8 @@ namespace Project_127.Popups
 		/// </summary>
 		string ZipFileWeWannaExtract;
 
+		string myZipExtractionPath;
+
 		/// <summary>
 		/// Constructor of PopupProgress.
 		/// String pParam1 is either the GUI Text for File Operations or the ZIP File physical location
@@ -70,8 +72,14 @@ namespace Project_127.Popups
 		/// <param name="pProgressType"></param>
 		/// <param name="pParam1"></param>
 		/// <param name="pMyFileOperations"></param>
-		public PopupProgress(ProgressTypes pProgressType, string pParam1, List<MyFileOperation> pMyFileOperations = null)
+		public PopupProgress(ProgressTypes pProgressType, string pParam1, List<MyFileOperation> pMyFileOperations = null, string zipExtractionPath = "")
 		{
+			if (zipExtractionPath == "")
+			{
+				zipExtractionPath = LauncherLogic.ZIPFilePath;
+			}
+			myZipExtractionPath = zipExtractionPath;
+
 			if (MainWindow.MW.IsVisible)
 			{
 				this.Owner = MainWindow.MW;
@@ -151,7 +159,7 @@ namespace Project_127.Popups
 			else if (ProgressType == ProgressTypes.ZIPFile)
 			{
 				HelperClasses.Logger.Log("ZipFileWeWannaExtract: '" + ZipFileWeWannaExtract + "'");
-				HelperClasses.Logger.Log("ZIPExtractPath: '" + LauncherLogic.ZIPFilePath + "'");
+				HelperClasses.Logger.Log("ZIPExtractPath: '" + myZipExtractionPath + "'");
 
 				List<System.IO.Compression.ZipArchiveEntry> fileList = new List<System.IO.Compression.ZipArchiveEntry>();
 				var totalFiles = 0;
@@ -177,7 +185,7 @@ namespace Project_127.Popups
 							if (!string.IsNullOrEmpty(file.Name))
 							{
 								bool doExtract = true;
-								string PathOnDisk = LauncherLogic.ZIPFilePath.TrimEnd('\\') + @"\" + file.FullName.Replace(@"/", @"\");
+								string PathOnDisk = myZipExtractionPath.TrimEnd('\\') + @"\" + file.FullName.Replace(@"/", @"\");
 								HelperClasses.FileHandling.createPathOfFile(PathOnDisk); // 99% Chance I fixed this with the createZipPaths Method. Lets keep this to make sure...
 								if (HelperClasses.FileHandling.doesFileExist(PathOnDisk))
 								{
@@ -255,9 +263,9 @@ namespace Project_127.Popups
 					// Update GUI
 					Application.Current.Dispatcher.Invoke((Action)delegate
 					{
-						long progress = (100 * i / FilesInDowngradeFiles.Length - 1);
+						long progress = ((i + 1) * 100  / FilesInDowngradeFiles.Length);
 						myPB.Value = progress;
-						myLBL.Content = "Gathering Information(" + i.ToString() + "/" + (FilesInDowngradeFiles.Length - 1).ToString() + ")";
+						myLBL.Content = "Gathering Information(" + (i + 1).ToString() + "/" + (FilesInDowngradeFiles.Length).ToString() + ")";
 					});
 
 
@@ -269,14 +277,14 @@ namespace Project_127.Popups
 					if (HelperClasses.FileHandling.doesFileExist(CorrespondingFilePathInGTALocation[i]))
 					{
 						// If the File we are replacing is the same as in DowngradeFiles
-						if (HelperClasses.FileHandling.AreFilesEqual(CorrespondingFilePathInGTALocation[i], FilesInDowngradeFiles[i]))
+						if (HelperClasses.FileHandling.AreFilesEqual(CorrespondingFilePathInGTALocation[i], FilesInDowngradeFiles[i], MySettings.Settings.EnableSlowCompare))
 						{
-							// Delete from GTA V Installation Path
+							// Delete from GTA V Installation Path 
 							MyFileOperationsTmp.Add(new MyFileOperation(MyFileOperation.FileOperations.Delete, CorrespondingFilePathInGTALocation[i], "", "Found '" + CorrespondingFilePathInGTALocation[i] + "' in GTA V Installation Path and its the same file as from $Downgrade_Files. Will delelte from GTA V Installation", 1));
 						}
 
 						// If the File we are replacing is the same as in UpgradeFiles
-						else if (HelperClasses.FileHandling.AreFilesEqual(CorrespondingFilePathInGTALocation[i], CorrespondingFilePathInUpgradeFiles[i]))
+						else if (HelperClasses.FileHandling.AreFilesEqual(CorrespondingFilePathInGTALocation[i], CorrespondingFilePathInUpgradeFiles[i], MySettings.Settings.EnableSlowCompare))
 						{
 							// Delete from GTA V Installation Path
 							MyFileOperationsTmp.Add(new MyFileOperation(MyFileOperation.FileOperations.Delete, CorrespondingFilePathInGTALocation[i], "", "Found '" + CorrespondingFilePathInGTALocation[i] + "' in GTA V Installation Path and its the same file as from $Upgrade_Files. Will delelte from GTA V Installation", 1));
@@ -355,9 +363,9 @@ namespace Project_127.Popups
 					// Update GUI
 					Application.Current.Dispatcher.Invoke((Action)delegate
 					{
-						long progress = (100 * i / FilesInDowngradeFiles.Length - 1);
+						long progress = ((i + 1) * 100 / FilesInDowngradeFiles.Length);
 						myPB.Value = progress;
-						myLBL.Content = "Gathering Information(" + i.ToString() + "/" + (FilesInDowngradeFiles.Length - 1).ToString() + ")";
+						myLBL.Content = "Gathering Information(" + (i+1).ToString() + "/" + (FilesInDowngradeFiles.Length).ToString() + ")";
 					});
 
 
@@ -369,14 +377,14 @@ namespace Project_127.Popups
 					if (HelperClasses.FileHandling.doesFileExist(CorrespondingFilePathInGTALocation[i]))
 					{
 						// If the File we are replacing is the same as in DowngradeFiles
-						if (HelperClasses.FileHandling.AreFilesEqual(CorrespondingFilePathInGTALocation[i], FilesInDowngradeFiles[i]))
+						if (HelperClasses.FileHandling.AreFilesEqual(CorrespondingFilePathInGTALocation[i], FilesInDowngradeFiles[i], MySettings.Settings.EnableSlowCompare))
 						{
 							// Delete from GTA V Installation Path
 							MyFileOperationsTmp.Add(new MyFileOperation(MyFileOperation.FileOperations.Delete, CorrespondingFilePathInGTALocation[i], "", "Found '" + CorrespondingFilePathInGTALocation[i] + "' in GTA V Installation Path and its the same file as from $Downgrade_Files. Will delelte from GTA V Installation", 1));
 						}
 
 						// If the File we are replacing is the same as in UpgradeFiles
-						else if (HelperClasses.FileHandling.AreFilesEqual(CorrespondingFilePathInGTALocation[i], CorrespondingFilePathInUpgradeFiles[i]))
+						else if (HelperClasses.FileHandling.AreFilesEqual(CorrespondingFilePathInGTALocation[i], CorrespondingFilePathInUpgradeFiles[i], MySettings.Settings.EnableSlowCompare))
 						{
 							// Delete from GTA V Installation Path
 							MyFileOperationsTmp.Add(new MyFileOperation(MyFileOperation.FileOperations.Delete, CorrespondingFilePathInGTALocation[i], "", "Found '" + CorrespondingFilePathInGTALocation[i] + "' in GTA V Installation Path and its the same file as from $Upgrade_Files. Will delelte from GTA V Installation", 1));
@@ -475,7 +483,7 @@ namespace Project_127.Popups
 				string Downgrade_UpdateRPF = LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\update\update.rpf";
 
 				SetProgress("Checking if GTA Update hit", 2, 5);
-				if (!HelperClasses.FileHandling.AreFilesEqual(GTA_GTA5, Upgrade_GTA5))
+				if (!HelperClasses.FileHandling.AreFilesEqual(GTA_GTA5, Upgrade_GTA5, MySettings.Settings.EnableSlowCompare))
 				{
 					//SetProgress("Checking if Update hit", 3, 8);
 					//if (!HelperClasses.FileHandling.AreFilesEqual(GTA_GTA5, Downgrade_GTA5))
@@ -486,7 +494,7 @@ namespace Project_127.Popups
 				}
 
 				SetProgress("Checking if GTA Update hit", 3, 5);
-				if (!HelperClasses.FileHandling.AreFilesEqual(GTA_PlayGTAV, Upgrade_PlayGTAV))
+				if (!HelperClasses.FileHandling.AreFilesEqual(GTA_PlayGTAV, Upgrade_PlayGTAV, MySettings.Settings.EnableSlowCompare))
 				{
 					//SetProgress("Checking if Update hit", 5, 8);
 					//if (!HelperClasses.FileHandling.AreFilesEqual(GTA_PlayGTAV, Downgrade_PlayGTAV))
@@ -497,7 +505,7 @@ namespace Project_127.Popups
 				}
 
 				SetProgress("Checking if GTA Update hit", 4, 5);
-				if (!HelperClasses.FileHandling.AreFilesEqual(GTA_UpdateRPF, Upgrade_UpdateRPF))
+				if (!HelperClasses.FileHandling.AreFilesEqual(GTA_UpdateRPF, Upgrade_UpdateRPF, MySettings.Settings.EnableSlowCompare))
 				{
 					//SetProgress("Checking if Update hit", 7, 8);
 					//if (!HelperClasses.FileHandling.AreFilesEqual(GTA_UpdateRPF, Downgrade_UpdateRPF))

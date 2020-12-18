@@ -156,6 +156,7 @@ namespace Project_127.Overlay
 
 			ButtonMouseOverMagic(btn_cb_Set_EnableOverlay);
 			ButtonMouseOverMagic(btn_cb_Set_OverlayMultiMonitorMode);
+			RefreshIfOptionsHide();
 		}
 
 		public static void InitGTAOverlay()
@@ -311,6 +312,7 @@ namespace Project_127.Overlay
 				MainWindow.OL_MM.Close();
 				MainWindow.OL_MM = null;
 			}
+			DisposePreview();
 			HelperClasses.Keyboard.KeyboardListener.Stop();
 			HelperClasses.WindowChangeListener.Stop();
 		}
@@ -336,7 +338,7 @@ namespace Project_127.Overlay
 						MainWindow.OL_MM = new Overlay_MultipleMonitor();
 						MainWindow.OL_MM.Show();
 						//MainWindow.MW.Show();
-						MainWindow.MW.Focus();
+						//MainWindow.MW.Focus();
 						MainWindow.MW.Activate();
 						NoteOverlay.InitGTAOverlay();
 						HelperClasses.Keyboard.KeyboardListener.Start();
@@ -361,6 +363,7 @@ namespace Project_127.Overlay
 							OverlaySetVisible();
 							MM_WasOpen = false;
 						}
+						LoadPreview();
 					}
 				}
 				Overlay.NoteOverlayPages.NoteOverlay_Look.RefreshIfHideOrNot();
@@ -457,12 +460,25 @@ namespace Project_127.Overlay
 			{
 				case "btn_cb_Set_EnableOverlay":
 					Settings.EnableOverlay = !Settings.EnableOverlay;
+					RefreshIfOptionsHide();
 					break;
 				case "btn_cb_Set_OverlayMultiMonitorMode":
 					Settings.OverlayMultiMonitorMode = !Settings.OverlayMultiMonitorMode;
 					break;
 			}
 			ButtonMouseOverMagic(myBtn);
+		}
+
+		public void RefreshIfOptionsHide()
+		{
+			if (Settings.EnableOverlay)
+			{
+				Rect_HideOption5.Visibility = Visibility.Hidden;
+			}
+			else
+			{
+				Rect_HideOption5.Visibility = Visibility.Visible;
+			}
 		}
 
 
@@ -539,6 +555,16 @@ namespace Project_127.Overlay
 		private void btn_Keybindings_Click(object sender, RoutedEventArgs e)
 		{
 			NoteOverlayPage = NoteOverlayPages.Keybinds;
+		}
+
+		private void btn_cb_Set_OverlayMultiMonitorMode_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+		{
+			NoteOverlay.OverlaySettingsChanged();
+
+			Settings.OL_MM_Left = 0;
+			Settings.OL_MM_Top = 0;
+
+			NoteOverlay.OverlaySettingsChanged();
 		}
 	}
 }

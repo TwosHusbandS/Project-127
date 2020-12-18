@@ -332,6 +332,8 @@ namespace Project_127
 			{"EnableLogging", "True"},
 			{"EnableAlternativeLaunch", "False"},
 			{"EnableCopyFilesInsteadOfHardlinking", "False"},
+			{"EnableSlowCompare", "False"},
+			{"Version", "127"},
 			{"EnableCopyFilesInsteadOfSyslinking_SocialClub", "False"},
 			{"ExitWay", "Close"},
 			{"StartWay", "Maximized"},
@@ -1064,14 +1066,7 @@ namespace Project_127
 		/// </summary>
 		public static void ProperExit()
 		{
-			if (MainWindow.OL_MM != null)
-			{
-				MainWindow.OL_MM.Close();
-			}
-			HelperClasses.Keyboard.KeyboardListener.Stop();
-			NoteOverlay.DisposeGTAOverlay();
-			NoteOverlay.DisposePreview();
-			WindowChangeListener.Stop();
+			NoteOverlay.DisposeAllOverlayStuff();
 			Jumpscript.StopJumpscript();
 			Globals.FSW.Dispose();
 			Globals.MyDispatcherTimer.Stop();

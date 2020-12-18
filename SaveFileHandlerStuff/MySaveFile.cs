@@ -319,6 +319,13 @@ namespace Project_127
 			string newFilePath = MySaveFile.CurrentBackupSavesPath.TrimEnd('\\') + @"\" + pFileName;
 			HelperClasses.FileHandling.copyFile(pOriginalFilePath, newFilePath);
 			HelperClasses.FileHandling.copyFile(pOriginalFilePath + ".bak", newFilePath + ".bak");
+
+			List<MyFileOperation> tmp = new List<MyFileOperation>();
+			tmp.Add(new MyFileOperation(MyFileOperation.FileOperations.Copy, pOriginalFilePath, newFilePath, "Copying SaveFiles to SupportFiles Folder", 1, MyFileOperation.FileOrFolder.File));
+			tmp.Add(new MyFileOperation(MyFileOperation.FileOperations.Copy, pOriginalFilePath + ".bak", newFilePath + ".bak", "Copying SaveFiles to SupportFiles Folder", 1, MyFileOperation.FileOrFolder.File));
+
+			new Popups.PopupProgress(Popups.PopupProgress.ProgressTypes.FileOperation, "Importing SaveFile", tmp).ShowDialog();
+
 			MySaveFile.BackupSaves.Add(new MySaveFile(newFilePath));
 		}
 
