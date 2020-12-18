@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -35,6 +36,36 @@ namespace Project_127
 			// "LauncherLogic.DowngradeAlternativeFilePathRockstar"
 			// "LauncherLogic.SocialClubFilePathSteam"
 			// "LauncherLogic.SocialClubFilePathRockstar"
+
+			var dm = new HelperClasses.DownloadManager("B:\\targets.xml");//MySettings.Settings.XMLLocation);
+			/*switch (MySettings.Settings.Retailer)
+            {
+				case MySettings.Settings.Retailers.Epic:
+					//Error
+					return;
+					break;
+				case MySettings.Settings.Retailers.Steam:
+					if (dm.getVersion("AM_124_STEAM") == new Version(-1, -1))
+                    {
+						//Error
+
+						return;
+					}
+					break;
+				case MySettings.Settings.Retailers.Rockstar:
+					if (dm.getVersion("") == new Version(-1, -1))
+					{
+						//Error
+
+						return;
+					}
+					break;
+				default:
+					goto case MySettings.Settings.Retailers.Epic;
+            }*/
+			//Ensured Copy
+			var targetEXE = System.IO.Path.Combine(MySettings.Settings.GTAVInstallationPath, "Play127.exe");
+			Process.Start(targetEXE);
 		}
 
 

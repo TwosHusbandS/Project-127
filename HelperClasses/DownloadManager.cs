@@ -14,7 +14,7 @@ namespace Project_127.HelperClasses
 	{
         private XPathNavigator nav;
         private Dictionary<string, XPathNavigator> availableSubassemblies;
-        private Dictionary<string, subassemblyInfo> _installedSubassemblies;
+        private Dictionary<string, subassemblyInfo> installedSubassemblies;
         private static string Project127Files
         {
             get
@@ -22,18 +22,11 @@ namespace Project_127.HelperClasses
                 return System.IO.Path.Combine(LauncherLogic.ZIPFilePath, @"Project_127_Files\");
             }
         }
-                
-        private Dictionary<string, subassemblyInfo> installedSubassemblies
+
+        private void updateInstalled()
         {
-            get
-            {
-                return _installedSubassemblies;
-            }
-            set
-            {
-                _installedSubassemblies = value;
-            }
-        }
+            HelperClasses.RegeditHandler.SetValue("DownloadManagerInstalledSubassemblies", json.Serialize(installedSubassemblies));
+        }        
 
         private static JavaScriptSerializer json = new JavaScriptSerializer();
         public async Task<bool> getSubassembly(string subassemblyName, bool reinstall = false)
@@ -81,6 +74,7 @@ namespace Project_127.HelperClasses
                     if (succeeded)
                     {
                         installedSubassemblies.Add(subassemblyName, subInfo);
+                        updateInstalled();
                         return true;
                     }
                 }
@@ -93,6 +87,7 @@ namespace Project_127.HelperClasses
                         subInfo.files.Add(new subAssemblyFile { name = file.GetAttribute("name", ""), available = false });
                     }
                     installedSubassemblies.Add(subassemblyName, subInfo);
+                    updateInstalled();
                     return true;
 
                 }
@@ -131,6 +126,7 @@ namespace Project_127.HelperClasses
                     }
                 }
                 installedSubassemblies.Add(subassemblyName, subInfo);
+                updateInstalled();
                 return true;
             }
         }
@@ -199,6 +195,7 @@ namespace Project_127.HelperClasses
                 System.IO.Directory.Delete(rootFullPath, true);
             }
             installedSubassemblies.Remove(subassemblyName);
+            updateInstalled();
         }
 
         private subAssemblyFile getSubassemblyFile(string path, XPathNavigator fileEntry)
@@ -405,7 +402,23 @@ namespace Project_127.HelperClasses
                 }
             }
             return true;
-            
+        }
+
+        public List<string> getInstalled()
+        {
+            return new List<string>(installedSubassemblies.Keys);
+        }
+
+        public Version getVersion(string subassembly)
+        {
+            try
+            {
+                return installedSubassemblies[subassembly].version;
+            }
+            catch
+            {
+                return new Version(-1, -1);
+            }
         }
         public DownloadManager(string xmlLocation)
         {
@@ -420,7 +433,7 @@ namespace Project_127.HelperClasses
             }
             if (HelperClasses.RegeditHandler.DoesValueExists("DownloadManagerInstalledSubassemblies"))
             {
-                _installedSubassemblies = json.Deserialize<Dictionary<string, subassemblyInfo>>(HelperClasses.RegeditHandler.GetValue("DownloadManagerInstalledSubassemblies"));
+                installedSubassemblies = json.Deserialize<Dictionary<string, subassemblyInfo>>(HelperClasses.RegeditHandler.GetValue("DownloadManagerInstalledSubassemblies"));
             }
             else
             {

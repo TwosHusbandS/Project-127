@@ -128,6 +128,26 @@ namespace Project_127
 			}
 		}
 
+		/// <summary>
+		/// URL for DownloadManagerXML
+		/// </summary>
+		public static string URL_DownloadManager
+		{
+			get
+			{
+				string masterURL = "https://raw.githubusercontent.com/TwosHusbandS/Project-127/master/Installer/DownloadManager.xml";
+				string modeURL = "https://raw.githubusercontent.com/TwosHusbandS/Project-127/" + Mode + "/Installer/DownloadManager.xml";
+				if (String.IsNullOrWhiteSpace(HelperClasses.FileHandling.GetStringFromURL(modeURL, true)))
+				{
+					return masterURL;
+				}
+				else
+				{
+					return modeURL;
+				}
+			}
+		}
+
 		public static string Mode
 		{
 			get
@@ -181,6 +201,9 @@ namespace Project_127
 		{
 			get
 			{
+#if DEBUG
+				return true;
+#endif
 				foreach (string tmp in Globals.CommandLineArgs)
 				{
 					if (tmp.ToLower().Contains("internal"))
