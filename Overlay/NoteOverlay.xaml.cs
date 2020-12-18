@@ -317,7 +317,7 @@ namespace Project_127.Overlay
 			HelperClasses.WindowChangeListener.Stop();
 		}
 
-		public static void OverlaySettingsChanged()
+		public static void OverlaySettingsChanged(bool ShowOverlay = false)
 		{
 			if (!GTAOverlay.DebugMode)
 			{
@@ -341,7 +341,12 @@ namespace Project_127.Overlay
 						//MainWindow.MW.Focus();
 						MainWindow.MW.Activate();
 						NoteOverlay.InitGTAOverlay();
-						HelperClasses.Keyboard.KeyboardListener.Start();
+						HelperClasses.Keyboard.KeyboardListener.Start(); 
+
+						if (ShowOverlay)
+						{
+							NoteOverlay.OverlaySetVisible();
+						}
 					}
 					else
 					{

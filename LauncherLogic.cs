@@ -60,6 +60,7 @@ namespace Project_127
 		{
 			get
 			{
+				//return AuthStates.Auth;
 				if (ROSCommunicationBackend.SessionValid)
 				{
 					return AuthStates.Auth;
@@ -142,7 +143,17 @@ namespace Project_127
 				}
 			}
 
-
+			if (Settings.EnableOverlay && Settings.OverlayMultiMonitorMode)
+			{
+				if (Overlay_MultipleMonitor.border_main_static != null)
+				{
+					if (Overlay_MultipleMonitor.border_main_static.Visibility == Visibility.Visible)
+					{
+						NoteOverlay.OverlaySettingsChanged(true);
+						return;
+					}
+				}
+			}
 			NoteOverlay.OverlaySettingsChanged();
 
 			//// If one of the Settings which require Hotkeys are enabled

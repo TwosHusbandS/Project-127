@@ -163,10 +163,11 @@ Hybrid code can be found in AAA_HybridCode.
 			=> More efficent compare of files
 			=> Check if Backup Methods (use / create) need to call Upgrade or Downgrade after or before
 			=> Back up DowngradeFiles because of rockstar update
+			=> On OverlaySettingsChange call when Game started due to weird edge case, make overlay be in same state (visible or not as it was before we had to call the method)
 			=> Investigate Jumpscript with Logs for crapideot
 			=> Deployment system with modes / branches like above
-				--> XML Tag for link to specific build.
-				--> Download the build, then call Launcher with command line args to swap the files out correctly, so we have the new build.
+				--> XML Tag for link / name to specific build.
+				--> Download the build, then call Launcher.exe with command line args to swap the files out correctly, so we have the new build.
 
 
 

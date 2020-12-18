@@ -204,7 +204,7 @@ namespace Project_127
 		/// <summary>
 		/// Property of other Buildinfo. Will be in the top message of logs
 		/// </summary>
-		public static string BuildInfo = "Build 3, test for autoupdate logic..., Internal Testing for 1.1. Special";
+		public static string BuildInfo = "Build for Duck With A Joint, 2, forced Authstate...";
 
 		/// <summary>
 		/// Returns all Command Line Args as StringArray

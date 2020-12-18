@@ -23,9 +23,12 @@ namespace Project_127
 	/// </summary>
 	public partial class Overlay_MultipleMonitor : Window
 	{
+		public static Border border_main_static;
+
 		public Overlay_MultipleMonitor()
 		{
 			InitializeComponent();
+			border_main_static = border_main;
 		}
 
 		private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
