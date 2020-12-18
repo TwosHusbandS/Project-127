@@ -907,22 +907,36 @@ namespace Project_127.MySettings
 
 		private void RefreshIfOptionsHide()
 		{
-			// Remove this...
-			Rect_HideOptions_Tease.Visibility = Visibility.Visible;
-			Rect_HideOptions.Visibility = Visibility.Hidden;
-			Rect_HideOptions2.Visibility = Visibility.Hidden;
-			Rect_HideOptions3.Visibility = Visibility.Hidden;
-			return;
+			Rect_HideOptions_Tease.Visibility = Visibility.Hidden;
+
+			if (Settings.EnableOverlay)
+			{
+				Rect_HideOption4.Visibility = Visibility.Hidden;
+			}
+			else
+			{
+				Rect_HideOption4.Visibility = Visibility.Hidden;
+
+			}
+
+			if (Settings.Retailer != Retailers.Steam)
+			{
+				Rect_HideOption6.Visibility = Visibility.Visible;
+			}
+			else
+			{
+				Rect_HideOption6.Visibility = Visibility.Hidden;
+			}
 
 			if (Settings.Retailer == Retailers.Epic)
 			{
+
 				Rect_HideOptions3.Visibility = Visibility.Visible;
 				Rect_HideOptions.Visibility = Visibility.Hidden;
 				Rect_HideOptions2.Visibility = Visibility.Hidden;
 			}
 			else
 			{
-
 				if (Settings.EnableAlternativeLaunch)
 				{
 					Rect_HideOptions.Visibility = Visibility.Hidden;
@@ -936,6 +950,14 @@ namespace Project_127.MySettings
 					Rect_HideOptions3.Visibility = Visibility.Hidden;
 				}
 			}
+
+
+
+			// Remove this...
+			Rect_HideOptions_Tease.Visibility = Visibility.Visible;
+			Rect_HideOptions.Visibility = Visibility.Hidden;
+			Rect_HideOptions2.Visibility = Visibility.Hidden;
+			Rect_HideOptions3.Visibility = Visibility.Hidden;
 		}
 
 
@@ -993,6 +1015,7 @@ namespace Project_127.MySettings
 					break;
 				case "btn_cb_Set_EnableOverlay":
 					Settings.EnableOverlay = !Settings.EnableOverlay;
+					RefreshIfOptionsHide();
 					break;
 				case "btn_cb_Set_EnableOverlayMultiMonitor":
 					Settings.OverlayMultiMonitorMode = !Settings.OverlayMultiMonitorMode;
@@ -1299,6 +1322,16 @@ namespace Project_127.MySettings
 		private void combox_UseBackup_SelectionChanged(object sender, SelectionChangedEventArgs e)
 		{
 
+		}
+
+		private void btn_cb_Set_EnableOverlayMultiMonitor_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+		{
+			NoteOverlay.OverlaySettingsChanged();
+
+			Settings.OL_MM_Left = 0;
+			Settings.OL_MM_Top = 0;
+
+			NoteOverlay.OverlaySettingsChanged();
 		}
 	} // End of Class
 } // End of Namespace 

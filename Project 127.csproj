@@ -224,6 +224,7 @@
     <Compile Include="Overlay\Overlay_MultipleMonitor.xaml.cs">
       <DependentUpon>Overlay_MultipleMonitor.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Overlay\UserPreferences.cs" />
     <Compile Include="Popups\PopupCombobox.xaml.cs">
       <DependentUpon>PopupCombobox.xaml</DependentUpon>
     </Compile>

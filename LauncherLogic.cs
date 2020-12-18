@@ -142,16 +142,27 @@ namespace Project_127
 				}
 			}
 
-			// If one of the Settings which require Hotkeys are enabled
-			if (Settings.EnableOverlay)
-			{
-				// Only Start Stop shit here when the overlay is not in debugmode
-				if (!GTAOverlay.DebugMode && GTAOverlay.OverlayMode == GTAOverlay.OverlayModes.Borderless)
-				{
-					NoteOverlay.InitGTAOverlay();
-					HelperClasses.WindowChangeListener.Start();
-				}
-			}
+
+			NoteOverlay.OverlaySettingsChanged();
+
+			//// If one of the Settings which require Hotkeys are enabled
+			//if (Settings.EnableOverlay)
+			//{
+			//	// Only Start Stop shit here when the overlay is not in debugmode
+			//	if (!GTAOverlay.DebugMode && GTAOverlay.OverlayMode == GTAOverlay.OverlayModes.Borderless)
+			//	{
+			//		NoteOverlay.InitGTAOverlay();
+			//		HelperClasses.WindowChangeListener.Start();
+			//	}
+			//	//else if (GTAOverlay.OverlayMode == GTAOverlay.OverlayModes.MultiMonitor)
+			//	//{
+			//	//	if (HelperClasses.Keyboard.KeyboardListener.IsRunning)
+			//	//	{
+			//	//		HelperClasses.Keyboard.KeyboardListener.Stop();
+			//	//		HelperClasses.Keyboard.KeyboardListener.Start();
+			//	//	}
+			//	//}
+			//}
 		}
 
 		public static void GTAClosed()

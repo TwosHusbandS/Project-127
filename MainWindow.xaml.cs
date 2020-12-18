@@ -153,12 +153,17 @@ Hybrid code can be found in AAA_HybridCode.
 			=> [DONE] New SafeFile Export / Import
 			=> [Working for me] Launching dragon Emu through steam broken?
 			=> [APPARENTLY DONE???] May not need DidUpdateHit Method...Its not called anywhere...
+			=> [DONE] Save WPF MM Overlay startup location somehow...
+			=> [DIRTFIXED] Overlay cant be toggled when multi monitor mode set before GTA started.
+			=> [DONE] Hide WPF MM Overlay from Alt + Tab
+			=> [DONE] Reset Window Location of OverlayMonitor
+			=> [DONE] Hide Settings when not on Steam
+			=> [DONE] Hide Settings when overlay Mode not enabled
 
-			=> More efficent compare of files...
-			=> Check if Backup Methods (use / create) need to call Upgrade or Downgrade after or before...
-			=> Overlay cant be toggled when multi monitor mode set before GTA started.
-			=> Back up DowngradeFiles because of rockstar update...
-			=> Investigate Jumpscript with Logs for crapideot.
+			=> More efficent compare of files
+			=> Check if Backup Methods (use / create) need to call Upgrade or Downgrade after or before
+			=> Back up DowngradeFiles because of rockstar update
+			=> Investigate Jumpscript with Logs for crapideot
 			=> Deployment system with modes / branches like above
 				--> XML Tag for link to specific build.
 				--> Download the build, then call Launcher with command line args to swap the files out correctly, so we have the new build.
@@ -166,7 +171,8 @@ Hybrid code can be found in AAA_HybridCode.
 
 
 
-			=> [NOT CONNECTED TO ANY FILE RELATED LOGIC] Dragons stuff. Both paths, Settings
+			=> [NOT CONNECTED TO ANY FILE RELATED LOGIC] Dragons stuff. Both paths, all settings
+			=> Remember to not only check if alternative launch, but also check out if epic...
 			=> Download Manager keeping track of componments
 			=> Support for 1.24
 			=> Safe File Handler path switch because of social club switch
