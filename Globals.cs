@@ -90,7 +90,7 @@ namespace Project_127
 			get
 			{
 				string masterURL = "https://raw.githubusercontent.com/TwosHusbandS/Project-127/master/Installer/Update.xml";
-				string modeURL = "https://raw.githubusercontent.com/TwosHusbandS/Project-127/" + Mode.ToLower() + "/Installer/Update.xml";
+				string modeURL = "https://raw.githubusercontent.com/TwosHusbandS/Project-127/" + Branch.ToLower() + "/Installer/Update.xml";
 
 				string modeXML = HelperClasses.FileHandling.GetStringFromURL(modeURL, true);
 
@@ -116,7 +116,7 @@ namespace Project_127
 			get
 			{
 				string masterURL = "https://raw.githubusercontent.com/TwosHusbandS/Project-127/master/Installer/Update.xml";
-				string modeURL = "https://raw.githubusercontent.com/TwosHusbandS/Project-127/" + Mode + "/Installer/Update.xml";
+				string modeURL = "https://raw.githubusercontent.com/TwosHusbandS/Project-127/" + Branch + "/Installer/Update.xml";
 				if (String.IsNullOrWhiteSpace(HelperClasses.FileHandling.GetStringFromURL(modeURL, true)))
 				{
 					return masterURL;
@@ -128,7 +128,7 @@ namespace Project_127
 			}
 		}
 
-		public static string Mode
+		public static string Branch
 		{
 			get
 			{
@@ -204,7 +204,7 @@ namespace Project_127
 		/// <summary>
 		/// Property of other Buildinfo. Will be in the top message of logs
 		/// </summary>
-		public static string BuildInfo = "Build for Duck With A Joint, 2, forced Authstate...";
+		public static string BuildInfo = "Build for BuildTesting LUL";
 
 		/// <summary>
 		/// Returns all Command Line Args as StringArray
@@ -1541,6 +1541,21 @@ namespace Project_127
 			return result;
 		}
 
+
+		public static void ImportBuildFromUrl(string pUrl)
+		{
+			string pDownloadLocation = ProjectInstallationPath.TrimEnd('\\') + @"\NewBuild.exe";
+
+			new PopupDownload(pUrl, pDownloadLocation, "Custom Build").ShowDialog();
+
+			Process p = new Process();
+			p.StartInfo.FileName = ProjectInstallationPath.TrimEnd('\\') + @"\Project 127 Launcher.exe";
+			p.StartInfo.WorkingDirectory = ProjectInstallationPath;
+			p.StartInfo.Arguments = "-ImportBuild " + "\"" + pDownloadLocation + "\"";
+			p.Start();
+
+			Globals.ProperExit();
+		}
 
 		/// <summary>
 		/// Returns a Brush from RGB integers, and an Opacity (0-100)

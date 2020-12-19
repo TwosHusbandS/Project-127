@@ -16,6 +16,7 @@ using Project_127.Overlay;
 using Project_127.Popups;
 using Project_127.MySettings;
 using System.Diagnostics;
+using System.Net;
 
 namespace Project_127.HelperClasses
 {
@@ -377,6 +378,25 @@ namespace Project_127.HelperClasses
 			return rtrn;
 		}
 
+		public static bool URLExists(string url)
+		{
+			bool result = true;
+
+			WebRequest webRequest = WebRequest.Create(url);
+			webRequest.Timeout = 500; // miliseconds
+			webRequest.Method = "HEAD";
+
+			try
+			{
+				webRequest.GetResponse();
+			}
+			catch
+			{
+				result = false;
+			}
+
+			return result;
+		}
 		public static bool AreFilesEqual(string pFilePathA, string pFilePathB, bool SlowButStable)
 		{
 			Stopwatch sw = new Stopwatch();

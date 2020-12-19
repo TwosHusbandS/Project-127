@@ -1126,7 +1126,7 @@ namespace Project_127.MySettings
 
 					string msg = "Error: GTA V Installation Path incorrect or ZIP Version == 0.\nGTAV Installation Path: '" + LauncherLogic.GTAVFilePath + "'\nInstallationState (probably): '" + LauncherLogic.InstallationState.ToString() + "'\nZip Version: " + Globals.ZipVersion + ".";
 
-					if (Globals.Mode == "internal" || Globals.Mode == "beta")
+					if (Globals.Branch != "master")
 					{
 						Popup yesno2 = new Popup(Popup.PopupWindowTypes.PopupYesNo, msg + "\n. Force this Repair?");
 						yesno2.ShowDialog();
@@ -1341,29 +1341,36 @@ namespace Project_127.MySettings
 
 		private void btn_CheckForUpdate_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
 		{
-
-		}
-
-		private string GetBuildName()
-		{
-			string uglySpecialBuilds = FileHandling.GetXMLTagContent(Globals.XML_AutoUpdate, "specialbuildname");
-
-			string rtrn = "none";
-			foreach (string SpecialBuild in GetStringListFromString(uglySpecialBuilds, ':'))
+			PopupTextbox tb = new PopupTextbox("Build Name:", "MyBuildName");
+			tb.ShowDialog();
+			if (tb.DialogResult == true)
 			{
-				List<string> SpecialBuildList = GetStringListFromString(SpecialBuild, ';');
-				if (SpecialBuildList.Count == 2)
+				// Check if we can Download the build from the branch we are currently on.
+
+
+				if (tb.MyReturnString != "")
 				{
-					string For = SpecialBuildList[0];
-					string Build = SpecialBuildList[1];
-					if (For.ToLower() == "all")
+					string DLLinkBranch = "https://github.com/TwosHusbandS/Project-127/raw/" + Globals.Branch + "/Installer/Builds/" + tb.MyReturnString.TrimEnd(".exe") + ".exe";
+					string DLLinkMaster = "https://github.com/TwosHusbandS/Project-127/raw/Master" + "/Installer/Builds/" + tb.MyReturnString.TrimEnd(".exe") + ".exe";
+
+					if (HelperClasses.FileHandling.URLExists(DLLinkBranch))
 					{
-						rtrn = Build.ToLower();
+						Globals.ImportBuildFromUrl(DLLinkBranch);
 					}
-					if (Foo.ToLower() == Globals.)
+					else
+					{
+						if (HelperClasses.FileHandling.URLExists(DLLinkMaster))
+						{
+							Globals.ImportBuildFromUrl(DLLinkMaster);
+						}
+					}
+
 				}
+
+				new Popup(Popup.PopupWindowTypes.PopupOk, "Cant find that build online.").ShowDialog();
 			}
-			return rtrn;
 		}
+
+
 	} // End of Class
 } // End of Namespace 

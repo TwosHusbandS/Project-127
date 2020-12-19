@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -30,6 +31,43 @@ namespace Project_127_Launcher
 			string filePath = ProjectInstallationPath.TrimEnd('\\') + @"\UglyFiles\Project 1.27.exe";
 
 			string[] args = Environment.GetCommandLineArgs();
+
+			for (int i = 0; i <= args.Length - 1; i++)
+			{
+				if (args[i].ToLower() == "-ImportBuild".ToLower())
+				{
+					Task.Delay(1000).GetAwaiter().GetResult();
+
+					// i+1 exists
+					if (i < args.Length - 1)
+					{
+						string ImportPath = args[i + 1].TrimStart('"').TrimEnd('"');
+
+						if (File.Exists(ImportPath))
+						{
+							foreach (Process myP in Process.GetProcessesByName("Project 1.27"))
+							{
+								myP.Kill();
+							}
+
+							File.Move(filePath, filePath + ".BACKUP");
+							File.Move(ImportPath, filePath);
+
+
+							Process pp = new Process();
+							pp.StartInfo.FileName = filePath;
+							pp.StartInfo.UseShellExecute = true;
+							pp.StartInfo.Verb = "runas";
+							pp.Start();
+
+							this.Close();
+							Environment.Exit(0);
+						}
+					}
+				}
+			}
+
+
 
 			string arg = string.Join(" ", args.Skip(1).ToArray());
 

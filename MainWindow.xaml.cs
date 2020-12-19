@@ -428,7 +428,7 @@ namespace Project_127
 			// Intepreting all Command Line shit
 			Globals.CommandLineArgumentIntepretation();
 
-			if (Globals.Mode == "internal")
+			if (Globals.Branch == "internal")
 			{
 				string msg = "We are in internal mode. I need testing on:\n\n" +
 					"- Upgrading / Downgrading / Repairing" + "\n" +
@@ -856,7 +856,7 @@ namespace Project_127
 		/// <param name="e"></param>
 		private void btn_Hamburger_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
 		{
-			if (Globals.Mode == "internal" || Globals.Mode == "beta")
+			if (Globals.Branch != "master")
 			{
 				// Opens the File
 				HelperClasses.ProcessHandler.StartProcess(@"C:\Windows\System32\notepad.exe", pCommandLineArguments: Globals.Logfile);
@@ -918,7 +918,7 @@ namespace Project_127
 				DebugMessage.Add("BuildTime: '" + MyCreationDate + "'");
 				DebugMessage.Add("Time Now: '" + DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss") + "'");
 				DebugMessage.Add("ZIP Version: '" + Globals.ZipVersion + "'");
-				DebugMessage.Add("Mode (Branch): '" + Globals.Mode + "'");
+				DebugMessage.Add("Globals.Branch: '" + Globals.Branch + "'");
 				DebugMessage.Add("InternalMode (Overwites, mode / branch): '" + Globals.InternalMode + "'");
 				DebugMessage.Add("Project 1.27 Installation Path '" + Globals.ProjectInstallationPath + "'");
 				DebugMessage.Add("Project 1.27 Installation Path Binary '" + Globals.ProjectInstallationPathBinary + "'");
@@ -1174,7 +1174,7 @@ namespace Project_127
 
 				string msg = "Error: GTA V Installation Path incorrect or ZIP Version == 0.\nGTAV Installation Path: '" + LauncherLogic.GTAVFilePath + "'\nInstallationState (probably): '" + LauncherLogic.InstallationState.ToString() + "'\nZip Version: " + Globals.ZipVersion + ".";
 
-				if (Globals.Mode == "internal" || Globals.Mode == "beta")
+				if (Globals.Branch != "master")
 				{
 					Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, msg + "\n. Force this Upgrade?");
 					yesno.ShowDialog();
@@ -1246,7 +1246,7 @@ namespace Project_127
 
 				string msg = "Error: GTA V Installation Path incorrect or ZIP Version == 0.\nGTAV Installation Path: '" + LauncherLogic.GTAVFilePath + "'\nInstallationState (probably): '" + LauncherLogic.InstallationState.ToString() + "'\nZip Version: " + Globals.ZipVersion + ".";
 
-				if (Globals.Mode == "internal" || Globals.Mode == "beta")
+				if (Globals.Branch != "master")
 				{
 					Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, msg + "\n. Force this Downgrade?");
 					yesno.ShowDialog();
