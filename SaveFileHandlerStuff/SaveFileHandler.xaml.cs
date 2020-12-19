@@ -25,7 +25,7 @@ using WpfAnimatedGif;
 using System.Threading;
 using System.IO.Compression;
 
-namespace Project_127
+namespace Project_127.SaveFileHandlerStuff
 {
 	/// <summary>
 	/// Class SaveFileHandler.xaml
@@ -118,26 +118,6 @@ namespace Project_127
 			}
 		}
 
-		// I don't understand why this method must be marked as `async`.
-		private async void button1_Click(object sender, EventArgs e)
-		{
-			Task<int> access = DoSomethingAsync();
-			// task independent stuff here
-
-			// this line is reached after the 5 seconds sleep from 
-			// DoSomethingAsync() method. Shouldn't it be reached immediately? 
-			int a = 1;
-
-			// from my understanding the waiting should be done here.
-			int x = await access;
-		}
-
-		async Task<int> DoSomethingAsync()
-		{
-			// is this executed on a background thread?
-			System.Threading.Thread.Sleep(5000);
-			return 1;
-		}
 
 		/// <summary>
 		/// Click on the Refresh Button. Reads files from disk again.

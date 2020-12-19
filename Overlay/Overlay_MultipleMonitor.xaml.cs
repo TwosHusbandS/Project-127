@@ -16,7 +16,7 @@ using System.Windows.Shapes;
 using Project_127.MySettings;
 using Project_127.Overlay;
 
-namespace Project_127
+namespace Project_127.Overlay
 {
 	/// <summary>
 	/// Interaction logic for Overlay_MultipleMonitor.xaml

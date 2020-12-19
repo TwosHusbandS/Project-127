@@ -550,12 +550,9 @@ namespace Project_127
 		/// <returns></returns>
 		public static bool DidUpdateHit()
 		{
-			if (1 == 2)
-			{
-				PopupProgress tmp = new PopupProgress(PopupProgress.ProgressTypes.DidUpdateHit, "");
-				tmp.ShowDialog();
-				return tmp.RtrnBool;
-			}
+			//PopupProgress tmp = new PopupProgress(PopupProgress.ProgressTypes.DidUpdateHit, "");
+			//tmp.ShowDialog();
+			//return tmp.RtrnBool;
 			return false;
 		}
 
@@ -841,6 +838,25 @@ namespace Project_127
 			}
 			else
 			{
+				long combinedSize = 0;
+				foreach (string myFile in FileHandling.GetFilesFromFolderAndSubFolder(NewPath))
+				{
+					combinedSize += FileHandling.GetSizeOfFile(myFile);
+					if (combinedSize > 5000)
+					{
+						Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Backup Files already exist.\nOverwrite existing Backup Files?");
+						yesno.ShowDialog();
+						if (yesno.DialogResult == true)
+						{
+							break;
+						}
+						else
+						{
+							return;
+						}
+					}
+				}
+
 				List<MyFileOperation> MyFileOperations = new List<MyFileOperation>();
 
 				MyFileOperations.Add(new MyFileOperation(MyFileOperation.FileOperations.Delete, NewPath, "", "Deleting Path: '" + (NewPath) + "'", 2, MyFileOperation.FileOrFolder.Folder));

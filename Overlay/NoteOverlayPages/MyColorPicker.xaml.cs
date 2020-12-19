@@ -16,7 +16,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Color = System.Drawing.Color;
 
-namespace Project_127
+namespace Project_127.Overlay.NoteOverlayPages
 {
 	/// <summary>
 	/// Interaction logic for MyColorPicker.xaml

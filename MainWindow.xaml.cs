@@ -170,8 +170,9 @@ Hybrid code can be found in AAA_HybridCode.
 					>> Add UI to have textbox with a built. Or decide on syntax for pushing builds. Maybe both?
 					>> Currently on rightclick check for updates. Might throw a simple textbox.
 				--> Download the build, then call Launcher.exe with command line args to swap the files out correctly, so we have the new build.
-			=> Investigate Jumpscript with Logs for crapideot
-
+			=> [DONE] Investigate Jumpscript with Logs for crapideot
+			=> [DONE] Check if "Create Backup" gives popup and asks if we were to overwrite...
+			
 			=> [FUCK THAT] More efficent compare of files
 			=> [NOT CONNECTED TO ANY FILE RELATED LOGIC] Dragons stuff. Both paths, all settings
 			=> Remember to not only check if alternative launch, but also check out if epic...
@@ -1479,7 +1480,7 @@ namespace Project_127
 			{
 				this.Hide();
 			}
-			catch (Exception ex)
+			catch 
 			{
 				//Globals.DebugPopup(ex.ToString());
 			}

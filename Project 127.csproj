@@ -185,7 +185,7 @@
     <Compile Include="HelperClasses\BuildVersionTable.cs" />
     <Compile Include="HelperClasses\DataGridHelper.cs" />
     <Compile Include="HelperClasses\DownloadManager.cs" />
-    <Compile Include="HelperClasses\Keyboard\Jumpscript.cs" />
+    <Compile Include="HelperClasses\Jumpscript.cs" />
     <Compile Include="HelperClasses\Keyboard\KeyboardListener.cs" />
     <Compile Include="HelperClasses\MouseSender.cs" />
     <Compile Include="HelperClasses\WindowChangeHander.cs" />
@@ -193,7 +193,7 @@
     <Compile Include="Overlay\EmptyPage.xaml.cs">
       <DependentUpon>EmptyPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Overlay\MyColorPicker.xaml.cs">
+    <Compile Include="Overlay\NoteOverlayPages\MyColorPicker.xaml.cs">
       <DependentUpon>MyColorPicker.xaml</DependentUpon>
     </Compile>
     <Compile Include="Overlay\GTAOverlay.cs" />
@@ -273,7 +273,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Overlay\MyColorPicker.xaml">
+    <Page Include="Overlay\NoteOverlayPages\MyColorPicker.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -24,7 +24,7 @@ namespace Project_127.HelperClasses
 			myList.Add("#SingleInstance Force");
 			myList.Add("#MaxHotkeysPerInterval 10000");
 			myList.Add("#UseHook");
-			myList.Add("#IfWinActive " + GTAOverlay.targetWindowBorderless);
+			myList.Add("#IfWinActive " + Overlay.GTAOverlay.targetWindowBorderless);
 			myList.Add(KeyToString(MySettings.Settings.JumpScriptKey1) + "::" + KeyToString(MySettings.Settings.JumpScriptKey2));
 			myList.Add(KeyToString(MySettings.Settings.JumpScriptKey2) + "::" + KeyToString(MySettings.Settings.JumpScriptKey1));
 			myList.Add("#IfWinActive");

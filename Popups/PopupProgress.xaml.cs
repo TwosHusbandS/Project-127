@@ -15,6 +15,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.IO.Compression;
 using Project_127.MySettings;
+using Project_127.HelperClasses;
 
 namespace Project_127.Popups
 {
@@ -44,12 +45,12 @@ namespace Project_127.Popups
 		/// <summary>
 		/// List of File Operations
 		/// </summary>
-		List<MyFileOperation> MyFileOperations;
+		List<HelperClasses.MyFileOperation> MyFileOperations;
 
 		/// <summary>
 		/// List of File Operations
 		/// </summary>
-		public List<MyFileOperation> RtrnMyFileOperations;
+		public List<HelperClasses.MyFileOperation> RtrnMyFileOperations;
 
 		public bool RtrnBool = false;
 
@@ -72,7 +73,7 @@ namespace Project_127.Popups
 		/// <param name="pProgressType"></param>
 		/// <param name="pParam1"></param>
 		/// <param name="pMyFileOperations"></param>
-		public PopupProgress(ProgressTypes pProgressType, string pParam1, List<MyFileOperation> pMyFileOperations = null, string zipExtractionPath = "")
+		public PopupProgress(ProgressTypes pProgressType, string pParam1, List<HelperClasses.MyFileOperation> pMyFileOperations = null, string zipExtractionPath = "")
 		{
 			if (zipExtractionPath == "")
 			{

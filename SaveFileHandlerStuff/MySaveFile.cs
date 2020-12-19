@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Project_127.HelperClasses;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -6,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Project_127
+namespace Project_127.SaveFileHandlerStuff
 {
 	/// <summary>
 	/// Class for "MyFile" Objects. Used in the DataGrids for the SaveFileManagement

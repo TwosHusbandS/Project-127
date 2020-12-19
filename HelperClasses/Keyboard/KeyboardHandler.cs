@@ -10,7 +10,7 @@ using Project_127.MySettings;
 using Project_127.HelperClasses.Keyboard;
 //using WindowsInput;
 
-namespace Project_127.HelperClasses
+namespace Project_127.HelperClasses.Keyboard
 {
 	class KeyboardHandler
 	{
