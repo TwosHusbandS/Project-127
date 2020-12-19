@@ -50,7 +50,16 @@ namespace Project_127_Launcher
 								myP.Kill();
 							}
 
+							if (File.Exists(filePath + ".BACKUP"))
+							{
+								File.Delete(filePath + ".BACKUP");
+							}
 							File.Move(filePath, filePath + ".BACKUP");
+
+							if (File.Exists(filePath))
+							{
+								File.Delete(filePath);
+							}
 							File.Move(ImportPath, filePath);
 
 

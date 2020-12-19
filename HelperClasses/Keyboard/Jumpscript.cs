@@ -43,13 +43,11 @@ namespace Project_127.HelperClasses
 			if (myJumpscript != null)
 			{
 				HelperClasses.ProcessHandler.Kill(myJumpscript);
+				myJumpscript = null;
+				HelperClasses.FileHandling.deleteFile(Globals.ProjectInstallationPathBinary.TrimEnd('\\') + @"\P127_Jumpscript.ahk");
+				HelperClasses.Logger.Log("Stopped Jumpscript");
+				IsRunning = false;
 			}
-
-			HelperClasses.FileHandling.deleteFile(Globals.ProjectInstallationPathBinary.TrimEnd('\\') + @"\P127_Jumpscript.ahk");
-
-			HelperClasses.Logger.Log("Stopped Jumpscript");
-
-			IsRunning = false;
 		}
 
 		public static string KeyToString(System.Windows.Forms.Keys pKey)

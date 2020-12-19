@@ -9,7 +9,7 @@ Actual code (partially closed source) which authentificates, handles entitlement
 Artwork, Design of GUI, GUI Behaviourehaviour, Colorchoices etc. by "@Hossel"
 Project 1.27 Client by "@thS"
 A number of other members of the team, including but not limited to @MoMo, @Diamondo25, @S.M.G, @gogsi, @Antibones, @Unemployed, @Aperture, @luky, @CrynesSs, @Daniel Kinau contributed to this project one way or another, and my thanks go out to them.
-Version: 1.0.9.6
+Version: 1.0.9.7
 
 Build Instructions:
 	Press CTRLF + F5, pray that nuget does its magic.
@@ -164,14 +164,13 @@ Hybrid code can be found in AAA_HybridCode.
 			=> [DONE] Overlay not fixed...
 			=> [DONE] Check if Backup Methods (use / create) need to call Upgrade or Downgrade after or before
 			=> [DONE] Get BuildVersion Table from Github, dont supply the last . and just hope...if that makes sense?
-			
-			=> Investigate Jumpscript with Logs for crapideot
-			=> Deployment system with modes / branches like above
+			=> [DONE] Deployment system with modes / branches like above
 				--> XML Tag for link / name to specific build.
 					>> Finish Logic of getting a build from github.
 					>> Add UI to have textbox with a built. Or decide on syntax for pushing builds. Maybe both?
 					>> Currently on rightclick check for updates. Might throw a simple textbox.
 				--> Download the build, then call Launcher.exe with command line args to swap the files out correctly, so we have the new build.
+			=> Investigate Jumpscript with Logs for crapideot
 
 			=> [FUCK THAT] More efficent compare of files
 			=> [NOT CONNECTED TO ANY FILE RELATED LOGIC] Dragons stuff. Both paths, all settings
@@ -431,13 +430,15 @@ namespace Project_127
 			if (Globals.Branch == "internal")
 			{
 				string msg = "We are in internal mode. I need testing on:\n\n" +
-					"- Upgrading / Downgrading / Repairing" + "\n" +
+					"- Upgrading / Downgrading" + "\n" +
 					"- Automatically detecting Upgrades" + "\n" +
 					"- Performance (CPU & Ram)" + "\n" +
 					"- Crashes" + "\n" +
 					"- NoteOverlay" + "\n" +
 					"- Jumpscript" + "\n" +
-					"- Bugfixes in general" + "\n" +
+					"- New SaveFileHanlder" + "\n" +
+					"- General / Normal stuff" + "\n" +
+					"\nI do expect everything to work, so no extensive Testing needed." + "\n" +
 					"\nThanks. Appreciated. Have a great day : )";
 
 				new Popup(Popup.PopupWindowTypes.PopupOk, msg).ShowDialog();
@@ -1033,10 +1034,10 @@ namespace Project_127
 			mi3.Click += MI_Close_Click;
 			cm.Items.Add(mi3);
 
-			MenuItem mi4 = new MenuItem();
-			mi4.Header = "Compare 2 Files";
-			mi4.Click += MI_Debug_Click;
-			cm.Items.Add(mi4);
+			//MenuItem mi4 = new MenuItem();
+			//mi4.Header = "Compare 2 Files";
+			//mi4.Click += MI_Debug_Click;
+			//cm.Items.Add(mi4);
 
 			//MenuItem mi5 = new MenuItem();
 			//mi5.Header = "Did Update Hit";

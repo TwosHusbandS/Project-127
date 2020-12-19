@@ -123,8 +123,15 @@ namespace Project_127
 		}
 
 
-		public static void GTAStarted()
+		public static async void GTAStarted()
 		{
+			HelperClasses.Logger.Log("AAAA - GTAStarted()");
+
+			await Task.Delay(5000);
+
+			HelperClasses.Logger.Log("AAAA - GTAStarted() - After 2.5 Seconds wait");
+
+
 			SetGTAProcessPriority();
 
 			// Start Jumpscript
@@ -155,7 +162,6 @@ namespace Project_127
 				}
 			}
 
-			Task.Delay(2500).GetAwaiter().GetResult();
 
 			NoteOverlay.OverlaySettingsChanged();
 

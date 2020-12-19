@@ -204,7 +204,7 @@ namespace Project_127
 		/// <summary>
 		/// Property of other Buildinfo. Will be in the top message of logs
 		/// </summary>
-		public static string BuildInfo = "Build for BuildTesting LUL";
+		public static string BuildInfo = "Build 1, everything apart from SocialClubLaunch";
 
 		/// <summary>
 		/// Returns all Command Line Args as StringArray
@@ -479,7 +479,7 @@ namespace Project_127
 			CheckForBigThree();
 
 			// Check whats the latest Version of the ZIP File in GITHUB
-			CheckForZipUpdate(); 
+			CheckForZipUpdate();
 
 			// Checks if Update hit
 			LauncherLogic.HandleUpdates();
@@ -565,12 +565,12 @@ namespace Project_127
 			{
 				FileVersionInfo FVI = FileVersionInfo.GetVersionInfo(pFilePath);
 				string rtrn = " (" + new Version(FVI.FileVersion).ToString();
-				
+
 				try
 				{
 					rtrn += " - " + new Version(HelperClasses.BuildVersionTable.GetNiceGameVersionString(new Version(FVI.FileVersion))) + ")";
 				}
-				catch 
+				catch
 				{
 					rtrn += ")";
 				}
@@ -658,6 +658,12 @@ namespace Project_127
 					HelperClasses.Logger.Log("Found dirtyprogramming File in the Directory. Will delete it.");
 					HelperClasses.FileHandling.deleteFile(myFile);
 				}
+				if (myFile.ToLower().Contains("Project 1.27.exe" + ".BACKUP"))
+				{
+					HelperClasses.Logger.Log("Found old build ('.BACKUP'). Will delete it.");
+					HelperClasses.FileHandling.deleteFile(myFile);
+				}
+
 				File.Create(Globals.ProjectInstallationPath.TrimEnd('\\') + @"\dirtyprogramming").Dispose();
 			}
 		}
