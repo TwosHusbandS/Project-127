@@ -24,7 +24,7 @@
         <Label Style="{StaticResource lbl}" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Left" FontSize="24" Height="60" VerticalAlignment="Bottom" Margin="0,0,0,0" Content="Settings"/>
         <Button Style="{StaticResource btn_SmallIcon}"  MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"  Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Margin="0,15,55,0" VerticalAlignment="Top" HorizontalAlignment="Right" x:Name="btn_Refresh"  ToolTip="Refresh (load Settings from Registry)"  Height="40" Width="40" Click="btn_Refresh_Click"/>
 
-        <Button x:Name="btn_SettingsGeneral" Margin="0,10,5,10" Content="General P127 Settings" Grid.Row="1" Grid.Column="0" Click="btn_SettingsGeneral_Click" Style="{StaticResource btn_hamburgeritem}"/>
+        <Button x:Name="btn_SettingsGeneral" Margin="0,10,5,10" Content="General P127 Settings" Grid.Row="1" Grid.Column="0" Click="btn_SettingsGeneral_Click" MouseRightButtonDown="btn_SettingsGeneral_MouseRightButtonDown" Style="{StaticResource btn_hamburgeritem}"/>
         <Button x:Name="btn_SettingsGTA" Margin="5,10,5,10" Content="GTA Settings" Grid.Row="1" Grid.Column="1" Click="btn_SettingsGTA_Click" Style="{StaticResource btn_hamburgeritem}"/>
         <Button x:Name="btn_SettingsExtra" Margin="5,10,0,10" Content="Extra Features" Grid.Row="1" Grid.Column="2" Click="btn_SettingsExtra_Click" Style="{StaticResource btn_hamburgeritem}"/>
 
@@ -43,6 +43,8 @@
                     <StackPanel x:Name="sp_Settings_General">
                         <Grid x:Name="Grid_Settings_General">
                             <Grid.RowDefinitions>
+                                <RowDefinition Height="40"/>
+                                <RowDefinition Height="40"/>
                                 <RowDefinition Height="40"/>
                                 <RowDefinition Height="40"/>
                                 <RowDefinition Height="40"/>
@@ -78,6 +80,8 @@
                             <Rectangle Grid.Row="11" Grid.Column="0" Grid.ColumnSpan="3" Fill="{x:Static local:Globals.SE_AlternateRowBackground}"/>
                             <Rectangle Grid.Row="12" Grid.Column="0" Grid.ColumnSpan="3" Fill="Transparent"/>
                             <Rectangle Grid.Row="13" Grid.Column="0" Grid.ColumnSpan="3" Fill="{x:Static local:Globals.SE_AlternateRowBackground}"/>
+                            <Rectangle Grid.Row="14" Grid.Column="0" Grid.ColumnSpan="3" Fill="Transparent"/>
+                            <Rectangle Grid.Row="15" Grid.Column="0" Grid.ColumnSpan="3" Fill="{x:Static local:Globals.SE_AlternateRowBackground}"/>
 
 
                             <Button Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource btn_SE_Path}" x:Name="btn_Set_GTAVInstallationPath" Click="btn_Path_Click" MouseRightButtonDown="btn_Path_RightClick"/>
@@ -90,32 +94,69 @@
                             <Label Grid.Row="3" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Slow, but stable method for Downgrading / Upgrading"/>
                             <Button Grid.Row="3" Grid.Column="1" x:Name="btn_cb_Set_CopyFilesInsteadOfHardlinking" Style="{StaticResource btn_cb}" Click="btn_cb_Click"  MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
 
-                            <Label Grid.Row="4" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Launch through Social Club"/>
-                            <Button Grid.Row="4" Grid.Column="1" x:Name="btn_cb_Set_EnableAlternativeLaunch" Style="{StaticResource btn_cb}" Click="btn_cb_Click"  MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
+                            <Label Grid.Row="4" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Slow, but stable method for comparing Files"/>
+                            <Button Grid.Row="4" Grid.Column="1" x:Name="btn_cb_Set_SlowCompare" Style="{StaticResource btn_cb}" Click="btn_cb_Click"  MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
 
-                            <Label Grid.Row="5" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Slow, but stable method for Social Club"/>
-                            <Button Grid.Row="5" Grid.Column="1" x:Name="btn_cb_Set_CopyFilesInsteadOfSyslinking_SocialClub" Style="{StaticResource btn_cb}" Click="btn_cb_Click"  MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
+                            <Label Grid.Row="5" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Launch through Social Club"/>
+                            <Button Grid.Row="5" Grid.Column="1" x:Name="btn_cb_Set_EnableAlternativeLaunch" Style="{StaticResource btn_cb}" Click="btn_cb_Click"  MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
 
-                            <Rectangle x:Name="Rect_HideOptions" Grid.Row="5" Grid.RowSpan="1" Grid.Column="0" Grid.ColumnSpan="2" Fill="{x:Static local:Globals.MyColorOffWhite85}" ToolTip="Non effective when not launching through Social Club"/>
+                            <Label Grid.Row="6" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Game Version: "/>
+                            <ComboBox Grid.Row="6" Grid.Column="1" Margin="10,5" Style="{StaticResource cobo}" x:Name="combox_Set_SocialClubGameVersion" SelectionChanged="combox_Set_SocialClubGameVersion_SelectionChanged"/>
+
+                            <Label Grid.Row="7" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Slow, but stable method for Social Club"/>
+                            <Button Grid.Row="7" Grid.Column="1" x:Name="btn_cb_Set_CopyFilesInsteadOfSyslinking_SocialClub" Style="{StaticResource btn_cb}" Click="btn_cb_Click"  MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
+
+                            <Rectangle x:Name="Rect_HideOptions3" Grid.Row="5" Grid.RowSpan="3" Grid.Column="0" Grid.ColumnSpan="2" Fill="{x:Static local:Globals.MyColorOffWhite85}" ToolTip="Non effective when on Epic"/>
+                            <Rectangle x:Name="Rect_HideOptions_Tease" Grid.Row="5" Grid.RowSpan="3" Grid.Column="0" Grid.ColumnSpan="2" Fill="{x:Static local:Globals.MyColorOffWhite85}" ToolTip="Teasing new features..."/>
+
+                            <Rectangle x:Name="Rect_HideOptions" Grid.Row="6" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="2" Fill="{x:Static local:Globals.MyColorOffWhite85}" ToolTip="Non effective when not launching through Social Club"/>
 
 
-                            <Label Grid.Row="6" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Start P127: "/>
-                            <ComboBox Grid.Row="6" Grid.Column="1" Margin="10,5" Style="{StaticResource cobo}" x:Name="combox_Set_StartWays" SelectionChanged="combox_Set_StartWays_SelectionChanged"/>
+                            <Label Grid.Row="8" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Start P127: "/>
+                            <ComboBox Grid.Row="8" Grid.Column="1" Margin="10,5" Style="{StaticResource cobo}" x:Name="combox_Set_StartWays" SelectionChanged="combox_Set_StartWays_SelectionChanged"/>
 
-                            <Label Grid.Row="7" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Exit Action: "/>
-                            <ComboBox Grid.Row="7" Grid.Column="1" Margin="10,5" Style="{StaticResource cobo}" x:Name="combox_Set_ExitWays" SelectionChanged="combox_Set_ExitWays_SelectionChanged"/>
+                            <Label Grid.Row="9" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Exit Action: "/>
+                            <ComboBox Grid.Row="9" Grid.Column="1" Margin="10,5" Style="{StaticResource cobo}" x:Name="combox_Set_ExitWays" SelectionChanged="combox_Set_ExitWays_SelectionChanged"/>
 
-                            <Button Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource btn_SE_Path}" x:Name="btn_Import_Zip" Click="btn_Import_Zip_Click" Content="Click Me!"/>
+                            <Button Grid.Row="10" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource btn_SE_Path}" x:Name="btn_Import_Zip" Click="btn_Import_Zip_Click" Content="Click Me!"/>
 
-                            <Button Grid.Row="9" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource btn_SE_Path}" x:Name="btn_CreateBackup" Click="btn_CreateBackup_Click" MouseRightButtonDown="btn_CreateBackup_MouseRightButtonDown" Content="Create Backup Files for Upgrading"/>
+                            <Button Grid.Row="11" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource btn_SE_Path}" x:Name="btn_CreateBackup" Click="btn_CreateBackup_Click" MouseRightButtonDown="btn_CreateBackup_MouseRightButtonDown" Content="Create Backup Files for Upgrading"/>
+                            <Popup x:Name="PopupCreateBackup"  PlacementTarget="{Binding ElementName=btn_CreateBackup}" Placement="MousePoint" Width="200" Height="140"  Margin="0,0,0,0" StaysOpen="False" Closed="PopupCreateBackup_Closed" Opened="PopupCreateBackup_Opened">
+                                <Border BorderBrush="{x:Static local:Globals.MyColorWhite}" BorderThickness="2" Background="{x:Static local:Globals.MyColorOffBlack}" MouseLeave="Border_MouseLeave">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition/>
+                                            <RowDefinition/>
+                                            <RowDefinition/>
+                                        </Grid.RowDefinitions>
+                                        <Label Grid.Row="0" Style="{StaticResource lbl_Set_Info}" Content="Create Backup"/>
+                                        <TextBox Grid.Row="1" Style="{StaticResource tb}" x:Name="tb_Set_BackupName" KeyDown="tb_Set_BackupName_KeyDown"/>
+                                        <Button Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource btn_SE_Path}" x:Name="btn_CreateBackupName" Click="btn_CreateBackupName_Click"  Content="Create Upgrade Backups"/>
+                                    </Grid>
+                                </Border>
+                            </Popup>
 
-                            <Button Grid.Row="10" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource btn_SE_Path}" x:Name="btn_UseBackup" Click="btn_UseBackup_Click" MouseRightButtonDown="btn_UseBackup_MouseRightButtonDown" Content="Use Backup Files for Upgrading"/>
+                            <Button Grid.Row="12" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource btn_SE_Path}" x:Name="btn_UseBackup" Click="btn_UseBackup_Click" MouseRightButtonDown="btn_UseBackup_MouseRightButtonDown" Content="Use Backup Files for Upgrading"/>
+                            <Popup x:Name="PopupUseBackup"  PlacementTarget="{Binding ElementName=btn_UseBackup}" Placement="MousePoint" Width="200" Height="140"  Margin="0,0,0,0" StaysOpen="False" Closed="PopupUseBackup_Closed" Opened="PopupUseBackup_Opened">
+                                <Border BorderBrush="{x:Static local:Globals.MyColorWhite}" BorderThickness="2" Background="{x:Static local:Globals.MyColorOffBlack}" MouseLeave="Border_MouseLeave">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition/>
+                                            <RowDefinition/>
+                                            <RowDefinition/>
+                                        </Grid.RowDefinitions>
+                                        <Label Grid.Row="0" Style="{StaticResource lbl_Set_Info}" Content="Apply Backup"/>
+                                        <ComboBox Grid.Row="1" Margin="10" Style="{StaticResource cobo}" x:Name="combox_UseBackup" SelectionChanged="combox_UseBackup_SelectionChanged"/>
+                                        <Button Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource btn_SE_Path}" x:Name="btn_UseBackupName" Click="btn_UseBackupName_Click"  Content="Use Backup"/>
+                                    </Grid>
+                                </Border>
+                            </Popup>
+                            
+                            <Button Grid.Row="13" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource btn_SE_Path}" x:Name="btn_RepairGTA" Click="btn_RepairGTA_Click" Content="Repair GTA V Installation"/>
 
-                            <Button Grid.Row="11" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource btn_SE_Path}" x:Name="btn_RepairGTA" Click="btn_RepairGTA_Click" Content="Repair GTA V Installation"/>
+                            <Button Grid.Row="14" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource btn_SE_Path}" x:Name="btn_CheckForUpdate" Click="btn_CheckForUpdate_Click" MouseRightButtonDown="btn_CheckForUpdate_MouseRightButtonDown" Content="Check for Update"/>
 
-                            <Button Grid.Row="12" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource btn_SE_Path}" x:Name="btn_CheckForUpdate" Click="btn_CheckForUpdate_Click" Content="Check for Update"/>
-
-                            <Button Grid.Row="13" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource btn_SE_Path}" x:Name="btn_Reset_Everything" Click="btn_Reset_Everything_Click" Content="Reset Everything"/>
+                            <Button Grid.Row="15" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource btn_SE_Path}" x:Name="btn_Reset_Everything" Click="btn_Reset_Everything_Click" Content="Reset Everything"/>
 
                         </Grid>
                     </StackPanel>
@@ -145,7 +186,7 @@
                             <Rectangle Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3" Fill="{x:Static local:Globals.SE_AlternateRowBackground}"/>
                             <Rectangle Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3" Fill="Transparent"/>
                             <Rectangle Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="3" Fill="{x:Static local:Globals.SE_AlternateRowBackground}"/>
-                            
+
                             <Label Grid.Row="0" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="GTA V Retailer: "/>
                             <ComboBox Grid.Row="0" Grid.Column="1" Margin="10,5" Style="{StaticResource cobo}" x:Name="combox_Set_Retail" SelectionChanged="combox_Set_Retail_SelectionChanged"/>
 
@@ -162,6 +203,11 @@
 
                             <Label Grid.Row="5" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Hide from Steam"/>
                             <Button Grid.Row="5" Grid.Column="1" x:Name="btn_cb_Set_EnableDontLaunchThroughSteam"  Style="{StaticResource btn_cb}" Click="btn_cb_Click" MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
+                            <Rectangle x:Name="Rect_HideOption6" Grid.Row="5" Grid.RowSpan="1" Grid.Column="0" Grid.ColumnSpan="2" Fill="{x:Static local:Globals.MyColorOffWhite85}" ToolTip="Non effective when Retailer is not Steam"/>
+
+
+                            <Rectangle x:Name="Rect_HideOptions2" Grid.Row="3" Grid.RowSpan="3" Grid.Column="0" Grid.ColumnSpan="2" Fill="{x:Static local:Globals.MyColorOffWhite85}" ToolTip="Non effective when launching through Social Club"/>
+
 
                         </Grid>
                     </StackPanel>
@@ -220,8 +266,11 @@
                             <Label Grid.Row="0" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Enable Project 1.27 Notes - Overlay"/>
                             <Button Grid.Row="0" Grid.Column="1" x:Name="btn_cb_Set_EnableOverlay"  Style="{StaticResource btn_cb}" Click="btn_cb_Click"  MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
 
-                            <Label Grid.Row="1" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Project 1.27 Overlay - Fullscreen / MultiMonitor Mode"/>
-                            <Button Grid.Row="1" Grid.Column="1" x:Name="btn_cb_Set_EnableOverlayMultiMonitor"  Style="{StaticResource btn_cb}" Click="btn_cb_Click"  MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
+                            <Label Grid.Row="1" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Project 1.27 Overlay - MultiMonitor Mode / Fullscreen" ToolTip="Gives you a Window you can move around instead of drawing on top of bordered / windowed GTA. Rightclick checkbox to reset Location"/>
+                            <Button Grid.Row="1" Grid.Column="1" x:Name="btn_cb_Set_EnableOverlayMultiMonitor"  Style="{StaticResource btn_cb}" Click="btn_cb_Click"  MouseEnter="btn_MouseEnter" ToolTip="Rightclick checkbox to reset Location" MouseRightButtonDown="btn_cb_Set_EnableOverlayMultiMonitor_MouseRightButtonDown" MouseLeave="btn_MouseLeave"/>
+                            
+                            <Rectangle x:Name="Rect_HideOption4" Grid.Row="1" Grid.RowSpan="1" Grid.Column="0" Grid.ColumnSpan="2" Fill="{x:Static local:Globals.MyColorOffWhite85}" ToolTip="Non effective when Overlay not activated"/>
+
 
                             <Button Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource btn_SE_Path}" x:Name="btn_Set_Overlay_Notes" Click="btn_Set_Overlay_Notes_Click" Content="Change Notes of Overlay"/>
 

@@ -17,9 +17,9 @@ namespace Project_127.HelperClasses
 
 			if (MySettings.Settings.EnableOverlay && GTAOverlay.OverlayMode == GTAOverlay.OverlayModes.Borderless)
 			{
-				if (WindowTitle == GTAOverlay.targetWindow && LastWindowTitle != GTAOverlay.targetWindow)
+				if (WindowTitle == GTAOverlay.targetWindowBorderless && LastWindowTitle != GTAOverlay.targetWindowBorderless)
 				{
-					HelperClasses.Logger.Log("'" + GTAOverlay.targetWindow + "' Foreground Change Event detected. It is now in Foreground.");
+					HelperClasses.Logger.Log("'" + GTAOverlay.targetWindowBorderless + "' Foreground Change Event detected. It is now in Foreground.");
 					HelperClasses.Keyboard.KeyboardListener.Start();
 					if (Overlay.NoteOverlay.OverlayWasVisible)
 					{
@@ -27,12 +27,12 @@ namespace Project_127.HelperClasses
 						Overlay.NoteOverlay.OverlayWasVisible = false;
 					}
 				}
-				else if (WindowTitle != GTAOverlay.targetWindow)
+				else if (WindowTitle != GTAOverlay.targetWindowBorderless)
 				{
 					if (HelperClasses.Keyboard.KeyboardListener.IsRunning)
 					{
 						// So we dont spam log with that.
-						HelperClasses.Logger.Log("'" + GTAOverlay.targetWindow + "' no longer foreground");
+						HelperClasses.Logger.Log("'" + GTAOverlay.targetWindowBorderless + "' no longer foreground");
 						HelperClasses.Keyboard.KeyboardListener.Stop();
 					}
 					if (Overlay.NoteOverlay.IsOverlayVisible())

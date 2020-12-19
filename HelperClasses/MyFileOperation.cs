@@ -25,7 +25,8 @@ namespace Project_127
 			Copy,
 			Move,
 			Hardlink,
-			Delete
+			Delete,
+			Create
 		}
 
 		/// <summary>
@@ -104,6 +105,19 @@ namespace Project_127
 						else
 						{
 							HelperClasses.FileHandling.CopyPath(pMyFileOperation.OriginalFile, pMyFileOperation.NewFile);
+						}
+						break;
+					}
+				case FileOperations.Create:
+					{
+						HelperClasses.Logger.Log(pMyFileOperation.Log, pMyFileOperation.LogLevel);
+						if (pMyFileOperation.MyFileOrFolder == FileOrFolder.File)
+						{
+							HelperClasses.FileHandling.createFile(pMyFileOperation.OriginalFile);
+						}
+						else
+						{
+							HelperClasses.FileHandling.createPath(pMyFileOperation.OriginalFile);
 						}
 						break;
 					}

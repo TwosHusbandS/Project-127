@@ -90,7 +90,7 @@ namespace Project_127
 			get
 			{
 				string masterURL = "https://raw.githubusercontent.com/TwosHusbandS/Project-127/master/Installer/Update.xml";
-				string modeURL = "https://raw.githubusercontent.com/TwosHusbandS/Project-127/" + Mode.ToLower() + "/Installer/Update.xml";
+				string modeURL = "https://raw.githubusercontent.com/TwosHusbandS/Project-127/" + Branch.ToLower() + "/Installer/Update.xml";
 
 				string modeXML = HelperClasses.FileHandling.GetStringFromURL(modeURL, true);
 
@@ -116,7 +116,7 @@ namespace Project_127
 			get
 			{
 				string masterURL = "https://raw.githubusercontent.com/TwosHusbandS/Project-127/master/Installer/Update.xml";
-				string modeURL = "https://raw.githubusercontent.com/TwosHusbandS/Project-127/" + Mode + "/Installer/Update.xml";
+				string modeURL = "https://raw.githubusercontent.com/TwosHusbandS/Project-127/" + Branch + "/Installer/Update.xml";
 				if (String.IsNullOrWhiteSpace(HelperClasses.FileHandling.GetStringFromURL(modeURL, true)))
 				{
 					return masterURL;
@@ -128,7 +128,7 @@ namespace Project_127
 			}
 		}
 
-		public static string Mode
+		public static string Branch
 		{
 			get
 			{
@@ -204,7 +204,7 @@ namespace Project_127
 		/// <summary>
 		/// Property of other Buildinfo. Will be in the top message of logs
 		/// </summary>
-		public static string BuildInfo = "Build 2, test for autoupdate logic..., Internal Testing for 1.1";
+		public static string BuildInfo = "Build 1, everything apart from SocialClubLaunch";
 
 		/// <summary>
 		/// Returns all Command Line Args as StringArray
@@ -245,44 +245,6 @@ namespace Project_127
 		public static RegistryKey MySettingsKey { get { return RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64).CreateSubKey("SOFTWARE").CreateSubKey("Project_127"); } }
 
 
-		public static Dictionary<string, string> VersionTable { get; private set; } = new Dictionary<string, string>()
-		{
-			{"1.0.323.1", "1.24" },
-			{"1.0.331.1", "1.24" },
-			{"1.0.335.2", "1.24" },
-			{"1.0.350.1", "1.26" },
-			{"1.0.350.2", "1.26" },
-			{"1.0.372.2", "1.27" },
-			{"1.0.393.2", "1.28" },
-			{"1.0.393.4", "1.28.01" },
-			{"1.0.463.1", "1.29" },
-			{"1.0.505.2", "1.30" },
-			{"1.0.573.1", "1.31" },
-			{"1.0.617.1", "1.32" },
-			{"1.0.678.1", "1.33" },
-			{"1.0.757.2", "1.34" },
-			{"1.0.757.4", "1.34" },
-			{"1.0.791.2", "1.35" },
-			{"1.0.877.1", "1.36" },
-			{"1.0.944.2", "1.37" },
-			{"1.0.1011.1", "1.38" },
-			{"1.0.1032.1", "1.39" },
-			{"1.0.1103.2", "1.40" },
-			{"1.0.1180.2", "1.41" },
-			{"1.0.1290.1", "1.42" },
-			{"1.0.1365.1", "1.43" },
-			{"1.0.1493.0", "1.44" },
-			{"1.0.1493.1", "1.44" },
-			{"1.0.1604.0", "1.46" },
-			{"1.0.1734.0", "1.47" },
-			{"1.0.1737.0", "1.48" },
-			{"1.0.1737.6", "1.48" },
-			{"1.0.1868.0", "1.50" },
-			{"1.0.2060.0", "1.51" },
-			{"1.0.2060.1", "1.52" },
-		};
-
-
 		/// <summary>
 		/// Property of our default Settings
 		/// </summary>
@@ -309,6 +271,8 @@ namespace Project_127
 			{"EnableLogging", "True"},
 			{"EnableAlternativeLaunch", "False"},
 			{"EnableCopyFilesInsteadOfHardlinking", "False"},
+			{"EnableSlowCompare", "False"},
+			{"Version", "127"},
 			{"EnableCopyFilesInsteadOfSyslinking_SocialClub", "False"},
 			{"ExitWay", "Close"},
 			{"StartWay", "Maximized"},
@@ -515,10 +479,13 @@ namespace Project_127
 			CheckForBigThree();
 
 			// Check whats the latest Version of the ZIP File in GITHUB
-			CheckForZipUpdate(); 
+			CheckForZipUpdate();
 
 			// Checks if Update hit
 			LauncherLogic.HandleUpdates();
+
+			// Loading Info for Version stuff.
+			HelperClasses.BuildVersionTable.ReadFromGithub();
 
 			// Rolling Log stuff
 			HelperClasses.Logger.RollingLog();
@@ -591,32 +558,25 @@ namespace Project_127
 
 
 
-		public static string GetGameVersionOfBuildNumber(Version BuildNumber)
-		{
-			foreach (KeyValuePair<string, string> KVP in Globals.VersionTable)
-			{
-				if (KVP.Key == BuildNumber.ToString())
-				{
-					return KVP.Value;
-				}
-			}
-
-			if (BuildNumber > new Version(Globals.VersionTable.ElementAt(Globals.VersionTable.Count - 1).Key))
-			{
-				return ("> " + Globals.VersionTable.ElementAt(Globals.VersionTable.Count - 1).Value);
-			}
-			else
-			{
-				return "???";
-			}
-		}
 
 		public static string GetGameInfoForDebug(string pFilePath)
 		{
 			if (HelperClasses.FileHandling.doesFileExist(pFilePath))
 			{
 				FileVersionInfo FVI = FileVersionInfo.GetVersionInfo(pFilePath);
-				return " (" + new Version(FVI.FileVersion).ToString() + " - " + new Version(Globals.GetGameVersionOfBuildNumber(new Version(FVI.FileVersion))) + ")";
+				string rtrn = " (" + new Version(FVI.FileVersion).ToString();
+
+				try
+				{
+					rtrn += " - " + new Version(HelperClasses.BuildVersionTable.GetNiceGameVersionString(new Version(FVI.FileVersion))) + ")";
+				}
+				catch
+				{
+					rtrn += ")";
+				}
+
+				return rtrn;
+
 			}
 			return "";
 		}
@@ -698,6 +658,12 @@ namespace Project_127
 					HelperClasses.Logger.Log("Found dirtyprogramming File in the Directory. Will delete it.");
 					HelperClasses.FileHandling.deleteFile(myFile);
 				}
+				if (myFile.ToLower().Contains("Project 1.27.exe" + ".BACKUP"))
+				{
+					HelperClasses.Logger.Log("Found old build ('.BACKUP'). Will delete it.");
+					HelperClasses.FileHandling.deleteFile(myFile);
+				}
+
 				File.Create(Globals.ProjectInstallationPath.TrimEnd('\\') + @"\dirtyprogramming").Dispose();
 			}
 		}
@@ -710,6 +676,7 @@ namespace Project_127
 		{
 			string XML_Autoupdate_Temp = XML_AutoUpdate;
 
+			HelperClasses.BuildVersionTable.ReadFromGithub();
 
 			// Check online File for Version.
 			string MyVersionOnlineString = HelperClasses.FileHandling.GetXMLTagContent(XML_Autoupdate_Temp, "version");
@@ -1029,14 +996,7 @@ namespace Project_127
 		/// </summary>
 		public static void ProperExit()
 		{
-			if (MainWindow.OL_MM != null)
-			{
-				MainWindow.OL_MM.Close();
-			}
-			HelperClasses.Keyboard.KeyboardListener.Stop();
-			NoteOverlay.DisposeGTAOverlay();
-			NoteOverlay.DisposePreview();
-			WindowChangeListener.Stop();
+			NoteOverlay.DisposeAllOverlayStuff();
 			Jumpscript.StopJumpscript();
 			Globals.FSW.Dispose();
 			Globals.MyDispatcherTimer.Stop();
@@ -1587,6 +1547,21 @@ namespace Project_127
 			return result;
 		}
 
+
+		public static void ImportBuildFromUrl(string pUrl)
+		{
+			string pDownloadLocation = ProjectInstallationPath.TrimEnd('\\') + @"\NewBuild.exe";
+
+			new PopupDownload(pUrl, pDownloadLocation, "Custom Build").ShowDialog();
+
+			Process p = new Process();
+			p.StartInfo.FileName = ProjectInstallationPath.TrimEnd('\\') + @"\Project 127 Launcher.exe";
+			p.StartInfo.WorkingDirectory = ProjectInstallationPath;
+			p.StartInfo.Arguments = "-ImportBuild " + "\"" + pDownloadLocation + "\"";
+			p.Start();
+
+			Globals.ProperExit();
+		}
 
 		/// <summary>
 		/// Returns a Brush from RGB integers, and an Opacity (0-100)

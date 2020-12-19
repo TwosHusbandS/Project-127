@@ -16,6 +16,7 @@ using Project_127.Overlay;
 using Project_127.Popups;
 using Project_127.MySettings;
 using System.Diagnostics;
+using System.Net;
 
 namespace Project_127.HelperClasses
 {
@@ -73,6 +74,16 @@ namespace Project_127.HelperClasses
 				return fsd.FileName;
 			}
 			return "";
+		}
+
+		public static string SaveFileDialog(string Title, string Filter)
+		{
+			SaveFileDialog saveFileDialog = new SaveFileDialog();
+			saveFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+			saveFileDialog.Filter = Filter;
+			saveFileDialog.Title = Title;
+			saveFileDialog.ShowDialog();
+			return saveFileDialog.FileName;
 		}
 
 
@@ -273,7 +284,6 @@ namespace Project_127.HelperClasses
 			catch (Exception e)
 			{
 				Logger.Log("Sth failed while writing string array to file: " + e.ToString());
-
 			}
 		}
 
@@ -352,6 +362,8 @@ namespace Project_127.HelperClasses
 		/// <returns></returns>
 		public static string GetXMLTagContent(string pXML, string pTag)
 		{
+			pXML = pXML.Replace("\n", "").Replace("\r", "");
+
 			string rtrn = "";
 
 			Regex regex = new Regex(@"<" + pTag + ">.+</" + pTag + ">");
@@ -360,22 +372,42 @@ namespace Project_127.HelperClasses
 			if (match.Success)
 			{
 				string tmp = match.Value;
-
 				rtrn = tmp.Substring(tmp.IndexOf('>') + 1, tmp.LastIndexOf('<') - 2 - pTag.Length);
 			}
 
 			return rtrn;
 		}
 
-		public static bool AreFilesEqual(string pFilePathA, string pFilePathB)
+		public static bool URLExists(string url)
+		{
+			bool result = true;
+
+			WebRequest webRequest = WebRequest.Create(url);
+			webRequest.Timeout = 500; // miliseconds
+			webRequest.Method = "HEAD";
+
+			try
+			{
+				webRequest.GetResponse();
+			}
+			catch
+			{
+				result = false;
+			}
+
+			return result;
+		}
+		public static bool AreFilesEqual(string pFilePathA, string pFilePathB, bool SlowButStable)
 		{
 			Stopwatch sw = new Stopwatch();
 			sw.Start();
-			bool Sth = AreFilesEqualReal(pFilePathA, pFilePathB);
+			bool Sth = AreFilesEqualReal(pFilePathA, pFilePathB, SlowButStable);
 			sw.Stop();
 			HelperClasses.Logger.Log("AAAA - It took '" + sw.ElapsedMilliseconds + "' ms to compare: '" + pFilePathA + "' and '" + pFilePathB + "'. Result is: " + Sth.ToString());
 			return Sth;
 		}
+
+
 
 		private static bool StreamsContentsAreEqual(Stream stream1, Stream stream2)
 		{
@@ -411,7 +443,7 @@ namespace Project_127.HelperClasses
 
 
 
-		public static bool AreFilesEqualReal(string pFilePathA, string pFilePathB)
+		public static bool AreFilesEqualReal(string pFilePathA, string pFilePathB, bool SlowButStable)
 		{
 			FileInfo fileInfo1 = new FileInfo(pFilePathA);
 			FileInfo fileInfo2 = new FileInfo(pFilePathB);
@@ -424,7 +456,7 @@ namespace Project_127.HelperClasses
 			{
 				return false;
 			}
-			else
+			else if (SlowButStable)
 			{
 				using (var file1 = fileInfo1.OpenRead())
 				{
@@ -433,6 +465,10 @@ namespace Project_127.HelperClasses
 						return StreamsContentsAreEqual(file1, file2);
 					}
 				}
+			}
+			else
+			{
+				return true;
 			}
 		}
 
@@ -467,7 +503,7 @@ namespace Project_127.HelperClasses
 			return rtrn;
 		}
 
-
+		
 		/// <summary>
 		/// Method to get Hash from a Folder
 		/// </summary>
@@ -668,7 +704,6 @@ namespace Project_127.HelperClasses
 		{
 			try
 			{
-
 				if (doesFileExist(pFilePath))
 				{
 					File.Delete(pFilePath);
@@ -684,7 +719,7 @@ namespace Project_127.HelperClasses
 
 
 		/// <summary>
-		/// Copy File A to file B. Does not overwrite
+		/// Copy File A to file B. DOES overwrite
 		/// </summary>
 		/// <param name="pSource"></param>
 		/// <param name="pDestination"></param>
@@ -697,11 +732,11 @@ namespace Project_127.HelperClasses
 			}
 			if (File.Exists(pDestination))
 			{
-				HelperClasses.Logger.Log("Copying File ['" + pSource + "' to '" + pDestination + "'] failed since DestinationFile ('" + pDestination + "') DOES exist.", true, 0);
-				return;
+				FileHandling.deleteFile(pDestination);
 			}
 			try
 			{
+				FileHandling.createPathOfFile(pDestination);
 				File.Copy(pSource, pDestination);
 			}
 			catch (Exception e)
@@ -869,15 +904,20 @@ namespace Project_127.HelperClasses
 			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\SupportFiles\Installer");
 			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\SupportFiles\SaveFiles");
 			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\DowngradeFiles_Alternative\");
-			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\DowngradeFiles_Alternative\steam");
-			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\DowngradeFiles_Alternative\steam\update");
-			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\DowngradeFiles_Alternative\rockstar");
-			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\DowngradeFiles_Alternative\rockstar\update");
-			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\SocialClubFiles");
-			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\SocialClubFiles\steam");
-			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\SocialClubFiles\steam\update");
-			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\SocialClubFiles\rockstar");
-			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\SocialClubFiles\rockstar\update");
+			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\DowngradeFiles_Alternative\rockstar\");
+			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\DowngradeFiles_Alternative\rockstar\127\");
+			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\DowngradeFiles_Alternative\rockstar\127\update\");
+			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\DowngradeFiles_Alternative\rockstar\124\");
+			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\DowngradeFiles_Alternative\rockstar\124\update\");
+			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\DowngradeFiles_Alternative\steam\");
+			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\DowngradeFiles_Alternative\steam\127\");
+			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\DowngradeFiles_Alternative\steam\127\update\");
+			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\DowngradeFiles_Alternative\steam\124\");
+			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\DowngradeFiles_Alternative\steam\124\update\");
+			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\SupportFiles\DowngradedSocialClub\");
+
+
+
 		}
 
 

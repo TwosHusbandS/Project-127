@@ -63,6 +63,7 @@ namespace Project_127.Popups
 			HelperClasses.Logger.Log("Download Popup: pMessage: '" + pMessage.ToString() + "'");
 
 			HelperClasses.FileHandling.createPathOfFile(pDownloadLocation);
+			HelperClasses.FileHandling.deleteFile(pDownloadLocation);
 
 			lbl_Main.Content = "Downloading " + DownloadName + "...";
 

@@ -13,6 +13,8 @@ using Project_127.Overlay;
 using Project_127.Popups;
 using Project_127.MySettings;
 using System.Windows.Forms;
+using System.Reflection;
+using System.ComponentModel;
 
 namespace Project_127.MySettings
 {
@@ -393,6 +395,21 @@ namespace Project_127.MySettings
 		}
 
 		/// <summary>
+		/// Settings EnableSlowCompare. Gets and Sets from the Dictionary.
+		/// </summary>
+		public static bool EnableSlowCompare
+		{
+			get
+			{
+				return GetBoolFromString(GetSetting("EnableSlowCompare"));
+			}
+			set
+			{
+				SetSetting("EnableSlowCompare", value.ToString());
+			}
+		}
+
+		/// <summary>
 		/// Settings EnableCopyFilesInsteadOfHardlinking. Gets and Sets from the Dictionary.
 		/// </summary>
 		public static bool EnableCopyFilesInsteadOfHardlinking
@@ -553,6 +570,34 @@ namespace Project_127.MySettings
 			Epic
 		}
 
+
+		public static string Version
+		{
+			get
+			{
+				if (GetSetting("Version") == "124")
+				{
+					return "124";
+				}
+				else
+				{
+					return "127";
+				}
+			}
+			set
+			{
+				if (value == "124" && Version != "124")
+				{
+					SetSetting("Version", "124");
+				}
+				else if (Version!="127")
+				{
+					SetSetting("Version", "127");
+				}
+			}
+		}
+
+	
 
 		/// <summary>
 		/// Settings Retailer. Gets and Sets from Dictionary.

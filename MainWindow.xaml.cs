@@ -9,7 +9,7 @@ Actual code (partially closed source) which authentificates, handles entitlement
 Artwork, Design of GUI, GUI Behaviourehaviour, Colorchoices etc. by "@Hossel"
 Project 1.27 Client by "@thS"
 A number of other members of the team, including but not limited to @MoMo, @Diamondo25, @S.M.G, @gogsi, @Antibones, @Unemployed, @Aperture, @luky, @CrynesSs, @Daniel Kinau contributed to this project one way or another, and my thanks go out to them.
-Version: 1.0.9.6
+Version: 1.0.9.7
 
 Build Instructions:
 	Press CTRLF + F5, pray that nuget does its magic.
@@ -105,27 +105,19 @@ Hybrid code can be found in AAA_HybridCode.
 		=> Released under MIT
 		=> Improved UX overall. Lots of small things.
 		=> Lots of SaveFileHandler Improvments. Really shitty code, really shitty performance, but UX is great.
+		=> Overlay (Borderless + MultiMonitor) done.
+		=> Jumpscrip done
+		=> Fixed Starting other programs with P127
 
 	Release 1.1
 
-		PRIO PRIO CTRLF
-		I think i tracked down a huge bug...
-			=> Be upgraded, empty Upgrade_Files folder.
-			=> Downgrade, CLOSE P127
-			=> Copy over Upgrade_Files folder into GTA. 
-			=> Open P127
-			=> "Downgraded (1.52)"
-		We are hardlinking...changing link will change source
-
 		- Internal Testing Reports Bugs:
-			=> Something removed update.rpf from my game directory...lets hope it wasnt my code...
-			=> [WANTED BEHAVIOUR] Broken InstallationState (says Unsure) when UpgradeFiles is empty.
-			=> [FIXED] Automatic Update of Files detected broken (when update.rpf missing. Maybe check other file attributes instead of size? Mhm. Or different faster method to detect if files are the same
-			=> [FIXED] More efficent isEqual method for checking if gta update hit
-			=> [FIXED] popup that path is wrong and you have to force downgrade
-			=> [FIXED] long freeze on check if update hit...actually as efficent as can be
-			=> [FIXED] Using Backup broken (folder locked...Fixed when explorer closed. Kinda weird-ish)
-			=> [NOT CONNECTED TO ANY FILE RELATED LOGIC] Dragons stuff. Both paths, Settings
+			
+			=> [DONE] Automatic Update of Files detected broken (when update.rpf missing. Maybe check other file attributes instead of size? Mhm. Or different faster method to detect if files are the same
+			=> [DONE] More efficent isEqual method for checking if gta update hit
+			=> [DONE] popup that path is wrong and you have to force downgrade
+			=> [DONE] long freeze on check if update hit...actually as efficent as can be
+			=> [DONE] Using Backup broken (folder locked...Fixed when explorer closed. Kinda weird-ish)
 			=> [DONE] No "new files blabla popup when upgrade_files is empty
 			=> [DONE] Make settings not write enums to settins on startup. Maybe check on Settings property if its the same as current before setting?
 			=> [DONE] Change Popup Text from "if Update hit" to something better
@@ -135,16 +127,57 @@ Hybrid code can be found in AAA_HybridCode.
 			=> [DONE] Do actual Modes (internal, beta, master etc.) on some hidden UI shit, "default", textbox, "set new", cancel
 			=> [DONE] Add "internal mode" and "buildinfo" and "buildtime" to debug info
 			=> [DONE] DebugFile async task,  check if what we are overwriting isnt larger than our message, popup then
-			=> Ugly startup
-			=> Release installer for a few people to test update on 2020-12-15
+			=> [DONE] Ugly startup
+			=> [DONE] Release installer for a few people to test update on 2020-12-15
+			=> [DONE] Hide options when launching through socialclub (GTA V ingame name, pre order bonus, hide from steam)
+			=> [DONE] Hide options (launch through social club and shit) when on epic retailer.
+			=> [DONE] Add blue face guy to credits. (AntherXx)
+			=> [DONE] Scroll faster
+			=> [DONE] Launching retailer steam, hide from steam enabled, when upgraded, launches into rockstar launcher...argh
+			=> [DONE] Reset settings is wonky UX
+			=> [DONE] (Download Manager popup gonna replace that Check for update button) Button to "reset" and get $DowngradeFiles new, since Rockstar fucks us..
+			=> [DONE] Better ProgressBar on CreatingBackup...
+			=> [DONE] Fix grammar from dragons screen + Other Text Improvements.
+			=> [DONE] Rightclick on create and use backup to give options to name it in a specific way. For mods and shit
+				>> Create: Custom Control Popup (not new Window)
+						Header
+						Textbox name popup,
+						2 buttons "Create", "Cancel"
+				>> Use: Custom Control Popup (not new Window)
+						Header
+						Select available Backuos from Dropdown / Combobox, delete empty back ups when reading in the info
+						Think of rename and exit functions...
+						Buttons "Use, "Exit".
+			=> [DONE] Check if rolling log works.
+			=> [DONE] Less accurate but faster Method for detecting upgrades
+			=> [DONE] New SafeFile Export / Import
+			=> [Working for me] Launching dragon Emu through steam broken?
+			=> [APPARENTLY DONE???] May not need DidUpdateHit Method...Its not called anywhere...
+			=> [DONE] Save WPF MM Overlay startup location somehow...
+			=> [DIRTFIXED] Overlay cant be toggled when multi monitor mode set before GTA started.
+			=> [DONE] Hide WPF MM Overlay from Alt + Tab
+			=> [DONE] Reset Window Location of OverlayMonitor
+			=> [DONE] Hide Settings when not on Steam
+			=> [DONE] Hide Settings when overlay Mode not enabled
+			=> [DONE / WILL BE HANDLED IN DL MANAGER] Back up DowngradeFiles because of rockstar update
+			=> [DONE] On OverlaySettingsChange call when Game started due to weird edge case, make overlay be in same state (visible or not as it was before we had to call the method)
+			=> [DONE] Overlay not fixed...
+			=> [DONE] Check if Backup Methods (use / create) need to call Upgrade or Downgrade after or before
+			=> [DONE] Get BuildVersion Table from Github, dont supply the last . and just hope...if that makes sense?
+			=> [DONE] Deployment system with modes / branches like above
+				--> XML Tag for link / name to specific build.
+					>> Finish Logic of getting a build from github.
+					>> Add UI to have textbox with a built. Or decide on syntax for pushing builds. Maybe both?
+					>> Currently on rightclick check for updates. Might throw a simple textbox.
+				--> Download the build, then call Launcher.exe with command line args to swap the files out correctly, so we have the new build.
+			=> Investigate Jumpscript with Logs for crapideot
 
-			=> Rightclick on create and use backup to give options to name it in a specific way. For mods and shit
-			=> Reset settings is wonky UX
-			=> Investigate Jumpscript with Logs for crapideot.
-			=> [Working for Special] launching through rockstar when upgraded broken
-			=> Deployment system with modes / branches like above
-				--> XML Tag for link to specific build.
-				--> Download the build, then call Launcher with command line args to swap the files out correctly, so we have the new build.
+			=> [FUCK THAT] More efficent compare of files
+			=> [NOT CONNECTED TO ANY FILE RELATED LOGIC] Dragons stuff. Both paths, all settings
+			=> Remember to not only check if alternative launch, but also check out if epic...
+			=> Download Manager keeping track of componments
+			=> Support for 1.24
+			=> Safe File Handler path switch because of social club switch
 			=> Think about integrating new lauch version
 					- what files we need, how we get them, with Optional stuff
 					- where do we keep social club files? How are we messing with them.
@@ -394,16 +427,18 @@ namespace Project_127
 			// Intepreting all Command Line shit
 			Globals.CommandLineArgumentIntepretation();
 
-			if (Globals.Mode == "internal")
+			if (Globals.Branch == "internal")
 			{
 				string msg = "We are in internal mode. I need testing on:\n\n" +
-					"- Upgrading / Downgrading / Repairing" + "\n" +
+					"- Upgrading / Downgrading" + "\n" +
 					"- Automatically detecting Upgrades" + "\n" +
 					"- Performance (CPU & Ram)" + "\n" +
 					"- Crashes" + "\n" +
 					"- NoteOverlay" + "\n" +
 					"- Jumpscript" + "\n" +
-					"- Bugfixes in general" + "\n" +
+					"- New SaveFileHanlder" + "\n" +
+					"- General / Normal stuff" + "\n" +
+					"\nI do expect everything to work, so no extensive Testing needed." + "\n" +
 					"\nThanks. Appreciated. Have a great day : )";
 
 				new Popup(Popup.PopupWindowTypes.PopupOk, msg).ShowDialog();
@@ -606,7 +641,7 @@ namespace Project_127
 				lbl_GTA.Content = "Unsure";
 			}
 
-			lbl_GTA.Content += " (" + Globals.GetGameVersionOfBuildNumber(Globals.GameVersion) + ")";
+			lbl_GTA.Content += BuildVersionTable.GetNiceGameVersionString(Globals.GameVersion);
 
 			if (LauncherLogic.PollGameState() == LauncherLogic.GameStates.Running)
 			{
@@ -822,7 +857,7 @@ namespace Project_127
 		/// <param name="e"></param>
 		private void btn_Hamburger_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
 		{
-			if (Globals.Mode == "internal" || Globals.Mode == "beta")
+			if (Globals.Branch != "master")
 			{
 				// Opens the File
 				HelperClasses.ProcessHandler.StartProcess(@"C:\Windows\System32\notepad.exe", pCommandLineArguments: Globals.Logfile);
@@ -884,7 +919,7 @@ namespace Project_127
 				DebugMessage.Add("BuildTime: '" + MyCreationDate + "'");
 				DebugMessage.Add("Time Now: '" + DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss") + "'");
 				DebugMessage.Add("ZIP Version: '" + Globals.ZipVersion + "'");
-				DebugMessage.Add("Mode (Branch): '" + Globals.Mode + "'");
+				DebugMessage.Add("Globals.Branch: '" + Globals.Branch + "'");
 				DebugMessage.Add("InternalMode (Overwites, mode / branch): '" + Globals.InternalMode + "'");
 				DebugMessage.Add("Project 1.27 Installation Path '" + Globals.ProjectInstallationPath + "'");
 				DebugMessage.Add("Project 1.27 Installation Path Binary '" + Globals.ProjectInstallationPathBinary + "'");
@@ -1050,7 +1085,8 @@ namespace Project_127
 			string Downgrade_PlayGTAV = LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\playgtav.exe";
 			string Downgrade_UpdateRPF = LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\update\update.rpf";
 
-			bool areTheyEqual = HelperClasses.FileHandling.AreFilesEqual(GTA_UpdateRPF, Upgrade_UpdateRPF);
+			bool areTheyEqual = HelperClasses.FileHandling.AreFilesEqual(GTA_UpdateRPF, Upgrade_UpdateRPF, true);
+			btn_Downgrade.Content = "Update Files are equal: '" + areTheyEqual.ToString() + "'";
 
 			//if (FileHandling.GetSizeOfFile(GTA_UpdateRPF) == FileHandling.GetSizeOfFile(Downgrade_UpdateRPF))
 			//{
@@ -1061,7 +1097,6 @@ namespace Project_127
 			//	areTheyEqual = false;
 			//}
 
-			btn_Downgrade.Content = "Update Files are equal: '" + areTheyEqual.ToString() + "'";
 
 		}
 
@@ -1140,7 +1175,7 @@ namespace Project_127
 
 				string msg = "Error: GTA V Installation Path incorrect or ZIP Version == 0.\nGTAV Installation Path: '" + LauncherLogic.GTAVFilePath + "'\nInstallationState (probably): '" + LauncherLogic.InstallationState.ToString() + "'\nZip Version: " + Globals.ZipVersion + ".";
 
-				if (Globals.Mode == "internal" || Globals.Mode == "beta")
+				if (Globals.Branch != "master")
 				{
 					Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, msg + "\n. Force this Upgrade?");
 					yesno.ShowDialog();
@@ -1212,7 +1247,7 @@ namespace Project_127
 
 				string msg = "Error: GTA V Installation Path incorrect or ZIP Version == 0.\nGTAV Installation Path: '" + LauncherLogic.GTAVFilePath + "'\nInstallationState (probably): '" + LauncherLogic.InstallationState.ToString() + "'\nZip Version: " + Globals.ZipVersion + ".";
 
-				if (Globals.Mode == "internal" || Globals.Mode == "beta")
+				if (Globals.Branch != "master")
 				{
 					Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, msg + "\n. Force this Downgrade?");
 					yesno.ShowDialog();
@@ -1502,9 +1537,5 @@ namespace Project_127
 			Globals.ProperExit();
 		}
 
-		private void Window_Loaded_1(object sender, RoutedEventArgs e)
-		{
-
-		}
 	} // End of Class
 } // End of Namespace

@@ -24,7 +24,7 @@ namespace Project_127.HelperClasses
 			myList.Add("#SingleInstance Force");
 			myList.Add("#MaxHotkeysPerInterval 10000");
 			myList.Add("#UseHook");
-			myList.Add("#IfWinActive " + GTAOverlay.targetWindowFullscreen);
+			myList.Add("#IfWinActive " + GTAOverlay.targetWindowBorderless);
 			myList.Add(KeyToString(MySettings.Settings.JumpScriptKey1) + "::" + KeyToString(MySettings.Settings.JumpScriptKey2));
 			myList.Add(KeyToString(MySettings.Settings.JumpScriptKey2) + "::" + KeyToString(MySettings.Settings.JumpScriptKey1));
 			myList.Add("#IfWinActive");
@@ -43,13 +43,11 @@ namespace Project_127.HelperClasses
 			if (myJumpscript != null)
 			{
 				HelperClasses.ProcessHandler.Kill(myJumpscript);
+				myJumpscript = null;
+				HelperClasses.FileHandling.deleteFile(Globals.ProjectInstallationPathBinary.TrimEnd('\\') + @"\P127_Jumpscript.ahk");
+				HelperClasses.Logger.Log("Stopped Jumpscript");
+				IsRunning = false;
 			}
-
-			HelperClasses.FileHandling.deleteFile(Globals.ProjectInstallationPathBinary.TrimEnd('\\') + @"\P127_Jumpscript.ahk");
-
-			HelperClasses.Logger.Log("Stopped Jumpscript");
-
-			IsRunning = false;
 		}
 
 		public static string KeyToString(System.Windows.Forms.Keys pKey)
@@ -151,6 +149,10 @@ namespace Project_127.HelperClasses
 			else if (pKey == Keys.MediaStop)
 			{
 				rtrn = "Media_Stop";
+			}
+			else if (pKey == Keys.Space)
+			{
+				rtrn = "Space";
 			}
 
 			// Translate this:
