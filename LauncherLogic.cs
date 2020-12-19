@@ -154,6 +154,9 @@ namespace Project_127
 					}
 				}
 			}
+
+			Task.Delay(2500).GetAwaiter().GetResult();
+
 			NoteOverlay.OverlaySettingsChanged();
 
 			//// If one of the Settings which require Hotkeys are enabled
@@ -377,13 +380,16 @@ namespace Project_127
 		/// <summary>
 		/// Method for Upgrading the Game back to latest Version
 		/// </summary>
-		public static void Upgrade()
+		public static void Upgrade(bool IgnoreNewFiles = false)
 		{
 			if (HandleUpdates())
 			{
 				return;
 			}
 
+			KillRelevantProcesses();
+
+			IgnoreNewFilesWhileUpgradeDowngradeLogic = IgnoreNewFiles;
 
 			// Cancel any stuff when we have no files in upgrade files...simple right?
 			if (HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(UpgradeFilePath).Length <= 1)
@@ -406,6 +412,9 @@ namespace Project_127
 			{
 				new Popup(Popup.PopupWindowTypes.PopupOk, "We just did an Upgrade but the detected InstallationState is not Upgraded.\nI suggest reading the \"Help\" Part of the Information Page");
 			}
+
+
+			IgnoreNewFilesWhileUpgradeDowngradeLogic = false;
 
 			HelperClasses.Logger.Log("Done Upgrading");
 		}
@@ -442,10 +451,12 @@ namespace Project_127
 			HelperClasses.Logger.Log("Repair is done. Files in Upgrade Folder deleted.");
 		}
 
+		public static bool IgnoreNewFilesWhileUpgradeDowngradeLogic = false;
+
 		/// <summary>
 		/// Method for Downgrading
 		/// </summary>
-		public static void Downgrade()
+		public static void Downgrade(bool IgnoreNewFiles = false)
 		{
 			if (HandleUpdates())
 			{
@@ -453,6 +464,8 @@ namespace Project_127
 			}
 
 			KillRelevantProcesses();
+
+			IgnoreNewFilesWhileUpgradeDowngradeLogic = IgnoreNewFiles;
 
 			PopupProgress tmp = new PopupProgress(PopupProgress.ProgressTypes.Downgrade, "");
 			tmp.ShowDialog();
@@ -467,6 +480,7 @@ namespace Project_127
 				new Popup(Popup.PopupWindowTypes.PopupOk, "We just did an Downgraded but the detected InstallationState is not Downgraded.\nI suggest reading the \"Help\" Part of the Information Page");
 			}
 
+			IgnoreNewFilesWhileUpgradeDowngradeLogic = false;
 
 			HelperClasses.Logger.Log("Done Downgrading");
 		}
@@ -862,6 +876,8 @@ namespace Project_127
 			}
 			else
 			{
+				InstallationStates OldInstallationState = InstallationState;
+
 				List<MyFileOperation> MyFileOperations = new List<MyFileOperation>();
 
 				MyFileOperations.Add(new MyFileOperation(MyFileOperation.FileOperations.Delete, OrigPath, "", "Deleting Path: '" + (OrigPath) + "'", 2, MyFileOperation.FileOrFolder.Folder));
@@ -881,11 +897,13 @@ namespace Project_127
 
 				new Popup(Popup.PopupWindowTypes.PopupOk, "Using backup files now.").ShowDialog();
 
-				// Keep this here...
-				string asdf = InstallationState.ToString();
-				if (asdf.Length > 10000)
+				if (OldInstallationState == InstallationStates.Upgraded)
 				{
-					Globals.DebugPopup(asdf);
+					Upgrade(true);
+				}
+				else
+				{
+					Downgrade(true);
 				}
 			}
 

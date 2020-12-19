@@ -479,6 +479,9 @@ namespace Project_127.Auth
 					//LKey.Add(0);
 
 
+
+					/* Just some Logging Statements
+					 
 					string OutputFilePath = Settings.GTAVInstallationPath.TrimEnd('\\') + @"\launch.dat";
 					HelperClasses.Logger.Log("OutputFilePath: '" + OutputFilePath + "'");
 					if (HelperClasses.FileHandling.doesFileExist(OutputFilePath))
@@ -495,7 +498,8 @@ namespace Project_127.Auth
 						}
 					}
 					HelperClasses.Logger.Log("Will gen Token");
-
+					
+					//*/
 
 
 					var launcBin = LKey.ToArray();
@@ -510,9 +514,8 @@ namespace Project_127.Auth
 						b.Write(launcBin);
 					}
 
-
-
-					HelperClasses.Logger.Log("Token generated. DoesExist: " + HelperClasses.FileHandling.doesFileExist(OutputFilePath));
+					// Other logging Statement
+					// HelperClasses.Logger.Log("Token generated. DoesExist: " + HelperClasses.FileHandling.doesFileExist(OutputFilePath));
 
 
 					tgr.error = false;

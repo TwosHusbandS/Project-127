@@ -159,19 +159,21 @@ Hybrid code can be found in AAA_HybridCode.
 			=> [DONE] Reset Window Location of OverlayMonitor
 			=> [DONE] Hide Settings when not on Steam
 			=> [DONE] Hide Settings when overlay Mode not enabled
-
-			=> More efficent compare of files
-			=> Check if Backup Methods (use / create) need to call Upgrade or Downgrade after or before
-			=> Back up DowngradeFiles because of rockstar update
-			=> On OverlaySettingsChange call when Game started due to weird edge case, make overlay be in same state (visible or not as it was before we had to call the method)
+			=> [DONE / WILL BE HANDLED IN DL MANAGER] Back up DowngradeFiles because of rockstar update
+			=> [DONE] On OverlaySettingsChange call when Game started due to weird edge case, make overlay be in same state (visible or not as it was before we had to call the method)
+			=> [DONE] Overlay not fixed...
+			=> [DONE] Check if Backup Methods (use / create) need to call Upgrade or Downgrade after or before
+			=> [DONE] Get BuildVersion Table from Github, dont supply the last . and just hope...if that makes sense?
+			
 			=> Investigate Jumpscript with Logs for crapideot
 			=> Deployment system with modes / branches like above
 				--> XML Tag for link / name to specific build.
+					>> Finish Logic of getting a build from github.
+					>> Add UI to have textbox with a built. Or decide on syntax for pushing builds. Maybe both?
+					>> Currently on rightclick check for updates. Might throw a simple textbox.
 				--> Download the build, then call Launcher.exe with command line args to swap the files out correctly, so we have the new build.
 
-
-
-
+			=> [FUCK THAT] More efficent compare of files
 			=> [NOT CONNECTED TO ANY FILE RELATED LOGIC] Dragons stuff. Both paths, all settings
 			=> Remember to not only check if alternative launch, but also check out if epic...
 			=> Download Manager keeping track of componments
@@ -638,7 +640,7 @@ namespace Project_127
 				lbl_GTA.Content = "Unsure";
 			}
 
-			lbl_GTA.Content += " (" + Globals.GetGameVersionOfBuildNumber(Globals.GameVersion) + ")";
+			lbl_GTA.Content += BuildVersionTable.GetNiceGameVersionString(Globals.GameVersion);
 
 			if (LauncherLogic.PollGameState() == LauncherLogic.GameStates.Running)
 			{
@@ -1031,10 +1033,10 @@ namespace Project_127
 			mi3.Click += MI_Close_Click;
 			cm.Items.Add(mi3);
 
-			//MenuItem mi4 = new MenuItem();
-			//mi4.Header = "Compare 2 Files";
-			//mi4.Click += MI_Debug_Click;
-			//cm.Items.Add(mi4);
+			MenuItem mi4 = new MenuItem();
+			mi4.Header = "Compare 2 Files";
+			mi4.Click += MI_Debug_Click;
+			cm.Items.Add(mi4);
 
 			//MenuItem mi5 = new MenuItem();
 			//mi5.Header = "Did Update Hit";
@@ -1082,8 +1084,8 @@ namespace Project_127
 			string Downgrade_PlayGTAV = LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\playgtav.exe";
 			string Downgrade_UpdateRPF = LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\update\update.rpf";
 
-			//bool areTheyEqual = HelperClasses.FileHandling.AreFilesEqual(GTA_UpdateRPF, Upgrade_UpdateRPF, );
-			//btn_Downgrade.Content = "Update Files are equal: '" + areTheyEqual.ToString() + "'";
+			bool areTheyEqual = HelperClasses.FileHandling.AreFilesEqual(GTA_UpdateRPF, Upgrade_UpdateRPF, true);
+			btn_Downgrade.Content = "Update Files are equal: '" + areTheyEqual.ToString() + "'";
 
 			//if (FileHandling.GetSizeOfFile(GTA_UpdateRPF) == FileHandling.GetSizeOfFile(Downgrade_UpdateRPF))
 			//{

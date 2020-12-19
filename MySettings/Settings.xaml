@@ -24,7 +24,7 @@
         <Label Style="{StaticResource lbl}" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Left" FontSize="24" Height="60" VerticalAlignment="Bottom" Margin="0,0,0,0" Content="Settings"/>
         <Button Style="{StaticResource btn_SmallIcon}"  MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"  Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Margin="0,15,55,0" VerticalAlignment="Top" HorizontalAlignment="Right" x:Name="btn_Refresh"  ToolTip="Refresh (load Settings from Registry)"  Height="40" Width="40" Click="btn_Refresh_Click"/>
 
-        <Button x:Name="btn_SettingsGeneral" Margin="0,10,5,10" Content="General P127 Settings" Grid.Row="1" Grid.Column="0" Click="btn_SettingsGeneral_Click" Style="{StaticResource btn_hamburgeritem}"/>
+        <Button x:Name="btn_SettingsGeneral" Margin="0,10,5,10" Content="General P127 Settings" Grid.Row="1" Grid.Column="0" Click="btn_SettingsGeneral_Click" MouseRightButtonDown="btn_SettingsGeneral_MouseRightButtonDown" Style="{StaticResource btn_hamburgeritem}"/>
         <Button x:Name="btn_SettingsGTA" Margin="5,10,5,10" Content="GTA Settings" Grid.Row="1" Grid.Column="1" Click="btn_SettingsGTA_Click" Style="{StaticResource btn_hamburgeritem}"/>
         <Button x:Name="btn_SettingsExtra" Margin="5,10,0,10" Content="Extra Features" Grid.Row="1" Grid.Column="2" Click="btn_SettingsExtra_Click" Style="{StaticResource btn_hamburgeritem}"/>
 
@@ -154,7 +154,7 @@
                             
                             <Button Grid.Row="13" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource btn_SE_Path}" x:Name="btn_RepairGTA" Click="btn_RepairGTA_Click" Content="Repair GTA V Installation"/>
 
-                            <Button Grid.Row="14" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource btn_SE_Path}" x:Name="btn_CheckForUpdate" Click="btn_CheckForUpdate_Click" Content="Check for Update"/>
+                            <Button Grid.Row="14" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource btn_SE_Path}" x:Name="btn_CheckForUpdate" Click="btn_CheckForUpdate_Click" MouseRightButtonDown="btn_CheckForUpdate_MouseRightButtonDown" Content="Check for Update"/>
 
                             <Button Grid.Row="15" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource btn_SE_Path}" x:Name="btn_Reset_Everything" Click="btn_Reset_Everything_Click" Content="Reset Everything"/>
 

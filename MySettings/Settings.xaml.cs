@@ -1333,5 +1333,37 @@ namespace Project_127.MySettings
 
 			NoteOverlay.OverlaySettingsChanged();
 		}
+
+		private void btn_SettingsGeneral_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+		{
+			new PopupMode().ShowDialog();
+		}
+
+		private void btn_CheckForUpdate_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+		{
+
+		}
+
+		private string GetBuildName()
+		{
+			string uglySpecialBuilds = FileHandling.GetXMLTagContent(Globals.XML_AutoUpdate, "specialbuildname");
+
+			string rtrn = "none";
+			foreach (string SpecialBuild in GetStringListFromString(uglySpecialBuilds, ':'))
+			{
+				List<string> SpecialBuildList = GetStringListFromString(SpecialBuild, ';');
+				if (SpecialBuildList.Count == 2)
+				{
+					string For = SpecialBuildList[0];
+					string Build = SpecialBuildList[1];
+					if (For.ToLower() == "all")
+					{
+						rtrn = Build.ToLower();
+					}
+					if (Foo.ToLower() == Globals.)
+				}
+			}
+			return rtrn;
+		}
 	} // End of Class
 } // End of Namespace 

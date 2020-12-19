@@ -182,6 +182,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Auth\CEFResourceHandler.cs" />
+    <Compile Include="HelperClasses\BuildVersionTable.cs" />
     <Compile Include="HelperClasses\DataGridHelper.cs" />
     <Compile Include="HelperClasses\DownloadManager.cs" />
     <Compile Include="HelperClasses\Keyboard\Jumpscript.cs" />
