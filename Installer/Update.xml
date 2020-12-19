@@ -4,10 +4,6 @@
   <url>https://raw.githubusercontent.com/TwosHusbandS/Project-127/master/Installer/Project_127_Installer_V_1_0_0_2.exe</url>
   <authuser>https://raw.githubusercontent.com/TwosHusbandS/Project-127/master/Installer/AuthUser.txt</authuser>
   <announcement></announcement>
- <specialbuildname>
-all;none:
-UUID;buildname:
-  </specialbuildname>
   <buildversiontable>
 1.0.323.0;1.24:
 1.0.350.0;1.26:
