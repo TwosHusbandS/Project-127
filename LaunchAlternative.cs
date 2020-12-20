@@ -40,7 +40,7 @@ namespace Project_127
 
             //NOTE: this is just testing example code, not meant for final release (yet)
 
-            var dm = new HelperClasses.DownloadManager("B:\\targets.xml");//MySettings.Settings.XMLLocation); <= can also be a url, just for example
+            var dm = new HelperClasses.DownloadManager(Globals.URL_DownloadManager);// <= xml isn't there yet
             switch (MySettings.Settings.Retailer)
             {
                 case MySettings.Settings.Retailers.Epic:
