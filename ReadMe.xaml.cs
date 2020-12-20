@@ -212,7 +212,7 @@ namespace Project_127
 "@hossel");
 
 			AddParagraph(rtb_Credits, "Special thanks to:\n" +
-"@JakeMiester, @Antibones, @Aperture, @Diamondo25, @MOMO");
+"@JakeMiester, @Antibones, @Aperture, @MOMO");
 
 			AddParagraph(rtb_Credits, "Special shoutouts to @dr490n, who was responsible for getting the downgraded game to launch, adding patches against in-game triggers, writing the Overlay Backend, authentication backend, decryption and managed to get the preorder entitlement to work.");
 
@@ -225,11 +225,11 @@ namespace Project_127
 
 			AddParagraph(rtb_Credits, "Shoutout to @yoshi for providing the Information which Build Version corresponds with which Game Version");
 
+			AddParagraph(rtb_Credits, "Shoutout to @Diamondo25 for finding a way to launch GTA without going through LaunchGTAV.exe or PlayGTAV.exe, which eased the development process to launch through Social Club");
+
 			AddHyperlinkText(rtb_Credits, "https://github.com/DaWolf85/GTAVAutoPatcher/", "open-sourcing his Tool", "Shoutout to @DaWolf85 for ", " the Community used to Upgrade / Downgrade previously.It helped us a ton.");
 
 			AddParagraph(rtb_Credits, "Shoutout to @burhac, @Crapideot, @GearsOfW, @rollschuh2282 , @Ollie, @Alfie, @AntherXx for being awesome members of the GTA Speedrunning community, always being nice and respectful, and providing Help / Testing. You guys are much appreciated.");
-
-			//AddParagraph(rtb_Credits, "Shoutout to my parents who raised me well enough, so that I am not naming certain People who actively hindered the P127 development and deserved to me mentioned in a negative context here.");
 
 			AddParagraph(rtb_Credits, "");
 		}

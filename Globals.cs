@@ -656,16 +656,24 @@ namespace Project_127
 				}
 				if (myFile.ToLower().Contains("dirtyprogramming"))
 				{
-					HelperClasses.Logger.Log("Found dirtyprogramming File in the Directory. Will delete it.");
+					HelperClasses.Logger.Log("Found dirtyprogramming File in the Directory. Will Keep it there : )");
 					HelperClasses.FileHandling.deleteFile(myFile);
+				}
+				else
+				{
+					HelperClasses.Logger.Log("Found NO dirtyprogramming File in the Directory. Will create it : )");
+					File.Create(Globals.ProjectInstallationPath.TrimEnd('\\') + @"\dirtyprogramming").Dispose();
 				}
 				if (myFile.ToLower().Contains("Project 1.27.exe" + ".BACKUP"))
 				{
 					HelperClasses.Logger.Log("Found old build ('.BACKUP'). Will delete it.");
 					HelperClasses.FileHandling.deleteFile(myFile);
 				}
-
-				File.Create(Globals.ProjectInstallationPath.TrimEnd('\\') + @"\dirtyprogramming").Dispose();
+				if (myFile.ToLower().Contains(".exe") && !myFile.ToLower().Contains("Project 127 Launcher.exe".ToLower()))
+				{
+					HelperClasses.Logger.Log("Found exe File ('" + myFile "'). Will delete it.");
+					HelperClasses.FileHandling.deleteFile(myFile);
+				}
 			}
 		}
 

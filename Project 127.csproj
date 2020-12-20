@@ -375,6 +375,7 @@
     </EmbeddedResource>
     <None Include="app.manifest" />
     <None Include="Installer\Changelog.md" />
+    <None Include="Installer\Changelogs\V_1_1_0_0_Changelog.md" />
     <None Include="Installer\Changelogs\V_0_0_4_0_Changelog.md" />
     <None Include="Installer\Changelogs\V_0_0_3_1_Changelog.md" />
     <None Include="Installer\Changelogs\V_0_0_3_0_Changelog.md" />
