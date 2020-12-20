@@ -29,6 +29,13 @@ namespace Project_127.HelperClasses
         }        
 
         private static JavaScriptSerializer json = new JavaScriptSerializer();
+
+        /// <summary>
+        /// Function to install subassemblies
+        /// </summary>
+        /// <param name="subassemblyName">Name of subassembly to be installed</param>
+        /// <param name="reinstall">Determines whether or not reinstall is enabled</param>
+        /// <returns>Boolean indicating whether install succeded or not</returns>
         public async Task<bool> getSubassembly(string subassemblyName, bool reinstall = false)
         {
             if (!availableSubassemblies.ContainsKey(subassemblyName))
@@ -50,9 +57,14 @@ namespace Project_127.HelperClasses
                 }
                 catch
                 {
-                    vinfo = new Version(0, 0);
+                    vinfo = new Version(0, 0, 0, 1);
                 }
-                subInfo.version = vinfo;
+                subInfo.version = vinfo.ToString();
+                var reqs = s.Select("./requires/subassembly");
+                foreach (XPathNavigator req in reqs)
+                {
+                    await getSubassembly(req.GetAttribute("target", ""));
+                }
                 if (s.GetAttribute("type","").ToLower() == "zip")
                 {
                     var mirrors = s.Select("./mirror");
@@ -61,7 +73,7 @@ namespace Project_127.HelperClasses
                     {
                         var zipdlpath = System.IO.Path.Combine(Globals.ProjectInstallationPath, "dl.zip");
                         string link = zipMirror.Value;
-                        new PopupDownload(link, zipdlpath, "Downloading zip...").ShowDialog();
+                        new PopupDownload(link, zipdlpath, "zip...").ShowDialog();
                         var zipmd5 = HelperClasses.FileHandling.GetHashFromFile(zipdlpath);
                         succeeded = s.SelectSingleNode("./hash").Value.ToLower() == zipmd5;
                         if (!succeeded)
@@ -90,11 +102,6 @@ namespace Project_127.HelperClasses
                     updateInstalled();
                     return true;
 
-                }
-                var reqs = s.Select("./requires/subassembly");
-                foreach (XPathNavigator req in reqs)
-                {
-                    await getSubassembly(req.GetAttribute("target", ""));
                 }
                 string root = s.GetAttribute("root", "");
                 string rootFullPath = System.IO.Path.Combine(Project127Files, root);
@@ -166,6 +173,12 @@ namespace Project_127.HelperClasses
                 delSubassemblyFile(f);
             }
         }
+
+        /// <summary>
+        /// Function to uninstall subassemblies
+        /// </summary>
+        /// <param name="subassemblyName">Name of subassembly to be remove</param>
+        /// <returns>Boolean indicating whether uninstall succeded or not</returns>
         public void delSubassembly(string subassemblyName)
         {
             if (!installedSubassemblies.ContainsKey(subassemblyName))
@@ -201,6 +214,7 @@ namespace Project_127.HelperClasses
         private subAssemblyFile getSubassemblyFile(string path, XPathNavigator fileEntry)
         {
             var filename = fileEntry.GetAttribute("name", "");
+            path.TrimEnd("\\");
             var relPath = path + "\\" + filename;
             var fullPath = System.IO.Path.Combine(Project127Files, relPath);
             if (fileEntry.GetAttribute("linked", "").ToLower() == "true")
@@ -212,7 +226,7 @@ namespace Project_127.HelperClasses
             foreach (XPathNavigator mirror in mirrors)
             {
                 string link = mirror.Value;
-                new PopupDownload(link, fullPath, "Downloading " + filename).ShowDialog();
+                new PopupDownload(link, fullPath, filename).ShowDialog();
                 var md5hash = HelperClasses.FileHandling.GetHashFromFile(fullPath);
                 succeeded = fileEntry.SelectSingleNode("./hash").Value.ToLower() == md5hash;
                 if (succeeded)
@@ -237,6 +251,7 @@ namespace Project_127.HelperClasses
         private subAssemblyFile linkedGetManager(string path, XPathNavigator fileEntry)
         {
             var filename = fileEntry.GetAttribute("name", "");
+            path.TrimEnd("\\");
             var relPath = path + "\\" + filename;
             var fullPath = System.IO.Path.Combine(Project127Files, relPath);
             var from = fileEntry.GetAttribute("subassembly", "");
@@ -275,11 +290,11 @@ namespace Project_127.HelperClasses
             {
                 if (file.GetAttribute("name","") == filename)
                 {
-                    var mirrors = file.Select("//mirror");
+                    var mirrors = file.Select("./mirror");
                     foreach (XPathNavigator mirror in mirrors)
                     {
                         string link = mirror.Value;
-                        new PopupDownload(link, fullPath, "Downloading " + filename).ShowDialog();
+                        new PopupDownload(link, fullPath, filename).ShowDialog();
                         var md5hash = HelperClasses.FileHandling.GetHashFromFile(fullPath);
                         succeeded = file.SelectSingleNode("./hash").Value.ToLower() == md5hash;
                         if (succeeded)
@@ -313,6 +328,7 @@ namespace Project_127.HelperClasses
         private KeyValuePair<List<subAssemblyFile>, bool> getSubassemblyFolder(string path, XPathNavigator folderEntry)
         {
             var outp = new List<subAssemblyFile>();
+            path.TrimEnd("\\");
             path = path + "\\" +folderEntry.GetAttribute("name", "");
             var files = folderEntry.Select("./file");
             System.IO.Directory.CreateDirectory(System.IO.Path.Combine(Project127Files, path));
@@ -337,6 +353,12 @@ namespace Project_127.HelperClasses
             }
             return new KeyValuePair<List<subAssemblyFile>, bool>(outp, true);
         }
+
+        /// <summary>
+        /// Function to verify the hashes of a subassembly
+        /// </summary>
+        /// <param name="subassemblyName">Subassembly to verify</param>
+        /// <returns>Boolean indicating whether all hashes matched</returns>
         public async Task<bool> verifySubassembly(string subassemblyName)
         {
             if (!availableSubassemblies.ContainsKey(subassemblyName))
@@ -351,7 +373,7 @@ namespace Project_127.HelperClasses
             var sai = installedSubassemblies[subassemblyName];
             try
             {
-                if (new Version(sa.GetAttribute("version","")) != sai.version)
+                if (new Version(sa.GetAttribute("version","")) != new Version(sai.version))
                 {
                     return false;
                 }
@@ -360,11 +382,11 @@ namespace Project_127.HelperClasses
             Dictionary<string, string> hashdict;
             if (sai.common)
             {
-                var files = sa.Select("//files");
+                var files = sa.Select(".//files");
                 hashdict = new Dictionary<string, string>();
                 foreach (XPathNavigator file in files)
                 {
-                    hashdict.Add(file.GetAttribute("name", ""), file.SelectSingleNode("//hash").Value);
+                    hashdict.Add(file.GetAttribute("name", ""), file.SelectSingleNode("./hash").Value);
                 }
                 foreach (var file in sai.files)
                 {
@@ -404,20 +426,28 @@ namespace Project_127.HelperClasses
             return true;
         }
 
+        /// <summary>
+        /// Function to generate a list of installed subassemblies
+        /// </summary>
+        /// <returns>A list of names of all installed subassemblies</returns>
         public List<string> getInstalled()
         {
             return new List<string>(installedSubassemblies.Keys);
         }
 
+        /// <summary>
+        /// Function to get a the version of an installed subassembly
+        /// </summary>
+        /// <returns>The version of the installed subassembly (or 0.0 if n/a)</returns>
         public Version getVersion(string subassembly)
         {
             try
             {
-                return installedSubassemblies[subassembly].version;
+                return new Version(installedSubassemblies[subassembly].version);
             }
             catch
             {
-                return new Version(-1, -1);
+                return new Version(0, 0);
             }
         }
         public DownloadManager(string xmlLocation)
@@ -444,7 +474,7 @@ namespace Project_127.HelperClasses
        
         private class subassemblyInfo
         {
-            public Version version;
+            public string version = "0.0";
             public bool common = false;
             
             public List<subAssemblyFile> files = new List<subAssemblyFile>();
@@ -462,14 +492,14 @@ namespace Project_127.HelperClasses
             public string extentedAttributes = ""; //Future-proofing
         }
         
-        public Dictionary<string,string> hfTree(XPathNavigator x, string root)
+        private Dictionary<string,string> hfTree(XPathNavigator x, string root)
         {
             var hashdict = new Dictionary<string, string>();
             var files = x.Select("./file");
             var folders = x.Select("./folder");
             foreach (XPathNavigator file in files)
             {
-                hashdict[root+"\\"+file.GetAttribute("name","")] = file.SelectSingleNode("//hash").Value;
+                hashdict[root+"\\"+file.GetAttribute("name","")] = file.SelectSingleNode("./hash").Value;
             }
             foreach (XPathNavigator folder in folders)
             {
