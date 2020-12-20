@@ -47,7 +47,7 @@ Shamelessly stolen from: https://github.com/othneildrew/Best-README-Template
     <br />
     <a href="https://www.youtube.com/watch?v=PLACEHOLDER">View Demo</a>
     ·
-    <a href="changelog-url">Changelog</a>
+    <a href="changelogs-url">Changelog</a>
     ·
     <a href="CTRLF">Contact me</a>
   </p>
