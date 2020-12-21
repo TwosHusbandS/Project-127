@@ -487,6 +487,9 @@ namespace Project_127
 			// Throw annoucements
 			HandleAnnouncements();
 
+			// SetUpDownloadManager
+			SetUpDownloadManager();
+
 			// Auto Updater
 			CheckForUpdate();
 
@@ -609,6 +612,14 @@ namespace Project_127
 		// Update Stuff below
 
 		#region UpdateShit
+
+
+		public static HelperClasses.DownloadManager MyDM = new HelperClasses.DownloadManager(); 
+		public static void SetUpDownloadManager()
+		{
+
+		}
+
 
 
 		/// <summary>
@@ -1215,6 +1226,8 @@ namespace Project_127
 
 		public static void ImportBuildFromUrl(string pUrl)
 		{
+			HelperClasses.Logger.Log("Importing Build from '" + pUrl + "'");
+
 			string pDownloadLocation = ProjectInstallationPath.TrimEnd('\\') + @"\NewBuild.exe";
 
 			new PopupDownload(pUrl, pDownloadLocation, "Custom Build").ShowDialog();

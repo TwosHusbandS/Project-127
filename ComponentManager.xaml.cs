@@ -23,6 +23,7 @@ namespace Project_127
 		public ComponentManager()
 		{
 			InitializeComponent();
+			ButtonMouseOverMagic(btn_Refresh);
 		}
 
 		private void Page_Loaded(object sender, RoutedEventArgs e)
@@ -37,6 +38,42 @@ namespace Project_127
 		}
 
 		private void btn_Uninstall_Click(object sender, RoutedEventArgs e)
+		{
+
+		}
+
+		private void btn_MouseEnter(object sender, MouseEventArgs e)
+		{
+			ButtonMouseOverMagic((Button)sender);
+		}
+
+		private void btn_MouseLeave(object sender, MouseEventArgs e)
+		{
+			ButtonMouseOverMagic((Button)sender);
+		}
+
+		/// <summary>
+		/// Logic behind all MouseOver Stuff. Checkboxes and Refresh Button
+		/// </summary>
+		/// <param name="myBtn"></param>
+		private void ButtonMouseOverMagic(Button myBtn)
+		{
+			switch (myBtn.Name)
+			{
+				case "btn_Refresh":
+					if (myBtn.IsMouseOver)
+					{
+						MainWindow.MW.SetControlBackground(btn_Refresh, "Artwork/refresh_mo.png");
+					}
+					else
+					{
+						MainWindow.MW.SetControlBackground(btn_Refresh, "Artwork/refresh.png");
+					}
+					break;
+			}
+		}
+
+		private void btn_Refresh_Click(object sender, RoutedEventArgs e)
 		{
 
 		}

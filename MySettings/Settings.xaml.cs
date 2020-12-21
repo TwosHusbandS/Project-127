@@ -1532,6 +1532,10 @@ namespace Project_127.MySettings
 					string DLLinkBranch = "https://github.com/TwosHusbandS/Project-127/raw/" + Globals.Branch + "/Installer/Builds/" + tb.MyReturnString.TrimEnd(".exe") + ".exe";
 					string DLLinkMaster = "https://github.com/TwosHusbandS/Project-127/raw/Master" + "/Installer/Builds/" + tb.MyReturnString.TrimEnd(".exe") + ".exe";
 
+					HelperClasses.Logger.Log("Importing Build. Links: ");
+					HelperClasses.Logger.Log("DLLinkBranch: " + DLLinkBranch);
+					HelperClasses.Logger.Log("DLLinkMaster: " + DLLinkMaster);
+
 					if (HelperClasses.FileHandling.URLExists(DLLinkBranch))
 					{
 						Globals.ImportBuildFromUrl(DLLinkBranch);
@@ -1544,6 +1548,7 @@ namespace Project_127.MySettings
 						}
 					}
 
+					HelperClasses.Logger.Log("Both not reachable...");
 
 				}
 
