@@ -1,87 +1,516 @@
-﻿using Project_127.Popups;
+﻿using Microsoft.Win32;
+using Project_127.Popups;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web.Script.Serialization;
+using System.Xml.XPath;
 
 namespace Project_127.HelperClasses
 {
 	class DownloadManager
 	{
-		public static void Demo()
-		{
-			// Would be cool to have static getter properties of this class to check if they are really downgraded (size of folder or folder exists...)
-			// so i can check which of the 6 comonments are downloaded
-		
-			// There will be a WPF Window / Page / CustomControl using this. So...
-			// a) Downloading a componment
-			// b) re-downloading a componment
-			// c) is a componment downloaded
-			// are all needed. More maybe to come.
-			
-			
-			// All 6 componments:
-			// -1.27 LaunchThroughSocialClub Rockstar 
-			// -1.27 LaunchThroughSocialClub Steam
-			// -1.24 LaunchThroughSocialClub Rockstar
-			// -1.24 LaunchThroughSocialClub Steam
-			// Downgraded Social Club
-			// Additional SaveFiles (will provide you ZIP)
+        private XPathNavigator nav;
+        private Dictionary<string, XPathNavigator> availableSubassemblies;
+        private Dictionary<string, subassemblyInfo> installedSubassemblies;
+        private static string Project127Files
+        {
+            get
+            {
+                return System.IO.Path.Combine(LauncherLogic.ZIPFilePath, @"Project_127_Files\");
+            }
+        }
 
-			// Point to the paths (probably non existing and empty at this point)
-			string tmp = "";
-			tmp = LauncherLogic.DowngradeAlternativeFilePathSteam127;
-			tmp = LauncherLogic.DowngradeAlternativeFilePathSteam124;
-			tmp = LauncherLogic.DowngradeAlternativeFilePathRockstar127;
-			tmp = LauncherLogic.DowngradeAlternativeFilePathRockstar124;
-			tmp = LauncherLogic.DowngradedSocialClub;
-			tmp = LauncherLogic.SaveFilesPath;
+        private void updateInstalled()
+        {
+            HelperClasses.RegeditHandler.SetValue("DownloadManagerInstalledSubassemblies", json.Serialize(installedSubassemblies));
+        }        
 
-			/* Paths inside zip file of those would be:
-			
-			\Project_127_Files\DowngradeFiles_Alternative\steam\127\
-			\Project_127_Files\DowngradeFiles_Alternative\steam\124\
-			\Project_127_Files\DowngradeFiles_Alternative\rockstar\127\
-			\Project_127_Files\DowngradeFiles_Alternative\rockstar\124\
-			\Project_127_Files\SupportFiles\DowngradedSocialClub\
-			\Project_127_Files\SupportFiles\SaveFiles\
+        private static JavaScriptSerializer json = new JavaScriptSerializer();
 
-			*/
+        /// <summary>
+        /// Function to install subassemblies
+        /// </summary>
+        /// <param name="subassemblyName">Name of subassembly to be installed</param>
+        /// <param name="reinstall">Determines whether or not reinstall is enabled</param>
+        /// <returns>Boolean indicating whether install succeded or not</returns>
+        public async Task<bool> getSubassembly(string subassemblyName, bool reinstall = false)
+        {
+            if (!availableSubassemblies.ContainsKey(subassemblyName))
+            {
+                return false;
+            } 
+            else if (installedSubassemblies.ContainsKey(subassemblyName) && !reinstall)
+            {
+                return true;
+            }
+            else
+            {
+                var s = availableSubassemblies[subassemblyName];
+                var subInfo = new subassemblyInfo();
+                Version vinfo;
+                try
+                {
+                    vinfo = new Version(s.GetAttribute("version", ""));
+                }
+                catch
+                {
+                    vinfo = new Version(0, 0, 0, 1);
+                }
+                subInfo.version = vinfo.ToString();
+                var reqs = s.Select("./requires/subassembly");
+                foreach (XPathNavigator req in reqs)
+                {
+                    await getSubassembly(req.GetAttribute("target", ""));
+                }
+                if (s.GetAttribute("type","").ToLower() == "zip")
+                {
+                    var mirrors = s.Select("./mirror");
+                    var succeeded = false;
+                    foreach (XPathNavigator zipMirror in mirrors)
+                    {
+                        var zipdlpath = System.IO.Path.Combine(Globals.ProjectInstallationPath, "dl.zip");
+                        string link = zipMirror.Value;
+                        new PopupDownload(link, zipdlpath, "zip...").ShowDialog();
+                        var zipmd5 = HelperClasses.FileHandling.GetHashFromFile(zipdlpath);
+                        succeeded = s.SelectSingleNode("./hash").Value.ToLower() == zipmd5;
+                        if (!succeeded)
+                        {
+                            continue;
+                        }
+                        new PopupProgress(PopupProgress.ProgressTypes.ZIPFile, zipdlpath).ShowDialog();
+                        break;
+                    }
+                    if (succeeded)
+                    {
+                        installedSubassemblies.Add(subassemblyName, subInfo);
+                        updateInstalled();
+                        return true;
+                    }
+                }
+                else if (s.GetAttribute("type", "").ToLower() == "common")
+                {
+                    subInfo.common = true;
+                    var cfiles = s.Select("./file");
+                    foreach (XPathNavigator file in cfiles)
+                    {
+                        subInfo.files.Add(new subAssemblyFile { name = file.GetAttribute("name", ""), available = false });
+                    }
+                    installedSubassemblies.Add(subassemblyName, subInfo);
+                    updateInstalled();
+                    return true;
 
-			// So. Code to get the text inside a specific XML tag from the update.xml file on github
-			tmp = HelperClasses.FileHandling.GetXMLTagContent(Globals.XML_AutoUpdate, "zip");
+                }
+                string root = s.GetAttribute("root", "");
+                string rootFullPath = System.IO.Path.Combine(Project127Files, root);
+                if (!System.IO.Directory.Exists(rootFullPath))
+                {
+                    System.IO.Directory.CreateDirectory(rootFullPath);
+                }
+                var files = s.Select("./file");
+                var folders = s.Select("./folder");
+                foreach (XPathNavigator fileEntry in files)
+                {
+                    var saf = getSubassemblyFile(root, fileEntry);
+                    if (saf == null)
+                    {
+                        delSubassemblyFiles(subInfo.files);
+                        return false;
+                    }
+                    subInfo.files.Add(saf);
 
-			// Code to download a file
-			new PopupDownload(@"https://some.url.com/myfile.zip", @"C:\Some\Location\myfilename.zip", "ZIP-File").ShowDialog();
+                }
+                foreach (XPathNavigator folderEntry in folders)
+                {
+                    var fol = getSubassemblyFolder(root, folderEntry);
+                    subInfo.files.AddRange(fol.Key);
+                    if (!fol.Value)
+                    {
+                        delSubassemblyFiles(subInfo.files);
+                        return false;
+                    }
+                }
+                installedSubassemblies.Add(subassemblyName, subInfo);
+                updateInstalled();
+                return true;
+            }
+        }
+        private void delSubassemblyFile(subAssemblyFile f)
+        {
+            if (f.linked)
+            {
+                foreach(var sa in installedSubassemblies.Values)
+                {
+                    if (!sa.common)
+                    {
+                        continue;
+                    }
+                    foreach (var file in sa.files)
+                    {
+                        if (file.paths.Contains(f.paths[0]))
+                        {
+                            file.paths.Remove(f.paths[0]);
+                            if (file.paths.Count == 0)
+                            {
+                                file.available = false;
+                            }
+                        }
+                    }
+                }
+            }
+            foreach (var path in f.paths)
+            {
+                var fullPath = System.IO.Path.Combine(Project127Files, path);
+                System.IO.File.Delete(fullPath);
+            }
+        }
+        private void delSubassemblyFiles(List<subAssemblyFile> L)
+        {
+            foreach (var f in L)
+            {
+                delSubassemblyFile(f);
+            }
+        }
 
-			// Code to extract a zip file (zip file needs to have some folder convention as current zips out there...
-			// I recommend deleting the local ZIP file after that.
-			// this replaces all files (if it exists already) apart from $UpgradeFiles
-			new PopupProgress(PopupProgress.ProgressTypes.ZIPFile, @"C:\Some\Location\myfilename.zip").ShowDialog();
+        /// <summary>
+        /// Function to uninstall subassemblies
+        /// </summary>
+        /// <param name="subassemblyName">Name of subassembly to be remove</param>
+        /// <returns>Boolean indicating whether uninstall succeded or not</returns>
+        public void delSubassembly(string subassemblyName)
+        {
+            if (!installedSubassemblies.ContainsKey(subassemblyName))
+            {
+                return;
+            }
+            var sa = installedSubassemblies[subassemblyName];
+            var sar = availableSubassemblies[subassemblyName].GetAttribute("root", "");
+            if (sa.common)
+            {
+                foreach(XPathNavigator saa in availableSubassemblies.Values)
+                {
+                    var reqs = saa.Select("./requires/subassembly");
+                    foreach (XPathNavigator req in reqs)
+                    {
+                        if (req.GetAttribute("target","") == subassemblyName)
+                        {
+                            delSubassembly(saa.GetAttribute("name", ""));
+                        }
+                    }
+                }
+            }
+            delSubassemblyFiles(sa.files);
+            if (sar != "")
+            {
+                var rootFullPath = System.IO.Path.Combine(Project127Files, sar);
+                System.IO.Directory.Delete(rootFullPath, true);
+            }
+            installedSubassemblies.Remove(subassemblyName);
+            updateInstalled();
+        }
 
-			// Code to do a few file operations. 
-			// Code here is...historically grown and not the greatest..but it works.
-			// this cannot hardlink folders.
-			// if called with hardlink, it will check further down if we are inside GTA Installation directory and switch to copying if needed.
-			List<MyFileOperation> ListOfFileOperations = new List<MyFileOperation>();
-			ListOfFileOperations.Add(new MyFileOperation(MyFileOperation.FileOperations.Copy, @"C:\SourceDirectory", @"C:\DestinationDirectory", "my-log-message", 0, MyFileOperation.FileOrFolder.Folder));
-			ListOfFileOperations.Add(new MyFileOperation(MyFileOperation.FileOperations.Delete, @"C:\DestinationDirectory\Somefile", "", "my-log-message", 0, MyFileOperation.FileOrFolder.File));
+        private subAssemblyFile getSubassemblyFile(string path, XPathNavigator fileEntry)
+        {
+            var filename = fileEntry.GetAttribute("name", "");
+            path.TrimEnd("\\");
+            var relPath = path + "\\" + filename;
+            var fullPath = System.IO.Path.Combine(Project127Files, relPath);
+            if (fileEntry.GetAttribute("linked", "").ToLower() == "true")
+            {
+                return linkedGetManager(path, fileEntry);
+            }
+            var succeeded = false;
+            var mirrors = fileEntry.Select("./mirror");
+            foreach (XPathNavigator mirror in mirrors)
+            {
+                string link = mirror.Value;
+                new PopupDownload(link, fullPath, filename).ShowDialog();
+                var md5hash = HelperClasses.FileHandling.GetHashFromFile(fullPath);
+                succeeded = fileEntry.SelectSingleNode("./hash").Value.ToLower() == md5hash;
+                if (succeeded)
+                {
+                    break;
+                }
+            }
+            if (!succeeded)
+            {
+                return null;
+            }
+            else
+            {
+                return new subAssemblyFile
+                {
+                    name = filename,
+                    paths = new List<string>(new string[] { relPath })
+                };
+            }
+        }
+        
+        private subAssemblyFile linkedGetManager(string path, XPathNavigator fileEntry)
+        {
+            var filename = fileEntry.GetAttribute("name", "");
+            path.TrimEnd("\\");
+            var relPath = path + "\\" + filename;
+            var fullPath = System.IO.Path.Combine(Project127Files, relPath);
+            var from = fileEntry.GetAttribute("subassembly", "");
+            var froma = availableSubassemblies[from];
+            var fromi = installedSubassemblies[from];
+            var files = froma.Select("./file");
 
-			// Actually executing the File Operations
-			new PopupProgress(PopupProgress.ProgressTypes.FileOperation, "GUI - Title", ListOfFileOperations).ShowDialog();
+            foreach (var file in fromi.files)
+            {
+                if (file.name == filename)
+                {
+                    if (file.available)
+                    {
+                        var fpa = file.paths[0];
+                        var fpafull = System.IO.Path.Combine(Project127Files, fpa);
+                        if (System.IO.File.Exists(fullPath))
+                        {
+                            System.IO.File.Delete(fullPath);
+                        }
+                        System.IO.File.Copy(fpafull, fullPath);
+                        return new subAssemblyFile
+                        {
+                            name = filename,
+                            linked = true,
+                            paths = new List<string>(new string[] { relPath })
+                        };
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }  
+            }
+            var succeeded = false;
+            foreach (XPathNavigator file in files)
+            {
+                if (file.GetAttribute("name","") == filename)
+                {
+                    var mirrors = file.Select("./mirror");
+                    foreach (XPathNavigator mirror in mirrors)
+                    {
+                        string link = mirror.Value;
+                        new PopupDownload(link, fullPath, filename).ShowDialog();
+                        var md5hash = HelperClasses.FileHandling.GetHashFromFile(fullPath);
+                        succeeded = file.SelectSingleNode("./hash").Value.ToLower() == md5hash;
+                        if (succeeded)
+                        {
+                            break;
+                        }
+                    }
+                    if (succeeded)
+                    {
+                        foreach (var filei in fromi.files)
+                        {
+                            if (filei.name == filename)
+                            {
+                                filei.available = true;
+                                filei.paths.Add(relPath);
+                                break;
+                            }
+                        }
+                        return new subAssemblyFile
+                        {
+                            name = filename,
+                            linked = true,
+                            paths = new List<string>(new string[] { relPath })
+                        };
+                    }
+                    break;
+                }
+            }
+            return null;
+        }
+        private KeyValuePair<List<subAssemblyFile>, bool> getSubassemblyFolder(string path, XPathNavigator folderEntry)
+        {
+            var outp = new List<subAssemblyFile>();
+            path.TrimEnd("\\");
+            path = path + "\\" +folderEntry.GetAttribute("name", "");
+            var files = folderEntry.Select("./file");
+            System.IO.Directory.CreateDirectory(System.IO.Path.Combine(Project127Files, path));
+            foreach (XPathNavigator file in files)
+            {
+                var saf = getSubassemblyFile(path, file);
+                if (saf == null)
+                {
+                    return new KeyValuePair<List<subAssemblyFile>,bool>(outp,false);
+                }
+                outp.Add(saf);
+            }
+            var folders = folderEntry.Select("./folder");
+            foreach (XPathNavigator folder in folders)
+            {
+                var gfo = getSubassemblyFolder(path, folder);
+                outp.AddRange(gfo.Key);
+                if (!gfo.Value)
+                {
+                    return new KeyValuePair<List<subAssemblyFile>, bool>(outp, false);
+                }
+            }
+            return new KeyValuePair<List<subAssemblyFile>, bool>(outp, true);
+        }
 
-			// it will treat this as 2 operations, thus the progressbar and percentage text is gonna be stuck at 50% for most of the time, since copying a folder takes longer than deleting one file.
-			// you might want to add a MyFileOperation object for each file inside a folder, instead of copying the entire folder, so UX is better. 
+        /// <summary>
+        /// Function to verify the hashes of a subassembly
+        /// </summary>
+        /// <param name="subassemblyName">Subassembly to verify</param>
+        /// <returns>Boolean indicating whether all hashes matched</returns>
+        public async Task<bool> verifySubassembly(string subassemblyName)
+        {
+            if (!availableSubassemblies.ContainsKey(subassemblyName))
+            {
+                return false;
+            } 
+            else if (!installedSubassemblies.ContainsKey(subassemblyName))
+            {
+                return false;
+            }
+            var sa = availableSubassemblies[subassemblyName];
+            var sai = installedSubassemblies[subassemblyName];
+            try
+            {
+                if (new Version(sa.GetAttribute("version","")) != new Version(sai.version))
+                {
+                    return false;
+                }
+            }
+            catch { }
+            Dictionary<string, string> hashdict;
+            if (sai.common)
+            {
+                var files = sa.Select(".//files");
+                hashdict = new Dictionary<string, string>();
+                foreach (XPathNavigator file in files)
+                {
+                    hashdict.Add(file.GetAttribute("name", ""), file.SelectSingleNode("./hash").Value);
+                }
+                foreach (var file in sai.files)
+                {
+                    foreach (var path in file.paths)
+                    {
+                        var fullpath = System.IO.Path.Combine(Project127Files, path);
+                        var fileHash = HelperClasses.FileHandling.GetHashFromFile(fullpath);
+                        if (hashdict[file.name].ToLower() != fileHash)
+                        {
+                            return false;
+                        }
+                    }
+                }
+                return true;
+            }
+            hashdict = hfTree(sa, sa.GetAttribute("root", ""));
+            foreach (var file in sai.files)
+            {
+                if (file.linked)
+                {
+                    continue;
+                }
+                foreach (var filepath in file.paths)
+                {
+                    var fullpath = System.IO.Path.Combine(Project127Files, filepath);
+                    var fileHash = HelperClasses.FileHandling.GetHashFromFile(fullpath);
+                    if (!hashdict.ContainsKey(filepath))
+                    {
+                        continue;
+                    }
+                    if (hashdict[filepath].ToLower() != fileHash)
+                    {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
 
-			// Helper Methods you might find usefull
-			HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(@"C:\Some\Path"); // Returns full Filepaths for all files
-			HelperClasses.FileHandling.GetSubFolders(@"C:\Some\Path"); // returns full filepath for all folders
-			HelperClasses.FileHandling.GetHashFromFile(@"C:\Some\Path\Somefile.txt"); // gets Hash of one file, "" if non existant
-			HelperClasses.FileHandling.GetSizeOfFile(@"C:\Some\Path\Somefile.txt"); // gets size of one file, 0 if non existant
+        /// <summary>
+        /// Function to generate a list of installed subassemblies
+        /// </summary>
+        /// <returns>A list of names of all installed subassemblies</returns>
+        public List<string> getInstalled()
+        {
+            return new List<string>(installedSubassemblies.Keys);
+        }
 
+        /// <summary>
+        /// Function to get a the version of an installed subassembly
+        /// </summary>
+        /// <returns>The version of the installed subassembly (or 0.0 if n/a)</returns>
+        public Version getVersion(string subassembly)
+        {
+            try
+            {
+                return new Version(installedSubassemblies[subassembly].version);
+            }
+            catch
+            {
+                return new Version(0, 0);
+            }
+        }
+        public DownloadManager(string xmlLocation)
+        {
+            XPathDocument xml = new XPathDocument(xmlLocation);//);
+            nav = xml.CreateNavigator();
+            var subassemblyEntries = nav.Select("/targets/subassembly");
+            availableSubassemblies = new Dictionary<string, XPathNavigator>();
+            foreach (XPathNavigator s in subassemblyEntries)
+            {
+                var name = s.GetAttribute("name", "");
+                availableSubassemblies.Add(name, s);
+            }
+            if (HelperClasses.RegeditHandler.DoesValueExists("DownloadManagerInstalledSubassemblies"))
+            {
+                installedSubassemblies = json.Deserialize<Dictionary<string, subassemblyInfo>>(HelperClasses.RegeditHandler.GetValue("DownloadManagerInstalledSubassemblies"));
+            }
+            else
+            {
+                installedSubassemblies = new Dictionary<string, subassemblyInfo>();
+            }
 
-			// All path related stuff (does path of new file exists, does file exist etc. should be taken care of inside the executing... Copy / Move / Hardlink will replace target file if it exists
-		}
-	}
+        }
+       
+        private class subassemblyInfo
+        {
+            public string version = "0.0";
+            public bool common = false;
+            
+            public List<subAssemblyFile> files = new List<subAssemblyFile>();
+
+            public string extentedAttributes = ""; //Future-proofing
+        }
+        private class subAssemblyFile
+        {
+            public bool available = false;
+            public bool linked = false;
+
+            public string name;
+            public List<string> paths = new List<string>();
+
+            public string extentedAttributes = ""; //Future-proofing
+        }
+        
+        private Dictionary<string,string> hfTree(XPathNavigator x, string root)
+        {
+            var hashdict = new Dictionary<string, string>();
+            var files = x.Select("./file");
+            var folders = x.Select("./folder");
+            foreach (XPathNavigator file in files)
+            {
+                hashdict[root+"\\"+file.GetAttribute("name","")] = file.SelectSingleNode("./hash").Value;
+            }
+            foreach (XPathNavigator folder in folders)
+            {
+                var shf = hfTree(folder, root + folder.GetAttribute("name", ""));
+                foreach (KeyValuePair<string,string> fileHashPair in shf)
+                {
+                    hashdict.Add(fileHashPair.Key, fileHashPair.Value); 
+                }
+            }
+            return hashdict;
+        }
+            
+    }
 }
