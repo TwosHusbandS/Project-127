@@ -63,17 +63,10 @@ namespace Project_127.SaveFileHandlerStuff
 
 			CopyCutPasteObject = null;
 
-			//this.Dispatcher.Invoke(() =>
-			//{
 			this.sv_BackupFiles_Loading.Visibility = Visibility.Visible;
 			this.sv_BackupFiles.Visibility = Visibility.Hidden;
 			this.sv_GTAFiles_Loading.Visibility = Visibility.Visible;
 			this.sv_GTAFiles.Visibility = Visibility.Hidden;
-			//var controller = ImageBehavior.GetAnimationController(sv_BackupFiles_Loading);
-			//controller.Play();
-			//var controller2 = ImageBehavior.GetAnimationController(sv_GTAFiles_Loading);
-			//controller2.Play();
-			//});
 		}
 
 
@@ -206,7 +199,11 @@ namespace Project_127.SaveFileHandlerStuff
 			this.sv_GTAFiles.Visibility = Visibility.Visible;
 		}
 
-
+		/// <summary>
+		/// Gets a single DataGridCell from a CellInfo
+		/// </summary>
+		/// <param name="cellInfo"></param>
+		/// <returns></returns>
 		private System.Windows.Controls.DataGridCell GetDataGridCell(System.Windows.Controls.DataGridCellInfo cellInfo)
 		{
 			var cellContent = cellInfo.Column.GetCellContent(cellInfo.Item);
@@ -217,6 +214,12 @@ namespace Project_127.SaveFileHandlerStuff
 			return (null);
 		}
 
+
+		/// <summary>
+		/// Refresh Logic. Returns a RefreshTaskObject. Async task
+		/// </summary>
+		/// <param name="DataGridToSelect"></param>
+		/// <returns></returns>
 		private async Task<SaveFileHandlerStuff.RefreshTaskObject> RefreshLogic(DataGrid DataGridToSelect = null)
 		{
 			SaveFileHandlerStuff.RefreshTaskObject TMP = null;
@@ -720,6 +723,11 @@ namespace Project_127.SaveFileHandlerStuff
 			Refresh();
 		}
 
+		/// <summary>
+		/// Double click on a dataGrid Row
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void Row_DoubleClick(object sender, MouseButtonEventArgs e)
 		{
 			MySaveFile MSV = GetSelectedSaveFile();
@@ -733,20 +741,36 @@ namespace Project_127.SaveFileHandlerStuff
 			}
 		}
 
+		/// <summary>
+		/// Rightclick on the Datagrid
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void dg_PreviewMouseRightButtonDown(object sender, MouseButtonEventArgs e)
 		{
 			DataGrid myDataGrid = (DataGrid)sender;
 
 			if (myDataGrid != null)
 			{
+				// this is so that rightclick on non selected shit works...
+
 				e.Handled = false;
+				// making the selection 0
 				myDataGrid.SelectedItem = null;
+
+				// then simulating leftclick where the mouse is
 				HelperClasses.MouseSender.DoMouseClick();
+
+				// Generate COntext Menu
 				GenerateContextMenu(myDataGrid);
 				myDataGrid.Focus();
 			}
 		}
 
+		/// <summary>
+		/// Generates the ContextMenu
+		/// </summary>
+		/// <param name="myDG"></param>
 		private async void GenerateContextMenu(DataGrid myDG)
 		{
 			await Task.Delay(50);
@@ -882,6 +906,11 @@ namespace Project_127.SaveFileHandlerStuff
 			}
 		}
 
+		/// <summary>
+		/// Context Menu Click (Cut)
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void MI_Cut_Click(object sender, RoutedEventArgs e)
 		{
 			MySaveFile tmp = GetSelectedSaveFile();
@@ -892,6 +921,11 @@ namespace Project_127.SaveFileHandlerStuff
 			}
 		}
 
+		/// <summary>
+		/// Context Menu Click (Copy)
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void MI_Copy_Click(object sender, RoutedEventArgs e)
 		{
 			MySaveFile tmp = GetSelectedSaveFile();
@@ -902,6 +936,11 @@ namespace Project_127.SaveFileHandlerStuff
 			}
 		}
 
+		/// <summary>
+		/// Context Menu Click (PasteIntoGTA)
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void MI_PasteIntoGTA_Click(object sender, RoutedEventArgs e)
 		{
 			int i = 0;
@@ -939,6 +978,11 @@ namespace Project_127.SaveFileHandlerStuff
 			}
 		}
 
+		/// <summary>
+		/// Context Menu Click (PasteIntoBackup)
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void MI_PasteIntoBackup_Click(object sender, RoutedEventArgs e)
 		{
 			if (CopyCutPasteObject != null)
@@ -956,6 +1000,11 @@ namespace Project_127.SaveFileHandlerStuff
 			}
 		}
 
+		/// <summary>
+		/// Context Menu Click (PasteIntoBackupFolder)
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void MI_PasteIntoBackupFolder_Click(object sender, RoutedEventArgs e)
 		{
 			MySaveFile tmp = GetSelectedSaveFile();
@@ -977,7 +1026,11 @@ namespace Project_127.SaveFileHandlerStuff
 			}
 		}
 
-
+		/// <summary>
+		/// Context Menu Click (NewFolder)
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void MI_NewFolder_Click(object sender, RoutedEventArgs e)
 		{
 			string rtrn = GetNewFolderName(MySaveFile.CurrentBackupSavesPath);
@@ -988,11 +1041,21 @@ namespace Project_127.SaveFileHandlerStuff
 			}
 		}
 
+		/// <summary>
+		/// Context Menu Click (DeleteFolder)
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void MI_DeleteFolder_Click(object sender, RoutedEventArgs e)
 		{
 			btn_Delete_Click(null, null);
 		}
 
+		/// <summary>
+		/// Context Menu Click (ExportFolder)
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void MI_ExportFolder_Click(object sender, RoutedEventArgs e)
 		{
 			MySaveFile tmp = GetSelectedSaveFile();
@@ -1025,26 +1088,51 @@ namespace Project_127.SaveFileHandlerStuff
 			}
 		}
 
+		/// <summary>
+		/// Context Menu Click (MoveToGTA)
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void MI_MoveToGTA_Click(object sender, RoutedEventArgs e)
 		{
 			btn_RightArrow_Click(null, null);
 		}
 
+		/// <summary>
+		/// Context Menu Click (MoveToBackup)
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void MI_MoveToBackup_Click(object sender, RoutedEventArgs e)
 		{
 			btn_LeftArrow_Click(null, null);
 		}
 
+		/// <summary>
+		/// Context Menu Click (Rename)
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void MI_Rename_Click(object sender, RoutedEventArgs e)
 		{
 			btn_Rename_Click(null, null);
 		}
 
+		/// <summary>
+		/// Context Menu Click (Delete)
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void MI_Delete_Click(object sender, RoutedEventArgs e)
 		{
 			btn_Delete_Click(null, null);
 		}
 
+		/// <summary>
+		/// When the Page is loaded, throw a Refresh
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private async void Page_Loaded(object sender, RoutedEventArgs e)
 		{
 			await Task.Delay(10);

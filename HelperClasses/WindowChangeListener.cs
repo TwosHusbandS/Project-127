@@ -14,13 +14,19 @@ namespace Project_127.HelperClasses
 
 	// Gets Started / Stopped from the 2.5 seconds poll of if GTA V is running in GameStates
 	// This Starts / Stopps the KeyBoard Listener on Foreground Changed Event
+	// Using this class to determine when to start / stop the Keyboard Listener if the Overlay is enabled and in Borderless Mode.
+	// Keyboard Listener should only be running when GTA is in foreground
 
+	/// <summary>
+	/// Window Change Listener class
+	/// </summary>
 	class WindowChangeListener
 	{
 		public static bool IsRunning = false;
 
-		//public static Thread myThread;
-
+		/// <summary>
+		/// Acual Start Method
+		/// </summary>
 		public static void _Start()
 		{
 			dele = new WinEventDelegate(WinEventProc);
@@ -29,6 +35,9 @@ namespace Project_127.HelperClasses
 			Application.Run();
 		}
 
+		/// <summary>
+		/// Public Start. Checks if its already running before starting
+		/// </summary>
 		public static void Start()
 		{
 			if (!WindowChangeListener.IsRunning)
@@ -41,6 +50,9 @@ namespace Project_127.HelperClasses
 			}
 		}
 
+		/// <summary>
+		/// Public Stop. Checks if its stopped before trying to stop.
+		/// </summary>
 		public static void Stop()
 		{
 			if (WindowChangeListener.IsRunning)
@@ -52,6 +64,9 @@ namespace Project_127.HelperClasses
 			}
 		}
 
+		/// <summary>
+		/// Actual Stop Method
+		/// </summary>
 		public static void _Stop()
 		{
 			Application.Exit();
@@ -75,6 +90,10 @@ namespace Project_127.HelperClasses
 		[DllImport("user32.dll")]
 		static extern int GetWindowText(IntPtr hWnd, StringBuilder text, int count);
 
+		/// <summary>
+		/// Gets the most foreground window
+		/// </summary>
+		/// <returns></returns>
 		public static string GetActiveWindowTitle() //STATIC
 		{
 			const int nChars = 256;

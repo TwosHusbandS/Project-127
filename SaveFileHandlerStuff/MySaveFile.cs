@@ -228,6 +228,10 @@ namespace Project_127.SaveFileHandlerStuff
 			BackupSaves.Add(new MySaveFile(newFilePath));
 		}
 
+		/// <summary>
+		/// Copy a Rightclick -> Copy SaveFile
+		/// </summary>
+		/// <param name="pPath"></param>
 		public void CopyTo(string pPath)
 		{
 			string newFilePath = pPath.TrimEnd('\\') + @"\" + HelperClasses.FileHandling.PathSplitUp(this.FilePath)[1];
@@ -246,6 +250,10 @@ namespace Project_127.SaveFileHandlerStuff
 			HelperClasses.FileHandling.copyFile(this.FilePathBak, newFilePath + ".bak");
 		}
 
+		/// <summary>
+		/// Move a Rightclick -> Cut SaveFile
+		/// </summary>
+		/// <param name="pPath"></param>
 		public void MoveTo(string pPath)
 		{
 			string newFilePath = pPath.TrimEnd('\\') + @"\" + HelperClasses.FileHandling.PathSplitUp(this.FilePath)[1];

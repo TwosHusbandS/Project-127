@@ -27,9 +27,6 @@ namespace Project_127
 	/// </summary>
 	public partial class GTA_Page : Page
 	{
-		// This might lead to a null pointer if another Frame.Content is loaded and we are updating the GTA V Status (Upgaded / Downgraded, Ingame, etc.)
-		// Apparently this does not...but it should.
-
 		/// <summary>
 		/// Static Property of Control of Instance.
 		/// </summary>
@@ -45,12 +42,12 @@ namespace Project_127
 
 			if (LauncherLogic.GameState == LauncherLogic.GameStates.Running)
 			{
-				GTA_Page.btn_GTA_static.BorderBrush = Globals.MW_ButtonGTAGameRunningBorderBrush;
+				GTA_Page.btn_GTA_static.BorderBrush = MyColors.MW_ButtonGTAGameRunningBorderBrush;
 				GTA_Page.btn_GTA_static.Content = "Exit GTA V";
 			}
 			else
 			{
-				GTA_Page.btn_GTA_static.BorderBrush = Globals.MW_ButtonGTAGameNotRunningBorderBrush;
+				GTA_Page.btn_GTA_static.BorderBrush = MyColors.MW_ButtonGTAGameNotRunningBorderBrush;
 				GTA_Page.btn_GTA_static.Content = "Launch GTA V";
 			}
 		}
@@ -64,25 +61,7 @@ namespace Project_127
 		/// <param name="e"></param>
 		private void btn_GTA_Click(object sender, RoutedEventArgs e)
 		{
-			btn_GTA_Click_Static();
-
-		}
-
-
-		public static void btn_GTA_Click_Static()
-		{
-			if (LauncherLogic.GameState == LauncherLogic.GameStates.Running)
-			{
-				HelperClasses.Logger.Log("Game deteced running.", 1);
-				btn_GTA_MouseRightButtonDown_Static();
-			}
-			else
-			{
-				HelperClasses.Logger.Log("User wantst to Launch", 1);
-				LauncherLogic.Launch();
-			}
-			//FocusManager.SetFocusedElement(this, null);
-			MainWindow.MW.UpdateGUIDispatcherTimer();
+			MainWindow.btn_GTA_Click_Static();
 		}
 
 
@@ -93,21 +72,9 @@ namespace Project_127
 		/// <param name="e"></param>
 		private void btn_GTA_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
 		{
-			btn_GTA_MouseRightButtonDown_Static();
+			MainWindow.btn_GTA_MouseRightButtonDown_Static();
 		}
 
-		public static void btn_GTA_MouseRightButtonDown_Static()
-		{
-			Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Do you want to close GTAV?");
-			yesno.ShowDialog();
-			if (yesno.DialogResult == true)
-			{
-				LauncherLogic.KillRelevantProcesses();
-			}
-			//FocusManager.SetFocusedElement(this, null);
-			MainWindow.MW.UpdateGUIDispatcherTimer();
-		}
-
+	
 	}
-
 }

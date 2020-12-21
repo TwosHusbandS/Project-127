@@ -25,6 +25,9 @@ namespace Project_127.Popups
 	/// </summary>
 	public partial class PopupCombobox : Window
 	{
+		/// <summary>
+		/// Property which has the toString of the ComboBox selected Item to "return" it
+		/// </summary>
 		public string MyReturnString;
 
 		/// <summary>
@@ -73,9 +76,11 @@ namespace Project_127.Popups
 
 		}
 
-
-
-
+		/// <summary>
+		/// Selection Changed Event
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void MyComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
 		{
 			ComboBox tmp = (ComboBox)sender;
@@ -97,9 +102,6 @@ namespace Project_127.Popups
 			this.DialogResult = true; // probably not needed...
 			this.Close();
 		}
-
-
-		// Below are Methods we need to make the behaviour of this nice.
 
 
 		/// <summary>

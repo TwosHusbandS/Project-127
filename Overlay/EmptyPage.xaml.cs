@@ -20,6 +20,9 @@ namespace Project_127.Overlay
 	/// </summary>
 	public partial class EmptyPage : Page
 	{
+		/// <summary>
+		/// Empty Page to take load of the CPU so the current Page doesnt get rendered all the time (noteoverlay_preview)
+		/// </summary>
 		public EmptyPage()
 		{
 			InitializeComponent();

@@ -137,6 +137,9 @@ namespace Project_127
 			}
 		}
 
+		/// <summary>
+		/// Method to set up the Speedrun Info Text
+		/// </summary>
 		private void SetUpSpeedrun()
 		{
 			AddParagraph(rtb_SpeedRun, "");
@@ -194,6 +197,9 @@ namespace Project_127
 			AddParagraph(rtb_SpeedRun, "CATEGORIES\nThe many categories of GTA V speedrunning are sorted into 3 main groups. Any%, 100%, and Misc.\nAny% is about completing the game with any completion percentage, as fast as possible. The categories of Any% are;\n- Any% Classic,\n- Any% No Mission Skips, and\n- Any% Mission Skips.\n\n100% is about completing the game with a full completion percentage, as fast as possible. The categories of 100% are;\n- 100% Classic,\n- 100% No Mission Skips, and\n- 100% Mission Skips.\n\nMisc is everything that can't be put under neither Any%, nor 100%. The categories here are usually not taken seriously, and are only meant as casual fun. (Other than Golf and a certain individual :p) The categories of Misc are;\n- Segments,\n- All Stunt Jumps,\n- A Close Shave,\n- All Letters,\n- All Monkey Mosaics,- All Peyote Plants.\n\nRULES\nClassic: Classic is supposed to mimic the speedruns of earlier GTA games. In IV, and V, many new game mechanics got introduced that weren't present previously. Classic forbids the use of Taxis, Mission Skipping, and choosing the The Third Way ending is mandatory.Timer starts on first frame of the Prologue text.\n\nNo Mission Skips: The only thing that No Mission Skips forbids is, surprisingly, Mission Skipping.Taxis and any ending are allowed here.Timer starts on first frame of the Prologue text.\n\nMission Skips: This ruleset allows everything.Timer starts on first frame of the Prologue text.\n\nSegments: These follow the rules of Classic. Shorter, bite-sized runs for optimal learning.Timer varies from segment to segment, but usually when you gain control.\n\nAll Stunt Jumps: Goal is to hit all 50 Stunt Jumps of the game as fast as you can. The run starts from Franklin and Lamar, which is easiest to reach from the Prologue autosave. Mission Skipping, and Taxis are all allowed.Timer starts on first frame of the Franklin and Lamar cutscene.\n\nA Close Shave: A similar run to All Stunt Jumps, but here you complete all Under The Bridges, and Knife Flights. Mission Skipping, and Taxis are all allowed.Timer starts on first frame of the Franklin and Lamar cutscene.\n\nAll Letters: Pick up all Letter scraps scattered around the map. These become accessible after completing Prologue, Franklin and Lamar, and Repossession. Mission Skipping, and Taxis are all allowed.Timer starts on first frame of the Franklin and Lamar cutscene.\n\nAll Monkey Mosaics: Photograph all Monkey Mosaics scattered around the map. Mission Skipping, and Taxis are all allowed.Timer starts on first frame of the Franklin and Lamar cutscene.\n\nAll Peyote Plants: Pick up all Peyote Plants scattered around the map.Mission Skipping, and Taxis are all allowed.Timer starts on first frame of the Franklin and Lamar cutscene.\n");
 		}
 
+		/// <summary>
+		/// Method to set up the Credits Text
+		/// </summary>
 		private void SetUpCredits()
 		{
 			AddParagraph(rtb_Credits, "");
@@ -234,6 +240,9 @@ namespace Project_127
 			AddParagraph(rtb_Credits, "");
 		}
 
+		/// <summary>
+		/// Message about the "About" Text
+		/// </summary>
 		private void SetUpAbout()
 		{
 			AddParagraph(rtb_About, "");
@@ -255,6 +264,9 @@ namespace Project_127
 			AddParagraph(rtb_About, "");
 		}
 
+		/// <summary>
+		/// Setting up the "Help" Text
+		/// </summary>
 		private void SetUpHelp()
 		{
 			AddParagraph(rtb_Help, "");
@@ -269,15 +281,11 @@ namespace Project_127
 
 			AddParagraph(rtb_Help, "When P127 crashes just when you are expected to login (on click of Auth Button, or on Game Launch when not logged in already), you might fail to connect to Rockstar Server. Make sure you are connected to the internet.");
 
-			AddParagraph(rtb_Help, "When Upgrading / Downgrading does not work as expected in general, verify Game Files via Steam / Rockstar / Epic (Or re-download GTAV) and click \"Repair GTAV\" inside Settings.");
-
-			AddParagraph(rtb_Help, "When Project 1.27 crashes when you are trying to authenticate (when pressing the Auth Button or when Pressing \"Launch GTAV\" while not being authenticated) Project 1.27 cannot reach Rockstar Servers.");
+			AddParagraph(rtb_Help, "When Upgrading / Downgrading does not work as expected in general, verify Game Files via Steam / Rockstar / Epic (Or re-download GTAV), clicking \"Repair GTA\" inside P127 Generel Settings and re-download the components.");
 
 			AddHyperlinkText(rtb_Help, "http://ResetAll.com", "\"Reset All\"", "If something is still not working, you can always try verifying Files via Steam / Rockstar / Epic and hitting the ", " Button below.This might take a few minutes, and Project 1.27 will quit automatically when its done. Re - Open it and everything should work again.");
 
 			AddParagraph(rtb_Help, "If you still cant get it to work or you wish to contact me, please RIGHT-click the Auth icon (the one with the lock icon in the top left corner) and send me the AAA - Logfile.log and the AAA - Debugfile.txt from the folder which will open (Project 1.27 Installation Directory) and include a detailed Report of what you did and whats not working.");
-
-			AddParagraph(rtb_Help, "Working on Project 1.27 has been incredibly satisfying but also incredibly frustrating. I am glad we were able to give the GTA V Speedrunning Community a permanent solution for their problem and I cheerish the experience I have gained from doing this Project. Shoutouts to everyone involved in Project 1.27 from Day 1. Working with all of you has been a great pleasure.");
 
 			AddParagraph(rtb_Help, "I hope everything works for you and you dont experience any crashes or anything like that. In case you do, i sincerly apoligze for the inconvenience. Feel free to contact me for help :) Discord: @thS#0305.");
 
@@ -286,6 +294,11 @@ namespace Project_127
 			AddParagraph(rtb_Help, "");
 		}
 
+		/// <summary>
+		/// Adding a Paragraph to a RichTextBox
+		/// </summary>
+		/// <param name="rtb"></param>
+		/// <param name="Paragraph"></param>
 		private void AddParagraph(RichTextBox rtb, string Paragraph)
 		{
 			Paragraph para = new Paragraph();
@@ -295,6 +308,13 @@ namespace Project_127
 			rtb.Document.Blocks.Add(para);
 		}
 
+		/// <summary>
+		/// Adding StrikeThrough Paragraph to a RichTextBox
+		/// </summary>
+		/// <param name="rtb"></param>
+		/// <param name="textBefore"></param>
+		/// <param name="textStrike"></param>
+		/// <param name="textAfter"></param>
 		private void AddStrikethroughParagraph(RichTextBox rtb, string textBefore, string textStrike,
 			  string textAfter)
 		{
@@ -313,6 +333,14 @@ namespace Project_127
 			rtb.Document.Blocks.Add(para);
 		}
 
+		/// <summary>
+		/// Adding a Paragraph with a Hyperlink to a RichTextBox
+		/// </summary>
+		/// <param name="rtb"></param>
+		/// <param name="linkURL"></param>
+		/// <param name="linkName"></param>
+		/// <param name="TextBeforeLink"></param>
+		/// <param name="TextAfterLink"></param>
 		private void AddHyperlinkText(RichTextBox rtb, string linkURL, string linkName,
 			  string TextBeforeLink, string TextAfterLink)
 		{
@@ -335,28 +363,52 @@ namespace Project_127
 		}
 
 
+		/// <summary>
+		/// Loading the Speedrun "Page"
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void btn_SpeedRun_Click(object sender, RoutedEventArgs e)
 		{
 			ReadMeState = ReadMeStates.SpeedRun;
 		}
 
+		/// <summary>
+		/// Loading the About "Page"
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+
 		private void btn_About_Click(object sender, RoutedEventArgs e)
 		{
 			ReadMeState = ReadMeStates.About;
 		}
+		/// <summary>
+		/// Loading the Credits "Page"
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 
 		private void btn_Credits_Click(object sender, RoutedEventArgs e)
 		{
 			ReadMeState = ReadMeStates.Credits;
 		}
 
-
+		/// <summary>
+		/// Loading the Help "Page"
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void btn_Help_Click(object sender, RoutedEventArgs e)
 		{
 			ReadMeState = ReadMeStates.Help;
 		}
 
-
+		/// <summary>
+		/// Special Shoutouts to a special someone
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void btn_About_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
 		{
 			if (e.ClickCount == 3)
@@ -365,7 +417,11 @@ namespace Project_127
 			}
 		}
 
-
+		/// <summary>
+		/// Some Hyperlink logic we need
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e)
 		{
 			if (e.Uri.ToString().ToLower().Contains("bigzip"))
@@ -383,6 +439,9 @@ namespace Project_127
 			e.Handled = true;
 		}
 
+		/// <summary>
+		/// Some "failsafe" content deployment system
+		/// </summary>
 		private void TryBigZip()
 		{
 			string TMP_UpdateXML = Globals.XML_AutoUpdate;

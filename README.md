@@ -38,18 +38,16 @@ Shamelessly stolen from: https://github.com/othneildrew/Best-README-Template
     <img src="Artwork/icon.png" alt="Logo" width="80" height="80">
   </a>
 
-  <h3 align="center">Project 1.27</h3>
+  <h3 align="center">Project 1.27 aka. P127</h3>
 
   <p align="center">
-    Project 1.27 aka. P127
-    <br />
-    <br />
+    Custom Client / Launcher for Speedrunning GTA.
     <br />
     <a href="https://www.youtube.com/watch?v=PLACEHOLDER">View Demo</a>
     ·
-    <a href="https://github.com/TwosHusbandS/Project-127/tree/master/Installer/Changelogs">Changelog</a>
+    <a href="">Changelog</a>
     ·
-    <a href="CTRLF">Contact me</a>
+    <a href="#contact">Contact me</a>
   </p>
 </p>
 
@@ -132,21 +130,21 @@ Pretty much built with straight C# visualized with WPF
 
 ### Installation
 
-* Grab the [latest Installer]([installer-latest-url]) from [the Installer folder]([installer-folder-url])
+* Grab the [latest Installer][installer-latest-url] from [the Installer folder][installer-folder-url]
 * Execute said Installer
 * Open Project 127
 
 ### User Instructions:
 
 * **Get your GTA V Installation to an Up-To-Date State and launch the latest Version online to confirm that its working.**
-* Grab the [latest Installer]([installer-latest-url]) from [the Installer folder]([installer-folder-url])
+* Grab the [latest Installer][installer-latest-url] from [the Installer folder][installer-folder-url]
 * This Program does automatically detect the current State of the Installation (Downgraded or Upgraded) and launches the Game accordingly.
 * Windows 10 Checks all Files for Viruses if they are run for the first time. If you open a file (the Installer or the Program) for the first time, please give it some time (up to 15 seconds) to do so, and just wait.
 * This Program only supports 64 Bit at this Point and probably will never support 32 Bit. Seeing as GTA V only supports 64 Bit (AFAIK), and I doubt you can have a good time playing GTA V on less than 4 GB of RAM, this will probably stay this way.
 * This Program also requires Admin-Rights for File Operations and Accessing the Registry for Settings. You do not need to start it as Admin, you will get the UserAccessControl Popup regardless of how this was started.
 * Please actually Read the Popups the Program gives you
 * In order to fully remove this Program and all of its files and settings click the Uninstall Button inside the Settings Window.
-* [Changelogs can be found here]([changelogs-url])
+* [Changelogs can be found here][changelogs-url]
 * If something is not working and you are contact me, I would appreciate the LogFile and the DebugFile, which are both in the InstallationFolder of this Program
 * Read the Help Section if something is not working.
 
@@ -155,7 +153,8 @@ Pretty much built with straight C# visualized with WPF
 
 * Settings are in: Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Project_127 in the Registry
 * The Files this Program needs (apart from the Client itself) are saved in a folder called "Project_127_Files" inside the Folder which you selected to use for ZIP File Extracting.
-  * By default it recommends you to use your GTA Installation for that. Again: Use your GTA Installation Folder for this.
+  * By default it recommends you to use your GTA Installation for that.
+  * Again: Use your GTA Installation Folder for this.
 * Theres a lot of stuff you can rightclick. I mean. A lot.
 
 ### Help Section
@@ -184,6 +183,7 @@ It will continue to receive BugFixes and Hotfixes if needed.
 * Press F5.
 
 * In Order to check how stuff is connected id just recommend following User Actions and seeing what Methods are called.
+* The whole Project ...historically grew a lot, and it shows.
 * Some of the Code (especially XAML / GUI related) is not the best looking and far from best practice.
 * If you can think of Improvements or new Features feel free to make a Pull Request or [contact me](#contact). 
 * Can always use an extra pair of eyes to make sure I dont do anything stupid.
@@ -217,11 +217,11 @@ Distributed under the MIT License. See `LICENSE` for more information.
 
 ## Contact
 
-Twitter - [@thsBizz]([twitter-url])
+Twitter - [@thsBizz][twitter-url]
 
-Project Link - [github.com/TwosHusbandS/Project-127]([p127-url])
+Project Link - [github.com/TwosHusbandS/Project-127][p127-url]
 
-Discord - [@ths#0305]([discord-url])
+Discord - [@ths#0305][discord-url]
 
 
 

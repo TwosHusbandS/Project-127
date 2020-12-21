@@ -30,14 +30,34 @@ namespace Project_127.Overlay
 
 		// https://stackoverflow.com/a/47582420
 
+		/// <summary>
+		/// "Loaded" Notes user can scroll through
+		/// </summary>
 		public static string[] NotesLoaded = { "" };
+
+		/// <summary>
+		/// Title of the "Loaded" notes
+		/// </summary>
 		public static string[] NotesLoadedTitle = { "" };
+
+		/// <summary>
+		/// Index of the NotesLoaded
+		/// </summary>
 		public static int NotesLoadedIndex = 0;
 
+		/// <summary>
+		/// When we want to call the Overlay Page with a custom SubPage
+		/// </summary>
 		public static NoteOverlayPages LoadNoteOverlayWithCustomPage = NoteOverlayPages.NoteFiles;
 
+		/// <summary>
+		/// Was Overlay Visible before we hid it? When in Fullscreen and we alt tabbed out of GTA (and made Overlay invisible)
+		/// </summary>
 		public static bool OverlayWasVisible = false;
 
+		/// <summary>
+		/// Enum with all Subpages
+		/// </summary>
 		public enum NoteOverlayPages
 		{
 			NoteFiles,
@@ -45,8 +65,14 @@ namespace Project_127.Overlay
 			Look
 		}
 
+		/// <summary>
+		/// Current Subpage we are on
+		/// </summary>
 		private static NoteOverlayPages _NoteOverlayPage = NoteOverlayPages.NoteFiles;
 
+		/// <summary>
+		/// Subpage we are on with some Setter logic
+		/// </summary>
 		public NoteOverlayPages NoteOverlayPage
 		{
 			get
@@ -99,8 +125,21 @@ namespace Project_127.Overlay
 			}
 		}
 
+		/// <summary>
+		/// Static Property reference to the current Overlay
+		/// </summary>
 		public static GTAOverlay MyGTAOverlay;
 
+
+		/// <summary>
+		/// If MultiMonitor was visible before Showing it for Preview
+		/// </summary>
+		private static bool MM_WasOpen = true;
+
+
+		/// <summary>
+		/// Making Preview visible
+		/// </summary>
 		public static void LoadPreview()
 		{
 			MainWindow.MW.Frame_Game.Content = new Overlay_Preview();
@@ -122,8 +161,10 @@ namespace Project_127.Overlay
 			Overlay_Preview.StartDispatcherTimer();
 		}
 
-		private static bool MM_WasOpen = true;
 
+		/// <summary>
+		/// Disposing the Preview to the side
+		/// </summary>
 		public static void DisposePreview()
 		{
 			MainWindow.MW.Width = 900;
@@ -146,7 +187,9 @@ namespace Project_127.Overlay
 			MM_WasOpen = true;
 		}
 
-
+		/// <summary>
+		/// Constructor of the NoteOverlay Page
+		/// </summary>
 		public NoteOverlay()
 		{
 			InitializeComponent();
@@ -159,6 +202,9 @@ namespace Project_127.Overlay
 			RefreshIfOptionsHide();
 		}
 
+		/// <summary>
+		/// Initiating a GTA Overlay Object with all logic needed
+		/// </summary>
 		public static void InitGTAOverlay()
 		{
 			//HelperClasses.Logger.Log("Trying to Init GTA Overlay");
@@ -183,7 +229,28 @@ namespace Project_127.Overlay
 			}
 		}
 
+		/// <summary>
+		/// Disposing the GTA Overlay
+		/// </summary>
+		public static void DisposeGTAOverlay()
+		{
+			//HelperClasses.Logger.Log("Trying to Dispose GTA Overlay");
+			if (MyGTAOverlay != null)
+			{
+				OverlayWasVisible = false;
+				MyGTAOverlay.Dispose();
+				MyGTAOverlay = null;
+				HelperClasses.Logger.Log("GTA Overlay disposed", 1);
+			}
+			else
+			{
+				//HelperClasses.Logger.Log("GTA Overlay already disposed", 1);
+			}
+		}
 
+		/// <summary>
+		/// Loading Texts from Settings into RAM / UI / Overlay
+		/// </summary>
 		public static void LoadTexts()
 		{
 			List<string> NotesTexts = new List<string>();
@@ -221,23 +288,11 @@ namespace Project_127.Overlay
 			ChangeNoteIndex(0);
 		}
 
-		public static void DisposeGTAOverlay()
-		{
-			//HelperClasses.Logger.Log("Trying to Dispose GTA Overlay");
-			if (MyGTAOverlay != null)
-			{
-				OverlayWasVisible = false;
-				MyGTAOverlay.Dispose();
-				MyGTAOverlay = null;
-				HelperClasses.Logger.Log("GTA Overlay disposed", 1);
-			}
-			else
-			{
-				//HelperClasses.Logger.Log("GTA Overlay already disposed", 1);
-			}
-		}
 
-
+	
+		/// <summary>
+		/// Making Overlay Visible
+		/// </summary>
 		public static void OverlaySetVisible()
 		{
 			if (IsOverlayInit())
@@ -258,6 +313,9 @@ namespace Project_127.Overlay
 			}
 		}
 
+		/// <summary>
+		/// Making Overlay Invisible
+		/// </summary>
 		public static void OverlaySetInvisible()
 		{
 			if (IsOverlayInit())
@@ -279,18 +337,29 @@ namespace Project_127.Overlay
 			}
 		}
 
-		public static bool IsOverlayInit()
+		/// <summary>
+		/// Toggling Overlay Visibility
+		/// </summary>
+		public static void OverlayToggle()
 		{
-			if (MyGTAOverlay == null)
+			if (IsOverlayInit())
 			{
-				return false;
-			}
-			else
-			{
-				return true;
+				if (IsOverlayVisible())
+				{
+					OverlaySetInvisible();
+				}
+				else
+				{
+					OverlaySetVisible();
+				}
 			}
 		}
 
+
+		/// <summary>
+		/// Is Overlay Visible
+		/// </summary>
+		/// <returns></returns>
 		public static bool IsOverlayVisible()
 		{
 			if (IsOverlayInit())
@@ -304,6 +373,26 @@ namespace Project_127.Overlay
 		}
 
 
+		/// <summary>
+		/// Is Overlay initiated
+		/// </summary>
+		/// <returns></returns>
+		public static bool IsOverlayInit()
+		{
+			if (MyGTAOverlay == null)
+			{
+				return false;
+			}
+			else
+			{
+				return true;
+			}
+		}
+
+
+		/// <summary>
+		/// Disposing everything to do with the Overlay
+		/// </summary>
 		public static void DisposeAllOverlayStuff()
 		{
 			NoteOverlay.DisposeGTAOverlay();
@@ -317,6 +406,11 @@ namespace Project_127.Overlay
 			HelperClasses.WindowChangeListener.Stop();
 		}
 
+		/// <summary>
+		/// If any Overlay Setting has been changed, this checks what needs to be done. 
+		/// For the logic when Settings regarding Overlay are changed while Overlay is running
+		/// </summary>
+		/// <param name="ShowOverlay"></param>
 		public static void OverlaySettingsChanged(bool ShowOverlay = false)
 		{
 			if (!GTAOverlay.DebugMode)
@@ -376,31 +470,25 @@ namespace Project_127.Overlay
 		}
 
 
-		public static void OverlayToggle()
-		{
-			if (IsOverlayInit())
-			{
-				if (IsOverlayVisible())
-				{
-					OverlaySetInvisible();
-				}
-				else
-				{
-					OverlaySetVisible();
-				}
-			}
-		}
-
+		/// <summary>
+		/// Scrolling Up
+		/// </summary>
 		public static void OverlayScrollUp()
 		{
 			MyGTAOverlay.scroll(15);
 		}
 
+		/// <summary>
+		/// Scrolling Down
+		/// </summary>
 		public static void OverlayScrollDown()
 		{
 			MyGTAOverlay.scroll(-15);
 		}
 
+		/// <summary>
+		/// Switching to next loaded Note
+		/// </summary>
 		public static void OverlayNoteNext()
 		{
 			int NotesLoadedNewIndex = NotesLoadedIndex;
@@ -415,6 +503,27 @@ namespace Project_127.Overlay
 			ChangeNoteIndex(NotesLoadedNewIndex);
 		}
 
+		/// <summary>
+		/// Switching to previous loaded Note
+		/// </summary>
+		public static void OverlayNotePrev()
+		{
+			int NotesLoadedNewIndex = NotesLoadedIndex;
+			if (NotesLoadedNewIndex == 0)
+			{
+				NotesLoadedNewIndex = NotesLoaded.Length - 1;
+			}
+			else
+			{
+				NotesLoadedNewIndex -= 1;
+			}
+			ChangeNoteIndex(NotesLoadedNewIndex);
+		}
+
+		/// <summary>
+		/// Change of the Index of the Notes which are loaded
+		/// </summary>
+		/// <param name="pNotesLoadedNewIndex"></param>
 		public static void ChangeNoteIndex(int pNotesLoadedNewIndex)
 		{
 			if (IsOverlayInit())
@@ -431,33 +540,23 @@ namespace Project_127.Overlay
 			}
 		}
 
-		public static void OverlayNotePrev()
-		{
-			int NotesLoadedNewIndex = NotesLoadedIndex;
-			if (NotesLoadedNewIndex == 0)
-			{
-				NotesLoadedNewIndex = NotesLoaded.Length - 1;
-			}
-			else
-			{
-				NotesLoadedNewIndex -= 1;
-			}
-			ChangeNoteIndex(NotesLoadedNewIndex);
-		}
 
 		public static void OverlayNoteChapterNext()
 		{
-
+			throw new NotImplementedException();
 		}
 
 		public static void OverlayNoteChapterPrev()
 		{
-
+			throw new NotImplementedException();
 		}
 
 
-
-
+		/// <summary>
+		/// Click of a Checkbox
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void btn_cb_Click(object sender, RoutedEventArgs e)
 		{
 			Button myBtn = (Button)sender;
@@ -473,6 +572,11 @@ namespace Project_127.Overlay
 			}
 			ButtonMouseOverMagic(myBtn);
 		}
+
+
+		/// <summary>
+		/// Refresh if we need to Hide any options becuase of MultiMonitor
+		/// </summary>
 
 		public void RefreshIfOptionsHide()
 		{
@@ -547,21 +651,41 @@ namespace Project_127.Overlay
 
 		}
 
+		/// <summary>
+		/// Button click to load Subpage (Notes)
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void btn_Notes_Click(object sender, RoutedEventArgs e)
 		{
 			NoteOverlayPage = NoteOverlayPages.NoteFiles;
 		}
 
+		/// <summary>
+		/// Button click to load Subpage (Looks)
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void btn_Looks_Click(object sender, RoutedEventArgs e)
 		{
 			NoteOverlayPage = NoteOverlayPages.Look;
 		}
 
+		/// <summary>
+		/// Button click to load Subpage (Keybindings)
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void btn_Keybindings_Click(object sender, RoutedEventArgs e)
 		{
 			NoteOverlayPage = NoteOverlayPages.Keybinds;
 		}
 
+		/// <summary>
+		/// MouseRightButton down on Multi Monitor Mode. Resetting that position.
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void btn_cb_Set_OverlayMultiMonitorMode_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
 		{
 			NoteOverlay.OverlaySettingsChanged();

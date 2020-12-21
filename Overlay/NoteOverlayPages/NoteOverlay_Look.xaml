@@ -34,13 +34,13 @@
                 </Grid.ColumnDefinitions>
 
                 <Rectangle Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Fill="Transparent"/>
-                <Rectangle Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Fill="{x:Static local:Globals.SE_AlternateRowBackground}"/>
+                <Rectangle Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Fill="{x:Static local:MyColors.SE_AlternateRowBackground}"/>
                 <Rectangle Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" Fill="Transparent"/>
-                <Rectangle Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3" Fill="{x:Static local:Globals.SE_AlternateRowBackground}"/>
+                <Rectangle Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3" Fill="{x:Static local:MyColors.SE_AlternateRowBackground}"/>
                 <Rectangle Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3" Fill="Transparent"/>
-                <Rectangle Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="3" Fill="{x:Static local:Globals.SE_AlternateRowBackground}"/>
+                <Rectangle Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="3" Fill="{x:Static local:MyColors.SE_AlternateRowBackground}"/>
                 <Rectangle Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="3" Fill="Transparent"/>
-                <Rectangle Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="3" Fill="{x:Static local:Globals.SE_AlternateRowBackground}"/>
+                <Rectangle Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="3" Fill="{x:Static local:MyColors.SE_AlternateRowBackground}"/>
                 <Rectangle Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="3" Fill="Transparent"/>
 
 
@@ -63,7 +63,7 @@
                 <Slider Grid.Row="4" Grid.Column="1" Style="{StaticResource SliderStyle}" x:Name="sl_MarginY" ValueChanged="sl_MarginY_ValueChanged" Minimum="0" Maximum="500" TickFrequency="5" PreviewMouseLeftButtonUp="sl_MarginY_PreviewMouseLeftButtonUp"/>
                 <Label Style="{StaticResource lbl_Set_Info}" Grid.Row="4" Grid.Column="2" x:Name="lbl_MarginY" Margin="0"/>
 
-                <Rectangle x:Name="Rect_HideOptions" Grid.Row="2" Grid.RowSpan="3" Grid.Column="0" Grid.ColumnSpan="3" Fill="{x:Static local:Globals.MyColorOffWhite85}" ToolTip="Non effective in Multi Monitor Mode"/>
+                <Rectangle x:Name="Rect_HideOptions" Grid.Row="2" Grid.RowSpan="3" Grid.Column="0" Grid.ColumnSpan="3" Fill="{x:Static local:MyColors.MyColorOffWhite85}" ToolTip="Non effective in Multi Monitor Mode"/>
 
                 <Label Grid.Row="5" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="  Overlay - Width"/>
                 <Slider Grid.Row="5" Grid.Column="1" Style="{StaticResource SliderStyle}" x:Name="sl_Width" ValueChanged="sl_Width_ValueChanged" Minimum="160" Maximum="1920" TickFrequency="20" PreviewMouseLeftButtonUp="sl_Width_PreviewMouseLeftButtonUp"/>

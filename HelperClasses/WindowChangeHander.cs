@@ -8,14 +8,23 @@ using Project_127.Overlay;
 
 namespace Project_127.HelperClasses
 {
+	/// <summary>
+	/// Class which handles our WindowChanceListener
+	/// </summary>
 	class WindowChangeHander
 	{
+		// Using this class to determine when to start / stop the Keyboard Listener if the Overlay is enabled and in Borderless Mode.
+		// Keyboard Listener should only be running when GTA is in foreground
+
+		// to actually detect a change
 		private static string LastWindowTitle = "";
 
+		/// <summary>
+		/// Method when a WindowChange occured
+		/// </summary>
+		/// <param name="WindowTitle"></param>
 		public static void WindowChangeEvent(string WindowTitle)
 		{
-			//HelperClasses.Logger.Log("DEBUG: '" + WindowTitle + "'", 2);
-
 			if (MySettings.Settings.EnableOverlay && GTAOverlay.OverlayMode == GTAOverlay.OverlayModes.Borderless)
 			{
 				if (WindowTitle == GTAOverlay.targetWindowBorderless && LastWindowTitle != GTAOverlay.targetWindowBorderless)

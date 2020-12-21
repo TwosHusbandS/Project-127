@@ -6,13 +6,13 @@
         xmlns:local="clr-namespace:Project_127"
         mc:Ignorable="d"
         Title="Popup" 
-        Background="{x:Static local:Globals.PU_Background}"
+        Background="{x:Static local:MyColors.PU_Background}"
         WindowStyle="None" ResizeMode="CanMinimize" WindowStartupLocation="CenterScreen" MouseLeftButtonDown="Window_MouseLeftButtonDown"
         Height="160"
         Width="420"
         Icon="/Artwork/icon.png">
 
-    <Border BorderBrush="{x:Static local:Globals.PU_BorderBrush}" BorderThickness="2">
+    <Border BorderBrush="{x:Static local:MyColors.PU_BorderBrush}" BorderThickness="2">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition/>

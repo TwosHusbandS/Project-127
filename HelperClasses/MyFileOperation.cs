@@ -13,7 +13,7 @@ using Project_127.MySettings;
 namespace Project_127.HelperClasses
 {
 	/// <summary>
-	/// Class
+	/// Class of MyFileOperation
 	/// </summary>
 	public class MyFileOperation
 	{

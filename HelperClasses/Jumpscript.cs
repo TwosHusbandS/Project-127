@@ -8,12 +8,24 @@ using Keys = System.Windows.Forms.Keys;
 
 namespace Project_127.HelperClasses
 {
+	/// <summary>
+	/// Jumpscript Logic
+	/// </summary>
 	class Jumpscript
 	{
+		/// <summary>
+		/// Process we start / stop
+		/// </summary>
 		static Process myJumpscript;
 
+		/// <summary>
+		/// Bool if Jumpscript is running
+		/// </summary>
 		public static bool IsRunning;
 
+		/// <summary>
+		/// (Re-)Starting Jumpscript
+		/// </summary>
 		public static void StartJumpscript()
 		{
 			StopJumpscript();
@@ -29,15 +41,18 @@ namespace Project_127.HelperClasses
 			myList.Add(KeyToString(MySettings.Settings.JumpScriptKey2) + "::" + KeyToString(MySettings.Settings.JumpScriptKey1));
 			myList.Add("#IfWinActive");
 
-			HelperClasses.FileHandling.WriteToFile(Globals.ProjectInstallationPathBinary.TrimEnd('\\') + @"\P127_Jumpscript.ahk", myList.ToArray());
+			FileHandling.WriteStringToFileOverwrite(Globals.ProjectInstallationPathBinary.TrimEnd('\\') + @"\P127_Jumpscript.ahk", myList.ToArray());
 
-			myJumpscript = HelperClasses.ProcessHandler.StartProcess(Globals.ProjectInstallationPathBinary.TrimEnd('\\') + @"\P127_Jumpscript.exe");
+			myJumpscript = ProcessHandler.StartProcess(Globals.ProjectInstallationPathBinary.TrimEnd('\\') + @"\P127_Jumpscript.exe");
 
-			HelperClasses.Logger.Log("(Re-)Started Jumpscript");
+			Logger.Log("(Re-)Started Jumpscript");
 
 			IsRunning = true;
 		}
 
+		/// <summary>
+		/// Stopping Jumpscript.
+		/// </summary>
 		public static void StopJumpscript()
 		{
 			if (myJumpscript != null)
@@ -50,6 +65,14 @@ namespace Project_127.HelperClasses
 			}
 		}
 
+
+
+
+		/// <summary>
+		/// Translating from System.Windows.Forms.Keys to AutoHotkey key strings
+		/// </summary>
+		/// <param name="pKey"></param>
+		/// <returns></returns>
 		public static string KeyToString(System.Windows.Forms.Keys pKey)
 		{
 			string rtrn = "";

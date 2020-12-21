@@ -110,11 +110,6 @@ namespace Project_127.Popups
 			lbl_Main.Content = "Downloading " + DownloadName + "...\n(" + pb_Main.Value + "%)";
 		}
 
-
-		////////////////////////////////////////////////////////////////////
-		// Below are Methods we need to make the behaviour of this nice. ///
-		////////////////////////////////////////////////////////////////////
-
 		/// <summary>
 		/// Method which makes the Window draggable, which moves the whole window when holding down Mouse1 on the background
 		/// </summary>
