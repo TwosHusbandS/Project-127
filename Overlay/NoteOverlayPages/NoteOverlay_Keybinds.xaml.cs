@@ -15,6 +15,7 @@ using System.Windows.Shapes;
 using Project_127.HelperClasses;
 using Keys = System.Windows.Forms.Keys;
 using Project_127.MySettings;
+using Project_127.HelperClasses.Keyboard;
 
 namespace Project_127.Overlay.NoteOverlayPages
 {
@@ -23,6 +24,9 @@ namespace Project_127.Overlay.NoteOverlayPages
 	/// </summary>
 	public partial class NoteOverlay_Keybinds : Page
 	{
+		/// <summary>
+		/// Constructor of Subpage Keybinds
+		/// </summary>
 		public NoteOverlay_Keybinds()
 		{
 			InitializeComponent();
@@ -36,6 +40,11 @@ namespace Project_127.Overlay.NoteOverlayPages
 			btn_OverlayHotkeyNoteNext.Content = Settings.KeyOverlayNoteNext;
 		}
 
+		/// <summary>
+		/// Key: OverlayHotkeyToggle change Event when Button is clicked
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private async void btn_OverlayHotkeyToggle_Click(object sender, RoutedEventArgs e)
 		{
 			((Button)sender).Content = "[Press new Key Now]";
@@ -47,6 +56,11 @@ namespace Project_127.Overlay.NoteOverlayPages
 			((Button)sender).Content = Settings.KeyOverlayToggle;
 		}
 
+		/// <summary>
+		/// Key: OverlayHotkeyScrollUp change Event when Button is clicked
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private async void btn_OverlayHotkeyScrollUp_Click(object sender, RoutedEventArgs e)
 		{
 			((Button)sender).Content = "[Press new Key Now]";
@@ -58,6 +72,11 @@ namespace Project_127.Overlay.NoteOverlayPages
 			((Button)sender).Content = Settings.KeyOverlayScrollUp;
 		}
 
+		/// <summary>
+		/// Key: OverlayHotkeyScrollDown change Event when Button is clicked
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private async void btn_OverlayHotkeyScrollDown_Click(object sender, RoutedEventArgs e)
 		{
 			((Button)sender).Content = "[Press new Key Now]";
@@ -69,6 +88,11 @@ namespace Project_127.Overlay.NoteOverlayPages
 			((Button)sender).Content = Settings.KeyOverlayScrollDown;
 		}
 
+		/// <summary>
+		/// Key: OverlayHotkeyScrollRight change Event when Button is clicked
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private async void btn_OverlayHotkeyScrollRight_Click(object sender, RoutedEventArgs e)
 		{
 			((Button)sender).Content = "[Press new Key Now]";
@@ -80,6 +104,11 @@ namespace Project_127.Overlay.NoteOverlayPages
 			((Button)sender).Content = Settings.KeyOverlayScrollRight;
 		}
 
+		/// <summary>
+		/// Key: OverlayHotkeyScrollLeft change Event when Button is clicked
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private async void btn_OverlayHotkeyScrollLeft_Click(object sender, RoutedEventArgs e)
 		{
 			((Button)sender).Content = "[Press new Key Now]";
@@ -91,6 +120,11 @@ namespace Project_127.Overlay.NoteOverlayPages
 			((Button)sender).Content = Settings.KeyOverlayScrollLeft;
 		}
 
+		/// <summary>
+		/// Key: OverlayHotkeyNotePrev change Event when Button is clicked
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private async void btn_OverlayHotkeyNotePrev_Click(object sender, RoutedEventArgs e)
 		{
 			((Button)sender).Content = "[Press new Key Now]";
@@ -102,6 +136,11 @@ namespace Project_127.Overlay.NoteOverlayPages
 			((Button)sender).Content = Settings.KeyOverlayNotePrev;
 		}
 
+		/// <summary>
+		/// Key: OverlayHotkeyNoteNext change Event when Button is clicked
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private async void btn_OverlayHotkeyNoteNext_Click(object sender, RoutedEventArgs e)
 		{
 			((Button)sender).Content = "[Press new Key Now]";

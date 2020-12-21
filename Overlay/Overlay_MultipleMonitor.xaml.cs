@@ -16,43 +16,80 @@ using System.Windows.Shapes;
 using Project_127.MySettings;
 using Project_127.Overlay;
 
-namespace Project_127
+namespace Project_127.Overlay
 {
 	/// <summary>
 	/// Interaction logic for Overlay_MultipleMonitor.xaml
 	/// </summary>
 	public partial class Overlay_MultipleMonitor : Window
 	{
+		/// <summary>
+		/// Constructor Of Multi Monitor Overlay WPF Window
+		/// </summary>
 		public Overlay_MultipleMonitor()
 		{
 			InitializeComponent();
 		}
 
+		/// <summary>
+		/// Moving Window around works
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
 		{
 			DragMove();
 		}
 
+		/// <summary>
+		/// Making our WPF Window show
+		/// </summary>
 		public void MyShow()
 		{
 			this.border_main.Visibility = Visibility.Visible;
 		}
 
-		public void TMP()
+		/// <summary>
+		/// If our Window is Visible / Displayed
+		/// </summary>
+		/// <returns></returns>
+		public bool IsDisplayed()
 		{
+			if (this.border_main.Visibility == Visibility.Visible)
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
 		}
 
+		/// <summary>
+		/// Hiding our WPF Window
+		/// </summary>
 		public void MyHide()
 		{
 			this.border_main.Visibility = Visibility.Hidden;
 		}
 
+		/// <summary>
+		/// Saving our Position when this is being closed
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
 		{
 			Settings.OL_MM_Top = this.Top;
 			Settings.OL_MM_Left = this.Left;
 		}
 
+
+		/// <summary>
+		/// Window Styles on Window Load
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void Window_Loaded(object sender, RoutedEventArgs e)
 		{
 			WindowInteropHelper wndHelper = new WindowInteropHelper(this);
@@ -64,6 +101,25 @@ namespace Project_127
 
 		}
 
+
+		/// <summary>
+		/// Re-setting Window Margins, then hiding our Window on Init
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void Window_SourceInitialized(object sender, EventArgs e)
+		{
+			this.Width = Settings.OverlayWidth / 2;
+
+			this.Top = Settings.OL_MM_Top;
+			this.Left = Settings.OL_MM_Left;
+
+			MyHide();
+
+		}
+
+
+		// Whatever this sorcery is below this shit...
 
 		#region Window styles
 		[Flags]
@@ -129,15 +185,6 @@ namespace Project_127
 		#endregion
 
 
-		private void Window_SourceInitialized(object sender, EventArgs e)
-		{
-			this.Width = Settings.OverlayWidth / 2;
 
-			this.Top = Settings.OL_MM_Top;
-			this.Left = Settings.OL_MM_Left;
-
-			MyHide();
-
-		}
 	}
 }

@@ -10,10 +10,10 @@ using Project_127.Overlay;
 using Project_127.Popups;
 using Project_127.MySettings;
 
-namespace Project_127
+namespace Project_127.HelperClasses
 {
 	/// <summary>
-	/// Class
+	/// Class of MyFileOperation
 	/// </summary>
 	public class MyFileOperation
 	{

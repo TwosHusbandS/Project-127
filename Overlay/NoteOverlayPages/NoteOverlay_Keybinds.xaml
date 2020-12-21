@@ -24,9 +24,9 @@
         </Grid.ColumnDefinitions>
 
         <Rectangle Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Fill="Transparent"/>
-        <Rectangle Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Fill="{x:Static local:Globals.SE_AlternateRowBackground}"/>
+        <Rectangle Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Fill="{x:Static local:MyColors.SE_AlternateRowBackground}"/>
         <Rectangle Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Fill="Transparent"/>
-        <Rectangle Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Fill="{x:Static local:Globals.SE_AlternateRowBackground}"/>
+        <Rectangle Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Fill="{x:Static local:MyColors.SE_AlternateRowBackground}"/>
         <Rectangle Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Fill="Transparent"/>
         <!--<Rectangle Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" Fill="{x:Static local:Globals.SE_AlternateRowBackground}"/>
         <Rectangle Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2" Fill="Transparent"/>-->

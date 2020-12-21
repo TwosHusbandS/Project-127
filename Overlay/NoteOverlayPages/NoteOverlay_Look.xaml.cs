@@ -31,6 +31,11 @@ namespace Project_127.Overlay.NoteOverlayPages
 		// Setting those 4 getters setters below all the time
 		// and writing it to settings on close / mouseleftup events
 
+		// doing this logic below so that certain things are getting pushed to the overlay and the preview in real time
+		// but are only written to registry and settings when mouse is away from the slider
+
+		// not bothering with cleaning this up, its all badly implemented UI shit
+
 		private static int _OverlayMarginX = Settings.OverlayMarginX;
 		private static int _OverlayMarginY = Settings.OverlayMarginY;
 		private static int _OverlayWidth = Settings.OverlayWidth;
@@ -41,6 +46,9 @@ namespace Project_127.Overlay.NoteOverlayPages
 
 		private static NoteOverlay_Look NO_L;
 
+		/// <summary>
+		/// Method to Hide some options when we are in Multi Monitor Mode
+		/// </summary>
 		public static void RefreshIfHideOrNot()
 		{
 			if (NO_L != null)
@@ -55,6 +63,7 @@ namespace Project_127.Overlay.NoteOverlayPages
 				}
 			}
 		}
+
 
 		public static int OverlayMarginX
 		{
@@ -182,7 +191,9 @@ namespace Project_127.Overlay.NoteOverlayPages
 		}
 
 
-
+		/// <summary>
+		/// Constructor of the Subpage "Looks" of NoteOverlay
+		/// </summary>
 		public NoteOverlay_Look()
 		{
 			InitializeComponent();
@@ -208,7 +219,6 @@ namespace Project_127.Overlay.NoteOverlayPages
 			try { lbl_TextSize.Content = OverlayTextSize.ToString() + " pt"; } catch { }
 
 			ComboBox_Fonts.ItemsSource = Fonts.SystemFontFamilies.ToArray();
-
 			foreach (FontFamily myFF in ComboBox_Fonts.ItemsSource)
 			{
 				if (myFF.ToString() == NoteOverlay_Look.OverlayTextFont)
@@ -217,14 +227,8 @@ namespace Project_127.Overlay.NoteOverlayPages
 				}
 			}
 
-			List<string> myEnumValues = new List<string>();
-			foreach (string myString in OverlayLocation.GetType().GetEnumNames())
-			{
-				myEnumValues.Add(myString);
-			}
-
-			ComboBox_OverlayLocation.ItemsSource = myEnumValues;
-			ComboBox_OverlayLocation.SelectedItem = NoteOverlay_Look.OverlayLocation.ToString();
+			ComboBox_OverlayLocation.ItemsSource = Enum.GetValues(typeof(GTAOverlay.Positions)).Cast<GTAOverlay.Positions>();
+			ComboBox_OverlayLocation.SelectedItem = NoteOverlay_Look.OverlayLocation;
 
 			MyColorPicker_Background.SelectedColor = Settings.OverlayBackground;
 			MyColorPicker_Foreground.SelectedColor = Settings.OverlayForeground;

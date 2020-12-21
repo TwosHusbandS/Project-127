@@ -40,6 +40,9 @@ namespace Project_127.Overlay
 		private int PreviewMarginX;
 		private int PreviewMarginY;
 
+		/// <summary>
+		/// Constructor of Preview Page
+		/// </summary>
 		public Overlay_Preview()
 		{
 			InitializeComponent();
@@ -71,22 +74,40 @@ namespace Project_127.Overlay
 			MyDispatcherTimer.Start();
 		}
 
+		/// <summary>
+		/// Tick of the DispatcherTimer
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void MyDispatcherTimerTick(object sender, EventArgs e)
 		{
 			SetPreviewBackgroundNext();
 		}
 
+		/// <summary>
+		/// UI SHIT BADLY IMPLEMENTED
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void btn_MouseEnter(object sender, MouseEventArgs e)
 		{
 			SetButtonMouseOverMagic((Button)sender);
 		}
 
+		/// <summary>
+		/// UI SHIT BADLY IMPLEMENTED
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void btn_MouseLeave(object sender, MouseEventArgs e)
 		{
 			SetButtonMouseOverMagic((Button)sender);
 		}
 
 
+		/// <summary>
+		/// Stops the Dispatcher Timer for Backgrounds
+		/// </summary>
 		public static void StopDispatcherTimer()
 		{
 			if (MyDispatcherTimer != null)
@@ -95,6 +116,9 @@ namespace Project_127.Overlay
 			}
 		}
 
+		/// <summary>
+		/// Starts the Dispatcher Timer for Backgrounds
+		/// </summary>
 		public static void StartDispatcherTimer()
 		{
 			if (MyDispatcherTimer != null)
@@ -105,6 +129,10 @@ namespace Project_127.Overlay
 			OP.SetPreviewBackground();
 		}
 
+		/// <summary>
+		/// UI Shitty Implementation
+		/// </summary>
+		/// <param name="myBtn"></param>
 		public void SetButtonMouseOverMagic(Button myBtn)
 		{
 			switch (myBtn.Name)
@@ -151,6 +179,11 @@ namespace Project_127.Overlay
 			}
 		}
 
+		/// <summary>
+		/// PlayPause Button
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void btn_PlayPause_Click(object sender, RoutedEventArgs e)
 		{
 			if (IsDispatcherTimerRunning)
@@ -168,6 +201,11 @@ namespace Project_127.Overlay
 			SetButtonMouseOverMagic(btn_PlayPause);
 		}
 
+		/// <summary>
+		/// Click to go to next Image
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void btn_RightArrow_Click(object sender, RoutedEventArgs e)
 		{
 			SetPreviewBackgroundNext();
@@ -178,6 +216,11 @@ namespace Project_127.Overlay
 			}
 		}
 
+		/// <summary>
+		/// Click to go to prev Image
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void btn_LeftArrow_Click(object sender, RoutedEventArgs e)
 		{
 			SetPreviewBackgroundPrev();
@@ -188,12 +231,17 @@ namespace Project_127.Overlay
 			}
 		}
 
-
+		/// <summary>
+		/// Set Font
+		/// </summary>
 		public void SetFont()
 		{
 			Preview.FontFamily = new FontFamily(Settings.OverlayTextFont);
 		}
 
+		/// <summary>
+		/// Set Location / Position
+		/// </summary>
 		public void SetLocation()
 		{
 			switch (Settings.OverlayLocation)
@@ -240,6 +288,10 @@ namespace Project_127.Overlay
 			Preview.Margin = newMargin;
 		}
 
+		/// <summary>
+		/// Set Text Size
+		/// </summary>
+		/// <param name="FontSize"></param>
 		public void SetTextSize(int FontSize = -1)
 		{
 			if (FontSize == -1)
@@ -250,6 +302,10 @@ namespace Project_127.Overlay
 			Preview.FontSize = FontSize;
 		}
 
+		/// <summary>
+		/// Set Height
+		/// </summary>
+		/// <param name="Height"></param>
 		public void SetHeight(int Height = -1)
 		{
 			if (Height == -1)
@@ -260,6 +316,10 @@ namespace Project_127.Overlay
 			Preview.Height = Height;
 		}
 
+		/// <summary>
+		/// Set Width
+		/// </summary>
+		/// <param name="Width"></param>
 		public void SetWidth (int Width = -1)
 		{
 			if (Width == -1)
@@ -270,6 +330,10 @@ namespace Project_127.Overlay
 			Preview.Width = Width;
 		}
 
+		/// <summary>
+		/// SetMarginX
+		/// </summary>
+		/// <param name="MarginX"></param>
 		public void SetMarginX (int MarginX = -1)
 		{
 			if (MarginX == -1)
@@ -281,7 +345,10 @@ namespace Project_127.Overlay
 			SetLocation();
 		}
 
-
+		/// <summary>
+		/// SetMarginY
+		/// </summary>
+		/// <param name="MarginY"></param>
 		public void SetMarginY(int MarginY = -1)
 		{
 			if (MarginY == -1)
@@ -293,7 +360,9 @@ namespace Project_127.Overlay
 			SetLocation();
 		}
 
-
+		/// <summary>
+		/// Set Next Background on Preview
+		/// </summary>
 		public void SetPreviewBackgroundNext()
 		{
 			if (PreviewIndex == PreviewIndexMax)
@@ -307,6 +376,9 @@ namespace Project_127.Overlay
 			SetPreviewBackground();
 		}
 
+		/// <summary>
+		/// Set Previous Background on Preview
+		/// </summary>
 		public void SetPreviewBackgroundPrev()
 		{
 			if (PreviewIndex == PreviewIndexMin)
@@ -320,17 +392,27 @@ namespace Project_127.Overlay
 			SetPreviewBackground();
 		}
 
+		/// <summary>
+		/// Setting the Background of the Preview
+		/// </summary>
 		public void SetPreviewBackground()
 		{
 			MainWindow.MW.SetControlBackground(Preview_BG, @"Artwork\Preview_" + PreviewIndex.ToString() + ".png");
 			lbl_Header.Content = "Overview - Preview(" + PreviewIndex  + " / " + PreviewIndexMax + ")";
 		}
 
+		/// <summary>
+		/// SetBackgroundColor FromSettings
+		/// </summary>
 		public void SetBackground()
 		{
 			SetBackground(Settings.OverlayBackground);
 		}
 
+		/// <summary>
+		/// SetBackgroundColor
+		/// </summary>
+		/// <param name="pColor"></param>
 		public void SetBackground(Color pColor)
 		{
 			Brush brush = new SolidColorBrush(System.Windows.Media.Color.FromArgb(255, pColor.R, pColor.G, pColor.B));
@@ -338,11 +420,18 @@ namespace Project_127.Overlay
 			Preview.Background = brush;
 		}
 
+		/// <summary>
+		/// SetForegroundColor from Settings
+		/// </summary>
 		public void SetForeground()
 		{
 			SetForeground(Settings.OverlayForeground);
 		}
 
+		/// <summary>
+		/// SetForegroundColor
+		/// </summary>
+		/// <param name="pColor"></param>
 		public void SetForeground(Color pColor)
 		{
 			Brush brush = new SolidColorBrush(System.Windows.Media.Color.FromArgb(255, pColor.R, pColor.G, pColor.B));

@@ -19,6 +19,7 @@ using Project_127.HelperClasses;
 using Project_127.Overlay;
 using Project_127.Popups;
 using Project_127.MySettings;
+using Project_127.SaveFileHandlerStuff;
 using System.Windows.Resources;
 using System.Windows.Media.Imaging;
 using CefSharp;
@@ -32,6 +33,11 @@ namespace Project_127
 	/// </summary>
 	public static class Globals
 	{
+		// Properties with benefit or logic below
+
+		#region Properties with benefit or logic
+
+
 		/// <summary>
 		/// Property of our own Installation Path
 		/// </summary>
@@ -47,18 +53,6 @@ namespace Project_127
 		/// Property of our own Installation Path Binary
 		/// </summary>
 		public static string ProjectInstallationPathBinary { get { return Process.GetCurrentProcess().MainModule.FileName.Substring(0, Process.GetCurrentProcess().MainModule.FileName.LastIndexOf('\\')); } }
-
-
-		/// <summary>
-		/// Property of our ProjectName (for Folders, Regedit, etc.)
-		/// </summary>
-		/// 
-		public static string ProjectName = "Project_127";
-
-		/// <summary>
-		/// Property of our ProjectNiceName (for GUI)
-		/// </summary>
-		public static string ProjectNiceName = "Project 127";
 
 		/// <summary>
 		/// Property of the ZIP Version currently installed
@@ -90,7 +84,7 @@ namespace Project_127
 			get
 			{
 				string masterURL = "https://raw.githubusercontent.com/TwosHusbandS/Project-127/master/Installer/Update.xml";
-				string modeURL = "https://raw.githubusercontent.com/TwosHusbandS/Project-127/" + Mode.ToLower() + "/Installer/Update.xml";
+				string modeURL = "https://raw.githubusercontent.com/TwosHusbandS/Project-127/" + Branch.ToLower() + "/Installer/Update.xml";
 
 				string modeXML = HelperClasses.FileHandling.GetStringFromURL(modeURL, true);
 
@@ -116,7 +110,7 @@ namespace Project_127
 			get
 			{
 				string masterURL = "https://raw.githubusercontent.com/TwosHusbandS/Project-127/master/Installer/Update.xml";
-				string modeURL = "https://raw.githubusercontent.com/TwosHusbandS/Project-127/" + Mode + "/Installer/Update.xml";
+				string modeURL = "https://raw.githubusercontent.com/TwosHusbandS/Project-127/" + Branch + "/Installer/Update.xml";
 				if (String.IsNullOrWhiteSpace(HelperClasses.FileHandling.GetStringFromURL(modeURL, true)))
 				{
 					return masterURL;
@@ -148,7 +142,9 @@ namespace Project_127
 			}
 		}
 
-		public static string Mode
+		/// Gets the Branch we are in as actual branch.
+		/// </summary>
+		public static string Branch
 		{
 			get
 			{
@@ -164,7 +160,10 @@ namespace Project_127
 			}
 		}
 
-		public static Version GameVersion
+		/// <summary>
+		/// Gets the Version (BuildVersion) of our GTA5.exe
+		/// </summary>
+		public static Version BuildVersion
 		{
 			get
 			{
@@ -227,7 +226,7 @@ namespace Project_127
 		/// <summary>
 		/// Property of other Buildinfo. Will be in the top message of logs
 		/// </summary>
-		public static string BuildInfo = "Build 3, test for autoupdate logic..., Internal Testing for 1.1. Special";
+		public static string BuildInfo = "Build 1, gotta love Crapideot";
 
 		/// <summary>
 		/// Returns all Command Line Args as StringArray
@@ -247,10 +246,7 @@ namespace Project_127
 			}
 		}
 
-		/// <summary>
-		/// Property of the Dispatcher Timer we use to keep track of GameState
-		/// </summary>
-		public static DispatcherTimer MyDispatcherTimer;
+
 
 		/// <summary>
 		/// Property we use to keep track if we have already thrown one OfflineError Popup
@@ -262,48 +258,20 @@ namespace Project_127
 		/// </summary>
 		public static string Logfile { get; private set; } = ProjectInstallationPath.TrimEnd('\\') + @"\AAA - Logfile.log";
 
+
+
+		#endregion
+
+		// Properties with benefit / Logic above
+
+		// Settings stuff below
+
+		#region Settings stuff
+
 		/// <summary>
 		/// Property of the Registry Key we use for our Settings
 		/// </summary>													
 		public static RegistryKey MySettingsKey { get { return RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64).CreateSubKey("SOFTWARE").CreateSubKey("Project_127"); } }
-
-
-		public static Dictionary<string, string> VersionTable { get; private set; } = new Dictionary<string, string>()
-		{
-			{"1.0.323.1", "1.24" },
-			{"1.0.331.1", "1.24" },
-			{"1.0.335.2", "1.24" },
-			{"1.0.350.1", "1.26" },
-			{"1.0.350.2", "1.26" },
-			{"1.0.372.2", "1.27" },
-			{"1.0.393.2", "1.28" },
-			{"1.0.393.4", "1.28.01" },
-			{"1.0.463.1", "1.29" },
-			{"1.0.505.2", "1.30" },
-			{"1.0.573.1", "1.31" },
-			{"1.0.617.1", "1.32" },
-			{"1.0.678.1", "1.33" },
-			{"1.0.757.2", "1.34" },
-			{"1.0.757.4", "1.34" },
-			{"1.0.791.2", "1.35" },
-			{"1.0.877.1", "1.36" },
-			{"1.0.944.2", "1.37" },
-			{"1.0.1011.1", "1.38" },
-			{"1.0.1032.1", "1.39" },
-			{"1.0.1103.2", "1.40" },
-			{"1.0.1180.2", "1.41" },
-			{"1.0.1290.1", "1.42" },
-			{"1.0.1365.1", "1.43" },
-			{"1.0.1493.0", "1.44" },
-			{"1.0.1493.1", "1.44" },
-			{"1.0.1604.0", "1.46" },
-			{"1.0.1734.0", "1.47" },
-			{"1.0.1737.0", "1.48" },
-			{"1.0.1737.6", "1.48" },
-			{"1.0.1868.0", "1.50" },
-			{"1.0.2060.0", "1.51" },
-			{"1.0.2060.1", "1.52" },
-		};
 
 
 		/// <summary>
@@ -399,6 +367,14 @@ namespace Project_127
 		/// Property of our Settings (Dictionary). Gets the default values on initiating the program. Our Settings will get read from registry on the Init functions.
 		/// </summary>
 		public static Dictionary<string, string> MySettings { get; private set; } = MyDefaultSettings.ToDictionary(entry => entry.Key, entry => entry.Value); // https://stackoverflow.com/a/139626
+
+		#endregion
+
+		// Settings stuff above
+
+		// Init and exit Code below
+
+		#region Init and Exit
 
 		/// <summary>
 		/// Init function which gets called at the very beginning
@@ -533,6 +509,9 @@ namespace Project_127
 			// Throw annoucements
 			HandleAnnouncements();
 
+			// SetUpDownloadManager
+			SetUpDownloadManager();
+
 			// Auto Updater
 			CheckForUpdate();
 
@@ -540,10 +519,10 @@ namespace Project_127
 			CheckForBigThree();
 
 			// Check whats the latest Version of the ZIP File in GITHUB
-			CheckForZipUpdate(); 
+			CheckForZipUpdate();
 
-			// Checks if Update hit
-			LauncherLogic.HandleUpdates();
+			// Loading Info for Version stuff.
+			HelperClasses.BuildVersionTable.ReadFromGithub();
 
 			// Rolling Log stuff
 			HelperClasses.Logger.RollingLog();
@@ -552,21 +531,50 @@ namespace Project_127
 			// this makes its parent window show super early, which is ugly.
 			// NoteOverlay.OverlaySettingsChanged();
 
+			// Inits the FIleWatcher for IPC
 			InitFileWatcher();
-
-			// CEF Initializing
-			//CEFInitialize();
-
-			// Starting the Dispatcher Timer for the automatic updates of the GTA V Button
-			MyDispatcherTimer = new System.Windows.Threading.DispatcherTimer();
-			MyDispatcherTimer.Tick += new EventHandler(MainWindow.MW.UpdateGUIDispatcherTimer);
-			MyDispatcherTimer.Interval = TimeSpan.FromMilliseconds(2500);
-			MyDispatcherTimer.Start();
-			MainWindow.MW.UpdateGUIDispatcherTimer();
 		}
 
+
+
+		/// <summary>
+		/// Proper Exit Method. EMPTY FOR NOW. Get called when closed (user and taskmgr) and when PC is shutdown. Not when process is killed or power ist lost.
+		/// </summary>
+		public static void ProperExit()
+		{
+			NoteOverlay.DisposeAllOverlayStuff();
+			Jumpscript.StopJumpscript();
+			Globals.FSW.Dispose();
+			MainWindow.MyDispatcherTimer.Stop();
+			MainWindow.myMutex.ReleaseMutex();
+			HelperClasses.Logger.Log("Program closed. Proper Exit. Ended normally");
+			try
+			{
+				MainWindow.MW.Close();
+			}
+			catch { }
+			Application.Current.Shutdown();
+			Environment.Exit(0);
+		}
+
+
+
+		#endregion
+
+		// Init and exit stuff above
+
+		// FileSystemWatcher (IPC) below
+
+		#region FileSystemWatcher (IPC)
+
+		/// <summary>
+		/// Reference to our FileSystemWatcher
+		/// </summary>
 		public static FileSystemWatcher FSW = new FileSystemWatcher();
 
+		/// <summary>
+		/// Inits our File Watcher for IPC
+		/// </summary>
 		public static void InitFileWatcher()
 		{
 			//HelperClasses.FileHandling.AddToDebug("In InitFileWatcher() Creating FileSystemWatcher");
@@ -598,6 +606,11 @@ namespace Project_127
 
 		}
 
+		/// <summary>
+		/// Event when a file is renamed
+		/// </summary>
+		/// <param name="source"></param>
+		/// <param name="e"></param>
 		private static async void OnRename(object source, RenamedEventArgs e)
 		{
 			//HelperClasses.FileHandling.AddToDebug("In OnRename() - " + $"File: {e.OldFullPath} renamed to {e.FullPath}");
@@ -614,130 +627,21 @@ namespace Project_127
 			}
 		}
 
+		#endregion
+
+		// FileSystemWatcher (IPC) above
+
+		// Update Stuff below
+
+		#region UpdateShit
 
 
-		public static string GetGameVersionOfBuildNumber(Version BuildNumber)
+		public static HelperClasses.DownloadManager MyDM = new HelperClasses.DownloadManager(); 
+		public static void SetUpDownloadManager()
 		{
-			foreach (KeyValuePair<string, string> KVP in Globals.VersionTable)
-			{
-				if (KVP.Key == BuildNumber.ToString())
-				{
-					return KVP.Value;
-				}
-			}
 
-			if (BuildNumber > new Version(Globals.VersionTable.ElementAt(Globals.VersionTable.Count - 1).Key))
-			{
-				return ("> " + Globals.VersionTable.ElementAt(Globals.VersionTable.Count - 1).Value);
-			}
-			else
-			{
-				return "???";
-			}
 		}
 
-		public static string GetGameInfoForDebug(string pFilePath)
-		{
-			if (HelperClasses.FileHandling.doesFileExist(pFilePath))
-			{
-				FileVersionInfo FVI = FileVersionInfo.GetVersionInfo(pFilePath);
-				string rtrn = " (" + new Version(FVI.FileVersion).ToString();
-				
-				try
-				{
-					rtrn += " - " + new Version(Globals.GetGameVersionOfBuildNumber(new Version(FVI.FileVersion))) + ")";
-				}
-				catch 
-				{
-					rtrn += ")";
-				}
-
-				return rtrn;
-
-			}
-			return "";
-		}
-
-
-		/// <summary>
-		/// CommandLineArgumentIntepretation(), currently used for Background Image
-		/// </summary>
-		public static void CommandLineArgumentIntepretation()
-		{
-			// Code for internal mode is in Globals.Internalmode Getter
-
-			// Need to be in following Format
-			// "-CommandLineArg Value"
-			string[] args = Globals.CommandLineArgs;
-
-			for (int i = 0; i <= args.Length - 1; i++)
-			{
-				if (args[i].ToLower() == "-background")
-				{
-					// i+1 exists
-					if (i < args.Length - 1)
-					{
-						Globals.BackgroundImages Tmp = Globals.BackgroundImages.Main;
-						try
-						{
-							Tmp = (Globals.BackgroundImages)System.Enum.Parse(typeof(Globals.BackgroundImages), args[i + 1]);
-							Globals.BackgroundImage = Tmp;
-						}
-						catch (Exception e)
-						{
-							new Popup(Popup.PopupWindowTypes.PopupOkError, "Error converting Command Line Argument to Background Image.\n" + e.ToString()).ShowDialog();
-						}
-					}
-				}
-			}
-		}
-
-
-		private static void HandleAnnouncements()
-		{
-			string MyAnnoucment = HelperClasses.FileHandling.GetXMLTagContent(XML_AutoUpdate, "announcement");
-			if (MyAnnoucment != "")
-			{
-				MyAnnoucment = MyAnnoucment.Replace(@"\n", "\n");
-				new Popup(Popup.PopupWindowTypes.PopupOk, MyAnnoucment);
-			}
-		}
-
-		/// <summary>
-		/// Deleting all Old Files (Installer and ZIP Files) from the Installation Folder
-		/// </summary>
-		private static void DeleteOldFiles()
-		{
-			HelperClasses.Logger.Log("Checking if there is an old Installer or ZIP Files in the Project InstallationPath during startup procedure.");
-
-			// Looping through all Files in the Installation Path
-			foreach (string myFile in HelperClasses.FileHandling.GetFilesFromFolder(Globals.ProjectInstallationPath))
-			{
-				// If it contains the word installer, delete it
-				if (myFile.ToLower().Contains("installer"))
-				{
-					HelperClasses.Logger.Log("Found old installer File ('" + HelperClasses.FileHandling.PathSplitUp(myFile)[1] + "') in the Directory. Will delete it.");
-					HelperClasses.FileHandling.deleteFile(myFile);
-				}
-				// If it is the Name of the ZIP File we download, we delete it
-				if (myFile == Globals.ZipFileDownloadLocation)
-				{
-					HelperClasses.Logger.Log("Found old ZIP File ('" + HelperClasses.FileHandling.PathSplitUp(myFile)[1] + "') in the Directory. Will delete it.");
-					HelperClasses.FileHandling.deleteFile(myFile);
-				}
-				if (myFile.ToLower().Contains("pleaseshow"))
-				{
-					HelperClasses.Logger.Log("Found pleaseshow File in the Directory. Will delete it.");
-					HelperClasses.FileHandling.deleteFile(myFile);
-				}
-				if (myFile.ToLower().Contains("dirtyprogramming"))
-				{
-					HelperClasses.Logger.Log("Found dirtyprogramming File in the Directory. Will delete it.");
-					HelperClasses.FileHandling.deleteFile(myFile);
-				}
-				File.Create(Globals.ProjectInstallationPath.TrimEnd('\\') + @"\dirtyprogramming").Dispose();
-			}
-		}
 
 
 		/// <summary>
@@ -747,6 +651,7 @@ namespace Project_127
 		{
 			string XML_Autoupdate_Temp = XML_AutoUpdate;
 
+			HelperClasses.BuildVersionTable.ReadFromGithub();
 
 			// Check online File for Version.
 			string MyVersionOnlineString = HelperClasses.FileHandling.GetXMLTagContent(XML_Autoupdate_Temp, "version");
@@ -1061,37 +966,14 @@ namespace Project_127
 			new Popup(Popup.PopupWindowTypes.PopupOkError, "Update of ZIP File failed (No Suitable ZIP Files Found).\nI suggest restarting the program.");
 		}
 
-		/// <summary>
-		/// Proper Exit Method. EMPTY FOR NOW. Get called when closed (user and taskmgr) and when PC is shutdown. Not when process is killed or power ist lost.
-		/// </summary>
-		public static void ProperExit()
-		{
-			NoteOverlay.DisposeAllOverlayStuff();
-			Jumpscript.StopJumpscript();
-			Globals.FSW.Dispose();
-			Globals.MyDispatcherTimer.Stop();
-			MainWindow.myMutex.ReleaseMutex();
-			HelperClasses.Logger.Log("Program closed. Proper Exit. Ended normally");
-			try
-			{
-				MainWindow.MW.Close();
-			}
-			catch { }
-			Application.Current.Shutdown();
-			Environment.Exit(0);
-		}
+		#endregion
 
+		// Update Stuff above
 
+		// UI-States (enums) below
 
+		#region UI-States (enums)
 
-		/// <summary>
-		/// DebugPopup Method. Just opens Messagebox with pMsg
-		/// </summary>
-		/// <param name="pMsg"></param>
-		public static void DebugPopup(string pMsg)
-		{
-			System.Windows.Forms.MessageBox.Show(pMsg);
-		}
 
 
 		/// <summary>
@@ -1104,7 +986,8 @@ namespace Project_127
 			Auth,
 			ReadMe,
 			GTA,
-			NoteOverlay
+			NoteOverlay,
+			ComponentManager
 		}
 
 		/// <summary>
@@ -1137,7 +1020,7 @@ namespace Project_127
 					NoteOverlay.DisposePreview();
 				}
 
-				MainWindow.MW.SetBackground(Globals.GetBackGroundPath());
+				MainWindow.MW.SetWindowBackground(Globals.GetBackGroundPath());
 
 				// Switch Value
 				switch (value)
@@ -1154,6 +1037,7 @@ namespace Project_127
 						MainWindow.MW.btn_SaveFiles.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
 						MainWindow.MW.btn_ReadMe.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
 						MainWindow.MW.btn_NoteOverlay.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
+						MainWindow.MW.btn_ComponentManager.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
 						break;
 					case PageStates.SaveFileHandler:
 						MainWindow.MW.Frame_Main.Content = new SaveFileHandler();
@@ -1163,6 +1047,7 @@ namespace Project_127
 						MainWindow.MW.btn_Settings.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
 						MainWindow.MW.btn_ReadMe.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
 						MainWindow.MW.btn_NoteOverlay.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
+						MainWindow.MW.btn_ComponentManager.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
 						break;
 					case PageStates.ReadMe:
 						MainWindow.MW.Frame_Main.Content = new ReadMe();
@@ -1172,6 +1057,7 @@ namespace Project_127
 						MainWindow.MW.btn_Settings.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
 						MainWindow.MW.btn_SaveFiles.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
 						MainWindow.MW.btn_NoteOverlay.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
+						MainWindow.MW.btn_ComponentManager.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
 						break;
 					case PageStates.NoteOverlay:
 						MainWindow.MW.Frame_Main.Content = new Overlay.NoteOverlay();
@@ -1181,6 +1067,17 @@ namespace Project_127
 						MainWindow.MW.btn_Settings.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
 						MainWindow.MW.btn_SaveFiles.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
 						MainWindow.MW.btn_ReadMe.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
+						MainWindow.MW.btn_ComponentManager.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
+						break;
+					case PageStates.ComponentManager:
+						MainWindow.MW.Frame_Main.Content = new ComponentManager();
+						MainWindow.MW.btn_ComponentManager.Style = Application.Current.FindResource("btn_hamburgeritem_selected") as Style;
+
+						MainWindow.MW.btn_Auth.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
+						MainWindow.MW.btn_Settings.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
+						MainWindow.MW.btn_SaveFiles.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
+						MainWindow.MW.btn_ReadMe.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
+						MainWindow.MW.btn_NoteOverlay.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
 						break;
 					case PageStates.Auth:
 						if (Globals.LaunchAfterAuth)
@@ -1198,6 +1095,7 @@ namespace Project_127
 						MainWindow.MW.btn_Settings.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
 						MainWindow.MW.btn_SaveFiles.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
 						MainWindow.MW.btn_NoteOverlay.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
+						MainWindow.MW.btn_ComponentManager.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
 						break;
 					case PageStates.GTA:
 						MainWindow.MW.Frame_Main.Content = new GTA_Page();
@@ -1207,6 +1105,7 @@ namespace Project_127
 						MainWindow.MW.btn_Settings.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
 						MainWindow.MW.btn_SaveFiles.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
 						MainWindow.MW.btn_NoteOverlay.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
+						MainWindow.MW.btn_ComponentManager.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
 						break;
 				}
 			}
@@ -1240,7 +1139,7 @@ namespace Project_127
 			set
 			{
 				_BackgroundImage = value;
-				MainWindow.MW.SetBackground(GetBackGroundPath());
+				MainWindow.MW.SetWindowBackground(GetBackGroundPath());
 			}
 		}
 
@@ -1270,7 +1169,7 @@ namespace Project_127
 			set
 			{
 				_HamburgerMenuState = value;
-				MainWindow.MW.SetBackground(Globals.GetBackGroundPath());
+				MainWindow.MW.SetWindowBackground(Globals.GetBackGroundPath());
 
 
 				if (value == HamburgerMenuStates.Visible)
@@ -1289,6 +1188,11 @@ namespace Project_127
 				}
 			}
 		}
+
+
+
+
+
 
 
 		/// <summary>
@@ -1334,269 +1238,154 @@ namespace Project_127
 			return URL_Path;
 		}
 
+		#endregion
 
-		/// <summary>
-		/// Initialzes CEF settings
-		/// </summary>
-		public static void CEFInitialize()
+		// UI-States (enums) above
+
+		// Random shit below
+
+		#region random shit
+
+		public static void ImportBuildFromUrl(string pUrl)
 		{
-			HelperClasses.Logger.Log("Initializing CEF...");
-			var s = new CefSharp.Wpf.CefSettings();
-			s.CachePath = Globals.ProjectInstallationPathBinary.TrimEnd('\\') + @"\CEF_CacheFiles";
-			s.BackgroundColor = 0;//0x13 << 16 | 0x15 << 8 | 0x18;
-			s.DisableGpuAcceleration();
-			s.CefCommandLineArgs["autoplay-policy"] = "no-user-gesture-required";
-#if DEBUG
-			s.RemoteDebuggingPort = 8088;
-#endif
-			Cef.Initialize(s);
-		}
+			HelperClasses.Logger.Log("Importing Build from '" + pUrl + "'");
 
-		/// COLOR STUFF
+			string pDownloadLocation = ProjectInstallationPath.TrimEnd('\\') + @"\NewBuild.exe";
 
-		/// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+			new PopupDownload(pUrl, pDownloadLocation, "Custom Build").ShowDialog();
 
-		/// <summary>
-		/// Actual Main colors we use:
-		/// </summary>
-		public static Brush MyColorWhite { get; private set; } = (Brush)new BrushConverter().ConvertFromString("#FFFFFF");
-		public static Brush MyColorOffWhite { get; private set; } = (Brush)new BrushConverter().ConvertFromString("#c1ced1");
-		public static Brush MyColorOffWhite85 { get; private set; } = SetOpacity((Brush)new BrushConverter().ConvertFromString("#c1ced1"), 85);
-		public static Brush MyColorBlack { get; private set; } = (Brush)new BrushConverter().ConvertFromString("#000000");
-		public static Brush MyColorOffBlack { get; private set; } = (Brush)new BrushConverter().ConvertFromString("#1a1a1a");
-		public static Brush MyColorOffBlack70 { get; private set; } = SetOpacity((Brush)new BrushConverter().ConvertFromString("#1a1a1a"), 70);
-		public static Brush MyColorOffBlack50 { get; private set; } = SetOpacity((Brush)new BrushConverter().ConvertFromString("#1a1a1a"), 50);
-		public static Brush MyColorOrange { get; private set; } = (Brush)new BrushConverter().ConvertFromString("#E35627");
-		public static Brush MyColorGreen { get; private set; } = (Brush)new BrushConverter().ConvertFromString("#4cd213");
+			Process p = new Process();
+			p.StartInfo.FileName = ProjectInstallationPath.TrimEnd('\\') + @"\Project 127 Launcher.exe";
+			p.StartInfo.WorkingDirectory = ProjectInstallationPath;
+			p.StartInfo.Arguments = "-ImportBuild " + "\"" + pDownloadLocation + "\"";
+			p.Start();
 
-		/// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-		/// <summary>
-		/// All other colors:
-		/// App = App_Wide styles
-		/// MW = MainWindow
-		/// PU = Pop Up
-		/// SE = Settings
-		/// SFH = SafeFileHandler
-		/// MO = Mouse Over
-		/// DG = Data Grid
-		/// </summary>
-		/// 
-
-
-		// App - Wide stuff
-		public static Brush App_LabelForeground { get; private set; } = MyColorWhite;
-
-		public static Thickness App_ButtonBorderThickness { get; private set; } = new Thickness(0);
-
-		public static Brush App_ButtonBorderBrush { get; private set; } = MyColorWhite;
-		public static Brush App_ButtonBackground { get; private set; } = SetOpacity(MyColorBlack, 70);
-		public static Brush App_ButtonForeground { get; private set; } = MyColorWhite;
-		public static Brush App_ButtonMOBackground { get; private set; } = MyColorOffWhite;
-		public static Brush App_ButtonMOForeground { get; private set; } = MyColorBlack;
-		public static Brush App_ButtonMOBorderBrush { get; private set; } = MyColorWhite;
-
-		public static Brush App_Submenu_Background { get; private set; } = SetOpacity(MyColorBlack, 65);
-
-		public static Brush SM_ButtonBackground { get; private set; } = MyColorOffBlack;
-		public static Brush SM_ButtonForeground { get; private set; } = MyColorWhite;
-		public static Brush SM_ButtonBorderBrush { get; private set; } = MyColorWhite;
-		public static Brush SM_ButtonMOBackground { get; private set; } = MyColorOffWhite;
-		public static Brush SM_ButtonMOForeground { get; private set; } = MyColorOffBlack;
-		public static Brush SM_ButtonMOBorderBrush { get; private set; } = Brushes.Transparent;
-		public static System.Windows.Thickness SM_ButtonBorderThickness { get; private set; } = new System.Windows.Thickness(2);
-
-
-		public static Brush App_ScrollViewerForeground { get; private set; } = MyColorOffWhite;
-
-
-
-		public static Thickness App_ButtonSmallBorderThickness { get; private set; } = new Thickness(0);
-		public static Brush App_ButtonSmallBorderBrush { get; private set; } = MyColorWhite;
-
-
-		// MainWindow
-		public static Thickness MW_BorderThickness { get; private set; } = new System.Windows.Thickness(2);
-		public static Brush MW_BorderBrush { get; private set; } = MyColorWhite;
-		public static Brush MW_HamburgerMenuGridBackground { get; private set; } = SetOpacity(MyColorBlack, 65);
-		public static Brush MW_HamburgerMenuSeperatorBrush { get; private set; } = MyColorWhite;
-
-		public static Thickness MW_ButtonHamburgerMenuBorderThickness { get; private set; } = new Thickness(0);
-		public static Brush MW_ButtonHamburgerMenuBorderBrush { get; private set; } = App_ButtonBorderBrush;
-		public static Brush MW_ButtonHamburgerMenuBackground { get; private set; } = App_ButtonBackground;
-		public static Brush MW_ButtonHamburgerMenuForeground { get; private set; } = App_ButtonForeground;
-		public static Brush MW_ButtonHamburgerMenuMOBackground { get; private set; } = App_ButtonMOBackground;
-		public static Brush MW_ButtonHamburgerMenuMOForeground { get; private set; } = App_ButtonMOForeground;
-		public static Brush MW_ButtonHamburgerMenuMOBorderBrush { get; private set; } = App_ButtonMOBorderBrush;
-
-
-		// GTA Launch Button
-		// Border Color will depend on game running or not running, so we will not set this here. I guess. 
-		public static System.Windows.Thickness MW_ButtonGTABorderThickness { get; private set; } = new System.Windows.Thickness(5);
-		public static Brush MW_ButtonGTAGameNotRunningBorderBrush { get; private set; } = MyColorWhite;
-		public static Brush MW_ButtonGTAGameRunningBorderBrush { get; private set; } = MyColorGreen;
-		public static Brush MW_ButtonGTABackground { get; private set; } = SetOpacity(MyColorBlack, 70);
-		public static Brush MW_ButtonGTAForeground { get; private set; } = MyColorWhite;
-		public static Brush MW_ButtonGTAMOBackground { get; private set; } = SetOpacity(MyColorOffWhite, 100);
-		public static Brush MW_ButtonGTAMOForeground { get; private set; } = MyColorBlack;
-
-		// GTA Label (Upgraded, Downgrad, Unsure etc.
-		public static Brush MW_GTALabelDowngradedForeground { get; private set; } = MyColorGreen;
-		public static Brush MW_GTALabelUpgradedForeground { get; private set; } = Brushes.White;
-		public static Brush MW_GTALabelUnsureForeground { get; private set; } = Brushes.Red;
-
-
-
-
-
-		// POPUP Window
-		public static Brush PU_Background { get; private set; } = MyColorOffBlack;
-		public static Brush PU_BorderBrush { get; private set; } = MyColorWhite;
-		public static Brush PU_LabelForeground { get; private set; } = MyColorWhite;
-
-		public static Brush PU_ButtonBackground { get; private set; } = MyColorOffBlack;
-		public static Brush PU_ButtonForeground { get; private set; } = MyColorWhite;
-		public static Brush PU_ButtonBorderBrush { get; private set; } = MyColorWhite;
-		public static Brush PU_ButtonMOBackground { get; private set; } = MyColorOffWhite;
-		public static Brush PU_ButtonMOForeground { get; private set; } = MyColorOffBlack;
-		public static Brush PU_ButtonMOBorderBrush { get; private set; } = MyColorOffBlack;
-		public static System.Windows.Thickness PU_ButtonBorderThickness { get; private set; } = new System.Windows.Thickness(2);
-
-		public static Brush ProgressBarBackground { get; private set; } = MyColorOffBlack;
-		public static Brush ProgressBarForeground { get; private set; } = MyColorOffWhite;
-		public static Brush ProgressBarBorderBrush { get; private set; } = MyColorOffWhite;
-
-		public static Brush DropDownBackground { get; private set; } = MyColorBlack;
-		public static Brush DropDownForeground { get; private set; } = MyColorOffWhite;
-		public static Brush DropDownPopDownBackground { get; private set; } = MyColorBlack;
-		public static Brush DropDownBorderBrush { get; private set; } = MyColorWhite;
-
-
-		// SaveFilerHandler Window
-
-
-		public static Brush SFH_DGBorderBrush { get; private set; } = MyColorWhite;
-		public static Thickness SFH_DGBorderThickness { get; private set; } = new Thickness(2);
-		public static Brush SFH_DGHeaderBackground { get; private set; } = MyColorOffWhite;
-		public static Brush SFH_DGHeaderForeground { get; private set; } = MyColorBlack;
-		public static Brush SFH_DGBackground { get; private set; } = SetOpacity(MyColorBlack, 50);
-		public static Brush SFH_DGRowBackground { get; private set; } = Brushes.Transparent;
-		public static Brush SFH_DGAlternateRowBackground { get; private set; } = SetOpacity(MyColorOffWhite, 20);
-		public static Brush SFH_DGForeground { get; private set; } = MyColorWhite;
-		public static Brush SFH_DGCellBorderBrush { get; private set; } = Brushes.Transparent;
-		public static Thickness SFH_DGCellBorderThickness { get; private set; } = new Thickness(0);
-		//public static Brush SFH_DGSelectedBackground { get; private set; } = Brushes.Transparent;
-		//public static Brush SFH_DGSelectedForeground { get; private set; } = GetBrushHex("#76e412");
-		//public static Brush SFH_DGSelectedBorderBrush { get; private set; } = GetBrushHex("#76e412");
-		public static Brush SFH_DGSelectedBackground { get; private set; } = SetOpacity(MyColorWhite, 80);
-		public static Brush SFH_DGSelectedForeground { get; private set; } = MyColorOffBlack;
-		public static Brush SFH_DGSelectedBorderBrush { get; private set; } = MyColorOffWhite;
-		public static Thickness SFH_DGSelectedBorderThickness { get; private set; } = new Thickness(2);
-
-		//GetBrushRGB(226, 0, 116);
-
-		// Settings Window
-
-		public static Brush SE_RowBackground { get; private set; } = SetOpacity(MyColorBlack, 50);
-		public static Brush SE_AlternateRowBackground { get; private set; } = SetOpacity(MyColorOffWhite, 20);
-		public static Brush SE_BorderBrush_Inner { get; private set; } = MyColorWhite;
-
-		public static Brush SE_Lbl_Header_Background { get; private set; } = MyColorOffWhite;
-		public static Brush SE_Lbl_Header_Foreground { get; private set; } = MyColorOffBlack;
-
-
-		// ReadMe Window
-
-		public static Brush ReadME_Inner_Background { get; private set; } = SetOpacity(MyColorBlack, 50);
-		public static Brush ReadME_Inner_BorderBrush { get; private set; } = MyColorWhite;
-		public static Thickness ReadME_Inner_BorderThickness { get; private set; } = new Thickness(2);
-		public static CornerRadius ReadME_Inner_CornerRadius { get; private set; } = new CornerRadius(10);
-
-		// Using a lot of settings stuff (grid-background, grid second / alternative row color, button styles inside grid) on the noteoverlay...whatevs XD
-
-		public static Brush NO_Slider_Track_Brush { get; private set; } = MyColorOffWhite;
-		public static Brush NO_Slider_Thumb_Brush { get; private set; } = MyColorOffWhite;
-		public static Brush NO_Slider_Thumb_MO_Brush { get; private set; } = MyColorOffBlack;
-
-
-		//public static Brush SE_LabelForeground { get; private set; } = MyColorWhite;
-		//public static Brush SE_LabelSetForeground { get; private set; } = MyColorWhite;
-
-		//public static Brush SE_ButtonBackground { get; private set; } = MyColorBlack;
-		//public static Brush SE_ButtonForeground { get; private set; } = MyColorWhite;
-		//public static Brush SE_ButtonBorderBrush { get; private set; } = MyColorWhite;
-		//public static Brush SE_ButtonMOBackground { get; private set; } = MyColorWhite;
-		//public static Brush SE_ButtonMOForeground { get; private set; } = MyColorBlack;
-		//public static Brush SE_ButtonMOBorderBrush { get; private set; } = MyColorWhite;
-
-		//public static Brush SE_ButtonSetBackground { get; private set; } = MyColorBlack;
-		//public static Brush SE_ButtonSetForeground { get; private set; } = MyColorWhite;
-		//public static Brush SE_ButtonSetBorderBrush { get; private set; } = MyColorWhite;
-		//public static Brush SE_ButtonSetMOBackground { get; private set; } = MyColorWhite;
-		//public static Brush SE_ButtonSetMOForeground { get; private set; } = MyColorBlack;
-		//public static Brush SE_ButtonSetMOBorderBrush { get; private set; } = MyColorWhite;
-
-		//public static Brush SE_SVBackground { get; private set; } = MyColorBlack;
-		//public static Brush SE_SVForeground { get; private set; } = MyColorWhite;
-
-		//public static System.Windows.Thickness SE_ButtonBorderThickness { get; private set; } = new System.Windows.Thickness(2);
-
-
-
-
-
-		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-		/// <summary>
-		/// Takes a Brush and a Opacity (0-100) and returns a Brush.
-		/// </summary>
-		/// <param name="pBrush"></param>
-		/// <param name="pOpacity"></param>
-		/// <returns></returns>
-		private static Brush SetOpacity(Brush pBrush, int pOpacity)
-		{
-			double dOpacity = (((double)pOpacity) / 100);
-			Brush NewBrush = pBrush.Clone();
-			NewBrush.Opacity = dOpacity;
-			return NewBrush;
+			Globals.ProperExit();
 		}
 
 
 		/// <summary>
-		/// Returns a Brush from a Hex String
+		/// CommandLineArgumentIntepretation(), currently used for Background Image
 		/// </summary>
-		/// <param name="pString"></param>
-		/// <returns></returns>
-		private static Brush GetBrushHex(string pString)
+		public static void CommandLineArgumentIntepretation()
 		{
-			return (GetBrushHex(pString, 100));
+			// Code for internal mode is in Globals.Internalmode Getter
+
+			// Need to be in following Format
+			// "-CommandLineArg Value"
+			string[] args = Globals.CommandLineArgs;
+
+			for (int i = 0; i <= args.Length - 1; i++)
+			{
+				if (args[i].ToLower() == "-background")
+				{
+					// i+1 exists
+					if (i < args.Length - 1)
+					{
+						Globals.BackgroundImages Tmp = Globals.BackgroundImages.Main;
+						try
+						{
+							Tmp = (Globals.BackgroundImages)System.Enum.Parse(typeof(Globals.BackgroundImages), args[i + 1]);
+							Globals.BackgroundImage = Tmp;
+						}
+						catch (Exception e)
+						{
+							new Popup(Popup.PopupWindowTypes.PopupOkError, "Error converting Command Line Argument to Background Image.\n" + e.ToString()).ShowDialog();
+						}
+					}
+				}
+			}
 		}
+
 
 
 		/// <summary>
-		/// Returns a Brush from a Hex String and an Opacity (0-100)
+		/// Deleting all Old Files (Installer and ZIP Files) from the Installation Folder
 		/// </summary>
-		/// <param name="pString"></param>
-		/// <param name="pOpacity"></param>
-		/// <returns></returns>
-		private static Brush GetBrushHex(string pString, int pOpacity)
+		private static void DeleteOldFiles()
 		{
-			Brush rtrn = (Brush)new BrushConverter().ConvertFromString("#" + pString.TrimStart('#'));
-			return SetOpacity(rtrn, pOpacity);
+			HelperClasses.Logger.Log("Checking if there is an old Installer or ZIP Files in the Project InstallationPath during startup procedure.");
+
+			// Looping through all Files in the Installation Path
+			foreach (string myFile in HelperClasses.FileHandling.GetFilesFromFolder(Globals.ProjectInstallationPath))
+			{
+				// If it contains the word installer, delete it
+				if (myFile.ToLower().Contains("installer"))
+				{
+					HelperClasses.Logger.Log("Found old installer File ('" + HelperClasses.FileHandling.PathSplitUp(myFile)[1] + "') in the Directory. Will delete it.");
+					HelperClasses.FileHandling.deleteFile(myFile);
+				}
+				// If it is the Name of the ZIP File we download, we delete it
+				if (myFile == Globals.ZipFileDownloadLocation)
+				{
+					HelperClasses.Logger.Log("Found old ZIP File ('" + HelperClasses.FileHandling.PathSplitUp(myFile)[1] + "') in the Directory. Will delete it.");
+					HelperClasses.FileHandling.deleteFile(myFile);
+				}
+				if (myFile.ToLower().Contains("pleaseshow"))
+				{
+					HelperClasses.Logger.Log("Found pleaseshow File in the Directory. Will delete it.");
+					HelperClasses.FileHandling.deleteFile(myFile);
+				}
+				if (myFile.ToLower().Contains("dirtyprogramming"))
+				{
+					HelperClasses.Logger.Log("Found dirtyprogramming File in the Directory. Will Keep it there : )");
+					HelperClasses.FileHandling.deleteFile(myFile);
+				}
+				else
+				{
+					HelperClasses.Logger.Log("Found NO dirtyprogramming File in the Directory. Will create it : )");
+					File.Create(Globals.ProjectInstallationPath.TrimEnd('\\') + @"\dirtyprogramming").Dispose();
+				}
+				if (myFile.ToLower().Contains("Project 1.27.exe" + ".BACKUP"))
+				{
+					HelperClasses.Logger.Log("Found old build ('.BACKUP'). Will delete it.");
+					HelperClasses.FileHandling.deleteFile(myFile);
+				}
+				if (myFile.ToLower().Contains(".exe") && !myFile.ToLower().Contains("Project 127 Launcher.exe".ToLower()))
+				{
+					HelperClasses.Logger.Log("Found exe File ('" + myFile + "'). Will delete it.");
+					HelperClasses.FileHandling.deleteFile(myFile);
+				}
+			}
 		}
 
 
-		/// <summary>
-		/// Returns a Brush from RGB integers
-		/// </summary>
-		/// <param name="r"></param>
-		/// <param name="g"></param>
-		/// <param name="b"></param>
-		/// <returns></returns>
-		private static Brush GetBrushRGB(int r, int g, int b)
+		private static void HandleAnnouncements()
 		{
-			return GetBrushRGB(r, g, b, 100);
+			string MyAnnoucment = HelperClasses.FileHandling.GetXMLTagContent(XML_AutoUpdate, "announcement");
+			if (MyAnnoucment != "")
+			{
+				MyAnnoucment = MyAnnoucment.Replace(@"\n", "\n");
+				new Popup(Popup.PopupWindowTypes.PopupOk, MyAnnoucment);
+			}
 		}
+
+
+
+
+		public static string GetGameInfoForDebug(string pFilePath)
+		{
+			if (HelperClasses.FileHandling.doesFileExist(pFilePath))
+			{
+				FileVersionInfo FVI = FileVersionInfo.GetVersionInfo(pFilePath);
+				string rtrn = " (" + new Version(FVI.FileVersion).ToString();
+
+				try
+				{
+					rtrn += " - " + new Version(HelperClasses.BuildVersionTable.GetNiceGameVersionString(new Version(FVI.FileVersion))) + ")";
+				}
+				catch
+				{
+					rtrn += ")";
+				}
+
+				return rtrn;
+
+			}
+			return "";
+		}
+
+
 
 
 		/// <summary>
@@ -1618,30 +1407,24 @@ namespace Project_127
 		}
 
 
-		/// <summary>
-		/// Returns a Brush from RGB integers, and an Opacity (0-100)
-		/// </summary>
-		/// <param name="r"></param>
-		/// <param name="g"></param>
-		/// <param name="b"></param>
-		/// <param name="pOpacity"></param>
-		/// <returns></returns>
-		// yeye this ugly like yo mama but its just for internal testing. Wont be called in production
-		private static Brush GetBrushRGB(int r, int g, int b, int pOpacity)
-		{
-			try
-			{
-				string hex = string.Format("{0:X2}{1:X2}{2:X2}", r, g, b);
+		
 
-				return GetBrushHex(hex, pOpacity);
-			}
-			catch
-			{
-				System.Windows.Forms.MessageBox.Show("this shouldnt have happened. Error in RGB / Hex conversion");
-				Environment.Exit(1);
-				return null;
-			}
+
+		/// <summary>
+		/// DebugPopup Method. Just opens Messagebox with pMsg
+		/// </summary>
+		/// <param name="pMsg"></param>
+		public static void DebugPopup(string pMsg)
+		{
+			System.Windows.Forms.MessageBox.Show(pMsg);
 		}
+
+
+
+
+
+		#endregion
+
 
 
 

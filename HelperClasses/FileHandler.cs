@@ -16,6 +16,7 @@ using Project_127.Overlay;
 using Project_127.Popups;
 using Project_127.MySettings;
 using System.Diagnostics;
+using System.Net;
 
 namespace Project_127.HelperClasses
 {
@@ -80,7 +81,7 @@ namespace Project_127.HelperClasses
 			SaveFileDialog saveFileDialog = new SaveFileDialog();
 			saveFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
 			saveFileDialog.Filter = Filter;
-			saveFileDialog.Title = Title; 
+			saveFileDialog.Title = Title;
 			saveFileDialog.ShowDialog();
 			return saveFileDialog.FileName;
 		}
@@ -123,7 +124,10 @@ namespace Project_127.HelperClasses
 		}
 
 
-
+		/// <summary>
+		/// Creates the Path of a FilePath
+		/// </summary>
+		/// <param name="pFilePath"></param>
 		public static void createPathOfFile(string pFilePath)
 		{
 			string path = pFilePath.Substring(0, pFilePath.LastIndexOf('\\'));
@@ -229,6 +233,11 @@ namespace Project_127.HelperClasses
 			}
 		}
 
+		/// <summary>
+		/// Moving a Path. Moving (Cut, Paste a Folder) or Rename a folder
+		/// </summary>
+		/// <param name="Source"></param>
+		/// <param name="Dest"></param>
 		public static void movePath(string Source, string Dest)
 		{
 			try
@@ -249,6 +258,11 @@ namespace Project_127.HelperClasses
 			}
 		}
 
+		/// <summary>
+		/// Overwriting a string array to a file
+		/// </summary>
+		/// <param name="pFilePath"></param>
+		/// <param name="pContent"></param>
 		public static void WriteStringToFileOverwrite(string pFilePath, string[] pContent)
 		{
 
@@ -259,36 +273,23 @@ namespace Project_127.HelperClasses
 			File.WriteAllLines(pFilePath, pContent);
 		}
 
-		public static void WriteToFile(string pFilePath, string[] pLines)
-		{
-			try
-			{
-				if (doesFileExist(pFilePath))
-				{
-					deleteFile(pFilePath);
-				}
 
-				createFile(pFilePath);
 
-				StreamWriter sw;
-				sw = File.AppendText(pFilePath);
-
-				for (int i = 0; i <= pLines.Length - 1; i++)
-				{
-					sw.Write(pLines[i] + Environment.NewLine);
-				}
-
-				sw.Close();
-			}
-			catch (Exception e)
-			{
-				Logger.Log("Sth failed while writing string array to file: " + e.ToString());
-			}
-		}
-
+		/// <summary>
+		/// Uses to generate Random Numbers
+		/// </summary>
 		static Random random = new Random();
+
+		/// <summary>
+		/// Used to indicate which instance we log from.
+		/// </summary>
 		static int intrandom = random.Next(1000, 9999);
 
+
+		/// <summary>
+		/// Adding to DebugFile.
+		/// </summary>
+		/// <param name="pLineContent"></param>
 		public static void AddToDebug(string pLineContent)
 		{
 
@@ -361,6 +362,8 @@ namespace Project_127.HelperClasses
 		/// <returns></returns>
 		public static string GetXMLTagContent(string pXML, string pTag)
 		{
+			pXML = pXML.Replace("\n", "").Replace("\r", "");
+
 			string rtrn = "";
 
 			Regex regex = new Regex(@"<" + pTag + ">.+</" + pTag + ">");
@@ -369,13 +372,44 @@ namespace Project_127.HelperClasses
 			if (match.Success)
 			{
 				string tmp = match.Value;
-
 				rtrn = tmp.Substring(tmp.IndexOf('>') + 1, tmp.LastIndexOf('<') - 2 - pTag.Length);
 			}
 
 			return rtrn;
 		}
 
+		/// <summary>
+		/// Does remote URL exist. Timeout in MS
+		/// </summary>
+		/// <param name="url"></param>
+		/// <returns></returns>
+		public static bool URLExists(string url, int TimeOutMS = 500)
+		{
+			bool result = true;
+
+			WebRequest webRequest = WebRequest.Create(url);
+			webRequest.Timeout = TimeOutMS; 
+			webRequest.Method = "HEAD";
+
+			try
+			{
+				webRequest.GetResponse();
+			}
+			catch
+			{
+				result = false;
+			}
+
+			return result;
+		}
+
+		/// <summary>
+		/// Checks if 2 Files are equal.
+		/// </summary>
+		/// <param name="pFilePathA"></param>
+		/// <param name="pFilePathB"></param>
+		/// <param name="SlowButStable"></param>
+		/// <returns></returns>
 		public static bool AreFilesEqual(string pFilePathA, string pFilePathB, bool SlowButStable)
 		{
 			Stopwatch sw = new Stopwatch();
@@ -385,6 +419,8 @@ namespace Project_127.HelperClasses
 			HelperClasses.Logger.Log("AAAA - It took '" + sw.ElapsedMilliseconds + "' ms to compare: '" + pFilePathA + "' and '" + pFilePathB + "'. Result is: " + Sth.ToString());
 			return Sth;
 		}
+
+
 
 		private static bool StreamsContentsAreEqual(Stream stream1, Stream stream2)
 		{
@@ -419,7 +455,13 @@ namespace Project_127.HelperClasses
 		}
 
 
-
+		/// <summary>
+		/// Actual File Comparison Logic
+		/// </summary>
+		/// <param name="pFilePathA"></param>
+		/// <param name="pFilePathB"></param>
+		/// <param name="SlowButStable"></param>
+		/// <returns></returns>
 		public static bool AreFilesEqualReal(string pFilePathA, string pFilePathB, bool SlowButStable)
 		{
 			FileInfo fileInfo1 = new FileInfo(pFilePathA);
@@ -480,7 +522,7 @@ namespace Project_127.HelperClasses
 			return rtrn;
 		}
 
-
+		
 		/// <summary>
 		/// Method to get Hash from a Folder
 		/// </summary>
@@ -547,6 +589,11 @@ namespace Project_127.HelperClasses
 		}
 
 
+		/// <summary>
+		/// Get all SubFolders from a Path
+		/// </summary>
+		/// <param name="pPath"></param>
+		/// <returns></returns>
 		public static string[] GetSubFolders(string pPath)
 		{
 			if (doesPathExist(pPath))
@@ -588,6 +635,11 @@ namespace Project_127.HelperClasses
 			return rtrn;
 		}
 
+		/// <summary>
+		/// Renaming a file. Second param is FileName not FilePath
+		/// </summary>
+		/// <param name="pFilePathSource"></param>
+		/// <param name="pFileNameDest"></param>
 		public static void RenameFile(string pFilePathSource, string pFileNameDest)
 		{
 			if (doesFileExist(pFilePathSource))
@@ -681,7 +733,6 @@ namespace Project_127.HelperClasses
 		{
 			try
 			{
-
 				if (doesFileExist(pFilePath))
 				{
 					File.Delete(pFilePath);
@@ -791,7 +842,10 @@ namespace Project_127.HelperClasses
 			return Directory.Exists(pFolderPath);
 		}
 
-
+		/// <summary>
+		/// Deletes a Folder
+		/// </summary>
+		/// <param name="pPath"></param>
 		public static void DeleteFolder(string pPath)
 		{
 			try
@@ -812,7 +866,7 @@ namespace Project_127.HelperClasses
 		/// </summary>
 		/// <param name="pFolderPath"></param>
 		public static void createPath(string pFolderPath)
-		{ 
+		{
 			try
 			{
 				if (!doesPathExist(pFolderPath))
@@ -882,15 +936,20 @@ namespace Project_127.HelperClasses
 			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\SupportFiles\Installer");
 			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\SupportFiles\SaveFiles");
 			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\DowngradeFiles_Alternative\");
-			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\DowngradeFiles_Alternative\steam");
-			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\DowngradeFiles_Alternative\steam\update");
-			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\DowngradeFiles_Alternative\rockstar");
-			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\DowngradeFiles_Alternative\rockstar\update");
-			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\SocialClubFiles");
-			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\SocialClubFiles\steam");
-			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\SocialClubFiles\steam\update");
-			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\SocialClubFiles\rockstar");
-			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\SocialClubFiles\rockstar\update");
+			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\DowngradeFiles_Alternative\rockstar\");
+			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\DowngradeFiles_Alternative\rockstar\127\");
+			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\DowngradeFiles_Alternative\rockstar\127\update\");
+			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\DowngradeFiles_Alternative\rockstar\124\");
+			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\DowngradeFiles_Alternative\rockstar\124\update\");
+			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\DowngradeFiles_Alternative\steam\");
+			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\DowngradeFiles_Alternative\steam\127\");
+			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\DowngradeFiles_Alternative\steam\127\update\");
+			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\DowngradeFiles_Alternative\steam\124\");
+			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\DowngradeFiles_Alternative\steam\124\update\");
+			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\SupportFiles\DowngradedSocialClub\");
+
+
+
 		}
 
 

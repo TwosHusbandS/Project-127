@@ -10,6 +10,9 @@ using System.Windows.Media;
 
 namespace Project_127.HelperClasses
 {
+	/// <summary>
+	/// DataGrid WPF Helper. Dont ask me what the fuck most of this does. But it does what it says it does.
+	/// </summary>
 	class DataGridHelper
 	{
 		public static void SelectFirst(DataGrid myDG)

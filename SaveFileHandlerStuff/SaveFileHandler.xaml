@@ -1,4 +1,4 @@
-﻿<Page x:Class="Project_127.SaveFileHandler"
+﻿<Page x:Class="Project_127.SaveFileHandlerStuff.SaveFileHandler"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -7,7 +7,7 @@
         xmlns:local="clr-namespace:Project_127"
         mc:Ignorable="d"
         Title="Save File Manager" d:DesignHeight="540" d:DesignWidth="625"        
-        Background="{x:Static local:Globals.App_Submenu_Background}" Loaded="Page_Loaded">
+        Background="{x:Static local:MyColors.App_Submenu_Background}" Loaded="Page_Loaded">
     <Grid x:Name="Grid_Main" Margin="15,0,15,0" Height="540">
         <Grid.RowDefinitions>
             <RowDefinition Height="70"/>
@@ -32,14 +32,14 @@
                 <ColumnDefinition Width="3*"/>
             </Grid.ColumnDefinitions>
 
-            <Border Grid.Column="0"  Margin="0" BorderBrush="{x:Static local:Globals.SFH_DGBorderBrush}" BorderThickness="{x:Static local:Globals.SFH_DGBorderThickness}" Background="{x:Static local:Globals.SFH_DGBackground}">
+            <Border Grid.Column="0"  Margin="0" BorderBrush="{x:Static local:MyColors.SFH_DGBorderBrush}" BorderThickness="{x:Static local:MyColors.SFH_DGBorderThickness}" Background="{x:Static local:MyColors.SFH_DGBackground}">
                 <Grid x:Name="Grid_Inner_Left" >
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="8*"/>
                     </Grid.RowDefinitions>
 
-                    <Label Grid.Row="0"  FontSize="20"  Style="{StaticResource lbl}" x:Name="lbl_BackupFilesHeader" Content="Backup Save Files" ToolTip="Backup Save Files" Margin="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Foreground="{x:Static local:Globals.SFH_DGHeaderForeground}" Background="{x:Static local:Globals.SFH_DGHeaderBackground}"/>
+                    <Label Grid.Row="0"  FontSize="20"  Style="{StaticResource lbl}" x:Name="lbl_BackupFilesHeader" Content="Backup Save Files" ToolTip="Backup Save Files" Margin="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Foreground="{x:Static local:MyColors.SFH_DGHeaderForeground}" Background="{x:Static local:MyColors.SFH_DGHeaderBackground}"/>
 
                     <Image x:Name="sv_BackupFiles_Loading" Grid.Row="1" Visibility="Hidden" gif:ImageBehavior.AnimatedSource="../Artwork/loading.gif" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Height="48" Width="48" />
 
@@ -63,14 +63,14 @@
 
             <Button Style="{StaticResource btn}" Grid.Column="1" x:Name="btn_LeftArrow" MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave" ToolTip="Move File to Backup Folder" Margin="0,200,0,0" Height="40" Width="40" Click="btn_LeftArrow_Click"/>
 
-            <Border Grid.Column="2"  Margin="0" BorderBrush="{x:Static local:Globals.SFH_DGBorderBrush}" BorderThickness="{x:Static local:Globals.SFH_DGBorderThickness}" Background="{x:Static local:Globals.SFH_DGBackground}">
+            <Border Grid.Column="2"  Margin="0" BorderBrush="{x:Static local:MyColors.SFH_DGBorderBrush}" BorderThickness="{x:Static local:MyColors.SFH_DGBorderThickness}" Background="{x:Static local:MyColors.SFH_DGBackground}">
                 <Grid x:Name="Grid_Inner_Right" >
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="8*"/>
                     </Grid.RowDefinitions>
 
-                    <Label Grid.Row="0"  FontSize="20" Content="GTA V Save Files" Style="{StaticResource lbl}" Margin="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Foreground="{x:Static local:Globals.SFH_DGHeaderForeground}" Background="{x:Static local:Globals.SFH_DGHeaderBackground}"/>
+                    <Label Grid.Row="0"  FontSize="20" Content="GTA V Save Files" Style="{StaticResource lbl}" Margin="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Foreground="{x:Static local:MyColors.SFH_DGHeaderForeground}" Background="{x:Static local:MyColors.SFH_DGHeaderBackground}"/>
 
                     <Image x:Name="sv_GTAFiles_Loading" Grid.Row="1" Visibility="Hidden" gif:ImageBehavior.AnimatedSource="../Artwork/loading.gif" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Height="48" Width="48" />
 

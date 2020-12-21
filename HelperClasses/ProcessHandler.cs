@@ -176,7 +176,6 @@ namespace Project_127.HelperClasses
 		/// <param name="waitForExit"></param>
 		public static Process StartProcess(string pFilepath, string pWorkingDir = null, string pCommandLineArguments = null, bool useShellExecute = false, bool runAsAdmin = false, bool waitForExit = false)
 		{
-			// TO DO...THIS MIGHT BE BROKEN WITH CMDL ARGS WITH CONTAIN SPACES...NEED TO DO THIS MANUALLY IN THE METHOD WHICH CALLS IT FOR NOW
 			if (FileHandling.doesFileExist(pFilepath))
 			{
 				Process proc = new Process();
