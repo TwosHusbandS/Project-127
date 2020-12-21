@@ -326,7 +326,7 @@ namespace Project_127.Popups
 											{
 												HelperClasses.Logger.Log("User does want it. Initiating CreateBackup()");
 
-												LauncherLogic.KillRelevantProcesses();
+												HelperClasses.ProcessHandler.KillRelevantProcesses();
 
 												LauncherLogic.CreateBackup();
 											}
@@ -437,7 +437,7 @@ namespace Project_127.Popups
 											{
 												HelperClasses.Logger.Log("User does want it. Initiating CreateBackup()");
 
-												LauncherLogic.KillRelevantProcesses();
+												HelperClasses.ProcessHandler.KillRelevantProcesses();
 
 												LauncherLogic.CreateBackup();
 											}

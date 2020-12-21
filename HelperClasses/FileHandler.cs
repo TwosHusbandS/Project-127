@@ -635,6 +635,11 @@ namespace Project_127.HelperClasses
 			return rtrn;
 		}
 
+		/// <summary>
+		/// Renaming a file. Second param is FileName not FilePath
+		/// </summary>
+		/// <param name="pFilePathSource"></param>
+		/// <param name="pFileNameDest"></param>
 		public static void RenameFile(string pFilePathSource, string pFileNameDest)
 		{
 			if (doesFileExist(pFilePathSource))

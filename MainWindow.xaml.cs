@@ -56,6 +56,7 @@ To Do before 1.1:
 - Check Installer Script. 
 	=> Uninstall command line arg ?
 	=> Stop deleting our own folder
+- Delete Files with dragon...hope he deletes all and stuff.
 - [FUCK THAT] More efficent compare of files
 - [NOT CONNECTED TO ANY FILE RELATED LOGIC] Dragons stuff. Both paths, all settings
 - Remember to not only check if alternative launch, but also check out if epic...
@@ -116,30 +117,29 @@ namespace Project_127
 	/// </summary>
 	public partial class MainWindow : Window
 	{
-		/*
-		MainWindow:
-		- Contains all Main GUI stuff
-		- a few Methods we need on Starting like AutoUpdating or Re-Launching with Admin
-		*/
-
-		// This is a static property pointing to the only instance of MainWindow...
-		// This ugly like yo mama, but shit happerino, you know?
-
 
 		// Properties and Constructor below
 
 		#region Properties and Constructor
-
 
 		/// <summary>
 		/// Static Property to access Children (mainly Controls) of MainWindow Instance
 		/// </summary>
 		public static MainWindow MW;
 
+		/// <summary>
+		/// Static Reference to our WPF Window for Multi Monitor Overlay
+		/// </summary>
 		public static Overlay_MultipleMonitor OL_MM = null;
 
+		/// <summary>
+		/// Static Property to our NotifyIcon (Tray icon)
+		/// </summary>
 		private System.Windows.Forms.NotifyIcon notifyIcon = null;
 
+		/// <summary>
+		/// Static Property of the Mutex we use to determine if P127 is already running in another instance
+		/// </summary>
 		public static Mutex myMutex;
 
 		/// <summary>
@@ -158,9 +158,6 @@ namespace Project_127
 			// Setting this for use in other classes later
 			MainWindow.MW = this;
 
-			// Admin Relauncher
-			AdminRelauncher();
-
 			//Dont run anything when we are on 32 bit...
 			//If this ever gets changed, take a second look at regedit class and path(different for 32 and 64 bit OS)
 			if (Environment.Is64BitOperatingSystem == false)
@@ -169,6 +166,10 @@ namespace Project_127
 				Environment.Exit(1);
 			}
 
+			// Admin Relauncher
+			AdminRelauncher();
+
+			// Some shit due to do with the multi monitor preview
 			this.Width = 900;
 
 			// Checking if Mutex is already running
@@ -176,18 +177,15 @@ namespace Project_127
 			if (m.WaitOne(100))
 			{
 				// When it isnt
-
-				//HelperClasses.FileHandling.AddToDebug("This is our first instance");
-				// Globals.DebugPopup("This is our first instance");
 			}
 			else
 			{
-				// It is already running
-
+				// It is already running, calls Globals.ProperExit
 				AlreadyRunning();
 			}
 
-			// Starting Mutex
+
+			// Starting our own Mutex since its not already running
 			myMutex = new Mutex(false, "P127_Mutex");
 			myMutex.WaitOne();
 
@@ -263,6 +261,11 @@ namespace Project_127
 
 		#region windowevents
 
+		/// <summary>
+		/// Event when Window finished Loading
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void Window_Loaded(object sender, RoutedEventArgs e)
 		{
 			InitNotifyIcon();
@@ -313,22 +316,20 @@ namespace Project_127
 
 		#region AlreadyRunning, Admin Relauncher, DispatcherTimer
 
+		/// <summary>
+		/// Gets called when another P127 instance is already running. 
+		/// </summary>
 		public async void AlreadyRunning()
 		{
-			//HelperClasses.FileHandling.AddToDebug("In AlreadyRunning(), renaming file now");
-
+			// renames some File which the other instance has a System File Watcher on. Very basic IPC.
 			string myPath = Globals.ProjectInstallationPath.TrimEnd('\\') + @"\dirtyprogramming";
 			string myPathNew = Globals.ProjectInstallationPath.TrimEnd('\\') + @"\pleaseshow";
-			// create file. 
-
 			HelperClasses.FileHandling.RenameFile(myPath, "pleaseshow");
 
-			//HelperClasses.FileHandling.AddToDebug("In AlreadyRunning(), File created, before Sleeps");
-
+			// waiting 2 seconds for the other instance to do stuff.
 			await Task.Delay(2000);
 
-			//HelperClasses.FileHandling.AddToDebug("In AlreadyRunning(), After Sleeps");
-
+			// if renamed file still exists, IPC failed
 			if (HelperClasses.FileHandling.doesFileExist(myPathNew))
 			{
 				Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Program is open twice.\nAttempt to talk to already running instance failed.\nForce Close Everything?");
@@ -342,18 +343,14 @@ namespace Project_127
 							HelperClasses.ProcessHandler.Kill(p);
 						}
 					}
+					Globals.ProperExit();
 				}
-
-
-				//HelperClasses.FileHandling.AddToDebug("In AlreadyRunning(), renamed File exists");
 			}
 			else
 			{
-				//HelperClasses.FileHandling.AddToDebug("In AlreadyRunning(), renamed File doesnt exist. Closing this instance");
+				// IPC sucess
+				Globals.ProperExit();
 			}
-
-			Globals.ProperExit();
-
 		}
 
 
@@ -399,7 +396,9 @@ namespace Project_127
 
 
 
-
+		/// <summary>
+		/// Starting the Dispatcher Timer. 2,5 seconds. Used for Polling Gamestate and stuff
+		/// </summary>
 		private void StartDispatcherTimer()
 		{
 			// Starting the Dispatcher Timer for the automatic updates of the GTA V Button
@@ -412,7 +411,7 @@ namespace Project_127
 
 
 		/// <summary>
-		/// Updates the GUI with relevant stuff. Gets called every 5 Seconds
+		/// Updates the GUI with relevant stuff. Gets called every 2.5 Seconds
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
@@ -434,7 +433,7 @@ namespace Project_127
 				lbl_GTA.Content = "Unsure";
 			}
 
-			lbl_GTA.Content += BuildVersionTable.GetNiceGameVersionString(Globals.GameVersion);
+			lbl_GTA.Content += BuildVersionTable.GetNiceGameVersionString(Globals.BuildVersion);
 
 			if (LauncherLogic.PollGameState() == LauncherLogic.GameStates.Running)
 			{
@@ -559,7 +558,10 @@ namespace Project_127
 		}
 
 
-
+		/// <summary>
+		/// Set the Background to our WPF Window
+		/// </summary>
+		/// <param name="pArtworkPath"></param>
 		public void SetWindowBackground(string pArtworkPath)
 		{
 			Uri resourceUri = new Uri(pArtworkPath, UriKind.Relative);
@@ -618,11 +620,9 @@ namespace Project_127
 
 
 
-
 		#endregion
 
 		// PureUI Logic and Helper Classes above
-
 
 
 	} // End of Class

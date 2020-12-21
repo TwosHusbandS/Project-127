@@ -1,0 +1,82 @@
+﻿<Page x:Class="Project_127.ComponentManager"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:Project_127"
+      mc:Ignorable="d" 
+        Title="Component Manager" d:DesignHeight="540" d:DesignWidth="625"        
+        Background="{x:Static local:MyColors.App_Submenu_Background}" Loaded="Page_Loaded">
+    <Grid x:Name="Grid_Outer"  Margin="15,0,15,0" Height="540">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="70"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        
+        <Label Style="{StaticResource lbl}" Grid.Row="0" HorizontalAlignment="Left" FontSize="24" Height="60" VerticalAlignment="Bottom" Margin="0,0,0,0" Content="Component Manager"/>
+        <Border x:Name="Border_Main" Grid.Row="1" Margin="0,30,0,15" BorderThickness="2" BorderBrush="{x:Static local:MyColors.MW_BorderBrush}">
+            <Grid x:Name="Grid_Main" Margin="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2.5*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <Rectangle Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4" Fill="Transparent"/>
+                <Rectangle Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="4" Fill="{x:Static local:MyColors.SE_AlternateRowBackground}"/>
+                <Rectangle Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="4" Fill="Transparent"/>
+                <Rectangle Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="4" Fill="{x:Static local:MyColors.SE_AlternateRowBackground}"/>
+                <Rectangle Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="4" Fill="Transparent"/>
+                <Rectangle Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="4" Fill="{x:Static local:MyColors.SE_AlternateRowBackground}"/>
+                <Rectangle Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="4" Fill="Transparent"/>
+
+
+                <Label Grid.Row="0" Grid.Column="0" x:Name="lbl_FilesMain_Name" Content="Required Files" ToolTip="Required Files. 'Normal' P127 Launch Files and Savefiles / Notes" Style="{StaticResource lbl_Set_Info}"/>
+                <Label Grid.Row="0" Grid.Column="1" x:Name="lbl_FilesMain_Status" Content="Not installed" Style="{StaticResource lbl_Set_Info}" Foreground="{x:Static local:MyColors.MyColorGreen}"/>
+                <Button Grid.Row="0" Grid.Column="2" x:Name="btn_FilesMain_Install" Click="btn_Install_Click" Tag="FilesMain" Content="(Re-)install" Style="{StaticResource btn_CM_Action}"/>
+                <Button Grid.Row="0" Grid.Column="3" x:Name="btn_FilesMain_Uninstall" Click="btn_Uninstall_Click" Tag="FilesMain" Content="Uninstall" Style="{StaticResource btn_CM_Action_Disabled}"/>
+
+                <Label Grid.Row="1" Grid.Column="0" x:Name="lbl_FilesSCLSteam127_Name" Content="Social Club Launch Steam 1.27" ToolTip="Social Club Launch Steam 1.27" Style="{StaticResource lbl_Set_Info}"/>
+                <Label Grid.Row="1" Grid.Column="1" x:Name="lbl_FilesSCLSteam127_Status" Content="Status" Style="{StaticResource lbl_Set_Info}" Foreground="{x:Static local:MyColors.MyColorGreen}"/>
+                <Button Grid.Row="1" Grid.Column="2" x:Name="btn_FilesSCLSteam127_Install" Click="btn_Install_Click" Tag="FilesSCLSteam127" Content="(Re-)install" Style="{StaticResource btn_CM_Action}"/>
+                <Button Grid.Row="1" Grid.Column="3" x:Name="btn_FilesSCLSteam127_Uninstall" Click="btn_Uninstall_Click" Tag="FilesSCLSteam127" Content="Uninstall" Style="{StaticResource btn_CM_Action}"/>
+
+                <Label Grid.Row="2" Grid.Column="0" x:Name="lbl_FilesSCLSteam124_Name" Content="Social Club Launch Steam 1.24" ToolTip="Social Club Launch Steam 1.24" Style="{StaticResource lbl_Set_Info}"/>
+                <Label Grid.Row="2" Grid.Column="1" x:Name="lbl_FilesSCLSteam124_Status" Content="Status" Style="{StaticResource lbl_Set_Info}" Foreground="{x:Static local:MyColors.MyColorGreen}"/>
+                <Button Grid.Row="2" Grid.Column="2" x:Name="btn_FilesSCLSteam124_Install" Click="btn_Install_Click" Tag="FilesSCLSteam124" Content="(Re-)install" Style="{StaticResource btn_CM_Action}"/>
+                <Button Grid.Row="2" Grid.Column="3" x:Name="btn_FilesSCLSteam124_Uninstall" Click="btn_Uninstall_Click" Tag="FilesSCLSteam124" Content="Uninstall" Style="{StaticResource btn_CM_Action}"/>
+
+                <Label Grid.Row="3" Grid.Column="0" x:Name="lbl_FilesSCLRockstar127_Name" Content="Social Club Launch Rockstar 1.27" ToolTip="Social Club Launch Rockstar 1.27" Style="{StaticResource lbl_Set_Info}"/>
+                <Label Grid.Row="3" Grid.Column="1" x:Name="lbl_FilesSCLRockstar127_Status" Content="Status" Style="{StaticResource lbl_Set_Info}" Foreground="{x:Static local:MyColors.MyColorGreen}"/>
+                <Button Grid.Row="3" Grid.Column="2" x:Name="btn_FilesSCLRockstar127_Install" Click="btn_Install_Click" Tag="FilesSCLRockstar127" Content="(Re-)install" Style="{StaticResource btn_CM_Action}"/>
+                <Button Grid.Row="3" Grid.Column="3" x:Name="btn_FilesSCLRockstar127_Uninstall" Click="btn_Uninstall_Click" Tag="FilesSCLRockstar127" Content="Uninstall" Style="{StaticResource btn_CM_Action}"/>
+
+                <Label Grid.Row="4" Grid.Column="0" x:Name="lbl_FilesSCLRockstar124_Name" Content="Social Club Launch Rockstar 1.24" ToolTip="Social Club Launch Rockstar 1.24" Style="{StaticResource lbl_Set_Info}"/>
+                <Label Grid.Row="4" Grid.Column="1" x:Name="lbl_FilesSCLRockstar124_Status" Content="Status" Style="{StaticResource lbl_Set_Info}" Foreground="{x:Static local:MyColors.MyColorGreen}"/>
+                <Button Grid.Row="4" Grid.Column="2" x:Name="btn_FilesSCLRockstar124_Install" Click="btn_Install_Click" Tag="FilesSCLRockstar124" Content="(Re-)install" Style="{StaticResource btn_CM_Action}"/>
+                <Button Grid.Row="4" Grid.Column="3" x:Name="btn_FilesSCLRockstar124_Uninstall" Click="btn_Uninstall_Click" Tag="FilesSCLRockstar124" Content="Uninstall" Style="{StaticResource btn_CM_Action}"/>
+
+                <Label Grid.Row="5" Grid.Column="0" x:Name="lbl_FilesSCLDowngradedSC_Name" Content="Downgraded Social Club" ToolTip="Social Club v. 1.1.7.8. Needed for Launching through Social Club" Style="{StaticResource lbl_Set_Info}"/>
+                <Label Grid.Row="5" Grid.Column="1" x:Name="lbl_FilesSCLDowngradedSC_Status" Content="Status" Style="{StaticResource lbl_Set_Info}" Foreground="{x:Static local:MyColors.MyColorGreen}"/>
+                <Button Grid.Row="5" Grid.Column="2" x:Name="btn_FilesSCLDowngradedSC_Install" Click="btn_Install_Click" Tag="FilesSCLDowngradedSC" Content="(Re-)install" Style="{StaticResource btn_CM_Action}"/>
+                <Button Grid.Row="5" Grid.Column="3" x:Name="btn_FilesSCLDowngradedSC_Uninstall" Click="btn_Uninstall_Click" Tag="FilesSCLDowngradedSC" Content="Uninstall" Style="{StaticResource btn_CM_Action}"/>
+
+                <Label Grid.Row="6" Grid.Column="0" x:Name="lbl_FilesAdditionalSF_Name" Content="Additional SafeFiles" ToolTip="SafeFiles for every Mission in the Game" Style="{StaticResource lbl_Set_Info}"/>
+                <Label Grid.Row="6" Grid.Column="1" x:Name="lbl_FilesAdditionalSF_Status" Content="Status" Style="{StaticResource lbl_Set_Info}" Foreground="{x:Static local:MyColors.MyColorGreen}"/>
+                <Button Grid.Row="6" Grid.Column="2" x:Name="btn_FilesAdditionalSF_Install" Click="btn_Install_Click" Tag="FilesAdditionalSF" Content="(Re-)install" Style="{StaticResource btn_CM_Action}"/>
+                <Button Grid.Row="6" Grid.Column="3" x:Name="btn_FilesAdditionalSF_Uninstall" Click="btn_Uninstall_Click" Tag="AdditionalSF" Content="Uninstall" Style="{StaticResource btn_CM_Action}"/>
+            </Grid>                                                                                                            
+        </Border>
+
+    </Grid>
+</Page>

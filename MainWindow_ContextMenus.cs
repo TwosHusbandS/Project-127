@@ -20,13 +20,15 @@ namespace Project_127
 
 		#region NotifyIcon (Tray Icon)
 
+		/// <summary>
+		/// Initiating the NotifyIcon (tray icon) with context menu
+		/// </summary>
 		private void InitNotifyIcon()
 		{
 			notifyIcon = new System.Windows.Forms.NotifyIcon();
 			notifyIcon.Click += new EventHandler(notifyIcon_Click);
 			notifyIcon.DoubleClick += new EventHandler(notifyIcon_DoubleClick);
 			notifyIcon.Visible = true;
-
 
 			Uri resourceUri = new Uri(@"Artwork\icon.ico", UriKind.Relative);
 			System.Windows.Forms.NotifyIcon icon = new System.Windows.Forms.NotifyIcon();
@@ -78,6 +80,11 @@ namespace Project_127
 			mi7.Click += new System.EventHandler(this.menuItem_NoteOverlay_Click);
 			cm.MenuItems.Add(mi7);
 
+			System.Windows.Forms.MenuItem mi7B = new System.Windows.Forms.MenuItem();
+			mi7B.Text = "ComponentManager";
+			mi7B.Click += new System.EventHandler(this.menuItem_ComponentManager_Click);
+			cm.MenuItems.Add(mi7B);
+
 			System.Windows.Forms.MenuItem mi8 = new System.Windows.Forms.MenuItem();
 			mi8.Text = "Settings";
 			mi8.Click += new System.EventHandler(this.menuItem_Settings_Click);
@@ -107,10 +114,20 @@ namespace Project_127
 			}
 		}
 
+		/// <summary>
+		/// Double click on Tray Icon. Nothing happens.
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void notifyIcon_DoubleClick(object sender, EventArgs e)
 		{
 		}
 
+		/// <summary>
+		/// Single click on Tray Icon. Toggles Visibility
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void notifyIcon_Click(object sender, EventArgs e)
 		{
 			if (this.Visibility == Visibility.Visible)
@@ -122,10 +139,12 @@ namespace Project_127
 				menuItem_Show_Click(null, null);
 			}
 		}
-
-
-	
-
+		
+		/// <summary>
+		/// Tray Icon - Context Menu - Method (Show P127)
+		/// </summary>
+		/// <param name="Sender"></param>
+		/// <param name="e"></param>
 		public void menuItem_Show_Click(object Sender, EventArgs e)
 		{
 			this.WindowState = System.Windows.WindowState.Normal;
@@ -133,6 +152,11 @@ namespace Project_127
 			this.Activate();
 		}
 
+		/// <summary>
+		/// Tray Icon - Context Menu - Method (Hide P127)
+		/// </summary>
+		/// <param name="Sender"></param>
+		/// <param name="e"></param>
 		private void menuItem_Hide_Click(object Sender, EventArgs e)
 		{
 			try
@@ -145,16 +169,33 @@ namespace Project_127
 			}
 		}
 
+		/// <summary>
+		/// Tray Icon - Context Menu - Method (Upgrade)
+		/// </summary>
+		/// <param name="Sender"></param>
+		/// <param name="e"></param>
 		private void menuItem_Upgrade_Click(object Sender, EventArgs e)
 		{
 			this.btn_Upgrade_Click(null, null);
 		}
 
+
+		/// <summary>
+		/// Tray Icon - Context Menu - Method (Downgrade)
+		/// </summary>
+		/// <param name="Sender"></param>
+		/// <param name="e"></param>
 		private void menuItem_Downgrade_Click(object Sender, EventArgs e)
 		{
 			this.btn_Downgrade_Click(null, null);
 		}
 
+
+		/// <summary>
+		/// Tray Icon - Context Menu - Method (LaunchGame)
+		/// </summary>
+		/// <param name="Sender"></param>
+		/// <param name="e"></param>
 		private void menuItem_LaunchGame_Click(object Sender, EventArgs e)
 		{
 			menuItem_Show_Click(null, null);
@@ -162,30 +203,66 @@ namespace Project_127
 			MainWindow.btn_GTA_Click_Static();
 		}
 
+		/// <summary>
+		/// Tray Icon - Context Menu - Method (SaveFileHandler)
+		/// </summary>
+		/// <param name="Sender"></param>
+		/// <param name="e"></param>
 		private void menuItem_SaveFileHandler_Click(object Sender, EventArgs e)
 		{
 			menuItem_Show_Click(null, null);
 			Globals.PageState = Globals.PageStates.SaveFileHandler;
 		}
 
+		/// <summary>
+		/// Tray Icon - Context Menu - Method (NoteOverlay)
+		/// </summary>
+		/// <param name="Sender"></param>
+		/// <param name="e"></param>
 		private void menuItem_NoteOverlay_Click(object Sender, EventArgs e)
 		{
 			menuItem_Show_Click(null, null);
 			Globals.PageState = Globals.PageStates.NoteOverlay;
 		}
 
+		/// <summary>
+		/// Tray Icon - Context Menu - Method (ComponentManager)
+		/// </summary>
+		/// <param name="Sender"></param>
+		/// <param name="e"></param>
+		private void menuItem_ComponentManager_Click(object Sender, EventArgs e)
+		{
+			menuItem_Show_Click(null, null);
+			Globals.PageState = Globals.PageStates.ComponentManager;
+		}
+
+		/// <summary>
+		/// Tray Icon - Context Menu - Method (Settings)
+		/// </summary>
+		/// <param name="Sender"></param>
+		/// <param name="e"></param>
 		private void menuItem_Settings_Click(object Sender, EventArgs e)
 		{
 			menuItem_Show_Click(null, null);
 			Globals.PageState = Globals.PageStates.Settings;
 		}
 
+		/// <summary>
+		/// Tray Icon - Context Menu - Method (Information)
+		/// </summary>
+		/// <param name="Sender"></param>
+		/// <param name="e"></param>
 		private void menuItem_Information_Click(object Sender, EventArgs e)
 		{
 			menuItem_Show_Click(null, null);
 			Globals.PageState = Globals.PageStates.ReadMe;
 		}
 
+		/// <summary>
+		/// Tray Icon - Context Menu - Method (Close)
+		/// </summary>
+		/// <param name="Sender"></param>
+		/// <param name="e"></param>
 		private void menuItem_Close_Click(object Sender, EventArgs e)
 		{
 			Globals.ProperExit();

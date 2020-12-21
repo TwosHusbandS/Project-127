@@ -54,18 +54,6 @@ namespace Project_127
 		/// </summary>
 		public static string ProjectInstallationPathBinary { get { return Process.GetCurrentProcess().MainModule.FileName.Substring(0, Process.GetCurrentProcess().MainModule.FileName.LastIndexOf('\\')); } }
 
-
-		/// <summary>
-		/// Property of our ProjectName (for Folders, Regedit, etc.)
-		/// </summary>
-		/// 
-		public static string ProjectName = "Project_127";
-
-		/// <summary>
-		/// Property of our ProjectNiceName (for GUI)
-		/// </summary>
-		public static string ProjectNiceName = "Project 127";
-
 		/// <summary>
 		/// Property of the ZIP Version currently installed
 		/// </summary>
@@ -134,6 +122,9 @@ namespace Project_127
 			}
 		}
 
+		/// <summary>
+		/// Gets the Branch we are in as actual branch.
+		/// </summary>
 		public static string Branch
 		{
 			get
@@ -150,7 +141,10 @@ namespace Project_127
 			}
 		}
 
-		public static Version GameVersion
+		/// <summary>
+		/// Gets the Version (BuildVersion) of our GTA5.exe
+		/// </summary>
+		public static Version BuildVersion
 		{
 			get
 			{
@@ -210,7 +204,7 @@ namespace Project_127
 		/// <summary>
 		/// Property of other Buildinfo. Will be in the top message of logs
 		/// </summary>
-		public static string BuildInfo = "Build 1, everything apart from SocialClubLaunch";
+		public static string BuildInfo = "Build 1, gotta love Crapideot";
 
 		/// <summary>
 		/// Returns all Command Line Args as StringArray
@@ -512,8 +506,8 @@ namespace Project_127
 			// this makes its parent window show super early, which is ugly.
 			// NoteOverlay.OverlaySettingsChanged();
 
+			// Inits the FIleWatcher for IPC
 			InitFileWatcher();
-
 		}
 
 
@@ -548,8 +542,14 @@ namespace Project_127
 
 		#region FileSystemWatcher (IPC)
 
+		/// <summary>
+		/// Reference to our FileSystemWatcher
+		/// </summary>
 		public static FileSystemWatcher FSW = new FileSystemWatcher();
 
+		/// <summary>
+		/// Inits our File Watcher for IPC
+		/// </summary>
 		public static void InitFileWatcher()
 		{
 			//HelperClasses.FileHandling.AddToDebug("In InitFileWatcher() Creating FileSystemWatcher");
@@ -581,6 +581,11 @@ namespace Project_127
 
 		}
 
+		/// <summary>
+		/// Event when a file is renamed
+		/// </summary>
+		/// <param name="source"></param>
+		/// <param name="e"></param>
 		private static async void OnRename(object source, RenamedEventArgs e)
 		{
 			//HelperClasses.FileHandling.AddToDebug("In OnRename() - " + $"File: {e.OldFullPath} renamed to {e.FullPath}");
@@ -948,7 +953,8 @@ namespace Project_127
 			Auth,
 			ReadMe,
 			GTA,
-			NoteOverlay
+			NoteOverlay,
+			ComponentManager
 		}
 
 		/// <summary>
@@ -998,6 +1004,7 @@ namespace Project_127
 						MainWindow.MW.btn_SaveFiles.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
 						MainWindow.MW.btn_ReadMe.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
 						MainWindow.MW.btn_NoteOverlay.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
+						MainWindow.MW.btn_ComponentManager.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
 						break;
 					case PageStates.SaveFileHandler:
 						MainWindow.MW.Frame_Main.Content = new SaveFileHandler();
@@ -1007,6 +1014,7 @@ namespace Project_127
 						MainWindow.MW.btn_Settings.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
 						MainWindow.MW.btn_ReadMe.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
 						MainWindow.MW.btn_NoteOverlay.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
+						MainWindow.MW.btn_ComponentManager.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
 						break;
 					case PageStates.ReadMe:
 						MainWindow.MW.Frame_Main.Content = new ReadMe();
@@ -1016,6 +1024,7 @@ namespace Project_127
 						MainWindow.MW.btn_Settings.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
 						MainWindow.MW.btn_SaveFiles.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
 						MainWindow.MW.btn_NoteOverlay.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
+						MainWindow.MW.btn_ComponentManager.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
 						break;
 					case PageStates.NoteOverlay:
 						MainWindow.MW.Frame_Main.Content = new Overlay.NoteOverlay();
@@ -1025,6 +1034,17 @@ namespace Project_127
 						MainWindow.MW.btn_Settings.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
 						MainWindow.MW.btn_SaveFiles.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
 						MainWindow.MW.btn_ReadMe.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
+						MainWindow.MW.btn_ComponentManager.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
+						break;
+					case PageStates.ComponentManager:
+						MainWindow.MW.Frame_Main.Content = new ComponentManager();
+						MainWindow.MW.btn_ComponentManager.Style = Application.Current.FindResource("btn_hamburgeritem_selected") as Style;
+
+						MainWindow.MW.btn_Auth.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
+						MainWindow.MW.btn_Settings.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
+						MainWindow.MW.btn_SaveFiles.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
+						MainWindow.MW.btn_ReadMe.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
+						MainWindow.MW.btn_NoteOverlay.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
 						break;
 					case PageStates.Auth:
 						if (Globals.LaunchAfterAuth)
@@ -1042,6 +1062,7 @@ namespace Project_127
 						MainWindow.MW.btn_Settings.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
 						MainWindow.MW.btn_SaveFiles.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
 						MainWindow.MW.btn_NoteOverlay.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
+						MainWindow.MW.btn_ComponentManager.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
 						break;
 					case PageStates.GTA:
 						MainWindow.MW.Frame_Main.Content = new GTA_Page();
@@ -1051,6 +1072,7 @@ namespace Project_127
 						MainWindow.MW.btn_Settings.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
 						MainWindow.MW.btn_SaveFiles.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
 						MainWindow.MW.btn_NoteOverlay.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
+						MainWindow.MW.btn_ComponentManager.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
 						break;
 				}
 			}
@@ -1190,7 +1212,6 @@ namespace Project_127
 		// Random shit below
 
 		#region random shit
-
 
 		public static void ImportBuildFromUrl(string pUrl)
 		{

@@ -218,6 +218,11 @@ namespace Project_127
 		}
 
 
+		/// <summary>
+		/// Shoutouts to crapideot
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void btn_Upgrade_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
 		{
 			if (e.ClickCount == 3)
@@ -327,6 +332,20 @@ namespace Project_127
 		}
 
 
+
+		private void btn_ComponentManager_Click(object sender, RoutedEventArgs e)
+		{
+			if (Globals.PageState == Globals.PageStates.ComponentManager)
+			{
+				Globals.PageState = Globals.PageStates.GTA;
+			}
+			else
+			{
+				Globals.PageState = Globals.PageStates.ComponentManager;
+			}
+		}
+
+
 		/// <summary>
 		/// Method which gets called when the Settings Button is clicked
 		/// </summary>
@@ -374,7 +393,7 @@ namespace Project_127
 			yesno.ShowDialog();
 			if (yesno.DialogResult == true)
 			{
-				LauncherLogic.KillRelevantProcesses();
+				HelperClasses.ProcessHandler.KillRelevantProcesses();
 			}
 			//FocusManager.SetFocusedElement(this, null);
 			MainWindow.MW.UpdateGUIDispatcherTimer();
@@ -403,8 +422,11 @@ namespace Project_127
 
 
 
-
-
+		/// <summary>
+		/// Mode / Branch thingy rightclick
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void btn_lbl_Mode_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
 		{
 			if (Settings.Mode.ToLower() != "default")
@@ -412,6 +434,7 @@ namespace Project_127
 				new PopupMode().ShowDialog();
 			}
 		}
+
 
 		/// <summary>
 		/// Method which makes the Window draggable, which moves the whole window when holding down Mouse1 on the background
