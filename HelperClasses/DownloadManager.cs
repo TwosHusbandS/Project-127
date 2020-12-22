@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web.Script.Serialization;
+using System.Xml;
 using System.Xml.XPath;
 
 namespace Project_127.HelperClasses
@@ -613,16 +614,16 @@ namespace Project_127.HelperClasses
             updateInstalled();
         }
 
-        public DownloadManager(string xmlLocation = null)
+        public DownloadManager(string xmls = null)
         {
-            if (xmlLocation == null)
+            if (xmls == null)
             {
-                xmlLocation = Globals.URL_DownloadManager;
+                xmls = HelperClasses.FileHandling.GetStringFromURL(Globals.URL_DownloadManager);
             }
-            XPathDocument xml;
-            if (VerifyUrlExists(xmlLocation).GetAwaiter().GetResult())
+            XPathDocument xml = null;
+            if (string.IsNullOrEmpty(xmls))
             {
-                xml = new XPathDocument(xmlLocation);//);
+                xml = new XPathDocument(new System.IO.StringReader(xmls));//);
             }
             else
             {
