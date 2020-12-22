@@ -37,14 +37,10 @@ Comments like "TODO", "TO DO", "CTRLF", "CTRL-F", and "CTRL F" are just ways of 
 Hybrid code can be found in AAA_HybridCode.
 			
 To Do before 1.1:
-- Comment MainWindow
-- Comment Globals
-- Comment LauncherLogic
-- DL Manager WPF Window
 - Fix ReadMe:
 		=> signature thingies
 		=> links
-		=> license,
+		=> license
 		=> Programming language
 		=> help section 
 			>> needs MultiMonitor thingy
