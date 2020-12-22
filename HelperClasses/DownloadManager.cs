@@ -66,7 +66,7 @@ namespace Project_127.HelperClasses
                 {
                     await getSubassembly(req.GetAttribute("target", ""));
                 }
-                if (s.GetAttribute("type","").ToLower() == "zip")
+                if (s.GetAttribute("type", "").ToLower() == "zip")
                 {
                     var mirrors = s.Select("./mirror");
                     var succeeded = false;
@@ -95,6 +95,55 @@ namespace Project_127.HelperClasses
                 {
                     subInfo.common = true;
                     var cfiles = s.Select("./file");
+                    if (reinstall)
+                    {
+                        var installedFiles = new List<string>();
+                        foreach (var file in installedSubassemblies[subassemblyName].files)
+                        {
+                            installedFiles.Add(file.name);
+                            subInfo.files.Add(file);
+                        }
+                        var fileInfo = new Dictionary<string, XPathNavigator>();
+                        foreach (XPathNavigator file in cfiles)
+                        {
+                            if (!installedFiles.Contains(file.GetAttribute("name", "")))
+                            {
+                                subInfo.files.Add(new subAssemblyFile { name = file.GetAttribute("name", ""), available = false });
+                            }
+                            fileInfo.Add(file.GetAttribute("name", ""), file);
+                        }
+                        foreach (var file in subInfo.files)
+                        {
+                            if (file.paths.Count > 0)
+                            {
+                                var fileEntry = fileInfo[file.name];
+                                var succeeded = false;
+                                var mirrors = fileEntry.Select("./mirror");
+                                var fullPath = System.IO.Path.Combine(System.IO.Path.GetTempPath(), System.IO.Path.GetRandomFileName());
+                                foreach (XPathNavigator mirror in mirrors)
+                                {
+                                    string link = mirror.Value;
+                                    new PopupDownload(link, fullPath, file.name).ShowDialog();
+                                    var md5hash = HelperClasses.FileHandling.GetHashFromFile(fullPath);
+                                    succeeded = fileEntry.SelectSingleNode("./hash").Value.ToLower() == md5hash;
+                                    if (succeeded)
+                                    {
+                                        break;
+                                    }
+                                }
+                                if (!succeeded)
+                                {
+                                    return false;
+                                }
+                                foreach (var path in file.paths)
+                                {
+                                    System.IO.File.Copy(fullPath, path, true);
+                                }
+                                System.IO.File.Delete(fullPath);
+                            }
+                        }
+                        return true;
+                    }
                     foreach (XPathNavigator file in cfiles)
                     {
                         subInfo.files.Add(new subAssemblyFile { name = file.GetAttribute("name", ""), available = false });
@@ -462,9 +511,101 @@ namespace Project_127.HelperClasses
                 return new Version(0, 0);
             }
         }
-        public DownloadManager(string xmlLocation)
+
+        /// <summary>
+        /// Function to check whether a given subassembly has an available update
+        /// </summary>
+        /// <param name="subassemblyName">Subassembly to check</param>
+        /// <returns>Boolean indicating whether or not there is an update</returns>
+        public bool isUpdateAvalailable(string subassemblyName)
         {
-            XPathDocument xml = new XPathDocument(xmlLocation);//);
+            if (!availableSubassemblies.ContainsKey(subassemblyName))
+            {
+                return false;
+            }
+            else if (!installedSubassemblies.ContainsKey(subassemblyName))
+            {
+                return true;
+            }
+            var cver = getVersion(subassemblyName);
+            var avers = availableSubassemblies[subassemblyName].GetAttribute("version", "");
+            Version aver;
+            try
+            {
+                aver = new Version(avers);
+            }
+            catch
+            {
+                return false;
+            }
+            if (cver < aver)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Function to retrieve a list of installed subassemblies which have an available update
+        /// </summary>
+        /// <returns>List of subassemblies with an available update</returns>
+        public List<string> availableUpdates()
+        {
+            var outp = new List<string>();
+            foreach (var s in installedSubassemblies.Keys)
+            {
+                if (isUpdateAvalailable(s))
+                {
+                    outp.Add(s);
+                }
+            }
+            return outp;
+        }
+
+        /// <summary>
+        /// Function to update installed subassemblies
+        /// </summary>
+        /// <param name="subassemblyName">Name of subassembly to update</param>
+        /// <param name="checkVersion"> Boolean indicating whether or not to verify an update is available</param>
+        /// <returns></returns>
+        public async Task<bool> updateSubssembly(string subassemblyName, bool checkVersion = true)
+        {
+            if (checkVersion && !isUpdateAvalailable(subassemblyName))
+            {
+                return true;
+            }
+            if (!availableSubassemblies.ContainsKey(subassemblyName) || 
+                !installedSubassemblies.ContainsKey(subassemblyName))
+            {
+                return false;
+            }
+            var sa = availableSubassemblies[subassemblyName];
+            var sai = installedSubassemblies[subassemblyName];
+            var reqs = sa.Select("./requires/subassembly");
+            foreach (XPathNavigator req in reqs)
+            {
+                await updateSubssembly(req.GetAttribute("target", ""));
+            }
+            
+            return await getSubassembly(subassemblyName, true);
+        }
+
+        public DownloadManager(string xmlLocation = null)
+        {
+            if (xmlLocation == null)
+            {
+                xmlLocation = Globals.URL_DownloadManager;
+            }
+            XPathDocument xml;
+            try
+            {
+                xml = new XPathDocument(xmlLocation);//);
+            }
+            catch
+            {
+                System.Windows.MessageBox.Show("Download Manager unable to fetch xml");
+                xml = new XPathDocument(new System.IO.StringReader("<targets/>"));
+            }
             nav = xml.CreateNavigator();
             var subassemblyEntries = nav.Select("/targets/subassembly");
             availableSubassemblies = new Dictionary<string, XPathNavigator>();
