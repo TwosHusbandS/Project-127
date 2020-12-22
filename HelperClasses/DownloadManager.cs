@@ -50,6 +50,10 @@ namespace Project_127.HelperClasses
             }
             else
             {
+                if (reinstall && isInstalled(subassemblyName)) 
+                {
+                    delSubassembly(subassemblyName, true);
+                }
                 var s = availableSubassemblies[subassemblyName];
                 var subInfo = new subassemblyInfo();
                 Version vinfo;
@@ -87,6 +91,10 @@ namespace Project_127.HelperClasses
                     }
                     if (succeeded)
                     {
+                        if (installedSubassemblies.ContainsKey(subassemblyName))
+                        {
+                            installedSubassemblies.Remove(subassemblyName);
+                        }
                         installedSubassemblies.Add(subassemblyName, subInfo);
                         updateInstalled();
                         return true;
@@ -138,7 +146,8 @@ namespace Project_127.HelperClasses
                                 }
                                 foreach (var path in file.paths)
                                 {
-                                    System.IO.File.Copy(fullPath, path, true);
+                                    var outfullpath = System.IO.Path.Combine(Project127Files, path);
+                                    System.IO.File.Copy(fullPath, outfullpath, true);
                                 }
                                 System.IO.File.Delete(fullPath);
                             }
@@ -232,13 +241,18 @@ namespace Project_127.HelperClasses
         /// <returns>Boolean indicating whether uninstall succeded or not</returns>
         public void delSubassembly(string subassemblyName)
         {
+            delSubassembly(subassemblyName, false);
+        }
+
+        private void delSubassembly(string subassemblyName, bool reqBySupress)
+        {
             if (!installedSubassemblies.ContainsKey(subassemblyName))
             {
                 return;
             }
             var sa = installedSubassemblies[subassemblyName];
             var sar = availableSubassemblies[subassemblyName].GetAttribute("root", "");
-            if (sa.common)
+            if (sa.common && !reqBySupress)
             {
                 foreach(XPathNavigator saa in availableSubassemblies.Values)
                 {
