@@ -198,9 +198,6 @@ namespace Project_127
 		{
 			get
 			{
-#if DEBUG
-				return true;
-#endif
 				foreach (string tmp in Globals.CommandLineArgs)
 				{
 					if (tmp.ToLower().Contains("internal"))

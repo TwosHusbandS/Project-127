@@ -62,7 +62,7 @@
 
         <requires>
             <subassembly target="AM_BASE_SUBASSEMBLY"/>
-            <subassembly target="127_BASE_SUBASSEMBLY"/>
+            <subassembly target="124_BASE_SUBASSEMBLY"/>
         </requires>
     </subassembly>
 
@@ -89,7 +89,7 @@
         
         <requires>
             <subassembly target="AM_BASE_SUBASSEMBLY"/>
-            <subassembly target="127_BASE_SUBASSEMBLY"/>
+            <subassembly target="124_BASE_SUBASSEMBLY"/>
         </requires>
     </subassembly>
 
