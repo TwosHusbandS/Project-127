@@ -33,6 +33,7 @@ using Project_127.HelperClasses;
 using Project_127.Overlay;
 using Project_127.Popups;
 using Project_127.MySettings;
+using System.Diagnostics;
 
 /*
 * This file is based on LegitimacyNUI.cpp from the CitizenFX Project - http://citizen.re/
@@ -81,8 +82,29 @@ namespace Project_127.Auth
 			return (Message.Length == 0);
 		}
 
+		public static async void MTLAuth()
+        {
+			MainWindow.MTLAuthTimer.Stop();
+			Process.Start("explorer.exe", "mtl://");
+			await Task.Delay(15000);
+			MainWindow.MTLAuthTimer.Interval = new TimeSpan(15000);
+			MainWindow.MW.AutoAuthMTLTimer();
+			MainWindow.MTLAuthTimer.Start();
+			//Timer when auth: minimize MTL, foreground p127
+		}
+
 		public ROSIntegration(bool pLaunchAfter = false)
 		{
+			if (false)//!MySettings.Settings.EnableLegacyAuth)
+            {
+				MTLAuth();
+				this.Dispatcher.Invoke(() =>
+				{
+					Globals.PageState = Globals.PageStates.GTA;
+				});
+				return;
+			}
+			
 			Uri jsfURI = new Uri(@"Auth\authpage.js", UriKind.Relative);
 			var jsfStream = System.Windows.Application.GetResourceStream(jsfURI);
 			using (var reader = new StreamReader(jsfStream.Stream))
@@ -387,8 +409,6 @@ namespace Project_127.Auth
 				creds.Save();
 			}
 		}
-
-
 
 		/// <summary>
 		/// Initialzes CEF settings
