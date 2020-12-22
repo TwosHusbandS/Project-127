@@ -366,7 +366,6 @@ namespace Project_127.Auth
 
 		public static async Task<bool> LoginMTL()
         {
-			HelperClasses.Logger.Log("Verifying Ownership...");
 			var s = MTLAuth.GetMTLSession();
 			if (!s.isValid())
             {

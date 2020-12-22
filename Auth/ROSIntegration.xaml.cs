@@ -85,10 +85,12 @@ namespace Project_127.Auth
 
 		public static async void MTLAuth()
         {
+			HelperClasses.Logger.Log("Launching MTL...");
 			MainWindow.MTLAuthTimer.Stop();
 			Process.Start("explorer.exe", "mtl://");
 			await Task.Delay(15000);
-			MainWindow.MTLAuthTimer.Interval = new TimeSpan(15000);
+			HelperClasses.Logger.Log("Waiting for session...");
+			//MainWindow.MTLAuthTimer.Interval = new TimeSpan(15000);
 			MainWindow.MW.AutoAuthMTLTimer();
 			MainWindow.MTLAuthTimer.Start();
 			//Timer when auth: minimize MTL, foreground p127
@@ -107,6 +109,7 @@ namespace Project_127.Auth
         {
 			if (LauncherLogic.AuthState == LauncherLogic.AuthStates.Auth)
             {
+				HelperClasses.Logger.Log("Got session");
 				MTLwait.Stop();
 				Process[] ps = Process.GetProcessesByName("SocialClubHelper");
 				IntPtr mtlWindow = new IntPtr();
