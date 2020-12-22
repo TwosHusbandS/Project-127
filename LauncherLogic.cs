@@ -153,6 +153,8 @@ namespace Project_127
 			Auth = 1
 		}
 
+		private static bool AuthStateOverWrite = false;
+
 		/// <summary>
 		/// AuthState Property
 		/// </summary>
@@ -160,7 +162,11 @@ namespace Project_127
 		{
 			get
 			{
-				//return AuthStates.Auth;
+				if (AuthStateOverWrite)
+				{
+					return AuthStates.Auth;
+				}
+
 				if (ROSCommunicationBackend.SessionValid)
 				{
 					return AuthStates.Auth;
@@ -534,8 +540,12 @@ namespace Project_127
 					}
 
 					// Generates Token needed to Launch Downgraded GTAV
-					HelperClasses.Logger.Log("Letting Dragon work his magic");
-					await ROSCommunicationBackend.GenToken();
+
+					if (!AuthStateOverWrite)
+					{
+						HelperClasses.Logger.Log("Letting Dragon work his magic");
+						await ROSCommunicationBackend.GenToken();
+					}
 
 
 					// If Steam
