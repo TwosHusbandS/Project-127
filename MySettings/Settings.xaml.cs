@@ -704,6 +704,7 @@ namespace Project_127.MySettings
 			ButtonMouseOverMagic(btn_cb_Set_EnableDontLaunchThroughSteam);
 			ButtonMouseOverMagic(btn_cb_Set_EnableAutoStartJumpScript);
 			ButtonMouseOverMagic(btn_cb_Set_SlowCompare);
+			ButtonMouseOverMagic(btn_cb_Set_LegacyAuth);
 
 			RefreshIfOptionsHide();
 		}
@@ -854,6 +855,9 @@ namespace Project_127.MySettings
 				case "btn_cb_Set_EnableLogging":
 					SetCheckBoxBackground(myBtn, Settings.EnableLogging);
 					break;
+				case "btn_cb_Set_LegacyAuth":
+					SetCheckBoxBackground(myBtn, Settings.EnableLegacyAuth);
+					break;
 				case "btn_cb_Set_SlowCompare":
 					SetCheckBoxBackground(myBtn, Settings.EnableSlowCompare);
 					break;
@@ -985,6 +989,9 @@ namespace Project_127.MySettings
 			{
 				case "btn_cb_Set_EnableLogging":
 					Settings.EnableLogging = !Settings.EnableLogging;
+					break;
+				case "btn_cb_Set_LegacyAuth":
+					Settings.EnableLegacyAuth = !Settings.EnableLegacyAuth;
 					break;
 				case "btn_cb_Set_SlowCompare":
 					Settings.EnableSlowCompare = !Settings.EnableSlowCompare;

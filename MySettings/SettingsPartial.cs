@@ -829,6 +829,23 @@ namespace Project_127.MySettings
 			}
 		}
 
+
+		/// <summary>
+		/// Settings EnableLegacyAuth. Gets and Sets from the Dictionary.
+		/// </summary>
+		public static bool EnableLegacyAuth
+		{
+			get
+			{
+				return GetBoolFromString(GetSetting("EnableLegacyAuth"));
+			}
+			set
+			{
+				SetSetting("EnableLegacyAuth", value.ToString());
+			}
+		}
+
+
 		/// <summary>
 		/// Getting a Key from the registry
 		/// </summary>

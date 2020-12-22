@@ -235,6 +235,8 @@ namespace Project_127
 
 			StartDispatcherTimer();
 
+			StartMTLDispatcherTimer();
+
 			HelperClasses.Logger.Log("Only CEF Init to go...");
 
 			Auth.ROSIntegration.CEFInitialize();
@@ -252,7 +254,6 @@ namespace Project_127
 				// Same as other two thingies here lolerino
 				HelperClasses.WindowChangeListener.Start();
 			}
-			StartMTLDispatcherTimer();
 		}
 
 		#endregion

@@ -41,6 +41,22 @@ namespace Project_127
 			}
 		}
 
+		public static List<Components> InstalledComponents
+		{
+			get
+			{
+				List<Components> tmp = new List<Components>();
+				foreach (Components myComponent in AllComponents)
+				{
+					if (myComponent.IsInstalled())
+					{
+						tmp.Add(myComponent);
+					}
+				}
+				return tmp;
+			}
+		}
+
 		public static bool isCSLSocialClubRequired
 		{
 			get
@@ -64,10 +80,13 @@ namespace Project_127
 			Had it crash on verify
 			delSubassembly does not return bool
 			What happens if SC and SCL_Steam_127 is installed, and SC gets verified
-			Need to make this work with current ZIP and Importing ZIP...Check for ZIP Version?
 			Not checking for Success Bools...
 			Crashing here and there. When SC + One thing which relys in SC is installed, and other thing which relys on SC gets installed.
 		
+			Need to make this work with current ZIP and Importing ZIP...Check for ZIP Version?
+			Window done...lets move into backend
+
+			Integrate into P127 backend...
 			Integrate everywhere else...instead of update check
 			DL shit when its needed (so on settings changed)
 			Verify whats installed on startup
@@ -179,9 +198,26 @@ namespace Project_127
 			Refresh();
 		}
 
-		private void Refresh(bool VerifyFromDisk = false)
+		public static void CheckForUpdates()
 		{
-			Globals.SetUpDownloadManager(VerifyFromDisk);
+			foreach (Components myComponent in InstalledComponents)
+			{
+				myComponent.UpdateLogic();
+			}
+		}
+
+		public static void StartupCheck()
+		{
+			if (Components.Base.IsInstalled() == false)
+			{
+				Components.Base.Install();
+			}
+			CheckForUpdates();
+		}
+
+		private void Refresh()
+		{
+			//Globals.SetUpDownloadManager(false);
 
 			Components.Base.UpdateStatus(lbl_FilesMain_Status);
 			Components.SCLRockstar124.UpdateStatus(lbl_FilesSCLRockstar124_Status);
@@ -191,12 +227,17 @@ namespace Project_127
 			Components.SCLDowngradedSC.UpdateStatus(lbl_FilesSCLDowngradedSC_Status);
 			Components.AdditionalSaveFiles.UpdateStatus(lbl_FilesAdditionalSF_Status);
 
+			CheckForUpdates();
+
 			btn_lbl_FilesMain_Name.Content = "Required Files (v." + Globals.ZipVersion + ")";
 		}
 
 		private void btn_lbl_FilesMain_Name_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
 		{
-
+			if (e.ClickCount >= 3)
+			{
+				// Change ZIP Here...
+			}
 		}
 	}
 
@@ -227,7 +268,7 @@ namespace Project_127
 					rtrn = "SOCIALCLUB_1178";
 					break;
 				case ComponentManager.Components.AdditionalSaveFiles:
-					rtrn = "ADDITIONAL_SF";
+					rtrn = "ADDITIONAL_SAVEFILES";
 					break;
 			}
 			return rtrn;
@@ -268,10 +309,9 @@ namespace Project_127
 			return Globals.MyDM.isInstalled(Component.GetAssemblyName());
 		}
 
-		public static bool ForceSetInstalled(this ComponentManager.Components Component, Version myVersion)
+		public static void ForceSetInstalled(this ComponentManager.Components Component, Version myVersion)
 		{
-			//return Globals.MyDM.setInstalled(Component.GetAssemblyName(), myVersion);
-			return true;
+			Globals.MyDM.setVersion(Component.GetAssemblyName(), myVersion);
 		}
 
 		public static bool UpdateLogic(this ComponentManager.Components Component)
@@ -283,9 +323,10 @@ namespace Project_127
 				if (yesno.DialogResult == true)
 				{
 					Globals.MyDM.updateSubssembly(Component.GetAssemblyName(), true).GetAwaiter().GetResult();
+					return true;
 				}
 			}
-			return true;
+			return false;
 		}
 
 		/// <summary>
