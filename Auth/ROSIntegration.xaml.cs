@@ -93,9 +93,15 @@ namespace Project_127.Auth
 			//Timer when auth: minimize MTL, foreground p127
 		}
 
+		private void onMTLAuthCompletion()
+        {
+			MainWindow.MW.menuItem_Show_Click(null, null);
+
+		}
+
 		public ROSIntegration(bool pLaunchAfter = false)
 		{
-			if (false)//!MySettings.Settings.EnableLegacyAuth)
+			if (!MySettings.Settings.EnableLegacyAuth)
             {
 				MTLAuth();
 				this.Dispatcher.Invoke(() =>
