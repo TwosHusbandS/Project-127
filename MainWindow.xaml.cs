@@ -144,6 +144,11 @@ namespace Project_127
 		public static DispatcherTimer MyDispatcherTimer;
 
 		/// <summary>
+		/// Property of the Dispatcher Timer we use to control automatic MTL session retrieval
+		/// </summary>
+		public static DispatcherTimer MTLAuthTimer;
+
+		/// <summary>
 		/// Constructor of Main Window
 		/// </summary>
 		public MainWindow()
@@ -247,6 +252,7 @@ namespace Project_127
 				// Same as other two thingies here lolerino
 				HelperClasses.WindowChangeListener.Start();
 			}
+			StartMTLDispatcherTimer();
 		}
 
 		#endregion
@@ -445,6 +451,39 @@ namespace Project_127
 			SetButtonMouseOverMagic(btn_Auth);
 		}
 
+		/// <summary>
+		/// Starting the Dispatcher Timer. 30 seconds. Used to control automatic MTL session retrieval
+		/// </summary>
+		private void StartMTLDispatcherTimer()
+		{
+			// Starting the Dispatcher Timer for the automatic updates of the GTA V Button
+			MTLAuthTimer = new System.Windows.Threading.DispatcherTimer();
+			MTLAuthTimer.Tick += new EventHandler(MainWindow.MW.AutoAuthMTLTimer);
+			MTLAuthTimer.Interval = TimeSpan.FromMilliseconds(30000);
+			MTLAuthTimer.Start();
+			MainWindow.MW.AutoAuthMTLTimer();
+		}
+
+		/// <summary>
+		/// Attempts to update auth session using MTL session data. Runs every 30 seconds
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		public void AutoAuthMTLTimer(object sender = null, EventArgs e = null)
+        {
+			if (LauncherLogic.AuthState == LauncherLogic.AuthStates.Auth)
+            {
+				MTLAuthTimer.Stop();
+            }
+			else if (Settings.EnableAlternativeLaunch)
+			{
+				return;
+            }
+            else
+            {
+				Auth.ROSCommunicationBackend.LoginMTL();
+			}
+		}
 
 		#endregion
 
