@@ -126,6 +126,17 @@ namespace Project_127.Auth
 					this.myGridLoading.Visibility = Visibility.Visible;
 				});
 
+				if (ROSCommunicationBackend.LoginMTL().Result)
+				{
+					HelperClasses.Logger.Log("MTL Login successful");
+					this.Dispatcher.Invoke(() =>
+					{
+						this.myGridContent.Visibility = Visibility.Hidden;
+						this.myGridLoading.Visibility = Visibility.Visible;
+					});
+					return;
+				}
+
 				browser.BrowserSettings.ApplicationCache = CefState.Disabled;
 				//browser.BrowserSettings.BackgroundColor = 0x13 << 16 | 0x15 << 8 | 0x18 | 0xFF << 24;
 				HelperClasses.Logger.Log("Initialization complete");

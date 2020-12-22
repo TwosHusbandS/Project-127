@@ -160,7 +160,7 @@ namespace Project_127
 		{
 			get
 			{
-				return AuthStates.Auth;
+				//return AuthStates.Auth;
 				if (ROSCommunicationBackend.SessionValid)
 				{
 					return AuthStates.Auth;
