@@ -165,7 +165,7 @@ namespace Project_127.Popups
 					this.Dispatcher.Invoke(() =>
 					{
 						myPB.Value = (int)(j / count * 100);
-						myLBL.Content = "Doing a " + Operation + "...(" + myPB.Value + "%)";
+						myLBL.Content = Operation + "...(" + myPB.Value + "%)";
 					});
 				}
 				HelperClasses.Logger.Log("Done with File Operation Stuff");
