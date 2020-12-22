@@ -182,6 +182,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Auth\CEFResourceHandler.cs" />
+    <Compile Include="Auth\MTLAuth.cs" />
     <Compile Include="ComponentManager.xaml.cs">
       <DependentUpon>ComponentManager.xaml</DependentUpon>
     </Compile>
