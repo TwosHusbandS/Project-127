@@ -39,7 +39,7 @@
                         <RowDefinition Height="8*"/>
                     </Grid.RowDefinitions>
 
-                    <Label Grid.Row="0"  FontSize="20"  Style="{StaticResource lbl}" x:Name="lbl_BackupFilesHeader" Content="Backup Save Files" ToolTip="Backup Save Files" Margin="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Foreground="{x:Static local:MyColors.SFH_DGHeaderForeground}" Background="{x:Static local:MyColors.SFH_DGHeaderBackground}"/>
+                    <Button Grid.Row="0" x:Name="btn_lbl_BackupSaves" Content="GTA V Save Files" Style="{StaticResource btn_Set_Header}" MouseRightButtonDown="btn_lbl_BackupSaves_MouseRightButtonDown"/>
 
                     <Image x:Name="sv_BackupFiles_Loading" Grid.Row="1" Visibility="Hidden" gif:ImageBehavior.AnimatedSource="../Artwork/loading.gif" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Height="48" Width="48" />
 
@@ -70,7 +70,7 @@
                         <RowDefinition Height="8*"/>
                     </Grid.RowDefinitions>
 
-                    <Label Grid.Row="0"  FontSize="20" Content="GTA V Save Files" Style="{StaticResource lbl}" Margin="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Foreground="{x:Static local:MyColors.SFH_DGHeaderForeground}" Background="{x:Static local:MyColors.SFH_DGHeaderBackground}"/>
+                    <Button Grid.Row="0" x:Name="btn_lbl_GTASavesHeader" Content="GTA V Save Files" Style="{StaticResource btn_Set_Header}" ToolTip="Right-Click Me" MouseRightButtonDown="btn_lbl_GTASavesHeader_MouseRightButtonDown"/>
 
                     <Image x:Name="sv_GTAFiles_Loading" Grid.Row="1" Visibility="Hidden" gif:ImageBehavior.AnimatedSource="../Artwork/loading.gif" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Height="48" Width="48" />
 

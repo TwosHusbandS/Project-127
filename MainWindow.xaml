@@ -9,7 +9,7 @@
         Title="Project - 1.27"
          Height="540" Width="1600"
         WindowStyle="None" 
-        ResizeMode="CanMinimize"
+        ResizeMode="CanResizeWithGrip"
         AllowsTransparency="False" 
         Loaded="Window_Loaded"
         MouseLeftButtonDown="Window_MouseLeftButtonDown" 

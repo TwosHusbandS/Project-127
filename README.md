@@ -44,17 +44,10 @@ Shamelessly stolen from: https://github.com/othneildrew/Best-README-Template
     Custom Client / Launcher for Speedrunning GTA.
     <br />
     <a href="https://www.youtube.com/watch?v=PLACEHOLDER">View Demo</a>
-<<<<<<< HEAD
-    ·
-    <a href="">Changelog</a>
-    ·
+	.
     <a href="#contact">Contact me</a>
-=======
-    Â·
-    <a href="changelogs-url">Changelog</a>
-    Â·
-    <a href="CTRLF">Contact me</a>
->>>>>>> fa0a1463b157f34305af858160842a6b49d5998a
+	.
+	<a href="[changelogs-url]">Changelog</a>
   </p>
 </p>
 

@@ -164,9 +164,9 @@ namespace Project_127.SaveFileHandlerStuff
 				TMP_Fontsize = newFontSize;
 
 			}
-			lbl_BackupFilesHeader.Content = TMP_BackupPathDisplay;
-			lbl_BackupFilesHeader.ToolTip = TMP_BackupPathDisplay;
-			lbl_BackupFilesHeader.FontSize = TMP_Fontsize;
+			btn_lbl_BackupSaves.Content = TMP_BackupPathDisplay;
+			btn_lbl_BackupSaves.ToolTip = TMP_BackupPathDisplay;
+			btn_lbl_BackupSaves.FontSize = TMP_Fontsize;
 
 			SaveFileHandlerStuff.RefreshTaskObject myTMP = await RefreshLogic();
 
@@ -182,15 +182,19 @@ namespace Project_127.SaveFileHandlerStuff
 			dg_GTAFiles.ItemsSource = MySaveFile.GTASaves;
 
 
-
 			if (DataGridToSelect != null)
 			{
 				HelperClasses.DataGridHelper.SelectFirst(DataGridToSelect);
 
-				if (GetDataGridCell(DataGridToSelect.SelectedCells[0]) != null)
+				try
 				{
-					Keyboard.Focus(GetDataGridCell(DataGridToSelect.SelectedCells[0]));
+
+					if (GetDataGridCell(DataGridToSelect.SelectedCells[0]) != null)
+					{
+						Keyboard.Focus(GetDataGridCell(DataGridToSelect.SelectedCells[0]));
+					}
 				}
+				catch { }
 			}
 
 			this.sv_BackupFiles_Loading.Visibility = Visibility.Hidden;
@@ -332,7 +336,7 @@ namespace Project_127.SaveFileHandlerStuff
 				}
 				tmp.CopyToGTA(NewFileName);
 				Refresh(dg_BackupFiles);
-				new Popup(Popup.PopupWindowTypes.PopupOk, "Copied '" + tmp.FileName + "' to the GTA V Saves Location under the Name '" + NewFileName + "' !").ShowDialog();
+				//new Popup(Popup.PopupWindowTypes.PopupOk, "Copied '" + tmp.FileName + "' to the GTA V Saves Location under the Name '" + NewFileName + "' !").ShowDialog();
 			}
 		}
 
@@ -1138,5 +1142,89 @@ namespace Project_127.SaveFileHandlerStuff
 			await Task.Delay(10);
 			Refresh();
 		}
+
+		private void btn_lbl_BackupSaves_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+		{
+			CreateHeaderContextMenu(MySaveFile.SaveFileKinds.Backup);
+		}
+
+		private void btn_lbl_GTASavesHeader_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+		{
+			CreateHeaderContextMenu(MySaveFile.SaveFileKinds.GTAV);
+		}
+
+		public void CreateHeaderContextMenu(MySaveFile.SaveFileKinds mySFK)
+		{
+
+			ContextMenu cm = new ContextMenu();
+			cm.Name = mySFK.ToString();
+
+			MenuItem mi = new MenuItem();
+			mi.Header = "Open Path in Explorer";
+			mi.Click += MI_OpenPath_Click;
+			cm.Items.Add(mi);
+
+			MenuItem mi2 = new MenuItem();
+			mi2.Header = "Clear";
+			mi2.Click += MI_Clear_Click;
+			cm.Items.Add(mi2);
+
+
+			cm.IsOpen = true;
+
+		}
+
+
+		private void MI_OpenPath_Click(object sender, RoutedEventArgs e)
+		{
+			MenuItem mi = (MenuItem)sender;
+			ContextMenu cm = (ContextMenu)mi.Parent;
+			if (cm.Name == "GTAV")
+			{
+				ProcessHandler.StartProcess(@"C:\Windows\explorer.exe", pCommandLineArguments: MySaveFile.GTAVSavesPath);
+			}
+			else
+			{
+				ProcessHandler.StartProcess(@"C:\Windows\explorer.exe", pCommandLineArguments: MySaveFile.CurrentBackupSavesPath);
+			}
+		}
+
+		private void MI_Clear_Click(object sender, RoutedEventArgs e)
+		{
+			Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Do you want to delete every file in the entire Tab?");
+			yesno.ShowDialog();
+			if (yesno.DialogResult == true)
+			{
+				HelperClasses.Logger.Log("User wants to delete everything in: '" + MySaveFile.GTAVSavesPath + "' from SaveFileHandler");
+				MenuItem mi = (MenuItem)sender;
+				ContextMenu cm = (ContextMenu)mi.Parent;
+				if (cm.Name == "GTAV")
+				{
+					foreach (string myFile in FileHandling.GetFilesFromFolderAndSubFolder(MySaveFile.GTAVSavesPath))
+					{
+						FileHandling.deleteFile(myFile);
+					}
+					foreach (string myFolder in FileHandling.GetSubFolders(MySaveFile.GTAVSavesPath))
+					{
+						FileHandling.DeleteFolder(myFolder);
+					}
+					Refresh(dg_GTAFiles);
+				}
+				else
+				{
+
+					foreach (string myFile in FileHandling.GetFilesFromFolderAndSubFolder(MySaveFile.CurrentBackupSavesPath))
+					{
+						FileHandling.deleteFile(myFile);
+					}
+					foreach (string myFolder in FileHandling.GetSubFolders(MySaveFile.CurrentBackupSavesPath))
+					{
+						FileHandling.DeleteFolder(myFolder);
+					}
+					Refresh(dg_GTAFiles);
+				}
+			}
+		}
+
 	} // End of Class
 } // End of Namespace

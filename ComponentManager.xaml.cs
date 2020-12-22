@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Project_127.Popups;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,6 +21,60 @@ namespace Project_127
 	/// </summary>
 	public partial class ComponentManager : Page
 	{
+		public enum Components
+		{
+			Base,
+			SCLSteam127,
+			SCLSteam124,
+			SCLRockstar127,
+			SCLRockstar124,
+			SCLDowngradedSC,
+			AdditionalSaveFiles
+		}
+
+
+		public static Array AllComponents
+		{
+			get
+			{
+				return Enum.GetValues(typeof(Components));
+			}
+		}
+
+		public static bool isCSLSocialClubRequired
+		{
+			get
+			{
+				foreach (Components myComponent in RequireCSLSocialClub)
+				{
+					if (myComponent.IsInstalled())
+					{
+						return true;
+					}
+				}
+				return false;
+			}
+		}
+
+		public static Components[] RequireCSLSocialClub = new Components[] { Components.SCLRockstar124, Components.SCLRockstar127, Components.SCLSteam124, Components.SCLSteam127 };
+
+		/*
+			Questions:
+			Had it break when calling getSubassembly with (true)
+			Had it crash on verify
+			delSubassembly does not return bool
+			What happens if SC and SCL_Steam_127 is installed, and SC gets verified
+			Need to make this work with current ZIP and Importing ZIP...Check for ZIP Version?
+			Not checking for Success Bools...
+			Crashing here and there. When SC + One thing which relys in SC is installed, and other thing which relys on SC gets installed.
+		
+			Integrate everywhere else...instead of update check
+			DL shit when its needed (so on settings changed)
+			Verify whats installed on startup
+			Tripple Rightclick - change ZIP number
+		*/
+
+
 		public ComponentManager()
 		{
 			InitializeComponent();
@@ -28,18 +83,64 @@ namespace Project_127
 
 		private void Page_Loaded(object sender, RoutedEventArgs e)
 		{
-
+			Refresh();
 		}
 
 
 		private void btn_Install_Click(object sender, RoutedEventArgs e)
 		{
-
+			string RealTag = ((Button)sender).Tag.ToString().TrimStart("Files".ToCharArray());
+			Components MyComponent = (Components)System.Enum.Parse(typeof(Components), RealTag);
+			if (MyComponent.IsInstalled())
+			{
+				Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Do you want to Re-Install the following Component:\n" + MyComponent.GetNiceName());
+				yesno.ShowDialog();
+				if (yesno.DialogResult == true)
+				{
+					MyComponent.ReInstall();
+					new Popup(Popup.PopupWindowTypes.PopupOk, "Done ReInstalling:\n" + MyComponent.GetNiceName()).ShowDialog();
+					Refresh();
+				}
+			}
+			else
+			{
+				MyComponent.Install();
+				new Popup(Popup.PopupWindowTypes.PopupOk, "Done Installing:\n" + MyComponent.GetNiceName()).ShowDialog();
+				Refresh();
+			}
 		}
 
 		private void btn_Uninstall_Click(object sender, RoutedEventArgs e)
 		{
+			string RealTag = ((Button)sender).Tag.ToString().TrimStart("Files".ToCharArray());
+			Components MyComponent = (Components)System.Enum.Parse(typeof(Components), RealTag);
 
+			if (MyComponent == Components.Base)
+			{
+				new Popup(Popup.PopupWindowTypes.PopupOk, "Cant delete our Base Component:\n" + Components.Base.GetNiceName()).ShowDialog();
+			}
+			else if (MyComponent == Components.SCLDowngradedSC && isCSLSocialClubRequired)
+			{
+				new Popup(Popup.PopupWindowTypes.PopupOk, "Cant delete that, we because Components requiring this are installed.").ShowDialog();
+			}
+			else if (MyComponent.IsInstalled())
+			{
+				MyComponent.Uninstall();
+				new Popup(Popup.PopupWindowTypes.PopupOk, "Done deleting:\n" + MyComponent.GetNiceName()).ShowDialog();
+				Refresh();
+			}
+		}
+
+		private void btn_Install_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+		{
+			string RealTag = ((Button)sender).Tag.ToString().TrimStart("Files".ToCharArray());
+			Components MyComponent = (Components)System.Enum.Parse(typeof(Components), RealTag);
+			if (MyComponent.IsInstalled())
+			{
+				MyComponent.Verify();
+				new Popup(Popup.PopupWindowTypes.PopupOk, "Done verifying:\n" + MyComponent.GetNiceName()).ShowDialog();
+				Refresh();
+			}
 		}
 
 		private void btn_MouseEnter(object sender, MouseEventArgs e)
@@ -75,7 +176,130 @@ namespace Project_127
 
 		private void btn_Refresh_Click(object sender, RoutedEventArgs e)
 		{
+			Refresh();
+		}
 
+		private void Refresh(bool VerifyFromDisk = false)
+		{
+			Globals.SetUpDownloadManager(VerifyFromDisk);
+
+			Components.Base.UpdateStatus(lbl_FilesMain_Status);
+			Components.SCLRockstar124.UpdateStatus(lbl_FilesSCLRockstar124_Status);
+			Components.SCLRockstar127.UpdateStatus(lbl_FilesSCLRockstar127_Status);
+			Components.SCLSteam124.UpdateStatus(lbl_FilesSCLSteam124_Status);
+			Components.SCLSteam127.UpdateStatus(lbl_FilesSCLSteam127_Status);
+			Components.SCLDowngradedSC.UpdateStatus(lbl_FilesSCLDowngradedSC_Status);
+			Components.AdditionalSaveFiles.UpdateStatus(lbl_FilesAdditionalSF_Status);
+
+			btn_lbl_FilesMain_Name.Content = "Required Files (v." + Globals.ZipVersion + ")";
+		}
+
+		private void btn_lbl_FilesMain_Name_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+		{
+
+		}
+	}
+
+
+	static class ComponentsExtensions
+	{
+		public static string GetAssemblyName(this ComponentManager.Components Component)
+		{
+			string rtrn = "";
+			switch (Component)
+			{
+				case ComponentManager.Components.Base:
+					rtrn = "MAIN";
+					break;
+				case ComponentManager.Components.SCLRockstar124:
+					rtrn = "AM_124_ROCKSTAR";
+					break;
+				case ComponentManager.Components.SCLRockstar127:
+					rtrn = "AM_127_ROCKSTAR";
+					break;
+				case ComponentManager.Components.SCLSteam124:
+					rtrn = "AM_124_STEAM";
+					break;
+				case ComponentManager.Components.SCLSteam127:
+					rtrn = "AM_127_STEAM";
+					break;
+				case ComponentManager.Components.SCLDowngradedSC:
+					rtrn = "SOCIALCLUB_1178";
+					break;
+				case ComponentManager.Components.AdditionalSaveFiles:
+					rtrn = "ADDITIONAL_SF";
+					break;
+			}
+			return rtrn;
+		}
+
+		public static string GetNiceName(this ComponentManager.Components Component)
+		{
+			string rtrn = "";
+			switch (Component)
+			{
+				case ComponentManager.Components.Base:
+					rtrn = "Needed GTA and P127 Files";
+					break;
+				case ComponentManager.Components.SCLRockstar124:
+					rtrn = "Launching through Social Club for Rockstar 1.24";
+					break;
+				case ComponentManager.Components.SCLRockstar127:
+					rtrn = "Launching through Social Club for Rockstar 1.27";
+					break;
+				case ComponentManager.Components.SCLSteam124:
+					rtrn = "Launching through Social Club for Steam 1.24";
+					break;
+				case ComponentManager.Components.SCLSteam127:
+					rtrn = "Launching through Social Club for Steam 1.27";
+					break;
+				case ComponentManager.Components.SCLDowngradedSC:
+					rtrn = "Launching through Downgraded Social Club.";
+					break;
+				case ComponentManager.Components.AdditionalSaveFiles:
+					rtrn = "Additional SaveFiles";
+					break;
+			}
+			return rtrn;
+		}
+
+		public static bool IsInstalled(this ComponentManager.Components Component)
+		{
+			return Globals.MyDM.isInstalled(Component.GetAssemblyName());
+		}
+
+		public static bool Install(this ComponentManager.Components Component)
+		{
+			return Globals.MyDM.getSubassembly(Component.GetAssemblyName()).GetAwaiter().GetResult();
+		}
+
+		public static bool ReInstall(this ComponentManager.Components Component)
+		{
+			return Globals.MyDM.getSubassembly(Component.GetAssemblyName(), true).GetAwaiter().GetResult();
+		}
+
+		public static void Uninstall(this ComponentManager.Components Component)
+		{
+			Globals.MyDM.delSubassembly(Component.GetAssemblyName());
+		}
+
+		public static bool Verify(this ComponentManager.Components Component)
+		{
+			return Globals.MyDM.verifySubassembly(Component.GetAssemblyName()).GetAwaiter().GetResult();
+		}
+
+		public static void UpdateStatus(this ComponentManager.Components Component, Label myLbl)
+		{
+			if (Component.IsInstalled())
+			{
+				myLbl.Content = "Installed";
+				myLbl.Foreground = MyColors.MyColorGreen;
+			}
+			else
+			{
+				myLbl.Content = "Not Installed";
+				myLbl.Foreground = MyColors.MyColorOrange;
+			}
 		}
 	}
 }
