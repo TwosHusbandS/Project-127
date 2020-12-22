@@ -64,6 +64,7 @@ namespace Project_127.Popups
 
 			HelperClasses.FileHandling.createPathOfFile(pDownloadLocation);
 			HelperClasses.FileHandling.deleteFile(pDownloadLocation);
+
 			lbl_Main.Content = "Downloading " + DownloadName + "...";
 
 			// Setting up some Webclient stuff. 
@@ -108,11 +109,6 @@ namespace Project_127.Popups
 			pb_Main.Value = (double)e.ProgressPercentage;
 			lbl_Main.Content = "Downloading " + DownloadName + "...\n(" + pb_Main.Value + "%)";
 		}
-
-
-		////////////////////////////////////////////////////////////////////
-		// Below are Methods we need to make the behaviour of this nice. ///
-		////////////////////////////////////////////////////////////////////
 
 		/// <summary>
 		/// Method which makes the Window draggable, which moves the whole window when holding down Mouse1 on the background

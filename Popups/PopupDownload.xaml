@@ -6,12 +6,12 @@
         xmlns:local="clr-namespace:Project_127"
         mc:Ignorable="d"
         Title="Popup Download" 
-        Background="{x:Static local:Globals.PU_Background}"
+        Background="{x:Static local:MyColors.PU_Background}"
         WindowStyle="None" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" MouseLeftButtonDown="Window_MouseLeftButtonDown"
         Height="200"
         Width="400"
         Icon="/Artwork/icon.png">
-    <Border BorderBrush="{x:Static local:Globals.PU_BorderBrush}" BorderThickness="2">
+    <Border BorderBrush="{x:Static local:MyColors.PU_BorderBrush}" BorderThickness="2">
 
         <Grid x:Name="myGrid" Margin="10,5" >
             <Grid.RowDefinitions>

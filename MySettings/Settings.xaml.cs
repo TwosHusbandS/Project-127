@@ -20,6 +20,7 @@ using Project_127.HelperClasses;
 using Project_127.Overlay;
 using Project_127.Popups;
 using Project_127.MySettings;
+using Project_127.HelperClasses.Keyboard;
 
 namespace Project_127.MySettings
 {
@@ -30,7 +31,8 @@ namespace Project_127.MySettings
 	{
 
 		/*
-		Main GUI Stuff for Settings. Most Logic should be in SettingsPartial.cs
+		Main GUI Stuff for Settings. Contains the Button Clicks etc.
+		SettingsPartial contains the actual Settings Properties.
 		*/
 
 
@@ -44,13 +46,9 @@ namespace Project_127.MySettings
 
 			// Needed for GUI Shit
 			combox_Set_Retail.ItemsSource = Enum.GetValues(typeof(Retailers)).Cast<Retailers>();
-
 			combox_Set_LanguageSelected.ItemsSource = Enum.GetValues(typeof(Languages)).Cast<Languages>();
-
 			combox_Set_ExitWays.ItemsSource = Enum.GetValues(typeof(ExitWays)).Cast<ExitWays>();
-
 			combox_Set_StartWays.ItemsSource = Enum.GetValues(typeof(StartWays)).Cast<StartWays>();
-
 			combox_Set_SocialClubGameVersion.Items.Add("127");
 			combox_Set_SocialClubGameVersion.Items.Add("124");
 
@@ -281,7 +279,7 @@ namespace Project_127.MySettings
 
 
 		/// <summary>
-		/// Event that gets triggered when the ComboBox of Retailers changed.
+		/// Event that gets raised when the ComboBox of Retailers changed.
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
@@ -293,7 +291,7 @@ namespace Project_127.MySettings
 
 
 		/// <summary>
-		/// Event that gets triggered when the ComboBox of Languages changed.
+		/// Event that gets raised when the ComboBox of Languages changed.
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
@@ -302,10 +300,24 @@ namespace Project_127.MySettings
 			LanguageSelected = (Languages)System.Enum.Parse(typeof(Languages), combox_Set_LanguageSelected.SelectedItem.ToString());
 		}
 
+
+		/// <summary>
+		/// Event that gets raised when the ComboBox of StartWays changed
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+
 		private void combox_Set_StartWays_SelectionChanged(object sender, SelectionChangedEventArgs e)
 		{
 			StartWay = (StartWays)System.Enum.Parse(typeof(StartWays), combox_Set_StartWays.SelectedItem.ToString());
 		}
+
+
+		/// <summary>
+		/// Event that gets raised when the ComboBox of ExitWays changed
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 
 		private void combox_Set_ExitWays_SelectionChanged(object sender, SelectionChangedEventArgs e)
 		{
@@ -350,7 +362,11 @@ namespace Project_127.MySettings
 					explorerStartPath = Settings.GTAVInstallationPath;
 					if (!IsRightClick)
 					{
-						SetGTAVPathManually();
+						//Originally this was here:
+						// SetGTAVPathManually();
+
+						// I changed it to this...hope its correct LOL
+						SetGTAVPathManually(true);
 					}
 					break;
 				case "btn_Set_ZIPExtractionPath":
@@ -665,14 +681,11 @@ namespace Project_127.MySettings
 			combox_Set_LanguageSelected.SelectedItem = Settings.LanguageSelected;
 			combox_Set_ExitWays.SelectedItem = Settings.ExitWay;
 			combox_Set_StartWays.SelectedItem = Settings.StartWay;
-
 			combox_Set_SocialClubGameVersion.SelectedItem = Settings.Version;
 
 			tb_Set_InGameName.Text = Settings.InGameName;
-
 			btn_Set_JumpScriptKey1.Content = Settings.JumpScriptKey1;
 			btn_Set_JumpScriptKey2.Content = Settings.JumpScriptKey2;
-
 
 			ButtonMouseOverMagic(btn_Refresh);
 			ButtonMouseOverMagic(btn_cb_Set_EnableLogging);
@@ -693,11 +706,6 @@ namespace Project_127.MySettings
 			ButtonMouseOverMagic(btn_cb_Set_SlowCompare);
 
 			RefreshIfOptionsHide();
-
-			//btn_Set_JumpScriptKey1.Content = Settings.JumpScriptKey1;
-			//btn_Set_JumpScriptKey2.Content = Settings.JumpScriptKey2;
-			//cb_Set_EnableAutoStartJumpScript.IsChecked = Settings.EnableAutoStartJumpScript;
-			//cb_Set_EnableNohboardBurhac.IsChecked = Settings.EnableNohboardBurhac;
 		}
 
 
@@ -905,6 +913,9 @@ namespace Project_127.MySettings
 		}
 
 
+		/// <summary>
+		/// Logic to decide which Settings we need to not show (overlay with Grey Rectangle to say that they are disabled
+		/// </summary>
 		private void RefreshIfOptionsHide()
 		{
 			Rect_HideOptions_Tease.Visibility = Visibility.Hidden;
@@ -1027,6 +1038,11 @@ namespace Project_127.MySettings
 			RefreshGUI();
 		}
 
+		/// <summary>
+		/// Checking for Update
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void btn_CheckForUpdate_Click(object sender, RoutedEventArgs e)
 		{
 			Globals.CheckForBigThree();
@@ -1041,18 +1057,33 @@ namespace Project_127.MySettings
 		}
 
 
+		/// <summary>
+		/// Switching to NoteOverlay specific Page (Notes)
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void btn_Set_Overlay_Notes_Click(object sender, RoutedEventArgs e)
 		{
 			NoteOverlay.LoadNoteOverlayWithCustomPage = NoteOverlay.NoteOverlayPages.NoteFiles;
 			Globals.PageState = Globals.PageStates.NoteOverlay;
 		}
 
+		/// <summary>
+		/// Switching to NoteOverlay specific Page (Hotkeys) 
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void btn_Set_Overlay_Hotkeys_Click(object sender, RoutedEventArgs e)
 		{
 			NoteOverlay.LoadNoteOverlayWithCustomPage = NoteOverlay.NoteOverlayPages.Keybinds;
 			Globals.PageState = Globals.PageStates.NoteOverlay;
 		}
 
+		/// <summary>
+		/// Switching to NoteOverlay specific Page (Looks) 
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void btn_Set_Overlay_Looks_Click(object sender, RoutedEventArgs e)
 		{
 			NoteOverlay.LoadNoteOverlayWithCustomPage = NoteOverlay.NoteOverlayPages.Look;
@@ -1060,11 +1091,19 @@ namespace Project_127.MySettings
 		}
 
 
+		/// <summary>
+		/// Resetting Everything
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void btn_Reset_Everything_Click(object sender, RoutedEventArgs e)
 		{
 			ResetEverything();
 		}
 
+		/// <summary>
+		/// Resetting Everything
+		/// </summary>
 		public static void ResetEverything()
 		{
 			Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "This resets the whole Project 1.27 Client including:\nSettings\nZIP Files Downloaded\nBacked up GTA Files to upgrade when downgraded\n\nYou need to repair GTA V through Steam / Epic / Rockstar after this\n(if its not already Up-To-Date)");
@@ -1087,19 +1126,46 @@ namespace Project_127.MySettings
 				HelperClasses.FileHandling.DeleteFolder(LauncherLogic.ZIPFilePath.TrimEnd('\\') + @"\Project_127_Files");
 				HelperClasses.Logger.Log("Done deleting all extracted ZIP Files.", 1);
 
-				HelperClasses.Logger.Log("Gonna close this now I guess...cya");
-				HelperClasses.Logger.Log("=");
-				HelperClasses.Logger.Log("=");
-				HelperClasses.Logger.Log("=");
-				HelperClasses.Logger.Log("=");
-				HelperClasses.Logger.Log("=");
-				HelperClasses.Logger.Log("=");
-				HelperClasses.Logger.Log("=");
-				HelperClasses.Logger.Log("=== FULL REPAIR DONE ===");
-				HelperClasses.Logger.Log("=");
-				HelperClasses.Logger.Log("=");
-				HelperClasses.Logger.Log("=");
-				Environment.Exit(0);
+				Popup yesno2 = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Do you want to uninstall Project 1.27?");
+				yesno2.ShowDialog();
+				if (yesno2.DialogResult == true)
+				{
+					HelperClasses.Logger.Log("User wants no uninstall...Gonna close this now I guess...cya");
+					HelperClasses.Logger.Log("=");
+					HelperClasses.Logger.Log("=");
+					HelperClasses.Logger.Log("=");
+					HelperClasses.Logger.Log("=");
+					HelperClasses.Logger.Log("=");
+					HelperClasses.Logger.Log("=");
+					HelperClasses.Logger.Log("=");
+					HelperClasses.Logger.Log("=== FULL REPAIR DONE ===");
+					HelperClasses.Logger.Log("=");
+					HelperClasses.Logger.Log("=== UNINSTALL COMMING ===");
+					HelperClasses.Logger.Log("=");
+
+					string FilePath = Globals.ProjectInstallationPath.TrimEnd('\\') + @"\unins000.exe";
+					ProcessHandler.StartProcess(FilePath, Globals.ProjectInstallationPath);
+
+					Globals.ProperExit();
+				}
+				else
+				{
+					HelperClasses.Logger.Log("User wants no uninstall...Gonna close this now I guess...cya");
+					HelperClasses.Logger.Log("=");
+					HelperClasses.Logger.Log("=");
+					HelperClasses.Logger.Log("=");
+					HelperClasses.Logger.Log("=");
+					HelperClasses.Logger.Log("=");
+					HelperClasses.Logger.Log("=");
+					HelperClasses.Logger.Log("=");
+					HelperClasses.Logger.Log("=== FULL REPAIR DONE ===");
+					HelperClasses.Logger.Log("=");
+					HelperClasses.Logger.Log("=");
+					HelperClasses.Logger.Log("=");
+
+					Globals.ProperExit();
+				}
+
 			}
 		}
 
@@ -1126,7 +1192,7 @@ namespace Project_127.MySettings
 
 					string msg = "Error: GTA V Installation Path incorrect or ZIP Version == 0.\nGTAV Installation Path: '" + LauncherLogic.GTAVFilePath + "'\nInstallationState (probably): '" + LauncherLogic.InstallationState.ToString() + "'\nZip Version: " + Globals.ZipVersion + ".";
 
-					if (Globals.Mode == "internal" || Globals.Mode == "beta")
+					if (Globals.Branch != "master")
 					{
 						Popup yesno2 = new Popup(Popup.PopupWindowTypes.PopupYesNo, msg + "\n. Force this Repair?");
 						yesno2.ShowDialog();
@@ -1146,44 +1212,87 @@ namespace Project_127.MySettings
 		}
 
 
-
-
+		/// <summary>
+		/// Create Backup Click
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void btn_CreateBackup_Click(object sender, RoutedEventArgs e)
 		{
 			LauncherLogic.CreateBackup();
 		}
 
+
+
+		/// <summary>
+		/// Create Backup Rightclick
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void btn_CreateBackup_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
 		{
 			PopupCreateBackup.IsOpen = true;
 		}
 
+		/// <summary>
+		/// Use Backup Click
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void btn_UseBackup_Click(object sender, RoutedEventArgs e)
 		{
 			LauncherLogic.UseBackup();
 		}
 
+
+		/// <summary>
+		/// Use Backup Rightclick
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void btn_UseBackup_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
 		{
 			PopupUseBackup.IsOpen = true;
 		}
 
 
+		/// <summary>
+		/// Click on Subpage of Settings
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void btn_SettingsGeneral_Click(object sender, RoutedEventArgs e)
 		{
 			SettingsState = SettingsStates.General;
 		}
 
+		/// <summary>
+		/// Click on Subpage of Settings
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void btn_SettingsGTA_Click(object sender, RoutedEventArgs e)
 		{
 			SettingsState = SettingsStates.GTA;
 		}
 
+
+		/// <summary>
+		/// Click on Subpage of Settings
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void btn_SettingsExtra_Click(object sender, RoutedEventArgs e)
 		{
 			SettingsState = SettingsStates.Extra;
 		}
 
+
+		/// <summary>
+		/// Rightclick Settings Header to get Mode Popup
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void lbl_SettingsHeader_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
 		{
 			if (SettingsState == SettingsStates.General)
@@ -1192,21 +1301,45 @@ namespace Project_127.MySettings
 			}
 		}
 
+
+		/// <summary>
+		/// Selection Changed of Version ComboBox
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void combox_Set_SocialClubGameVersion_SelectionChanged(object sender, SelectionChangedEventArgs e)
 		{
 			Settings.Version = combox_Set_SocialClubGameVersion.SelectedItem.ToString();
 		}
 
+
+		/// <summary>
+		/// Empty
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void PopupCreateBackup_Closed(object sender, EventArgs e)
 		{
 
 		}
 
+
+		/// <summary>
+		/// Method gets called when Popup of CreateBackup is opened
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void PopupCreateBackup_Opened(object sender, EventArgs e)
 		{
 			tb_Set_BackupName.Text = "BackupName";
 		}
 
+
+		/// <summary>
+		/// Keydown event to click "yes" on Enter on textbox of SetBackup 
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void tb_Set_BackupName_KeyDown(object sender, KeyEventArgs e)
 		{
 			if (e.Key == Key.Enter)
@@ -1215,6 +1348,11 @@ namespace Project_127.MySettings
 			}
 		}
 
+		/// <summary>
+		/// Creating a Backup
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private async void btn_CreateBackupName_Click(object sender, RoutedEventArgs e)
 		{
 			if (String.IsNullOrEmpty(tb_Set_BackupName.Text))
@@ -1255,17 +1393,33 @@ namespace Project_127.MySettings
 			}
 		}
 
+		/// <summary>
+		/// MouseLeave on Popup Borders
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void Border_MouseLeave(object sender, MouseEventArgs e)
 		{
 			PopupCreateBackup.IsOpen = false;
 			PopupUseBackup.IsOpen = false;
 		}
 
+		/// <summary>
+		/// Empty
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void PopupUseBackup_Closed(object sender, EventArgs e)
 		{
 
 		}
 
+
+		/// <summary>
+		/// Use Backup Popup opened.
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void PopupUseBackup_Opened(object sender, EventArgs e)
 		{
 			combox_UseBackup.Items.Clear();
@@ -1282,6 +1436,11 @@ namespace Project_127.MySettings
 
 		}
 
+		/// <summary>
+		/// use Backup Button Click
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private async void btn_UseBackupName_Click(object sender, RoutedEventArgs e)
 		{
 			if (combox_UseBackup.SelectedItem == null)
@@ -1319,11 +1478,21 @@ namespace Project_127.MySettings
 			LauncherLogic.UseBackup(combox_UseBackup.SelectedItem.ToString());
 		}
 
+		/// <summary>
+		/// Empty
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void combox_UseBackup_SelectionChanged(object sender, SelectionChangedEventArgs e)
 		{
 
 		}
 
+		/// <summary>
+		/// Resetting location of multi monitor mode
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void btn_cb_Set_EnableOverlayMultiMonitor_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
 		{
 			NoteOverlay.OverlaySettingsChanged();
@@ -1333,5 +1502,61 @@ namespace Project_127.MySettings
 
 			NoteOverlay.OverlaySettingsChanged();
 		}
+
+		/// <summary>
+		/// Rightclick on General Subpage Button. MOde popup.
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void btn_SettingsGeneral_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+		{
+			new PopupMode().ShowDialog();
+		}
+
+		/// <summary>
+		/// Check for Update rightclick ( getting specific build)
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void btn_CheckForUpdate_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+		{
+			PopupTextbox tb = new PopupTextbox("Build Name:", "MyBuildName");
+			tb.ShowDialog();
+			if (tb.DialogResult == true)
+			{
+				// Check if we can Download the build from the branch we are currently on.
+
+
+				if (tb.MyReturnString != "")
+				{
+					string DLLinkBranch = "https://github.com/TwosHusbandS/Project-127/raw/" + Globals.Branch + "/Installer/Builds/" + tb.MyReturnString.TrimEnd(".exe") + ".exe";
+					string DLLinkMaster = "https://github.com/TwosHusbandS/Project-127/raw/Master" + "/Installer/Builds/" + tb.MyReturnString.TrimEnd(".exe") + ".exe";
+
+					HelperClasses.Logger.Log("Importing Build. Links: ");
+					HelperClasses.Logger.Log("DLLinkBranch: " + DLLinkBranch);
+					HelperClasses.Logger.Log("DLLinkMaster: " + DLLinkMaster);
+
+					if (HelperClasses.FileHandling.URLExists(DLLinkBranch))
+					{
+						Globals.ImportBuildFromUrl(DLLinkBranch);
+					}
+					else
+					{
+						if (HelperClasses.FileHandling.URLExists(DLLinkMaster))
+						{
+							Globals.ImportBuildFromUrl(DLLinkMaster);
+						}
+					}
+
+					HelperClasses.Logger.Log("Both not reachable...");
+
+				}
+
+
+				new Popup(Popup.PopupWindowTypes.PopupOk, "Cant find that build online.").ShowDialog();
+			}
+		}
+
+
 	} // End of Class
 } // End of Namespace 

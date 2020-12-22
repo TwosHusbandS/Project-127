@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Controls;
 using Image = GameOverlay.Drawing.Image;
 
-namespace Project_127
+namespace Project_127.Overlay
 {
 
 	public class GTAOverlay : IDisposable
