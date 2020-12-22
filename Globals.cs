@@ -130,7 +130,7 @@ namespace Project_127
 			get
 			{
 				string masterURL = "https://raw.githubusercontent.com/TwosHusbandS/Project-127/master/Installer/DownloadManager.xml";
-				string modeURL = "https://raw.githubusercontent.com/TwosHusbandS/Project-127/" + Mode + "/Installer/DownloadManager.xml";
+				string modeURL = "https://raw.githubusercontent.com/TwosHusbandS/Project-127/" + Branch + "/Installer/DownloadManager.xml";
 				if (String.IsNullOrWhiteSpace(HelperClasses.FileHandling.GetStringFromURL(modeURL, true)))
 				{
 					return masterURL;

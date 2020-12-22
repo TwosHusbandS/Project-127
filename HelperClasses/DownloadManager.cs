@@ -10,7 +10,7 @@ using System.Xml.XPath;
 
 namespace Project_127.HelperClasses
 {
-	class DownloadManager
+	public class DownloadManager
 	{
         private XPathNavigator nav;
         private Dictionary<string, XPathNavigator> availableSubassemblies;
@@ -578,9 +578,22 @@ namespace Project_127.HelperClasses
             return await getSubassembly(subassemblyName, true);
         }
 
-        public DownloadManager(string xmlLocation)
+        public DownloadManager(string xmlLocation = null)
         {
-            XPathDocument xml = new XPathDocument(xmlLocation);//);
+            if (xmlLocation == null)
+            {
+                xmlLocation = Globals.URL_DownloadManager;
+            }
+            XPathDocument xml;
+            try
+            {
+                xml = new XPathDocument(xmlLocation);//);
+            }
+            catch
+            {
+                System.Windows.MessageBox.Show("Download Manager unable to fetch xml");
+                xml = new XPathDocument(new System.IO.StringReader("<targets/>"));
+            }
             nav = xml.CreateNavigator();
             var subassemblyEntries = nav.Select("/targets/subassembly");
             availableSubassemblies = new Dictionary<string, XPathNavigator>();
