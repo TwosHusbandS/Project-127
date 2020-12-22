@@ -125,7 +125,6 @@ namespace Project_127.Auth
 					this.myGridContent.Visibility = Visibility.Hidden;
 					this.myGridLoading.Visibility = Visibility.Visible;
 				});
-				ROSCommunicationBackend.LoginMTL();
 
 				browser.BrowserSettings.ApplicationCache = CefState.Disabled;
 				//browser.BrowserSettings.BackgroundColor = 0x13 << 16 | 0x15 << 8 | 0x18 | 0xFF << 24;
