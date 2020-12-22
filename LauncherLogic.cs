@@ -381,12 +381,11 @@ namespace Project_127
 
 		public static void AuthClick(bool StartGameImmediatelyAfter = false)
 		{
-			if (Globals.PageState != Globals.PageStates.Auth)
+			if (!MySettings.Settings.EnableLegacyAuth)
 			{
 				if (LauncherLogic.AuthState == LauncherLogic.AuthStates.NotAuth)
 				{
-					Globals.LaunchAfterAuth = StartGameImmediatelyAfter;
-					Globals.PageState = Globals.PageStates.Auth;
+					Auth.ROSIntegration.MTLAuth(StartGameImmediatelyAfter);
 				}
 				else
 				{
@@ -395,8 +394,24 @@ namespace Project_127
 			}
 			else
 			{
-				Globals.PageState = Globals.PageStates.GTA;
+				if (Globals.PageState != Globals.PageStates.Auth)
+				{
+					if (LauncherLogic.AuthState == LauncherLogic.AuthStates.NotAuth)
+					{
+						Globals.LaunchAfterAuth = StartGameImmediatelyAfter;
+						Globals.PageState = Globals.PageStates.Auth;
+					}
+					else
+					{
+						new Popup(Popup.PopupWindowTypes.PopupOk, "You are already authenticated.").ShowDialog();
+					}
+				}
+				else
+				{
+					Globals.PageState = Globals.PageStates.GTA;
+				}
 			}
+
 		}
 
 

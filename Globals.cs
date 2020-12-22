@@ -115,7 +115,7 @@ namespace Project_127
 				}
 				else
 				{
-					return HelperClasses.FileHandling.GetStringFromURL(masterURL);
+					return HelperClasses.FileHandling.GetStringFromURL(masterURL, true);
 				}
 			}
 		}

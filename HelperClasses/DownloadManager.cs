@@ -627,7 +627,7 @@ namespace Project_127.HelperClasses
             }
             else
             {
-                System.Windows.MessageBox.Show("Download Manager unable to fetch xml");
+				new Popup(Popup.PopupWindowTypes.PopupOkError, "Download Manager unable to fetch xml").ShowDialog();
                 xml = new XPathDocument(new System.IO.StringReader("<targets/>"));
             }
             nav = xml.CreateNavigator();

@@ -56,7 +56,7 @@ namespace Project_127.Auth
 		private int sendCount = 0;
 		private static bool newInstance = false;
 
-		private bool LaunchAfter;
+		private static bool LaunchAfter;
 
 
 		public bool WebSiteIsAvailable(string Url)
@@ -83,8 +83,9 @@ namespace Project_127.Auth
 			return (Message.Length == 0);
 		}
 
-		public static async void MTLAuth()
+		public static async void MTLAuth(bool LaunchGameAfter = false)
         {
+			LaunchAfter = LaunchGameAfter;
 			HelperClasses.Logger.Log("Launching MTL...");
 			MainWindow.MTLAuthTimer.Stop();
 			Process.Start("explorer.exe", "mtl://");
@@ -126,6 +127,10 @@ namespace Project_127.Auth
 					ShowWindowAsync(mtlWindow, 11);//Minimize
                 }
 				MainWindow.MW.menuItem_Show_Click(null, null);
+				if (LaunchAfter)
+				{
+					LauncherLogic.Launch();
+				}
 				return;
             }
 
@@ -133,16 +138,6 @@ namespace Project_127.Auth
 
 		public ROSIntegration(bool pLaunchAfter = false)
 		{
-			if (!MySettings.Settings.EnableLegacyAuth)
-            {
-				MTLAuth();
-				this.Dispatcher.Invoke(() =>
-				{
-					Globals.PageState = Globals.PageStates.GTA;
-				});
-				return;
-			}
-			
 			Uri jsfURI = new Uri(@"Auth\authpage.js", UriKind.Relative);
 			var jsfStream = System.Windows.Application.GetResourceStream(jsfURI);
 			using (var reader = new StreamReader(jsfStream.Stream))
