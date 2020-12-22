@@ -279,6 +279,7 @@ namespace Project_127
 			{"EnableAlternativeLaunch", "False"},
 			{"EnableCopyFilesInsteadOfHardlinking", "False"},
 			{"EnableSlowCompare", "False"},
+			{"EnableLegacyAuth", "False"},
 			{"Version", "127"},
 			{"EnableCopyFilesInsteadOfSyslinking_SocialClub", "False"},
 			{"ExitWay", "Close"},
@@ -524,6 +525,7 @@ namespace Project_127
 			Jumpscript.StopJumpscript();
 			Globals.FSW.Dispose();
 			MainWindow.MyDispatcherTimer.Stop();
+			MainWindow.MTLAuthTimer.Stop();
 			MainWindow.myMutex.ReleaseMutex();
 			HelperClasses.Logger.Log("Program closed. Proper Exit. Ended normally");
 			try
@@ -616,14 +618,13 @@ namespace Project_127
 
 		public static HelperClasses.DownloadManager MyDM;
 
-		public static void SetUpDownloadManager(bool VerifyFromDisk = false)
+		public static void SetUpDownloadManager(bool StartupCheck = true)
 		{
 			MyDM = new HelperClasses.DownloadManager(Globals.URL_DownloadManager);
-			//MyDM.delSubassembly("AM_127_STEAM");
-			//bool success = MyDM.delSubassembly("AM_127_ROCKSTAR").GetAwaiter().GetResult();
-			MyDM.delSubassembly("AM_127_STEAM");
-			//bool success = MyDM.verifySubassembly("AM_127_STEAM").GetAwaiter().GetResult();
-			//Globals.DebugPopup(success.ToString());
+			if (StartupCheck)
+			{
+				ComponentManager.StartupCheck();
+			}
 		}
 
 

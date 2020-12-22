@@ -57,26 +57,11 @@ namespace Project_127
 		/// <param name="e"></param>
 		private void btn_Auth_Click(object sender, RoutedEventArgs e)
 		{
-			if (Globals.PageState != Globals.PageStates.Auth)
-			{
-				if (LauncherLogic.AuthState == LauncherLogic.AuthStates.NotAuth)
-				{
-					Globals.PageState = Globals.PageStates.Auth;
-				}
-				else
-				{
-					new Popup(Popup.PopupWindowTypes.PopupOk, "You are already authenticated.").ShowDialog();
-				}
-			}
-			else
-			{
-				Globals.PageState = Globals.PageStates.GTA;
-			}
+			LauncherLogic.AuthClick();
 
 			// Yes this is correct
 			SetButtonMouseOverMagic(btn_Auth);
 		}
-
 
 
 		/// <summary>
@@ -88,11 +73,6 @@ namespace Project_127
 		{
 			HelperClasses.Logger.GenerateDebug();
 		}
-
-
-
-
-
 
 
 		/// <summary>
