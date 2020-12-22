@@ -274,9 +274,17 @@ namespace Project_127
 			return true;
 		}
 
-		public static bool Update(this ComponentManager.Components Component)
+		public static bool UpdateLogic(this ComponentManager.Components Component)
 		{
-			// return Globals.MyDM.Update(Component.GetAssemblyName()).GetAwaiter().GetResult();
+			if (Globals.MyDM.isUpdateAvalailable(Component.GetAssemblyName()))
+			{
+				Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Update for: '" + Component.GetNiceName() + "' available.\nDo you want to Download it?");
+				yesno.ShowDialog();
+				if (yesno.DialogResult == true)
+				{
+					Globals.MyDM.updateSubssembly(Component.GetAssemblyName(), true).GetAwaiter().GetResult();
+				}
+			}
 			return true;
 		}
 
