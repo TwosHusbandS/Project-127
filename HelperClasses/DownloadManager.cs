@@ -621,7 +621,7 @@ namespace Project_127.HelperClasses
                 xmls = HelperClasses.FileHandling.GetStringFromURL(Globals.URL_DownloadManager);
             }
             XPathDocument xml = null;
-            if (string.IsNullOrEmpty(xmls))
+            if (!string.IsNullOrEmpty(xmls))
             {
                 xml = new XPathDocument(new System.IO.StringReader(xmls));//);
             }

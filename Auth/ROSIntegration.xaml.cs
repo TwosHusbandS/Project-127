@@ -34,6 +34,7 @@ using Project_127.Overlay;
 using Project_127.Popups;
 using Project_127.MySettings;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 
 /*
 * This file is based on LegitimacyNUI.cpp from the CitizenFX Project - http://citizen.re/
@@ -91,11 +92,39 @@ namespace Project_127.Auth
 			MainWindow.MW.AutoAuthMTLTimer();
 			MainWindow.MTLAuthTimer.Start();
 			//Timer when auth: minimize MTL, foreground p127
+			MTLwait = new System.Windows.Threading.DispatcherTimer();
+			MTLwait.Tick += new EventHandler(onMTLAuthCompletion);
+			MTLwait.Interval = new TimeSpan(2000);
+			MTLwait.Start();
 		}
 
-		private void onMTLAuthCompletion()
+		private static System.Windows.Threading.DispatcherTimer MTLwait;
+
+		[DllImport("user32.dll")]
+		private static extern bool ShowWindowAsync(IntPtr hWnd, int nCmdShow);
+
+		private static void onMTLAuthCompletion(object sender = null, EventArgs e = null)
         {
-			MainWindow.MW.menuItem_Show_Click(null, null);
+			if (LauncherLogic.AuthState == LauncherLogic.AuthStates.Auth)
+            {
+				MTLwait.Stop();
+				Process[] ps = Process.GetProcessesByName("SocialClubHelper");
+				IntPtr mtlWindow = new IntPtr();
+				foreach (var p in ps)
+                {
+					if (p.MainWindowTitle.ToLower().Contains("Rockstar Games Launcher".ToLower()))
+                    {
+						mtlWindow = p.MainWindowHandle;
+						break;
+                    }
+                }
+				if (mtlWindow != IntPtr.Zero)
+                {
+					ShowWindowAsync(mtlWindow, 11);//Minimize
+                }
+				MainWindow.MW.menuItem_Show_Click(null, null);
+				return;
+            }
 
 		}
 
