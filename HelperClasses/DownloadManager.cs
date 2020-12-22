@@ -551,9 +551,10 @@ namespace Project_127.HelperClasses
         }
 
         /// <summary>
-        /// 
+        /// Function to update installed subassemblies
         /// </summary>
-        /// <param name="checkVersion"></param>
+        /// <param name="subassemblyName">Name of subassembly to update</param>
+        /// <param name="checkVersion"> Boolean indicating whether or not to verify an update is available</param>
         /// <returns></returns>
         public async Task<bool> updateSubssembly(string subassemblyName, bool checkVersion = true)
         {

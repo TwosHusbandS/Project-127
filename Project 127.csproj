@@ -486,6 +486,9 @@
       <HintPath>bin\DLLs\v2_AutoHotkey.dll</HintPath>
     </NativeReference>
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Installer\DownloadManager.xml" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

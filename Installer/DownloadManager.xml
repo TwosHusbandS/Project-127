@@ -176,4 +176,78 @@
         <hash>A4194EC76A80DBD0C621D8B9D3DDD374</hash>
         <mirror>http://gtav.anushk.net/downloadManager/subassemblies/Downgraded_Socialclub.zip</mirror>
     </subassembly>
+
+    <subassembly name="STANDARD_BASE" root="DowngradeFiles\" version="1.12.0.0">
+        <file name="PlayGTAV.exe" linked="true" subassembly="EMU_BASE_SUBASSEMBLY"/>
+        <file name="launc.dll" linked="true" subassembly="EMU_BASE_SUBASSEMBLY"/>
+        <file name="asmjit.dll" linked="true" subassembly="EMU_BASE_SUBASSEMBLY"/>
+        <file name="botan.dll" linked="true" subassembly="EMU_BASE_SUBASSEMBLY"/>
+        <file name="orig_socialclub.dll" linked="true" subassembly="EMU_BASE_SUBASSEMBLY"/>
+        <file name="ROSCrypto.dll" linked="true" subassembly="EMU_BASE_SUBASSEMBLY"/>
+        <file name="socialclub.dll" linked="true" subassembly="EMU_BASE_SUBASSEMBLY"/>
+        <file name="tinyxml2.dll" linked="true" subassembly="EMU_BASE_SUBASSEMBLY"/>
+        <file name="GFSDK_ShadowLib.win64.dll" linked="true" subassembly="EMU_BASE_SUBASSEMBLY"/>
+      
+        <file name="GTA5.exe">
+            <hash>5C706E27F1F204050450839F24E12C8A</hash>
+            <mirror>http://gtav.anushk.net/downloadManager/subassemblies/am127rockstar/GTA5.exe</mirror>
+        </file>
+        
+        <folder name="update">
+            <file name="update.rpf" linked="true" subassembly="127_BASE_SUBASSEMBLY"/>
+        </folder>
+        
+        <file name="bink2w64.dll" linked="true" subassembly="EMU_BASE_SUBASSEMBLY"/>
+        <file name="x64a.rpf" linked="true" subassembly="127_BASE_SUBASSEMBLY"/>
+        
+        <requires>
+            <subassembly target="127_BASE_SUBASSEMBLY"/>
+            <subassembly target="EMU_BASE_SUBASSEMBLY"/>
+            <subassembly target="MISC_FILES"/>
+        </requires>
+    </subassembly>
+    
+    <subassembly name="EMU_BASE_SUBASSEMBLY" type="common" version ="1.12.0.0">
+        <file name="PlayGTAV.exe">
+            <hash>078DC056B21FF674F5807809E423268F</hash>
+            <mirror>http://gtav.anushk.net/downloadManager/subassemblies/emuv12/PlayGTAV.exe</mirror>
+        </file>
+        <file name="launc.dll">
+            <hash>E2B4BA0D1A8AFC848C3893BAF4FA72F0</hash>
+            <mirror>http://gtav.anushk.net/downloadManager/subassemblies/emuv12/launc.dll</mirror>
+        </file>
+        <file name="asmjit.dll">
+            <hash>725BE7F710A3782606DE0DBAF9D3670C</hash>
+            <mirror>http://gtav.anushk.net/downloadManager/subassemblies/emuv12/asmjit.dll</mirror>
+        </file>
+        <file name="botan.dll">
+            <hash>6054DEC02D1676C3C1ABB8EFA92588D9</hash>
+            <mirror>http://gtav.anushk.net/downloadManager/subassemblies/emuv12/botan.dll</mirror>
+        </file>
+        <file name="orig_socialclub.dll">
+            <hash>B33FD2FCDD6E2EF9BD55DEC39D1DDFD2</hash>
+            <mirror>http://gtav.anushk.net/downloadManager/subassemblies/emuv12/orig_socialclub.dll</mirror>
+        </file>
+        <file name="ROSCrypto.dll">
+            <hash>810CE8A37EBF849806D5558B0A9C3075</hash>
+            <mirror>http://gtav.anushk.net/downloadManager/subassemblies/emuv12/ROSCrypto.dll</mirror>
+        </file>
+        <file name="socialclub.dll">
+            <hash>0477D5C8EBD51F520FC6B0ADF59E5581</hash>
+            <mirror>http://gtav.anushk.net/downloadManager/subassemblies/emuv12/socialclub.dll</mirror>
+        </file>
+        <file name="tinyxml2.dll">
+            <hash>4BAFE9D630BC74FDE367A543BF9E9C4A</hash>
+            <mirror>http://gtav.anushk.net/downloadManager/subassemblies/emuv12/tinyxml2.dll</mirror>
+        </file>
+        <file name="GFSDK_ShadowLib.win64.dll">
+            <hash>D043C98ED424F6770EA800E77EFCF561</hash>
+            <mirror>http://gtav.anushk.net/downloadManager/subassemblies/emuv12/GFSDK_ShadowLib.win64.dll</mirror>
+        </file>
+        <file name="bink2w64.dll">
+            <hash>518C9DA8D048F1DB89E835254E369EE0</hash>
+            <mirror>http://gtav.anushk.net/downloadManager/subassemblies/emuv12/bink2w64.dll</mirror>
+        </file>
+    </subassembly>
+
 </targets>
