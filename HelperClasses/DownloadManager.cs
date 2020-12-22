@@ -15,6 +15,7 @@ namespace Project_127.HelperClasses
         private XPathNavigator nav;
         private Dictionary<string, XPathNavigator> availableSubassemblies;
         private Dictionary<string, subassemblyInfo> installedSubassemblies;
+
         private static string Project127Files
         {
             get
@@ -487,6 +488,17 @@ namespace Project_127.HelperClasses
         {
             return new List<string>(installedSubassemblies.Keys);
         }
+
+
+		/// <summary>
+		/// Function to check if a single subassembly is installed
+		/// </summary>
+		/// <param name="subassembly"></param>
+		/// <returns>Bool if specicic subassembly is installed</returns>
+		public bool isInstalled(string subassembly)
+		{
+			return (getInstalled().Contains(subassembly));
+		}
 
         /// <summary>
         /// Function to get a the version of an installed subassembly

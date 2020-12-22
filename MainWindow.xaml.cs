@@ -16,6 +16,9 @@ Build Instructions:
 	If this doesnt work, required DLLs and files can be gotten by running the latest installer
 
 Deploy Instructions:
+	
+	CHANGE INNOSETUP SCRIPT AFTER 1.0 SO IT DOESNT DELETE INSTALL DIR!!
+
 	Change Version Number a few Lines Above.
 	Change Version Number in both of the last lines in AssemblyInfo.cs
 	Check if BetaMode / InternalMode in Globals.cs is correct
@@ -37,25 +40,18 @@ Comments like "TODO", "TO DO", "CTRLF", "CTRL-F", and "CTRL F" are just ways of 
 Hybrid code can be found in AAA_HybridCode.
 			
 To Do before 1.1:
-- Comment MainWindow
-- Comment Globals
-- Comment LauncherLogic
-- DL Manager WPF Window
 - Fix ReadMe:
 		=> signature thingies
-		=> links
-		=> license,
+		=> links (relative links for installer stuff, relative link for license)
+		=> license
 		=> Programming language
 		=> help section 
 			>> needs MultiMonitor thingy
 			>> and download stuff, 
 			>> rockstuf fucks us help on redownload
 			>> new launch thingy
-				>> CAP OVER TO README INSIDE P127 <<
-		=> maybe export Features and Help to other MarkDown
-- Check Installer Script. 
-	=> Uninstall command line arg ?
-	=> Stop deleting our own folder
+			>> Write stupid "Set up" thingy.
+
 - Delete Files with dragon...hope he deletes all and stuff.
 - [FUCK THAT] More efficent compare of files
 - [NOT CONNECTED TO ANY FILE RELATED LOGIC] Dragons stuff. Both paths, all settings

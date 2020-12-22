@@ -100,28 +100,6 @@ namespace Project_127
 		}
 
 
-
-
-		/// <summary>
-		/// URL for AutoUpdaterFile
-		/// </summary>
-		public static string URL_AutoUpdate
-		{
-			get
-			{
-				string masterURL = "https://raw.githubusercontent.com/TwosHusbandS/Project-127/master/Installer/Update.xml";
-				string modeURL = "https://raw.githubusercontent.com/TwosHusbandS/Project-127/" + Branch + "/Installer/Update.xml";
-				if (String.IsNullOrWhiteSpace(HelperClasses.FileHandling.GetStringFromURL(modeURL, true)))
-				{
-					return masterURL;
-				}
-				else
-				{
-					return modeURL;
-				}
-			}
-		}
-
 		/// <summary>
 		/// URL for DownloadManagerXML
 		/// </summary>
@@ -226,7 +204,7 @@ namespace Project_127
 		/// <summary>
 		/// Property of other Buildinfo. Will be in the top message of logs
 		/// </summary>
-		public static string BuildInfo = "Build 1, gotta love Crapideot";
+		public static string BuildInfo = "Build 0, shoutouts to AntherXx";
 
 		/// <summary>
 		/// Returns all Command Line Args as StringArray
@@ -636,10 +614,16 @@ namespace Project_127
 		#region UpdateShit
 
 
-		public static HelperClasses.DownloadManager MyDM = new HelperClasses.DownloadManager(); 
-		public static void SetUpDownloadManager()
-		{
+		public static HelperClasses.DownloadManager MyDM;
 
+		public static void SetUpDownloadManager(bool VerifyFromDisk = false)
+		{
+			MyDM = new HelperClasses.DownloadManager(Globals.URL_DownloadManager);
+			//MyDM.delSubassembly("AM_127_STEAM");
+			//bool success = MyDM.delSubassembly("AM_127_ROCKSTAR").GetAwaiter().GetResult();
+			MyDM.delSubassembly("AM_127_STEAM");
+			//bool success = MyDM.verifySubassembly("AM_127_STEAM").GetAwaiter().GetResult();
+			//Globals.DebugPopup(success.ToString());
 		}
 
 
@@ -1407,7 +1391,7 @@ namespace Project_127
 		}
 
 
-		
+
 
 
 		/// <summary>
