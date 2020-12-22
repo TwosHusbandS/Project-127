@@ -479,6 +479,10 @@ namespace Project_127
             {
 				MTLAuthTimer.Stop();
             }
+			else if (Settings.EnableAlternativeLaunch)
+			{
+				return;
+            }
             else
             {
 				Auth.ROSCommunicationBackend.LoginMTL();

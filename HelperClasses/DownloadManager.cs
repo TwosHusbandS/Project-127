@@ -426,6 +426,10 @@ namespace Project_127.HelperClasses
                 {
                     return false;
                 }
+                else if (sa.GetAttribute("type", "") == "zip")
+                {
+                    return true;
+                }
             }
             catch { }
             Dictionary<string, string> hashdict;
@@ -604,11 +608,11 @@ namespace Project_127.HelperClasses
                 xmlLocation = Globals.URL_DownloadManager;
             }
             XPathDocument xml;
-            try
+            if (VerifyUrlExists(xmlLocation).GetAwaiter().GetResult())
             {
                 xml = new XPathDocument(xmlLocation);//);
             }
-            catch
+            else
             {
                 System.Windows.MessageBox.Show("Download Manager unable to fetch xml");
                 xml = new XPathDocument(new System.IO.StringReader("<targets/>"));
@@ -630,6 +634,11 @@ namespace Project_127.HelperClasses
                 installedSubassemblies = new Dictionary<string, subassemblyInfo>();
             }
 
+        }
+
+        private async Task<bool> VerifyUrlExists(string url)
+        {
+            return HelperClasses.FileHandling.URLExists(url);
         }
        
         private class subassemblyInfo

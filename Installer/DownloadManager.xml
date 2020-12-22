@@ -250,4 +250,14 @@
         </file>
     </subassembly>
 
+    <subassembly name="MISC_FILES" type="zip" version="1.12.0.0">
+        <hash>591C9BC0E4FECDB6DDE185D0D31249EA</hash>
+        <mirror>http://gtav.anushk.net/MISC_FILES.zip</mirror>
+    </subassembly>
+
+    <subassembly name="ADDITIONAL_SAVEFILES" type="zip" version="1.12.0.0">
+        <hash>A1B038D54ADA12EADC189CA0CD5C54BD</hash>
+        <mirror>http://gtav.anushk.net/ADDITIONAL_SAVEFILES.zip</mirror>
+    </subassembly>
+
 </targets>
