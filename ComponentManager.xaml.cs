@@ -75,17 +75,60 @@ namespace Project_127
 		public static Components[] RequireCSLSocialClub = new Components[] { Components.SCLRockstar124, Components.SCLRockstar127, Components.SCLSteam124, Components.SCLSteam127 };
 
 		/*
-			Questions:
-			Had it break when calling getSubassembly with (true)
-			Had it crash on verify
-			delSubassembly does not return bool
-			What happens if SC and SCL_Steam_127 is installed, and SC gets verified
+		 * on re-install (seems to affect everything... (path has two \\)
+			"System.IO.FileNotFoundException: 'Could not find file 'F:\SteamLibrary\steamapps\common\Grand Theft Auto V\Project_127_Files\DowngradeFiles\\PlayGTAV.exe'.'"
+
+				System.IO.FileNotFoundException
+			  HResult=0x80070002
+			  Message=Could not find file 'F:\SteamLibrary\steamapps\common\Grand Theft Auto V\Project_127_Files\DowngradeFiles_Alternative\steam\127\\bink2w64.dll'.
+			  Source=mscorlib
+			  StackTrace:
+			   at System.IO.__Error.WinIOError(Int32 errorCode, String maybeFullPath)
+			   at System.IO.File.InternalCopy(String sourceFileName, String destFileName, Boolean overwrite, Boolean checkHost)
+			   at Project_127.HelperClasses.DownloadManager.linkedGetManager(String path, XPathNavigator fileEntry)
+			   at Project_127.HelperClasses.DownloadManager.getSubassemblyFile(String path, XPathNavigator fileEntry)
+			   at Project_127.HelperClasses.DownloadManager.<getSubassembly>d__7.MoveNext()
+		 install, delete work fine.
+
+		* On verify (seems to affect everything...)
+			System.NullReferenceException
+			 HResult=0x80004003
+			 Message=Object reference not set to an instance of an object.
+			 Source=Project 1.27
+			 StackTrace:
+			  at Project_127.HelperClasses.DownloadManager.hfTree(XPathNavigator x, String root)
+			  at Project_127.HelperClasses.DownloadManager.<verifySubassembly>d__14.MoveNext()
+			  at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+
+		* On install of 1.24 Rockstar OR 1.24 Steam
+			System.Collections.Generic.KeyNotFoundException
+			 HResult=0x80131577
+			 Message=The given key was not present in the dictionary.
+			 Source=mscorlib
+			 StackTrace:
+			  at System.ThrowHelper.ThrowKeyNotFoundException()
+			  at System.Collections.Generic.Dictionary`2.get_Item(TKey key)
+			  at Project_127.HelperClasses.DownloadManager.linkedGetManager(String path, XPathNavigator fileEntry)
+			  at Project_127.HelperClasses.DownloadManager.getSubassemblyFile(String path, XPathNavigator fileEntry)
+			  at Project_127.HelperClasses.DownloadManager.<getSubassembly>d__7.MoveNext()
+			  at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+
+		* DelSubassembly doesnt return anything
+
+		* Short Freeze and no Popups for the last like 5 seconds of Installing something
+
+		* Downgraded Social Club never gets installed even when its required...at least it doesnt show as "installed"
+	
+		* What happens if SC and SCL_Steam_127 is installed, and SC gets verified??
+
+			
+
+
+
+
 			Not checking for Success Bools...
-			Crashing here and there. When SC + One thing which relys in SC is installed, and other thing which relys on SC gets installed.
-		
 			Need to make this work with current ZIP and Importing ZIP...Check for ZIP Version?
 			Window done...lets move into backend
-
 			Integrate into P127 backend...
 			Integrate everywhere else...instead of update check
 			DL shit when its needed (so on settings changed)
@@ -117,15 +160,15 @@ namespace Project_127
 				if (yesno.DialogResult == true)
 				{
 					MyComponent.ReInstall();
-					new Popup(Popup.PopupWindowTypes.PopupOk, "Done ReInstalling:\n" + MyComponent.GetNiceName()).ShowDialog();
 					Refresh();
+					new Popup(Popup.PopupWindowTypes.PopupOk, "Done ReInstalling:\n" + MyComponent.GetNiceName()).ShowDialog();
 				}
 			}
 			else
 			{
 				MyComponent.Install();
-				new Popup(Popup.PopupWindowTypes.PopupOk, "Done Installing:\n" + MyComponent.GetNiceName()).ShowDialog();
 				Refresh();
+				new Popup(Popup.PopupWindowTypes.PopupOk, "Done Installing:\n" + MyComponent.GetNiceName()).ShowDialog();
 			}
 		}
 
@@ -140,13 +183,13 @@ namespace Project_127
 			}
 			else if (MyComponent == Components.SCLDowngradedSC && isCSLSocialClubRequired)
 			{
-				new Popup(Popup.PopupWindowTypes.PopupOk, "Cant delete that, we because Components requiring this are installed.").ShowDialog();
+				new Popup(Popup.PopupWindowTypes.PopupOk, "Cant delete that, because Components requiring this are installed.").ShowDialog();
 			}
 			else if (MyComponent.IsInstalled())
 			{
 				MyComponent.Uninstall();
-				new Popup(Popup.PopupWindowTypes.PopupOk, "Done deleting:\n" + MyComponent.GetNiceName()).ShowDialog();
 				Refresh();
+				new Popup(Popup.PopupWindowTypes.PopupOk, "Done deleting:\n" + MyComponent.GetNiceName()).ShowDialog();
 			}
 		}
 
@@ -157,8 +200,8 @@ namespace Project_127
 			if (MyComponent.IsInstalled())
 			{
 				MyComponent.Verify();
-				new Popup(Popup.PopupWindowTypes.PopupOk, "Done verifying:\n" + MyComponent.GetNiceName()).ShowDialog();
 				Refresh();
+				new Popup(Popup.PopupWindowTypes.PopupOk, "Done verifying:\n" + MyComponent.GetNiceName()).ShowDialog();
 			}
 		}
 
@@ -217,7 +260,7 @@ namespace Project_127
 
 		private void Refresh()
 		{
-			//Globals.SetUpDownloadManager(false);
+			Globals.SetUpDownloadManager(false);
 
 			Components.Base.UpdateStatus(lbl_FilesMain_Status);
 			Components.SCLRockstar124.UpdateStatus(lbl_FilesSCLRockstar124_Status);

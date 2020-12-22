@@ -74,8 +74,6 @@ namespace Project_127
 
 
 
-
-
 		/// <summary>
 		/// XML for AutoUpdaterFile
 		/// </summary>
@@ -99,6 +97,28 @@ namespace Project_127
 			}
 		}
 
+
+		/// <summary>
+		/// XML for DownloadManagerXML
+		/// </summary>
+		public static string XML_DownloadManager
+		{
+			get
+			{
+				string masterURL = "https://raw.githubusercontent.com/TwosHusbandS/Project-127/master/Installer/DownloadManager.xml";
+				string modeURL = "https://raw.githubusercontent.com/TwosHusbandS/Project-127/" + Branch + "/Installer/DownloadManager.xml";
+
+				string modeXML = HelperClasses.FileHandling.GetStringFromURL(modeURL, true);
+				if (!String.IsNullOrWhiteSpace(modeXML))
+				{
+					return modeXML;
+				}
+				else
+				{
+					return HelperClasses.FileHandling.GetStringFromURL(masterURL);
+				}
+			}
+		}
 
 		/// <summary>
 		/// URL for DownloadManagerXML
@@ -620,7 +640,7 @@ namespace Project_127
 
 		public static void SetUpDownloadManager(bool StartupCheck = true)
 		{
-			MyDM = new HelperClasses.DownloadManager(Globals.URL_DownloadManager);
+			MyDM = new HelperClasses.DownloadManager(Globals.XML_DownloadManager);
 			if (StartupCheck)
 			{
 				ComponentManager.StartupCheck();

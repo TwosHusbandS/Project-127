@@ -42,8 +42,8 @@
 
                 <Button Grid.Row="0" Grid.Column="0" x:Name="btn_lbl_FilesMain_Name" Content="Required Files"  ToolTip="Required Files. 'Normal' P127 Launch Files and Savefiles / Notes" Style="{StaticResource btn_Set_Header}" Foreground="{x:Static local:MyColors.App_LabelForeground}" FontFamily="Tahoma" FontSize="16" Background="Transparent" HorizontalAlignment="Left" BorderThickness="0" MouseRightButtonDown="btn_lbl_FilesMain_Name_MouseRightButtonDown" Margin="8"/>
                 <Label Grid.Row="0" Grid.Column="1" x:Name="lbl_FilesMain_Status" Content="Not installed" Style="{StaticResource lbl_Set_Info}" Foreground="{x:Static local:MyColors.MyColorGreen}"/>
-                <Button Grid.Row="0" Grid.Column="2" x:Name="btn_FilesMain_Install" Click="btn_Install_Click" MouseRightButtonDown="btn_Install_MouseRightButtonDown" Tag="FilesMain" Content="(Re-)install" ToolTip="Rightclick to Verify Files" Style="{StaticResource btn_CM_Action}"/>
-                <Button Grid.Row="0" Grid.Column="3" x:Name="btn_FilesMain_Uninstall" Click="btn_Uninstall_Click" Tag="FilesMain" Content="Uninstall" Style="{StaticResource btn_CM_Action_Disabled}"/>
+                <Button Grid.Row="0" Grid.Column="2" x:Name="btn_FilesMain_Install" Click="btn_Install_Click" MouseRightButtonDown="btn_Install_MouseRightButtonDown" Tag="FilesBase" Content="(Re-)install" ToolTip="Rightclick to Verify Files" Style="{StaticResource btn_CM_Action}"/>
+                <Button Grid.Row="0" Grid.Column="3" x:Name="btn_FilesMain_Uninstall" Click="btn_Uninstall_Click" Tag="FilesBase" Content="Uninstall" Style="{StaticResource btn_CM_Action_Disabled}"/>
 
                 <Label Grid.Row="1" Grid.Column="0" x:Name="lbl_FilesSCLSteam127_Name" Content="Social Club Launch Steam 1.27" ToolTip="Social Club Launch Steam 1.27" Style="{StaticResource lbl_Set_Info}"/>
                 <Label Grid.Row="1" Grid.Column="1" x:Name="lbl_FilesSCLSteam127_Status" Content="Status" Style="{StaticResource lbl_Set_Info}" Foreground="{x:Static local:MyColors.MyColorGreen}"/>
@@ -72,8 +72,8 @@
 
                 <Label Grid.Row="6" Grid.Column="0" x:Name="lbl_FilesAdditionalSF_Name" Content="Additional SafeFiles" ToolTip="SafeFiles for every Mission in the Game" Style="{StaticResource lbl_Set_Info}"/>
                 <Label Grid.Row="6" Grid.Column="1" x:Name="lbl_FilesAdditionalSF_Status" Content="Status" Style="{StaticResource lbl_Set_Info}" Foreground="{x:Static local:MyColors.MyColorGreen}"/>
-                <Button Grid.Row="6" Grid.Column="2" x:Name="btn_FilesAdditionalSF_Install" Click="btn_Install_Click" MouseRightButtonDown="btn_Install_MouseRightButtonDown" Tag="FilesAdditionalSF" Content="(Re-)install" ToolTip="Rightclick to Verify Files" Style="{StaticResource btn_CM_Action}"/>
-                <Button Grid.Row="6" Grid.Column="3" x:Name="btn_FilesAdditionalSF_Uninstall" Click="btn_Uninstall_Click" Tag="AdditionalSF" Content="Uninstall" Style="{StaticResource btn_CM_Action}"/>
+                <Button Grid.Row="6" Grid.Column="2" x:Name="btn_FilesAdditionalSF_Install" Click="btn_Install_Click" MouseRightButtonDown="btn_Install_MouseRightButtonDown" Tag="FilesAdditionalSaveFiles" Content="(Re-)install" ToolTip="Rightclick to Verify Files" Style="{StaticResource btn_CM_Action}"/>
+                <Button Grid.Row="6" Grid.Column="3" x:Name="btn_FilesAdditionalSF_Uninstall" Click="btn_Uninstall_Click" Tag="FilesAdditionalSaveFiles" Content="Uninstall" Style="{StaticResource btn_CM_Action}"/>
             </Grid>                                                                                                            
         </Border>
 
