@@ -578,6 +578,25 @@ namespace Project_127.HelperClasses
             return await getSubassembly(subassemblyName, true);
         }
 
+        /// <summary>
+        /// Function to set the version of an installed subassembly
+        /// Can be used to "install" packages from zip import
+        /// </summary>
+        /// <returns>The version of the installed subassembly</returns>
+        public void setVersion(string subassemblyName, Version version)
+        {
+            if (installedSubassemblies.ContainsKey(subassemblyName))
+            {
+                installedSubassemblies[subassemblyName].version = version.ToString();
+            }
+            else
+            {
+                var s = new subassemblyInfo {version = version.ToString() };
+                installedSubassemblies.Add(subassemblyName, s);
+            }
+            updateInstalled();
+        }
+
         public DownloadManager(string xmlLocation = null)
         {
             if (xmlLocation == null)
