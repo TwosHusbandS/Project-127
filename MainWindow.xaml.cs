@@ -39,7 +39,7 @@ Hybrid code can be found in AAA_HybridCode.
 To Do before 1.1:
 - Fix ReadMe:
 		=> signature thingies
-		=> links
+		=> links (relative links for installer stuff, relative link for license)
 		=> license
 		=> Programming language
 		=> help section 
@@ -47,8 +47,7 @@ To Do before 1.1:
 			>> and download stuff, 
 			>> rockstuf fucks us help on redownload
 			>> new launch thingy
-				>> CAP OVER TO README INSIDE P127 <<
-		=> maybe export Features and Help to other MarkDown
+			>> Write stupid "Set up" thingy.
 - Check Installer Script. 
 	=> Uninstall command line arg ?
 	=> Stop deleting our own folder
