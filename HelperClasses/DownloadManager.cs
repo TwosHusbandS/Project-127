@@ -695,6 +695,10 @@ namespace Project_127.HelperClasses
             var folders = x.Select("./folder");
             foreach (XPathNavigator file in files)
             {
+                if (file.GetAttribute("linked","").ToLower() == "true")
+                {
+                    continue;
+                }
                 hashdict[root+"\\"+file.GetAttribute("name","")] = file.SelectSingleNode("./hash").Value;
             }
             foreach (XPathNavigator folder in folders)
