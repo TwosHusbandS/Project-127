@@ -209,7 +209,7 @@ namespace Project_127
 			switch (Component)
 			{
 				case ComponentManager.Components.Base:
-					rtrn = "MAIN";
+					rtrn = "STANDARD_BASE";
 					break;
 				case ComponentManager.Components.SCLRockstar124:
 					rtrn = "AM_124_ROCKSTAR";
@@ -239,7 +239,7 @@ namespace Project_127
 			switch (Component)
 			{
 				case ComponentManager.Components.Base:
-					rtrn = "Needed GTA and P127 Files";
+					rtrn = "Needed Files for P127 and Downgraded GTA";
 					break;
 				case ComponentManager.Components.SCLRockstar124:
 					rtrn = "Launching through Social Club for Rockstar 1.24";
@@ -268,26 +268,63 @@ namespace Project_127
 			return Globals.MyDM.isInstalled(Component.GetAssemblyName());
 		}
 
+		public static bool ForceSetInstalled(this ComponentManager.Components Component, Version myVersion)
+		{
+			//return Globals.MyDM.setInstalled(Component.GetAssemblyName(), myVersion);
+			return true;
+		}
+
+		public static bool Update(this ComponentManager.Components Component)
+		{
+			// return Globals.MyDM.Update(Component.GetAssemblyName()).GetAwaiter().GetResult();
+			return true;
+		}
+
+		/// <summary>
+		/// Installs a Specific Assembly. Returns Success bool.
+		/// </summary>
+		/// <param name="Component"></param>
+		/// <returns></returns>
 		public static bool Install(this ComponentManager.Components Component)
 		{
 			return Globals.MyDM.getSubassembly(Component.GetAssemblyName()).GetAwaiter().GetResult();
 		}
 
+		/// <summary>
+		/// Re-Installs a specific Assembly. Returns Success bool.
+		/// </summary>
+		/// <param name="Component"></param>
+		/// <returns></returns>
 		public static bool ReInstall(this ComponentManager.Components Component)
 		{
 			return Globals.MyDM.getSubassembly(Component.GetAssemblyName(), true).GetAwaiter().GetResult();
 		}
 
+
+		/// <summary>
+		/// Uninstall a Specific assembly.
+		/// </summary>
+		/// <param name="Component"></param>
 		public static void Uninstall(this ComponentManager.Components Component)
 		{
 			Globals.MyDM.delSubassembly(Component.GetAssemblyName());
 		}
 
+		/// <summary>
+		/// Checks if a Subassembly is actuall installed (matches Hashes). Doesnt repair. Returns Success bool.
+		/// </summary>
+		/// <param name="Component"></param>
+		/// <returns></returns>
 		public static bool Verify(this ComponentManager.Components Component)
 		{
 			return Globals.MyDM.verifySubassembly(Component.GetAssemblyName()).GetAwaiter().GetResult();
 		}
 
+		/// <summary>
+		/// GUI Method to Update the label
+		/// </summary>
+		/// <param name="Component"></param>
+		/// <param name="myLbl"></param>
 		public static void UpdateStatus(this ComponentManager.Components Component, Label myLbl)
 		{
 			if (Component.IsInstalled())

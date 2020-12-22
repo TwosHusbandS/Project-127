@@ -153,7 +153,6 @@ namespace Project_127
 			Auth = 1
 		}
 
-
 		private static bool AuthStateOverWrite = false;
 
 		/// <summary>

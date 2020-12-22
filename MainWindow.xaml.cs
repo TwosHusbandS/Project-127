@@ -16,6 +16,9 @@ Build Instructions:
 	If this doesnt work, required DLLs and files can be gotten by running the latest installer
 
 Deploy Instructions:
+	
+	CHANGE INNOSETUP SCRIPT AFTER 1.0 SO IT DOESNT DELETE INSTALL DIR!!
+
 	Change Version Number a few Lines Above.
 	Change Version Number in both of the last lines in AssemblyInfo.cs
 	Check if BetaMode / InternalMode in Globals.cs is correct
@@ -48,9 +51,7 @@ To Do before 1.1:
 			>> rockstuf fucks us help on redownload
 			>> new launch thingy
 			>> Write stupid "Set up" thingy.
-- Check Installer Script. 
-	=> Uninstall command line arg ?
-	=> Stop deleting our own folder
+
 - Delete Files with dragon...hope he deletes all and stuff.
 - [FUCK THAT] More efficent compare of files
 - [NOT CONNECTED TO ANY FILE RELATED LOGIC] Dragons stuff. Both paths, all settings
