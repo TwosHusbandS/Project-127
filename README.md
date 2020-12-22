@@ -60,11 +60,12 @@ Shamelessly stolen from: https://github.com/othneildrew/Best-README-Template
     <li>
       <a href="#about-the-project">About Project 1.27</a>
       <ul>
+        <li><a href="#main-features">Main Features</a></li>
+        <li><a href="#Help">Help and how to get Started</a></li>
         <li><a href="#built-with">Built With</a></li>
         <li><a href="#nstallation">Installation</a></li>
         <li><a href="#user-instructions">User Instructions</a></li>
         <li><a href="#advanced-user-instructions">Advanced User Instructions</a></li>
-        <li><a href="#help-section">Help Section</a></li>
       </ul>
     </li>
     <li><a href="#roadmap">Roadmap</a></li>
@@ -80,13 +81,17 @@ Shamelessly stolen from: https://github.com/othneildrew/Best-README-Template
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-Hi! This is a custom Client which was originally created to give Speedrunners the capability of launching the Downgraded GTA Version 1.27
+Hi! This is a custom Client which was originally created to give all Speedrunners the capability of launching the Downgraded GTA Version 1.27. 
 
-[List of Main Features here]()
+Over time it grew with Features and Launch - Capabilities
 
-[Help and How to get started]()
+### Main Features
 
-If you can think of any other Features or things this Program could do, please do not hesitate to contact me.
+* [List of Main Features here][help-url]
+
+### Help
+
+* [Help and How to get started][features-url]
 
 ### Built With
 
@@ -125,13 +130,6 @@ Pretty much built with straight C# visualized with WPF
   * By default it recommends you to use your GTA Installation for that.
   * Again: Use your GTA Installation Folder for this.
 * Theres a lot of stuff you can rightclick. I mean. A lot.
-
-### Help Section
-
-* Place
-* Holder
-* And
-* Stuff
 
 
 -----
