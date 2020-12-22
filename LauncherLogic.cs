@@ -381,34 +381,21 @@ namespace Project_127
 
 		public static void AuthClick(bool StartGameImmediatelyAfter = false)
 		{
-			if (Settings.EnableLegacyAuth)
+			if (Globals.PageState != Globals.PageStates.Auth)
 			{
-				if (Globals.PageState != Globals.PageStates.Auth)
+				if (LauncherLogic.AuthState == LauncherLogic.AuthStates.NotAuth)
 				{
-					if (LauncherLogic.AuthState == LauncherLogic.AuthStates.NotAuth)
-					{
-						Globals.LaunchAfterAuth = StartGameImmediatelyAfter;
-						Globals.PageState = Globals.PageStates.Auth;
-					}
-					else
-					{
-						new Popup(Popup.PopupWindowTypes.PopupOk, "You are already authenticated.").ShowDialog();
-					}
+					Globals.LaunchAfterAuth = StartGameImmediatelyAfter;
+					Globals.PageState = Globals.PageStates.Auth;
 				}
 				else
 				{
-					Globals.PageState = Globals.PageStates.GTA;
+					new Popup(Popup.PopupWindowTypes.PopupOk, "You are already authenticated.").ShowDialog();
 				}
 			}
 			else
 			{
-				// AUTH BUTTON IS CLICKED, OR GAME LAUNCH WAS CLICKED AND WE ARE NOT AUTH YET
-				// SETTINGS.ENABLELEGACYAUTH IS SET TO FALSE.
-
-				// CHECK FOR StartGameImmediatelyAfter bool Parameter and start game if needed / wanted...
-				// just call LauncherLogic.Launch(); for that. That will take care of the rest (check what version, what launch, downgraded upraded etc.
-
-				// DO YOUR MAGIC HERE.
+				Globals.PageState = Globals.PageStates.GTA;
 			}
 		}
 
