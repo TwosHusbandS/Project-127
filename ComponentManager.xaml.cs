@@ -57,6 +57,66 @@ namespace Project_127
 			}
 		}
 
+
+		public static List<Components> RequiredComponentsBasedOnSettings
+		{
+			get
+			{
+				List<Components> tmp = new List<Components>();
+				tmp.Add(Components.Base);
+				if (MySettings.Settings.EnableAlternativeLaunch && MySettings.Settings.Retailer != MySettings.Settings.Retailers.Epic)
+				{
+					tmp.Add(Components.SCLDowngradedSC);
+					if (MySettings.Settings.SocialClubLaunchGameVersion == "124")
+					{
+						if (MySettings.Settings.Retailer == MySettings.Settings.Retailers.Steam)
+						{
+							tmp.Add(Components.SCLSteam124);
+						}
+						else if (MySettings.Settings.Retailer == MySettings.Settings.Retailers.Rockstar)
+						{
+							tmp.Add(Components.SCLRockstar124);
+						}
+					}
+					else if (MySettings.Settings.SocialClubLaunchGameVersion == "127")
+					{
+						if (MySettings.Settings.Retailer == MySettings.Settings.Retailers.Steam)
+						{
+							tmp.Add(Components.SCLSteam127);
+						}
+						else if (MySettings.Settings.Retailer == MySettings.Settings.Retailers.Rockstar)
+						{
+							tmp.Add(Components.SCLRockstar127);
+						}
+					}
+				}
+				return tmp;
+			}
+		}
+
+		public static void CheckIfRequiredComponentsAreInstalled()
+		{
+			foreach (Components myComponent in RequiredComponentsBasedOnSettings)
+			{
+				if (!myComponent.IsInstalled())
+				{
+					myComponent.Install();
+				}
+				else
+				{
+					if (myComponent == Components.SCLDowngradedSC)
+					{
+						string Path1 = LauncherLogic.DowngradedSocialClub.TrimEnd('\\') + @"\subprocess.exe";
+						string Path2 = LauncherLogic.DowngradedSocialClub.TrimEnd('\\') + @"\socialclub.dll";
+						if (!HelperClasses.FileHandling.doesFileExist(Path1) || !HelperClasses.FileHandling.doesFileExist(Path2))
+						{
+							myComponent.ReInstall();
+						}
+					}
+				}
+			}
+		}
+
 		public static bool isCSLSocialClubRequired
 		{
 			get
@@ -119,10 +179,26 @@ namespace Project_127
 			}
 		}
 
+		public static void ZIPVersionSwitcheroo()
+		{
+			int _ZipVersion = 0;
+			string VersionTxt = LauncherLogic.ZIPFilePath.TrimEnd('\\') + @"\Project_127_Files\Version.txt";
+			if (HelperClasses.FileHandling.doesFileExist(VersionTxt))
+			{
+				Int32.TryParse(HelperClasses.FileHandling.ReadContentOfFile(VersionTxt), out _ZipVersion);
+				if (_ZipVersion > 0)
+				{
+					HelperClasses.FileHandling.deleteFile(VersionTxt);
+					Components.Base.ForceSetInstalled(new Version(1, _ZipVersion));
+				}
+			}
+
+		}
+
 		public static void ThrowShoutout()
 		{
 			string msg = "";
-			msg += "Editors Note: Massive Shoutout to AntherXx for going through the trouble and manual labor" + "\n";
+			msg += "Editors Note: Massive Shoutout to @AntherXx for going through the trouble and manual labor" + "\n";
 			msg += "of renaming the SaveFiles and collecting them.Thanks a lot mate." + "\n";
 			msg += "" + "\n";
 			msg += "This is a compilation of save files to practice each mission as you would in a full run, instead of in a Mission Replay." + "\n";
@@ -228,11 +304,8 @@ namespace Project_127
 
 		public static void StartupCheck()
 		{
-			if (Components.Base.IsInstalled() == false)
-			{
-				Components.Base.Install();
-			}
 			CheckForUpdates();
+			CheckIfRequiredComponentsAreInstalled();
 		}
 
 		private void Refresh(bool CheckForUpdatesPls = false)
@@ -242,8 +315,6 @@ namespace Project_127
 				Globals.SetUpDownloadManager(false);
 				CheckForUpdates();
 			}
-
-			//Globals.MyDM.setVersion(Components.AdditionalSaveFiles.GetAssemblyName()w, new Version("1.0.0.0"));
 
 			Components.Base.UpdateStatus(lbl_FilesMain_Status);
 			Components.SCLRockstar124.UpdateStatus(lbl_FilesSCLRockstar124_Status);
@@ -260,6 +331,8 @@ namespace Project_127
 			lbl_FilesSCLSteam127_Name.ToolTip = Components.SCLSteam127.GetToolTip();
 			lbl_FilesSCLDowngradedSC_Name.ToolTip = Components.SCLDowngradedSC.GetToolTip();
 			lbl_FilesAdditionalSF_Name.ToolTip = Components.AdditionalSaveFiles.GetToolTip();
+
+
 
 			Version tmp = Components.Base.GetInstalledVersion();
 			if (tmp != new Version("0.0.0.1"))
@@ -296,6 +369,20 @@ namespace Project_127
 							Refresh();
 						}
 					}
+				}
+			}
+		}
+
+		private void btn_Refresh_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+		{
+			if (e.ClickCount >= 3)
+			{
+				Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Do you want to reset the Information if Components are installed?");
+				yesno.ShowDialog();
+				if (yesno.DialogResult == true)
+				{
+					HelperClasses.RegeditHandler.SetValue("DownloadManagerInstalledSubassemblies","");
+					Globals.SetUpDownloadManager(true);
 				}
 			}
 		}
@@ -440,11 +527,13 @@ namespace Project_127
 			{
 				myLbl.Content = "Installed";
 				myLbl.Foreground = MyColors.MyColorGreen;
+				myLbl.ToolTip = "Installed Version: " + Component.GetInstalledVersion().ToString();
 			}
 			else
 			{
 				myLbl.Content = "Not Installed";
 				myLbl.Foreground = MyColors.MyColorOrange;
+				myLbl.ToolTip = "";
 			}
 		}
 

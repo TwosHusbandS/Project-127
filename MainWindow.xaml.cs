@@ -41,35 +41,10 @@ Hybrid code can be found in AAA_HybridCode.
 			
 To Do before 1.1:
 - Fix ReadMe:
-		=> Features.md thingies for new stuff. SFH, DM / CM and new laucnh and legacy auth. Also add to 1.1 Changelog
 		=> signature thingies
 		=> links (relative links for installer stuff, relative link for license)
 		=> license
 		=> Programming language
-		=> help section 
-			>> needs MultiMonitor thingy
-			>> and download stuff, 
-			>> rockstuf fucks us help on redownload
-			>> new launch thingy
-			>> Write stupid "Set up" thingy.
-- [BEFORE PUSHING] 
-	>> File & XML are there, just gotta comment out and re-download 1.0 first...
-	>> Force Version like in Refresh method example
-- After Import ZIP, set installed version to it, delete Version.txt
-	>> On first launch on 1.0 just do the same, make existing files marked as installed. Should be "early" enough before the DM gets created
-- comment out ZIP update
-- Check for Updates and Rightclick check for new / old stuff
-- Logic for Social Club Launch
-	=> On settings change
-		>> Settings.EnableAlternativeLaunch
-		>> Settings.Retailer
-		>> Settings.SocialClubVersion
-	=> If currently Downgraded, Say we have to Upgrade before changing that.
-		>> If we dont have it downloaded, download it.
-		>> Set SettingsEnum
-		>> Apply Downgrade if we were Downgraded 
-		>> On Downgrade check if we have files available. What to do on Upgrade???
-		>> on launch, divert to launch alternative.
  - Installer, test installer
 
  */

@@ -405,7 +405,6 @@ namespace Project_127.Popups
 					CorrespondingFilePathInUpgradeFiles[i] = LauncherLogic.UpgradeFilePath + FilesInDowngradeFiles[i].Substring(LauncherLogic.DowngradeFilePath.Length);
 
 
-
 					if (LauncherLogic.IgnoreNewFilesWhileUpgradeDowngradeLogic)
 					{
 						// Move to $UpgradeFiles

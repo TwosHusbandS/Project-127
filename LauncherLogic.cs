@@ -205,71 +205,65 @@ namespace Project_127
 				long SizeOfUpgradedUpdate = HelperClasses.FileHandling.GetSizeOfFile(UpgradeFilePath.TrimEnd('\\') + @"\update\update.rpf");
 				long SizeOfUpgradedPlayGTAV = HelperClasses.FileHandling.GetSizeOfFile(UpgradeFilePath.TrimEnd('\\') + @"\playgtav.exe");
 
-				long SizeOfDowngradeAlternativeSteamGTAV = HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeAlternativeFilePathSteam127.TrimEnd('\\') + @"\GTA5.exe");
-				long SizeOfDowngradeAlternativeSteamUpdate = HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeAlternativeFilePathSteam127.TrimEnd('\\') + @"\update\update.rpf");
-				long SizeOfDowngradeAlternativeSteamPlayGTAV = HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeAlternativeFilePathSteam127.TrimEnd('\\') + @"\playgtav.exe");
+				long SizeOfDowngradeEmuGTAV = HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeEmuFilePath.TrimEnd('\\') + @"\GTA5.exe");
+				long SizeOfDowngradeEmuUpdate = HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeEmuFilePath.TrimEnd('\\') + @"\update\update.rpf");
+				long SizeOfDowngradeEmuPlayGTAV = HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeEmuFilePath.TrimEnd('\\') + @"\playgtav.exe");
 
-				long SizeOfDowngradeAlternativeRockstarGTAV = HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeAlternativeFilePathRockstar127.TrimEnd('\\') + @"\GTA5.exe");
-				long SizeOfDowngradeAlternativeRockstarUpdate = HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeAlternativeFilePathRockstar127.TrimEnd('\\') + @"\update\update.rpf");
-				long SizeOfDowngradeAlternativeRockstarPlayGTAV = HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeAlternativeFilePathRockstar127.TrimEnd('\\') + @"\playgtav.exe");
+				long SizeOfDowngradeAlternativeSteam127GTAV = HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeAlternativeFilePathSteam127.TrimEnd('\\') + @"\GTA5.exe");
+				long SizeOfDowngradeAlternativeSteam127Update = HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeAlternativeFilePathSteam127.TrimEnd('\\') + @"\update\update.rpf");
+				long SizeOfDowngradeAlternativeSteam127PlayGTAV = HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeAlternativeFilePathSteam127.TrimEnd('\\') + @"\playgtav.exe");
 
-				//string Message = "GTAV: '" + SizeOfGTAV + "'\nUpdate: '" + SizeOfUpdate + "'\nPlayGTAV: '" + SizeOfPlayGTAV + "'";
-				//Globals.DebugPopup(Message);
+				long SizeOfDowngradeAlternativeRockstar127GTAV = HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeAlternativeFilePathRockstar127.TrimEnd('\\') + @"\GTA5.exe");
+				long SizeOfDowngradeAlternativeRockstar127Update = HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeAlternativeFilePathRockstar127.TrimEnd('\\') + @"\update\update.rpf");
+				long SizeOfDowngradeAlternativeRockstar127PlayGTAV = HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeAlternativeFilePathRockstar127.TrimEnd('\\') + @"\playgtav.exe");
 
+				long SizeOfDowngradeAlternativeSteam124GTAV = HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeAlternativeFilePathSteam124.TrimEnd('\\') + @"\GTA5.exe");
+				long SizeOfDowngradeAlternativeSteam124Update = HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeAlternativeFilePathSteam124.TrimEnd('\\') + @"\update\update.rpf");
+				long SizeOfDowngradeAlternativeSteam124PlayGTAV = HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeAlternativeFilePathSteam124.TrimEnd('\\') + @"\playgtav.exe");
+
+				long SizeOfDowngradeAlternativeRockstar124GTAV = HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeAlternativeFilePathRockstar124.TrimEnd('\\') + @"\GTA5.exe");
+				long SizeOfDowngradeAlternativeRockstar124Update = HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeAlternativeFilePathRockstar124.TrimEnd('\\') + @"\update\update.rpf");
+				long SizeOfDowngradeAlternativeRockstar124PlayGTAV = HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeAlternativeFilePathRockstar124.TrimEnd('\\') + @"\playgtav.exe");
 
 				// if both Files in the GTA V Install Path exist
-				if (SizeOfGTAV > 0 && SizeOfUpdate > 0 && SizeOfPlayGTAV > 0)
+				if (SizeOfGTAV > 0 && SizeOfUpdate > 0)
 				{
 					// if Sizes in GTA V Installation Path match what files we use from ZIP for downgrading
-					if (SizeOfGTAV == SizeOfDowngradedGTAV && SizeOfUpdate == SizeOfDowngradedUPDATE && SizeOfPlayGTAV == SizeOfDowngradedPlayGTAV)
+					if (SizeOfGTAV == SizeOfDowngradeEmuGTAV && SizeOfUpdate == SizeOfDowngradeEmuUpdate && SizeOfPlayGTAV == SizeOfDowngradeEmuPlayGTAV)
 					{
 						return InstallationStates.Downgraded;
 					}
-					else if (SizeOfGTAV == SizeOfDowngradeAlternativeSteamGTAV && SizeOfUpdate == SizeOfDowngradeAlternativeSteamUpdate && SizeOfPlayGTAV == SizeOfDowngradeAlternativeSteamPlayGTAV)
+					else if (SizeOfGTAV == SizeOfDowngradeAlternativeSteam127GTAV && SizeOfUpdate == SizeOfDowngradeAlternativeSteam127Update)
 					{
 						return InstallationStates.Downgraded;
 					}
-					else if (SizeOfGTAV == SizeOfDowngradeAlternativeRockstarGTAV && SizeOfUpdate == SizeOfDowngradeAlternativeRockstarUpdate && SizeOfPlayGTAV == SizeOfDowngradeAlternativeRockstarPlayGTAV)
+					else if (SizeOfGTAV == SizeOfDowngradeAlternativeRockstar127GTAV && SizeOfUpdate == SizeOfDowngradeAlternativeRockstar127Update)
+					{
+						return InstallationStates.Downgraded;
+					}
+					else if (SizeOfGTAV == SizeOfDowngradeAlternativeSteam124GTAV && SizeOfUpdate == SizeOfDowngradeAlternativeSteam124Update)
+					{
+						return InstallationStates.Downgraded;
+					}
+					else if (SizeOfGTAV == SizeOfDowngradeAlternativeRockstar124GTAV && SizeOfUpdate == SizeOfDowngradeAlternativeRockstar124Update)
 					{
 						return InstallationStates.Downgraded;
 					}
 					// if not downgraded
 					else
 					{
-						//// If upgrade files exist
-						//if (SizeOfUpgradedGTAV > 0 && SizeOfUpgradedUpdate > 0 && SizeOfUpgradedPlayGTAV > 0)
-						//{
-						//	// If both are NOT downgrad
-						//	if (SizeOfGTAV == SizeOfUpgradedGTAV && SizeOfUpdate == SizeOfUpgradedUpdate && SizeOfPlayGTAV == SizeOfUpgradedPlayGTAV)
-						//	{
-						//		return InstallationStates.Upgraded;
-						//	}
-						//	else
-						//	{
-						//		return InstallationStates.Upgraded;
-						//	}
-						//}
-						//else
-						//{
-						//	return InstallationStates.Upgraded;
-						//}
-
-
-						if (SizeOfGTAV == SizeOfDowngradedGTAV || SizeOfGTAV == SizeOfDowngradeAlternativeSteamGTAV || SizeOfGTAV == SizeOfDowngradeAlternativeRockstarGTAV)
-						{
-							return InstallationStates.Unsure;
-						}
-						else if (SizeOfGTAV == SizeOfDowngradedGTAV || SizeOfGTAV == SizeOfDowngradeAlternativeSteamGTAV || SizeOfGTAV == SizeOfDowngradeAlternativeRockstarGTAV)
-						{
-							return InstallationStates.Unsure;
-						}
-						else if (SizeOfGTAV == SizeOfDowngradedGTAV || SizeOfGTAV == SizeOfDowngradeAlternativeSteamGTAV || SizeOfGTAV == SizeOfDowngradeAlternativeRockstarGTAV)
+						if (SizeOfGTAV == SizeOfDowngradeEmuGTAV || 
+							SizeOfGTAV == SizeOfDowngradeAlternativeSteam124GTAV || 
+							SizeOfGTAV == SizeOfDowngradeAlternativeRockstar124GTAV || 
+							SizeOfGTAV == SizeOfDowngradeAlternativeSteam127GTAV || 
+							SizeOfGTAV == SizeOfDowngradeAlternativeRockstar127GTAV ||
+							SizeOfGTAV == SizeOfDowngradeAlternativeRockstar124GTAV)
 						{
 							return InstallationStates.Unsure;
 						}
 						else
 						{
-							if (SizeOfUpgradedGTAV > 0 && SizeOfUpgradedUpdate > 0 && SizeOfUpgradedPlayGTAV > 0)
+							if (SizeOfUpgradedGTAV > 0 && SizeOfUpgradedUpdate > 0)
 							{
 								return InstallationStates.Upgraded;
 							}
@@ -298,21 +292,6 @@ namespace Project_127
 
 
 		/// <summary>
-		/// Size of Downgraded GTAV.exe. So I can detect the InstallationState (Upgrade / Downgrade)
-		/// </summary>
-		public static long SizeOfDowngradedGTAV { get { return HelperClasses.FileHandling.GetSizeOfFile(DowngradeFilePath.TrimEnd('\\') + @"\GTA5.exe"); } }
-
-		/// <summary>
-		/// Size of Downgraded upgrade\upgrade.rpf . So I can detect the InstallationState (Upgrade / Downgrade)
-		/// </summary>
-		public static long SizeOfDowngradedUPDATE { get { return HelperClasses.FileHandling.GetSizeOfFile(DowngradeFilePath.TrimEnd('\\') + @"\update\update.rpf"); } }
-
-		/// <summary>
-		/// Size of Downgraded upgrade\upgrade.rpf . So I can detect the InstallationState (Upgrade / Downgrade)
-		/// </summary>
-		public static long SizeOfDowngradedPlayGTAV { get { return HelperClasses.FileHandling.GetSizeOfFile(DowngradeFilePath.TrimEnd('\\') + @"\playgtav.exe"); } }
-
-		/// <summary>
 		/// Path of where the ZIP File is extracted
 		/// </summary>
 		public static string ZIPFilePath { get { return Settings.ZIPExtractionPath.TrimEnd('\\') + @"\"; } }
@@ -330,7 +309,50 @@ namespace Project_127
 		/// <summary>
 		/// Property of often used variable. (DowngradeFilePath)
 		/// </summary>
-		public static string DowngradeFilePath { get { return LauncherLogic.ZIPFilePath.TrimEnd('\\') + @"\Project_127_Files\DowngradeFiles\"; } }
+		public static string DowngradeFilePath
+		{
+			get
+			{
+				if (Settings.EnableAlternativeLaunch)
+				{
+					if (Settings.Retailer == Settings.Retailers.Steam)
+					{
+						if (Settings.SocialClubLaunchGameVersion == "124")
+						{
+							return DowngradeAlternativeFilePathSteam124;
+						}
+						else
+						{
+							return DowngradeAlternativeFilePathSteam127;
+						}
+					}
+					else if (Settings.Retailer == Settings.Retailers.Rockstar)
+					{
+						if (Settings.SocialClubLaunchGameVersion == "124")
+						{
+							return DowngradeAlternativeFilePathRockstar124;
+						}
+						else
+						{
+							return DowngradeAlternativeFilePathRockstar127;
+						}
+					}
+					else
+					{
+						return DowngradeEmuFilePath;
+					}
+				}
+				else
+				{
+					return DowngradeEmuFilePath;
+				}
+			}
+		}
+
+		/// <summary>
+		/// Property of often used variable. (DowngradeEmuFilePath)
+		/// </summary>
+		public static string DowngradeEmuFilePath { get { return LauncherLogic.ZIPFilePath.TrimEnd('\\') + @"\Project_127_Files\DowngradeFiles\"; } }
 
 		/// <summary>
 		/// Property of often used variable. (DowngradeAlternativeFilePathSteam127)
@@ -441,6 +463,11 @@ namespace Project_127
 
 			HelperClasses.ProcessHandler.KillRockstarProcesses();
 
+			if (HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(DowngradeFilePath).Length <= 1)
+			{
+				new Popup(Popup.PopupWindowTypes.PopupOk, "Found no DowngradeFiles. Please make sure the required components are installed.").ShowDialog();
+				return;
+			}
 
 			PopupProgress tmp = new PopupProgress(PopupProgress.ProgressTypes.Upgrade, "");
 			tmp.ShowDialog();
@@ -468,6 +495,12 @@ namespace Project_127
 			HelperClasses.ProcessHandler.KillRockstarProcesses();
 
 			IgnoreNewFilesWhileUpgradeDowngradeLogic = IgnoreNewFiles;
+
+			if (HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(DowngradeFilePath).Length <= 1)
+			{
+				new Popup(Popup.PopupWindowTypes.PopupOk, "Found no DowngradeFiles. Please make sure the required components are installed.").ShowDialog();
+				return;
+			}
 
 			PopupProgress tmp = new PopupProgress(PopupProgress.ProgressTypes.Downgrade, "");
 			tmp.ShowDialog();
@@ -612,9 +645,9 @@ namespace Project_127
 			{
 				HelperClasses.Logger.Log("Installation State Broken");
 				HelperClasses.Logger.Log("    Size of GTA5.exe in GTAV Installation Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\GTA5.exe"));
-				HelperClasses.Logger.Log("    Size of GTA5.exe in Downgrade Files Folder: " + LauncherLogic.SizeOfDowngradedGTAV);
+				HelperClasses.Logger.Log("    Size of GTA5.exe in Downgrade Files Folder: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\GTA5.exe"));
 				HelperClasses.Logger.Log("    Size of update.rpf in GTAV Installation Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\update\update.rpf"));
-				HelperClasses.Logger.Log("    Size of update.rpf in Downgrade Files Folder: " + LauncherLogic.SizeOfDowngradedUPDATE);
+				HelperClasses.Logger.Log("    Size of update.rpf in Downgrade Files Folder: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\update\update.rpf"));
 
 				new Popup(Popup.PopupWindowTypes.PopupOkError, "Installation State is broken for some reason. Try to repair.");
 				return;
@@ -784,19 +817,6 @@ namespace Project_127
 			HelperClasses.Logger.Log("Old Hash of Downgrade Folder: '" + OldHash + "'");
 			HelperClasses.Logger.Log("Settings.ZIPPath: '" + Settings.ZIPExtractionPath + "'");
 
-
-			string[] myFiles = HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(LauncherLogic.ZIPFilePath.TrimEnd('\\') + @"\Project_127_Files");
-
-			// Dont need this for now, lets keep it in case its needed again
-			//foreach (string myFile in myFiles)
-			//{
-			//	if (!myFile.Contains("UpgradeFiles"))
-			//	{
-			//		// Deleting all Files which are NOT in the UpgradeFiles Folder of the ZIP Extract Path
-			//		HelperClasses.FileHandling.deleteFile(myFile);
-			//	}
-			//}
-
 			// Actually Extracting the ZIP File
 			HelperClasses.Logger.Log("Extracting ZIP File: '" + pZipFileLocation + "' to the path: '" + LauncherLogic.ZIPFilePath + "'");
 			new PopupProgress(PopupProgress.ProgressTypes.ZIPFile, pZipFileLocation).ShowDialog();
@@ -828,6 +848,8 @@ namespace Project_127
 					LauncherLogic.Downgrade();
 				}
 			}
+
+			ComponentManager.ZIPVersionSwitcheroo();
 
 			new Popup(Popup.PopupWindowTypes.PopupOk, "ZIP File imported (Version: '" + Globals.ZipVersion + "')").ShowDialog();
 		}

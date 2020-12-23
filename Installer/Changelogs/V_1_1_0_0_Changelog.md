@@ -21,6 +21,14 @@
   * "Use Backup" and "Create Backup" Methods which creates or applies a Backup of UpgradeFiles.
     * This means if you back up your UpgradeFiles used for 1.52, and 1.53 hits, you can then use your old Backup files to get your "upgraded" GTA back to 1.52
   * Rightclick the "Use Backup" and "Create Backup" Buttons to use / apply a backup with a specific name
+* Component Manager with new Deployment System
+* Launching through Original SocialClub. 
+  * P127 Provides the File for automatic downgrading for you and automatically does it for you when needed.
+  * Completely original Launch Process
+  * No Captchas
+* New way of getting Authentication Information when NOT launching through Social Club
+  * Also no Captchas here.
+  * "Legacy Auth" can be enabled in Settings
 
 #### Improved Features:
 
@@ -62,15 +70,15 @@
 * Improved generating DebugFile UX
 * Split Settings in 3 SubPages
 * Added "Mode" and "GetBuild" Feature to be able to help Users quickly.
+* Improved Command Line Interpretation
 
 #### BugFixes:
 
 * Fixed Auth Button Mouse over Bug
 * Fixed Not launching after pressing Launch when non-auth
-* Auth will no longer crash when not reachable. Well at least we check it on page load...
+* Auth will no longer crash when not reachable. Well at least we check it on page load
 * Auto-Start XYZ on Game Launch working dir fix (for OBS)
 * Made sure Process Priority is set correctly (only once and successfully)
-* Improved Command Line Interpretation
 
 
 		

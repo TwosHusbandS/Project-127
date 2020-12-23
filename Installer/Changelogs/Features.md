@@ -1,13 +1,17 @@
 ﻿
-* Upgrading / Downgrading GTAV (both via Hardlinking and via normal Copying)
+* Upgrading / Downgrading GTAV
+  * Can be done quick (Hardlinking) or slow but stable (Copying Files)
+  * File Comparison for Information Gathering which files are new, which we overwrite etc. can be quick (just checking FileSize) or slow (Checking the entire File)
+  * Automatic Detection a GTA Upgrade
 * Launching Upgraded and Downgraded GTAV
-* Automatically detecting a GTA Upgrade
+  * Can "Hide from Steam" as well as Enable / Disable the 500k PreOrder Bonus at will and change your InGameName (only when NOT launching downgraded GTA through Social Club)
+  * Can choose between "New" or "Legacy" Method for getting Authenticated. (only when NOT launching downgraded GTA through Social Club)
 * Launching through original SocialClub installation if wanted
+  * Not Possible for users on Epic
   * no more logging into social club and dealing with captchas inside P127
   * Ability to launch 1.27 and 1.24 Rockstar and Steam
 * SaveFileHandler with special GTA V Speedrun Categories as well as a 100% Savefile for Practicing
   * Basic Functionality you would expect from a SaveFileHandler. Folder support, Rightclick Support, Keyboard Support.
-* Enable / Disable the 500k PreOrder Bonus as you please, and changing your inGameName (only when NOT launching downgraded GTA through social club)
 * Automatically doing things on Game Launch:
   * Setting gta5.exe Process Priority to "high"
   * Starting GTA V with the affinity process core fix
@@ -26,6 +30,9 @@
   * Lots of Options regarding Files, Look and Hotkeys
 * Download Manager / Component Manager
   * Download Manager for additional needed Files (depending on Features you want to use)
+  * Basic Install, Re-Install and Delete Functionality.
+  * Installed Version can be found when hovering your Mouse over the Installed / Not Installed Text.
+  * Verify of a Component can be triggered by rightclicking the Install Button. If this does not work, hit "ReInstall"
 * Backup Feature (for UpgradeFiles)
   * Ability to back up the Folder P127 uses to Upgrade your Game. 
   * Ability to apply / use a Backuo of your UpgradeFiles.
