@@ -252,7 +252,7 @@ namespace Project_127.HelperClasses
             }
             var sa = installedSubassemblies[subassemblyName];
             var sar = availableSubassemblies[subassemblyName].GetAttribute("root", "");
-            if (sa.common && !reqBySupress)
+            if (!reqBySupress)
             {
                 foreach(XPathNavigator saa in availableSubassemblies.Values)
                 {
