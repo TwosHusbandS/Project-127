@@ -211,7 +211,7 @@ namespace Project_127
 			AddParagraph(rtb_Credits, "Reverse Engineering:\n" +
 "@dr490n, @Special For, @zCri");
 
-			AddParagraph(rtb_Credits, "Launcher / Client Programming, Documentating:\n" +
+			AddParagraph(rtb_Credits, "Launcher / Client Programming, Documenting:\n" +
 "@thS");
 
 			AddParagraph(rtb_Credits, "Launcher GUI Design & Artwork:\n" +
@@ -229,11 +229,13 @@ namespace Project_127
 
 			AddParagraph(rtb_Credits, "Shoutout to @Fro for providing Hosting to the Files needed for Project 1.27");
 
-			AddParagraph(rtb_Credits, "Shoutout to @yoshi for providing the Information which Build Version corresponds with which Game Version");
+			AddParagraph(rtb_Credits, "Shoutout to @yoshi for providing the Information which Build Version corresponds with which Game Version and Testing our Social-Club Launch");
 
 			AddParagraph(rtb_Credits, "Shoutout to @Diamondo25 for finding a way to launch GTA without going through LaunchGTAV.exe or PlayGTAV.exe, which eased the development process to launch through Social Club");
 
-			AddHyperlinkText(rtb_Credits, "https://github.com/DaWolf85/GTAVAutoPatcher/", "open-sourcing his Tool", "Shoutout to @DaWolf85 for ", " the Community used to Upgrade / Downgrade previously.It helped us a ton.");
+			AddParagraph(rtb_Credits, "Shoutout to @AntherXx for going through the trouble of tracking down and renaming SaveFiles for every single Mission in Classic% and to @Hossel for providing the SaveFiles for the main Categories");
+
+			AddHyperlinkText(rtb_Credits, "https://github.com/DaWolf85/GTAVAutoPatcher/", "open-sourcing his Tool", "Shoutout to @DaWolf85 for ", " the Community used to Upgrade / Downgrade previously. It helped us a ton.");
 
 			AddParagraph(rtb_Credits, "Shoutout to @burhac, @Crapideot, @GearsOfW, @rollschuh2282 , @Ollie, @Alfie, @AntherXx for being awesome members of the GTA Speedrunning community, always being nice and respectful, and providing Help / Testing. You guys are much appreciated.");
 

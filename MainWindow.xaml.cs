@@ -51,22 +51,30 @@ To Do before 1.1:
 			>> rockstuf fucks us help on redownload
 			>> new launch thingy
 			>> Write stupid "Set up" thingy.
-
-- Delete Files with dragon...hope he deletes all and stuff.
-- [FUCK THAT] More efficent compare of files
-- [NOT CONNECTED TO ANY FILE RELATED LOGIC] Dragons stuff. Both paths, all settings
-- Remember to not only check if alternative launch, but also check out if epic...
-- Download Manager keeping track of componments
+ - feature thingies for new stuff. SFH and new laucnh and legacy auth
+- Delete Files with dragon...hope he deletes all and stuff. 
 - Check if Dragon needs to call ImportZIP or ZIP Popup directly
-- Support for 1.24
-- Safe File Handler path switch because of social club switch
-- Think about integrating new lauch version
-	=> what files we need, how we get them, with Optional stuff
-	=> where do we keep social club files? How are we messing with them.
-	=> what do we need to do if user checks the checkmark and wants new way of launching. Etc.
+- Download Manager takes care of things. Need to test Update.
+- make existing files marked as installed
+- Only offer backup if not a low built (below 1.30)
+- "FailSafe" VersionTable
+- comment out ZIP update
+- Check for Updates and Rightclick check for new / old stuff
+- BuildInfo
+- Logic for Social Club Launch
+	=> On settings change
+		>> Settings.EnableAlternativeLaunch
+		>> Settings.Retailer
+		>> Settings.SocialClubVersion
+	=> If currently Downgraded, Say we have to Upgrade before changing that.
+		>> If we dont have it downloaded, download it.
+		>> Set SettingsEnum
+		>> Apply Downgrade if we were Downgraded 
+		>> On Downgrade check if we have files available. What to do on Upgrade???
+		>> on launch, divert to launch alternative.
+ - Installer, test installer
 
-
-*/
+ */
 
 using System;
 using System.Collections.Generic;

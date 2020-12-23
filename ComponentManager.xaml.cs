@@ -74,67 +74,6 @@ namespace Project_127
 
 		public static Components[] RequireCSLSocialClub = new Components[] { Components.SCLRockstar124, Components.SCLRockstar127, Components.SCLSteam124, Components.SCLSteam127 };
 
-		/*
-		 * on re-install (seems to affect everything... (path has two \\)
-			"System.IO.FileNotFoundException: 'Could not find file 'F:\SteamLibrary\steamapps\common\Grand Theft Auto V\Project_127_Files\DowngradeFiles\\PlayGTAV.exe'.'"
-
-				System.IO.FileNotFoundException
-			  HResult=0x80070002
-			  Message=Could not find file 'F:\SteamLibrary\steamapps\common\Grand Theft Auto V\Project_127_Files\DowngradeFiles_Alternative\steam\127\\bink2w64.dll'.
-			  Source=mscorlib
-			  StackTrace:
-			   at System.IO.__Error.WinIOError(Int32 errorCode, String maybeFullPath)
-			   at System.IO.File.InternalCopy(String sourceFileName, String destFileName, Boolean overwrite, Boolean checkHost)
-			   at Project_127.HelperClasses.DownloadManager.linkedGetManager(String path, XPathNavigator fileEntry)
-			   at Project_127.HelperClasses.DownloadManager.getSubassemblyFile(String path, XPathNavigator fileEntry)
-			   at Project_127.HelperClasses.DownloadManager.<getSubassembly>d__7.MoveNext()
-		 install, delete work fine.
-
-		* On verify (seems to affect everything...)
-			System.NullReferenceException
-			 HResult=0x80004003
-			 Message=Object reference not set to an instance of an object.
-			 Source=Project 1.27
-			 StackTrace:
-			  at Project_127.HelperClasses.DownloadManager.hfTree(XPathNavigator x, String root)
-			  at Project_127.HelperClasses.DownloadManager.<verifySubassembly>d__14.MoveNext()
-			  at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
-
-		* On install of 1.24 Rockstar OR 1.24 Steam
-			System.Collections.Generic.KeyNotFoundException
-			 HResult=0x80131577
-			 Message=The given key was not present in the dictionary.
-			 Source=mscorlib
-			 StackTrace:
-			  at System.ThrowHelper.ThrowKeyNotFoundException()
-			  at System.Collections.Generic.Dictionary`2.get_Item(TKey key)
-			  at Project_127.HelperClasses.DownloadManager.linkedGetManager(String path, XPathNavigator fileEntry)
-			  at Project_127.HelperClasses.DownloadManager.getSubassemblyFile(String path, XPathNavigator fileEntry)
-			  at Project_127.HelperClasses.DownloadManager.<getSubassembly>d__7.MoveNext()
-			  at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
-
-		* DelSubassembly doesnt return anything
-
-		* Short Freeze and no Popups for the last like 5 seconds of Installing something
-
-		* Downgraded Social Club never gets installed even when its required...at least it doesnt show as "installed"
-	
-		* What happens if SC and SCL_Steam_127 is installed, and SC gets verified??
-
-			
-
-
-
-
-			Not checking for Success Bools...
-			Need to make this work with current ZIP and Importing ZIP...Check for ZIP Version?
-			Window done...lets move into backend
-			Integrate into P127 backend...
-			Integrate everywhere else...instead of update check
-			DL shit when its needed (so on settings changed)
-			Verify whats installed on startup
-			Tripple Rightclick - change ZIP number
-		*/
 
 
 		public ComponentManager()
@@ -162,6 +101,10 @@ namespace Project_127
 					MyComponent.ReInstall();
 					Refresh();
 					new Popup(Popup.PopupWindowTypes.PopupOk, "Done ReInstalling:\n" + MyComponent.GetNiceName()).ShowDialog();
+					if (MyComponent == Components.AdditionalSaveFiles)
+					{
+						ThrowShoutout();
+					}
 				}
 			}
 			else
@@ -169,7 +112,41 @@ namespace Project_127
 				MyComponent.Install();
 				Refresh();
 				new Popup(Popup.PopupWindowTypes.PopupOk, "Done Installing:\n" + MyComponent.GetNiceName()).ShowDialog();
+				if (MyComponent == Components.AdditionalSaveFiles)
+				{
+					ThrowShoutout();
+				}
 			}
+		}
+
+		public static void ThrowShoutout()
+		{
+			string msg = "";
+			msg += "Editors Note: Massive Shoutout to AntherXx for going through the trouble and manual labor" + "\n";
+			msg += "of renaming the SaveFiles and collecting them.Thanks a lot mate." + "\n";
+			msg += "" + "\n";
+			msg += "This is a compilation of save files to practice each mission as you would in a full run, instead of in a Mission Replay." + "\n";
+			msg += "All save files are made immediately following the end of the previous mission, so that you can practice the drive to the mission" + "\n";
+			msg += "The mission order is based on the current Classic % route." + "\n";
+			msg += "" + "\n";
+			msg += "Some save files have a duplicate, for example Lamar Down, where you finish The Wrap Up as Michael at the gas station(save file #1)," + "\n";
+			msg += "but switch to Franklin and save warp to start Lamar Down. (save file #2 is made right after the switch to Franklin)" + "\n";
+			msg += "" + "\n";
+			msg += "Some mission save files are missing, such as the tow truck and garbage truck for Blitz Play. This is simply because there are routes" + "\n";
+			msg += "that differ so much from run to run that it would be unfair to decide one particular way to make a save file for it." + "\n";
+			msg += "" + "\n";
+			msg += "This should NOT be used to start segment runs, there should be save files already within your Project 1.27 launcher that has those," + "\n";
+			msg += "if not you can download them from speedrun.com/ gtav" + "\n";
+			msg += "" + "\n";
+			msg += "Although I tried to make them as accurate to the Classic % strats and mission routing as possible," + "\n";
+			msg += "there might be some points where the characters do not have the correct weapons, and I am sorry for that." + "\n";
+			msg += "" + "\n";
+			msg += "In that case, instead of making a new save file yourself or correcting it yourself, (which you can do as well)," + "\n";
+			msg += "I would request that you reach out to me on discord so that I can correct it." + "\n";
+			msg += "" + "\n";
+			msg += "If there are any other questions/ comments / concerns, please let me know on discord at @AntherXx#5392";
+
+			new Popup(Popup.PopupWindowTypes.PopupOk, msg, 16).ShowDialog();
 		}
 
 		private void btn_Uninstall_Click(object sender, RoutedEventArgs e)

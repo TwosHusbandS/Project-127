@@ -681,7 +681,7 @@ namespace Project_127.MySettings
 			combox_Set_LanguageSelected.SelectedItem = Settings.LanguageSelected;
 			combox_Set_ExitWays.SelectedItem = Settings.ExitWay;
 			combox_Set_StartWays.SelectedItem = Settings.StartWay;
-			combox_Set_SocialClubGameVersion.SelectedItem = Settings.Version;
+			combox_Set_SocialClubGameVersion.SelectedItem = Settings.SocialClubLaunchGameVersion;
 
 			tb_Set_InGameName.Text = Settings.InGameName;
 			btn_Set_JumpScriptKey1.Content = Settings.JumpScriptKey1;
@@ -1316,7 +1316,7 @@ namespace Project_127.MySettings
 		/// <param name="e"></param>
 		private void combox_Set_SocialClubGameVersion_SelectionChanged(object sender, SelectionChangedEventArgs e)
 		{
-			Settings.Version = combox_Set_SocialClubGameVersion.SelectedItem.ToString();
+			Settings.SocialClubLaunchGameVersion = combox_Set_SocialClubGameVersion.SelectedItem.ToString();
 		}
 
 

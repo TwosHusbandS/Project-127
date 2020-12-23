@@ -70,7 +70,7 @@
                 <Button Grid.Row="5" Grid.Column="2" x:Name="btn_FilesSCLDowngradedSC_Install" Click="btn_Install_Click" MouseRightButtonDown="btn_Install_MouseRightButtonDown" Tag="FilesSCLDowngradedSC" Content="(Re-)install" ToolTip="Rightclick to Verify Files" Style="{StaticResource btn_CM_Action}"/>
                 <Button Grid.Row="5" Grid.Column="3" x:Name="btn_FilesSCLDowngradedSC_Uninstall" Click="btn_Uninstall_Click" Tag="FilesSCLDowngradedSC" Content="Uninstall" Style="{StaticResource btn_CM_Action}"/>
 
-                <Label Grid.Row="6" Grid.Column="0" x:Name="lbl_FilesAdditionalSF_Name" Content="Additional SafeFiles" ToolTip="SafeFiles for every Mission in the Game" Style="{StaticResource lbl_Set_Info}"/>
+                <Label Grid.Row="6" Grid.Column="0" x:Name="lbl_FilesAdditionalSF_Name" Content="Additional SaveFiles" ToolTip="SaveFiles for every Mission in the Game" Style="{StaticResource lbl_Set_Info}"/>
                 <Label Grid.Row="6" Grid.Column="1" x:Name="lbl_FilesAdditionalSF_Status" Content="Status" Style="{StaticResource lbl_Set_Info}" Foreground="{x:Static local:MyColors.MyColorGreen}"/>
                 <Button Grid.Row="6" Grid.Column="2" x:Name="btn_FilesAdditionalSF_Install" Click="btn_Install_Click" MouseRightButtonDown="btn_Install_MouseRightButtonDown" Tag="FilesAdditionalSaveFiles" Content="(Re-)install" ToolTip="Rightclick to Verify Files" Style="{StaticResource btn_CM_Action}"/>
                 <Button Grid.Row="6" Grid.Column="3" x:Name="btn_FilesAdditionalSF_Uninstall" Click="btn_Uninstall_Click" Tag="FilesAdditionalSaveFiles" Content="Uninstall" Style="{StaticResource btn_CM_Action}"/>

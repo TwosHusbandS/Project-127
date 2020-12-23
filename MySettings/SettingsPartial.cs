@@ -571,7 +571,7 @@ namespace Project_127.MySettings
 		/// <summary>
 		/// Version of Social Club Launch. Either "127" or "124"
 		/// </summary>
-		public static string Version
+		public static string SocialClubLaunchGameVersion
 		{
 			get
 			{
@@ -586,11 +586,11 @@ namespace Project_127.MySettings
 			}
 			set
 			{
-				if (value == "124" && Version != "124")
+				if (value == "124" && SocialClubLaunchGameVersion != "124")
 				{
 					SetSetting("Version", "124");
 				}
-				else if (Version!="127")
+				else if (SocialClubLaunchGameVersion != "127")
 				{
 					SetSetting("Version", "127");
 				}

@@ -75,7 +75,26 @@ namespace Project_127.SaveFileHandlerStuff
 		/// Path for the SaveFiles inside GTAV Installation Location
 		/// </summary>
 		/// https://stackoverflow.com/a/3492996
-		public static string GTAVSavesPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) +
+		public static string CurrGTASavesPath = GTASavesPathDragonEmu;
+
+
+		public static string GTASavesPathSocialClub
+		{
+			get
+			{
+				string rtrn = HelperClasses.FileHandling.MostLikelyProfileFolder();
+				if (HelperClasses.FileHandling.doesPathExist(rtrn))
+				{
+					return rtrn;
+				}
+				else
+				{
+					return GTASavesPathDragonEmu;
+				}
+			}
+		}
+
+		public static string GTASavesPathDragonEmu = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) +
 											@"\Rockstar Games\GTA V\Profiles\Project127\GTA V\0F74F4C4";
 
 		/// <summary>
@@ -281,7 +300,7 @@ namespace Project_127.SaveFileHandlerStuff
 		{
 			HelperClasses.Logger.Log("Copying SaveFiles '" + this.FileName + "' to GTA Folder under Name '" + pNewName + "'");
 
-			string newFilePath = MySaveFile.GTAVSavesPath.TrimEnd('\\') + @"\" + pNewName;
+			string newFilePath = MySaveFile.CurrGTASavesPath.TrimEnd('\\') + @"\" + pNewName;
 			HelperClasses.FileHandling.copyFile(this.FilePath, newFilePath);
 			HelperClasses.FileHandling.copyFile(this.FilePathBak, newFilePath + ".bak");
 			GTASaves.Add(new MySaveFile(newFilePath));

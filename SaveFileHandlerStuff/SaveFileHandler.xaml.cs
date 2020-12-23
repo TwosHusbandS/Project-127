@@ -63,6 +63,16 @@ namespace Project_127.SaveFileHandlerStuff
 
 			CopyCutPasteObject = null;
 
+			if (Settings.EnableAlternativeLaunch)
+			{
+				MySaveFile.CurrGTASavesPath = MySaveFile.GTASavesPathSocialClub;
+				btn_GTA_Path_Change.Content = "P127 Emu SaveFilePath";
+			}
+			else
+			{
+				MySaveFile.CurrGTASavesPath = MySaveFile.GTASavesPathDragonEmu;
+				btn_GTA_Path_Change.Content = "Social Club SaveFilePath";
+			}
 			this.sv_BackupFiles_Loading.Visibility = Visibility.Visible;
 			this.sv_BackupFiles.Visibility = Visibility.Hidden;
 			this.sv_GTAFiles_Loading.Visibility = Visibility.Visible;
@@ -252,7 +262,7 @@ namespace Project_127.SaveFileHandlerStuff
 				}
 
 				// Files in actual GTAV Save File Locations
-				string[] MyGTAVSaveFiles = HelperClasses.FileHandling.GetFilesFromFolder(MySaveFile.GTAVSavesPath);
+				string[] MyGTAVSaveFiles = HelperClasses.FileHandling.GetFilesFromFolder(MySaveFile.CurrGTASavesPath);
 				foreach (string MyGTAVSaveFile in MyGTAVSaveFiles)
 				{
 					if (!MyGTAVSaveFile.Contains(".bak") && MyGTAVSaveFile.Contains("SGTA500"))
@@ -317,7 +327,7 @@ namespace Project_127.SaveFileHandlerStuff
 				// Building the first theoretical FileName
 				int i = 0;
 				string NewFileName = MySaveFile.ProperSaveNameBase + i.ToString("00");
-				string FilePathInsideGTA = MySaveFile.GTAVSavesPath.TrimEnd('\\') + @"\" + NewFileName;
+				string FilePathInsideGTA = MySaveFile.CurrGTASavesPath.TrimEnd('\\') + @"\" + NewFileName;
 
 				// While Loop through all 16 names, breaking out when File does NOT exist or when we reached the manimum
 				while (HelperClasses.FileHandling.doesFileExist(FilePathInsideGTA))
@@ -332,7 +342,7 @@ namespace Project_127.SaveFileHandlerStuff
 					// Build new theoretical FileName
 					i++;
 					NewFileName = MySaveFile.ProperSaveNameBase + i.ToString("00");
-					FilePathInsideGTA = MySaveFile.GTAVSavesPath.TrimEnd('\\') + @"\" + NewFileName;
+					FilePathInsideGTA = MySaveFile.CurrGTASavesPath.TrimEnd('\\') + @"\" + NewFileName;
 				}
 				tmp.CopyToGTA(NewFileName);
 				Refresh(dg_BackupFiles);
@@ -713,7 +723,7 @@ namespace Project_127.SaveFileHandlerStuff
 					if (!MySelectedFilesUnique.Contains(MySelectedFiles[i]))
 					{
 						string FileName = MySelectedFiles[i].Substring(MySelectedFiles[i].LastIndexOf('\\') + 1);
-						if (HelperClasses.FileHandling.doesFileExist(MySaveFile.GTAVSavesPath.TrimEnd('\\') + @"\" + FileName))
+						if (HelperClasses.FileHandling.doesFileExist(MySaveFile.CurrGTASavesPath.TrimEnd('\\') + @"\" + FileName))
 						{
 							FileName = GetNewFileName(FileName, MySaveFile.CurrentBackupSavesPath);
 						}
@@ -949,7 +959,7 @@ namespace Project_127.SaveFileHandlerStuff
 		{
 			int i = 0;
 			string NewFileName = MySaveFile.ProperSaveNameBase + i.ToString("00");
-			string FilePathInsideGTA = MySaveFile.GTAVSavesPath.TrimEnd('\\') + @"\" + NewFileName;
+			string FilePathInsideGTA = MySaveFile.CurrGTASavesPath.TrimEnd('\\') + @"\" + NewFileName;
 
 			// While Loop through all 16 names, breaking out when File does NOT exist or when we reached the manimum
 			while (HelperClasses.FileHandling.doesFileExist(FilePathInsideGTA))
@@ -964,7 +974,7 @@ namespace Project_127.SaveFileHandlerStuff
 				// Build new theoretical FileName
 				i++;
 				NewFileName = MySaveFile.ProperSaveNameBase + i.ToString("00");
-				FilePathInsideGTA = MySaveFile.GTAVSavesPath.TrimEnd('\\') + @"\" + NewFileName;
+				FilePathInsideGTA = MySaveFile.CurrGTASavesPath.TrimEnd('\\') + @"\" + NewFileName;
 			}
 
 			if (CopyCutPasteObject != null)
@@ -1181,7 +1191,7 @@ namespace Project_127.SaveFileHandlerStuff
 			ContextMenu cm = (ContextMenu)mi.Parent;
 			if (cm.Name == "GTAV")
 			{
-				ProcessHandler.StartProcess(@"C:\Windows\explorer.exe", pCommandLineArguments: MySaveFile.GTAVSavesPath);
+				ProcessHandler.StartProcess(@"C:\Windows\explorer.exe", pCommandLineArguments: MySaveFile.CurrGTASavesPath);
 			}
 			else
 			{
@@ -1195,16 +1205,16 @@ namespace Project_127.SaveFileHandlerStuff
 			yesno.ShowDialog();
 			if (yesno.DialogResult == true)
 			{
-				HelperClasses.Logger.Log("User wants to delete everything in: '" + MySaveFile.GTAVSavesPath + "' from SaveFileHandler");
+				HelperClasses.Logger.Log("User wants to delete everything in: '" + MySaveFile.CurrGTASavesPath + "' from SaveFileHandler");
 				MenuItem mi = (MenuItem)sender;
 				ContextMenu cm = (ContextMenu)mi.Parent;
 				if (cm.Name == "GTAV")
 				{
-					foreach (string myFile in FileHandling.GetFilesFromFolderAndSubFolder(MySaveFile.GTAVSavesPath))
+					foreach (string myFile in FileHandling.GetFilesFromFolderAndSubFolder(MySaveFile.CurrGTASavesPath))
 					{
 						FileHandling.deleteFile(myFile);
 					}
-					foreach (string myFolder in FileHandling.GetSubFolders(MySaveFile.GTAVSavesPath))
+					foreach (string myFolder in FileHandling.GetSubFolders(MySaveFile.CurrGTASavesPath))
 					{
 						FileHandling.DeleteFolder(myFolder);
 					}
@@ -1223,6 +1233,70 @@ namespace Project_127.SaveFileHandlerStuff
 					}
 					Refresh(dg_GTAFiles);
 				}
+			}
+		}
+
+		private void btn_GTA_Path_Change_Click(object sender, RoutedEventArgs e)
+		{
+			if (MySaveFile.CurrGTASavesPath == MySaveFile.GTASavesPathDragonEmu)
+			{
+				MySaveFile.CurrGTASavesPath = MySaveFile.GTASavesPathSocialClub;
+				btn_GTA_Path_Change.Content = "Load P127 Emu SaveFilePath";
+			}
+			else
+			{
+				MySaveFile.CurrGTASavesPath = MySaveFile.GTASavesPathDragonEmu;
+				btn_GTA_Path_Change.Content = "Load Social Club SaveFilePath";
+			}
+			Refresh();
+		}
+
+		private void btn_GTA_Path_Change_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+		{
+			ContextMenu cm = new ContextMenu();
+			
+			MenuItem mi = new MenuItem();
+			mi.Header = "Help";
+			mi.Click += MI_Help_Click;
+			cm.Items.Add(mi);
+
+			MenuItem mi2 = new MenuItem();
+			mi2.Header = "Custom Path";
+			mi2.Click += MI_CustomPath_Click;
+			cm.Items.Add(mi2);
+
+			cm.IsOpen = true;
+		}
+
+
+		/// <summary>
+		/// Context Menu Path Button Click (Help)
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void MI_Help_Click(object sender, RoutedEventArgs e)
+		{
+			string msg = "If you enabled 'Launch through Socialclub' the 'default'\n";
+			msg += "Path where SaveFiles are saved is the same as 'normal' GTA.\n";
+			msg += "If you have NOT enabled that and are launching through P127 Emu\n";
+			msg += "with P127 Auth, your SaveFiles will be stored in a different Location\n";
+			msg += "\nClicking this Button will toggle what Path is used for the SaveFileHandler.\n";
+			msg += "The correct Path (based on your P127 Settings)\nwill be loaded when you open the SafeFileHandler.";
+			new Popup(Popup.PopupWindowTypes.PopupOk, msg, 18).ShowDialog();
+		}
+
+		/// <summary>
+		/// Context Menu Path Button Click (Custom Path)
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void MI_CustomPath_Click(object sender, RoutedEventArgs e)
+		{
+			string rtrn = HelperClasses.FileHandling.OpenDialogExplorer(FileHandling.PathDialogType.Folder, "Select the Folder you want P127 to consider as your GTA Saves Location", Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments));
+			if (HelperClasses.FileHandling.doesPathExist(rtrn))
+			{
+				MySaveFile.CurrGTASavesPath = rtrn;
+				Refresh();
 			}
 		}
 

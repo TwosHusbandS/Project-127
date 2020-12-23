@@ -48,8 +48,8 @@ namespace Project_127
                     System.Windows.MessageBox.Show("Socialclub mode not supported on Epic!");
                     return;
                 case MySettings.Settings.Retailers.Steam:
-                    if ((dm.getVersion("AM_124_STEAM") == new Version(0, 0) && MySettings.Settings.Version == "124")
-                        ||(dm.getVersion("AM_127_STEAM") == new Version(0, 0) && MySettings.Settings.Version == "127"))
+                    if ((dm.getVersion("AM_124_STEAM") == new Version(0, 0) && MySettings.Settings.SocialClubLaunchGameVersion == "124")
+                        ||(dm.getVersion("AM_127_STEAM") == new Version(0, 0) && MySettings.Settings.SocialClubLaunchGameVersion == "127"))
                     {
 
                         //Error
@@ -62,7 +62,7 @@ namespace Project_127
                         if ((bool)confirmation.DialogResult)
                         {
                             var success = false;
-                            if (MySettings.Settings.Version == "124")
+                            if (MySettings.Settings.SocialClubLaunchGameVersion == "124")
                             {
                                 success = dm.getSubassembly("AM_124_STEAM").Result;
                             }
@@ -87,8 +87,8 @@ namespace Project_127
                     }//also check correct files in place
                     break;
                 case MySettings.Settings.Retailers.Rockstar:
-                    if ((dm.getVersion("AM_124_ROCKSTAR") == new Version(0, 0) && MySettings.Settings.Version == "124")
-                        || (dm.getVersion("AM_127_ROCKSTAR") == new Version(0, 0) && MySettings.Settings.Version == "127"))
+                    if ((dm.getVersion("AM_124_ROCKSTAR") == new Version(0, 0) && MySettings.Settings.SocialClubLaunchGameVersion == "124")
+                        || (dm.getVersion("AM_127_ROCKSTAR") == new Version(0, 0) && MySettings.Settings.SocialClubLaunchGameVersion == "127"))
                     {
                         //Error
                         Popups.Popup confirmation = new Popups.Popup(
@@ -100,7 +100,7 @@ namespace Project_127
                         if ((bool)confirmation.DialogResult)
                         {
                             var success = false;
-                            if (MySettings.Settings.Version == "124")
+                            if (MySettings.Settings.SocialClubLaunchGameVersion == "124")
                             {
                                 success = dm.getSubassembly("AM_124_ROCKSTAR").Result;
                             }
