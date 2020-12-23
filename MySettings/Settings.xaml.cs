@@ -286,7 +286,7 @@ namespace Project_127.MySettings
 		private void combox_Set_Retail_SelectionChanged(object sender, SelectionChangedEventArgs e)
 		{
 			Retailer = (Retailers)System.Enum.Parse(typeof(Retailers), combox_Set_Retail.SelectedItem.ToString());
-			RefreshIfOptionsHide();
+			RefreshGUI();
 		}
 
 
@@ -926,43 +926,41 @@ namespace Project_127.MySettings
 
 			if (Settings.EnableOverlay)
 			{
-				Rect_HideOption4.Visibility = Visibility.Hidden;
+				Rect_HideOption_OverlayMM.Visibility = Visibility.Hidden;
 			}
 			else
 			{
-				Rect_HideOption4.Visibility = Visibility.Hidden;
-
+				Rect_HideOption_OverlayMM.Visibility = Visibility.Visible;
 			}
 
 			if (Settings.Retailer != Retailers.Steam)
 			{
-				Rect_HideOption6.Visibility = Visibility.Visible;
+				Rect_HideOption_HideFromSteam.Visibility = Visibility.Visible;
 			}
 			else
 			{
-				Rect_HideOption6.Visibility = Visibility.Hidden;
+				Rect_HideOption_HideFromSteam.Visibility = Visibility.Hidden;
 			}
 
 			if (Settings.Retailer == Retailers.Epic)
 			{
-
-				Rect_HideOptions3.Visibility = Visibility.Visible;
-				Rect_HideOptions.Visibility = Visibility.Hidden;
-				Rect_HideOptions2.Visibility = Visibility.Hidden;
+				Rect_HideOptions_AllLaunchThroughSocialClubThings.Visibility = Visibility.Visible;
+				Rect_HideOptions_LaunchThroughSocialClubOptions.Visibility = Visibility.Hidden;
+				Rect_HideOptions_OrigEmu.Visibility = Visibility.Hidden;
 			}
 			else
 			{
+				Rect_HideOptions_AllLaunchThroughSocialClubThings.Visibility = Visibility.Hidden;
+
 				if (Settings.EnableAlternativeLaunch)
 				{
-					Rect_HideOptions.Visibility = Visibility.Hidden;
-					Rect_HideOptions2.Visibility = Visibility.Visible;
-					Rect_HideOptions3.Visibility = Visibility.Hidden;
+					Rect_HideOptions_LaunchThroughSocialClubOptions.Visibility = Visibility.Hidden;
+					Rect_HideOptions_OrigEmu.Visibility = Visibility.Visible;
 				}
 				else
 				{
-					Rect_HideOptions.Visibility = Visibility.Visible;
-					Rect_HideOptions2.Visibility = Visibility.Hidden;
-					Rect_HideOptions3.Visibility = Visibility.Hidden;
+					Rect_HideOptions_LaunchThroughSocialClubOptions.Visibility = Visibility.Visible;
+					Rect_HideOptions_OrigEmu.Visibility = Visibility.Hidden;
 				}
 			}
 

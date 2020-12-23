@@ -457,7 +457,11 @@ namespace Project_127.MySettings
 					{
 						LauncherLogic.Upgrade();
 						SetSetting("EnableAlternativeLaunch", value.ToString());
-						ComponentManager.CheckIfRequiredComponentsAreInstalled();
+						if (!ComponentManager.CheckIfRequiredComponentsAreInstalled(true))
+						{
+							SetSetting("EnableAlternativeLaunch", (!value).ToString());
+							return;
+						}
 					}
 					else
 					{
@@ -468,7 +472,11 @@ namespace Project_127.MySettings
 				else
 				{
 					SetSetting("EnableAlternativeLaunch", value.ToString());
-					ComponentManager.CheckIfRequiredComponentsAreInstalled();
+					if (!ComponentManager.CheckIfRequiredComponentsAreInstalled(true))
+					{
+						SetSetting("EnableAlternativeLaunch", (!value).ToString());
+						return;
+					}
 				}
 			}
 		}
@@ -617,7 +625,18 @@ namespace Project_127.MySettings
 						{
 							LauncherLogic.Upgrade();
 							SetSetting("Version", value);
-							ComponentManager.CheckIfRequiredComponentsAreInstalled();
+							if (!ComponentManager.CheckIfRequiredComponentsAreInstalled(true))
+							{
+								if (value == "124")
+								{
+									SetSetting("Version", "127");
+								}
+								else
+								{
+									SetSetting("Version", "124");
+								}
+								return;
+							}
 						}
 						else
 						{
@@ -628,7 +647,18 @@ namespace Project_127.MySettings
 					else
 					{
 						SetSetting("Version", value);
-						ComponentManager.CheckIfRequiredComponentsAreInstalled();
+						if (!ComponentManager.CheckIfRequiredComponentsAreInstalled(true))
+						{
+							if (value == "124")
+							{
+								SetSetting("Version", "127");
+							}
+							else
+							{
+								SetSetting("Version", "124");
+							}
+							return;
+						}
 					}
 				}
 			}
@@ -651,6 +681,7 @@ namespace Project_127.MySettings
 				{
 					if (Settings.EnableAlternativeLaunch)
 					{
+						Retailers OldRetailer = Retailer;
 						if (LauncherLogic.InstallationState != LauncherLogic.InstallationStates.Upgraded)
 						{
 							Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Before you do that, we need to be Upgraded.\nDo you want to Upgrade now?");
@@ -663,12 +694,29 @@ namespace Project_127.MySettings
 								{
 									Settings.EnableAlternativeLaunch = false;
 								}
-								ComponentManager.CheckIfRequiredComponentsAreInstalled();
-
+								if (!ComponentManager.CheckIfRequiredComponentsAreInstalled(true))
+								{
+									SetSetting("Retailer", OldRetailer.ToString());
+									return;
+								}
 							}
 							else
 							{
 								new Popup(Popup.PopupWindowTypes.PopupOk, "Retailer was not changed.");
+								return;
+							}
+						}
+						else
+						{
+							SetSetting("Retailer", value.ToString());
+							if (value == Retailers.Epic)
+							{
+								Settings.EnableAlternativeLaunch = false;
+							}
+							if (!ComponentManager.CheckIfRequiredComponentsAreInstalled(true))
+							{
+								SetSetting("Retailer", OldRetailer.ToString());
+								return;
 							}
 						}
 					}

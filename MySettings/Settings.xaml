@@ -111,10 +111,9 @@
                             <Label Grid.Row="8" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Slow, but stable method for Social Club"/>
                             <Button Grid.Row="8" Grid.Column="1" x:Name="btn_cb_Set_CopyFilesInsteadOfSyslinking_SocialClub" Style="{StaticResource btn_cb}" Click="btn_cb_Click"  MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
 
-                            <Rectangle x:Name="Rect_HideOptions3" Grid.Row="6" Grid.RowSpan="3" Grid.Column="0" Grid.ColumnSpan="2" Fill="{x:Static local:MyColors.MyColorOffWhite85}" ToolTip="Non effective when on Epic"/>
+                            <Rectangle x:Name="Rect_HideOptions_AllLaunchThroughSocialClubThings" Grid.Row="6" Grid.RowSpan="3" Grid.Column="0" Grid.ColumnSpan="2" Fill="{x:Static local:MyColors.MyColorOffWhite85}" ToolTip="Non effective when on Epic"/>
                             <Rectangle x:Name="Rect_HideOptions_Tease" Grid.Row="6" Grid.RowSpan="3" Grid.Column="0" Grid.ColumnSpan="2" Fill="{x:Static local:MyColors.MyColorOffWhite85}" ToolTip="Teasing new features..."/>
-
-                            <Rectangle x:Name="Rect_HideOptions" Grid.Row="7" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="2" Fill="{x:Static local:MyColors.MyColorOffWhite85}" ToolTip="Non effective when not launching through Social Club"/>
+                            <Rectangle x:Name="Rect_HideOptions_LaunchThroughSocialClubOptions" Grid.Row="7" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="2" Fill="{x:Static local:MyColors.MyColorOffWhite85}" ToolTip="Non effective when not launching through Social Club"/>
 
 
                             <Label Grid.Row="9" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Start P127: "/>
@@ -208,10 +207,8 @@
 
                             <Label Grid.Row="5" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Hide from Steam"/>
                             <Button Grid.Row="5" Grid.Column="1" x:Name="btn_cb_Set_EnableDontLaunchThroughSteam"  Style="{StaticResource btn_cb}" Click="btn_cb_Click" MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
-                            <Rectangle x:Name="Rect_HideOption6" Grid.Row="5" Grid.RowSpan="1" Grid.Column="0" Grid.ColumnSpan="2" Fill="{x:Static local:MyColors.MyColorOffWhite85}" ToolTip="Non effective when Retailer is not Steam"/>
-
-
-                            <Rectangle x:Name="Rect_HideOptions2" Grid.Row="3" Grid.RowSpan="3" Grid.Column="0" Grid.ColumnSpan="2" Fill="{x:Static local:MyColors.MyColorOffWhite85}" ToolTip="Non effective when launching through Social Club"/>
+                            <Rectangle x:Name="Rect_HideOption_HideFromSteam" Grid.Row="5" Grid.RowSpan="1" Grid.Column="0" Grid.ColumnSpan="2" Fill="{x:Static local:MyColors.MyColorOffWhite85}" ToolTip="Non effective when Retailer is not Steam"/>
+                            <Rectangle x:Name="Rect_HideOptions_OrigEmu" Grid.Row="3" Grid.RowSpan="3" Grid.Column="0" Grid.ColumnSpan="2" Fill="{x:Static local:MyColors.MyColorOffWhite85}" ToolTip="Non effective when launching through Social Club"/>
 
 
                         </Grid>
@@ -274,7 +271,7 @@
                             <Label Grid.Row="1" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Project 1.27 Overlay - MultiMonitor Mode / Fullscreen" ToolTip="Gives you a Window you can move around instead of drawing on top of bordered / windowed GTA. Rightclick checkbox to reset Location"/>
                             <Button Grid.Row="1" Grid.Column="1" x:Name="btn_cb_Set_EnableOverlayMultiMonitor"  Style="{StaticResource btn_cb}" Click="btn_cb_Click"  MouseEnter="btn_MouseEnter" ToolTip="Rightclick checkbox to reset Location" MouseRightButtonDown="btn_cb_Set_EnableOverlayMultiMonitor_MouseRightButtonDown" MouseLeave="btn_MouseLeave"/>
 
-                            <Rectangle x:Name="Rect_HideOption4" Grid.Row="1" Grid.RowSpan="1" Grid.Column="0" Grid.ColumnSpan="2" Fill="{x:Static local:MyColors.MyColorOffWhite85}" ToolTip="Non effective when Overlay not activated"/>
+                            <Rectangle x:Name="Rect_HideOption_OverlayMM" Grid.Row="1" Grid.RowSpan="1" Grid.Column="0" Grid.ColumnSpan="2" Fill="{x:Static local:MyColors.MyColorOffWhite85}" ToolTip="Non effective when Overlay not activated"/>
 
 
                             <Button Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource btn_SE_Path}" x:Name="btn_Set_Overlay_Notes" Click="btn_Set_Overlay_Notes_Click" Content="Change Notes of Overlay"/>

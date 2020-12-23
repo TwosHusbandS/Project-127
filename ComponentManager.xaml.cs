@@ -94,13 +94,31 @@ namespace Project_127
 			}
 		}
 
-		public static void CheckIfRequiredComponentsAreInstalled()
+		public static bool CheckIfRequiredComponentsAreInstalled(bool AskUser = false)
 		{
+			bool rtrn = true;
 			foreach (Components myComponent in RequiredComponentsBasedOnSettings)
 			{
 				if (!myComponent.IsInstalled())
 				{
-					myComponent.Install();
+					if (AskUser)
+					{
+						Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Component:\n" + myComponent.GetNiceName() + "\nmissing but needed.\nDo you want to install it?\n(Clicking no might result in Upgrading / Downgrading / Launching being disabled.)");
+						yesno.ShowDialog();
+						if (yesno.DialogResult == true)
+						{
+							myComponent.Install();
+						}
+						else
+						{
+							rtrn = false;
+						}
+					}
+					else
+					{
+						new Popup(Popup.PopupWindowTypes.PopupOk, "Component:\n" + myComponent.GetNiceName() + "\nmissing but needed.\nIt will be downloaded and installed now.").ShowDialog();
+						myComponent.Install();
+					}
 				}
 				else
 				{
@@ -110,11 +128,29 @@ namespace Project_127
 						string Path2 = LauncherLogic.DowngradedSocialClub.TrimEnd('\\') + @"\socialclub.dll";
 						if (!HelperClasses.FileHandling.doesFileExist(Path1) || !HelperClasses.FileHandling.doesFileExist(Path2))
 						{
-							myComponent.ReInstall();
+							if (AskUser)
+							{
+								Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Component:\n" + myComponent.GetNiceName() + "\nmissing but needed.\nDo you want to install it?\n(Clicking no might result in Upgrading / Downgrading / Launching being disabled.)");
+								yesno.ShowDialog();
+								if (yesno.DialogResult == true)
+								{
+									myComponent.ReInstall();
+								}
+								else
+								{
+									rtrn = false;
+								}
+							}
+							else
+							{
+								new Popup(Popup.PopupWindowTypes.PopupOk, "Component:\n" + myComponent.GetNiceName() + "\nmissing but needed.\nIt will be downloaded and installed now.").ShowDialog();
+								myComponent.ReInstall();
+							}
 						}
 					}
 				}
 			}
+			return rtrn;
 		}
 
 		public static bool isCSLSocialClubRequired
@@ -305,7 +341,7 @@ namespace Project_127
 		public static void StartupCheck()
 		{
 			CheckForUpdates();
-			CheckIfRequiredComponentsAreInstalled();
+			CheckIfRequiredComponentsAreInstalled(true);
 		}
 
 		private void Refresh(bool CheckForUpdatesPls = false)
@@ -381,7 +417,7 @@ namespace Project_127
 				yesno.ShowDialog();
 				if (yesno.DialogResult == true)
 				{
-					HelperClasses.RegeditHandler.SetValue("DownloadManagerInstalledSubassemblies","");
+					HelperClasses.RegeditHandler.SetValue("DownloadManagerInstalledSubassemblies", "");
 					Globals.SetUpDownloadManager(true);
 				}
 			}

@@ -592,6 +592,12 @@ namespace Project_127
 			}
 			else if (LauncherLogic.InstallationState == InstallationStates.Downgraded)
 			{
+				if (!ComponentManager.CheckIfRequiredComponentsAreInstalled(true))
+				{
+					new Popups.Popup(Popups.Popup.PopupWindowTypes.PopupOk, "Cant do that because of because of missing Components").ShowDialog();
+					return;
+				}
+
 				HelperClasses.Logger.Log("Installation State Downgraded Detected.", 1);
 
 				if (!Settings.EnableAlternativeLaunch)

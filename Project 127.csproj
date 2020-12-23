@@ -504,6 +504,11 @@
   <ItemGroup>
     <Resource Include="Installer\DownloadManager.xml" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="MTLInterface.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
