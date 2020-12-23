@@ -571,7 +571,18 @@ namespace Project_127
 		/// </summary>
 		public static void InitFileWatcher()
 		{
-			//HelperClasses.FileHandling.AddToDebug("In InitFileWatcher() Creating FileSystemWatcher");
+			HelperClasses.Logger.Log("In InitFileWatcher() Creating FileSystemWatcher");
+
+			string MyPath = ProjectInstallationPath.TrimEnd('\\') + @"\dirtyprogramming";
+			if (HelperClasses.FileHandling.doesFileExist(MyPath))
+			{
+				HelperClasses.Logger.Log("Found dirtyprogramming File in the ProjectInstallationPath. Will Keep it there : )");
+			}
+			else
+			{
+				HelperClasses.Logger.Log("Found NO dirtyprogramming File in the ProjectInstallationPath. Will create it : )");
+				File.Create(MyPath).Dispose();
+			}
 
 			FSW = new FileSystemWatcher();
 
@@ -1324,15 +1335,6 @@ namespace Project_127
 				{
 					HelperClasses.Logger.Log("Found pleaseshow File in the Directory. Will delete it.");
 					HelperClasses.FileHandling.deleteFile(myFile);
-				}
-				if (myFile.ToLower().Contains("dirtyprogramming"))
-				{
-					HelperClasses.Logger.Log("Found dirtyprogramming File in the Directory. Will Keep it there : )");
-				}
-				else
-				{
-					HelperClasses.Logger.Log("Found NO dirtyprogramming File in the Directory. Will create it : )");
-					File.Create(Globals.ProjectInstallationPath.TrimEnd('\\') + @"\dirtyprogramming").Dispose();
 				}
 				if (myFile.ToLower().Contains("Project 1.27.exe" + ".BACKUP"))
 				{

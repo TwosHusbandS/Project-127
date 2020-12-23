@@ -258,11 +258,7 @@
     <!--<subassembly name="ADDITIONAL_SAVEFILES" type="zip" version="1.0.0.0">
         <hash>A1B038D54ADA12EADC189CA0CD5C54BD</hash>
         <mirror>http://gtav.anushk.net/ADDITIONAL_SAVEFILES.zip</mirror>
-<<<<<<< HEAD
     </subassembly> -->
-=======
-    </subassembly>-->
->>>>>>> d52719002953bf1b1c26a59740bbbc5adc22e2f8
 
     <subassembly name="ADDITIONAL_SAVEFILES" type="zip" version="1.1.0.0">
     <hash>95E5EACB2B575AA912F878C108973964</hash>
