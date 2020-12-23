@@ -16,6 +16,7 @@ using System.Windows.Shapes;
 using System.IO.Compression;
 using Project_127.MySettings;
 using Project_127.HelperClasses;
+using System.Diagnostics;
 
 namespace Project_127.Popups
 {
@@ -165,7 +166,7 @@ namespace Project_127.Popups
 					this.Dispatcher.Invoke(() =>
 					{
 						myPB.Value = (int)(j / count * 100);
-						myLBL.Content = "Doing a " + Operation + "...(" + myPB.Value + "%)";
+						myLBL.Content = Operation + "...(" + myPB.Value + "%)";
 					});
 				}
 				HelperClasses.Logger.Log("Done with File Operation Stuff");
@@ -316,28 +317,36 @@ namespace Project_127.Popups
 								// If it exists in UpgradeFiles (but is an outdated Upgrade...)
 								if (HelperClasses.FileHandling.doesFileExist(CorrespondingFilePathInUpgradeFiles[i]))
 								{
-									if (!UpdatePopupThrownAlready)
+									string tmp = LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\gta5.exe";
+									if (HelperClasses.FileHandling.doesFileExist(tmp))
 									{
-										Application.Current.Dispatcher.Invoke((Action)delegate
+										FileVersionInfo myFVI = FileVersionInfo.GetVersionInfo(tmp);
+										Version myVersion = new Version(myFVI.FileVersion);
+										if (BuildVersionTable.GetGameVersionOfBuild(myVersion) > new Version("1.30"))
 										{
-											Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Detected new Files inside your GTA Installation.\nP127 will use these as the files you revert to when Upgrading.\nDo you want me to back up your previous Upgrade - Files?");
-											yesno.ShowDialog();
-											if (yesno.DialogResult == true)
+											if (!UpdatePopupThrownAlready)
 											{
-												HelperClasses.Logger.Log("User does want it. Initiating CreateBackup()");
+												Application.Current.Dispatcher.Invoke((Action)delegate
+												{
+													Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Detected new Files inside your GTA Installation.\nP127 will use these as the files you revert to when Upgrading.\nDo you want me to back up your previous Upgrade - Files?");
+													yesno.ShowDialog();
+													if (yesno.DialogResult == true)
+													{
+														HelperClasses.Logger.Log("User does want it. Initiating CreateBackup()");
 
-												HelperClasses.ProcessHandler.KillRelevantProcesses();
+														HelperClasses.ProcessHandler.KillRelevantProcesses();
 
-												LauncherLogic.CreateBackup();
+														LauncherLogic.CreateBackup();
+													}
+													else
+													{
+														HelperClasses.Logger.Log("User doesnt want it. Alright then");
+													}
+												});
+												UpdatePopupThrownAlready = true;
 											}
-											else
-											{
-												HelperClasses.Logger.Log("User doesnt want it. Alright then");
-											}
-										});
-										UpdatePopupThrownAlready = true;
+										}
 									}
-
 									// Delte from $UpgradeFiles
 									MyFileOperationsTmp.Add(new MyFileOperation(MyFileOperation.FileOperations.Delete, CorrespondingFilePathInUpgradeFiles[i], "", "We are overwriting a file which is not equal to the existing files in $Downgrade_Files and $Upgrade_Files. Deleting '" + CorrespondingFilePathInUpgradeFiles[i] + "' from $Upgrade_Files to use the existing File as new Backup", 1));
 								}
@@ -396,7 +405,6 @@ namespace Project_127.Popups
 					CorrespondingFilePathInUpgradeFiles[i] = LauncherLogic.UpgradeFilePath + FilesInDowngradeFiles[i].Substring(LauncherLogic.DowngradeFilePath.Length);
 
 
-
 					if (LauncherLogic.IgnoreNewFilesWhileUpgradeDowngradeLogic)
 					{
 						// Move to $UpgradeFiles
@@ -428,25 +436,35 @@ namespace Project_127.Popups
 								// If it exists in UpgradeFiles (but is an outdated Upgrade...)
 								if (HelperClasses.FileHandling.doesFileExist(CorrespondingFilePathInUpgradeFiles[i]))
 								{
-									if (!UpdatePopupThrownAlready)
+									string tmp = LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\gta5.exe";
+									if (HelperClasses.FileHandling.doesFileExist(tmp))
 									{
-										Application.Current.Dispatcher.Invoke((Action)delegate
+										FileVersionInfo myFVI = FileVersionInfo.GetVersionInfo(tmp);
+										Version myVersion = new Version(myFVI.FileVersion);
+										if (BuildVersionTable.GetGameVersionOfBuild(myVersion) > new Version("1.30"))
 										{
-											Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Detected new Files inside your GTA Installation.\nP127 will use these as the files you revert to when Upgrading.\nDo you want me to back up your previous Upgrade - Files?");
-											yesno.ShowDialog(); if (yesno.DialogResult == true)
+											if (!UpdatePopupThrownAlready)
 											{
-												HelperClasses.Logger.Log("User does want it. Initiating CreateBackup()");
+												Application.Current.Dispatcher.Invoke((Action)delegate
+												{
+													Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Detected new Files inside your GTA Installation.\nP127 will use these as the files you revert to when Upgrading.\nDo you want me to back up your previous Upgrade - Files?");
+													yesno.ShowDialog();
+													if (yesno.DialogResult == true)
+													{
+														HelperClasses.Logger.Log("User does want it. Initiating CreateBackup()");
 
-												HelperClasses.ProcessHandler.KillRelevantProcesses();
+														HelperClasses.ProcessHandler.KillRelevantProcesses();
 
-												LauncherLogic.CreateBackup();
+														LauncherLogic.CreateBackup();
+													}
+													else
+													{
+														HelperClasses.Logger.Log("User doesnt want it. Alright then");
+													}
+												});
+												UpdatePopupThrownAlready = true;
 											}
-											else
-											{
-												HelperClasses.Logger.Log("User doesnt want it. Alright then");
-											}
-										});
-										UpdatePopupThrownAlready = true;
+										}
 									}
 									// Delte from $UpgradeFiles
 									MyFileOperationsTmp.Add(new MyFileOperation(MyFileOperation.FileOperations.Delete, CorrespondingFilePathInUpgradeFiles[i], "", "We are overwriting a file which is not equal to the existing files in $Downgrade_Files and $Upgrade_Files. Deleting '" + CorrespondingFilePathInUpgradeFiles[i] + "' from $Upgrade_Files to use the existing File as new Backup", 1));

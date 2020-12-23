@@ -61,9 +61,7 @@ namespace Project_127
 		{
 			get
 			{
-				int _ZipVersion = 0;
-				Int32.TryParse(HelperClasses.FileHandling.ReadContentOfFile(LauncherLogic.ZIPFilePath.TrimEnd('\\') + @"\Project_127_Files\Version.txt"), out _ZipVersion);
-				return _ZipVersion;
+				return ComponentManager.Components.Base.GetInstalledVersion().Minor;
 			}
 		}
 
@@ -115,7 +113,7 @@ namespace Project_127
 				}
 				else
 				{
-					return HelperClasses.FileHandling.GetStringFromURL(masterURL);
+					return HelperClasses.FileHandling.GetStringFromURL(masterURL, true);
 				}
 			}
 		}
@@ -221,7 +219,7 @@ namespace Project_127
 		/// <summary>
 		/// Property of other Buildinfo. Will be in the top message of logs
 		/// </summary>
-		public static string BuildInfo = "Build 0, shoutouts to AntherXx";
+		public static string BuildInfo = "Build 1";
 
 		/// <summary>
 		/// Returns all Command Line Args as StringArray
@@ -476,11 +474,8 @@ namespace Project_127
 					FileHandling.deleteFile(LauncherLogic.UpgradeFilePath.TrimEnd('\\') + @"\socialclub.dll");
 					FileHandling.deleteFile(LauncherLogic.UpgradeFilePath.TrimEnd('\\') + @"\tinyxml2.dll");
 
-					string[] tmp = HelperClasses.FileHandling.GetSubFolders(ProjectInstallationPathBinary);
-					foreach (string temp in tmp)
-					{
-						HelperClasses.FileHandling.DeleteFolder(temp);
-					}
+					Globals.SetUpDownloadManager(false);
+					ComponentManager.ZIPVersionSwitcheroo();
 
 					HelperClasses.FileHandling.createPath(MySaveFile.BackupSavesPath.TrimEnd('\\') + @"\New Folder");
 					HelperClasses.FileHandling.createPath(MySaveFile.BackupSavesPath.TrimEnd('\\') + @"\YouCanRightclick");
@@ -505,17 +500,19 @@ namespace Project_127
 			// Throw annoucements
 			HandleAnnouncements();
 
-			// SetUpDownloadManager
-			SetUpDownloadManager();
-
 			// Auto Updater
 			CheckForUpdate();
 
-			// Downloads the "big 3" gamefiles from github release
-			CheckForBigThree();
+			// SetUpDownloadManager
+			SetUpDownloadManager();
 
+			// OUTDATED
+			// Downloads the "big 3" gamefiles from github release
+			//CheckForBigThree();
+
+			// OUTDATED
 			// Check whats the latest Version of the ZIP File in GITHUB
-			CheckForZipUpdate();
+			// CheckForZipUpdate();
 
 			// Loading Info for Version stuff.
 			HelperClasses.BuildVersionTable.ReadFromGithub();
@@ -713,135 +710,135 @@ namespace Project_127
 		/// </summary>
 		public static void CheckForBigThree()
 		{
-			HelperClasses.Logger.Log("Downloading the 'big three' files");
+			//HelperClasses.Logger.Log("Downloading the 'big three' files");
 
-			bool PopupThrownAlready = false;
+			//bool PopupThrownAlready = false;
 
-			string UpdateXML = XML_AutoUpdate;
+			//string UpdateXML = XML_AutoUpdate;
 
-			string DLLinkG = HelperClasses.FileHandling.GetXMLTagContent(UpdateXML, "DLLinkG");
-			string DLLinkGHash = HelperClasses.FileHandling.GetXMLTagContent(UpdateXML, "DLLinkGHash");
-			string DLLinkU = HelperClasses.FileHandling.GetXMLTagContent(UpdateXML, "DLLinkU");
-			string DLLinkUHash = HelperClasses.FileHandling.GetXMLTagContent(UpdateXML, "DLLinkUHash");
-			string DLLinkX = HelperClasses.FileHandling.GetXMLTagContent(UpdateXML, "DLLinkX");
-			string DLLinkXHash = HelperClasses.FileHandling.GetXMLTagContent(UpdateXML, "DLLinkXHash");
+			//string DLLinkG = HelperClasses.FileHandling.GetXMLTagContent(UpdateXML, "DLLinkG");
+			//string DLLinkGHash = HelperClasses.FileHandling.GetXMLTagContent(UpdateXML, "DLLinkGHash");
+			//string DLLinkU = HelperClasses.FileHandling.GetXMLTagContent(UpdateXML, "DLLinkU");
+			//string DLLinkUHash = HelperClasses.FileHandling.GetXMLTagContent(UpdateXML, "DLLinkUHash");
+			//string DLLinkX = HelperClasses.FileHandling.GetXMLTagContent(UpdateXML, "DLLinkX");
+			//string DLLinkXHash = HelperClasses.FileHandling.GetXMLTagContent(UpdateXML, "DLLinkXHash");
 
-			HelperClasses.Logger.Log("Checking if gta5.exe exists locally", 1);
-			if (HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\GTA5.exe") > 100)
-			{
-				HelperClasses.Logger.Log("It does and we dont need to download anything", 2);
-			}
-			else
-			{
-				HelperClasses.Logger.Log("It does NOT and we DO need to download something", 2);
+			//HelperClasses.Logger.Log("Checking if gta5.exe exists locally", 1);
+			//if (HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\GTA5.exe") > 100)
+			//{
+			//	HelperClasses.Logger.Log("It does and we dont need to download anything", 2);
+			//}
+			//else
+			//{
+			//	HelperClasses.Logger.Log("It does NOT and we DO need to download something", 2);
 
-				if (PopupThrownAlready == false)
-				{
-					Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "You are missing Files required for Downgrading.\nDo you want to download these now?\nI recommend clicking 'Yes'");
-					yesno.ShowDialog();
-					PopupThrownAlready = true;
-					if (yesno.DialogResult == false)
-					{
-						HelperClasses.Logger.Log("Well user doesnt want to Download Files...alright then");
-						return;
-					}
-				}
+			//	if (PopupThrownAlready == false)
+			//	{
+			//		Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "You are missing Files required for Downgrading.\nDo you want to download these now?\nI recommend clicking 'Yes'");
+			//		yesno.ShowDialog();
+			//		PopupThrownAlready = true;
+			//		if (yesno.DialogResult == false)
+			//		{
+			//			HelperClasses.Logger.Log("Well user doesnt want to Download Files...alright then");
+			//			return;
+			//		}
+			//	}
 
-				new PopupDownload(DLLinkG, LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\GTA5.exe", "Needed Files (gta5.exe 1/3)").ShowDialog();
+			//	new PopupDownload(DLLinkG, LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\GTA5.exe", "Needed Files (gta5.exe 1/3)").ShowDialog();
 
-				if (!string.IsNullOrWhiteSpace(DLLinkGHash))
-				{
-					HelperClasses.Logger.Log("We do have a Hash for that file. Lets compare it:", 2);
-					HelperClasses.Logger.Log("Hash we want: '" + DLLinkGHash + "'", 3);
-					HelperClasses.Logger.Log("Hash we have: '" + HelperClasses.FileHandling.GetHashFromFile(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\GTA5.exe") + "'", 3);
-					while (HelperClasses.FileHandling.GetHashFromFile(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\GTA5.exe") != DLLinkGHash)
-					{
-						HelperClasses.Logger.Log("Well..hashes dont match shit. Lets try again", 2);
-						HelperClasses.FileHandling.deleteFile(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\GTA5.exe");
-						new PopupDownload(DLLinkG, LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\GTA5.exe", "Needed Files (gta5.exe 1/3)").ShowDialog();
-						HelperClasses.Logger.Log("Hash we want: '" + DLLinkGHash + "'", 3);
-						HelperClasses.Logger.Log("Hash we have: '" + HelperClasses.FileHandling.GetHashFromFile(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\GTA5.exe") + "'", 3);
-					}
-				}
-			}
+			//	if (!string.IsNullOrWhiteSpace(DLLinkGHash))
+			//	{
+			//		HelperClasses.Logger.Log("We do have a Hash for that file. Lets compare it:", 2);
+			//		HelperClasses.Logger.Log("Hash we want: '" + DLLinkGHash + "'", 3);
+			//		HelperClasses.Logger.Log("Hash we have: '" + HelperClasses.FileHandling.GetHashFromFile(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\GTA5.exe") + "'", 3);
+			//		while (HelperClasses.FileHandling.GetHashFromFile(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\GTA5.exe") != DLLinkGHash)
+			//		{
+			//			HelperClasses.Logger.Log("Well..hashes dont match shit. Lets try again", 2);
+			//			HelperClasses.FileHandling.deleteFile(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\GTA5.exe");
+			//			new PopupDownload(DLLinkG, LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\GTA5.exe", "Needed Files (gta5.exe 1/3)").ShowDialog();
+			//			HelperClasses.Logger.Log("Hash we want: '" + DLLinkGHash + "'", 3);
+			//			HelperClasses.Logger.Log("Hash we have: '" + HelperClasses.FileHandling.GetHashFromFile(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\GTA5.exe") + "'", 3);
+			//		}
+			//	}
+			//}
 
-			HelperClasses.Logger.Log("Checking if x64a.rpf exists locally", 1);
-			if (HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\x64a.rpf") > 100)
-			{
-				HelperClasses.Logger.Log("It does and we dont need to download anything", 2);
-			}
-			else
-			{
-				HelperClasses.Logger.Log("It does NOT and we DO need to download something", 2);
+			//HelperClasses.Logger.Log("Checking if x64a.rpf exists locally", 1);
+			//if (HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\x64a.rpf") > 100)
+			//{
+			//	HelperClasses.Logger.Log("It does and we dont need to download anything", 2);
+			//}
+			//else
+			//{
+			//	HelperClasses.Logger.Log("It does NOT and we DO need to download something", 2);
 
-				if (PopupThrownAlready == false)
-				{
-					Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "You are missing Files required for Downgrading.\nDo you want to download these now?\nI recommend clicking 'Yes'");
-					yesno.ShowDialog();
-					PopupThrownAlready = true;
-					if (yesno.DialogResult == false)
-					{
-						HelperClasses.Logger.Log("Well user doesnt want to Download Files...alright then");
-						return;
-					}
-				}
+			//	if (PopupThrownAlready == false)
+			//	{
+			//		Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "You are missing Files required for Downgrading.\nDo you want to download these now?\nI recommend clicking 'Yes'");
+			//		yesno.ShowDialog();
+			//		PopupThrownAlready = true;
+			//		if (yesno.DialogResult == false)
+			//		{
+			//			HelperClasses.Logger.Log("Well user doesnt want to Download Files...alright then");
+			//			return;
+			//		}
+			//	}
 
-				new PopupDownload(DLLinkX, LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\x64a.rpf", "Needed Files (x64a.rpf, 2/3)").ShowDialog();
+			//	new PopupDownload(DLLinkX, LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\x64a.rpf", "Needed Files (x64a.rpf, 2/3)").ShowDialog();
 
-				if (!string.IsNullOrWhiteSpace(DLLinkXHash))
-				{
-					HelperClasses.Logger.Log("We do have a Hash for that file. Lets compare it:", 2);
-					HelperClasses.Logger.Log("Hash we want: '" + DLLinkXHash + "'", 3);
-					HelperClasses.Logger.Log("Hash we have: '" + HelperClasses.FileHandling.GetHashFromFile(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\x64a.rpf") + "'", 3);
-					while (HelperClasses.FileHandling.GetHashFromFile(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\x64a.rpf") != DLLinkXHash)
-					{
-						HelperClasses.Logger.Log("Well..hashes dont match shit. Lets try again", 2);
-						HelperClasses.FileHandling.deleteFile(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\x64a.rpf");
-						new PopupDownload(DLLinkX, LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\x64a.rpf", "Needed Files (x64a.rpf, 2/3)").ShowDialog();
-						HelperClasses.Logger.Log("Hash we want: '" + DLLinkXHash + "'", 3);
-						HelperClasses.Logger.Log("Hash we have: '" + HelperClasses.FileHandling.GetHashFromFile(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\x64a.rpf") + "'", 3);
-					}
-				}
-			}
+			//	if (!string.IsNullOrWhiteSpace(DLLinkXHash))
+			//	{
+			//		HelperClasses.Logger.Log("We do have a Hash for that file. Lets compare it:", 2);
+			//		HelperClasses.Logger.Log("Hash we want: '" + DLLinkXHash + "'", 3);
+			//		HelperClasses.Logger.Log("Hash we have: '" + HelperClasses.FileHandling.GetHashFromFile(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\x64a.rpf") + "'", 3);
+			//		while (HelperClasses.FileHandling.GetHashFromFile(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\x64a.rpf") != DLLinkXHash)
+			//		{
+			//			HelperClasses.Logger.Log("Well..hashes dont match shit. Lets try again", 2);
+			//			HelperClasses.FileHandling.deleteFile(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\x64a.rpf");
+			//			new PopupDownload(DLLinkX, LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\x64a.rpf", "Needed Files (x64a.rpf, 2/3)").ShowDialog();
+			//			HelperClasses.Logger.Log("Hash we want: '" + DLLinkXHash + "'", 3);
+			//			HelperClasses.Logger.Log("Hash we have: '" + HelperClasses.FileHandling.GetHashFromFile(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\x64a.rpf") + "'", 3);
+			//		}
+			//	}
+			//}
 
-			HelperClasses.Logger.Log(@"Checking if update\update.rpf exists locally", 1);
-			if (HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\update\update.rpf") > 100)
-			{
-				HelperClasses.Logger.Log("It does and we dont need to download anything", 2);
-			}
-			else
-			{
-				HelperClasses.Logger.Log("It does NOT and we DO need to download something", 2);
+			//HelperClasses.Logger.Log(@"Checking if update\update.rpf exists locally", 1);
+			//if (HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\update\update.rpf") > 100)
+			//{
+			//	HelperClasses.Logger.Log("It does and we dont need to download anything", 2);
+			//}
+			//else
+			//{
+			//	HelperClasses.Logger.Log("It does NOT and we DO need to download something", 2);
 
-				if (PopupThrownAlready == false)
-				{
-					Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "You are missing Files required for Downgrading.\nDo you want to download these now?\nI recommend clicking 'Yes'");
-					yesno.ShowDialog();
-					PopupThrownAlready = true;
-					if (yesno.DialogResult == false)
-					{
-						HelperClasses.Logger.Log("Well user doesnt want to Download Files...alright then");
-						return;
-					}
-				}
+			//	if (PopupThrownAlready == false)
+			//	{
+			//		Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "You are missing Files required for Downgrading.\nDo you want to download these now?\nI recommend clicking 'Yes'");
+			//		yesno.ShowDialog();
+			//		PopupThrownAlready = true;
+			//		if (yesno.DialogResult == false)
+			//		{
+			//			HelperClasses.Logger.Log("Well user doesnt want to Download Files...alright then");
+			//			return;
+			//		}
+			//	}
 
-				new PopupDownload(DLLinkU, LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\update\update.rpf", "Needed Files (Update.rpf, 3/3)").ShowDialog();
+			//	new PopupDownload(DLLinkU, LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\update\update.rpf", "Needed Files (Update.rpf, 3/3)").ShowDialog();
 
-				if (!string.IsNullOrWhiteSpace(DLLinkUHash))
-				{
-					HelperClasses.Logger.Log("We do have a Hash for that file. Lets compare it:", 2);
-					HelperClasses.Logger.Log("Hash we want: '" + DLLinkUHash + "'", 3);
-					HelperClasses.Logger.Log("Hash we have: '" + HelperClasses.FileHandling.GetHashFromFile(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\update\update.rpf") + "'", 3);
-					while (HelperClasses.FileHandling.GetHashFromFile(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\update\update.rpf") != DLLinkUHash)
-					{
-						HelperClasses.Logger.Log("Well..hashes dont match shit. Lets try again", 2);
-						HelperClasses.FileHandling.deleteFile(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\update\update.rpf");
-						new PopupDownload(DLLinkU, LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\update\update.rpf", "Needed Files (update.rpf, 3/3)").ShowDialog();
-						HelperClasses.Logger.Log("Hash we want: '" + DLLinkUHash + "'", 3);
-						HelperClasses.Logger.Log("Hash we have: '" + HelperClasses.FileHandling.GetHashFromFile(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\update\update.rpf") + "'", 3);
-					}
-				}
-			}
+			//	if (!string.IsNullOrWhiteSpace(DLLinkUHash))
+			//	{
+			//		HelperClasses.Logger.Log("We do have a Hash for that file. Lets compare it:", 2);
+			//		HelperClasses.Logger.Log("Hash we want: '" + DLLinkUHash + "'", 3);
+			//		HelperClasses.Logger.Log("Hash we have: '" + HelperClasses.FileHandling.GetHashFromFile(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\update\update.rpf") + "'", 3);
+			//		while (HelperClasses.FileHandling.GetHashFromFile(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\update\update.rpf") != DLLinkUHash)
+			//		{
+			//			HelperClasses.Logger.Log("Well..hashes dont match shit. Lets try again", 2);
+			//			HelperClasses.FileHandling.deleteFile(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\update\update.rpf");
+			//			new PopupDownload(DLLinkU, LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\update\update.rpf", "Needed Files (update.rpf, 3/3)").ShowDialog();
+			//			HelperClasses.Logger.Log("Hash we want: '" + DLLinkUHash + "'", 3);
+			//			HelperClasses.Logger.Log("Hash we have: '" + HelperClasses.FileHandling.GetHashFromFile(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\update\update.rpf") + "'", 3);
+			//		}
+			//	}
+			//}
 		}
 
 
@@ -887,85 +884,85 @@ namespace Project_127
 		/// </summary>
 		public static void CheckForZipUpdate()
 		{
-			// Check whats the latest Version of the ZIP File in GITHUB
-			int ZipOnlineVersion = 0;
-			Int32.TryParse(HelperClasses.FileHandling.GetXMLTagContent(XML_AutoUpdate, "zipversion"), out ZipOnlineVersion);
+			//// Check whats the latest Version of the ZIP File in GITHUB
+			//int ZipOnlineVersion = 0;
+			//Int32.TryParse(HelperClasses.FileHandling.GetXMLTagContent(XML_AutoUpdate, "zipversion"), out ZipOnlineVersion);
 
-			HelperClasses.Logger.Log("Checking for ZIP - Update");
-			HelperClasses.Logger.Log("ZipVersion = '" + Globals.ZipVersion + "', ZipOnlineVersion = '" + ZipOnlineVersion + "'");
+			//HelperClasses.Logger.Log("Checking for ZIP - Update");
+			//HelperClasses.Logger.Log("ZipVersion = '" + Globals.ZipVersion + "', ZipOnlineVersion = '" + ZipOnlineVersion + "'");
 
-			// If Zip file from Server is newer
-			if (ZipOnlineVersion > Globals.ZipVersion)
-			{
-				HelperClasses.Logger.Log("Update for ZIP found");
-				Popup yesno;
-				if (Globals.ZipVersion > 0)
-				{
-					yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "ZIP Version: '" + ZipOnlineVersion.ToString() + "' found on the Server.\nZIP Version: '" + Globals.ZipVersion.ToString() + "' found installed.\nDo you want to upgrade?");
-				}
-				else
-				{
-					yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "ZIP Version: '" + ZipOnlineVersion.ToString() + "' found on the Server.\nNo ZIP Version found installed.\nDo you want to install the ZIP?");
-				}
-				yesno.ShowDialog();
-				if (yesno.DialogResult == true)
-				{
-					HelperClasses.Logger.Log("User wants update for ZIP");
+			//// If Zip file from Server is newer
+			//if (ZipOnlineVersion > Globals.ZipVersion)
+			//{
+			//	HelperClasses.Logger.Log("Update for ZIP found");
+			//	Popup yesno;
+			//	if (Globals.ZipVersion > 0)
+			//	{
+			//		yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "ZIP Version: '" + ZipOnlineVersion.ToString() + "' found on the Server.\nZIP Version: '" + Globals.ZipVersion.ToString() + "' found installed.\nDo you want to upgrade?");
+			//	}
+			//	else
+			//	{
+			//		yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "ZIP Version: '" + ZipOnlineVersion.ToString() + "' found on the Server.\nNo ZIP Version found installed.\nDo you want to install the ZIP?");
+			//	}
+			//	yesno.ShowDialog();
+			//	if (yesno.DialogResult == true)
+			//	{
+			//		HelperClasses.Logger.Log("User wants update for ZIP");
 
-					ZipUpdate();
-				}
-				else
-				{
-					HelperClasses.Logger.Log("User does not want update for ZIP");
-				}
-			}
-			else
-			{
-				HelperClasses.Logger.Log("NO Update for ZIP found");
-			}
+			//		ZipUpdate();
+			//	}
+			//	else
+			//	{
+			//		HelperClasses.Logger.Log("User does not want update for ZIP");
+			//	}
+			//}
+			//else
+			//{
+			//	HelperClasses.Logger.Log("NO Update for ZIP found");
+			//}
 		}
 
 
 		public static void ZipUpdate()
 		{
-			string TMP_AutoupdateXML = Globals.XML_AutoUpdate;
+			//string TMP_AutoupdateXML = Globals.XML_AutoUpdate;
 
-			// Getting the Hash of the new ZIPFile
-			string hashNeeded = HelperClasses.FileHandling.GetXMLTagContent(TMP_AutoupdateXML, "zipmd5");
-			HelperClasses.Logger.Log("HashNeeded: " + hashNeeded);
+			//// Getting the Hash of the new ZIPFile
+			//string hashNeeded = HelperClasses.FileHandling.GetXMLTagContent(TMP_AutoupdateXML, "zipmd5");
+			//HelperClasses.Logger.Log("HashNeeded: " + hashNeeded);
 
-			// Looping 0 through 5
-			for (int i = 0; i <= 5; i++)
-			{
-				// Getting DL Link of zip + i
-				string pathOfNewZip = HelperClasses.FileHandling.GetXMLTagContent(TMP_AutoupdateXML, "zip" + i.ToString());
-				HelperClasses.Logger.Log("Zip-Try: 'zip" + i.ToString() + "'");
-				HelperClasses.Logger.Log("DL Link: '" + pathOfNewZip + "'");
+			//// Looping 0 through 5
+			//for (int i = 0; i <= 5; i++)
+			//{
+			//	// Getting DL Link of zip + i
+			//	string pathOfNewZip = HelperClasses.FileHandling.GetXMLTagContent(TMP_AutoupdateXML, "zip" + i.ToString());
+			//	HelperClasses.Logger.Log("Zip-Try: 'zip" + i.ToString() + "'");
+			//	HelperClasses.Logger.Log("DL Link: '" + pathOfNewZip + "'");
 
-				// Deleting old ZIPFile
-				HelperClasses.FileHandling.deleteFile(Globals.ZipFileDownloadLocation);
+			//	// Deleting old ZIPFile
+			//	HelperClasses.FileHandling.deleteFile(Globals.ZipFileDownloadLocation);
 
-				// Getting actual DDL
-				pathOfNewZip = GetDDL(pathOfNewZip);
+			//	// Getting actual DDL
+			//	pathOfNewZip = GetDDL(pathOfNewZip);
 
-				// Downloading the ZIP File
-				new PopupDownload(pathOfNewZip, Globals.ZipFileDownloadLocation, "ZIP-File").ShowDialog();
+			//	// Downloading the ZIP File
+			//	new PopupDownload(pathOfNewZip, Globals.ZipFileDownloadLocation, "ZIP-File").ShowDialog();
 
-				// Checking the hash of the Download
-				string HashOfDownload = HelperClasses.FileHandling.GetHashFromFile(Globals.ZipFileDownloadLocation);
-				HelperClasses.Logger.Log("Download Done, Hash of Downloaded File: '" + HashOfDownload + "'");
+			//	// Checking the hash of the Download
+			//	string HashOfDownload = HelperClasses.FileHandling.GetHashFromFile(Globals.ZipFileDownloadLocation);
+			//	HelperClasses.Logger.Log("Download Done, Hash of Downloaded File: '" + HashOfDownload + "'");
 
-				// If Hash looks good, we import it
-				if (HashOfDownload == hashNeeded)
-				{
-					HelperClasses.Logger.Log("Hashes Match, will Import");
-					LauncherLogic.ImportZip(Globals.ZipFileDownloadLocation, true);
-					return;
-				}
-				HelperClasses.Logger.Log("Hashes dont match, will move on");
-			}
-			HelperClasses.Logger.Log("Error. Could not find a suitable ZIP File from a FileHoster. Program cannot download new ZIP at the moment.");
-			new Popup(Popup.PopupWindowTypes.PopupOkError, "Update of ZIP File failed (No Suitable ZIP Files Found).\nI suggest restarting the program.");
+			//	// If Hash looks good, we import it
+			//	if (HashOfDownload == hashNeeded)
+			//	{
+			//		HelperClasses.Logger.Log("Hashes Match, will Import");
+			//		LauncherLogic.ImportZip(Globals.ZipFileDownloadLocation, true);
+			//		return;
+			//	}
+			//	HelperClasses.Logger.Log("Hashes dont match, will move on");
+			//}
+			//HelperClasses.Logger.Log("Error. Could not find a suitable ZIP File from a FileHoster. Program cannot download new ZIP at the moment.");
+			//new Popup(Popup.PopupWindowTypes.PopupOkError, "Update of ZIP File failed (No Suitable ZIP Files Found).\nI suggest restarting the program.");
 		}
 
 		#endregion
@@ -1331,7 +1328,6 @@ namespace Project_127
 				if (myFile.ToLower().Contains("dirtyprogramming"))
 				{
 					HelperClasses.Logger.Log("Found dirtyprogramming File in the Directory. Will Keep it there : )");
-					HelperClasses.FileHandling.deleteFile(myFile);
 				}
 				else
 				{
@@ -1346,6 +1342,11 @@ namespace Project_127
 				if (myFile.ToLower().Contains(".exe") && !myFile.ToLower().Contains("Project 127 Launcher.exe".ToLower()))
 				{
 					HelperClasses.Logger.Log("Found exe File ('" + myFile + "'). Will delete it.");
+					HelperClasses.FileHandling.deleteFile(myFile);
+				} 
+				if (myFile.ToLower().Contains("dl.zip"))
+				{
+					HelperClasses.Logger.Log("Found zip File ('DL.ZIP'). Will delete it.");
 					HelperClasses.FileHandling.deleteFile(myFile);
 				}
 			}
@@ -1370,15 +1371,15 @@ namespace Project_127
 			if (HelperClasses.FileHandling.doesFileExist(pFilePath))
 			{
 				FileVersionInfo FVI = FileVersionInfo.GetVersionInfo(pFilePath);
-				string rtrn = " (" + new Version(FVI.FileVersion).ToString();
+				string rtrn = " [" + new Version(FVI.FileVersion).ToString();
 
 				try
 				{
-					rtrn += " - " + new Version(HelperClasses.BuildVersionTable.GetNiceGameVersionString(new Version(FVI.FileVersion))) + ")";
+					rtrn += " - " + BuildVersionTable.GetNiceGameVersionString(new Version(FVI.FileVersion)) + "]";
 				}
 				catch
 				{
-					rtrn += ")";
+					rtrn += "]";
 				}
 
 				return rtrn;

@@ -388,7 +388,7 @@ namespace Project_127.HelperClasses
 			bool result = true;
 
 			WebRequest webRequest = WebRequest.Create(url);
-			webRequest.Timeout = TimeOutMS; 
+			webRequest.Timeout = TimeOutMS;
 			webRequest.Method = "HEAD";
 
 			try
@@ -522,7 +522,7 @@ namespace Project_127.HelperClasses
 			return rtrn;
 		}
 
-		
+
 		/// <summary>
 		/// Method to get Hash from a Folder
 		/// </summary>
@@ -560,7 +560,28 @@ namespace Project_127.HelperClasses
 			}
 		}
 
+		public static string MostLikelyProfileFolder()
+		{
+			string profilesDir = System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+			profilesDir = System.IO.Path.Combine(profilesDir, @"Rockstar Games\GTA V\Profiles");
+			var di = new System.IO.DirectoryInfo(profilesDir);
+			DateTime lastHigh = new DateTime(1900, 1, 1);
+			string highDir = "";
+			foreach (var profile in di.GetDirectories())
+			{
+				if (Regex.IsMatch(profile.Name, "[0-9A-F]{8}"))
+				{
+					DateTime created = profile.LastWriteTime;
 
+					if (created > lastHigh)
+					{
+						highDir = profile.FullName;
+						lastHigh = created;
+					}
+				}
+			}
+			return highDir;
+		}
 
 		/// <summary>
 		/// Gets String from URL

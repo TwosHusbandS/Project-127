@@ -127,6 +127,10 @@ namespace Project_127.HelperClasses
 				DebugMessage.Add("Project 1.27 Installation Path '" + Globals.ProjectInstallationPath + "'");
 				DebugMessage.Add("Project 1.27 Installation Path Binary '" + Globals.ProjectInstallationPathBinary + "'");
 				DebugMessage.Add("ZIP Extraction Path '" + LauncherLogic.ZIPFilePath + "'");
+				foreach (ComponentManager.Components myComponent in ComponentManager.AllComponents)
+				{
+					DebugMessage.Add("    Component: '" + myComponent.ToString() + "', Installed: '" + myComponent.IsInstalled() + "'. Version: '" + myComponent.GetInstalledVersion() + "'");
+				}
 				DebugMessage.Add("LauncherLogic.GTAVFilePath: '" + LauncherLogic.GTAVFilePath + "'");
 				DebugMessage.Add("LauncherLogic.UpgradeFilePath: '" + LauncherLogic.UpgradeFilePath + "'");
 				DebugMessage.Add("LauncherLogic.DowngradeFilePath: '" + LauncherLogic.DowngradeFilePath + "'");
@@ -138,9 +142,25 @@ namespace Project_127.HelperClasses
 				DebugMessage.Add("    Size of update.rpf in GTAV Installation Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\update\update.rpf"));
 				DebugMessage.Add("    Size of playgtav.exe in GTAV Installation Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\playgtav.exe"));
 				DebugMessage.Add("    ------------------------------------------------");
-				DebugMessage.Add("    Size of GTA5.exe in DowngradeFiles Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\GTA5.exe") + Globals.GetGameInfoForDebug(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\GTA5.exe"));
-				DebugMessage.Add("    Size of update.rpf in DowngradeFiles Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\update\update.rpf"));
-				DebugMessage.Add("    Size of playgtav.exe in DowngradeFiles Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\playgtav.exe"));
+				DebugMessage.Add("    Size of GTA5.exe in DowngradeFiles (Emu) Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeEmuFilePath.TrimEnd('\\') + @"\GTA5.exe") + Globals.GetGameInfoForDebug(LauncherLogic.DowngradeEmuFilePath.TrimEnd('\\') + @"\GTA5.exe"));
+				DebugMessage.Add("    Size of update.rpf in DowngradeFiles (Emu) Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeEmuFilePath.TrimEnd('\\') + @"\update\update.rpf"));
+				DebugMessage.Add("    Size of playgtav.exe in DowngradeFiles (Emu) Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeEmuFilePath.TrimEnd('\\') + @"\playgtav.exe"));
+				DebugMessage.Add("    ------------------------------------------------");
+				DebugMessage.Add("    Size of GTA5.exe in DowngradeFiles (SocialClubLaunch Steam 124) Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeAlternativeFilePathSteam124.TrimEnd('\\') + @"\GTA5.exe") + Globals.GetGameInfoForDebug(LauncherLogic.DowngradeAlternativeFilePathSteam124.TrimEnd('\\') + @"\GTA5.exe"));
+				DebugMessage.Add("    Size of update.rpf in DowngradeFiles (SocialClubLaunch Steam 124) Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeAlternativeFilePathSteam124.TrimEnd('\\') + @"\update\update.rpf"));
+				DebugMessage.Add("    Size of playgtav.exe in DowngradeFiles (SocialClubLaunch Steam 124) Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeAlternativeFilePathSteam124.TrimEnd('\\') + @"\playgtav.exe"));
+				DebugMessage.Add("    ------------------------------------------------");
+				DebugMessage.Add("    Size of GTA5.exe in DowngradeFiles (SocialClubLaunch Steam 127) Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeAlternativeFilePathSteam127.TrimEnd('\\') + @"\GTA5.exe") + Globals.GetGameInfoForDebug(LauncherLogic.DowngradeAlternativeFilePathSteam127.TrimEnd('\\') + @"\GTA5.exe"));
+				DebugMessage.Add("    Size of update.rpf in DowngradeFiles (SocialClubLaunch Steam 127) Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeAlternativeFilePathSteam127.TrimEnd('\\') + @"\update\update.rpf"));
+				DebugMessage.Add("    Size of playgtav.exe in DowngradeFiles (SocialClubLaunch Steam 127) Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeAlternativeFilePathSteam127.TrimEnd('\\') + @"\playgtav.exe"));
+				DebugMessage.Add("    ------------------------------------------------");
+				DebugMessage.Add("    Size of GTA5.exe in DowngradeFiles (SocialClubLaunch Rockstar 124) Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeAlternativeFilePathRockstar124.TrimEnd('\\') + @"\GTA5.exe") + Globals.GetGameInfoForDebug(LauncherLogic.DowngradeAlternativeFilePathRockstar124.TrimEnd('\\') + @"\GTA5.exe"));
+				DebugMessage.Add("    Size of update.rpf in DowngradeFiles (SocialClubLaunch Rockstar 124) Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeAlternativeFilePathRockstar124.TrimEnd('\\') + @"\update\update.rpf"));
+				DebugMessage.Add("    Size of playgtav.exe in DowngradeFiles (SocialClubLaunch Rockstar 124) Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeAlternativeFilePathRockstar124.TrimEnd('\\') + @"\playgtav.exe"));
+				DebugMessage.Add("    ------------------------------------------------");
+				DebugMessage.Add("    Size of GTA5.exe in DowngradeFiles (SocialClubLaunch Rockstar 127) Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeAlternativeFilePathRockstar127.TrimEnd('\\') + @"\GTA5.exe") + Globals.GetGameInfoForDebug(LauncherLogic.DowngradeAlternativeFilePathRockstar127.TrimEnd('\\') + @"\GTA5.exe"));
+				DebugMessage.Add("    Size of update.rpf in DowngradeFiles (SocialClubLaunch Rockstar 127) Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeAlternativeFilePathRockstar127.TrimEnd('\\') + @"\update\update.rpf"));
+				DebugMessage.Add("    Size of playgtav.exe in DowngradeFiles (SocialClubLaunch Rockstar 127) Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeAlternativeFilePathRockstar127.TrimEnd('\\') + @"\playgtav.exe"));
 				DebugMessage.Add("    ------------------------------------------------");
 				DebugMessage.Add("    Size of GTA5.exe in UpdateFiles Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.UpgradeFilePath.TrimEnd('\\') + @"\GTA5.exe") + Globals.GetGameInfoForDebug(LauncherLogic.UpgradeFilePath.TrimEnd('\\') + @"\GTA5.exe"));
 				DebugMessage.Add("    Size of update.rpf in UpdateFiles Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.UpgradeFilePath.TrimEnd('\\') + @"\update\update.rpf"));

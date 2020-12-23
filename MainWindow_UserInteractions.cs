@@ -63,7 +63,7 @@ namespace Project_127
 			SetButtonMouseOverMagic(btn_Auth);
 		}
 
-
+ 
 		/// <summary>
 		/// Right click on Auth button. Gives proper Debug Output
 		/// </summary>

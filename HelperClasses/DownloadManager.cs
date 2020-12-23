@@ -79,15 +79,18 @@ namespace Project_127.HelperClasses
                     {
                         var zipdlpath = System.IO.Path.Combine(Globals.ProjectInstallationPath, "dl.zip");
                         string link = zipMirror.Value;
+
                         var pd = new PopupDownload(link, zipdlpath, "zip...", true);
                         pd.ShowDialog();
                         var zipmd5 = pd.HashString;
+
                         succeeded = s.SelectSingleNode("./hash").Value.ToLower() == zipmd5;
                         if (!succeeded)
                         {
                             continue;
                         }
                         new PopupProgress(PopupProgress.ProgressTypes.ZIPFile, zipdlpath).ShowDialog();
+						HelperClasses.FileHandling.DeleteFolder(zipdlpath);
                         break;
                     }
                     if (succeeded)
@@ -645,7 +648,7 @@ namespace Project_127.HelperClasses
             }
             else
             {
-                System.Windows.MessageBox.Show("Download Manager unable to fetch xml");
+				new Popup(Popup.PopupWindowTypes.PopupOkError, "Download Manager unable to fetch xml").ShowDialog();
                 xml = new XPathDocument(new System.IO.StringReader("<targets/>"));
             }
             nav = xml.CreateNavigator();

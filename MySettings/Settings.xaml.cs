@@ -681,7 +681,7 @@ namespace Project_127.MySettings
 			combox_Set_LanguageSelected.SelectedItem = Settings.LanguageSelected;
 			combox_Set_ExitWays.SelectedItem = Settings.ExitWay;
 			combox_Set_StartWays.SelectedItem = Settings.StartWay;
-			combox_Set_SocialClubGameVersion.SelectedItem = Settings.Version;
+			combox_Set_SocialClubGameVersion.SelectedItem = Settings.SocialClubLaunchGameVersion;
 
 			tb_Set_InGameName.Text = Settings.InGameName;
 			btn_Set_JumpScriptKey1.Content = Settings.JumpScriptKey1;
@@ -966,13 +966,12 @@ namespace Project_127.MySettings
 				}
 			}
 
-
-
 			// Remove this...
-			Rect_HideOptions_Tease.Visibility = Visibility.Visible;
-			Rect_HideOptions.Visibility = Visibility.Hidden;
-			Rect_HideOptions2.Visibility = Visibility.Hidden;
-			Rect_HideOptions3.Visibility = Visibility.Hidden;
+			
+			// Rect_HideOptions_Tease.Visibility = Visibility.Visible;
+			// Rect_HideOptions.Visibility = Visibility.Hidden;
+			// Rect_HideOptions2.Visibility = Visibility.Hidden;
+			// Rect_HideOptions3.Visibility = Visibility.Hidden;
 		}
 
 
@@ -1052,15 +1051,11 @@ namespace Project_127.MySettings
 		/// <param name="e"></param>
 		private void btn_CheckForUpdate_Click(object sender, RoutedEventArgs e)
 		{
-			Globals.CheckForBigThree();
-			Globals.CheckForZipUpdate();
+			//Globals.CheckForBigThree();
+			//Globals.CheckForZipUpdate();
 			Globals.CheckForUpdate();
-			Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Update check complete. All updates handled.\nDo you want to re-download the ZIP File?");
-			yesno.ShowDialog();
-			if (yesno.DialogResult == true)
-			{
-				Globals.ZipUpdate();
-			}
+			Globals.SetUpDownloadManager();
+			new Popup(Popup.PopupWindowTypes.PopupOk, "Update check complete. All updates handled.\nIf you want to re-download certain files,\nyou can do so in the 'Component Manager'").ShowDialog();
 		}
 
 
@@ -1113,7 +1108,7 @@ namespace Project_127.MySettings
 		/// </summary>
 		public static void ResetEverything()
 		{
-			Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "This resets the whole Project 1.27 Client including:\nSettings\nZIP Files Downloaded\nBacked up GTA Files to upgrade when downgraded\n\nYou need to repair GTA V through Steam / Epic / Rockstar after this\n(if its not already Up-To-Date)");
+			Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "This resets the whole Project 1.27 Client including:\nSettings\nZIP Files Downloaded\nBacked up GTA Files to upgrade when downgraded\n\nYou need to repair GTA V through Steam / Epic / Rockstar after this\n(if its not already Up-To-Date)\n\nYou will be asked if you want to re-install P127 after this.");
 			yesno.ShowDialog();
 			if (yesno.DialogResult == true)
 			{
@@ -1316,7 +1311,7 @@ namespace Project_127.MySettings
 		/// <param name="e"></param>
 		private void combox_Set_SocialClubGameVersion_SelectionChanged(object sender, SelectionChangedEventArgs e)
 		{
-			Settings.Version = combox_Set_SocialClubGameVersion.SelectedItem.ToString();
+			Settings.SocialClubLaunchGameVersion = combox_Set_SocialClubGameVersion.SelectedItem.ToString();
 		}
 
 

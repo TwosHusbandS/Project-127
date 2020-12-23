@@ -57,6 +57,66 @@ namespace Project_127
 			}
 		}
 
+
+		public static List<Components> RequiredComponentsBasedOnSettings
+		{
+			get
+			{
+				List<Components> tmp = new List<Components>();
+				tmp.Add(Components.Base);
+				if (MySettings.Settings.EnableAlternativeLaunch && MySettings.Settings.Retailer != MySettings.Settings.Retailers.Epic)
+				{
+					tmp.Add(Components.SCLDowngradedSC);
+					if (MySettings.Settings.SocialClubLaunchGameVersion == "124")
+					{
+						if (MySettings.Settings.Retailer == MySettings.Settings.Retailers.Steam)
+						{
+							tmp.Add(Components.SCLSteam124);
+						}
+						else if (MySettings.Settings.Retailer == MySettings.Settings.Retailers.Rockstar)
+						{
+							tmp.Add(Components.SCLRockstar124);
+						}
+					}
+					else if (MySettings.Settings.SocialClubLaunchGameVersion == "127")
+					{
+						if (MySettings.Settings.Retailer == MySettings.Settings.Retailers.Steam)
+						{
+							tmp.Add(Components.SCLSteam127);
+						}
+						else if (MySettings.Settings.Retailer == MySettings.Settings.Retailers.Rockstar)
+						{
+							tmp.Add(Components.SCLRockstar127);
+						}
+					}
+				}
+				return tmp;
+			}
+		}
+
+		public static void CheckIfRequiredComponentsAreInstalled()
+		{
+			foreach (Components myComponent in RequiredComponentsBasedOnSettings)
+			{
+				if (!myComponent.IsInstalled())
+				{
+					myComponent.Install();
+				}
+				else
+				{
+					if (myComponent == Components.SCLDowngradedSC)
+					{
+						string Path1 = LauncherLogic.DowngradedSocialClub.TrimEnd('\\') + @"\subprocess.exe";
+						string Path2 = LauncherLogic.DowngradedSocialClub.TrimEnd('\\') + @"\socialclub.dll";
+						if (!HelperClasses.FileHandling.doesFileExist(Path1) || !HelperClasses.FileHandling.doesFileExist(Path2))
+						{
+							myComponent.ReInstall();
+						}
+					}
+				}
+			}
+		}
+
 		public static bool isCSLSocialClubRequired
 		{
 			get
@@ -74,67 +134,6 @@ namespace Project_127
 
 		public static Components[] RequireCSLSocialClub = new Components[] { Components.SCLRockstar124, Components.SCLRockstar127, Components.SCLSteam124, Components.SCLSteam127 };
 
-		/*
-		 * on re-install (seems to affect everything... (path has two \\)
-			"System.IO.FileNotFoundException: 'Could not find file 'F:\SteamLibrary\steamapps\common\Grand Theft Auto V\Project_127_Files\DowngradeFiles\\PlayGTAV.exe'.'"
-
-				System.IO.FileNotFoundException
-			  HResult=0x80070002
-			  Message=Could not find file 'F:\SteamLibrary\steamapps\common\Grand Theft Auto V\Project_127_Files\DowngradeFiles_Alternative\steam\127\\bink2w64.dll'.
-			  Source=mscorlib
-			  StackTrace:
-			   at System.IO.__Error.WinIOError(Int32 errorCode, String maybeFullPath)
-			   at System.IO.File.InternalCopy(String sourceFileName, String destFileName, Boolean overwrite, Boolean checkHost)
-			   at Project_127.HelperClasses.DownloadManager.linkedGetManager(String path, XPathNavigator fileEntry)
-			   at Project_127.HelperClasses.DownloadManager.getSubassemblyFile(String path, XPathNavigator fileEntry)
-			   at Project_127.HelperClasses.DownloadManager.<getSubassembly>d__7.MoveNext()
-		 install, delete work fine.
-
-		* On verify (seems to affect everything...)
-			System.NullReferenceException
-			 HResult=0x80004003
-			 Message=Object reference not set to an instance of an object.
-			 Source=Project 1.27
-			 StackTrace:
-			  at Project_127.HelperClasses.DownloadManager.hfTree(XPathNavigator x, String root)
-			  at Project_127.HelperClasses.DownloadManager.<verifySubassembly>d__14.MoveNext()
-			  at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
-
-		* On install of 1.24 Rockstar OR 1.24 Steam
-			System.Collections.Generic.KeyNotFoundException
-			 HResult=0x80131577
-			 Message=The given key was not present in the dictionary.
-			 Source=mscorlib
-			 StackTrace:
-			  at System.ThrowHelper.ThrowKeyNotFoundException()
-			  at System.Collections.Generic.Dictionary`2.get_Item(TKey key)
-			  at Project_127.HelperClasses.DownloadManager.linkedGetManager(String path, XPathNavigator fileEntry)
-			  at Project_127.HelperClasses.DownloadManager.getSubassemblyFile(String path, XPathNavigator fileEntry)
-			  at Project_127.HelperClasses.DownloadManager.<getSubassembly>d__7.MoveNext()
-			  at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
-
-		* DelSubassembly doesnt return anything
-
-		* Short Freeze and no Popups for the last like 5 seconds of Installing something
-
-		* Downgraded Social Club never gets installed even when its required...at least it doesnt show as "installed"
-	
-		* What happens if SC and SCL_Steam_127 is installed, and SC gets verified??
-
-			
-
-
-
-
-			Not checking for Success Bools...
-			Need to make this work with current ZIP and Importing ZIP...Check for ZIP Version?
-			Window done...lets move into backend
-			Integrate into P127 backend...
-			Integrate everywhere else...instead of update check
-			DL shit when its needed (so on settings changed)
-			Verify whats installed on startup
-			Tripple Rightclick - change ZIP number
-		*/
 
 
 		public ComponentManager()
@@ -162,6 +161,10 @@ namespace Project_127
 					MyComponent.ReInstall();
 					Refresh();
 					new Popup(Popup.PopupWindowTypes.PopupOk, "Done ReInstalling:\n" + MyComponent.GetNiceName()).ShowDialog();
+					if (MyComponent == Components.AdditionalSaveFiles)
+					{
+						ThrowShoutout();
+					}
 				}
 			}
 			else
@@ -169,7 +172,57 @@ namespace Project_127
 				MyComponent.Install();
 				Refresh();
 				new Popup(Popup.PopupWindowTypes.PopupOk, "Done Installing:\n" + MyComponent.GetNiceName()).ShowDialog();
+				if (MyComponent == Components.AdditionalSaveFiles)
+				{
+					ThrowShoutout();
+				}
 			}
+		}
+
+		public static void ZIPVersionSwitcheroo()
+		{
+			int _ZipVersion = 0;
+			string VersionTxt = LauncherLogic.ZIPFilePath.TrimEnd('\\') + @"\Project_127_Files\Version.txt";
+			if (HelperClasses.FileHandling.doesFileExist(VersionTxt))
+			{
+				Int32.TryParse(HelperClasses.FileHandling.ReadContentOfFile(VersionTxt), out _ZipVersion);
+				if (_ZipVersion > 0)
+				{
+					HelperClasses.FileHandling.deleteFile(VersionTxt);
+					Components.Base.ForceSetInstalled(new Version(1, _ZipVersion));
+				}
+			}
+
+		}
+
+		public static void ThrowShoutout()
+		{
+			string msg = "";
+			msg += "Editors Note: Massive Shoutout to @AntherXx for going through the trouble and manual labor" + "\n";
+			msg += "of renaming the SaveFiles and collecting them.Thanks a lot mate." + "\n";
+			msg += "" + "\n";
+			msg += "This is a compilation of save files to practice each mission as you would in a full run, instead of in a Mission Replay." + "\n";
+			msg += "All save files are made immediately following the end of the previous mission, so that you can practice the drive to the mission" + "\n";
+			msg += "The mission order is based on the current Classic % route." + "\n";
+			msg += "" + "\n";
+			msg += "Some save files have a duplicate, for example Lamar Down, where you finish The Wrap Up as Michael at the gas station(save file #1)," + "\n";
+			msg += "but switch to Franklin and save warp to start Lamar Down. (save file #2 is made right after the switch to Franklin)" + "\n";
+			msg += "" + "\n";
+			msg += "Some mission save files are missing, such as the tow truck and garbage truck for Blitz Play. This is simply because there are routes" + "\n";
+			msg += "that differ so much from run to run that it would be unfair to decide one particular way to make a save file for it." + "\n";
+			msg += "" + "\n";
+			msg += "This should NOT be used to start segment runs, there should be save files already within your Project 1.27 launcher that has those," + "\n";
+			msg += "if not you can download them from speedrun.com/ gtav" + "\n";
+			msg += "" + "\n";
+			msg += "Although I tried to make them as accurate to the Classic % strats and mission routing as possible," + "\n";
+			msg += "there might be some points where the characters do not have the correct weapons, and I am sorry for that." + "\n";
+			msg += "" + "\n";
+			msg += "In that case, instead of making a new save file yourself or correcting it yourself, (which you can do as well)," + "\n";
+			msg += "I would request that you reach out to me on discord so that I can correct it." + "\n";
+			msg += "" + "\n";
+			msg += "If there are any other questions/ comments / concerns, please let me know on discord at @AntherXx#5392";
+
+			new Popup(Popup.PopupWindowTypes.PopupOk, msg, 16).ShowDialog();
 		}
 
 		private void btn_Uninstall_Click(object sender, RoutedEventArgs e)
@@ -238,7 +291,7 @@ namespace Project_127
 
 		private void btn_Refresh_Click(object sender, RoutedEventArgs e)
 		{
-			Refresh();
+			Refresh(true);
 		}
 
 		public static void CheckForUpdates()
@@ -251,16 +304,17 @@ namespace Project_127
 
 		public static void StartupCheck()
 		{
-			if (Components.Base.IsInstalled() == false)
-			{
-				Components.Base.Install();
-			}
 			CheckForUpdates();
+			CheckIfRequiredComponentsAreInstalled();
 		}
 
-		private void Refresh()
+		private void Refresh(bool CheckForUpdatesPls = false)
 		{
-			Globals.SetUpDownloadManager(false);
+			if (CheckForUpdatesPls)
+			{
+				Globals.SetUpDownloadManager(false);
+				CheckForUpdates();
+			}
 
 			Components.Base.UpdateStatus(lbl_FilesMain_Status);
 			Components.SCLRockstar124.UpdateStatus(lbl_FilesSCLRockstar124_Status);
@@ -270,16 +324,66 @@ namespace Project_127
 			Components.SCLDowngradedSC.UpdateStatus(lbl_FilesSCLDowngradedSC_Status);
 			Components.AdditionalSaveFiles.UpdateStatus(lbl_FilesAdditionalSF_Status);
 
-			CheckForUpdates();
+			btn_lbl_FilesMain_Name.ToolTip = Components.Base.GetToolTip();
+			lbl_FilesSCLRockstar124_Name.ToolTip = Components.SCLRockstar124.GetToolTip();
+			lbl_FilesSCLRockstar127_Name.ToolTip = Components.SCLRockstar127.GetToolTip();
+			lbl_FilesSCLSteam124_Name.ToolTip = Components.SCLSteam124.GetToolTip();
+			lbl_FilesSCLSteam127_Name.ToolTip = Components.SCLSteam127.GetToolTip();
+			lbl_FilesSCLDowngradedSC_Name.ToolTip = Components.SCLDowngradedSC.GetToolTip();
+			lbl_FilesAdditionalSF_Name.ToolTip = Components.AdditionalSaveFiles.GetToolTip();
 
-			btn_lbl_FilesMain_Name.Content = "Required Files (v." + Globals.ZipVersion + ")";
+
+
+			Version tmp = Components.Base.GetInstalledVersion();
+			if (tmp != new Version("0.0.0.1"))
+			{
+				btn_lbl_FilesMain_Name.Content = "Required Files (v." + tmp.Minor + ")";
+			}
+			else
+			{
+				btn_lbl_FilesMain_Name.Content = "Required Files";
+			}
+
+
 		}
 
 		private void btn_lbl_FilesMain_Name_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
 		{
 			if (e.ClickCount >= 3)
 			{
-				// Change ZIP Here...
+				if (Components.Base.IsInstalled())
+				{
+					Popups.PopupTextbox tmp = new PopupTextbox("Enter forced Version.\nClick cancel,\nif you dont know what youre doing.", "1.0.0.0");
+					tmp.ShowDialog();
+					if (tmp.DialogResult == true)
+					{
+						Version tmpV = new Version("0.0.0.1");
+						try
+						{
+							tmpV = new Version(tmp.MyReturnString);
+						}
+						catch { }
+						if (tmpV != new Version("0.0.0.1"))
+						{
+							Components.Base.ForceSetInstalled(tmpV);
+							Refresh();
+						}
+					}
+				}
+			}
+		}
+
+		private void btn_Refresh_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+		{
+			if (e.ClickCount >= 3)
+			{
+				Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Do you want to reset the Information if Components are installed?");
+				yesno.ShowDialog();
+				if (yesno.DialogResult == true)
+				{
+					HelperClasses.RegeditHandler.SetValue("DownloadManagerInstalledSubassemblies","");
+					Globals.SetUpDownloadManager(true);
+				}
 			}
 		}
 	}
@@ -423,12 +527,43 @@ namespace Project_127
 			{
 				myLbl.Content = "Installed";
 				myLbl.Foreground = MyColors.MyColorGreen;
+				myLbl.ToolTip = "Installed Version: " + Component.GetInstalledVersion().ToString();
 			}
 			else
 			{
 				myLbl.Content = "Not Installed";
 				myLbl.Foreground = MyColors.MyColorOrange;
+				myLbl.ToolTip = "";
 			}
+		}
+
+		/// <summary>
+		/// GetInstallVersionUIText
+		/// </summary>
+		/// <param name="Component"></param>
+		public static Version GetInstalledVersion(this ComponentManager.Components Component)
+		{
+			Version rtrn = new Version("0.0.0.1");
+			if (Component.IsInstalled())
+			{
+				rtrn = Globals.MyDM.getVersion(Component.GetAssemblyName());
+			}
+			return rtrn;
+		}
+
+		/// <summary>
+		/// GetToolTip
+		/// </summary>
+		/// <param name="Component"></param>
+		/// <param name="myLbl"></param>
+		public static string GetToolTip(this ComponentManager.Components Component)
+		{
+			string toolTip = Component.GetNiceName();
+			if (Component.IsInstalled())
+			{
+				toolTip = toolTip + ". Installed Version: " + Component.GetInstalledVersion().ToString();
+			}
+			return toolTip;
 		}
 	}
 }

@@ -449,7 +449,27 @@ namespace Project_127.MySettings
 			}
 			set
 			{
-				SetSetting("EnableAlternativeLaunch", value.ToString());
+				if (LauncherLogic.InstallationState != LauncherLogic.InstallationStates.Upgraded)
+				{
+					Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Before you do that, we need to be Upgraded.\nDo you want to Upgrade now?");
+					yesno.ShowDialog();
+					if (yesno.DialogResult == true)
+					{
+						LauncherLogic.Upgrade();
+						SetSetting("EnableAlternativeLaunch", value.ToString());
+						ComponentManager.CheckIfRequiredComponentsAreInstalled();
+					}
+					else
+					{
+						new Popup(Popup.PopupWindowTypes.PopupOk, "Setting was not changed.");
+						return;
+					}
+				}
+				else
+				{
+					SetSetting("EnableAlternativeLaunch", value.ToString());
+					ComponentManager.CheckIfRequiredComponentsAreInstalled();
+				}
 			}
 		}
 
@@ -563,6 +583,7 @@ namespace Project_127.MySettings
 		/// </summary>
 		public enum Retailers
 		{
+			// THESE NEED TO BE IN THAT SPELLING AND UPPERCASING
 			Steam,
 			Rockstar,
 			Epic
@@ -571,7 +592,7 @@ namespace Project_127.MySettings
 		/// <summary>
 		/// Version of Social Club Launch. Either "127" or "124"
 		/// </summary>
-		public static string Version
+		public static string SocialClubLaunchGameVersion
 		{
 			get
 			{
@@ -586,18 +607,34 @@ namespace Project_127.MySettings
 			}
 			set
 			{
-				if (value == "124" && Version != "124")
+				if (value != SocialClubLaunchGameVersion)
 				{
-					SetSetting("Version", "124");
-				}
-				else if (Version!="127")
-				{
-					SetSetting("Version", "127");
+					if (LauncherLogic.InstallationState != LauncherLogic.InstallationStates.Upgraded)
+					{
+						Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Before you do that, we need to be Upgraded.\nDo you want to Upgrade now?");
+						yesno.ShowDialog();
+						if (yesno.DialogResult == true)
+						{
+							LauncherLogic.Upgrade();
+							SetSetting("Version", value);
+							ComponentManager.CheckIfRequiredComponentsAreInstalled();
+						}
+						else
+						{
+							new Popup(Popup.PopupWindowTypes.PopupOk, "Setting was not changed.");
+							return;
+						}
+					}
+					else
+					{
+						SetSetting("Version", value);
+						ComponentManager.CheckIfRequiredComponentsAreInstalled();
+					}
 				}
 			}
 		}
 
-	
+
 
 		/// <summary>
 		/// Settings Retailer. Gets and Sets from Dictionary.
@@ -612,7 +649,28 @@ namespace Project_127.MySettings
 			{
 				if (value != Retailer)
 				{
-					SetSetting("Retailer", value.ToString());
+					if (Settings.EnableAlternativeLaunch)
+					{
+						if (LauncherLogic.InstallationState != LauncherLogic.InstallationStates.Upgraded)
+						{
+							Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Before you do that, we need to be Upgraded.\nDo you want to Upgrade now?");
+							yesno.ShowDialog();
+							if (yesno.DialogResult == true)
+							{
+								LauncherLogic.Upgrade();
+								SetSetting("Retailer", value.ToString());
+								ComponentManager.CheckIfRequiredComponentsAreInstalled();
+							}
+							else
+							{
+								new Popup(Popup.PopupWindowTypes.PopupOk, "Retailer was not changed.");
+							}
+						}
+					}
+					else
+					{
+						SetSetting("Retailer", value.ToString());
+					}
 				}
 			}
 		}

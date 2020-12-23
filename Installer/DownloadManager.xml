@@ -255,9 +255,14 @@
         <mirror>http://gtav.anushk.net/MISC_FILES.zip</mirror>
     </subassembly>
 
-    <subassembly name="ADDITIONAL_SAVEFILES" type="zip" version="1.12.0.0">
+    <subassembly name="ADDITIONAL_SAVEFILES" type="zip" version="1.0.0.0">
         <hash>A1B038D54ADA12EADC189CA0CD5C54BD</hash>
         <mirror>http://gtav.anushk.net/ADDITIONAL_SAVEFILES.zip</mirror>
     </subassembly>
 
+    <subassembly name="ADDITIONAL_SAVEFILES" type="zip" version="1.1.0.0">
+    <hash>95E5EACB2B575AA912F878C108973964</hash>
+    <mirror>http://gtav.anushk.net/ADDITIONAL_SAVEFILES_V_1_1.zip</mirror>
+  </subassembly>
+  
 </targets>

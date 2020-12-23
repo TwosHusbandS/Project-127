@@ -45,28 +45,9 @@ To Do before 1.1:
 		=> links (relative links for installer stuff, relative link for license)
 		=> license
 		=> Programming language
-		=> help section 
-			>> needs MultiMonitor thingy
-			>> and download stuff, 
-			>> rockstuf fucks us help on redownload
-			>> new launch thingy
-			>> Write stupid "Set up" thingy.
+ - Installer, test installer
 
-- Delete Files with dragon...hope he deletes all and stuff.
-- [FUCK THAT] More efficent compare of files
-- [NOT CONNECTED TO ANY FILE RELATED LOGIC] Dragons stuff. Both paths, all settings
-- Remember to not only check if alternative launch, but also check out if epic...
-- Download Manager keeping track of componments
-- Check if Dragon needs to call ImportZIP or ZIP Popup directly
-- Support for 1.24
-- Safe File Handler path switch because of social club switch
-- Think about integrating new lauch version
-	=> what files we need, how we get them, with Optional stuff
-	=> where do we keep social club files? How are we messing with them.
-	=> what do we need to do if user checks the checkmark and wants new way of launching. Etc.
-
-
-*/
+ */
 
 using System;
 using System.Collections.Generic;
@@ -236,6 +217,11 @@ namespace Project_127
 			StartDispatcherTimer();
 
 			StartMTLDispatcherTimer();
+
+			HelperClasses.Logger.Log("#" + HelperClasses.FileHandling.GetHashFromFile(@"C:\Users\ingow\Downloads\Anhänge_20201220\New folder\ADDITIONAL_SAFEFILES_V_1_1.zip").ToUpper() + "#");
+			HelperClasses.Logger.Log("#" + HelperClasses.FileHandling.GetHashFromFile(@"C:\Users\ingow\Downloads\Anhänge_20201220\New folder\ADDITIONAL_SAFEFILES_V_1_1.zip") + "#");
+			HelperClasses.Logger.Log("#" + HelperClasses.FileHandling.GetHashFromFile(@"C:\Users\ingow\Downloads\Anhänge_20201220\New folder\ADDITIONAL_SAFEFILES_V_1_1.zip") + "#");
+			HelperClasses.Logger.Log("#" + HelperClasses.FileHandling.GetHashFromFile(@"C:\Users\ingow\Downloads\Anhänge_20201220\New folder\ADDITIONAL_SAFEFILES_V_1_1.zip") + "#");
 
 			HelperClasses.Logger.Log("Only CEF Init to go...");
 
@@ -471,17 +457,17 @@ namespace Project_127
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
 		public void AutoAuthMTLTimer(object sender = null, EventArgs e = null)
-        {
+		{
 			if (LauncherLogic.AuthState == LauncherLogic.AuthStates.Auth)
-            {
+			{
 				MTLAuthTimer.Stop();
-            }
+			}
 			else if (Settings.EnableAlternativeLaunch)
 			{
 				return;
-            }
-            else
-            {
+			}
+			else
+			{
 				Auth.ROSCommunicationBackend.LoginMTL();
 			}
 		}
