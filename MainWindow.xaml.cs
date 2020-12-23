@@ -41,6 +41,7 @@ Hybrid code can be found in AAA_HybridCode.
 			
 To Do before 1.1:
 - Fix ReadMe:
+		=> Features.md thingies for new stuff. SFH, DM / CM and new laucnh and legacy auth. Also add to 1.1 Changelog
 		=> signature thingies
 		=> links (relative links for installer stuff, relative link for license)
 		=> license
@@ -51,16 +52,13 @@ To Do before 1.1:
 			>> rockstuf fucks us help on redownload
 			>> new launch thingy
 			>> Write stupid "Set up" thingy.
- - feature thingies for new stuff. SFH and new laucnh and legacy auth
-- Delete Files with dragon...hope he deletes all and stuff. 
-- Check if Dragon needs to call ImportZIP or ZIP Popup directly
-- Download Manager takes care of things. Need to test Update.
-- make existing files marked as installed
-- Only offer backup if not a low built (below 1.30)
-- "FailSafe" VersionTable
+- [BEFORE PUSHING] 
+	>> File & XML are there, just gotta comment out and re-download 1.0 first...
+	>> Force Version like in Refresh method example
+- After Import ZIP, set installed version to it, delete Version.txt
+	>> On first launch on 1.0 just do the same, make existing files marked as installed. Should be "early" enough before the DM gets created
 - comment out ZIP update
 - Check for Updates and Rightclick check for new / old stuff
-- BuildInfo
 - Logic for Social Club Launch
 	=> On settings change
 		>> Settings.EnableAlternativeLaunch
@@ -244,6 +242,11 @@ namespace Project_127
 			StartDispatcherTimer();
 
 			StartMTLDispatcherTimer();
+
+			HelperClasses.Logger.Log("#" + HelperClasses.FileHandling.GetHashFromFile(@"C:\Users\ingow\Downloads\Anhänge_20201220\New folder\ADDITIONAL_SAFEFILES_V_1_1.zip").ToUpper() + "#");
+			HelperClasses.Logger.Log("#" + HelperClasses.FileHandling.GetHashFromFile(@"C:\Users\ingow\Downloads\Anhänge_20201220\New folder\ADDITIONAL_SAFEFILES_V_1_1.zip") + "#");
+			HelperClasses.Logger.Log("#" + HelperClasses.FileHandling.GetHashFromFile(@"C:\Users\ingow\Downloads\Anhänge_20201220\New folder\ADDITIONAL_SAFEFILES_V_1_1.zip") + "#");
+			HelperClasses.Logger.Log("#" + HelperClasses.FileHandling.GetHashFromFile(@"C:\Users\ingow\Downloads\Anhänge_20201220\New folder\ADDITIONAL_SAFEFILES_V_1_1.zip") + "#");
 
 			HelperClasses.Logger.Log("Only CEF Init to go...");
 
@@ -479,17 +482,17 @@ namespace Project_127
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
 		public void AutoAuthMTLTimer(object sender = null, EventArgs e = null)
-        {
+		{
 			if (LauncherLogic.AuthState == LauncherLogic.AuthStates.Auth)
-            {
+			{
 				MTLAuthTimer.Stop();
-            }
+			}
 			else if (Settings.EnableAlternativeLaunch)
 			{
 				return;
-            }
-            else
-            {
+			}
+			else
+			{
 				Auth.ROSCommunicationBackend.LoginMTL();
 			}
 		}

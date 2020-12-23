@@ -221,7 +221,7 @@ namespace Project_127
 		/// <summary>
 		/// Property of other Buildinfo. Will be in the top message of logs
 		/// </summary>
-		public static string BuildInfo = "Build 0, shoutouts to AntherXx";
+		public static string BuildInfo = "Build 1";
 
 		/// <summary>
 		/// Returns all Command Line Args as StringArray
@@ -1331,7 +1331,6 @@ namespace Project_127
 				if (myFile.ToLower().Contains("dirtyprogramming"))
 				{
 					HelperClasses.Logger.Log("Found dirtyprogramming File in the Directory. Will Keep it there : )");
-					HelperClasses.FileHandling.deleteFile(myFile);
 				}
 				else
 				{
@@ -1346,6 +1345,11 @@ namespace Project_127
 				if (myFile.ToLower().Contains(".exe") && !myFile.ToLower().Contains("Project 127 Launcher.exe".ToLower()))
 				{
 					HelperClasses.Logger.Log("Found exe File ('" + myFile + "'). Will delete it.");
+					HelperClasses.FileHandling.deleteFile(myFile);
+				} 
+				if (myFile.ToLower().Contains("dl.zip"))
+				{
+					HelperClasses.Logger.Log("Found zip File ('DL.ZIP'). Will delete it.");
 					HelperClasses.FileHandling.deleteFile(myFile);
 				}
 			}

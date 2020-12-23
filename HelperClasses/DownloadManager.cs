@@ -79,7 +79,7 @@ namespace Project_127.HelperClasses
                     {
                         var zipdlpath = System.IO.Path.Combine(Globals.ProjectInstallationPath, "dl.zip");
                         string link = zipMirror.Value;
-                        new PopupDownload(link, zipdlpath, "zip...").ShowDialog();
+                        new PopupDownload(link, zipdlpath, "Zip").ShowDialog();
                         var zipmd5 = HelperClasses.FileHandling.GetHashFromFile(zipdlpath);
                         succeeded = s.SelectSingleNode("./hash").Value.ToLower() == zipmd5;
                         if (!succeeded)
@@ -87,6 +87,7 @@ namespace Project_127.HelperClasses
                             continue;
                         }
                         new PopupProgress(PopupProgress.ProgressTypes.ZIPFile, zipdlpath).ShowDialog();
+						HelperClasses.FileHandling.DeleteFolder(zipdlpath);
                         break;
                     }
                     if (succeeded)

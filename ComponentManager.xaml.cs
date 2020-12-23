@@ -215,7 +215,7 @@ namespace Project_127
 
 		private void btn_Refresh_Click(object sender, RoutedEventArgs e)
 		{
-			Refresh();
+			Refresh(true);
 		}
 
 		public static void CheckForUpdates()
@@ -235,9 +235,15 @@ namespace Project_127
 			CheckForUpdates();
 		}
 
-		private void Refresh()
+		private void Refresh(bool CheckForUpdatesPls = false)
 		{
-			Globals.SetUpDownloadManager(false);
+			if (CheckForUpdatesPls)
+			{
+				Globals.SetUpDownloadManager(false);
+				CheckForUpdates();
+			}
+
+			//Globals.MyDM.setVersion(Components.AdditionalSaveFiles.GetAssemblyName()w, new Version("1.0.0.0"));
 
 			Components.Base.UpdateStatus(lbl_FilesMain_Status);
 			Components.SCLRockstar124.UpdateStatus(lbl_FilesSCLRockstar124_Status);
@@ -247,16 +253,50 @@ namespace Project_127
 			Components.SCLDowngradedSC.UpdateStatus(lbl_FilesSCLDowngradedSC_Status);
 			Components.AdditionalSaveFiles.UpdateStatus(lbl_FilesAdditionalSF_Status);
 
-			CheckForUpdates();
+			btn_lbl_FilesMain_Name.ToolTip = Components.Base.GetToolTip();
+			lbl_FilesSCLRockstar124_Name.ToolTip = Components.SCLRockstar124.GetToolTip();
+			lbl_FilesSCLRockstar127_Name.ToolTip = Components.SCLRockstar127.GetToolTip();
+			lbl_FilesSCLSteam124_Name.ToolTip = Components.SCLSteam124.GetToolTip();
+			lbl_FilesSCLSteam127_Name.ToolTip = Components.SCLSteam127.GetToolTip();
+			lbl_FilesSCLDowngradedSC_Name.ToolTip = Components.SCLDowngradedSC.GetToolTip();
+			lbl_FilesAdditionalSF_Name.ToolTip = Components.AdditionalSaveFiles.GetToolTip();
 
-			btn_lbl_FilesMain_Name.Content = "Required Files (v." + Globals.ZipVersion + ")";
+			Version tmp = Components.Base.GetInstalledVersion();
+			if (tmp != new Version("0.0.0.1"))
+			{
+				btn_lbl_FilesMain_Name.Content = "Required Files (v." + tmp.Minor + ")";
+			}
+			else
+			{
+				btn_lbl_FilesMain_Name.Content = "Required Files";
+			}
+
+
 		}
 
 		private void btn_lbl_FilesMain_Name_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
 		{
 			if (e.ClickCount >= 3)
 			{
-				// Change ZIP Here...
+				if (Components.Base.IsInstalled())
+				{
+					Popups.PopupTextbox tmp = new PopupTextbox("Enter forced Version.\nClick cancel,\nif you dont know what youre doing.", "1.0.0.0");
+					tmp.ShowDialog();
+					if (tmp.DialogResult == true)
+					{
+						Version tmpV = new Version("0.0.0.1");
+						try
+						{
+							tmpV = new Version(tmp.MyReturnString);
+						}
+						catch { }
+						if (tmpV != new Version("0.0.0.1"))
+						{
+							Components.Base.ForceSetInstalled(tmpV);
+							Refresh();
+						}
+					}
+				}
 			}
 		}
 	}
@@ -406,6 +446,35 @@ namespace Project_127
 				myLbl.Content = "Not Installed";
 				myLbl.Foreground = MyColors.MyColorOrange;
 			}
+		}
+
+		/// <summary>
+		/// GetInstallVersionUIText
+		/// </summary>
+		/// <param name="Component"></param>
+		public static Version GetInstalledVersion(this ComponentManager.Components Component)
+		{
+			Version rtrn = new Version("0.0.0.1");
+			if (Component.IsInstalled())
+			{
+				rtrn = Globals.MyDM.getVersion(Component.GetAssemblyName());
+			}
+			return rtrn;
+		}
+
+		/// <summary>
+		/// GetToolTip
+		/// </summary>
+		/// <param name="Component"></param>
+		/// <param name="myLbl"></param>
+		public static string GetToolTip(this ComponentManager.Components Component)
+		{
+			string toolTip = Component.GetNiceName();
+			if (Component.IsInstalled())
+			{
+				toolTip = toolTip + ". Installed Version: " + Component.GetInstalledVersion().ToString();
+			}
+			return toolTip;
 		}
 	}
 }
