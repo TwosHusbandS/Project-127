@@ -46,6 +46,8 @@ To Do before 1.1:
 		=> license
 		=> Programming language
  - Installer, test installer
+ - New Logic:
+	=> Rectangles that hide options are broken...
 
  */
 

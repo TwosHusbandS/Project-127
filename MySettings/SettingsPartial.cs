@@ -659,7 +659,12 @@ namespace Project_127.MySettings
 							{
 								LauncherLogic.Upgrade();
 								SetSetting("Retailer", value.ToString());
+								if (value == Retailers.Epic)
+								{
+									Settings.EnableAlternativeLaunch = false;
+								}
 								ComponentManager.CheckIfRequiredComponentsAreInstalled();
+
 							}
 							else
 							{
