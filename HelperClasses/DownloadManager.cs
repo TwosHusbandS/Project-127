@@ -79,8 +79,9 @@ namespace Project_127.HelperClasses
                     {
                         var zipdlpath = System.IO.Path.Combine(Globals.ProjectInstallationPath, "dl.zip");
                         string link = zipMirror.Value;
-                        new PopupDownload(link, zipdlpath, "zip...").ShowDialog();
-                        var zipmd5 = HelperClasses.FileHandling.GetHashFromFile(zipdlpath);
+                        var pd = new PopupDownload(link, zipdlpath, "zip...", true);
+                        pd.ShowDialog();
+                        var zipmd5 = pd.HashString;
                         succeeded = s.SelectSingleNode("./hash").Value.ToLower() == zipmd5;
                         if (!succeeded)
                         {
@@ -132,8 +133,9 @@ namespace Project_127.HelperClasses
                                 foreach (XPathNavigator mirror in mirrors)
                                 {
                                     string link = mirror.Value;
-                                    new PopupDownload(link, fullPath, file.name).ShowDialog();
-                                    var md5hash = HelperClasses.FileHandling.GetHashFromFile(fullPath);
+                                    var pd = new PopupDownload(link, fullPath, file.name, true);
+                                    pd.ShowDialog();
+                                    var md5hash = pd.HashString;
                                     succeeded = fileEntry.SelectSingleNode("./hash").Value.ToLower() == md5hash;
                                     if (succeeded)
                                     {
@@ -291,8 +293,9 @@ namespace Project_127.HelperClasses
             foreach (XPathNavigator mirror in mirrors)
             {
                 string link = mirror.Value;
-                new PopupDownload(link, fullPath, filename).ShowDialog();
-                var md5hash = HelperClasses.FileHandling.GetHashFromFile(fullPath);
+                var pd = new PopupDownload(link, fullPath, filename, true);
+                pd.ShowDialog();
+                var md5hash = pd.HashString;
                 succeeded = fileEntry.SelectSingleNode("./hash").Value.ToLower() == md5hash;
                 if (succeeded)
                 {
@@ -359,8 +362,9 @@ namespace Project_127.HelperClasses
                     foreach (XPathNavigator mirror in mirrors)
                     {
                         string link = mirror.Value;
-                        new PopupDownload(link, fullPath, filename).ShowDialog();
-                        var md5hash = HelperClasses.FileHandling.GetHashFromFile(fullPath);
+                        var pd = new PopupDownload(link, fullPath, filename, true);
+                        pd.ShowDialog();
+                        var md5hash = pd.HashString;
                         succeeded = file.SelectSingleNode("./hash").Value.ToLower() == md5hash;
                         if (succeeded)
                         {
