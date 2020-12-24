@@ -107,7 +107,7 @@ namespace Project_127
 						yesno.ShowDialog();
 						if (yesno.DialogResult == true)
 						{
-							myComponent.Install();
+							return myComponent.Install();
 						}
 						else
 						{
@@ -117,7 +117,7 @@ namespace Project_127
 					else
 					{
 						new Popup(Popup.PopupWindowTypes.PopupOk, "Component:\n" + myComponent.GetNiceName() + "\nmissing but needed.\nIt will be downloaded and installed now.").ShowDialog();
-						myComponent.Install();
+						return myComponent.Install();
 					}
 				}
 				else
@@ -134,7 +134,7 @@ namespace Project_127
 								yesno.ShowDialog();
 								if (yesno.DialogResult == true)
 								{
-									myComponent.ReInstall();
+									return myComponent.ReInstall();
 								}
 								else
 								{
@@ -144,7 +144,7 @@ namespace Project_127
 							else
 							{
 								new Popup(Popup.PopupWindowTypes.PopupOk, "Component:\n" + myComponent.GetNiceName() + "\nmissing but needed.\nIt will be downloaded and installed now.").ShowDialog();
-								myComponent.ReInstall();
+								return myComponent.ReInstall();
 							}
 						}
 					}
@@ -194,23 +194,37 @@ namespace Project_127
 				yesno.ShowDialog();
 				if (yesno.DialogResult == true)
 				{
-					MyComponent.ReInstall();
+					bool tmp = MyComponent.ReInstall();
 					Refresh();
-					new Popup(Popup.PopupWindowTypes.PopupOk, "Done ReInstalling:\n" + MyComponent.GetNiceName()).ShowDialog();
-					if (MyComponent == Components.AdditionalSaveFiles)
+					if (tmp)
 					{
-						ThrowShoutout();
+						new Popup(Popup.PopupWindowTypes.PopupOk, "Done Installing:\n" + MyComponent.GetNiceName()).ShowDialog();
+						if (MyComponent == Components.AdditionalSaveFiles)
+						{
+							ThrowShoutout();
+						}
+					}
+					else
+					{
+						new Popup(Popup.PopupWindowTypes.PopupOk, "Install failed. Try again:\n" + MyComponent.GetNiceName()).ShowDialog();
 					}
 				}
 			}
 			else
 			{
-				MyComponent.Install();
+				bool tmp = MyComponent.Install();
 				Refresh();
-				new Popup(Popup.PopupWindowTypes.PopupOk, "Done Installing:\n" + MyComponent.GetNiceName()).ShowDialog();
-				if (MyComponent == Components.AdditionalSaveFiles)
+				if (tmp)
 				{
-					ThrowShoutout();
+					new Popup(Popup.PopupWindowTypes.PopupOk, "Done Installing:\n" + MyComponent.GetNiceName()).ShowDialog();
+					if (MyComponent == Components.AdditionalSaveFiles)
+					{
+						ThrowShoutout();
+					}
+				}
+				else
+				{
+					new Popup(Popup.PopupWindowTypes.PopupOk, "Install failed. Try again:\n" + MyComponent.GetNiceName()).ShowDialog();
 				}
 			}
 		}
@@ -519,10 +533,7 @@ namespace Project_127
 		/// <returns></returns>
 		public static bool Install(this ComponentManager.Components Component)
 		{
-			bool tmp;
-			tmp = Globals.MyDM.getSubassembly(Component.GetAssemblyName()).GetAwaiter().GetResult();
-			Globals.DebugPopup(tmp.ToString());
-			return tmp;
+			return Globals.MyDM.getSubassembly(Component.GetAssemblyName()).GetAwaiter().GetResult();
 		}
 
 		/// <summary>

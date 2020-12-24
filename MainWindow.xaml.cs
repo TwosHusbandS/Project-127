@@ -45,11 +45,8 @@ Hybrid code can be found in AAA_HybridCode.
 
 To Do before 1.1:
 - Fix ReadMe:
-		=> signature thingies
-		=> links (relative links for installer stuff, relative link for license)
 		=> license
 		=> Programming language
-- Waiting for Dragons Fixes to not make it 404 on crashes...
  */
 
 using System;
@@ -175,7 +172,7 @@ namespace Project_127
 			myMutex.WaitOne();
 
 			// Start the Init Process of Logger, Settings, Globals, Regedit here, since we need the Logger in the next Line if it fails...
-			Globals.Init(this);
+			Globals.Init();
 
 			// Some Background Change based on Date
 			ChangeBackgroundBasedOnSeason();

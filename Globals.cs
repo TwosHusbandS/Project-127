@@ -219,7 +219,7 @@ namespace Project_127
 		/// <summary>
 		/// Property of other Buildinfo. Will be in the top message of logs
 		/// </summary>
-		public static string BuildInfo = "Build 1, Special Shoutouts to Special For";
+		public static string BuildInfo = "V. 1.1, Build 1";
 
 		/// <summary>
 		/// Returns all Command Line Args as StringArray
@@ -373,7 +373,7 @@ namespace Project_127
 		/// <summary>
 		/// Init function which gets called at the very beginning
 		/// </summary>
-		public static void Init(MainWindow pMW)
+		public static void Init()
 		{
 			// Initiates Logging
 			// This is also responsible for the intial first few messages on startup.
@@ -398,7 +398,6 @@ namespace Project_127
 				// Set FirstLaunch to false
 				Settings.FirstLaunch = false;
 
-
 				new Popup(Popup.PopupWindowTypes.PopupOk,
 				"Project 1.27 is finally in fully released.\n" +
 				"The published Product should work as expected.\n\n" +
@@ -409,7 +408,6 @@ namespace Project_127
 				"If anything does not work as expected, \n" +
 				"contact me on Discord. @thS#0305\n\n" +
 				" - The Project 1.27 Team").ShowDialog();
-
 
 				HelperClasses.Logger.Log("FirstLaunch Procedure Ended");
 			}
@@ -476,6 +474,8 @@ namespace Project_127
 
 					Globals.SetUpDownloadManager(false);
 					ComponentManager.ZIPVersionSwitcheroo();
+
+					Settings.Mode = "default";
 
 					HelperClasses.FileHandling.createPath(MySaveFile.BackupSavesPath.TrimEnd('\\') + @"\New Folder");
 					HelperClasses.FileHandling.createPath(MySaveFile.BackupSavesPath.TrimEnd('\\') + @"\YouCanRightclick");
