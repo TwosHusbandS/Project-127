@@ -29,7 +29,7 @@ Shamelessly stolen from: https://github.com/othneildrew/Best-README-Template
 [![Twitter][twitter-shield]][twitter-url]
 [![MIT License][license-shield]][license-url]
 [![Installer][version-shield]][installer-latest-url]
-[![Help][-shield]][help-url]
+[![Help][help-shield]][help-url]
 [![Features][features-shield]][features-url]
 
 
