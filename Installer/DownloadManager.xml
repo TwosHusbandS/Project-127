@@ -207,7 +207,7 @@
         </requires>
     </subassembly>
     
-    <subassembly name="EMU_BASE_SUBASSEMBLY" type="common" version ="1.12.0.0">
+    <subassembly name="EMU_BASE_SUBASSEMBLY" type="common" version ="1.13.0.0">
         <file name="PlayGTAV.exe">
             <hash>078DC056B21FF674F5807809E423268F</hash>
             <mirror>http://gtav.anushk.net/downloadManager/subassemblies/emuv12/PlayGTAV.exe</mirror>
@@ -229,12 +229,12 @@
             <mirror>http://gtav.anushk.net/downloadManager/subassemblies/emuv12/orig_socialclub.dll</mirror>
         </file>
         <file name="ROSCrypto.dll">
-            <hash>810CE8A37EBF849806D5558B0A9C3075</hash>
-            <mirror>http://gtav.anushk.net/downloadManager/subassemblies/emuv12/ROSCrypto.dll</mirror>
+            <hash>EF367527AE438C5368AE0C9FC213186E</hash>
+            <mirror>http://gtav.anushk.net/downloadManager/subassemblies/emuv13/ROSCrypto.dll</mirror>
         </file>
         <file name="socialclub.dll">
-            <hash>0477D5C8EBD51F520FC6B0ADF59E5581</hash>
-            <mirror>http://gtav.anushk.net/downloadManager/subassemblies/emuv12/socialclub.dll</mirror>
+            <hash>6554DC077AC3847F95DCAE0E77DFB3C9</hash>
+            <mirror>http://gtav.anushk.net/downloadManager/subassemblies/emuv13/socialclub.dll</mirror>
         </file>
         <file name="tinyxml2.dll">
             <hash>4BAFE9D630BC74FDE367A543BF9E9C4A</hash>
