@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Project 1.27"
-#define MyAppVersion "1.0.9.7"
+#define MyAppVersion "1.1.0.0"
 #define MyAppPublisher "Project 1.27 Inc."
 #define MyAppURL "https://github.com/TwosHusbandS/Project-127/"
 #define MyAppExeName "Project 127 Launcher.exe"
@@ -25,7 +25,7 @@ AllowNoIcons=yes
 ;PrivilegesRequired=lowest
 PrivilegesRequiredOverridesAllowed=dialog
 OutputDir=C:\Users\ingow\source\repos\Project-127\Installer
-OutputBaseFilename=Project_127_Installer_V_1_0_9_7
+OutputBaseFilename=Project_127_Installer_V_1_1_0_0
 SetupIconFile=C:\Users\ingow\source\repos\Project-127\Artwork\icon.ico
 Compression=lzma
 SolidCompression=yes
@@ -63,6 +63,7 @@ Source: "C:\Users\ingow\source\repos\Project-127\bin\x64\Release\UglyFiles\LICEN
 Source: "C:\Users\ingow\source\repos\Project-127\bin\x64\Release\UglyFiles\LICENSE_JUMPSCRIPT"; DestDir: "{app}\UglyFiles"; Flags: ignoreversion
 Source: "C:\Users\ingow\source\repos\Project-127\bin\x64\Release\UglyFiles\Microsoft.Bcl.AsyncInterfaces.dll"; DestDir: "{app}\UglyFiles"; Flags: ignoreversion
 Source: "C:\Users\ingow\source\repos\Project-127\bin\x64\Release\UglyFiles\Microsoft.Bcl.AsyncInterfaces.xml"; DestDir: "{app}\UglyFiles"; Flags: ignoreversion
+Source: "C:\Users\ingow\source\repos\Project-127\bin\x64\Release\UglyFiles\MTLInterface.dll"; DestDir: "{app}\UglyFiles"; Flags: ignoreversion
 Source: "C:\Users\ingow\source\repos\Project-127\bin\x64\Release\UglyFiles\Project 1.27.exe"; DestDir: "{app}\UglyFiles"; Flags: ignoreversion
 Source: "C:\Users\ingow\source\repos\Project-127\bin\x64\Release\UglyFiles\Project 1.27.exe.manifest"; DestDir: "{app}\UglyFiles"; Flags: ignoreversion
 Source: "C:\Users\ingow\source\repos\Project-127\bin\x64\Release\UglyFiles\P127_Jumpscript.exe"; DestDir: "{app}\UglyFiles"; Flags: ignoreversion

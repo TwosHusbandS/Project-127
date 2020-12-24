@@ -351,16 +351,42 @@ namespace Project_127.Auth
 				//string res = EntitlementDecrypt(v.text); // Not actual entitlements (yet)
 				//MessageBox.Show(res);
 				//MessageBox.Show(v.text);
-				HelperClasses.Logger.Log("Initial token generation sucess, ownership verification successful");
+				HelperClasses.Logger.Log("Initial token generation success, ownership verification successful");
 				return true;
 			}
 			else
 			{
 				HelperClasses.Logger.Log("Initial token generation failed;");
+				session.destroy();
 				MessageBox.Show(res.text); // Show Error
 			}
 
 			return false;
+		}
+
+		public static async Task<bool> LoginMTL()
+        {
+			var s = MTLAuth.GetMTLSession();
+			if (!s.isValid())
+            {
+				return false;
+            }
+			session = s;
+			HelperClasses.Logger.Log("Session retrieved");
+			var res = await GenToken();
+			if (!res.error)
+			{
+				HelperClasses.Logger.Log("Initial token generation success, ownership verification successful");
+				return true;
+			}
+			else
+			{
+				HelperClasses.Logger.Log("Initial token generation failed;");
+				session.destroy();
+				MessageBox.Show(res.text); // Show Error
+			}
+			return false;
+
 		}
 
 		/// <summary>
@@ -665,7 +691,7 @@ namespace Project_127.Auth
 			public string text;
 		}
 
-		private class sessionContainer
+		internal class sessionContainer
 		{
 			private string tick;
 			private string sesskey;

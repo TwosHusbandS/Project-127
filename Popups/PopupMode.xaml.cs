@@ -19,6 +19,9 @@ namespace Project_127.Popups
 	/// </summary>
 	public partial class PopupMode : Window
 	{
+		/// <summary>
+		/// Constructor of our Mode Popup
+		/// </summary>
 		public PopupMode()
 		{
 			InitializeComponent();
@@ -27,6 +30,11 @@ namespace Project_127.Popups
 			this.tb_Main.Text = MySettings.Settings.Mode;
 		}
 
+		/// <summary>
+		/// Changing Mode if wanted
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void btn_SetNew_Click(object sender, RoutedEventArgs e)
 		{
 			string mode = tb_Main.Text.ToLower();
@@ -46,11 +54,21 @@ namespace Project_127.Popups
 			this.Close();
 		}
 
+		/// <summary>
+		/// Exit Click. Closes Window
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void btn_Exit_Click(object sender, RoutedEventArgs e)
 		{
 			this.Close();
 		}
 
+		/// <summary>
+		/// Reset back to default Branch / Mode
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void btn_Reset_Click(object sender, RoutedEventArgs e)
 		{
 			MySettings.Settings.Mode = "default";
@@ -59,11 +77,21 @@ namespace Project_127.Popups
 			this.tb_Main.Text = MySettings.Settings.Mode;
 		}
 
+		/// <summary>
+		/// Move around...
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
 		{
 			DragMove();
 		}
 
+		/// <summary>
+		/// Key Down on the Textbox
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void MyTextBox_KeyDown(object sender, KeyEventArgs e)
 		{
 			if (e.Key == Key.Enter)
@@ -72,6 +100,11 @@ namespace Project_127.Popups
 			}
 		}
 
+		/// <summary>
+		/// Text of Textbox changed
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void tb_Main_TextChanged(object sender, TextChangedEventArgs e)
 		{
 			tb_Main.Text = tb_Main.Text.ToLower();

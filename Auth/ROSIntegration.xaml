@@ -8,7 +8,7 @@
         xmlns:local="clr-namespace:Project_127"
         xmlns:gif="http://wpfanimatedgif.codeplex.com"
         mc:Ignorable="d"
-        Background="{x:Static local:Globals.App_Submenu_Background}"
+        Background="{x:Static local:MyColors.App_Submenu_Background}"
         Title="ROSIntegration" d:DesignHeight="540" d:DesignWidth="625"    >
     <Grid Height="540" Width="625" HorizontalAlignment="Left" VerticalAlignment="Top">
         <Grid x:Name="myGridContent">

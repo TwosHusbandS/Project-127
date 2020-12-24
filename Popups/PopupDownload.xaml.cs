@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Net;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -27,14 +29,19 @@ namespace Project_127.Popups
 		public string DownloadName;
 
 		/// <summary>
-		/// DownloadURL Propertie of this object (PopupDownload Window)
+		/// DownloadURL Property of this object (PopupDownload Window)
 		/// </summary>
 		public string DownloadURL;
 
 		/// <summary>
-		/// DownloadLocation Propertie of this object (PopupDownload Window)
+		/// DownloadLocation Property of this object (PopupDownload Window)
 		/// </summary>
 		public string DownloadLocation;
+
+		/// <summary>
+		/// Hash Property (non null if hashing is enabled)
+		/// </summary>
+		public string HashString = null;
 
 		/// <summary>
 		/// Constructor of our Popup download
@@ -42,7 +49,7 @@ namespace Project_127.Popups
 		/// <param name="pDownloadURL"></param>
 		/// <param name="pDownloadLocation"></param>
 		/// <param name="pMessage"></param>
-		public PopupDownload(string pDownloadURL, string pDownloadLocation, string pMessage)
+		public PopupDownload(string pDownloadURL, string pDownloadLocation, string pMessage, bool autoHash = false)
 		{
 			if (MainWindow.MW.IsVisible)
 			{
@@ -70,13 +77,28 @@ namespace Project_127.Popups
 			// Setting up some Webclient stuff. 
 			WebClient webClient = new WebClient();
 			webClient.DownloadProgressChanged += new DownloadProgressChangedEventHandler(DownloadProgressed);
-			webClient.DownloadFileCompleted += new AsyncCompletedEventHandler(DownloadCompleted);
+			if (!autoHash)
+			{
+				webClient.DownloadFileCompleted += new AsyncCompletedEventHandler(DownloadCompleted);
+			}
+			else
+			{
+				webClient.DownloadDataCompleted += new DownloadDataCompletedEventHandler(DownloadCompletedAutoHash);
+
+			}
 			HelperClasses.Logger.Log("Download Popup: Starting Download");
 
 			// TryCatch of the actual Download
 			try
 			{
-				webClient.DownloadFileAsync(new Uri(DownloadURL), DownloadLocation);
+				if (!autoHash)
+				{
+					webClient.DownloadFileAsync(new Uri(DownloadURL), DownloadLocation);
+				}
+				else
+				{
+					webClient.DownloadDataAsync(new Uri(DownloadURL));
+				}
 			}
 			catch (Exception e)
 			{
@@ -100,6 +122,38 @@ namespace Project_127.Popups
 		}
 
 		/// <summary>
+		/// Method gets called when Download is done (autoHashingMode)
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void DownloadCompletedAutoHash(object sender, DownloadDataCompletedEventArgs e)
+		{
+			try
+			{
+				HelperClasses.Logger.Log("Download Popup: Download Done");
+				lbl_Main.Content = "Download Complete.";
+				byte[] file = e.Result;
+				HelperClasses.Logger.Log("Download Popup: Computing Hash");
+				using (var md5 = MD5.Create())
+				{
+					var hash = md5.ComputeHash(file);
+					HashString = BitConverter.ToString(hash).Replace("-", "").ToLower();
+				}
+				pb_Main.Value = 100;
+				using (var b = new BinaryWriter(File.Open(DownloadLocation, FileMode.Create)))
+				{
+					b.Write(file);
+				}
+				this.Close();
+			}
+			catch
+			{
+				HashString = "";
+				this.Close();
+			}
+		}
+
+		/// <summary>
 		/// Method gets Sets the Download Progress Bar, gets called if the Download Progress Changed
 		/// </summary>
 		/// <param name="sender"></param>
@@ -109,11 +163,6 @@ namespace Project_127.Popups
 			pb_Main.Value = (double)e.ProgressPercentage;
 			lbl_Main.Content = "Downloading " + DownloadName + "...\n(" + pb_Main.Value + "%)";
 		}
-
-
-		////////////////////////////////////////////////////////////////////
-		// Below are Methods we need to make the behaviour of this nice. ///
-		////////////////////////////////////////////////////////////////////
 
 		/// <summary>
 		/// Method which makes the Window draggable, which moves the whole window when holding down Mouse1 on the background

@@ -26,9 +26,9 @@
         </Grid.RowDefinitions>
 
 
-        <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" FontSize="20" Content="Note Files Currently Loaded" Style="{StaticResource lbl}" Margin="0,0,2,0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Foreground="{x:Static local:Globals.SFH_DGHeaderForeground}" Background="{x:Static local:Globals.SFH_DGHeaderBackground}"/>
+        <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" FontSize="20" Content="Note Files Currently Loaded" Style="{StaticResource lbl}" Margin="0,0,2,0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Foreground="{x:Static local:MyColors.SFH_DGHeaderForeground}" Background="{x:Static local:MyColors.SFH_DGHeaderBackground}"/>
 
-        <Border x:Name="bdr_Files" Grid.Row="1" Grid.RowSpan="5" Grid.Column="0" Grid.ColumnSpan="2" BorderThickness="2" Margin="5" BorderBrush="{x:Static local:Globals.MyColorOffWhite}">
+        <Border x:Name="bdr_Files" Grid.Row="1" Grid.RowSpan="5" Grid.Column="0" Grid.ColumnSpan="2" BorderThickness="2" Margin="5" BorderBrush="{x:Static local:MyColors.MyColorOffWhite}">
             <ScrollViewer x:Name="sv_Files">
                 <DataGrid x:Name="dg_Files" Style="{StaticResource dg}" PreviewMouseWheel="dg_Files_PreviewMouseWheel" PreviewKeyDown="dg_Files_PreviewKeyDown" SelectionMode="Extended" SelectionUnit="FullRow">
                     <DataGrid.Columns>
@@ -45,7 +45,7 @@
 
         <!--<Button Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2" x:Name="btn_Help" Content="Help" Click="btn_Help_Click" Style="{StaticResource btn_SE_Path}"/>-->
 
-        <Label Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2" FontSize="20" Content="Presets" Style="{StaticResource lbl}" Margin="2,0,0,0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Foreground="{x:Static local:Globals.SFH_DGHeaderForeground}" Background="{x:Static local:Globals.SFH_DGHeaderBackground}"/>
+        <Label Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2" FontSize="20" Content="Presets" Style="{StaticResource lbl}" Margin="2,0,0,0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Foreground="{x:Static local:MyColors.SFH_DGHeaderForeground}" Background="{x:Static local:MyColors.SFH_DGHeaderBackground}"/>
 
         <Button Tag="A" Grid.Row="1" Grid.Column="2" Click="btn_PresetLoad_Click" Content="Load A" Style="{StaticResource btn_SE_Path}"/>
         <Button Tag="B" Grid.Row="2" Grid.Column="2" Click="btn_PresetLoad_Click" Content="Load B" Style="{StaticResource btn_SE_Path}"/>

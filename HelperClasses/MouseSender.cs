@@ -7,9 +7,19 @@ using System.Threading.Tasks;
 
 namespace Project_127.HelperClasses
 {
+	/// <summary>
+	/// MouseSender class
+	/// </summary>
 	class MouseSender
 	{
-
+		/// <summary>
+		/// Imported DLL Method of mouse_event
+		/// </summary>
+		/// <param name="dwFlags"></param>
+		/// <param name="dx"></param>
+		/// <param name="dy"></param>
+		/// <param name="cButtons"></param>
+		/// <param name="dwExtraInfo"></param>
 		[DllImport("user32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
 		public static extern void mouse_event(long dwFlags, long dx, long dy, long cButtons, long dwExtraInfo);
 
@@ -18,6 +28,9 @@ namespace Project_127.HelperClasses
 		private const int MOUSEEVENTF_RIGHTDOWN = 0x08;
 		private const int MOUSEEVENTF_RIGHTUP = 0x10;
 
+		/// <summary>
+		/// Simulate a MouseClick
+		/// </summary>
 		public static void DoMouseClick()
 		{
 			mouse_event(MOUSEEVENTF_LEFTDOWN | MOUSEEVENTF_LEFTUP, 0, 0, 0, 0);

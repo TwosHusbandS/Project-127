@@ -67,8 +67,6 @@ namespace Project_127.MySettings
 		}
 
 
-
-
 		/// <summary>
 		/// Method which gets called when changing the Path of the ZIP Extraction
 		/// </summary>
@@ -451,7 +449,35 @@ namespace Project_127.MySettings
 			}
 			set
 			{
-				SetSetting("EnableAlternativeLaunch", value.ToString());
+				if (LauncherLogic.InstallationState != LauncherLogic.InstallationStates.Upgraded)
+				{
+					Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Before you do that, we need to be Upgraded.\nDo you want to Upgrade now?");
+					yesno.ShowDialog();
+					if (yesno.DialogResult == true)
+					{
+						LauncherLogic.Upgrade();
+						SetSetting("EnableAlternativeLaunch", value.ToString());
+						if (!ComponentManager.CheckIfRequiredComponentsAreInstalled(true))
+						{
+							SetSetting("EnableAlternativeLaunch", (!value).ToString());
+							return;
+						}
+					}
+					else
+					{
+						new Popup(Popup.PopupWindowTypes.PopupOk, "Setting was not changed.");
+						return;
+					}
+				}
+				else
+				{
+					SetSetting("EnableAlternativeLaunch", value.ToString());
+					if (!ComponentManager.CheckIfRequiredComponentsAreInstalled(true))
+					{
+						SetSetting("EnableAlternativeLaunch", (!value).ToString());
+						return;
+					}
+				}
 			}
 		}
 
@@ -565,13 +591,16 @@ namespace Project_127.MySettings
 		/// </summary>
 		public enum Retailers
 		{
+			// THESE NEED TO BE IN THAT SPELLING AND UPPERCASING
 			Steam,
 			Rockstar,
 			Epic
 		}
 
-
-		public static string Version
+		/// <summary>
+		/// Version of Social Club Launch. Either "127" or "124"
+		/// </summary>
+		public static string SocialClubLaunchGameVersion
 		{
 			get
 			{
@@ -586,18 +615,56 @@ namespace Project_127.MySettings
 			}
 			set
 			{
-				if (value == "124" && Version != "124")
+				if (value != SocialClubLaunchGameVersion)
 				{
-					SetSetting("Version", "124");
-				}
-				else if (Version!="127")
-				{
-					SetSetting("Version", "127");
+					if (LauncherLogic.InstallationState != LauncherLogic.InstallationStates.Upgraded)
+					{
+						Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Before you do that, we need to be Upgraded.\nDo you want to Upgrade now?");
+						yesno.ShowDialog();
+						if (yesno.DialogResult == true)
+						{
+							LauncherLogic.Upgrade();
+							SetSetting("Version", value);
+							if (!ComponentManager.CheckIfRequiredComponentsAreInstalled(true))
+							{
+								if (value == "124")
+								{
+									SetSetting("Version", "127");
+								}
+								else
+								{
+									SetSetting("Version", "124");
+								}
+								return;
+							}
+						}
+						else
+						{
+							new Popup(Popup.PopupWindowTypes.PopupOk, "Setting was not changed.");
+							return;
+						}
+					}
+					else
+					{
+						SetSetting("Version", value);
+						if (!ComponentManager.CheckIfRequiredComponentsAreInstalled(true))
+						{
+							if (value == "124")
+							{
+								SetSetting("Version", "127");
+							}
+							else
+							{
+								SetSetting("Version", "124");
+							}
+							return;
+						}
+					}
 				}
 			}
 		}
 
-	
+
 
 		/// <summary>
 		/// Settings Retailer. Gets and Sets from Dictionary.
@@ -612,7 +679,51 @@ namespace Project_127.MySettings
 			{
 				if (value != Retailer)
 				{
-					SetSetting("Retailer", value.ToString());
+					if (Settings.EnableAlternativeLaunch)
+					{
+						Retailers OldRetailer = Retailer;
+						if (LauncherLogic.InstallationState != LauncherLogic.InstallationStates.Upgraded)
+						{
+							Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Before you do that, we need to be Upgraded.\nDo you want to Upgrade now?");
+							yesno.ShowDialog();
+							if (yesno.DialogResult == true)
+							{
+								LauncherLogic.Upgrade();
+								SetSetting("Retailer", value.ToString());
+								if (value == Retailers.Epic)
+								{
+									Settings.EnableAlternativeLaunch = false;
+								}
+								if (!ComponentManager.CheckIfRequiredComponentsAreInstalled(true))
+								{
+									SetSetting("Retailer", OldRetailer.ToString());
+									return;
+								}
+							}
+							else
+							{
+								new Popup(Popup.PopupWindowTypes.PopupOk, "Retailer was not changed.");
+								return;
+							}
+						}
+						else
+						{
+							SetSetting("Retailer", value.ToString());
+							if (value == Retailers.Epic)
+							{
+								Settings.EnableAlternativeLaunch = false;
+							}
+							if (!ComponentManager.CheckIfRequiredComponentsAreInstalled(true))
+							{
+								SetSetting("Retailer", OldRetailer.ToString());
+								return;
+							}
+						}
+					}
+					else
+					{
+						SetSetting("Retailer", value.ToString());
+					}
 				}
 			}
 		}
@@ -830,6 +941,27 @@ namespace Project_127.MySettings
 		}
 
 
+		/// <summary>
+		/// Settings EnableLegacyAuth. Gets and Sets from the Dictionary.
+		/// </summary>
+		public static bool EnableLegacyAuth
+		{
+			get
+			{
+				return GetBoolFromString(GetSetting("EnableLegacyAuth"));
+			}
+			set
+			{
+				SetSetting("EnableLegacyAuth", value.ToString());
+			}
+		}
+
+
+		/// <summary>
+		/// Getting a Key from the registry
+		/// </summary>
+		/// <param name="pString"></param>
+		/// <returns></returns>
 		public static Keys GetKeyFromString(string pString)
 		{
 			Keys myReturnKey;
@@ -992,35 +1124,9 @@ namespace Project_127.MySettings
 
 
 
-		public static string GetStringFromColor(System.Drawing.Color pColor)
-		{
-			string rtrn = pColor.A.ToString() + "," + pColor.R.ToString() + "," + pColor.G.ToString() + "," + pColor.B.ToString();
-			return rtrn;
-		}
-
-		public static System.Drawing.Color GetColorFromString(string pColor)
-		{
-			System.Drawing.Color rtrn = System.Drawing.Color.Black;
-			try
-			{
-				string[] values_s = pColor.Split(',');
-				int[] values_i = new int[values_s.Length];
-
-				for (int i = 0; i <= values_s.Length - 1; i++)
-				{
-					values_i[i] = Int32.Parse(values_s[i]);
-				}
-
-				rtrn = System.Drawing.Color.FromArgb(values_i[0], values_i[1], values_i[2], values_i[3]);
-			}
-			catch
-			{
-				new Popups.Popup(Popup.PopupWindowTypes.PopupOkError, "Something broke while getting the Colors from the Settings.\n Try Resetting Settings").ShowDialog();
-			}
-			return rtrn;
-		}
-
-
+		/// <summary>
+		/// Setting for the OvererlayBackground. Gets and Sets from Dictionary
+		/// </summary>
 		public static System.Drawing.Color OverlayBackground
 		{
 			get
@@ -1033,7 +1139,9 @@ namespace Project_127.MySettings
 			}
 		}
 
-
+		/// <summary>
+		/// Setting for the OverlayForeground. Gets and Sets from Dictionary
+		/// </summary>
 		public static System.Drawing.Color OverlayForeground
 		{
 			get
@@ -1046,6 +1154,9 @@ namespace Project_127.MySettings
 			}
 		}
 
+		/// <summary>
+		/// Setting for the OverlayLocation. Gets and Sets from Dictionary
+		/// </summary>
 		public static GTAOverlay.Positions OverlayLocation
 		{
 			get
@@ -1058,6 +1169,9 @@ namespace Project_127.MySettings
 			}
 		}
 
+		/// <summary>
+		/// Setting for the OverlayTextFont. Gets and Sets from Dictionary
+		/// </summary>
 		public static string OverlayTextFont
 		{
 			get
@@ -1070,25 +1184,7 @@ namespace Project_127.MySettings
 			}
 		}
 
-		public static int GetIntFromString(string pString)
-		{
-			int rtrn = 0;
-			try
-			{
-				rtrn = Int32.Parse(pString);
-			}
-			catch
-			{
-				new Popups.Popup(Popup.PopupWindowTypes.PopupOkError, "Something broke while getting the a Number from the Settings.\n Try Resetting Settings").ShowDialog();
-			}
-			return rtrn;
-		}
 
-
-		public static double GetDoubleFromString(string pString)
-		{
-			return GetIntFromString(pString);
-		}
 
 
 		public static double OL_MM_Left
@@ -1239,6 +1335,9 @@ namespace Project_127.MySettings
 			}
 		}
 
+		/// <summary>
+		/// Setting: OverlayNotesPresetA. Gets and Sets from Dictionary
+		/// </summary>
 		public static List<string> OverlayNotesPresetA
 		{
 			get
@@ -1251,6 +1350,9 @@ namespace Project_127.MySettings
 			}
 		}
 
+		/// <summary>
+		/// Setting: OverlayNotesPresetB. Gets and Sets from Dictionary
+		/// </summary>
 		public static List<string> OverlayNotesPresetB
 		{
 			get
@@ -1263,6 +1365,9 @@ namespace Project_127.MySettings
 			}
 		}
 
+		/// <summary>
+		/// Setting: OverlayNotesPresetC. Gets and Sets from Dictionary
+		/// </summary>
 		public static List<string> OverlayNotesPresetC
 		{
 			get
@@ -1275,6 +1380,9 @@ namespace Project_127.MySettings
 			}
 		}
 
+		/// <summary>
+		/// Setting: OverlayNotesPresetD. Gets and Sets from Dictionary
+		/// </summary>
 		public static List<string> OverlayNotesPresetD
 		{
 			get
@@ -1287,6 +1395,9 @@ namespace Project_127.MySettings
 			}
 		}
 
+		/// <summary>
+		/// Setting: OverlayNotesPresetE. Gets and Sets from Dictionary
+		/// </summary>
 		public static List<string> OverlayNotesPresetE
 		{
 			get
@@ -1300,6 +1411,9 @@ namespace Project_127.MySettings
 			}
 		}
 
+		/// <summary>
+		/// Setting: OverlayNotesPresetF. Gets and Sets from Dictionary
+		/// </summary>
 		public static List<string> OverlayNotesPresetF
 		{
 			get
@@ -1312,6 +1426,9 @@ namespace Project_127.MySettings
 			}
 		}
 
+		/// <summary>
+		/// Setting: OverlayNotesMain. Gets and Sets from Dictionary
+		/// </summary>
 		public static List<string> OverlayNotesMain
 		{
 			get
@@ -1322,21 +1439,6 @@ namespace Project_127.MySettings
 			{
 				SetSetting("OverlayNotesMain", String.Join(";", value.ToArray()));
 			}
-		}
-
-		public static List<string> GetStringListFromString(string pString, char Deliminiter)
-		{
-			List<string> rtrn = new List<string>(pString.Split(Deliminiter));
-
-			if (rtrn.Count == 1)
-			{
-				if (String.IsNullOrWhiteSpace(rtrn[0]))
-				{
-					rtrn = new List<string>();
-				}
-			}
-
-			return rtrn;
 		}
 
 
@@ -1370,6 +1472,94 @@ namespace Project_127.MySettings
 				}
 			}
 		}
+
+
+		/// <summary>
+		/// Gets StringList from a single String
+		/// </summary>
+		/// <param name="pString"></param>
+		/// <param name="Deliminiter"></param>
+		/// <returns></returns>
+		public static List<string> GetStringListFromString(string pString, char Deliminiter)
+		{
+			List<string> rtrn = new List<string>(pString.Split(Deliminiter));
+
+			if (rtrn.Count == 1)
+			{
+				if (String.IsNullOrWhiteSpace(rtrn[0]))
+				{
+					rtrn = new List<string>();
+				}
+			}
+
+			return rtrn;
+		}
+
+
+
+		/// <summary>
+		/// Gets Int from String
+		/// </summary>
+		public static int GetIntFromString(string pString)
+		{
+			int rtrn = 0;
+			try
+			{
+				rtrn = Int32.Parse(pString);
+			}
+			catch
+			{
+				new Popups.Popup(Popup.PopupWindowTypes.PopupOkError, "Something broke while getting the a Number from the Settings.\n Try Resetting Settings").ShowDialog();
+			}
+			return rtrn;
+		}
+
+		/// <summary>
+		/// Gets Double from String
+		/// </summary>
+		public static double GetDoubleFromString(string pString)
+		{
+			return GetIntFromString(pString);
+		}
+
+		/// <summary>
+		/// Gets String from a Color
+		/// </summary>
+		/// <param name="pColor"></param>
+		/// <returns></returns>
+		public static string GetStringFromColor(System.Drawing.Color pColor)
+		{
+			string rtrn = pColor.A.ToString() + "," + pColor.R.ToString() + "," + pColor.G.ToString() + "," + pColor.B.ToString();
+			return rtrn;
+		}
+
+		/// <summary>
+		/// Gets Color from a String
+		/// </summary>
+		/// <param name="pColor"></param>
+		/// <returns></returns>
+		public static System.Drawing.Color GetColorFromString(string pColor)
+		{
+			System.Drawing.Color rtrn = System.Drawing.Color.Black;
+			try
+			{
+				string[] values_s = pColor.Split(',');
+				int[] values_i = new int[values_s.Length];
+
+				for (int i = 0; i <= values_s.Length - 1; i++)
+				{
+					values_i[i] = Int32.Parse(values_s[i]);
+				}
+
+				rtrn = System.Drawing.Color.FromArgb(values_i[0], values_i[1], values_i[2], values_i[3]);
+			}
+			catch
+			{
+				new Popups.Popup(Popup.PopupWindowTypes.PopupOkError, "Something broke while getting the Colors from the Settings.\n Try Resetting Settings").ShowDialog();
+			}
+			return rtrn;
+		}
+
 
 	} // End of partial Class
 } // End of Namespace

@@ -182,18 +182,25 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Auth\CEFResourceHandler.cs" />
+    <Compile Include="Auth\MTLAuth.cs" />
+    <Compile Include="ComponentManager.xaml.cs">
+      <DependentUpon>ComponentManager.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MyColors.cs" />
     <Compile Include="HelperClasses\BuildVersionTable.cs" />
     <Compile Include="HelperClasses\DataGridHelper.cs" />
     <Compile Include="HelperClasses\DownloadManager.cs" />
-    <Compile Include="HelperClasses\Keyboard\Jumpscript.cs" />
+    <Compile Include="HelperClasses\Jumpscript.cs" />
     <Compile Include="HelperClasses\Keyboard\KeyboardListener.cs" />
     <Compile Include="HelperClasses\MouseSender.cs" />
     <Compile Include="HelperClasses\WindowChangeHander.cs" />
     <Compile Include="LaunchAlternative.cs" />
+    <Compile Include="MainWindow_ContextMenus.cs" />
+    <Compile Include="MainWindow_UserInteractions.cs" />
     <Compile Include="Overlay\EmptyPage.xaml.cs">
       <DependentUpon>EmptyPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Overlay\MyColorPicker.xaml.cs">
+    <Compile Include="Overlay\NoteOverlayPages\MyColorPicker.xaml.cs">
       <DependentUpon>MyColorPicker.xaml</DependentUpon>
     </Compile>
     <Compile Include="Overlay\GTAOverlay.cs" />
@@ -265,6 +272,10 @@
     <Compile Include="MySettings\Settings.xaml.cs">
       <DependentUpon>Settings.xaml</DependentUpon>
     </Compile>
+    <Page Include="ComponentManager.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="GTA_Page.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -273,7 +284,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Overlay\MyColorPicker.xaml">
+    <Page Include="Overlay\NoteOverlayPages\MyColorPicker.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -375,6 +386,9 @@
     </EmbeddedResource>
     <None Include="app.manifest" />
     <None Include="Installer\Changelog.md" />
+    <None Include="Installer\Changelogs\Help.md" />
+    <None Include="Installer\Changelogs\Features.md" />
+    <None Include="Installer\Changelogs\V_1_1_0_0_Changelog.md" />
     <None Include="Installer\Changelogs\V_0_0_4_0_Changelog.md" />
     <None Include="Installer\Changelogs\V_0_0_3_1_Changelog.md" />
     <None Include="Installer\Changelogs\V_0_0_3_0_Changelog.md" />
@@ -486,6 +500,14 @@
       <Name>v2_AutoHotkey.dll</Name>
       <HintPath>bin\DLLs\v2_AutoHotkey.dll</HintPath>
     </NativeReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Installer\DownloadManager.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="MTLInterface.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

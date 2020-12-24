@@ -9,22 +9,23 @@
         Title="Project - 1.27"
          Height="540" Width="1600"
         WindowStyle="None" 
-        ResizeMode="CanMinimize"
+        ResizeMode="NoResize"
         AllowsTransparency="False" 
         Loaded="Window_Loaded"
         MouseLeftButtonDown="Window_MouseLeftButtonDown" 
         WindowStartupLocation="CenterScreen"
         Icon="/Artwork/icon.png">
-    <Border BorderThickness="{x:Static local:Globals.MW_BorderThickness}" BorderBrush="{x:Static local:Globals.MW_BorderBrush}">
+    <Border BorderThickness="{x:Static local:MyColors.MW_BorderThickness}" BorderBrush="{x:Static local:MyColors.MW_BorderBrush}">
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition x:Name="cd_Main" Width="896"/>
                 <ColumnDefinition x:Name="cd_Preview" Width="700"/>
             </Grid.ColumnDefinitions>
             <Grid x:Name="GridMain" Height="536" Width="896" Grid.Column="0" HorizontalAlignment="Left" >
-                <Grid x:Name="GridHamburgerOuter" HorizontalAlignment="Left" Width="275" Background="{x:Static local:Globals.MW_HamburgerMenuGridBackground}">
-                    <Grid x:Name="GridHamburgerInner" Margin="15, 120, 15, 60">
+                <Grid x:Name="GridHamburgerOuter" HorizontalAlignment="Left" Width="275" Background="{x:Static local:MyColors.MW_HamburgerMenuGridBackground}">
+                    <Grid x:Name="GridHamburgerInner" Margin="15, 120, 15, 30">
                         <Grid.RowDefinitions>
+                            <RowDefinition/>
                             <RowDefinition/>
                             <RowDefinition/>
                             <RowDefinition/>
@@ -36,14 +37,15 @@
                         <Button x:Name="btn_Downgrade" Grid.Row="1" Style="{StaticResource btn_hamburgeritem}" Content="Downgrade" Click="btn_Downgrade_Click"/>
                         <Button x:Name="btn_SaveFiles" Grid.Row="2" Style="{StaticResource btn_hamburgeritem}" BorderThickness="0" Content="Save File Handler" Click="btn_SaveFiles_Click" MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
                         <Button x:Name="btn_NoteOverlay" Grid.Row="3" Style="{StaticResource btn_hamburgeritem}" BorderThickness="0" Content="NoteOverlay" Click="btn_NoteOverlay_Click" MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
-                        <Button x:Name="btn_Settings" Grid.Row="4" Style="{StaticResource btn_hamburgeritem}" BorderThickness="0" Content="Settings" Click="btn_Settings_Click" MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
-                        <Button x:Name="btn_ReadMe" Grid.Row="5" Style="{StaticResource btn_hamburgeritem}" BorderThickness="0" Content="Information" Click="btn_ReadMe_Click" MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
+                        <Button x:Name="btn_ComponentManager" Grid.Row="4" Style="{StaticResource btn_hamburgeritem}" BorderThickness="0" Content="Component Manager" Click="btn_ComponentManager_Click"  MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
+                        <Button x:Name="btn_Settings" Grid.Row="5" Style="{StaticResource btn_hamburgeritem}" BorderThickness="0" Content="Settings" Click="btn_Settings_Click" MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
+                        <Button x:Name="btn_ReadMe" Grid.Row="6" Style="{StaticResource btn_hamburgeritem}" BorderThickness="0" Content="Information" Click="btn_ReadMe_Click" MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
                     </Grid>
 
 
 
                     <Button x:Name="btn_lbl_Mode" Style="{StaticResource btn}" Height="40"  MouseRightButtonDown="btn_lbl_Mode_MouseRightButtonDown" 
-                            VerticalAlignment="Top" HorizontalAlignment="Left" HorizontalContentAlignment="Left" FontSize="20" Foreground="{x:Static local:Globals.MyColorOrange}"
+                            VerticalAlignment="Top" HorizontalAlignment="Left" HorizontalContentAlignment="Left" FontSize="20" Foreground="{x:Static local:MyColors.MyColorOrange}"
                             Background="Transparent" Margin="10,75,10,10" Width="250" BorderThickness="0"/>
 
                     <!-- GridHamburgerInner -->
@@ -52,7 +54,7 @@
                 </Grid>
                 <!-- GridHamburgerOuter -->
 
-                <Rectangle x:Name="GridHamburgerOuterSeperator" Width="2" Height="9999" Fill="{x:Static local:Globals.MW_HamburgerMenuSeperatorBrush}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="275,0,0,0"/>
+                <Rectangle x:Name="GridHamburgerOuterSeperator" Width="2" Height="9999" Fill="{x:Static local:MyColors.MW_HamburgerMenuSeperatorBrush}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="275,0,0,0"/>
 
                 <Button x:Name="btn_Hamburger" ToolTip="Toggle Hamburger Menu"  Style="{StaticResource btn_SmallIcon}" MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave" MouseRightButtonDown="btn_Hamburger_MouseRightButtonDown" VerticalAlignment="Top" HorizontalAlignment="Left" Click="btn_Hamburger_Click" />
 
@@ -60,7 +62,7 @@
 
                 <Button x:Name="btn_Exit" ToolTip="Exit" Style="{StaticResource btn_SmallIcon}" MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave" VerticalAlignment="Top" HorizontalAlignment="Right" Click="btn_Exit_Click" MouseRightButtonDown="btn_Exit_MouseRightButtonDown"/>
             </Grid >
-            <Grid x:Name="Grid_Preview" Grid.Column="1" HorizontalAlignment="Right" Background="{x:Static local:Globals.MyColorOffBlack}" Width="700" Visibility="Visible">
+            <Grid x:Name="Grid_Preview" Grid.Column="1" HorizontalAlignment="Right" Background="{x:Static local:MyColors.MyColorOffBlack}" Width="700" Visibility="Visible">
                 <Frame x:Name="Frame_Game"  NavigationUIVisibility="Hidden">
 
                 </Frame>

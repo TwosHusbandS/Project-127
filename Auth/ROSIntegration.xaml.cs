@@ -33,6 +33,8 @@ using Project_127.HelperClasses;
 using Project_127.Overlay;
 using Project_127.Popups;
 using Project_127.MySettings;
+using System.Diagnostics;
+using System.Runtime.InteropServices;
 
 /*
 * This file is based on LegitimacyNUI.cpp from the CitizenFX Project - http://citizen.re/
@@ -54,7 +56,7 @@ namespace Project_127.Auth
 		private int sendCount = 0;
 		private static bool newInstance = false;
 
-		private bool LaunchAfter;
+		private static bool LaunchAfter;
 
 
 		public bool WebSiteIsAvailable(string Url)
@@ -79,6 +81,59 @@ namespace Project_127.Auth
 			}
 
 			return (Message.Length == 0);
+		}
+
+		public static async void MTLAuth(bool LaunchGameAfter = false)
+        {
+			LaunchAfter = LaunchGameAfter;
+			HelperClasses.Logger.Log("Launching MTL...");
+			MainWindow.MTLAuthTimer.Stop();
+			Process.Start("explorer.exe", "mtl://");
+			await Task.Delay(15000);
+			HelperClasses.Logger.Log("Waiting for session...");
+			//MainWindow.MTLAuthTimer.Interval = new TimeSpan(15000);
+			MainWindow.MW.AutoAuthMTLTimer();
+			MainWindow.MTLAuthTimer.Start();
+			//Timer when auth: minimize MTL, foreground p127
+			MTLwait = new System.Windows.Threading.DispatcherTimer();
+			MTLwait.Tick += new EventHandler(onMTLAuthCompletion);
+			MTLwait.Interval = new TimeSpan(2000);
+			MTLwait.Start();
+		}
+
+		private static System.Windows.Threading.DispatcherTimer MTLwait;
+
+		[DllImport("user32.dll")]
+		private static extern bool ShowWindowAsync(IntPtr hWnd, int nCmdShow);
+
+		private static void onMTLAuthCompletion(object sender = null, EventArgs e = null)
+        {
+			if (LauncherLogic.AuthState == LauncherLogic.AuthStates.Auth)
+            {
+				HelperClasses.Logger.Log("Got session");
+				MTLwait.Stop();
+				Process[] ps = Process.GetProcessesByName("SocialClubHelper");
+				IntPtr mtlWindow = new IntPtr();
+				foreach (var p in ps)
+                {
+					if (p.MainWindowTitle.ToLower().Contains("Rockstar Games Launcher".ToLower()))
+                    {
+						mtlWindow = p.MainWindowHandle;
+						break;
+                    }
+                }
+				if (mtlWindow != IntPtr.Zero)
+                {
+					ShowWindowAsync(mtlWindow, 11);//Minimize
+                }
+				MainWindow.MW.menuItem_Show_Click(null, null);
+				if (LaunchAfter)
+				{
+					LauncherLogic.Launch();
+				}
+				return;
+            }
+
 		}
 
 		public ROSIntegration(bool pLaunchAfter = false)
@@ -388,6 +443,22 @@ namespace Project_127.Auth
 			}
 		}
 
+		/// <summary>
+		/// Initialzes CEF settings
+		/// </summary>R
+		public static void CEFInitialize()
+		{
+			HelperClasses.Logger.Log("Initializing CEF...");
+			var s = new CefSharp.Wpf.CefSettings();
+			s.CachePath = Globals.ProjectInstallationPathBinary.TrimEnd('\\') + @"\CEF_CacheFiles";
+			s.BackgroundColor = 0;//0x13 << 16 | 0x15 << 8 | 0x18;
+			s.DisableGpuAcceleration();
+			s.CefCommandLineArgs["autoplay-policy"] = "no-user-gesture-required";
+#if DEBUG
+			s.RemoteDebuggingPort = 8088;
+#endif
+			Cef.Initialize(s);
+		}
 	}
 }
 

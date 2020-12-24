@@ -9,6 +9,9 @@ using System.Windows.Forms;
 
 namespace Project_127.HelperClasses.Keyboard
 {
+	/// <summary>
+	/// Our Keyboard Listener
+	/// </summary>
 	class KeyboardListener
 	{
 		// Credits:
@@ -20,8 +23,19 @@ namespace Project_127.HelperClasses.Keyboard
 		private static KeyboardListener _hook = new KeyboardListener();
 
 
+		/// <summary>
+		/// Bool Property if Keyboard Listener is running
+		/// </summary>
 		public static bool IsRunning = false;
+
+		/// <summary>
+		/// Using this to not stop Keyboard Listener if its meant to close during a Keyboard related Settings change
+		/// </summary>
 		public static bool DontStop = false;
+		
+		/// <summary>
+		/// Using this to stop Keyboard Listener if it was meant to shutdown during a Keyboard related Settings change after thats complete.
+		/// </summary>
 		public static bool WantToStop = false;
 
 		private enum HookType : int
@@ -75,18 +89,15 @@ namespace Project_127.HelperClasses.Keyboard
 		// hook method called by system
 		private delegate int HookProc(int code, IntPtr wParam, ref KBDLLHOOKSTRUCT lParam);
 
-		// events
-		//public delegate void HookEventHandler(object sender, HookEventArgs e);
-		//public event HookEventHandler KeyDown;
-		//public event HookEventHandler KeyUp;
-
 		public KeyboardListener()
 		{
 			_hookFunction = new HookProc(HookCallback);
 		}
 
 
-
+		/// <summary>
+		/// Public start method. Doesnt Start when already running.
+		/// </summary>
 		public static void Start()
 		{
 			WantToStop = false;
@@ -99,6 +110,9 @@ namespace Project_127.HelperClasses.Keyboard
 			}
 		}
 
+		/// <summary>
+		/// Public stop method. Doesnt stop when its already stopped
+		/// </summary>
 		public static void Stop()
 		{
 			if (DontStop)
@@ -114,7 +128,9 @@ namespace Project_127.HelperClasses.Keyboard
 			}
 		}
 
-
+		/// <summary>
+		/// Internal Start Method. Actual Starts the listener
+		/// </summary>
 		private void _Start()
 		{
 			// make sure not already installed
@@ -129,6 +145,9 @@ namespace Project_127.HelperClasses.Keyboard
 			_hookHandle = SetWindowsHookEx(_hookType, _hookFunction, Marshal.GetHINSTANCE(list[0]), 0);
 		}
 
+		/// <summary>
+		/// Internal Stop Method. Actually stops the listener.
+		/// </summary>
 		private void _Stop()
 		{
 			if (_hookHandle != IntPtr.Zero)
@@ -139,9 +158,13 @@ namespace Project_127.HelperClasses.Keyboard
 			}
 		}
 
-		// hook function called by system
-		//private int HookCallback(int code, IntPtr wParam, ref KBDLLHOOKSTRUCT lParam)
-		//private IntPtr HookCallback(int code, IntPtr wParam, IntPtr lParam)
+		/// <summary>
+		/// Callback method of Keyboard Hook
+		/// </summary>
+		/// <param name="code"></param>
+		/// <param name="wParam"></param>
+		/// <param name="lParam"></param>
+		/// <returns></returns>
 		private int HookCallback(int code, IntPtr wParam, ref KBDLLHOOKSTRUCT lParam)
 		{
 			//HelperClasses.Logger.Log("DEBUG: Keypress - detected",2);
@@ -178,47 +201,5 @@ namespace Project_127.HelperClasses.Keyboard
 				return CallNextHookEx(_hookHandle, code, wParam, ref lParam);
 			}
 		}
-
-
 	}
-
-	// The callback method converts the low-level keyboard data into something more .NET friendly with the HookEventArgs class.
-
-	public class HookEventArgs : EventArgs
-	{
-		// using Windows.Forms.Keys instead of Input.Key since the Forms.Keys maps
-		// to the Win32 KBDLLHOOKSTRUCT virtual key member, where Input.Key does not
-		public Keys Key;
-		public bool Alt;
-		public bool Control;
-		public bool Shift;
-
-		public HookEventArgs(UInt32 keyCode)
-		{
-			// detect what modifier keys are pressed, using 
-			// Windows.Forms.Control.ModifierKeys instead of Keyboard.Modifiers
-			// since Keyboard.Modifiers does not correctly get the state of the 
-			// modifier keys when the application does not have focus
-			this.Key = (Keys)keyCode;
-			this.Alt = (System.Windows.Forms.Control.ModifierKeys & Keys.Alt) != 0;
-			this.Control = (System.Windows.Forms.Control.ModifierKeys & Keys.Control) != 0;
-			this.Shift = (System.Windows.Forms.Control.ModifierKeys & Keys.Shift) != 0;
-		}
-	}
-
-	//	// usage: system-wide keyboard hook
-	//	private KeyboardHook _hook;
-
-
-	//	// install system-wide keyboard hook
-	//	_hook = new KeyboardHook();
-	//	_hook.KeyDown += new KeyboardHook.HookEventHandler(OnHookKeyDown);
-
-	//// keyboard hook handler
-	//void OnHookKeyDown(object sender, HookEventArgs e)
-	//	{
-	//	}
-
-	//}
-	//}
 }

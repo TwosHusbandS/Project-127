@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <item>
-  <version>1.0.9.7</version>
-  <url>https://github.com/TwosHusbandS/Project-127/raw/internal/Installer/Project_127_Installer_V_1_0_9_7.exe</url>
-  <authuser>https://raw.githubusercontent.com/TwosHusbandS/Project-127/master/Installer/AuthUser.txt</authuser>
-  <specialbuildname></specialbuildname>
+  <version>1.1.0.0</version>
+  <url>https://github.com/TwosHusbandS/Project-127/raw/master/Installer/Project_127_Installer_V_1_1_0_0.exe</url>
   <buildversiontable>
     1.0.323.0;1.24:
     1.0.350.0;1.26:
@@ -35,6 +33,10 @@
     1.0.2189.0;1.53:
   </buildversiontable>
   <announcement></announcement>
+  <tease>true</tease>
+  <specialbuildname></specialbuildname>
+  <comment>Backwards Compability</comment>
+  <authuser>https://raw.githubusercontent.com/TwosHusbandS/Project-127/master/Installer/AuthUser.txt</authuser>
   <DLLinkG>https://github.com/TwosHusbandS/Project-127/releases/download/V_Final/file.g</DLLinkG>
   <DLLinkGHash>5c706e27f1f204050450839f24e12c8a</DLLinkGHash>
   <DLLinkU>https://github.com/TwosHusbandS/Project-127/releases/download/V_Final/file.u</DLLinkU>
@@ -44,7 +46,6 @@
   <zip>https://gtav.anushk.net/Project_127_Files_V12_Big.zip</zip>
   <bigzipmd5>ffd3bcb436f8de26d84c30075403b7e1</bigzipmd5>
   <zipversion>12</zipversion>
-  <comment>We need a "complete" ZIP above in a "zip" Tag, for old Versions. Atleast for now.</comment>
   <zipmd5>d6337904f957a64f34f4451be51b14b6</zipmd5>
   <zip0>https://gtav.anushk.net/Project_127_Files_V12_Small.zip</zip0>
   <zip1>https://anonfiles.com/naO8d1q2pd/Project_127_Files_V12_Small_zip</zip1>

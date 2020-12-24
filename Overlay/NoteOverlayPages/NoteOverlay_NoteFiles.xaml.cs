@@ -31,9 +31,14 @@ namespace Project_127.Overlay.NoteOverlayPages
 	/// </summary>
 	public partial class NoteOverlay_NoteFiles : Page
 	{
+		/// <summary>
+		/// Internal Property of all NoteFiles
+		/// </summary>
 		ObservableCollection<MyNoteFile> _MyNoteFiles;
 
-
+		/// <summary>
+		/// Observable Collection of my Note Files
+		/// </summary>
 		ObservableCollection<MyNoteFile> MyNoteFiles
 		{
 			get
@@ -46,6 +51,9 @@ namespace Project_127.Overlay.NoteOverlayPages
 			}
 		}
 
+		/// <summary>
+		/// Path where those are located
+		/// </summary>
 		public static string NotePath
 		{
 			get
@@ -54,6 +62,9 @@ namespace Project_127.Overlay.NoteOverlayPages
 			}
 		}
 
+		/// <summary>
+		/// Constructor of NoteFiles Subpage
+		/// </summary>
 		public NoteOverlay_NoteFiles()
 		{
 			InitializeComponent();
@@ -67,6 +78,9 @@ namespace Project_127.Overlay.NoteOverlayPages
 			LoadMainNotes();
 		}
 
+		/// <summary>
+		/// Loading the "Main" Notes
+		/// </summary>
 		public void LoadMainNotes()
 		{
 			while (MyNoteFiles.Count > 0)
@@ -87,13 +101,21 @@ namespace Project_127.Overlay.NoteOverlayPages
 			HelperClasses.DataGridHelper.SelectFirst(dg_Files);
 		}
 
-
+		/// <summary>
+		/// Good scrolling
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void dg_Files_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
 		{
 			sv_Files.ScrollToVerticalOffset(sv_Files.VerticalOffset - e.Delta / 3);
 		}
 
-
+		/// <summary>
+		/// Add File Button Click
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void btn_Add_Click(object sender, RoutedEventArgs e)
 		{
 			string rtrn = HelperClasses.FileHandling.OpenDialogExplorer(FileHandling.PathDialogType.File, "Select the Note Files you want to add to your selection:", NotePath, true, "TXT Files|*.txt*");
@@ -131,7 +153,10 @@ namespace Project_127.Overlay.NoteOverlayPages
 			MyNoteFiles.MyAdd(MNFL);
 		}
 
-
+		/// <summary>
+		/// Returns the Selected Note Files
+		/// </summary>
+		/// <returns></returns>
 		private List<MyNoteFile> GetSelectedNoteFiles()
 		{
 			List<MyNoteFile> tmp = new List<MyNoteFile>();
@@ -148,7 +173,11 @@ namespace Project_127.Overlay.NoteOverlayPages
 		}
 
 
-
+		/// <summary>
+		/// Deletes the selected Notefile (from the Collection, not from Disk)
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void btn_Delete_Click(object sender, RoutedEventArgs e)
 		{
 
@@ -156,11 +185,15 @@ namespace Project_127.Overlay.NoteOverlayPages
 			HelperClasses.DataGridHelper.SelectFirst(dg_Files);
 		}
 
-
+		/// <summary>
+		/// Loading a Preset
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void btn_PresetLoad_Click(object sender, RoutedEventArgs e)
 		{
 			// TODO TO DO CTRLF CTRL F
-			// Currently calling LoadMainNotes() twice instead of one...idk why this is neccesary...
+			// Currently calling LoadMainNotes() twice instead of oncee...idk why this is neccesary...
 			// so this is kinda a dirtfix, but it works. Once again, no idea why we have to do it this way
 
 			//	-Overlay Presets Fix(according to burhac, shits broke)
@@ -193,6 +226,11 @@ namespace Project_127.Overlay.NoteOverlayPages
 			LoadMainNotes();
 		}
 
+		/// <summary>
+		/// Saving a Preset
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void btn_PresetSave_Click(object sender, RoutedEventArgs e)
 		{
 			switch (((Button)sender).Tag.ToString())
@@ -218,6 +256,11 @@ namespace Project_127.Overlay.NoteOverlayPages
 			}
 		}
 
+		/// <summary>
+		/// Key Event on Datagrid
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void dg_Files_PreviewKeyDown(object sender, KeyEventArgs e)
 		{
 			if (e.Key == Key.Delete)
@@ -232,6 +275,10 @@ namespace Project_127.Overlay.NoteOverlayPages
 
 	public static class ExtensionMethods
 	{
+		/// <summary>
+		/// Refreshing an Observable Collection
+		/// </summary>
+		/// <param name="OC"></param>
 		public static void Refresh(ObservableCollection<MyNoteFile> OC)
 		{
 			List<string> tmp = new List<string>();
@@ -245,7 +292,11 @@ namespace Project_127.Overlay.NoteOverlayPages
 		}
 
 
-
+		/// <summary>
+		/// Adding to our Observable Collection
+		/// </summary>
+		/// <param name="OC"></param>
+		/// <param name="MNFL"></param>
 		public static void MyAdd(this ObservableCollection<MyNoteFile> OC, List<MyNoteFile> MNFL)
 		{
 			foreach (MyNoteFile MNF in MNFL)
@@ -259,6 +310,11 @@ namespace Project_127.Overlay.NoteOverlayPages
 			Refresh(OC);
 		}
 
+		/// <summary>
+		/// Removing from our Observable Collection
+		/// </summary>
+		/// <param name="OC"></param>
+		/// <param name="MNFL"></param>
 		public static void MyRemove(this ObservableCollection<MyNoteFile> OC, List<MyNoteFile> MNFL)
 		{
 			foreach (MyNoteFile MNF in MNFL)
@@ -269,6 +325,11 @@ namespace Project_127.Overlay.NoteOverlayPages
 			Refresh(OC);
 		}
 
+		/// <summary>
+		/// Removing from out Observable Collection from a specific Index
+		/// </summary>
+		/// <param name="OC"></param>
+		/// <param name="Index"></param>
 		public static void MyRemove(this ObservableCollection<MyNoteFile> OC, int Index)
 		{
 			if (0 <= Index && Index <= OC.Count - 1)
@@ -287,6 +348,9 @@ namespace Project_127.Overlay.NoteOverlayPages
 	{
 		private string _FileName;
 
+		/// <summary>
+		/// FileName for one MyNoteFile
+		/// </summary>
 		public string FileName
 		{
 			get
@@ -301,6 +365,9 @@ namespace Project_127.Overlay.NoteOverlayPages
 
 		private string _FileNiceName;
 
+		/// <summary>
+		/// Nice FileName 
+		/// </summary>
 		public string FileNiceName
 		{
 			get
@@ -315,6 +382,9 @@ namespace Project_127.Overlay.NoteOverlayPages
 
 		private string _FilePath;
 
+		/// <summary>
+		/// FilePath to that one File
+		/// </summary>
 		public string FilePath
 		{
 			get
@@ -327,6 +397,10 @@ namespace Project_127.Overlay.NoteOverlayPages
 			}
 		}
 
+		/// <summary>
+		/// Constructor of "MyNoteFile"
+		/// </summary>
+		/// <param name="pFileName"></param>
 		public MyNoteFile(string pFileName)
 		{
 			this.FileName = pFileName;

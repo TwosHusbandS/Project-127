@@ -25,7 +25,7 @@ using WpfAnimatedGif;
 using System.Threading;
 using System.IO.Compression;
 
-namespace Project_127
+namespace Project_127.SaveFileHandlerStuff
 {
 	/// <summary>
 	/// Class SaveFileHandler.xaml
@@ -63,17 +63,20 @@ namespace Project_127
 
 			CopyCutPasteObject = null;
 
-			//this.Dispatcher.Invoke(() =>
-			//{
+			if (Settings.EnableAlternativeLaunch)
+			{
+				MySaveFile.CurrGTASavesPath = MySaveFile.GTASavesPathSocialClub;
+				btn_GTA_Path_Change.Content = "P127 Emu SaveFilePath";
+			}
+			else
+			{
+				MySaveFile.CurrGTASavesPath = MySaveFile.GTASavesPathDragonEmu;
+				btn_GTA_Path_Change.Content = "Social Club SaveFilePath";
+			}
 			this.sv_BackupFiles_Loading.Visibility = Visibility.Visible;
 			this.sv_BackupFiles.Visibility = Visibility.Hidden;
 			this.sv_GTAFiles_Loading.Visibility = Visibility.Visible;
 			this.sv_GTAFiles.Visibility = Visibility.Hidden;
-			//var controller = ImageBehavior.GetAnimationController(sv_BackupFiles_Loading);
-			//controller.Play();
-			//var controller2 = ImageBehavior.GetAnimationController(sv_GTAFiles_Loading);
-			//controller2.Play();
-			//});
 		}
 
 
@@ -118,26 +121,6 @@ namespace Project_127
 			}
 		}
 
-		// I don't understand why this method must be marked as `async`.
-		private async void button1_Click(object sender, EventArgs e)
-		{
-			Task<int> access = DoSomethingAsync();
-			// task independent stuff here
-
-			// this line is reached after the 5 seconds sleep from 
-			// DoSomethingAsync() method. Shouldn't it be reached immediately? 
-			int a = 1;
-
-			// from my understanding the waiting should be done here.
-			int x = await access;
-		}
-
-		async Task<int> DoSomethingAsync()
-		{
-			// is this executed on a background thread?
-			System.Threading.Thread.Sleep(5000);
-			return 1;
-		}
 
 		/// <summary>
 		/// Click on the Refresh Button. Reads files from disk again.
@@ -191,9 +174,9 @@ namespace Project_127
 				TMP_Fontsize = newFontSize;
 
 			}
-			lbl_BackupFilesHeader.Content = TMP_BackupPathDisplay;
-			lbl_BackupFilesHeader.ToolTip = TMP_BackupPathDisplay;
-			lbl_BackupFilesHeader.FontSize = TMP_Fontsize;
+			btn_lbl_BackupSaves.Content = TMP_BackupPathDisplay;
+			btn_lbl_BackupSaves.ToolTip = TMP_BackupPathDisplay;
+			btn_lbl_BackupSaves.FontSize = TMP_Fontsize;
 
 			SaveFileHandlerStuff.RefreshTaskObject myTMP = await RefreshLogic();
 
@@ -209,15 +192,19 @@ namespace Project_127
 			dg_GTAFiles.ItemsSource = MySaveFile.GTASaves;
 
 
-
 			if (DataGridToSelect != null)
 			{
 				HelperClasses.DataGridHelper.SelectFirst(DataGridToSelect);
 
-				if (GetDataGridCell(DataGridToSelect.SelectedCells[0]) != null)
+				try
 				{
-					Keyboard.Focus(GetDataGridCell(DataGridToSelect.SelectedCells[0]));
+
+					if (GetDataGridCell(DataGridToSelect.SelectedCells[0]) != null)
+					{
+						Keyboard.Focus(GetDataGridCell(DataGridToSelect.SelectedCells[0]));
+					}
 				}
+				catch { }
 			}
 
 			this.sv_BackupFiles_Loading.Visibility = Visibility.Hidden;
@@ -226,7 +213,11 @@ namespace Project_127
 			this.sv_GTAFiles.Visibility = Visibility.Visible;
 		}
 
-
+		/// <summary>
+		/// Gets a single DataGridCell from a CellInfo
+		/// </summary>
+		/// <param name="cellInfo"></param>
+		/// <returns></returns>
 		private System.Windows.Controls.DataGridCell GetDataGridCell(System.Windows.Controls.DataGridCellInfo cellInfo)
 		{
 			var cellContent = cellInfo.Column.GetCellContent(cellInfo.Item);
@@ -237,6 +228,12 @@ namespace Project_127
 			return (null);
 		}
 
+
+		/// <summary>
+		/// Refresh Logic. Returns a RefreshTaskObject. Async task
+		/// </summary>
+		/// <param name="DataGridToSelect"></param>
+		/// <returns></returns>
 		private async Task<SaveFileHandlerStuff.RefreshTaskObject> RefreshLogic(DataGrid DataGridToSelect = null)
 		{
 			SaveFileHandlerStuff.RefreshTaskObject TMP = null;
@@ -265,7 +262,7 @@ namespace Project_127
 				}
 
 				// Files in actual GTAV Save File Locations
-				string[] MyGTAVSaveFiles = HelperClasses.FileHandling.GetFilesFromFolder(MySaveFile.GTAVSavesPath);
+				string[] MyGTAVSaveFiles = HelperClasses.FileHandling.GetFilesFromFolder(MySaveFile.CurrGTASavesPath);
 				foreach (string MyGTAVSaveFile in MyGTAVSaveFiles)
 				{
 					if (!MyGTAVSaveFile.Contains(".bak") && MyGTAVSaveFile.Contains("SGTA500"))
@@ -330,7 +327,7 @@ namespace Project_127
 				// Building the first theoretical FileName
 				int i = 0;
 				string NewFileName = MySaveFile.ProperSaveNameBase + i.ToString("00");
-				string FilePathInsideGTA = MySaveFile.GTAVSavesPath.TrimEnd('\\') + @"\" + NewFileName;
+				string FilePathInsideGTA = MySaveFile.CurrGTASavesPath.TrimEnd('\\') + @"\" + NewFileName;
 
 				// While Loop through all 16 names, breaking out when File does NOT exist or when we reached the manimum
 				while (HelperClasses.FileHandling.doesFileExist(FilePathInsideGTA))
@@ -345,11 +342,11 @@ namespace Project_127
 					// Build new theoretical FileName
 					i++;
 					NewFileName = MySaveFile.ProperSaveNameBase + i.ToString("00");
-					FilePathInsideGTA = MySaveFile.GTAVSavesPath.TrimEnd('\\') + @"\" + NewFileName;
+					FilePathInsideGTA = MySaveFile.CurrGTASavesPath.TrimEnd('\\') + @"\" + NewFileName;
 				}
 				tmp.CopyToGTA(NewFileName);
 				Refresh(dg_BackupFiles);
-				new Popup(Popup.PopupWindowTypes.PopupOk, "Copied '" + tmp.FileName + "' to the GTA V Saves Location under the Name '" + NewFileName + "' !").ShowDialog();
+				//new Popup(Popup.PopupWindowTypes.PopupOk, "Copied '" + tmp.FileName + "' to the GTA V Saves Location under the Name '" + NewFileName + "' !").ShowDialog();
 			}
 		}
 
@@ -726,7 +723,7 @@ namespace Project_127
 					if (!MySelectedFilesUnique.Contains(MySelectedFiles[i]))
 					{
 						string FileName = MySelectedFiles[i].Substring(MySelectedFiles[i].LastIndexOf('\\') + 1);
-						if (HelperClasses.FileHandling.doesFileExist(MySaveFile.GTAVSavesPath.TrimEnd('\\') + @"\" + FileName))
+						if (HelperClasses.FileHandling.doesFileExist(MySaveFile.CurrGTASavesPath.TrimEnd('\\') + @"\" + FileName))
 						{
 							FileName = GetNewFileName(FileName, MySaveFile.CurrentBackupSavesPath);
 						}
@@ -740,6 +737,11 @@ namespace Project_127
 			Refresh();
 		}
 
+		/// <summary>
+		/// Double click on a dataGrid Row
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void Row_DoubleClick(object sender, MouseButtonEventArgs e)
 		{
 			MySaveFile MSV = GetSelectedSaveFile();
@@ -753,20 +755,36 @@ namespace Project_127
 			}
 		}
 
+		/// <summary>
+		/// Rightclick on the Datagrid
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void dg_PreviewMouseRightButtonDown(object sender, MouseButtonEventArgs e)
 		{
 			DataGrid myDataGrid = (DataGrid)sender;
 
 			if (myDataGrid != null)
 			{
+				// this is so that rightclick on non selected shit works...
+
 				e.Handled = false;
+				// making the selection 0
 				myDataGrid.SelectedItem = null;
+
+				// then simulating leftclick where the mouse is
 				HelperClasses.MouseSender.DoMouseClick();
+
+				// Generate COntext Menu
 				GenerateContextMenu(myDataGrid);
 				myDataGrid.Focus();
 			}
 		}
 
+		/// <summary>
+		/// Generates the ContextMenu
+		/// </summary>
+		/// <param name="myDG"></param>
 		private async void GenerateContextMenu(DataGrid myDG)
 		{
 			await Task.Delay(50);
@@ -902,6 +920,11 @@ namespace Project_127
 			}
 		}
 
+		/// <summary>
+		/// Context Menu Click (Cut)
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void MI_Cut_Click(object sender, RoutedEventArgs e)
 		{
 			MySaveFile tmp = GetSelectedSaveFile();
@@ -912,6 +935,11 @@ namespace Project_127
 			}
 		}
 
+		/// <summary>
+		/// Context Menu Click (Copy)
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void MI_Copy_Click(object sender, RoutedEventArgs e)
 		{
 			MySaveFile tmp = GetSelectedSaveFile();
@@ -922,11 +950,16 @@ namespace Project_127
 			}
 		}
 
+		/// <summary>
+		/// Context Menu Click (PasteIntoGTA)
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void MI_PasteIntoGTA_Click(object sender, RoutedEventArgs e)
 		{
 			int i = 0;
 			string NewFileName = MySaveFile.ProperSaveNameBase + i.ToString("00");
-			string FilePathInsideGTA = MySaveFile.GTAVSavesPath.TrimEnd('\\') + @"\" + NewFileName;
+			string FilePathInsideGTA = MySaveFile.CurrGTASavesPath.TrimEnd('\\') + @"\" + NewFileName;
 
 			// While Loop through all 16 names, breaking out when File does NOT exist or when we reached the manimum
 			while (HelperClasses.FileHandling.doesFileExist(FilePathInsideGTA))
@@ -941,7 +974,7 @@ namespace Project_127
 				// Build new theoretical FileName
 				i++;
 				NewFileName = MySaveFile.ProperSaveNameBase + i.ToString("00");
-				FilePathInsideGTA = MySaveFile.GTAVSavesPath.TrimEnd('\\') + @"\" + NewFileName;
+				FilePathInsideGTA = MySaveFile.CurrGTASavesPath.TrimEnd('\\') + @"\" + NewFileName;
 			}
 
 			if (CopyCutPasteObject != null)
@@ -959,6 +992,11 @@ namespace Project_127
 			}
 		}
 
+		/// <summary>
+		/// Context Menu Click (PasteIntoBackup)
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void MI_PasteIntoBackup_Click(object sender, RoutedEventArgs e)
 		{
 			if (CopyCutPasteObject != null)
@@ -976,6 +1014,11 @@ namespace Project_127
 			}
 		}
 
+		/// <summary>
+		/// Context Menu Click (PasteIntoBackupFolder)
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void MI_PasteIntoBackupFolder_Click(object sender, RoutedEventArgs e)
 		{
 			MySaveFile tmp = GetSelectedSaveFile();
@@ -997,7 +1040,11 @@ namespace Project_127
 			}
 		}
 
-
+		/// <summary>
+		/// Context Menu Click (NewFolder)
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void MI_NewFolder_Click(object sender, RoutedEventArgs e)
 		{
 			string rtrn = GetNewFolderName(MySaveFile.CurrentBackupSavesPath);
@@ -1008,11 +1055,21 @@ namespace Project_127
 			}
 		}
 
+		/// <summary>
+		/// Context Menu Click (DeleteFolder)
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void MI_DeleteFolder_Click(object sender, RoutedEventArgs e)
 		{
 			btn_Delete_Click(null, null);
 		}
 
+		/// <summary>
+		/// Context Menu Click (ExportFolder)
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void MI_ExportFolder_Click(object sender, RoutedEventArgs e)
 		{
 			MySaveFile tmp = GetSelectedSaveFile();
@@ -1045,30 +1102,203 @@ namespace Project_127
 			}
 		}
 
+		/// <summary>
+		/// Context Menu Click (MoveToGTA)
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void MI_MoveToGTA_Click(object sender, RoutedEventArgs e)
 		{
 			btn_RightArrow_Click(null, null);
 		}
 
+		/// <summary>
+		/// Context Menu Click (MoveToBackup)
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void MI_MoveToBackup_Click(object sender, RoutedEventArgs e)
 		{
 			btn_LeftArrow_Click(null, null);
 		}
 
+		/// <summary>
+		/// Context Menu Click (Rename)
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void MI_Rename_Click(object sender, RoutedEventArgs e)
 		{
 			btn_Rename_Click(null, null);
 		}
 
+		/// <summary>
+		/// Context Menu Click (Delete)
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void MI_Delete_Click(object sender, RoutedEventArgs e)
 		{
 			btn_Delete_Click(null, null);
 		}
 
+		/// <summary>
+		/// When the Page is loaded, throw a Refresh
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private async void Page_Loaded(object sender, RoutedEventArgs e)
 		{
 			await Task.Delay(10);
 			Refresh();
 		}
+
+		private void btn_lbl_BackupSaves_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+		{
+			CreateHeaderContextMenu(MySaveFile.SaveFileKinds.Backup);
+		}
+
+		private void btn_lbl_GTASavesHeader_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+		{
+			CreateHeaderContextMenu(MySaveFile.SaveFileKinds.GTAV);
+		}
+
+		public void CreateHeaderContextMenu(MySaveFile.SaveFileKinds mySFK)
+		{
+
+			ContextMenu cm = new ContextMenu();
+			cm.Name = mySFK.ToString();
+
+			MenuItem mi = new MenuItem();
+			mi.Header = "Open Path in Explorer";
+			mi.Click += MI_OpenPath_Click;
+			cm.Items.Add(mi);
+
+			MenuItem mi2 = new MenuItem();
+			mi2.Header = "Clear";
+			mi2.Click += MI_Clear_Click;
+			cm.Items.Add(mi2);
+
+
+			cm.IsOpen = true;
+
+		}
+
+
+		private void MI_OpenPath_Click(object sender, RoutedEventArgs e)
+		{
+			MenuItem mi = (MenuItem)sender;
+			ContextMenu cm = (ContextMenu)mi.Parent;
+			if (cm.Name == "GTAV")
+			{
+				ProcessHandler.StartProcess(@"C:\Windows\explorer.exe", pCommandLineArguments: MySaveFile.CurrGTASavesPath);
+			}
+			else
+			{
+				ProcessHandler.StartProcess(@"C:\Windows\explorer.exe", pCommandLineArguments: MySaveFile.CurrentBackupSavesPath);
+			}
+		}
+
+		private void MI_Clear_Click(object sender, RoutedEventArgs e)
+		{
+			Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Do you want to delete every file in the entire Tab?");
+			yesno.ShowDialog();
+			if (yesno.DialogResult == true)
+			{
+				HelperClasses.Logger.Log("User wants to delete everything in: '" + MySaveFile.CurrGTASavesPath + "' from SaveFileHandler");
+				MenuItem mi = (MenuItem)sender;
+				ContextMenu cm = (ContextMenu)mi.Parent;
+				if (cm.Name == "GTAV")
+				{
+					foreach (string myFile in FileHandling.GetFilesFromFolderAndSubFolder(MySaveFile.CurrGTASavesPath))
+					{
+						FileHandling.deleteFile(myFile);
+					}
+					foreach (string myFolder in FileHandling.GetSubFolders(MySaveFile.CurrGTASavesPath))
+					{
+						FileHandling.DeleteFolder(myFolder);
+					}
+					Refresh(dg_GTAFiles);
+				}
+				else
+				{
+
+					foreach (string myFile in FileHandling.GetFilesFromFolderAndSubFolder(MySaveFile.CurrentBackupSavesPath))
+					{
+						FileHandling.deleteFile(myFile);
+					}
+					foreach (string myFolder in FileHandling.GetSubFolders(MySaveFile.CurrentBackupSavesPath))
+					{
+						FileHandling.DeleteFolder(myFolder);
+					}
+					Refresh(dg_GTAFiles);
+				}
+			}
+		}
+
+		private void btn_GTA_Path_Change_Click(object sender, RoutedEventArgs e)
+		{
+			if (MySaveFile.CurrGTASavesPath == MySaveFile.GTASavesPathDragonEmu)
+			{
+				MySaveFile.CurrGTASavesPath = MySaveFile.GTASavesPathSocialClub;
+				btn_GTA_Path_Change.Content = "Load P127 Emu SaveFilePath";
+			}
+			else
+			{
+				MySaveFile.CurrGTASavesPath = MySaveFile.GTASavesPathDragonEmu;
+				btn_GTA_Path_Change.Content = "Load Social Club SaveFilePath";
+			}
+			Refresh();
+		}
+
+		private void btn_GTA_Path_Change_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+		{
+			ContextMenu cm = new ContextMenu();
+			
+			MenuItem mi = new MenuItem();
+			mi.Header = "Help";
+			mi.Click += MI_Help_Click;
+			cm.Items.Add(mi);
+
+			MenuItem mi2 = new MenuItem();
+			mi2.Header = "Custom Path";
+			mi2.Click += MI_CustomPath_Click;
+			cm.Items.Add(mi2);
+
+			cm.IsOpen = true;
+		}
+
+
+		/// <summary>
+		/// Context Menu Path Button Click (Help)
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void MI_Help_Click(object sender, RoutedEventArgs e)
+		{
+			string msg = "If you enabled 'Launch through Socialclub' the 'default'\n";
+			msg += "Path where SaveFiles are saved is the same as 'normal' GTA.\n";
+			msg += "If you have NOT enabled that and are launching through P127 Emu\n";
+			msg += "with P127 Auth, your SaveFiles will be stored in a different Location\n";
+			msg += "\nClicking this Button will toggle what Path is used for the SaveFileHandler.\n";
+			msg += "The correct Path (based on your P127 Settings)\nwill be loaded when you open the SafeFileHandler.";
+			new Popup(Popup.PopupWindowTypes.PopupOk, msg, 18).ShowDialog();
+		}
+
+		/// <summary>
+		/// Context Menu Path Button Click (Custom Path)
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void MI_CustomPath_Click(object sender, RoutedEventArgs e)
+		{
+			string rtrn = HelperClasses.FileHandling.OpenDialogExplorer(FileHandling.PathDialogType.Folder, "Select the Folder you want P127 to consider as your GTA Saves Location", Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments));
+			if (HelperClasses.FileHandling.doesPathExist(rtrn))
+			{
+				MySaveFile.CurrGTASavesPath = rtrn;
+				Refresh();
+			}
+		}
+
 	} // End of Class
 } // End of Namespace

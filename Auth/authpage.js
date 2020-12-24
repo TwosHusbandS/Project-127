@@ -180,9 +180,10 @@ function rememberMeState(active) {
         if (document.querySelector('#rememberMeProfile').checked != active) {
             document.querySelector('#rememberMeProfile').click();
         }
-    } catch{
+    } catch {
         location.reload();
     }
+    
 }
 
 function rememberMeHandler() {

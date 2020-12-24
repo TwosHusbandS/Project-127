@@ -208,8 +208,6 @@ namespace Project_127.HelperClasses
 			return null;
 		}
 
-
-
 		/// <summary>
 		/// Starting Game as Non Retail
 		/// </summary>
