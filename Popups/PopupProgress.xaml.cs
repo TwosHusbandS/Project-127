@@ -380,29 +380,41 @@ namespace Project_127.Popups
 				HelperClasses.Logger.Log("UpgradeFilePath: " + LauncherLogic.UpgradeFilePath, 1);
 
 				// Those are WITH the "\" at the end
-				string[] FilesInDowngradeFiles = HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(LauncherLogic.DowngradeFilePath);
-				string[] CorrespondingFilePathInGTALocation = new string[FilesInDowngradeFiles.Length];
-				string[] CorrespondingFilePathInUpgradeFiles = new string[FilesInDowngradeFiles.Length];
+				List<string> FilesInDowngradeAndUpgradePathInDowngradedPathFormat = HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(LauncherLogic.DowngradeFilePath).ToList();
+
 				List<string> ListOfFilePathsAboutToBeInUpgradeFiles = new List<string>();
 
-				HelperClasses.Logger.Log("Found " + FilesInDowngradeFiles.Length.ToString() + " Files in Downgrade Folder.");
+				HelperClasses.Logger.Log("Found " + FilesInDowngradeAndUpgradePathInDowngradedPathFormat.Count.ToString() + " Files in Downgrade Folder.");
 				HelperClasses.Logger.Log("Found " + HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(LauncherLogic.UpgradeFilePath).Length.ToString() + " Files in Upgrade Folder.");
 
+				// We need to loop through Downgrade AND Upgrade Files here...
+				foreach (string tmp in HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(LauncherLogic.UpgradeFilePath))
+				{
+					string CorrPathInDowngrades = LauncherLogic.DowngradeFilePath + tmp.Substring(LauncherLogic.UpgradeFilePath.Length);
+					if (!FilesInDowngradeAndUpgradePathInDowngradedPathFormat.Contains(CorrPathInDowngrades))
+					{
+						FilesInDowngradeAndUpgradePathInDowngradedPathFormat.Add(CorrPathInDowngrades);
+					}
+				}
+
+				string[] CorrespondingFilePathInGTALocation = new string[FilesInDowngradeAndUpgradePathInDowngradedPathFormat.Count];
+				string[] CorrespondingFilePathInUpgradeFiles = new string[FilesInDowngradeAndUpgradePathInDowngradedPathFormat.Count];
+
 				// Loop through all Files in Downgrade Files Folder
-				for (int i = 0; i <= FilesInDowngradeFiles.Length - 1; i++)
+				for (int i = 0; i <= FilesInDowngradeAndUpgradePathInDowngradedPathFormat.Count - 1; i++)
 				{
 					// Update GUI
 					Application.Current.Dispatcher.Invoke((Action)delegate
 					{
-						long progress = ((i + 1) * 100 / FilesInDowngradeFiles.Length);
+						long progress = ((i + 1) * 100 / FilesInDowngradeAndUpgradePathInDowngradedPathFormat.Count);
 						myPB.Value = progress;
-						myLBL.Content = "Gathering Information(" + (i + 1).ToString() + "/" + (FilesInDowngradeFiles.Length).ToString() + ")";
+						myLBL.Content = "Gathering Information(" + (i + 1).ToString() + "/" + (FilesInDowngradeAndUpgradePathInDowngradedPathFormat.Count).ToString() + ")";
 					});
 
 
 					// Build the Corresponding theoretical Filenames for Upgrade Folder and GTA V Installation Folder
-					CorrespondingFilePathInGTALocation[i] = LauncherLogic.GTAVFilePath + FilesInDowngradeFiles[i].Substring(LauncherLogic.DowngradeFilePath.Length);
-					CorrespondingFilePathInUpgradeFiles[i] = LauncherLogic.UpgradeFilePath + FilesInDowngradeFiles[i].Substring(LauncherLogic.DowngradeFilePath.Length);
+					CorrespondingFilePathInGTALocation[i] = LauncherLogic.GTAVFilePath + FilesInDowngradeAndUpgradePathInDowngradedPathFormat[i].Substring(LauncherLogic.DowngradeFilePath.Length);
+					CorrespondingFilePathInUpgradeFiles[i] = LauncherLogic.UpgradeFilePath + FilesInDowngradeAndUpgradePathInDowngradedPathFormat[i].Substring(LauncherLogic.DowngradeFilePath.Length);
 
 
 					if (LauncherLogic.IgnoreNewFilesWhileUpgradeDowngradeLogic)
@@ -417,7 +429,7 @@ namespace Project_127.Popups
 						if (HelperClasses.FileHandling.doesFileExist(CorrespondingFilePathInGTALocation[i]))
 						{
 							// If the File we are replacing is the same as in DowngradeFiles
-							if (HelperClasses.FileHandling.AreFilesEqual(CorrespondingFilePathInGTALocation[i], FilesInDowngradeFiles[i], MySettings.Settings.EnableSlowCompare))
+							if (HelperClasses.FileHandling.AreFilesEqual(CorrespondingFilePathInGTALocation[i], FilesInDowngradeAndUpgradePathInDowngradedPathFormat[i], MySettings.Settings.EnableSlowCompare))
 							{
 								// Delete from GTA V Installation Path
 								MyFileOperationsTmp.Add(new MyFileOperation(MyFileOperation.FileOperations.Delete, CorrespondingFilePathInGTALocation[i], "", "Found '" + CorrespondingFilePathInGTALocation[i] + "' in GTA V Installation Path and its the same file as from $Downgrade_Files. Will delelte from GTA V Installation", 1));

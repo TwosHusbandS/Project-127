@@ -50,7 +50,6 @@ To Do before 1.1:
 		=> license
 		=> Programming language
 - Waiting for Dragons Fixes to not make it 404 on crashes...
-- Upgrade needs to loop through downgrade AND UPGRADES Files...
  */
 
 using System;
