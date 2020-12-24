@@ -255,7 +255,7 @@ namespace Project_127
 						if (SizeOfGTAV > 0 && SizeOfUpdate > 0 && SizeOfPlayGTAV > 0)
 						{
 							FileVersionInfo FVI = FileVersionInfo.GetVersionInfo(GTAVFilePath.TrimEnd('\\') + @"\GTA5.exe");
-							if (new Version(BuildVersionTable.GetNiceGameVersionString(new Version(FVI.FileVersion))) > new Version(1, 30))
+							if (new Version(BuildVersionTable.GetNiceGameVersionString(new Version(FVI.FileVersion), true)) > new Version(1, 30))
 							{
 								return InstallationStates.Upgraded;
 							} 
