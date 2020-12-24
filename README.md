@@ -29,7 +29,7 @@ Shamelessly stolen from: https://github.com/othneildrew/Best-README-Template
 [![Twitter][twitter-shield]][twitter-url]
 [![MIT License][license-shield]][license-url]
 [![Installer][version-shield]][installer-latest-url]
-[![Help][-shield]][help-url]
+[![Help][help-shield]][help-url]
 [![Features][features-shield]][features-url]
 
 
@@ -211,7 +211,7 @@ Discord - [@ths#0305][discord-url]
 [license-url]: https://github.com/TwosHusbandS/Project-127/blob/master/LICENSE
 [version-shield]: https://img.shields.io/static/v1?label=Version&message=1.1-Installer&color=sucess
 [help-shield]: https://img.shields.io/static/v1?label=Help&message=Here&color=important
-[features-shield]: [https://img.shields.io/static/v1?label=Features&message=Click%20Me&color=blueviolet
+[features-shield]: https://img.shields.io/static/v1?label=Features&message=Click%20Me&color=blueviolet
 
 
 

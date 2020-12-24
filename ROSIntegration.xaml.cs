@@ -283,9 +283,13 @@ function setPass(pass) {
 }
 
 function rememberMeState(active) {
+try{
     if (document.querySelector('#rememberMeProfile').checked != active) {
         document.querySelector('#rememberMeProfile').click();
     }
+}catch{
+location.reload();
+}
 }
 
 function rememberMeHandler() {
