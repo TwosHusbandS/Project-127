@@ -9,7 +9,7 @@ Actual code (partially closed source) which authentificates, handles entitlement
 Artwork, Design of GUI, GUI Behaviourehaviour, Colorchoices etc. by "@Hossel"
 Project 1.27 Client by "@thS"
 A number of other members of the team, including but not limited to @MoMo, @Diamondo25, @S.M.G, @gogsi, @Antibones, @Unemployed, @Aperture, @luky, @CrynesSs, @Daniel Kinau contributed to this project one way or another, and my thanks go out to them.
-Version: 1.0.9.7
+Version: 1.0.9.8
 
 Build Instructions:
 	Press CTRLF + F5, pray that nuget does its magic.
@@ -38,15 +38,15 @@ Deploy Instructions:
 Comments like "TODO", "TO DO", "CTRLF", "CTRL-F", and "CTRL F" are just ways of finding a specific line quickly via searching
 
 Hybrid code can be found in AAA_HybridCode.
-			
+		
+// Remove Hide_Features stuff for social club launch from:
+// Update check on XML
+// Settings XML
+
 To Do before 1.1:
 - Fix ReadMe:
-		=> signature thingies
-		=> links (relative links for installer stuff, relative link for license)
 		=> license
 		=> Programming language
- - Installer, test installer
-
  */
 
 using System;
@@ -172,7 +172,7 @@ namespace Project_127
 			myMutex.WaitOne();
 
 			// Start the Init Process of Logger, Settings, Globals, Regedit here, since we need the Logger in the next Line if it fails...
-			Globals.Init(this);
+			Globals.Init();
 
 			// Some Background Change based on Date
 			ChangeBackgroundBasedOnSeason();
@@ -217,11 +217,6 @@ namespace Project_127
 			StartDispatcherTimer();
 
 			StartMTLDispatcherTimer();
-
-			HelperClasses.Logger.Log("#" + HelperClasses.FileHandling.GetHashFromFile(@"C:\Users\ingow\Downloads\Anhänge_20201220\New folder\ADDITIONAL_SAFEFILES_V_1_1.zip").ToUpper() + "#");
-			HelperClasses.Logger.Log("#" + HelperClasses.FileHandling.GetHashFromFile(@"C:\Users\ingow\Downloads\Anhänge_20201220\New folder\ADDITIONAL_SAFEFILES_V_1_1.zip") + "#");
-			HelperClasses.Logger.Log("#" + HelperClasses.FileHandling.GetHashFromFile(@"C:\Users\ingow\Downloads\Anhänge_20201220\New folder\ADDITIONAL_SAFEFILES_V_1_1.zip") + "#");
-			HelperClasses.Logger.Log("#" + HelperClasses.FileHandling.GetHashFromFile(@"C:\Users\ingow\Downloads\Anhänge_20201220\New folder\ADDITIONAL_SAFEFILES_V_1_1.zip") + "#");
 
 			HelperClasses.Logger.Log("Only CEF Init to go...");
 

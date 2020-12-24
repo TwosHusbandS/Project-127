@@ -219,7 +219,7 @@ namespace Project_127
 		/// <summary>
 		/// Property of other Buildinfo. Will be in the top message of logs
 		/// </summary>
-		public static string BuildInfo = "Build 1";
+		public static string BuildInfo = "V. 1.1, Build 1";
 
 		/// <summary>
 		/// Returns all Command Line Args as StringArray
@@ -373,7 +373,7 @@ namespace Project_127
 		/// <summary>
 		/// Init function which gets called at the very beginning
 		/// </summary>
-		public static void Init(MainWindow pMW)
+		public static void Init()
 		{
 			// Initiates Logging
 			// This is also responsible for the intial first few messages on startup.
@@ -398,7 +398,6 @@ namespace Project_127
 				// Set FirstLaunch to false
 				Settings.FirstLaunch = false;
 
-
 				new Popup(Popup.PopupWindowTypes.PopupOk,
 				"Project 1.27 is finally in fully released.\n" +
 				"The published Product should work as expected.\n\n" +
@@ -409,7 +408,6 @@ namespace Project_127
 				"If anything does not work as expected, \n" +
 				"contact me on Discord. @thS#0305\n\n" +
 				" - The Project 1.27 Team").ShowDialog();
-
 
 				HelperClasses.Logger.Log("FirstLaunch Procedure Ended");
 			}
@@ -477,6 +475,8 @@ namespace Project_127
 					Globals.SetUpDownloadManager(false);
 					ComponentManager.ZIPVersionSwitcheroo();
 
+					Settings.Mode = "default";
+
 					HelperClasses.FileHandling.createPath(MySaveFile.BackupSavesPath.TrimEnd('\\') + @"\New Folder");
 					HelperClasses.FileHandling.createPath(MySaveFile.BackupSavesPath.TrimEnd('\\') + @"\YouCanRightclick");
 
@@ -488,6 +488,8 @@ namespace Project_127
 							HelperClasses.FileHandling.deleteFile(file);
 						}
 					}
+					HelperClasses.RegeditHandler.SetValue("TeasingFeatures", "True");
+					// Create Registry Key here...
 				}
 
 				Settings.LastLaunchedVersion = Globals.ProjectVersion;
@@ -571,7 +573,18 @@ namespace Project_127
 		/// </summary>
 		public static void InitFileWatcher()
 		{
-			//HelperClasses.FileHandling.AddToDebug("In InitFileWatcher() Creating FileSystemWatcher");
+			HelperClasses.Logger.Log("In InitFileWatcher() Creating FileSystemWatcher");
+
+			string MyPath = ProjectInstallationPath.TrimEnd('\\') + @"\dirtyprogramming";
+			if (HelperClasses.FileHandling.doesFileExist(MyPath))
+			{
+				HelperClasses.Logger.Log("Found dirtyprogramming File in the ProjectInstallationPath. Will Keep it there : )");
+			}
+			else
+			{
+				HelperClasses.Logger.Log("Found NO dirtyprogramming File in the ProjectInstallationPath. Will create it : )");
+				File.Create(MyPath).Dispose();
+			}
 
 			FSW = new FileSystemWatcher();
 
@@ -649,6 +662,14 @@ namespace Project_127
 		public static void CheckForUpdate()
 		{
 			string XML_Autoupdate_Temp = XML_AutoUpdate;
+
+			// CTRLF CTRL F CTRL-F REMOVE THIS TODO TO DO
+			string tease = HelperClasses.FileHandling.GetXMLTagContent(XML_Autoupdate_Temp, "tease");
+			if (tease.ToLower() != "true")
+			{
+				// if user gets here from settings click...button will be there until refresh or reload...what evs.
+				HelperClasses.RegeditHandler.DeleteValue("TeasingFeatures");
+			}
 
 			HelperClasses.BuildVersionTable.ReadFromGithub();
 
@@ -1325,15 +1346,6 @@ namespace Project_127
 					HelperClasses.Logger.Log("Found pleaseshow File in the Directory. Will delete it.");
 					HelperClasses.FileHandling.deleteFile(myFile);
 				}
-				if (myFile.ToLower().Contains("dirtyprogramming"))
-				{
-					HelperClasses.Logger.Log("Found dirtyprogramming File in the Directory. Will Keep it there : )");
-				}
-				else
-				{
-					HelperClasses.Logger.Log("Found NO dirtyprogramming File in the Directory. Will create it : )");
-					File.Create(Globals.ProjectInstallationPath.TrimEnd('\\') + @"\dirtyprogramming").Dispose();
-				}
 				if (myFile.ToLower().Contains("Project 1.27.exe" + ".BACKUP"))
 				{
 					HelperClasses.Logger.Log("Found old build ('.BACKUP'). Will delete it.");
@@ -1343,7 +1355,7 @@ namespace Project_127
 				{
 					HelperClasses.Logger.Log("Found exe File ('" + myFile + "'). Will delete it.");
 					HelperClasses.FileHandling.deleteFile(myFile);
-				} 
+				}
 				if (myFile.ToLower().Contains("dl.zip"))
 				{
 					HelperClasses.Logger.Log("Found zip File ('DL.ZIP'). Will delete it.");

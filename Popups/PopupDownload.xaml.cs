@@ -78,11 +78,11 @@ namespace Project_127.Popups
 			WebClient webClient = new WebClient();
 			webClient.DownloadProgressChanged += new DownloadProgressChangedEventHandler(DownloadProgressed);
 			if (!autoHash)
-            {
+			{
 				webClient.DownloadFileCompleted += new AsyncCompletedEventHandler(DownloadCompleted);
-            }
-            else
-            {
+			}
+			else
+			{
 				webClient.DownloadDataCompleted += new DownloadDataCompletedEventHandler(DownloadCompletedAutoHash);
 
 			}
@@ -92,13 +92,13 @@ namespace Project_127.Popups
 			try
 			{
 				if (!autoHash)
-                {
+				{
 					webClient.DownloadFileAsync(new Uri(DownloadURL), DownloadLocation);
-                }
-                else
-                {
+				}
+				else
+				{
 					webClient.DownloadDataAsync(new Uri(DownloadURL));
-                }
+				}
 			}
 			catch (Exception e)
 			{
@@ -128,21 +128,29 @@ namespace Project_127.Popups
 		/// <param name="e"></param>
 		private void DownloadCompletedAutoHash(object sender, DownloadDataCompletedEventArgs e)
 		{
-			HelperClasses.Logger.Log("Download Popup: Download Done");
-			lbl_Main.Content = "Download Complete.";
-			byte[] file = e.Result;
-			HelperClasses.Logger.Log("Download Popup: Computing Hash");
-			using (var md5 = MD5.Create())
+			try
 			{
-				var hash = md5.ComputeHash(file);
-				HashString = BitConverter.ToString(hash).Replace("-", "").ToLower();
+				HelperClasses.Logger.Log("Download Popup: Download Done");
+				lbl_Main.Content = "Download Complete.";
+				byte[] file = e.Result;
+				HelperClasses.Logger.Log("Download Popup: Computing Hash");
+				using (var md5 = MD5.Create())
+				{
+					var hash = md5.ComputeHash(file);
+					HashString = BitConverter.ToString(hash).Replace("-", "").ToLower();
+				}
+				pb_Main.Value = 100;
+				using (var b = new BinaryWriter(File.Open(DownloadLocation, FileMode.Create)))
+				{
+					b.Write(file);
+				}
+				this.Close();
 			}
-			pb_Main.Value = 100;
-			using (var b = new BinaryWriter(File.Open(DownloadLocation, FileMode.Create)))
+			catch
 			{
-				b.Write(file);
+				HashString = "";
+				this.Close();
 			}
-			this.Close();
 		}
 
 		/// <summary>

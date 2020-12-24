@@ -94,13 +94,31 @@ namespace Project_127
 			}
 		}
 
-		public static void CheckIfRequiredComponentsAreInstalled()
+		public static bool CheckIfRequiredComponentsAreInstalled(bool AskUser = false)
 		{
+			bool rtrn = true;
 			foreach (Components myComponent in RequiredComponentsBasedOnSettings)
 			{
 				if (!myComponent.IsInstalled())
 				{
-					myComponent.Install();
+					if (AskUser)
+					{
+						Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Component:\n" + myComponent.GetNiceName() + "\nmissing but needed.\nDo you want to install it?\n(Clicking no might result in Upgrading / Downgrading / Launching being disabled.)");
+						yesno.ShowDialog();
+						if (yesno.DialogResult == true)
+						{
+							return myComponent.Install();
+						}
+						else
+						{
+							rtrn = false;
+						}
+					}
+					else
+					{
+						new Popup(Popup.PopupWindowTypes.PopupOk, "Component:\n" + myComponent.GetNiceName() + "\nmissing but needed.\nIt will be downloaded and installed now.").ShowDialog();
+						return myComponent.Install();
+					}
 				}
 				else
 				{
@@ -110,11 +128,29 @@ namespace Project_127
 						string Path2 = LauncherLogic.DowngradedSocialClub.TrimEnd('\\') + @"\socialclub.dll";
 						if (!HelperClasses.FileHandling.doesFileExist(Path1) || !HelperClasses.FileHandling.doesFileExist(Path2))
 						{
-							myComponent.ReInstall();
+							if (AskUser)
+							{
+								Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Component:\n" + myComponent.GetNiceName() + "\nmissing but needed.\nDo you want to install it?\n(Clicking no might result in Upgrading / Downgrading / Launching being disabled.)");
+								yesno.ShowDialog();
+								if (yesno.DialogResult == true)
+								{
+									return myComponent.ReInstall();
+								}
+								else
+								{
+									rtrn = false;
+								}
+							}
+							else
+							{
+								new Popup(Popup.PopupWindowTypes.PopupOk, "Component:\n" + myComponent.GetNiceName() + "\nmissing but needed.\nIt will be downloaded and installed now.").ShowDialog();
+								return myComponent.ReInstall();
+							}
 						}
 					}
 				}
 			}
+			return rtrn;
 		}
 
 		public static bool isCSLSocialClubRequired
@@ -158,23 +194,37 @@ namespace Project_127
 				yesno.ShowDialog();
 				if (yesno.DialogResult == true)
 				{
-					MyComponent.ReInstall();
+					bool tmp = MyComponent.ReInstall();
 					Refresh();
-					new Popup(Popup.PopupWindowTypes.PopupOk, "Done ReInstalling:\n" + MyComponent.GetNiceName()).ShowDialog();
-					if (MyComponent == Components.AdditionalSaveFiles)
+					if (tmp)
 					{
-						ThrowShoutout();
+						new Popup(Popup.PopupWindowTypes.PopupOk, "Done Installing:\n" + MyComponent.GetNiceName()).ShowDialog();
+						if (MyComponent == Components.AdditionalSaveFiles)
+						{
+							ThrowShoutout();
+						}
+					}
+					else
+					{
+						new Popup(Popup.PopupWindowTypes.PopupOk, "Install failed. Try again:\n" + MyComponent.GetNiceName()).ShowDialog();
 					}
 				}
 			}
 			else
 			{
-				MyComponent.Install();
+				bool tmp = MyComponent.Install();
 				Refresh();
-				new Popup(Popup.PopupWindowTypes.PopupOk, "Done Installing:\n" + MyComponent.GetNiceName()).ShowDialog();
-				if (MyComponent == Components.AdditionalSaveFiles)
+				if (tmp)
 				{
-					ThrowShoutout();
+					new Popup(Popup.PopupWindowTypes.PopupOk, "Done Installing:\n" + MyComponent.GetNiceName()).ShowDialog();
+					if (MyComponent == Components.AdditionalSaveFiles)
+					{
+						ThrowShoutout();
+					}
+				}
+				else
+				{
+					new Popup(Popup.PopupWindowTypes.PopupOk, "Install failed. Try again:\n" + MyComponent.GetNiceName()).ShowDialog();
 				}
 			}
 		}
@@ -305,7 +355,7 @@ namespace Project_127
 		public static void StartupCheck()
 		{
 			CheckForUpdates();
-			CheckIfRequiredComponentsAreInstalled();
+			CheckIfRequiredComponentsAreInstalled(true);
 		}
 
 		private void Refresh(bool CheckForUpdatesPls = false)
@@ -381,7 +431,7 @@ namespace Project_127
 				yesno.ShowDialog();
 				if (yesno.DialogResult == true)
 				{
-					HelperClasses.RegeditHandler.SetValue("DownloadManagerInstalledSubassemblies","");
+					HelperClasses.RegeditHandler.SetValue("DownloadManagerInstalledSubassemblies", "");
 					Globals.SetUpDownloadManager(true);
 				}
 			}

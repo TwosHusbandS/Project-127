@@ -286,7 +286,7 @@ namespace Project_127.MySettings
 		private void combox_Set_Retail_SelectionChanged(object sender, SelectionChangedEventArgs e)
 		{
 			Retailer = (Retailers)System.Enum.Parse(typeof(Retailers), combox_Set_Retail.SelectedItem.ToString());
-			RefreshIfOptionsHide();
+			RefreshGUI();
 		}
 
 
@@ -924,50 +924,53 @@ namespace Project_127.MySettings
 		{
 			Rect_HideOptions_Tease.Visibility = Visibility.Hidden;
 
+			if (HelperClasses.RegeditHandler.GetValue("TeasingFeatures") != "True")
+			{
+				Rect_HideOptions_ClosedBetaSocialClubLaunch.Visibility = Visibility.Hidden;
+			}
+
 			if (Settings.EnableOverlay)
 			{
-				Rect_HideOption4.Visibility = Visibility.Hidden;
+				Rect_HideOption_OverlayMM.Visibility = Visibility.Hidden;
 			}
 			else
 			{
-				Rect_HideOption4.Visibility = Visibility.Hidden;
-
+				Rect_HideOption_OverlayMM.Visibility = Visibility.Visible;
 			}
 
 			if (Settings.Retailer != Retailers.Steam)
 			{
-				Rect_HideOption6.Visibility = Visibility.Visible;
+				Rect_HideOption_HideFromSteam.Visibility = Visibility.Visible;
 			}
 			else
 			{
-				Rect_HideOption6.Visibility = Visibility.Hidden;
+				Rect_HideOption_HideFromSteam.Visibility = Visibility.Hidden;
 			}
 
 			if (Settings.Retailer == Retailers.Epic)
 			{
-
-				Rect_HideOptions3.Visibility = Visibility.Visible;
-				Rect_HideOptions.Visibility = Visibility.Hidden;
-				Rect_HideOptions2.Visibility = Visibility.Hidden;
+				Rect_HideOptions_AllLaunchThroughSocialClubThings.Visibility = Visibility.Visible;
+				Rect_HideOptions_LaunchThroughSocialClubOptions.Visibility = Visibility.Hidden;
+				Rect_HideOptions_OrigEmu.Visibility = Visibility.Hidden;
 			}
 			else
 			{
+				Rect_HideOptions_AllLaunchThroughSocialClubThings.Visibility = Visibility.Hidden;
+
 				if (Settings.EnableAlternativeLaunch)
 				{
-					Rect_HideOptions.Visibility = Visibility.Hidden;
-					Rect_HideOptions2.Visibility = Visibility.Visible;
-					Rect_HideOptions3.Visibility = Visibility.Hidden;
+					Rect_HideOptions_LaunchThroughSocialClubOptions.Visibility = Visibility.Hidden;
+					Rect_HideOptions_OrigEmu.Visibility = Visibility.Visible;
 				}
 				else
 				{
-					Rect_HideOptions.Visibility = Visibility.Visible;
-					Rect_HideOptions2.Visibility = Visibility.Hidden;
-					Rect_HideOptions3.Visibility = Visibility.Hidden;
+					Rect_HideOptions_LaunchThroughSocialClubOptions.Visibility = Visibility.Visible;
+					Rect_HideOptions_OrigEmu.Visibility = Visibility.Hidden;
 				}
 			}
 
 			// Remove this...
-			
+
 			// Rect_HideOptions_Tease.Visibility = Visibility.Visible;
 			// Rect_HideOptions.Visibility = Visibility.Hidden;
 			// Rect_HideOptions2.Visibility = Visibility.Hidden;
@@ -1528,8 +1531,13 @@ namespace Project_127.MySettings
 			{
 				// Check if we can Download the build from the branch we are currently on.
 
-
-				if (tb.MyReturnString != "")
+				if (HelperClasses.FileHandling.URLExists(tb.MyReturnString))
+				{
+					HelperClasses.Logger.Log("Importing Build. Links: ");
+					HelperClasses.Logger.Log("DDL: " + tb.MyReturnString);
+					Globals.ImportBuildFromUrl(tb.MyReturnString);
+				}
+				else if (tb.MyReturnString != "")
 				{
 					string DLLinkBranch = "https://github.com/TwosHusbandS/Project-127/raw/" + Globals.Branch + "/Installer/Builds/" + tb.MyReturnString.TrimEnd(".exe") + ".exe";
 					string DLLinkMaster = "https://github.com/TwosHusbandS/Project-127/raw/Master" + "/Installer/Builds/" + tb.MyReturnString.TrimEnd(".exe") + ".exe";
@@ -1559,6 +1567,18 @@ namespace Project_127.MySettings
 			}
 		}
 
-
+		private void Rect_HideOptions_ClosedBetaSocialClubLaunch_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+		{
+			if (e.ClickCount >= 3)
+			{
+				PopupTextbox pTb = new PopupTextbox("", "");
+				pTb.ShowDialog();
+				if (pTb.MyReturnString.ToLower() == "letmein")
+				{
+					HelperClasses.RegeditHandler.DeleteValue("TeasingFeatures");
+					RefreshIfOptionsHide();
+				}
+			}
+		}
 	} // End of Class
 } // End of Namespace 

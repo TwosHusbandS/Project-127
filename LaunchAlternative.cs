@@ -17,9 +17,7 @@ namespace Project_127
 		/// Launches Downgraded GTA in new / cleaner way.
 		/// </summary>
 		public static void Launch()
-		{
-			ComponentManager.CheckIfRequiredComponentsAreInstalled();
-
+		{ 
 			string filePath = LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\Play127.exe";
 			if (HelperClasses.FileHandling.doesFileExist(filePath))
 			{

@@ -252,32 +252,17 @@ namespace Project_127
 					// if not downgraded
 					else
 					{
-						if (SizeOfGTAV == SizeOfDowngradeEmuGTAV || 
-							SizeOfGTAV == SizeOfDowngradeAlternativeSteam124GTAV || 
-							SizeOfGTAV == SizeOfDowngradeAlternativeRockstar124GTAV || 
-							SizeOfGTAV == SizeOfDowngradeAlternativeSteam127GTAV || 
-							SizeOfGTAV == SizeOfDowngradeAlternativeRockstar127GTAV ||
-							SizeOfGTAV == SizeOfDowngradeAlternativeRockstar124GTAV)
+						if (SizeOfGTAV > 0 && SizeOfUpdate > 0 && SizeOfPlayGTAV > 0)
 						{
-							return InstallationStates.Unsure;
-						}
-						else
-						{
-							if (SizeOfUpgradedGTAV > 0 && SizeOfUpgradedUpdate > 0)
+							FileVersionInfo FVI = FileVersionInfo.GetVersionInfo(GTAVFilePath.TrimEnd('\\') + @"\GTA5.exe");
+							if (new Version(BuildVersionTable.GetNiceGameVersionString(new Version(FVI.FileVersion), true)) > new Version(1, 30))
 							{
 								return InstallationStates.Upgraded;
-							}
-							else
-							{
-								return InstallationStates.Unsure;
-							}
+							} 
 						}
 					}
 				}
-				else
-				{
-					return InstallationStates.Unsure;
-				}
+				return InstallationStates.Unsure;
 			}
 		}
 
@@ -592,6 +577,12 @@ namespace Project_127
 			}
 			else if (LauncherLogic.InstallationState == InstallationStates.Downgraded)
 			{
+				if (!ComponentManager.CheckIfRequiredComponentsAreInstalled(true))
+				{
+					new Popups.Popup(Popups.Popup.PopupWindowTypes.PopupOk, "Cant do that because of because of missing Components").ShowDialog();
+					return;
+				}
+
 				HelperClasses.Logger.Log("Installation State Downgraded Detected.", 1);
 
 				if (!Settings.EnableAlternativeLaunch)

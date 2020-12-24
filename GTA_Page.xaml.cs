@@ -40,6 +40,8 @@ namespace Project_127
 			InitializeComponent();
 			btn_GTA_static = btn_GTA;
 
+			btn_GTA.IsEnabled = MainWindow.MW.btn_Upgrade.IsEnabled;
+
 			if (LauncherLogic.GameState == LauncherLogic.GameStates.Running)
 			{
 				GTA_Page.btn_GTA_static.BorderBrush = MyColors.MW_ButtonGTAGameRunningBorderBrush;

@@ -251,15 +251,11 @@ namespace Project_127
 
 			rtb_About.Document.Blocks.Remove(rtb_About.Document.Blocks.FirstBlock);
 
-			AddParagraph(rtb_About, "Project 1.27 Version: '" + Globals.ProjectVersion + "'\n" +
-"BuildInfo: '" + Globals.BuildInfo + "'\n" +
-"ZIP Version: '" + Globals.ZipVersion + "'");
-
+			AddParagraph(rtb_About, "Project 1.27 Version: '" + Globals.ProjectVersion + "'\n" + "BuildInfo: '" + Globals.BuildInfo + "'\n" + "ZIP Version: '" + Globals.ZipVersion + "'");
 
 			AddParagraph(rtb_About, "You are running Project 1.27, a tool for the GTA V Speedrunning Community. This was created for the patch 1.27 downgrade problem, which started in August of 2020. This tool has a number of features, including Downgrading, Upgrading and launching the game.");
 
-			AddParagraph(rtb_About, "If you have any issues with this program or ideas for new features,\n" +
-"feel free to contact me on Discord: @thS#0305");
+			AddParagraph(rtb_About, "If you have any issues with this program or ideas for new features,\n" + "feel free to contact me on Discord: @thS#0305");
 
 			AddHyperlinkText(rtb_About, "https://www.mind.org.uk/donate", "Charity", "If you want to support us, we encourage you to donate to a ", " of your chosing.");
 
