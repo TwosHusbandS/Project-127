@@ -17,8 +17,6 @@ Build Instructions:
 
 Deploy Instructions:
 	
-	CHANGE INNOSETUP SCRIPT AFTER 1.0 SO IT DOESNT DELETE INSTALL DIR!!
-
 	Change Version Number a few Lines Above.
 	Change Version Number in both of the last lines in AssemblyInfo.cs
 	Check if BetaMode / InternalMode in Globals.cs is correct
@@ -39,11 +37,6 @@ Comments like "TODO", "TO DO", "CTRLF", "CTRL-F", and "CTRL F" are just ways of 
 
 Hybrid code can be found in AAA_HybridCode.
 		
-// Remove Hide_Features stuff for social club launch from:
-// Update check on XML
-// Settings XML
-
-
 
 To Do before 1.1:
 - Fix ReadMe:
