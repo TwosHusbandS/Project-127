@@ -102,6 +102,10 @@ namespace Project_127.HelperClasses
                         installedSubassemblies.Add(subassemblyName, subInfo);
                         updateInstalled();
                         return true;
+                    } 
+                    else
+                    {
+                        return false;
                     }
                 }
                 else if (s.GetAttribute("type", "").ToLower() == "common")
