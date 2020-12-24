@@ -6,6 +6,12 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using Project_127;
+using Project_127.Auth;
+using Project_127.HelperClasses;
+using Project_127.Overlay;
+using Project_127.Popups;
+using Project_127.MySettings;
 
 namespace Project_127.HelperClasses
 {
@@ -168,9 +174,8 @@ namespace Project_127.HelperClasses
 		/// <param name="pCommandLineArguments"></param>
 		/// <param name="runAsAdmin"></param>
 		/// <param name="waitForExit"></param>
-		public static void StartProcess(string pFilepath, string pWorkingDir = null, string pCommandLineArguments = null, bool useShellExecute = false, bool runAsAdmin = false, bool waitForExit = false)
+		public static Process StartProcess(string pFilepath, string pWorkingDir = null, string pCommandLineArguments = null, bool useShellExecute = false, bool runAsAdmin = false, bool waitForExit = false)
 		{
-			// TO DO...THIS MIGHT BE BROKEN WITH CMDL ARGS WITH CONTAIN SPACES...NEED TO DO THIS MANUALLY IN THE METHOD WHICH CALLS IT FOR NOW
 			if (FileHandling.doesFileExist(pFilepath))
 			{
 				Process proc = new Process();
@@ -197,15 +202,16 @@ namespace Project_127.HelperClasses
 				{
 					proc.WaitForExit();
 				}
+
+				return proc;
 			}
+			return null;
 		}
-
-
 
 		/// <summary>
 		/// Starting Game as Non Retail
 		/// </summary>
-		public static void StartGameNonRetail()
+		public static void StartGameNonRetail(bool startViaSteam = false)
 		{
 			int AmountOfCores = Environment.ProcessorCount;
 
@@ -213,17 +219,31 @@ namespace Project_127.HelperClasses
 			{
 				AmountOfCores = 4;
 			}
+			else if (AmountOfCores > 23)
+			{
+				AmountOfCores = 23;
+			}
 
 			UInt64 Possibilities = (UInt64)Math.Pow(2, AmountOfCores);
 
 			string MyHex = (Possibilities - 1).ToString("X");
 
-			string cmdLineArgs = @"/c cd /d " + "\"" + LauncherLogic.GTAVFilePath + "\"" + @" && start /affinity " + MyHex + " playgtav.exe -uilanguage " + Settings.ToMyLanguageString(Settings.LanguageSelected).ToLower() + " && exit";
 
-			//cmdLineArgs = @"/c cd / d "F:\SteamLibrary\steamapps\common\Grand Theft Auto V" && playgtav.exe -uilanguage french && exit";
+			//cmdLineArgs = @"/c cd / d "F:\SteamLibrary\steamapps\common\Grand Theft Auto V" && start /affinity FFFF playgtav.exe -uilanguage french && exit";
 
+			string cmdLineArgs = "";
+
+			if (startViaSteam)
+			{
+				cmdLineArgs = @"/c cd /d " + "\"" + Globals.SteamInstallPath + "\"" + @" && start /affinity " + MyHex + " steam.exe -applaunch 271590 -uilanguage " + Settings.ToMyLanguageString(Settings.LanguageSelected).ToLower() + " && exit";
+			}
+			else
+			{
+				cmdLineArgs = @"/c cd /d " + "\"" + LauncherLogic.GTAVFilePath + "\"" + @" && start /affinity " + MyHex + " playgtav.exe -uilanguage " + Settings.ToMyLanguageString(Settings.LanguageSelected).ToLower() + " && exit";
+			}
 
 			Process tmp = GSF.Identity.UserAccountControl.CreateProcessAsStandardUser(@"cmd.exe", cmdLineArgs);
+
 		}
 
 	} // End of Class

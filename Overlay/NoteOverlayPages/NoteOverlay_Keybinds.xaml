@@ -1,0 +1,54 @@
+﻿<Page x:Class="Project_127.Overlay.NoteOverlayPages.NoteOverlay_Keybinds"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:Project_127"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="NoteOverlay_Keybinds">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="45"/>
+            <RowDefinition Height="45"/>
+            <RowDefinition Height="45"/>
+            <RowDefinition Height="45"/>
+            <RowDefinition Height="45"/>
+            <RowDefinition Height="45"/>
+            <RowDefinition Height="45"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <Rectangle Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Fill="Transparent"/>
+        <Rectangle Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Fill="{x:Static local:MyColors.SE_AlternateRowBackground}"/>
+        <Rectangle Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Fill="Transparent"/>
+        <Rectangle Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Fill="{x:Static local:MyColors.SE_AlternateRowBackground}"/>
+        <Rectangle Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Fill="Transparent"/>
+        <!--<Rectangle Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" Fill="{x:Static local:Globals.SE_AlternateRowBackground}"/>
+        <Rectangle Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2" Fill="Transparent"/>-->
+
+        <Label Grid.Row="0" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="  Overlay Toggle Hotkey"/>
+        <Button Grid.Row="0" Grid.Column="1" Style="{StaticResource btn_SE_Path}" x:Name="btn_OverlayHotkeyToggle" Click="btn_OverlayHotkeyToggle_Click"/>
+        <Label Grid.Row="1" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="  Overlay Scroll Up Hotkey"/>
+        <Button Grid.Row="1" Grid.Column="1" Style="{StaticResource btn_SE_Path}" x:Name="btn_OverlayHotkeyScrollUp" Click="btn_OverlayHotkeyScrollUp_Click"/>
+        <Label Grid.Row="2" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="  Overlay Scroll Down Hotkey"/>
+        <Button Grid.Row="2" Grid.Column="1" Style="{StaticResource btn_SE_Path}" x:Name="btn_OverlayHotkeyScrollDown" Click="btn_OverlayHotkeyScrollDown_Click"/>
+        <Label Grid.Row="3" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="  Overlay Load Prev Note"/>
+        <Button Grid.Row="3" Grid.Column="1" Style="{StaticResource btn_SE_Path}" x:Name="btn_OverlayHotkeyNotePrev" Click="btn_OverlayHotkeyNotePrev_Click"/>
+        <Label Grid.Row="4" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="  Overlay Load Next Note"/>
+        <Button Grid.Row="4" Grid.Column="1" Style="{StaticResource btn_SE_Path}" x:Name="btn_OverlayHotkeyNoteNext" Click="btn_OverlayHotkeyNoteNext_Click"/>
+
+        <!--<Label Grid.Row="5" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="  Overlay Scroll Left Hotkey"/>
+        <Button Grid.Row="5" Grid.Column="1" Style="{StaticResource btn_SE_Path}" x:Name="btn_OverlayHotkeyScrollLeft" Click="btn_OverlayHotkeyScrollLeft_Click"/>
+        <Label Grid.Row="6" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="  Overlay Scroll Right Hotkey"/>
+        <Button Grid.Row="6" Grid.Column="1" Style="{StaticResource btn_SE_Path}" x:Name="btn_OverlayHotkeyScrollRight" Click="btn_OverlayHotkeyScrollRight_Click"/>-->
+
+        <Popup>
+
+        </Popup>
+    </Grid>
+</Page>
