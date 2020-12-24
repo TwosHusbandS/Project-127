@@ -1,86 +1,221 @@
-# Welcome to Project - 1.27
+<!--
+Shamelessly stolen from: https://github.com/othneildrew/Best-README-Template
+-->
 
-Hi! This is a custom Client which is capable of Downgrading and Upgrading the PC Version of GTA-V, and provides a few other Features which help the GTA V Speedrunning Community has Use-Cases for.
 
-The Client is also able to launch the Downgraded GTA V while authenticating through Rockstar Services, made possible by the hard work of @dr490n.
+<!--
+*** Thanks for checking out the Best-README-Template. If you have a suggestion
+*** that would make this better, please fork the repo and create a pull request
+*** or simply open an issue with the tag "enhancement".
+*** Thanks again! Now go create something AMAZING! :D
+-->
 
-Shoutout to FiveM and Goldberg, whose Source Code proved to be vital to understand and reverse engineer the GTA V Launch Process
 
-Also shoutout to the [Open-Source GTAV Auto Patcher by DaWolf85](https://github.com/DaWolf85/GTAVAutoPatcher) which was an important resource during the development of this Client.
 
-List of Main Features:
+<!-- PROJECT SHIELDS -->
+<!--
+*** I'm using markdown "reference style" links for readability.
+*** Reference links are enclosed in brackets [ ] instead of parentheses ( ).
+*** See the bottom of this document for the declaration of the reference variables
+*** for contributors-url, forks-url, etc. This is an optional, concise syntax you may use.
+*** https://www.markdownguide.org/basic-syntax/#reference-style-links
+-->
 
-* Upgrading / Downgrading GTAV (both via File-Copying and via Hardlinking)
-* Launching Upgraded and Downgraded GTAV
-* SaveFileHandler for special GTA V Speedrun Categories as well as a 100% Savefile for Practicing
-* Enable / Disable the 500k PreOrder Bonus as you please
-* Automatically doing things on Game Launch:
-	* Setting gta5.exe Process Priority to "high"
-	* Starting GTA V with the affinity process core fix
-	* Start LiveSplit
-	* Start OBS / Other Stream Programs
-	* Start FPS Limiter
-	* Start JumpScript (plus editing your keybindings)
-	* Start Nohboard (if wanted, with Burhacs Setup)
 
-Not all Features are fully implemented at this point. If you can think of any other Features or things this Program could do, please do not hesitate to contact me.
 
----
+
+
+[![Discord][discord-shield]][discord-url]
+[![Twitter][twitter-shield]][twitter-url]
+[![MIT License][license-shield]][license-url]
+[![Installer][version-shield]][installer-latest-url]
+[![Help][help-shield]][help-url]
+[![Features][features-shield]][features-url]
+
+
+
+<!-- PROJECT LOGO -->
+<br />
+<p align="center">
+  <a href="https://github.com/TwosHusbandS/Project-127">
+    <img src="Artwork/icon.png" alt="Logo" width="80" height="80">
+  </a>
+
+  <h3 align="center">Project 1.27 aka. P127</h3>
+
+  <p align="center">
+    Custom Client / Launcher for Speedrunning GTA.
+    <br />
+    <a href="https://www.youtube.com/watch?v=PLACEHOLDER">View Demo</a>
+	.
+    <a href="#contact">Contact me</a>
+	.
+	<a href="Installer/Changelogs/V_1_1_0_0_Changelog.md">Changelog</a>
+  </p>
+</p>
+
+
+
+<!-- TABLE OF CONTENTS -->
+<details open="open">
+  <summary>Table of Contents</summary>
+  <ol>
+    <li>
+      <a href="#about-the-project">About Project 1.27</a>
+      <ul>
+        <li><a href="#main-features">Main Features</a></li>
+        <li><a href="#Help">Help and how to get Started</a></li>
+        <li><a href="#built-with">Built With</a></li>
+        <li><a href="#nstallation">Installation</a></li>
+        <li><a href="#user-instructions">User Instructions</a></li>
+        <li><a href="#advanced-user-instructions">Advanced User Instructions</a></li>
+      </ul>
+    </li>
+    <li><a href="#roadmap">Roadmap</a></li>
+    <li><a href="#contributing">Contributing</a></li>
+    <li><a href="#license">License</a></li>
+    <li><a href="#shoutouts-and-credits">Shoutouts and Credits</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ol>
+</details>
+
+-----
+
+<!-- ABOUT THE PROJECT -->
+## About The Project
+
+Hi! This is a custom Client which was originally created to give all Speedrunners the capability of launching the Downgraded GTA Version 1.27. 
+
+Over time it grew with Features and Launch - Capabilities
+
+### Main Features
+
+* [List of Main Features here][help-url]
+
+### Help
+
+* [Help and How to get started][features-url]
+
+### Built With
+
+Pretty much built with straight C# visualized with WPF
+* Some componments, mostly in regards to the Game Launch are closed source and written in C / C++
+* The logging into your Social Club account is achieved by:
+  * JavaScript
+  * [Chrome Embedded Framework](https://github.com/cefsharp/CefSharp)
+
+
+### Installation
+
+* Grab the [latest Installer][installer-latest-url] from [the Installer folder][installer-folder-url]
+* Execute said Installer
+* Open Project 127
 
 ### User Instructions:
 
-* Get your GTA V Installation to an Up-To-Date State and launch the latest Version online to confirm that its working.
-* Download the latest Installer from the [Installer Folder](https://github.com/TwosHusbandS/Project-127/tree/master/Installer)
+* **Get your GTA V Installation to an Up-To-Date State and launch the latest Version online to confirm that its working.**
+* Grab the [latest Installer][installer-latest-url] from [the Installer folder][installer-folder-url]
 * This Program does automatically detect the current State of the Installation (Downgraded or Upgraded) and launches the Game accordingly.
 * Windows 10 Checks all Files for Viruses if they are run for the first time. If you open a file (the Installer or the Program) for the first time, please give it some time (up to 15 seconds) to do so, and just wait.
 * This Program only supports 64 Bit at this Point and probably will never support 32 Bit. Seeing as GTA V only supports 64 Bit (AFAIK), and I doubt you can have a good time playing GTA V on less than 4 GB of RAM, this will probably stay this way.
 * This Program also requires Admin-Rights for File Operations and Accessing the Registry for Settings. You do not need to start it as Admin, you will get the UserAccessControl Popup regardless of how this was started.
 * Please actually Read the Popups the Program gives you
-* In order to fully remove this Program and all of its files and settings, you need to run the [Cleanup.exe](https://github.com/TwosHusbandS/Project-127/raw/master/Installer/Cleanup.exe) from the same folder, after uninstalling the Program via Control Panel
-* [Changelogs can be found here](https://github.com/TwosHusbandS/Project-127/tree/master/Installer/Changelogs)
-* Rightclick the Authentification Button (Lock Symbol, Top Left Corner) to generate a DebugFile with some informations.
+* In order to fully remove this Program and all of its files and settings click the Uninstall Button inside the Settings Window.
+* [Changelogs can be found here][changelogs-url]
 * If something is not working and you are contact me, I would appreciate the LogFile and the DebugFile, which are both in the InstallationFolder of this Program
-* **If a Steam Upgrade Hits, make sure you are fully UPGRADED, and click "Repair" in the Client.**
+* Read the Help Section if something is not working.
 
----
-
-### Beta Instructions:
-
-This should behave like a normal Installation. No specific Beta Instructions needed.
-
----
 
 ### Advanced User Instructions:
 
 * Settings are in: Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Project_127 in the Registry
-* The Files this Program needs (apart from the Client itself) are Deployed with a ZIP File which gets extracted.
-* They are saved in a folder called "Project_127_Files" inside the Folder which you selected to use for ZIP File Extracting.
-*  You should use a Folder on the same Partition and Physical Drive as your GTA V Installation Folder. **I recommend selecting the GTAV Installation Path as your Location for ZIP File Extraction**
-* You can chose if you want to use hardlinking (creating a kind of shortcut to another file) or copy / pasting Files for Downgrading. I recommend using Copying if your ZIP File Path is not on the same drive as your GTA V Installation Path
+* The Files this Program needs (apart from the Client itself) are saved in a folder called "Project_127_Files" inside the Folder which you selected to use for ZIP File Extracting.
+  * By default it recommends you to use your GTA Installation for that.
+  * Again: Use your GTA Installation Folder for this.
+* Theres a lot of stuff you can rightclick. I mean. A lot.
 
----
 
-### Programer Instructions:
+-----
 
-* This was mainly developed using C# and WPF.
-* Check out the Main Documentation on the very top of the MainWindow.xaml.cs File.
-* Some of the Code (especially XAML / GUI related) is not the best looking.
-* If you can think of Improvements or new Features feel free to make a Pull Request of contact me on Discord. 
+
+## Roadmap
+
+Project 1.27 is not being actively developed at this stage.
+
+It will continue to receive BugFixes and Hotfixes if needed. 
+
+-----
+
+## Contributing
+
+* Clone the Github Repo.
+* Pray Nuget does its magic.
+* Press F5.
+
+* In Order to check how stuff is connected id just recommend following User Actions and seeing what Methods are called.
+* The whole Project ...historically grew a lot, and it shows.
+* Some of the Code (especially XAML / GUI related) is not the best looking and far from best practice.
+* If you can think of Improvements or new Features feel free to make a Pull Request or [contact me](#contact). 
 * Can always use an extra pair of eyes to make sure I dont do anything stupid.
-* Do whatever the F you want with this Code, as long as you dont straight up charge money for this exact client, we gucci
 
----
+To get a local copy up and running follow these simple example steps.
+
+-----
+
+## License
+
+Distributed under the MIT License. See `LICENSE` for more information.
+
+-----
+
+## Shoutouts and Credits
+
+* Project 1.27 Launcher / Client Programming, Documentating: @thS
+* Reverse Engineering: @dr490n, @Special For, @zCri
+* Launcher GUI Design & Artwork: @hossel
+* Special thanks to: @JakeMiester, @Antibones, @Aperture, @MOMO
+* Special shoutouts to @dr490n, who was responsible for getting the downgraded game to launch, adding patches against in-game triggers, writing the Overlay Backend, writing the Download Manager Backend, Writing the Launch-Through-Socialclub launch process, Authentication backend, decryption and managed to get the preorder entitlement to work.
+* Special shoutouts to @special for, for being there during the whole development phase, providing valuable insight, being available to bounce ideas off of, being available for brainstorming, and providing valuable help in regards to reverse engineering the GTA V Launch Process. We could not have done this without you.
+* Shoutout to FiveM and Goldberg, whose Source Code proved to be vital to understand and reverse engineer the GTA V Launch Process
+* Shoutout to @Fro for providing Hosting to the Files needed for Project 1.27. Youre an absolute legend
+* Shoutout to @yoshi for providing the Information which Build Version corresponds with which Game Version
+* Shoutout to @Diamondo25 for finding a way to launch GTA without going through LaunchGTAV.exe or PlayGTAV.exe, which eased the development process to launch through Social Club
+* Shoutout to @DaWolf85 for [open sourcing his GTAVAutoPatcher Tool](https://github.com/DaWolf85/GTAVAutoPatcher/) the Community used to Upgrade / Downgrade previously.It helped us a ton.
+* Shoutout to @burhac, @Crapideot, @GearsOfW, @rollschuh2282 , @Ollie, @Alfie, @AntherXx for being awesome members of the GTA Speedrunning community, always being nice and respectful, and providing Help / Testing. You guys are much appreciated.
+
+-----
+
+## Contact
+
+Twitter - [@thsBizz][twitter-url]
+
+Project Link - [github.com/TwosHusbandS/Project-127][p127-url]
+
+Discord - [@ths#0305][discord-url]
 
 
-This was made possibly for the GTA V Speedrunning community through almost a month of hard work by a number of dedicated individuals. This utility serves to not only allow downgrade of the existing GTA V patch, but subsequent patches as well down to the widely accepted speedrunning version of 1.27. This would not have been possible without the hard work of a number of very talented individuals from all walks of life who have contributed skills in Reverse Engineering, Programming, Decryption, Project Management, Scripting and Testing. Below is a list of some of the main contributors to the project although our thanks go out to everyone who has helped throughout the process. dr490n, Special For, thS, zCri, hossel, JakeMiester, MOMO, Daniel Kinau, Antibones, Aperture, Diamondo25
+<!-- MARKDOWN LINKS & IMAGES -->
+<!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
+[discord-url]: https://discordapp.com/users/612259615291342861
+[twitter-url]: https://twitter.com/thSbizz
+[features-url]: https://github.com/TwosHusbandS/Project-127/blob/master/Installer/Changelogs/Features.md
+[help-url]: https://github.com/TwosHusbandS/Project-127/blob/master/Installer/Changelogs/Help.md
+[p127-url]: https://github.com/TwosHusbandS/Project-127/
+[twitter-shield]: https://img.shields.io/twitter/url?color=blue&label=Twitter&logo=Red&logoColor=Green&style=plastic&url=https%3A%2F%2Ftwitter.com%2FthSbizz
+[discord-shield]: https://img.shields.io/twitter/url?color=lightgray&label=Discord&logo=red&style=plastic&url=https%3A%2F%2Fdiscordapp.com%2Fusers%2F612259615291342861
+[changelogs-url]: https://github.com/TwosHusbandS/Project-127/tree/master/Installer/Changelogs
+[installer-folder-url]: https://github.com/TwosHusbandS/Project-127/tree/master/Installer
+[installer-latest-url]: https://github.com/TwosHusbandS/Project-127/raw/master/Installer/Project_127_Installer_Latest.exe
+[activelydeveloped-shield]: https://img.shields.io/maintenance/no/2021?label=Actively%20developed
+[license-shield]: https://img.shields.io/github/license/TwosHusbandS/Project-127?color=Green&label=License&style=plastic
+[license-url]: https://github.com/TwosHusbandS/Project-127/blob/master/LICENSE
+[version-shield]: https://img.shields.io/static/v1?label=Version&message=1.1-Installer&color=sucess
+[help-shield]: https://img.shields.io/static/v1?label=Help&message=Here&color=important
+[features-shield]: https://img.shields.io/static/v1?label=Features&message=Click%20Me&color=blueviolet
 
-Special shoutouts to @dr490n who was responsible for getting the downgraded game to launch, added patches against in-game triggers, wrote the authentication backend, decryption and got the preorder entitlement to work.
 
 
 
-----------
-
-Contact me for anything related to this Client on Discord. @ths#0305
 
 
 

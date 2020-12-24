@@ -9,6 +9,7 @@ namespace Project_127.HelperClasses.OwnOpenFolderDialog
 {
 
 	// Stolen from: https://www.lyquidity.com/devblog/?p=136
+	// adapted for FolderSelectDialog
 
 
 	/// <summary>

@@ -45,6 +45,17 @@ namespace Project_127.HelperClasses
 			SetValue(Globals.MySettingsKey, pValue, pData, RegistryValueKind.String);
 		}
 
+		public static void DeleteValue(string pValue)
+		{
+			if (Globals.MySettingsKey != null)
+			{
+				if (DoesValueExists(pValue))
+				{
+					Globals.MySettingsKey.DeleteValue(pValue);
+				}
+			}
+		}
+
 		/// <summary>
 		/// Overloaded. Sets one Value/Data combination of our Key in Registry. AS STRING
 		/// </summary>
@@ -81,7 +92,7 @@ namespace Project_127.HelperClasses
 			catch
 			{
 				HelperClasses.Logger.Log("haha regedit goes boom while writing");
-				HelperClasses.Logger.Log("pRKey: '" + pRKey.ToString() + "', pValue: '" + pValue + "', pData:'" + pData + "', pRegistryValueKind: '" + pRegistryValueKind.ToString() + "'",1);
+				HelperClasses.Logger.Log("pRKey: '" + pRKey.ToString() + "', pValue: '" + pValue + "', pData:'" + pData + "', pRegistryValueKind: '" + pRegistryValueKind.ToString() + "'", 1);
 			}
 		}
 
@@ -93,6 +104,29 @@ namespace Project_127.HelperClasses
 		public static string GetValue(string pValue)
 		{
 			return GetValue(Globals.MySettingsKey, pValue);
+		}
+
+
+		public static void DeleteKey()
+		{
+			DeleteKey(Globals.MySettingsKey);
+		}
+
+
+		public static void DeleteKey(RegistryKey pKey)
+		{
+			try
+			{
+				foreach (KeyValuePair<string, string> kvp in Globals.MyDefaultSettings)
+				{
+					pKey.DeleteValue(kvp.Key);
+				}
+
+			}
+			catch (Exception e)
+			{
+				HelperClasses.Logger.Log("Deleting Regedit failed: " + e.ToString());
+			}
 		}
 
 		/// <summary>
@@ -109,14 +143,13 @@ namespace Project_127.HelperClasses
 			}
 			catch
 			{
-				HelperClasses.Logger.Log("haha regedit goes boom while reading. Function will return \"\"");
 				if (pRKey == null)
 				{
-					HelperClasses.Logger.Log("pRKey is null");
+					HelperClasses.Logger.Log("haha regedit goes boom while reading. Function will return \"\". pRKey is null");
 				}
 				else
 				{
-				HelperClasses.Logger.Log("pRKey: '" + pRKey.ToString() + "', pValue: '" + pValue + "'", 1);
+					HelperClasses.Logger.Log("haha regedit goes boom while reading. Function will return \"\". pRKey: '" + pRKey.ToString() + "', pValue: '" + pValue + "'", 1);
 				}
 			}
 			return rtrn;

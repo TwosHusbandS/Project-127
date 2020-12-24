@@ -4,8 +4,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 16.0.30104.148
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Project 127", "Project 127.csproj", "{A3C371FC-B027-4451-9D07-41302A90B250}"
+	ProjectSection(ProjectDependencies) = postProject
+		{F75AE30E-24D6-4FBC-90C6-A9EF52682EDF} = {F75AE30E-24D6-4FBC-90C6-A9EF52682EDF}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ROSCrypto", "AAA_HybridCode\C++\ROSCrypto\ROSCrypto.vcxproj", "{225A2F5D-B9EC-4691-A4F6-81C70B182903}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Project 127 Launcher", "AAA_HybridCode\Project 127 Launcher\Project 127 Launcher.csproj", "{F75AE30E-24D6-4FBC-90C6-A9EF52682EDF}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MTLInterface", "AAA_HybridCode\C++\MTLInterface\MTLInterface.vcxproj", "{652D7FDF-20B5-4BEF-A45F-DEA14040F848}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,6 +42,28 @@ Global
 		{225A2F5D-B9EC-4691-A4F6-81C70B182903}.Release|x64.Build.0 = Release|x64
 		{225A2F5D-B9EC-4691-A4F6-81C70B182903}.Release|x86.ActiveCfg = Release|Win32
 		{225A2F5D-B9EC-4691-A4F6-81C70B182903}.Release|x86.Build.0 = Release|Win32
+		{F75AE30E-24D6-4FBC-90C6-A9EF52682EDF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F75AE30E-24D6-4FBC-90C6-A9EF52682EDF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F75AE30E-24D6-4FBC-90C6-A9EF52682EDF}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{F75AE30E-24D6-4FBC-90C6-A9EF52682EDF}.Debug|x64.Build.0 = Debug|Any CPU
+		{F75AE30E-24D6-4FBC-90C6-A9EF52682EDF}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{F75AE30E-24D6-4FBC-90C6-A9EF52682EDF}.Debug|x86.Build.0 = Debug|Any CPU
+		{F75AE30E-24D6-4FBC-90C6-A9EF52682EDF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F75AE30E-24D6-4FBC-90C6-A9EF52682EDF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F75AE30E-24D6-4FBC-90C6-A9EF52682EDF}.Release|x64.ActiveCfg = Release|x64
+		{F75AE30E-24D6-4FBC-90C6-A9EF52682EDF}.Release|x64.Build.0 = Release|x64
+		{F75AE30E-24D6-4FBC-90C6-A9EF52682EDF}.Release|x86.ActiveCfg = Release|Any CPU
+		{F75AE30E-24D6-4FBC-90C6-A9EF52682EDF}.Release|x86.Build.0 = Release|Any CPU
+		{652D7FDF-20B5-4BEF-A45F-DEA14040F848}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{652D7FDF-20B5-4BEF-A45F-DEA14040F848}.Debug|x64.ActiveCfg = Debug|x64
+		{652D7FDF-20B5-4BEF-A45F-DEA14040F848}.Debug|x64.Build.0 = Debug|x64
+		{652D7FDF-20B5-4BEF-A45F-DEA14040F848}.Debug|x86.ActiveCfg = Debug|Win32
+		{652D7FDF-20B5-4BEF-A45F-DEA14040F848}.Debug|x86.Build.0 = Debug|Win32
+		{652D7FDF-20B5-4BEF-A45F-DEA14040F848}.Release|Any CPU.ActiveCfg = Release|Win32
+		{652D7FDF-20B5-4BEF-A45F-DEA14040F848}.Release|x64.ActiveCfg = Release|x64
+		{652D7FDF-20B5-4BEF-A45F-DEA14040F848}.Release|x64.Build.0 = Release|x64
+		{652D7FDF-20B5-4BEF-A45F-DEA14040F848}.Release|x86.ActiveCfg = Release|Win32
+		{652D7FDF-20B5-4BEF-A45F-DEA14040F848}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

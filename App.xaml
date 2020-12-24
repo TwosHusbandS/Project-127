@@ -5,10 +5,14 @@
              Startup="Application_Startup"
              SessionEnding="Application_SessionEnding"
              StartupUri="MainWindow.xaml">
+    <!--xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"-->
     <Application.Resources>
 
+        <!--<XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls" />-->
+
+
         <Style x:Key="lbl" TargetType="Label">
-            <Setter Property="Foreground" Value="{x:Static local:Globals.App_LabelForeground}" />
+            <Setter Property="Foreground" Value="{x:Static local:MyColors.App_LabelForeground}" />
             <Setter Property="FontFamily" Value="Tahoma" />
             <Setter Property="FontSize" Value="18" />
             <Setter Property="TextBlock.TextAlignment" Value="Center"/>
@@ -17,6 +21,16 @@
             <Setter Property="HorizontalContentAlignment" Value="Center" />
             <Setter Property="VerticalContentAlignment" Value="Center" />
             <Setter Property="Margin" Value="0" />
+        </Style>
+
+        <Style x:Key="rtb" TargetType="RichTextBox">
+            <Setter Property="Foreground" Value="{x:Static local:MyColors.App_LabelForeground}" />
+            <Setter Property="FontFamily" Value="Tahoma" />
+            <Setter Property="FontSize" Value="16" />
+            <Setter Property="Margin" Value="0" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
         </Style>
 
         <!--#region Buttons-->
@@ -33,15 +47,24 @@
             </Setter>
         </Style>
 
+        <Style x:Key="btn_Preview" TargetType="{x:Type Button}" BasedOn="{StaticResource btn}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <TextBlock Text="{TemplateBinding Content}" FontSize="{TemplateBinding FontSize}" FontFamily="{TemplateBinding FontFamily}" Foreground="{TemplateBinding Foreground}" Background="{TemplateBinding Background}" TextWrapping="Wrap"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
 
 
         <Style TargetType="Button" x:Key="btn_SM">
-            <Setter Property="Background" Value="{x:Static local:Globals.SM_ButtonBackground}"/>
-            <Setter Property="Foreground" Value="{x:Static local:Globals.SM_ButtonForeground}"/>
-            <Setter Property="BorderBrush" Value="{x:Static local:Globals.SM_ButtonBorderBrush}"/>
+            <Setter Property="Background" Value="{x:Static local:MyColors.SM_ButtonBackground}"/>
+            <Setter Property="Foreground" Value="{x:Static local:MyColors.SM_ButtonForeground}"/>
+            <Setter Property="BorderBrush" Value="{x:Static local:MyColors.SM_ButtonBorderBrush}"/>
             <Setter Property="FontSize" Value="18"/>
             <Setter Property="FontFamily" Value="Tahoma"/>
-            <Setter Property="BorderThickness" Value="{x:Static local:Globals.SM_ButtonBorderThickness}"/>
+            <Setter Property="BorderThickness" Value="{x:Static local:MyColors.SM_ButtonBorderThickness}"/>
             <Setter Property="Margin" Value="10"/>
             <Setter Property="Template">
                 <Setter.Value>
@@ -58,9 +81,9 @@
             </Setter>
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="{x:Static local:Globals.SM_ButtonMOBackground}"/>
-                    <Setter Property="Foreground" Value="{x:Static local:Globals.SM_ButtonMOForeground}"/>
-                    <Setter Property="BorderBrush" Value="{x:Static local:Globals.SM_ButtonMOBorderBrush}"/>
+                    <Setter Property="Background" Value="{x:Static local:MyColors.SM_ButtonMOBackground}"/>
+                    <Setter Property="Foreground" Value="{x:Static local:MyColors.SM_ButtonMOForeground}"/>
+                    <Setter Property="BorderBrush" Value="{x:Static local:MyColors.SM_ButtonMOBorderBrush}"/>
                 </Trigger>
             </Style.Triggers>
         </Style>
@@ -69,64 +92,64 @@
 
         <Style x:Key="btn_Main" TargetType="{x:Type Button}" BasedOn="{StaticResource btn}">
             <Setter Property="Margin" Value="20"/>
-            <Setter Property="Background" Value="{x:Static local:Globals.App_ButtonBackground}"/>
-            <Setter Property="Foreground" Value="{x:Static local:Globals.App_ButtonForeground}"/>
-            <Setter Property="BorderBrush" Value="{x:Static local:Globals.App_ButtonBorderBrush}"/>
-            <Setter Property="BorderThickness" Value="{x:Static local:Globals.App_ButtonBorderThickness}"/>
+            <Setter Property="Background" Value="{x:Static local:MyColors.App_ButtonBackground}"/>
+            <Setter Property="Foreground" Value="{x:Static local:MyColors.App_ButtonForeground}"/>
+            <Setter Property="BorderBrush" Value="{x:Static local:MyColors.App_ButtonBorderBrush}"/>
+            <Setter Property="BorderThickness" Value="{x:Static local:MyColors.App_ButtonBorderThickness}"/>
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="{x:Static local:Globals.App_ButtonMOBackground}"/>
-                    <Setter Property="Foreground" Value="{x:Static local:Globals.App_ButtonMOForeground}"/>
-                    <Setter Property="BorderBrush" Value="{x:Static local:Globals.App_ButtonMOBorderBrush}"/>
+                    <Setter Property="Background" Value="{x:Static local:MyColors.App_ButtonMOBackground}"/>
+                    <Setter Property="Foreground" Value="{x:Static local:MyColors.App_ButtonMOForeground}"/>
+                    <Setter Property="BorderBrush" Value="{x:Static local:MyColors.App_ButtonMOBorderBrush}"/>
                 </Trigger>
             </Style.Triggers>
         </Style>
-        
+
 
 
         <Style x:Key="btn_SmallIcon" TargetType="{x:Type Button}" BasedOn="{StaticResource btn_Main}">
             <Setter Property="Margin" Value="15"/>
             <Setter Property="Width" Value="40"/>
             <Setter Property="Height" Value="40"/>
-            <Setter Property="BorderBrush" Value="{x:Static local:Globals.App_ButtonSmallBorderBrush}"/>
-            <Setter Property="BorderThickness" Value="{x:Static local:Globals.App_ButtonSmallBorderThickness}"/>
+            <Setter Property="BorderBrush" Value="{x:Static local:MyColors.App_ButtonSmallBorderBrush}"/>
+            <Setter Property="BorderThickness" Value="{x:Static local:MyColors.App_ButtonSmallBorderThickness}"/>
         </Style>
 
         <Style x:Key="btn_hamburgeritem" TargetType="{x:Type Button}" BasedOn="{StaticResource btn_Main}">
-            <Setter Property="Background" Value="{x:Static local:Globals.MW_ButtonHamburgerMenuBackground}"/>
-            <Setter Property="Foreground" Value="{x:Static local:Globals.MW_ButtonHamburgerMenuForeground}"/>
-            <Setter Property="BorderBrush" Value="{x:Static local:Globals.MW_ButtonHamburgerMenuBorderBrush}"/>
-            <Setter Property="BorderThickness" Value="{x:Static local:Globals.MW_ButtonHamburgerMenuBorderThickness}"/>
+            <Setter Property="Background" Value="{x:Static local:MyColors.MW_ButtonHamburgerMenuBackground}"/>
+            <Setter Property="Foreground" Value="{x:Static local:MyColors.MW_ButtonHamburgerMenuForeground}"/>
+            <Setter Property="BorderBrush" Value="{x:Static local:MyColors.MW_ButtonHamburgerMenuBorderBrush}"/>
+            <Setter Property="BorderThickness" Value="{x:Static local:MyColors.MW_ButtonHamburgerMenuBorderThickness}"/>
             <Setter Property="Margin" Value="0,6"/>
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="{x:Static local:Globals.MW_ButtonHamburgerMenuMOBackground}"/>
-                    <Setter Property="Foreground" Value="{x:Static local:Globals.MW_ButtonHamburgerMenuMOForeground}"/>
-                    <Setter Property="BorderBrush" Value="{x:Static local:Globals.MW_ButtonHamburgerMenuMOBorderBrush}"/>
+                    <Setter Property="Background" Value="{x:Static local:MyColors.MW_ButtonHamburgerMenuMOBackground}"/>
+                    <Setter Property="Foreground" Value="{x:Static local:MyColors.MW_ButtonHamburgerMenuMOForeground}"/>
+                    <Setter Property="BorderBrush" Value="{x:Static local:MyColors.MW_ButtonHamburgerMenuMOBorderBrush}"/>
                 </Trigger>
             </Style.Triggers>
         </Style>
 
         <Style x:Key="btn_hamburgeritem_selected" TargetType="{x:Type Button}" BasedOn="{StaticResource btn_hamburgeritem}">
-            <Setter Property="Background" Value="{x:Static local:Globals.MW_ButtonHamburgerMenuMOBackground}"/>
-            <Setter Property="Foreground" Value="{x:Static local:Globals.MW_ButtonHamburgerMenuMOForeground}"/>
-            <Setter Property="BorderBrush" Value="{x:Static local:Globals.MW_ButtonHamburgerMenuMOBorderBrush}"/>
-            <Setter Property="BorderThickness" Value="{x:Static local:Globals.MW_ButtonHamburgerMenuBorderThickness}"/>
+            <Setter Property="Background" Value="{x:Static local:MyColors.MW_ButtonHamburgerMenuMOBackground}"/>
+            <Setter Property="Foreground" Value="{x:Static local:MyColors.MW_ButtonHamburgerMenuMOForeground}"/>
+            <Setter Property="BorderBrush" Value="{x:Static local:MyColors.MW_ButtonHamburgerMenuMOBorderBrush}"/>
+            <Setter Property="BorderThickness" Value="{x:Static local:MyColors.MW_ButtonHamburgerMenuBorderThickness}"/>
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
-                    <!--<Setter Property="Background" Value="{x:Static local:Globals.MW_ButtonHamburgerMenuBackground}"/>
-                    <Setter Property="Foreground" Value="{x:Static local:Globals.MW_ButtonHamburgerMenuForeground}"/>
-                    <Setter Property="BorderBrush" Value="{x:Static local:Globals.MW_ButtonHamburgerMenuBorderBrush}"/>-->
+                    <!--<Setter Property="Background" Value="{x:Static local:MyColors.MW_ButtonHamburgerMenuBackground}"/>
+                    <Setter Property="Foreground" Value="{x:Static local:MyColors.MW_ButtonHamburgerMenuForeground}"/>
+                    <Setter Property="BorderBrush" Value="{x:Static local:MyColors.MW_ButtonHamburgerMenuBorderBrush}"/>-->
                 </Trigger>
             </Style.Triggers>
         </Style>
 
         <Style x:Key="btn_gta" TargetType="{x:Type Button}" BasedOn="{StaticResource btn}">
-            <Setter Property="Background" Value="{x:Static local:Globals.MW_ButtonGTABackground}"/>
-            <Setter Property="Foreground" Value="{x:Static local:Globals.MW_ButtonGTAForeground}"/>
+            <Setter Property="Background" Value="{x:Static local:MyColors.MW_ButtonGTABackground}"/>
+            <Setter Property="Foreground" Value="{x:Static local:MyColors.MW_ButtonGTAForeground}"/>
             <Setter Property="FontSize" Value="18"/>
-            <Setter Property="BorderThickness" Value="{x:Static local:Globals.MW_ButtonGTABorderThickness}"/>
-            <Setter Property="BorderBrush" Value="{x:Static local:Globals.MW_ButtonGTAGameNotRunningBorderBrush}"/>
+            <Setter Property="BorderThickness" Value="{x:Static local:MyColors.MW_ButtonGTABorderThickness}"/>
+            <Setter Property="BorderBrush" Value="{x:Static local:MyColors.MW_ButtonGTAGameNotRunningBorderBrush}"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
@@ -142,8 +165,8 @@
             </Setter>
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="{x:Static local:Globals.MW_ButtonGTAMOBackground}"/>
-                    <Setter Property="Foreground" Value="{x:Static local:Globals.MW_ButtonGTAMOForeground}"/>
+                    <Setter Property="Background" Value="{x:Static local:MyColors.MW_ButtonGTAMOBackground}"/>
+                    <Setter Property="Foreground" Value="{x:Static local:MyColors.MW_ButtonGTAMOForeground}"/>
                 </Trigger>
             </Style.Triggers>
         </Style>
@@ -151,9 +174,9 @@
         <!--#endregion-->
 
         <Style x:Key="PU_btn" TargetType="Button">
-            <Setter Property="Background" Value="{x:Static local:Globals.PU_ButtonBackground}"/>
-            <Setter Property="Foreground" Value="{x:Static local:Globals.PU_ButtonForeground}"/>
-            <Setter Property="BorderBrush" Value="{x:Static local:Globals.PU_ButtonBorderBrush}"/>
+            <Setter Property="Background" Value="{x:Static local:MyColors.PU_ButtonBackground}"/>
+            <Setter Property="Foreground" Value="{x:Static local:MyColors.PU_ButtonForeground}"/>
+            <Setter Property="BorderBrush" Value="{x:Static local:MyColors.PU_ButtonBorderBrush}"/>
             <Setter Property="FontSize" Value="18"/>
             <Setter Property="FontFamily" Value="Tahoma"/>
             <Setter Property="Margin" Value="10"/>
@@ -162,7 +185,7 @@
                     <ControlTemplate TargetType="Button">
                         <Border Background="{TemplateBinding Background}"
                             CornerRadius="4"
-                            BorderThickness="{x:Static local:Globals.PU_ButtonBorderThickness}"
+                            BorderThickness="{x:Static local:MyColors.PU_ButtonBorderThickness}"
                             Padding="5"
                             BorderBrush="{TemplateBinding BorderBrush}">
                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
@@ -172,26 +195,26 @@
             </Setter>
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="{x:Static local:Globals.PU_ButtonMOBackground}"/>
-                    <Setter Property="Foreground" Value="{x:Static local:Globals.PU_ButtonMOForeground}"/>
-                    <Setter Property="BorderBrush" Value="{x:Static local:Globals.PU_ButtonMOBorderBrush}"/>
+                    <Setter Property="Background" Value="{x:Static local:MyColors.PU_ButtonMOBackground}"/>
+                    <Setter Property="Foreground" Value="{x:Static local:MyColors.PU_ButtonMOForeground}"/>
+                    <Setter Property="BorderBrush" Value="{x:Static local:MyColors.PU_ButtonMOBorderBrush}"/>
                 </Trigger>
             </Style.Triggers>
         </Style>
 
         <Style TargetType="TextBox" x:Key="tb">
             <Setter Property="Margin" Value="10,10,10,10"/>
-            <Setter Property="Background" Value="{x:Static local:Globals.MyColorOffWhite}"/>
-            <Setter Property="Foreground" Value="{x:Static local:Globals.MyColorOffBlack}"/>
+            <Setter Property="Background" Value="{x:Static local:MyColors.MyColorOffWhite}"/>
+            <Setter Property="Foreground" Value="{x:Static local:MyColors.MyColorOffBlack}"/>
             <Setter Property="MinHeight" Value="25"/>
             <Setter Property="MaxHeight" Value="25"/>
             <Setter Property="BorderThickness" Value="0"/>
         </Style>
 
         <Style x:Key="pb" TargetType="ProgressBar">
-            <Setter Property="Background" Value="{x:Static local:Globals.ProgressBarBackground}"/>
-            <Setter Property="Foreground" Value="{x:Static local:Globals.ProgressBarForeground}"/>
-            <Setter Property="BorderBrush" Value="{x:Static local:Globals.ProgressBarBorderBrush}"/>
+            <Setter Property="Background" Value="{x:Static local:MyColors.ProgressBarBackground}"/>
+            <Setter Property="Foreground" Value="{x:Static local:MyColors.ProgressBarForeground}"/>
+            <Setter Property="BorderBrush" Value="{x:Static local:MyColors.ProgressBarBorderBrush}"/>
             <Setter Property="BorderThickness" Value="2"/>
             <Setter Property="Minimum" Value="0"/>
             <Setter Property="Value" Value="0"/>
@@ -206,7 +229,7 @@
                     <ColumnDefinition />
                     <ColumnDefinition Width="0" />
                 </Grid.ColumnDefinitions>
-                <Border Grid.Column="0" CornerRadius="2" Margin="1" Background="{x:Static local:Globals.DropDownBackground}" BorderThickness="1" />
+                <Border Grid.Column="0" CornerRadius="2" Margin="1" Background="{x:Static local:MyColors.DropDownBackground}" BorderThickness="1" />
                 <Path x:Name="Arrow" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Data="M 0 0 L 4 4 L 8 0 Z"/>
             </Grid>
         </ControlTemplate>
@@ -219,14 +242,14 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="ComboBox">
-                        <Border BorderThickness="1" BorderBrush="{x:Static local:Globals.DropDownBorderBrush}">
+                        <Border BorderThickness="1" BorderBrush="{x:Static local:MyColors.DropDownBorderBrush}">
                             <Grid>
                                 <ToggleButton Name="ToggleButton" Template="{StaticResource ComboBoxToggleButton}" Grid.Column="2" Focusable="false" IsChecked="{Binding Path=IsDropDownOpen,Mode=TwoWay,RelativeSource={RelativeSource TemplatedParent}}" ClickMode="Press"/>
                                 <ContentPresenter Name="ContentSite" IsHitTestVisible="False" Margin="3,3,23,3" VerticalAlignment="Center" Content="{TemplateBinding ComboBox.SelectionBoxItem}" ContentTemplate="{TemplateBinding ComboBox.SelectionBoxItemTemplate}" ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}" HorizontalAlignment="Left"/>
                                 <TextBox x:Name="PART_EditableTextBox" Style="{x:Null}" Template="{StaticResource ComboBoxTextBox}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="3,3,23,3" Focusable="True" Visibility="Hidden" IsReadOnly="{TemplateBinding IsReadOnly}"/>
                                 <Popup Name="Popup" Placement="Bottom" IsOpen="{TemplateBinding IsDropDownOpen}" AllowsTransparency="True" Focusable="False" PopupAnimation="Slide">
                                     <Grid Name="DropDown" SnapsToDevicePixels="True" MinWidth="{TemplateBinding ActualWidth}" MaxHeight="{TemplateBinding MaxDropDownHeight}">
-                                        <Border x:Name="DropDownBorder" Background="{x:Static local:Globals.DropDownPopDownBackground}" BorderThickness="1" CornerRadius="2" Margin="1" />
+                                        <Border x:Name="DropDownBorder" Background="{x:Static local:MyColors.DropDownPopDownBackground}" BorderThickness="1" CornerRadius="2" Margin="1" />
                                         <ScrollViewer Margin="4,6,4,6" SnapsToDevicePixels="True">
                                             <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Contained"/>
                                         </ScrollViewer>
@@ -237,20 +260,14 @@
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
-            <Setter Property="Foreground" Value="{x:Static local:Globals.DropDownForeground}"/>
+            <Setter Property="Foreground" Value="{x:Static local:MyColors.DropDownForeground}"/>
             <Style.Triggers>
             </Style.Triggers>
         </Style>
 
 
 
-        <ContextMenu x:Key="ContextMenuKeyDataGrid">
-            <MenuItem Header="HeaderDataGrid"/>
-        </ContextMenu>
 
-        <ContextMenu x:Key="ContextMenuKeyDataGridCell">
-            <MenuItem Header="HeaderDataGridCell"/>
-        </ContextMenu>
 
         <Style x:Key="dg" TargetType="DataGrid">
             <!--<Setter Property="ContextMenu" Value="{StaticResource ContextMenuKeyDataGrid}"/>-->
@@ -262,20 +279,20 @@
             <Setter Property="SelectionMode" Value="Single"/>
             <Setter Property="CanUserDeleteRows" Value="False"/>
             <Setter Property="AlternationCount" Value="2"/>
-            <Setter Property="AlternatingRowBackground" Value="{x:Static local:Globals.SFH_DGAlternateRowBackground}"/>
-            <Setter Property="RowBackground" Value="{x:Static local:Globals.SFH_DGRowBackground}"/>
-            <Setter Property="Foreground" Value="{x:Static local:Globals.SFH_DGForeground}"/>
+            <Setter Property="AlternatingRowBackground" Value="{x:Static local:MyColors.SFH_DGAlternateRowBackground}"/>
+            <Setter Property="RowBackground" Value="{x:Static local:MyColors.SFH_DGRowBackground}"/>
+            <Setter Property="Foreground" Value="{x:Static local:MyColors.SFH_DGForeground}"/>
             <Setter Property="Background" Value="Transparent"/>
             <Style.Resources>
                 <Style TargetType="{x:Type DataGridCell}">
-                    <Setter Property="BorderBrush" Value="{x:Static local:Globals.SFH_DGCellBorderBrush}"/>
-                    <Setter Property="BorderThickness" Value="{x:Static local:Globals.SFH_DGCellBorderThickness}"/>
+                    <Setter Property="BorderBrush" Value="{x:Static local:MyColors.SFH_DGCellBorderBrush}"/>
+                    <Setter Property="BorderThickness" Value="{x:Static local:MyColors.SFH_DGCellBorderThickness}"/>
                     <Style.Triggers>
                         <Trigger Property="DataGridCell.IsSelected" Value="True">
-                            <Setter Property="Background" Value="{x:Static local:Globals.SFH_DGSelectedBackground}" />
-                            <Setter Property="Foreground" Value="{x:Static local:Globals.SFH_DGSelectedForeground}" />
-                            <Setter Property="BorderBrush" Value="{x:Static local:Globals.SFH_DGSelectedBorderBrush}" />
-                            <Setter Property="BorderThickness" Value="{x:Static local:Globals.SFH_DGSelectedBorderThickness}" />
+                            <Setter Property="Background" Value="{x:Static local:MyColors.SFH_DGSelectedBackground}" />
+                            <Setter Property="Foreground" Value="{x:Static local:MyColors.SFH_DGSelectedForeground}" />
+                            <Setter Property="BorderBrush" Value="{x:Static local:MyColors.SFH_DGSelectedBorderBrush}" />
+                            <Setter Property="BorderThickness" Value="{x:Static local:MyColors.SFH_DGSelectedBorderThickness}" />
                         </Trigger>
                     </Style.Triggers>
                     <!--<Setter Property="ContextMenu" Value="{StaticResource ContextMenuKeyDataGridCell}"/>-->
@@ -283,6 +300,45 @@
             </Style.Resources>
         </Style>
 
+        <ContextMenu x:Key="ContextMenuKeyDataGrid">
+            <MenuItem Header="HeaderDataGrid"/>
+        </ContextMenu>
+
+        <ContextMenu x:Key="ContextMenuKeyDataGridCell">
+            <MenuItem Header="HeaderDataGridCell"/>
+        </ContextMenu>
+
+        <Style x:Key="dg_cm" TargetType="DataGrid">
+            <!--<Setter Property="ContextMenu" Value="{StaticResource ContextMenuKeyDataGrid}"/>-->
+            <Setter Property="RowHeight" Value="35"/>
+            <Setter Property="CanUserResizeColumns" Value="False"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="HeadersVisibility" Value="None"/>
+            <Setter Property="AutoGenerateColumns" Value="False"/>
+            <Setter Property="SelectionMode" Value="Single"/>
+            <Setter Property="CanUserDeleteRows" Value="False"/>
+            <Setter Property="AlternationCount" Value="2"/>
+            <Setter Property="AlternatingRowBackground" Value="{x:Static local:MyColors.SFH_DGAlternateRowBackground}"/>
+            <Setter Property="RowBackground" Value="{x:Static local:MyColors.SFH_DGRowBackground}"/>
+            <Setter Property="Foreground" Value="{x:Static local:MyColors.SFH_DGForeground}"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Style.Resources>
+                <Style TargetType="{x:Type DataGridCell}">
+                    <Setter Property="ToolTip" Value="{Binding RelativeSource={RelativeSource Self},Path=Content.Text}"/>
+                    <Setter Property="BorderBrush" Value="{x:Static local:MyColors.SFH_DGCellBorderBrush}"/>
+                    <Setter Property="BorderThickness" Value="{x:Static local:MyColors.SFH_DGCellBorderThickness}"/>
+                    <!--<Setter Property="ContextMenu" Value="{StaticResource ContextMenuKeyDataGridCell}"/>-->
+                    <Style.Triggers>
+                        <Trigger Property="DataGridCell.IsSelected" Value="True">
+                            <Setter Property="Background" Value="{x:Static local:MyColors.SFH_DGSelectedBackground}" />
+                            <Setter Property="Foreground" Value="{x:Static local:MyColors.SFH_DGSelectedForeground}" />
+                            <Setter Property="BorderBrush" Value="{x:Static local:MyColors.SFH_DGSelectedBorderBrush}" />
+                            <Setter Property="BorderThickness" Value="{x:Static local:MyColors.SFH_DGSelectedBorderThickness}" />
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </Style.Resources>
+        </Style>
 
         <!--Scrollbar Thumbs-->
         <Style x:Key="ScrollThumbs" TargetType="{x:Type Thumb}">
@@ -307,7 +363,7 @@
         <!--ScrollBars-->
         <Style x:Key="{x:Type ScrollBar}" TargetType="{x:Type ScrollBar}">
             <Setter Property="Stylus.IsFlicksEnabled" Value="false" />
-            <Setter Property="Foreground" Value="{x:Static local:Globals.App_ScrollViewerForeground}" />
+            <Setter Property="Foreground" Value="{x:Static local:MyColors.App_ScrollViewerForeground}" />
             <Setter Property="Background" Value="Transparent" />
             <Setter Property="Width" Value="12" />
             <Setter Property="Template">
@@ -369,8 +425,17 @@
             <Setter Property="HorizontalAlignment" Value="Stretch"/>
             <Setter Property="VerticalAlignment" Value="Stretch"/>
             <Setter Property="Margin" Value="0"/>
-            <Setter Property="Background" Value="{x:Static local:Globals.SE_Lbl_Header_Background}"/>
-            <Setter Property="Foreground" Value="{x:Static local:Globals.SE_Lbl_Header_Foreground}"/>
+            <Setter Property="Background" Value="{x:Static local:MyColors.SE_Lbl_Header_Background}"/>
+            <Setter Property="Foreground" Value="{x:Static local:MyColors.SE_Lbl_Header_Foreground}"/>
+            <Setter Property="FontSize" Value="20"/>
+        </Style>
+
+        <Style x:Key="btn_Set_Header" TargetType="Button" BasedOn="{StaticResource btn}">
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="VerticalAlignment" Value="Stretch"/>
+            <Setter Property="Margin" Value="0"/>
+            <Setter Property="Background" Value="{x:Static local:MyColors.SE_Lbl_Header_Background}"/>
+            <Setter Property="Foreground" Value="{x:Static local:MyColors.SE_Lbl_Header_Foreground}"/>
             <Setter Property="FontSize" Value="20"/>
         </Style>
 
@@ -389,6 +454,21 @@
             <Setter Property="BorderBrush" Value="Transparent"/>
         </Style>
 
+        <Style x:Key="btn_CM_Action" TargetType="Button" BasedOn="{StaticResource btn_SE_Path}">
+            <Setter Property="Margin" Value="10,15"/>
+        </Style>
+
+        <Style x:Key="btn_CM_Action_Disabled" TargetType="Button" BasedOn="{StaticResource btn_SE_Path}">
+            <Setter Property="Margin" Value="10,15"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <!--<Setter Property="Background" Value="{x:Static local:MyColors.SM_ButtonMOBackground}"/>
+                    <Setter Property="Foreground" Value="{x:Static local:MyColors.SM_ButtonMOForeground}"/>
+                    <Setter Property="BorderBrush" Value="{x:Static local:MyColors.SM_ButtonMOBorderBrush}"/>-->
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
         <Style x:Key="btn_cb" TargetType="Button" BasedOn="{StaticResource btn}">
             <Setter Property="Height" Value="28"/>
             <Setter Property="Width" Value="28"/>
@@ -396,6 +476,94 @@
             <Setter Property="HorizontalAlignment" Value="Center"/>
             <Setter Property="BorderThickness" Value="0"/>
         </Style>
+
+        <Style x:Key="SliderThumbStyle" TargetType="Thumb">
+            <Setter Property="SnapsToDevicePixels" Value="true"/>
+            <Setter Property="OverridesDefaultStyle" Value="false"/>
+            <Setter Property="Height" Value="18"/>
+            <Setter Property="Width" Value="18"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Thumb">
+                        <Ellipse  Stroke="Black"
+                          StrokeThickness="1"
+                          Name="Ellipse" 
+                          Fill="{x:Static local:MyColors.NO_Slider_Thumb_Brush}" />
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Ellipse" Property="Fill" Value="{x:Static local:MyColors.NO_Slider_Thumb_MO_Brush}"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="false">
+                                <Setter TargetName="Ellipse" Property="Fill" Value="Gray"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="Slider" x:Key="SliderStyle">
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="OverridesDefaultStyle" Value="true"/>
+            <Setter Property="Minimum" Value="0"/>
+            <Setter Property="Maximum" Value="100"/>
+            <Setter Property="TickPlacement" Value="BottomRight"/>
+            <Setter Property="IsSnapToTickEnabled" Value="True"/>
+            <Setter Property="TickFrequency" Value="10"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Slider">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto" />
+                                <RowDefinition Height="auto" Name="row" />
+                                <RowDefinition Height="auto" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto" />
+                                <ColumnDefinition Width="*" Name="column" />
+                                <ColumnDefinition Width="auto" />
+                            </Grid.ColumnDefinitions>
+                            <Border Name="PART_Border"
+                           BorderBrush="Black" BorderThickness="1"
+                           Padding="2"
+                          Grid.Row="1" Grid.Column="1"
+                           Width="{TemplateBinding Width}"
+                           Height="{TemplateBinding Height}"
+                           Background="{x:Static local:MyColors.NO_Slider_Track_Brush}"
+                           HorizontalAlignment="Stretch"
+                           VerticalAlignment="Center" />
+                            <Track Name="PART_Track"
+                              HorizontalAlignment="Stretch"
+                              VerticalAlignment="Center"
+                              Grid.Row="1" Grid.Column="1"
+                              Width="{TemplateBinding Width}"
+                              Height="{TemplateBinding Height}">
+                                <Track.Thumb>
+                                    <Thumb Style="{StaticResource SliderThumbStyle}" />
+                                </Track.Thumb>
+                            </Track>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+
+        <!--<Style x:Key="MyColorPicker" TargetType="xctk:ColorPicker">
+            <Setter Property="ColorMode" Value="ColorCanvas"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="2"/>
+            <Setter Property="BorderBrush" Value="{x:Static local:MyColors.MyColorOffWhite}"/>
+            <Setter Property="Margin" Value="10"/>
+            <Setter Property="DropDownBackground" Value="{x:Static local:MyColors.MyColorOffBlack}"/>
+            <Setter Property="Foreground" Value="{x:Static local:MyColors.MyColorOffWhite}"/>
+            <Setter Property="ShowStandardColors" Value="False"/>
+            <Setter Property="ShowTabHeaders" Value="False"/>
+            <Setter Property="ShowDropDownButton" Value="False"/>
+        </Style>-->
 
     </Application.Resources>
 </Application>

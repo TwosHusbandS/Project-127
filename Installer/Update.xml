@@ -1,39 +1,42 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <item>
-  <version>1.0.0.2</version>
-  <url>https://raw.githubusercontent.com/TwosHusbandS/Project-127/master/Installer/Project_127_Installer_V_1_0_0_2.exe</url>
-  <authuser>https://raw.githubusercontent.com/TwosHusbandS/Project-127/master/Installer/AuthUser.txt</authuser>
-  <announcement></announcement>
+  <version>1.1.0.0</version>
+  <url>https://github.com/TwosHusbandS/Project-127/raw/master/Installer/Project_127_Installer_V_1_1_0_0.exe</url>
   <buildversiontable>
-1.0.323.0;1.24:
-1.0.350.0;1.26:
-1.0.372.0;1.27:
-1.0.393.0;1.28:
-1.0.463.0;1.29:
-1.0.505.0;1.30:
-1.0.573.0;1.31:
-1.0.617.0;1.32:
-1.0.678.0;1.33:
-1.0.757.0;1.34:
-1.0.757.0;1.34:
-1.0.791.0;1.35:
-1.0.877.0;1.36:
-1.0.944.0;1.37:
-1.0.1011.0;1.38:
-1.0.1032.0;1.39:
-1.0.1103.0;1.40:
-1.0.1180.0;1.41:
-1.0.1290.0;1.42:
-1.0.1365.0;1.43:
-1.0.1493.0;1.44:
-1.0.1604.0;1.46:
-1.0.1734.0;1.47:
-1.0.1737.0;1.48:
-1.0.1868.0;1.50:
-1.0.2060.0;1.51:
-1.0.2060.1;1.52:
-1.0.2189.0;1.53:
+    1.0.323.0;1.24:
+    1.0.350.0;1.26:
+    1.0.372.0;1.27:
+    1.0.393.0;1.28:
+    1.0.463.0;1.29:
+    1.0.505.0;1.30:
+    1.0.573.0;1.31:
+    1.0.617.0;1.32:
+    1.0.678.0;1.33:
+    1.0.757.0;1.34:
+    1.0.757.0;1.34:
+    1.0.791.0;1.35:
+    1.0.877.0;1.36:
+    1.0.944.0;1.37:
+    1.0.1011.0;1.38:
+    1.0.1032.0;1.39:
+    1.0.1103.0;1.40:
+    1.0.1180.0;1.41:
+    1.0.1290.0;1.42:
+    1.0.1365.0;1.43:
+    1.0.1493.0;1.44:
+    1.0.1604.0;1.46:
+    1.0.1734.0;1.47:
+    1.0.1737.0;1.48:
+    1.0.1868.0;1.50:
+    1.0.2060.0;1.51:
+    1.0.2060.1;1.52:
+    1.0.2189.0;1.53:
   </buildversiontable>
+  <announcement></announcement>
+  <tease>true</tease>
+  <specialbuildname></specialbuildname>
+  <comment>Backwards Compability</comment>
+  <authuser>https://raw.githubusercontent.com/TwosHusbandS/Project-127/master/Installer/AuthUser.txt</authuser>
   <DLLinkG>https://github.com/TwosHusbandS/Project-127/releases/download/V_Final/file.g</DLLinkG>
   <DLLinkGHash>5c706e27f1f204050450839f24e12c8a</DLLinkGHash>
   <DLLinkU>https://github.com/TwosHusbandS/Project-127/releases/download/V_Final/file.u</DLLinkU>
@@ -43,7 +46,6 @@
   <zip>https://gtav.anushk.net/Project_127_Files_V12_Big.zip</zip>
   <bigzipmd5>ffd3bcb436f8de26d84c30075403b7e1</bigzipmd5>
   <zipversion>12</zipversion>
-  <comment>We need a "complete" ZIP above in a "zip" Tag, for old Versions. Atleast for now.</comment>
   <zipmd5>d6337904f957a64f34f4451be51b14b6</zipmd5>
   <zip0>https://gtav.anushk.net/Project_127_Files_V12_Small.zip</zip0>
   <zip1>https://anonfiles.com/naO8d1q2pd/Project_127_Files_V12_Small_zip</zip1>
