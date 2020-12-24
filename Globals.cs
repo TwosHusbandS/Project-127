@@ -488,6 +488,8 @@ namespace Project_127
 							HelperClasses.FileHandling.deleteFile(file);
 						}
 					}
+					HelperClasses.RegeditHandler.SetValue("TeasingFeatures", "True");
+					// Create Registry Key here...
 				}
 
 				Settings.LastLaunchedVersion = Globals.ProjectVersion;
@@ -660,6 +662,14 @@ namespace Project_127
 		public static void CheckForUpdate()
 		{
 			string XML_Autoupdate_Temp = XML_AutoUpdate;
+
+			// CTRLF CTRL F CTRL-F REMOVE THIS TODO TO DO
+			string tease = HelperClasses.FileHandling.GetXMLTagContent(XML_Autoupdate_Temp, "tease");
+			if (tease.ToLower() != "true")
+			{
+				// if user gets here from settings click...button will be there until refresh or reload...what evs.
+				HelperClasses.RegeditHandler.DeleteValue("TeasingFeatures");
+			}
 
 			HelperClasses.BuildVersionTable.ReadFromGithub();
 
@@ -1345,7 +1355,7 @@ namespace Project_127
 				{
 					HelperClasses.Logger.Log("Found exe File ('" + myFile + "'). Will delete it.");
 					HelperClasses.FileHandling.deleteFile(myFile);
-				} 
+				}
 				if (myFile.ToLower().Contains("dl.zip"))
 				{
 					HelperClasses.Logger.Log("Found zip File ('DL.ZIP'). Will delete it.");

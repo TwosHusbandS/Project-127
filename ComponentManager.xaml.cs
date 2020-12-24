@@ -519,7 +519,10 @@ namespace Project_127
 		/// <returns></returns>
 		public static bool Install(this ComponentManager.Components Component)
 		{
-			return Globals.MyDM.getSubassembly(Component.GetAssemblyName()).GetAwaiter().GetResult();
+			bool tmp;
+			tmp = Globals.MyDM.getSubassembly(Component.GetAssemblyName()).GetAwaiter().GetResult();
+			Globals.DebugPopup(tmp.ToString());
+			return tmp;
 		}
 
 		/// <summary>

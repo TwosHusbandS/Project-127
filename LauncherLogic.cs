@@ -252,32 +252,17 @@ namespace Project_127
 					// if not downgraded
 					else
 					{
-						if (SizeOfGTAV == SizeOfDowngradeEmuGTAV || 
-							SizeOfGTAV == SizeOfDowngradeAlternativeSteam124GTAV || 
-							SizeOfGTAV == SizeOfDowngradeAlternativeRockstar124GTAV || 
-							SizeOfGTAV == SizeOfDowngradeAlternativeSteam127GTAV || 
-							SizeOfGTAV == SizeOfDowngradeAlternativeRockstar127GTAV ||
-							SizeOfGTAV == SizeOfDowngradeAlternativeRockstar124GTAV)
+						if (SizeOfGTAV > 0 && SizeOfUpdate > 0 && SizeOfPlayGTAV > 0)
 						{
-							return InstallationStates.Unsure;
-						}
-						else
-						{
-							if (SizeOfUpgradedGTAV > 0 && SizeOfUpgradedUpdate > 0)
+							FileVersionInfo FVI = FileVersionInfo.GetVersionInfo(GTAVFilePath.TrimEnd('\\') + @"\GTA5.exe");
+							if (new Version(BuildVersionTable.GetNiceGameVersionString(new Version(FVI.FileVersion))) > new Version(1, 30))
 							{
 								return InstallationStates.Upgraded;
-							}
-							else
-							{
-								return InstallationStates.Unsure;
-							}
+							} 
 						}
 					}
 				}
-				else
-				{
-					return InstallationStates.Unsure;
-				}
+				return InstallationStates.Unsure;
 			}
 		}
 

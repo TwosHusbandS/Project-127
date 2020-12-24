@@ -112,9 +112,10 @@
                             <Button Grid.Row="8" Grid.Column="1" x:Name="btn_cb_Set_CopyFilesInsteadOfSyslinking_SocialClub" Style="{StaticResource btn_cb}" Click="btn_cb_Click"  MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
 
                             <Rectangle x:Name="Rect_HideOptions_AllLaunchThroughSocialClubThings" Grid.Row="6" Grid.RowSpan="3" Grid.Column="0" Grid.ColumnSpan="2" Fill="{x:Static local:MyColors.MyColorOffWhite85}" ToolTip="Non effective when on Epic"/>
-                            <Rectangle x:Name="Rect_HideOptions_Tease" Grid.Row="6" Grid.RowSpan="3" Grid.Column="0" Grid.ColumnSpan="2" Fill="{x:Static local:MyColors.MyColorOffWhite85}" ToolTip="Teasing new features..."/>
+                            <Rectangle x:Name="Rect_HideOptions_Tease" Grid.Row="6" Grid.RowSpan="3" Grid.Column="0" Grid.ColumnSpan="2" />
                             <Rectangle x:Name="Rect_HideOptions_LaunchThroughSocialClubOptions" Grid.Row="7" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="2" Fill="{x:Static local:MyColors.MyColorOffWhite85}" ToolTip="Non effective when not launching through Social Club"/>
 
+                            <Button x:Name="Rect_HideOptions_ClosedBetaSocialClubLaunch" Style="{StaticResource btn_Set_Header}" Margin="0" Grid.Row="6" Grid.RowSpan="3" Grid.Column="0" Grid.ColumnSpan="2" Background="{x:Static local:MyColors.MyColorOffWhite85}" Foreground="Transparent" BorderThickness="0" ToolTip="Not quite ready yet..." MouseRightButtonDown="Rect_HideOptions_ClosedBetaSocialClubLaunch_MouseRightButtonDown"/>
 
                             <Label Grid.Row="9" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Start P127: "/>
                             <ComboBox Grid.Row="9" Grid.Column="1" Margin="10,5" Style="{StaticResource cobo}" x:Name="combox_Set_StartWays" SelectionChanged="combox_Set_StartWays_SelectionChanged"/>

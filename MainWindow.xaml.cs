@@ -38,15 +38,19 @@ Deploy Instructions:
 Comments like "TODO", "TO DO", "CTRLF", "CTRL-F", and "CTRL F" are just ways of finding a specific line quickly via searching
 
 Hybrid code can be found in AAA_HybridCode.
-			
+		
+// Remove Hide_Features stuff for social club launch from:
+// Update check on XML
+// Settings XML
+
 To Do before 1.1:
 - Fix ReadMe:
 		=> signature thingies
 		=> links (relative links for installer stuff, relative link for license)
 		=> license
 		=> Programming language
- - Installer, test installer
-
+- Waiting for Dragons Fixes to not make it 404 on crashes...
+- Upgrade needs to loop through downgrade AND UPGRADES Files...
  */
 
 using System;
@@ -217,11 +221,6 @@ namespace Project_127
 			StartDispatcherTimer();
 
 			StartMTLDispatcherTimer();
-
-			HelperClasses.Logger.Log("#" + HelperClasses.FileHandling.GetHashFromFile(@"C:\Users\ingow\Downloads\Anhänge_20201220\New folder\ADDITIONAL_SAFEFILES_V_1_1.zip").ToUpper() + "#");
-			HelperClasses.Logger.Log("#" + HelperClasses.FileHandling.GetHashFromFile(@"C:\Users\ingow\Downloads\Anhänge_20201220\New folder\ADDITIONAL_SAFEFILES_V_1_1.zip") + "#");
-			HelperClasses.Logger.Log("#" + HelperClasses.FileHandling.GetHashFromFile(@"C:\Users\ingow\Downloads\Anhänge_20201220\New folder\ADDITIONAL_SAFEFILES_V_1_1.zip") + "#");
-			HelperClasses.Logger.Log("#" + HelperClasses.FileHandling.GetHashFromFile(@"C:\Users\ingow\Downloads\Anhänge_20201220\New folder\ADDITIONAL_SAFEFILES_V_1_1.zip") + "#");
 
 			HelperClasses.Logger.Log("Only CEF Init to go...");
 
