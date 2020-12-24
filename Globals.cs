@@ -663,14 +663,6 @@ namespace Project_127
 		{
 			string XML_Autoupdate_Temp = XML_AutoUpdate;
 
-			// CTRLF CTRL F CTRL-F REMOVE THIS TODO TO DO
-			string tease = HelperClasses.FileHandling.GetXMLTagContent(XML_Autoupdate_Temp, "tease");
-			if (tease.ToLower() != "true")
-			{
-				// if user gets here from settings click...button will be there until refresh or reload...what evs.
-				HelperClasses.RegeditHandler.DeleteValue("TeasingFeatures");
-			}
-
 			HelperClasses.BuildVersionTable.ReadFromGithub();
 
 			// Check online File for Version.

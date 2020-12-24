@@ -924,11 +924,6 @@ namespace Project_127.MySettings
 		{
 			Rect_HideOptions_Tease.Visibility = Visibility.Hidden;
 
-			if (HelperClasses.RegeditHandler.GetValue("TeasingFeatures") != "True")
-			{
-				Rect_HideOptions_ClosedBetaSocialClubLaunch.Visibility = Visibility.Hidden;
-			}
-
 			if (Settings.EnableOverlay)
 			{
 				Rect_HideOption_OverlayMM.Visibility = Visibility.Hidden;
