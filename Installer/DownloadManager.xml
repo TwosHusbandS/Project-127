@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <targets>
-    <subassembly name="AM_127_STEAM" root="DowngradeFiles_Alternative\steam\127\" version="0.0.3.0">
+    <subassembly name="AM_127_STEAM" root="DowngradeFiles_Alternative\steam\127\" version="0.0.3.1">
         <file name="GTAVLauncher.exe">
             <hash>7E7FC8E19887C6F8747A78921E532929</hash>
             <mirror>http://gtav.anushk.net/downloadManager/subassemblies/am127steam/GTAVLauncher.exe</mirror>
@@ -38,7 +38,7 @@
         </requires>
     </subassembly>
 
-    <subassembly name="AM_124_STEAM" root="DowngradeFiles_Alternative\steam\124\" version="0.0.3.0">
+    <subassembly name="AM_124_STEAM" root="DowngradeFiles_Alternative\steam\124\" version="0.0.3.1">
         <file name="GTAVLauncher.exe">
             <hash>A3941A72A65C5B93FF516552700F9D09</hash>
             <mirror>http://gtav.anushk.net/downloadManager/subassemblies/am124steam/GTAVLauncher.exe</mirror>
@@ -130,7 +130,7 @@
         </requires>
     </subassembly>
 
-    <subassembly name="AM_BASE_SUBASSEMBLY"  type="common" version="0.0.1.18">
+    <subassembly name="AM_BASE_SUBASSEMBLY"  type="common" version="0.0.1.19">
         <file name="bink2w64.dll">
             <hash>518C9DA8D048F1DB89E835254E369EE0</hash>
             <mirror>http://gtav.anushk.net/downloadManager/subassemblies/ambase/bink2w64.dll</mirror>
@@ -187,7 +187,7 @@
         <mirror>http://gtav.anushk.net/downloadManager/subassemblies/Downgraded_Socialclub.zip</mirror>
     </subassembly>
 
-    <subassembly name="STANDARD_BASE" root="DowngradeFiles\" version="1.12.0.0">
+    <subassembly name="STANDARD_BASE" root="DowngradeFiles\" version="1.13.0.0">
         <file name="PlayGTAV.exe" linked="true" subassembly="EMU_BASE_SUBASSEMBLY"/>
         <file name="launc.dll" linked="true" subassembly="EMU_BASE_SUBASSEMBLY"/>
         <file name="asmjit.dll" linked="true" subassembly="EMU_BASE_SUBASSEMBLY"/>
