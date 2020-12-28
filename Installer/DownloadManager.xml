@@ -19,7 +19,12 @@
         <folder name="update">
             <file name="update.rpf" linked="true" subassembly="127_BASE_SUBASSEMBLY"/>
         </folder>
-        
+
+        <file name="steam_appid.txt">
+          <hash>270A72E51E56508D77B916759E98E6C0</hash>
+          <mirror>http://gtav.anushk.net/downloadManager/subassemblies/am127steam/steam_appid.txt</mirror>
+        </file>
+      
         <file name="bink2w64.dll" linked="true" subassembly="AM_BASE_SUBASSEMBLY"/>
         <file name="launc.dll" linked="true" subassembly="AM_BASE_SUBASSEMBLY"/>
         <file name="GTAStub.exe" linked="true" subassembly="AM_BASE_SUBASSEMBLY"/>
@@ -53,6 +58,11 @@
             <file name="update.rpf" linked="true" subassembly="124_BASE_SUBASSEMBLY"/>
         </folder>
 
+        <file name="steam_appid.txt">
+            <hash>270A72E51E56508D77B916759E98E6C0</hash>
+            <mirror>http://gtav.anushk.net/downloadManager/subassemblies/am127steam/steam_appid.txt</mirror>
+        </file>
+      
         <file name="bink2w64.dll" linked="true" subassembly="AM_BASE_SUBASSEMBLY"/>
         <file name="launc.dll" linked="true" subassembly="AM_BASE_SUBASSEMBLY"/>
         <file name="GTAStub.exe" linked="true" subassembly="AM_BASE_SUBASSEMBLY"/>
@@ -126,7 +136,7 @@
             <mirror>http://gtav.anushk.net/downloadManager/subassemblies/ambase/bink2w64.dll</mirror>
         </file>
         <file name="launc.dll">
-            <hash>B5C3DD0106108D9CBFE3C98041D65B42</hash>
+            <hash>BB4D5FCA5C6B1560E8701177ACC405A6</hash>
             <mirror>http://gtav.anushk.net/downloadManager/subassemblies/ambase/launc.dll</mirror>
         </file>
         <file name="GTAStub.exe">
@@ -142,7 +152,7 @@
             <mirror>http://gtav.anushk.net/downloadManager/subassemblies/ambase/GTATW28D.dll</mirror>
         </file>-->
         <file name="stubpatch.dll">
-            <hash>2C16C2CE00B300FDFBCE565E04016EE1</hash>
+            <hash>6E9F77E10C0AE520A1EE53608886201B</hash>
             <mirror>http://gtav.anushk.net/downloadManager/subassemblies/ambase/stubpatch.dll</mirror>
         </file>
         <requires>
