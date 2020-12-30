@@ -345,7 +345,7 @@ namespace Project_127.Auth
 			HelperClasses.Logger.Log("Generating session...");
 			session = new sessionContainer(ticket, sessionKey, sessionTicket, machineHash, ctime, nick);
 			HelperClasses.Logger.Log("Session genned");
-			var res = await GenToken();
+			var res = await GenLaunchToken();
 			if (!res.error)
 			{
 				//string res = EntitlementDecrypt(v.text); // Not actual entitlements (yet)
@@ -366,14 +366,17 @@ namespace Project_127.Auth
 
 		public static async Task<bool> LoginMTL()
         {
-			var s = MTLAuth.GetMTLSession();
-			if (!s.isValid())
+#if DEBUG
+			HelperClasses.Logger.Log("Checking for MTL Session");
+#endif
+			var s = MTLInterface.GetMTLSession();
+			if (s == null || !s.isValid())
             {
 				return false;
             }
 			session = s;
 			HelperClasses.Logger.Log("Session retrieved");
-			var res = await GenToken();
+			var res = await GenLaunchToken();
 			if (!res.error)
 			{
 				HelperClasses.Logger.Log("Initial token generation success, ownership verification successful");
@@ -389,23 +392,17 @@ namespace Project_127.Auth
 
 		}
 
-		/// <summary>
-		/// Generates a token for the GTA Launcher
-		/// </summary>
-		public static async Task<tokenGenResponse> GenToken()
-		{
+		private static async Task<tokenGenResponse> GenTitleAccessToken(byte[] challenge)
+        {
 			tokenGenResponse tgr = new tokenGenResponse();
 
-			if (!session.isValid())
+			if (session == null || !session.isValid())
 			{
 				tgr.status = 0;
 				tgr.text = "Session Expired";
 				return tgr;
 			}
 
-			var RNG = new RNGCryptoServiceProvider();
-			var challenge = new byte[8];
-			RNG.GetBytes(challenge);
 			byte[] reqBody = EncryptROSData(BuildPostString(
 						new Dictionary<string, string>{
 							{ "ticket", session.ticket },
@@ -443,159 +440,215 @@ namespace Project_127.Auth
 				tgr.status = (int)res.StatusCode;
 				return tgr;
 			}
-			else
-			{
-				byte[] rawResp = res.Content.ReadAsByteArrayAsync().Result;
-				string xmldoc = Encoding.UTF8.GetString(DecryptROSData(rawResp, rawResp.Length, session.sessionKey));
-				var xml = new XPathDocument(new StringReader(xmldoc));
-				var nav = xml.CreateNavigator();
+			byte[] rawResp = res.Content.ReadAsByteArrayAsync().Result;
+			string xmldoc = Encoding.UTF8.GetString(DecryptROSData(rawResp, rawResp.Length, session.sessionKey));
+			var xml = new XPathDocument(new StringReader(xmldoc));
+			var nav = xml.CreateNavigator();
 
-				if (NavGetOrDefault(nav, "//*[local-name()='Response']/*[local-name()='Status']", 0) == 0)
+			if (NavGetOrDefault(nav, "//*[local-name()='Response']/*[local-name()='Status']", 0) == 0)
+			{
+				tgr.error = true;
+				tgr.text = String.Format("Could not get title access token "
+					+ "from the Social Club. Error code: \n{0}/{1}",
+					NavGetOrDefault(nav, "//*[local-name()='Response']/*[local-name()='Error']/@Code", "[unknown]"),
+					NavGetOrDefault(nav, "//*[local-name()='Response']/*[local-name()='Error']/@CodeEx", "[unknown]")
+					);
+				tgr.status = -1;
+				return tgr;
+			}
+			var acctoken = NavGetOrDefault(nav, "//*[local-name()='Response']/*[local-name()='Result']", "");
+			if (acctoken != "")
+			{
+				tgr.error = false;
+				tgr.text = acctoken;
+				tgr.status = 200;
+			}
+			return tgr;
+		}
+
+		private static List<byte> GenLaunchBase(byte[] challenge, string acctoken)
+        {
+
+			//req2.Headers.TryAddWithoutValidation("locale", "en-US");
+			//req2.Headers.TryAddWithoutValidation("machineHash", btoa(mh));
+			var targetURI = new Uri("http://prod.ros.rockstargames.com/launcher/11/launcherservices/entitlements.asmx/GetEntitlementBlock");
+			var LKey = new List<byte>();
+			byte[] reqBody2 = EncryptROSData(BuildPostString(
+				new Dictionary<string, string>{
+					{ "ticket", session.ticket },
+					{ "titleAccessToken", acctoken },
+					{ "locale", "en-US"},
+					{ "machineHash", btoa(session.machineHash)},
+				}), session.sessionKey);
+			//addLaunchExtension("saveDirOverride", Encoding.UTF8.GetBytes());
+			setFlag(Flags.preorder, Settings.EnablePreOrderBonus);
+			LKey.Add(laflags);
+
+			byte[] reqHeaders = HeaderBuild(
+				new Dictionary<string, string>{
+					{ "ros-Challenge", btoa(challenge)},
+					{ "ros-HeadersHmac", btoa(HeadersHmac(challenge, "POST", targetURI.AbsolutePath, session.sessionKey, session.sessionTicket)) },
+					{ "ros-SecurityFlags", "239"},
+					{ "ros-SessionTicket", session.sessionTicket},
+				});
+			LKey.AddRange(BitConverter.GetBytes((UInt16)session.sessionKey.Length));
+			LKey.AddRange(Encoding.UTF8.GetBytes(session.sessionKey));
+
+			LKey.AddRange(BitConverter.GetBytes((UInt16)reqHeaders.Length));
+			LKey.AddRange(reqHeaders);
+
+			LKey.AddRange(BitConverter.GetBytes((UInt16)reqBody2.Length));
+			LKey.AddRange(reqBody2);
+			return LKey;
+		}
+
+		/// <summary>
+		/// Generates a launch token base
+		/// </summary>
+		/// <returns>Launch token base (or null on failed auth)</returns>
+		public static byte[] GenLaunchBase()
+        {
+			var RNG = new RNGCryptoServiceProvider();
+			var challenge = new byte[8];
+			RNG.GetBytes(challenge);
+
+			var titleAccessTokenResponse = GenTitleAccessToken(challenge).GetAwaiter().GetResult();
+			if (titleAccessTokenResponse.error)
+			{
+				return null;
+			}
+
+			var acctoken = titleAccessTokenResponse.text;
+
+			return GenLaunchBase(challenge, acctoken).ToArray();
+        }
+
+		/// <summary>
+		/// Generates a token for the GTA Launcher
+		/// </summary>
+		public static async Task<tokenGenResponse> GenLaunchToken()
+		{
+			tokenGenResponse tgr = new tokenGenResponse();
+
+			var RNG = new RNGCryptoServiceProvider();
+			var challenge = new byte[8];
+			RNG.GetBytes(challenge);
+
+			var titleAccessTokenResponse = await GenTitleAccessToken(challenge);
+			if (titleAccessTokenResponse.error)
+            {
+				return titleAccessTokenResponse;
+            }
+
+			var acctoken = titleAccessTokenResponse.text;
+
+			//req2.Headers.TryAddWithoutValidation("locale", "en-US");
+			//req2.Headers.TryAddWithoutValidation("machineHash", btoa(mh));
+			var LKey = GenLaunchBase(challenge, acctoken);
+
+			LKey.AddRange(genLaunchExtension());
+
+			byte[] reqBody2 = EncryptROSData(BuildPostString(
+				new Dictionary<string, string>{
+					{ "ticket", session.ticket },
+					{ "titleAccessToken", acctoken },
+					{ "locale", "en-US"},
+					{ "machineHash", btoa(session.machineHash)},
+				}), session.sessionKey);
+			//LKey.Add(0);
+			//LKey.Add(0);
+
+
+
+			/* Just some Logging Statements
+					 
+			string OutputFilePath = Settings.GTAVInstallationPath.TrimEnd('\\') + @"\launch.dat";
+			HelperClasses.Logger.Log("OutputFilePath: '" + OutputFilePath + "'");
+			if (HelperClasses.FileHandling.doesFileExist(OutputFilePath))
+			{
+				HelperClasses.Logger.Log("Does exist...will delete");
+				HelperClasses.FileHandling.deleteFile(OutputFilePath);
+				if (HelperClasses.FileHandling.doesFileExist(OutputFilePath))
 				{
-					tgr.error = true;
-					tgr.text = String.Format("Could not get title access token "
-						+ "from the Social Club. Error code: \n{0}/{1}",
-						NavGetOrDefault(nav, "//*[local-name()='Response']/*[local-name()='Error']/@Code", "[unknown]"),
-						NavGetOrDefault(nav, "//*[local-name()='Response']/*[local-name()='Error']/@CodeEx", "[unknown]")
-						);
-					tgr.status = -1;
-					return tgr;
+					HelperClasses.Logger.Log("Mhm...file still exists");
 				}
 				else
 				{
-					var acctoken = NavGetOrDefault(nav, "//*[local-name()='Response']/*[local-name()='Result']", "");
-					if (acctoken == "")
-					{
-						return tgr; // Unknown Error
-					}
-
-					//req2.Headers.TryAddWithoutValidation("locale", "en-US");
-					//req2.Headers.TryAddWithoutValidation("machineHash", btoa(mh));
-					var targetURI = new Uri("http://prod.ros.rockstargames.com/launcher/11/launcherservices/entitlements.asmx/GetEntitlementBlock");
-					var LKey = new List<byte>();
-					byte[] reqBody2 = EncryptROSData(BuildPostString(
-						new Dictionary<string, string>{
-							{ "ticket", session.ticket },
-							{ "titleAccessToken", acctoken },
-							{ "locale", "en-US"},
-							{ "machineHash", btoa(session.machineHash)},
-						}), session.sessionKey);
-					//addLaunchExtension("saveDirOverride", Encoding.UTF8.GetBytes());
-					setFlag(Flags.preorder, Settings.EnablePreOrderBonus);
-					LKey.Add(laflags);
-
-					byte[] reqHeaders = HeaderBuild(
-						new Dictionary<string, string>{
-							{ "ros-Challenge", btoa(challenge)},
-							{ "ros-HeadersHmac", btoa(HeadersHmac(challenge, "POST", targetURI.AbsolutePath, session.sessionKey, session.sessionTicket)) },
-							{ "ros-SecurityFlags", "239"},
-							{ "ros-SessionTicket", session.sessionTicket},
-						});
-					LKey.AddRange(BitConverter.GetBytes((UInt16)session.sessionKey.Length));
-					LKey.AddRange(Encoding.UTF8.GetBytes(session.sessionKey));
-
-					LKey.AddRange(BitConverter.GetBytes((UInt16)reqHeaders.Length));
-					LKey.AddRange(reqHeaders);
-
-					LKey.AddRange(BitConverter.GetBytes((UInt16)reqBody2.Length));
-					LKey.AddRange(reqBody2);
-
-					LKey.AddRange(genLaunchExtension());
-					//LKey.Add(0);
-					//LKey.Add(0);
-
-
-
-					/* Just some Logging Statements
-					 
-					string OutputFilePath = Settings.GTAVInstallationPath.TrimEnd('\\') + @"\launch.dat";
-					HelperClasses.Logger.Log("OutputFilePath: '" + OutputFilePath + "'");
-					if (HelperClasses.FileHandling.doesFileExist(OutputFilePath))
-					{
-						HelperClasses.Logger.Log("Does exist...will delete");
-						HelperClasses.FileHandling.deleteFile(OutputFilePath);
-						if (HelperClasses.FileHandling.doesFileExist(OutputFilePath))
-						{
-							HelperClasses.Logger.Log("Mhm...file still exists");
-						}
-						else
-						{
-							HelperClasses.Logger.Log("Delete of file success");
-						}
-					}
-					HelperClasses.Logger.Log("Will gen Token");
-					
-					//*/
-
-
-					var launcBin = LKey.ToArray();
-					var outdir = Settings.GTAVInstallationPath;
-					if (!outdir.EndsWith("\\"))
-					{
-						outdir += "\\";
-					}
-
-					using (var b = new BinaryWriter(File.Open(outdir + "launc.dat", FileMode.Create)))
-					{
-						b.Write(launcBin);
-					}
-
-					// Other logging Statement
-					// HelperClasses.Logger.Log("Token generated. DoesExist: " + HelperClasses.FileHandling.doesFileExist(OutputFilePath));
-
-
-					tgr.error = false;
-					tgr.status = 200;
-					tgr.text = "Launcher token data written";
-
-					var req2 = new HttpRequestMessage
-					{
-						RequestUri = new Uri("http://prod.ros.rockstargames.com/launcher/11/launcherservices/entitlements.asmx/GetEntitlementBlock"),
-						Method = HttpMethod.Post,
-					};
-					req2.Headers.Add("Host", "prod.ros.rockstargames.com");
-					req2.Headers.TryAddWithoutValidation("ros-Challenge", btoa(challenge));
-					req2.Headers.TryAddWithoutValidation("ros-HeadersHmac", btoa(HeadersHmac(challenge, "POST", req2.RequestUri.AbsolutePath, session.sessionKey, session.sessionTicket)));
-					req2.Headers.TryAddWithoutValidation("ros-SecurityFlags", "239");
-					req2.Headers.TryAddWithoutValidation("ros-SessionTicket", session.sessionTicket);
-					req2.Headers.TryAddWithoutValidation("User-Agent", GetROSVersionString());
-					req2.Headers.ConnectionClose = true;
-					req2.Headers.ExpectContinue = false;
-
-					req2.Content = new ByteArrayContent(reqBody2);
-					req2.Content.Headers.ContentType = new MediaTypeHeaderValue("application/x-www-form-urlencoded");
-					res = await httpClient.SendAsync(req2);
-
-					if (!res.IsSuccessStatusCode)
-					{
-						tgr.error = true;
-						tgr.text = String.Format("Ownership Verification Error {0}: {1}\r\n{2}",
-							(int)res.StatusCode, res.StatusCode, res.Content.ReadAsStringAsync().Result);
-						tgr.status = (int)res.StatusCode + 1000;
-					}
-					else
-					{
-						rawResp = res.Content.ReadAsByteArrayAsync().Result;
-						string exmldoc = Encoding.UTF8.GetString(DecryptROSData(rawResp, rawResp.Length, session.sessionKey));
-						var exml = new XPathDocument(new StringReader(exmldoc));
-						var enav = exml.CreateNavigator();
-						if (NavGetOrDefault(enav, "//*[local-name()='Response']/*[local-name()='Status']", 0) == 0) //you are here
-						{
-							tgr.error = true;
-							tgr.text = String.Format("Ownership error: could not get entitlement block "
-								+ "from the Social Club. Error code: \n{0}/{1}",
-								NavGetOrDefault(enav, "//*[local-name()='Response']/*[local-name()='Error']/@Code", "[unknown]"),
-								NavGetOrDefault(enav, "//*[local-name()='Response']/*[local-name()='Error']/@CodeEx", "[unknown]")
-								);
-							tgr.status = -1001;
-							session.destroy();
-						}
-
-					}
-					return tgr;
-
+					HelperClasses.Logger.Log("Delete of file success");
 				}
 			}
+			HelperClasses.Logger.Log("Will gen Token");
+					
+			//*/
+
+
+			var launcBin = LKey.ToArray();
+			var outdir = Settings.GTAVInstallationPath;
+			if (!outdir.EndsWith("\\"))
+			{
+				outdir += "\\";
+			}
+
+			using (var b = new BinaryWriter(File.Open(outdir + "launc.dat", FileMode.Create)))
+			{
+				b.Write(launcBin);
+			}
+
+			// Other logging Statement
+			// HelperClasses.Logger.Log("Token generated. DoesExist: " + HelperClasses.FileHandling.doesFileExist(OutputFilePath));
+
+
+			tgr.error = false;
+			tgr.status = 200;
+			tgr.text = "Launcher token data written";
+
+			var req2 = new HttpRequestMessage
+			{
+				RequestUri = new Uri("http://prod.ros.rockstargames.com/launcher/11/launcherservices/entitlements.asmx/GetEntitlementBlock"),
+				Method = HttpMethod.Post,
+			};
+			req2.Headers.Add("Host", "prod.ros.rockstargames.com");
+			req2.Headers.TryAddWithoutValidation("ros-Challenge", btoa(challenge));
+			req2.Headers.TryAddWithoutValidation("ros-HeadersHmac", btoa(HeadersHmac(challenge, "POST", req2.RequestUri.AbsolutePath, session.sessionKey, session.sessionTicket)));
+			req2.Headers.TryAddWithoutValidation("ros-SecurityFlags", "239");
+			req2.Headers.TryAddWithoutValidation("ros-SessionTicket", session.sessionTicket);
+			req2.Headers.TryAddWithoutValidation("User-Agent", GetROSVersionString());
+			req2.Headers.ConnectionClose = true;
+			req2.Headers.ExpectContinue = false;
+
+			req2.Content = new ByteArrayContent(reqBody2);
+			req2.Content.Headers.ContentType = new MediaTypeHeaderValue("application/x-www-form-urlencoded");
+			var res = await httpClient.SendAsync(req2);
+
+			if (!res.IsSuccessStatusCode)
+			{
+				tgr.error = true;
+				tgr.text = String.Format("Ownership Verification Error {0}: {1}\r\n{2}",
+					(int)res.StatusCode, res.StatusCode, res.Content.ReadAsStringAsync().Result);
+				tgr.status = (int)res.StatusCode + 1000;
+			}
+			else
+			{
+				var rawResp = res.Content.ReadAsByteArrayAsync().Result;
+				string exmldoc = Encoding.UTF8.GetString(DecryptROSData(rawResp, rawResp.Length, session.sessionKey));
+				var exml = new XPathDocument(new StringReader(exmldoc));
+				var enav = exml.CreateNavigator();
+				if (NavGetOrDefault(enav, "//*[local-name()='Response']/*[local-name()='Status']", 0) == 0) //you are here
+				{
+					tgr.error = true;
+					tgr.text = String.Format("Ownership error: could not get entitlement block "
+						+ "from the Social Club. Error code: \n{0}/{1}",
+						NavGetOrDefault(enav, "//*[local-name()='Response']/*[local-name()='Error']/@Code", "[unknown]"),
+						NavGetOrDefault(enav, "//*[local-name()='Response']/*[local-name()='Error']/@CodeEx", "[unknown]")
+						);
+					tgr.status = -1001;
+					session.destroy();
+				}
+
+			}
+			return tgr;
+
+			
 			//return tgr;
 		}
 

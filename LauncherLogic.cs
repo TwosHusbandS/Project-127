@@ -607,7 +607,7 @@ namespace Project_127
 					if (!AuthStateOverWrite)
 					{
 						HelperClasses.Logger.Log("Letting Dragon work his magic");
-						await ROSCommunicationBackend.GenToken();
+						await ROSCommunicationBackend.GenLaunchToken();
 					}
 
 

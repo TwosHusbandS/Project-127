@@ -131,6 +131,8 @@ namespace Project_127
 		/// </summary>
 		public static DispatcherTimer MTLAuthTimer;
 
+		public static IPCPipeServer pipeServer = new IPCPipeServer("Project127Launcher");
+
 		/// <summary>
 		/// Constructor of Main Window
 		/// </summary>
@@ -219,6 +221,8 @@ namespace Project_127
 			StartDispatcherTimer();
 
 			StartMTLDispatcherTimer();
+
+			initIPC();
 
 			HelperClasses.Logger.Log("Only CEF Init to go...");
 
@@ -395,6 +399,24 @@ namespace Project_127
 			MainWindow.MW.UpdateGUIDispatcherTimer();
 		}
 
+		/// <summary>
+		/// Sets up the IPC server
+		/// </summary>
+		private void initIPC()
+        {
+			pipeServer.registerEndpoint("test", (a) => {
+				MessageBox.Show(Encoding.UTF8.GetString(a));
+				return a;
+			});
+
+			pipeServer.registerEndpoint("getBaseToken", Auth.ROSCommunicationBackend.GenLaunchBase);
+			
+			pipeServer.run();
+
+
+			//var pc = new IPCPipeClient("Project127Launcher");
+			//pc.call("test", Encoding.UTF8.GetBytes("Hi"));
+		}
 
 		/// <summary>
 		/// Updates the GUI with relevant stuff. Gets called every 2.5 Seconds
@@ -455,12 +477,21 @@ namespace Project_127
 		/// <param name="e"></param>
 		public void AutoAuthMTLTimer(object sender = null, EventArgs e = null)
 		{
+#if DEBUG
+			HelperClasses.Logger.Log("Auth Timer Cycle!");
+#endif
 			if (LauncherLogic.AuthState == LauncherLogic.AuthStates.Auth)
 			{
+#if DEBUG
+				HelperClasses.Logger.Log("Already Authed!");
+#endif
 				MTLAuthTimer.Stop();
 			}
 			else if (Settings.EnableAlternativeLaunch)
 			{
+#if DEBUG
+				HelperClasses.Logger.Log("Alt enabled!");
+#endif
 				return;
 			}
 			else
