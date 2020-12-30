@@ -465,7 +465,7 @@ namespace Project_127
 			// Starting the Dispatcher Timer for the automatic updates of the GTA V Button
 			MTLAuthTimer = new System.Windows.Threading.DispatcherTimer();
 			MTLAuthTimer.Tick += new EventHandler(MainWindow.MW.AutoAuthMTLTimer);
-			MTLAuthTimer.Interval = TimeSpan.FromMilliseconds(30000);
+			MTLAuthTimer.Interval = TimeSpan.FromMilliseconds(2000);
 			MTLAuthTimer.Start();
 			MainWindow.MW.AutoAuthMTLTimer();
 		}
@@ -477,21 +477,13 @@ namespace Project_127
 		/// <param name="e"></param>
 		public void AutoAuthMTLTimer(object sender = null, EventArgs e = null)
 		{
-#if DEBUG
-			HelperClasses.Logger.Log("Auth Timer Cycle!");
-#endif
+
 			if (LauncherLogic.AuthState == LauncherLogic.AuthStates.Auth)
 			{
-#if DEBUG
-				HelperClasses.Logger.Log("Already Authed!");
-#endif
 				MTLAuthTimer.Stop();
 			}
 			else if (Settings.EnableAlternativeLaunch)
 			{
-#if DEBUG
-				HelperClasses.Logger.Log("Alt enabled!");
-#endif
 				return;
 			}
 			else

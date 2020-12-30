@@ -111,7 +111,7 @@ namespace Project_127.Auth
             var rockstarNick = Encoding.UTF8.GetString(blob.Skip(0xE9F).TakeWhile(a => a != 0).ToArray());
             var countryCode = Encoding.UTF8.GetString(blob.Skip(0xE0C).TakeWhile(a => a != 0).ToArray());
 
-            if (posixtime == 0)
+            if (posixtime == 0 || rockstarNick == "")
             {
                 return null;
             }
