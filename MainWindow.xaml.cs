@@ -404,13 +404,19 @@ namespace Project_127
 		/// </summary>
 		private void initIPC()
         {
-			pipeServer.registerEndpoint("test", (a) => {
+			pipeServer.registerEndpoint("messageBox", (a) => {
 				MessageBox.Show(Encoding.UTF8.GetString(a));
 				return a;
 			});
 
 			pipeServer.registerEndpoint("getBaseToken", Auth.ROSCommunicationBackend.GenLaunchBase);
-			
+
+			pipeServer.registerEndpoint("log", a =>
+			{
+				HelperClasses.Logger.Log(Encoding.UTF8.GetString(a).TrimEnd('\0'));
+				return null;
+			});
+
 			pipeServer.run();
 
 
