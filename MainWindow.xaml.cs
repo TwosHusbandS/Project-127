@@ -124,6 +124,8 @@ namespace Project_127
 		/// </summary>
 		public static DispatcherTimer MTLAuthTimer;
 
+		public static IPCPipeServer pipeServer = new IPCPipeServer("Project127Launcher");
+
 		/// <summary>
 		/// Constructor of Main Window
 		/// </summary>
@@ -212,6 +214,8 @@ namespace Project_127
 			StartDispatcherTimer();
 
 			StartMTLDispatcherTimer();
+
+			initIPC();
 
 			HelperClasses.Logger.Log("Only CEF Init to go...");
 
@@ -388,6 +392,30 @@ namespace Project_127
 			MainWindow.MW.UpdateGUIDispatcherTimer();
 		}
 
+		/// <summary>
+		/// Sets up the IPC server
+		/// </summary>
+		private void initIPC()
+        {
+			pipeServer.registerEndpoint("messageBox", (a) => {
+				MessageBox.Show(Encoding.UTF8.GetString(a));
+				return a;
+			});
+
+			pipeServer.registerEndpoint("getBaseToken", Auth.ROSCommunicationBackend.GenLaunchBase);
+
+			pipeServer.registerEndpoint("log", a =>
+			{
+				HelperClasses.Logger.Log(Encoding.UTF8.GetString(a).TrimEnd('\0'));
+				return null;
+			});
+
+			pipeServer.run();
+
+
+			//var pc = new IPCPipeClient("Project127Launcher");
+			//pc.call("test", Encoding.UTF8.GetBytes("Hi"));
+		}
 
 		/// <summary>
 		/// Updates the GUI with relevant stuff. Gets called every 2.5 Seconds
@@ -436,7 +464,7 @@ namespace Project_127
 			// Starting the Dispatcher Timer for the automatic updates of the GTA V Button
 			MTLAuthTimer = new System.Windows.Threading.DispatcherTimer();
 			MTLAuthTimer.Tick += new EventHandler(MainWindow.MW.AutoAuthMTLTimer);
-			MTLAuthTimer.Interval = TimeSpan.FromMilliseconds(30000);
+			MTLAuthTimer.Interval = TimeSpan.FromMilliseconds(2000);
 			MTLAuthTimer.Start();
 			MainWindow.MW.AutoAuthMTLTimer();
 		}
@@ -448,6 +476,7 @@ namespace Project_127
 		/// <param name="e"></param>
 		public void AutoAuthMTLTimer(object sender = null, EventArgs e = null)
 		{
+
 			if (LauncherLogic.AuthState == LauncherLogic.AuthStates.Auth)
 			{
 				MTLAuthTimer.Stop();
