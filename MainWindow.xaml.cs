@@ -414,7 +414,7 @@ namespace Project_127
 			pipeServer.registerEndpoint("log", a =>
 			{
 				HelperClasses.Logger.Log(Encoding.UTF8.GetString(a).TrimEnd('\0'));
-				return null;
+				return a.Take(1).ToArray();
 			});
 
 			pipeServer.run();

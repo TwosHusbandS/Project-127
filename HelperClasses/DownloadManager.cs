@@ -665,7 +665,16 @@ namespace Project_127.HelperClasses
             }
             if (HelperClasses.RegeditHandler.DoesValueExists("DownloadManagerInstalledSubassemblies"))
             {
-                installedSubassemblies = json.Deserialize<Dictionary<string, subassemblyInfo>>(HelperClasses.RegeditHandler.GetValue("DownloadManagerInstalledSubassemblies"));
+                try
+                {
+                    installedSubassemblies = json.Deserialize<Dictionary<string, subassemblyInfo>>(HelperClasses.RegeditHandler.GetValue("DownloadManagerInstalledSubassemblies"));
+                }
+                catch (Exception e)
+                {
+                    Logger.Log("Error in reading installed assemblies: ");
+                    Logger.Log(e.ToString());
+                    installedSubassemblies = new Dictionary<string, subassemblyInfo>();
+                }
             }
             else
             {
