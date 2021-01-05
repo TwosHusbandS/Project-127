@@ -254,11 +254,10 @@ namespace Project_127
 					{
 						if (SizeOfGTAV > 0 && SizeOfUpdate > 0 && SizeOfPlayGTAV > 0)
 						{
-							FileVersionInfo FVI = FileVersionInfo.GetVersionInfo(GTAVFilePath.TrimEnd('\\') + @"\GTA5.exe");
-							if (new Version(BuildVersionTable.GetNiceGameVersionString(new Version(FVI.FileVersion), true)) > new Version(1, 30))
+							if (BuildVersionTable.GetGameVersionOfBuild(Globals.GTABuild) > new Version(1, 30))
 							{
 								return InstallationStates.Upgraded;
-							} 
+							}
 						}
 					}
 				}
@@ -437,6 +436,12 @@ namespace Project_127
 		{
 			HelperClasses.ProcessHandler.KillRockstarProcesses();
 
+			if (!ComponentManager.CheckIfRequiredComponentsAreInstalled(true))
+			{
+				new Popups.Popup(Popups.Popup.PopupWindowTypes.PopupOk, "Cant do that because of because of missing Components").ShowDialog();
+				return;
+			}
+
 			IgnoreNewFilesWhileUpgradeDowngradeLogic = IgnoreNewFiles;
 
 			// Cancel any stuff when we have no files in upgrade files...simple right?
@@ -480,6 +485,12 @@ namespace Project_127
 			HelperClasses.ProcessHandler.KillRockstarProcesses();
 
 			IgnoreNewFilesWhileUpgradeDowngradeLogic = IgnoreNewFiles;
+
+			if (!ComponentManager.CheckIfRequiredComponentsAreInstalled(true))
+			{
+				new Popups.Popup(Popups.Popup.PopupWindowTypes.PopupOk, "Cant do that because of because of missing Components").ShowDialog();
+				return;
+			}
 
 			if (HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(DowngradeFilePath).Length <= 1)
 			{
@@ -1157,72 +1168,8 @@ namespace Project_127
 		#endregion
 
 
-		#region GTAUpdateDetection
+		#region Helpers
 
-
-		/// <summary>
-		/// Checks if update hit, asks User, handles User interaction. Returns if it handled an update.
-		/// </summary>
-		public static bool HandleUpdates()
-		{
-			HelperClasses.Logger.Log("Checking if an Update hit");
-			if (HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(LauncherLogic.UpgradeFilePath).Length > 1)
-			{
-				if (DidUpdateHit())
-				{
-					if (ThrewUpdateDetectedMessageAlready == false)
-					{
-						ThrewUpdateDetectedMessageAlready = true;
-
-						HelperClasses.Logger.Log("Apparently it did. Lets see if the user wants a repair");
-						Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Detected an automatic Update of GTA.\nDo you want to use your current state of GTA V\nas your new \"Upgraded\" Files?\nI recommend \"Yes\"\nThis will create a Backup of the Files P127 uses for Upgrading");
-						yesno.ShowDialog();
-						if (yesno.DialogResult == true)
-						{
-							HelperClasses.Logger.Log("User does want it. Initiating CreateBackup()");
-
-							HelperClasses.ProcessHandler.KillRockstarProcesses();
-
-							LauncherLogic.CreateBackup();
-
-							// Dont repair, so we still have UpgradeFiles folder from before backup. We need it.
-							//LauncherLogic.Repair();
-
-							return true;
-						}
-						else
-						{
-							HelperClasses.Logger.Log("User doesnt want it. Alright then");
-						}
-					}
-					else
-					{
-						HelperClasses.Logger.Log("Update detected but we threw a popup already");
-					}
-				}
-				else
-				{
-					HelperClasses.Logger.Log("No update detected");
-				}
-			}
-			else
-			{
-				HelperClasses.Logger.Log("No Files in $Upgrade_Files, so im not even checking if update hit");
-			}
-			return false;
-		}
-
-		/// <summary>
-		///  Returns Bool whether or not we think that an update hit.
-		/// </summary>
-		/// <returns></returns>
-		public static bool DidUpdateHit()
-		{
-			//PopupProgress tmp = new PopupProgress(PopupProgress.ProgressTypes.DidUpdateHit, "");
-			//tmp.ShowDialog();
-			//return tmp.RtrnBool;
-			return false;
-		}
 
 
 		#endregion

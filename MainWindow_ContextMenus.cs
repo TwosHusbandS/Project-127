@@ -297,72 +297,7 @@ namespace Project_127
 			mi3.Click += MI_Close_Click;
 			cm.Items.Add(mi3);
 
-			//MenuItem mi4 = new MenuItem();
-			//mi4.Header = "Compare 2 Files";
-			//mi4.Click += MI_Debug_Click;
-			//cm.Items.Add(mi4);
-
-			//MenuItem mi5 = new MenuItem();
-			//mi5.Header = "Did Update Hit";
-			//mi5.Click += MI_Debug2_Click;
-			//cm.Items.Add(mi5);
-
-			//MenuItem mi6 = new MenuItem();
-			//mi6.Header = "ResetBtn";
-			//mi6.Click += MI_Debug3_Click;
-			//cm.Items.Add(mi6);
-
 			cm.IsOpen = true;
-
-			//Globals.DebugPopup(Globals.CommandLineArgs.ToString());
-			//Globals.DebugPopup(Globals.InternalMode.ToString());
-		}
-
-
-
-		private void MI_Debug3_Click(object sender, RoutedEventArgs e)
-		{
-			//Globals.DebugPopup(Globals.XML_AutoUpdate);
-
-			btn_Downgrade.Content = "Downgrade";
-			HelperClasses.FileHandling.HardLinkFiles(Globals.ProjectInstallationPath.TrimEnd('\\') + @"\LICENSE_LINK", Globals.ProjectInstallationPath.TrimEnd('\\') + @"\LICENSE");
-		}
-
-		private void MI_Debug2_Click(object sender, RoutedEventArgs e)
-		{
-			bool areTheyEqual = LauncherLogic.DidUpdateHit();
-			btn_Downgrade.Content = "Downgrade: Did Update Hit: '" + areTheyEqual.ToString() + "'";
-		}
-
-		private void MI_Debug_Click(object sender, RoutedEventArgs e)
-		{
-			btn_Downgrade.Content = "Checking...";
-
-			string GTA_GTA5 = Settings.GTAVInstallationPath.TrimEnd('\\') + @"\gta5.exe";
-			string GTA_PlayGTAV = Settings.GTAVInstallationPath.TrimEnd('\\') + @"\playgtav.exe";
-			string GTA_UpdateRPF = Settings.GTAVInstallationPath.TrimEnd('\\') + @"\update\update.rpf";
-
-			string Upgrade_GTA5 = LauncherLogic.UpgradeFilePath.TrimEnd('\\') + @"\gta5.exe";
-			string Upgrade_PlayGTAV = LauncherLogic.UpgradeFilePath.TrimEnd('\\') + @"\playgtav.exe";
-			string Upgrade_UpdateRPF = LauncherLogic.UpgradeFilePath.TrimEnd('\\') + @"\update\update.rpf";
-
-			string Downgrade_GTA5 = LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\gta5.exe";
-			string Downgrade_PlayGTAV = LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\playgtav.exe";
-			string Downgrade_UpdateRPF = LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\update\update.rpf";
-
-			bool areTheyEqual = HelperClasses.FileHandling.AreFilesEqual(GTA_UpdateRPF, Upgrade_UpdateRPF, true);
-			btn_Downgrade.Content = "Update Files are equal: '" + areTheyEqual.ToString() + "'";
-
-			//if (FileHandling.GetSizeOfFile(GTA_UpdateRPF) == FileHandling.GetSizeOfFile(Downgrade_UpdateRPF))
-			//{
-			//	areTheyEqual = true;
-			//}
-			//else
-			//{
-			//	areTheyEqual = false;
-			//}
-
-
 		}
 
 

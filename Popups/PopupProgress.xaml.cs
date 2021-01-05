@@ -322,7 +322,7 @@ namespace Project_127.Popups
 									{
 										FileVersionInfo myFVI = FileVersionInfo.GetVersionInfo(tmp);
 										Version myVersion = new Version(myFVI.FileVersion);
-										if (BuildVersionTable.GetGameVersionOfBuild(myVersion) > new Version("1.30"))
+										if (BuildVersionTable.GetGameVersionOfBuild(Globals.GTABuild) > new Version(1, 30))
 										{
 											if (!UpdatePopupThrownAlready)
 											{
@@ -453,7 +453,7 @@ namespace Project_127.Popups
 									{
 										FileVersionInfo myFVI = FileVersionInfo.GetVersionInfo(tmp);
 										Version myVersion = new Version(myFVI.FileVersion);
-										if (BuildVersionTable.GetGameVersionOfBuild(myVersion) > new Version("1.30"))
+										if (BuildVersionTable.GetGameVersionOfBuild(Globals.GTABuild) > new Version(1, 30))
 										{
 											if (!UpdatePopupThrownAlready)
 											{

@@ -64,11 +64,6 @@ namespace Project_127.Popups
 			DownloadLocation = pDownloadLocation;
 			DownloadName = pMessage;
 
-			// Logging
-			HelperClasses.Logger.Log("Download Popup: DownloadURL: '" + pDownloadURL.ToString() + "'");
-			HelperClasses.Logger.Log("Download Popup: DownloadLocation: '" + pDownloadLocation.ToString() + "'");
-			HelperClasses.Logger.Log("Download Popup: pMessage: '" + pMessage.ToString() + "'");
-
 			HelperClasses.FileHandling.createPathOfFile(pDownloadLocation);
 			HelperClasses.FileHandling.deleteFile(pDownloadLocation);
 
@@ -86,7 +81,6 @@ namespace Project_127.Popups
 				webClient.DownloadDataCompleted += new DownloadDataCompletedEventHandler(DownloadCompletedAutoHash);
 
 			}
-			HelperClasses.Logger.Log("Download Popup: Starting Download");
 
 			// TryCatch of the actual Download
 			try
@@ -102,7 +96,7 @@ namespace Project_127.Popups
 			}
 			catch (Exception e)
 			{
-				HelperClasses.Logger.Log("Download of '" + pMessage.ToString() + "' failed for some reason." + e.Message);
+				HelperClasses.Logger.Log("Download of '" + pDownloadURL + "' to '" + pDownloadLocation + "' for Reason: '" + pMessage + "' failed for some reason." + e.Message);
 				// No Popup here, Popup will appear in Method which called this
 			}
 		}
@@ -115,7 +109,8 @@ namespace Project_127.Popups
 		/// <param name="e"></param>
 		private void DownloadCompleted(object sender, AsyncCompletedEventArgs e)
 		{
-			HelperClasses.Logger.Log("Download Popup: Download Done");
+			HelperClasses.Logger.Log("Download of '" + DownloadURL + "' to '" + DownloadLocation + "' for Reason: '" + DownloadName + "' done.");
+
 			lbl_Main.Content = "Download Complete.";
 			pb_Main.Value = 100;
 			this.Close();
@@ -130,10 +125,8 @@ namespace Project_127.Popups
 		{
 			try
 			{
-				HelperClasses.Logger.Log("Download Popup: Download Done");
 				lbl_Main.Content = "Download Complete.";
 				byte[] file = e.Result;
-				HelperClasses.Logger.Log("Download Popup: Computing Hash");
 				using (var md5 = MD5.Create())
 				{
 					var hash = md5.ComputeHash(file);
@@ -144,6 +137,9 @@ namespace Project_127.Popups
 				{
 					b.Write(file);
 				}
+
+				HelperClasses.Logger.Log("Download of '" + DownloadURL + "' to '" + DownloadLocation + "' for Reason: '" + DownloadName + "' done. Hash: '" + HashString + "'");
+
 				this.Close();
 			}
 			catch

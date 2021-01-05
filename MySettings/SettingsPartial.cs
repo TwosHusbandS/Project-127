@@ -438,6 +438,8 @@ namespace Project_127.MySettings
 			}
 		}
 
+
+
 		/// <summary>
 		/// Settings EnableAlternativeLaunch. Gets and Sets from the Dictionary.
 		/// </summary>
@@ -449,27 +451,7 @@ namespace Project_127.MySettings
 			}
 			set
 			{
-				if (LauncherLogic.InstallationState != LauncherLogic.InstallationStates.Upgraded)
-				{
-					Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Before you do that, we need to be Upgraded.\nDo you want to Upgrade now?");
-					yesno.ShowDialog();
-					if (yesno.DialogResult == true)
-					{
-						LauncherLogic.Upgrade();
-						SetSetting("EnableAlternativeLaunch", value.ToString());
-						if (!ComponentManager.CheckIfRequiredComponentsAreInstalled(true))
-						{
-							SetSetting("EnableAlternativeLaunch", (!value).ToString());
-							return;
-						}
-					}
-					else
-					{
-						new Popup(Popup.PopupWindowTypes.PopupOk, "Setting was not changed.");
-						return;
-					}
-				}
-				else
+				if (ComponentManager.RecommendUpgraded())
 				{
 					SetSetting("EnableAlternativeLaunch", value.ToString());
 					if (!ComponentManager.CheckIfRequiredComponentsAreInstalled(true))
@@ -477,6 +459,11 @@ namespace Project_127.MySettings
 						SetSetting("EnableAlternativeLaunch", (!value).ToString());
 						return;
 					}
+				}
+				else
+				{
+					new Popup(Popup.PopupWindowTypes.PopupOk, "Setting was not changed.");
+					return;
 				}
 			}
 		}
@@ -617,34 +604,7 @@ namespace Project_127.MySettings
 			{
 				if (value != SocialClubLaunchGameVersion)
 				{
-					if (LauncherLogic.InstallationState != LauncherLogic.InstallationStates.Upgraded)
-					{
-						Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Before you do that, we need to be Upgraded.\nDo you want to Upgrade now?");
-						yesno.ShowDialog();
-						if (yesno.DialogResult == true)
-						{
-							LauncherLogic.Upgrade();
-							SetSetting("Version", value);
-							if (!ComponentManager.CheckIfRequiredComponentsAreInstalled(true))
-							{
-								if (value == "124")
-								{
-									SetSetting("Version", "127");
-								}
-								else
-								{
-									SetSetting("Version", "124");
-								}
-								return;
-							}
-						}
-						else
-						{
-							new Popup(Popup.PopupWindowTypes.PopupOk, "Setting was not changed.");
-							return;
-						}
-					}
-					else
+					if (ComponentManager.RecommendUpgraded())
 					{
 						SetSetting("Version", value);
 						if (!ComponentManager.CheckIfRequiredComponentsAreInstalled(true))
@@ -659,6 +619,11 @@ namespace Project_127.MySettings
 							}
 							return;
 						}
+					}
+					else
+					{
+						new Popup(Popup.PopupWindowTypes.PopupOk, "Setting was not changed.");
+						return;
 					}
 				}
 			}
@@ -682,31 +647,7 @@ namespace Project_127.MySettings
 					if (Settings.EnableAlternativeLaunch)
 					{
 						Retailers OldRetailer = Retailer;
-						if (LauncherLogic.InstallationState != LauncherLogic.InstallationStates.Upgraded)
-						{
-							Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Before you do that, we need to be Upgraded.\nDo you want to Upgrade now?");
-							yesno.ShowDialog();
-							if (yesno.DialogResult == true)
-							{
-								LauncherLogic.Upgrade();
-								SetSetting("Retailer", value.ToString());
-								if (value == Retailers.Epic)
-								{
-									Settings.EnableAlternativeLaunch = false;
-								}
-								if (!ComponentManager.CheckIfRequiredComponentsAreInstalled(true))
-								{
-									SetSetting("Retailer", OldRetailer.ToString());
-									return;
-								}
-							}
-							else
-							{
-								new Popup(Popup.PopupWindowTypes.PopupOk, "Retailer was not changed.");
-								return;
-							}
-						}
-						else
+						if (ComponentManager.RecommendUpgraded())
 						{
 							SetSetting("Retailer", value.ToString());
 							if (value == Retailers.Epic)
@@ -719,6 +660,12 @@ namespace Project_127.MySettings
 								return;
 							}
 						}
+						else
+						{
+							new Popup(Popup.PopupWindowTypes.PopupOk, "Retailer was not changed.");
+							return;
+						}
+
 					}
 					else
 					{
