@@ -441,8 +441,8 @@ namespace Project_127
 		{
 			if (e.ClickCount >= 3)
 			{
-				if (Components.Base.IsInstalled())
-				{
+				//if (Components.Base.IsInstalled())
+				//{
 					Popups.PopupTextbox tmp = new PopupTextbox("Enter forced Version.\nClick cancel,\nif you dont know what youre doing.", "1.0.0.0");
 					tmp.ShowDialog();
 					if (tmp.DialogResult == true)
@@ -459,7 +459,7 @@ namespace Project_127
 							Refresh();
 						}
 					}
-				}
+				//}
 			}
 		}
 
@@ -559,8 +559,24 @@ namespace Project_127
 				yesno.ShowDialog();
 				if (yesno.DialogResult == true)
 				{
-					Globals.MyDM.updateSubssembly(Component.GetAssemblyName(), true).GetAwaiter().GetResult();
-					return true;
+					if (ComponentManager.RequiredComponentsBasedOnSettings.Contains(Component) && Component != ComponentManager.Components.SCLDowngradedSC)
+					{
+						if (ComponentManager.RecommendUpgraded())
+						{
+							Globals.MyDM.updateSubssembly(Component.GetAssemblyName(), true).GetAwaiter().GetResult();
+							return true;
+						}
+						else
+						{
+							new Popup(Popup.PopupWindowTypes.PopupOk, "Abandoning Update of Component:\n'" + Component.GetNiceName() + "'").ShowDialog();
+							return false;
+						}
+					}
+					else
+					{
+						Globals.MyDM.updateSubssembly(Component.GetAssemblyName(), true).GetAwaiter().GetResult();
+						return true;
+					}
 				}
 			}
 			return false;

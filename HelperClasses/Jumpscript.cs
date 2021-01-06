@@ -101,6 +101,42 @@ namespace Project_127.HelperClasses
 			{
 				rtrn = rtrn.Replace("NumPad", "Numpad");
 			}
+			else if (pKey == Keys.OemOpenBrackets)
+			{
+				rtrn = "ß";
+			}
+			else if (pKey == Keys.Oem6)
+			{
+				rtrn = "´";
+			}
+			else if (pKey == Keys.Oemplus)
+			{
+				rtrn = "+";
+			}
+			else if (pKey == Keys.OemQuestion)
+			{
+				rtrn = "#";
+			}
+			else if (pKey == Keys.Oem5)
+			{
+				rtrn = "^";
+			}
+			else if (pKey == Keys.Oemcomma)
+			{
+				rtrn = ",";
+			}
+			else if (pKey == Keys.OemPeriod)
+			{
+				rtrn = ".";
+			}
+			else if (pKey == Keys.OemMinus)
+			{
+				rtrn = "^";
+			}
+			else if (pKey == Keys.OemBackslash)
+			{
+				rtrn = "<";
+			}
 			else if (pKey == Keys.Multiply)
 			{
 				rtrn = "NumpadMult";
