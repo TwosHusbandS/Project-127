@@ -88,6 +88,28 @@ namespace Project_127.HelperClasses
 
 
 
+		public static Version GetVersionFromFile(string filePath, bool defaultToHighVersion = false)
+		{
+			Version rtrn = new Version("0.0.0.1");
+			if (defaultToHighVersion)
+			{
+				rtrn = new Version("99.99.99.99");
+			}
+
+			if (HelperClasses.FileHandling.doesFileExist(filePath))
+			{
+				try
+				{
+					FileVersionInfo FVI = FileVersionInfo.GetVersionInfo(filePath);
+					rtrn = new Version(FVI.FileVersion);
+				}
+				catch { }
+			}
+
+			return rtrn;
+		}
+
+
 
 		/// <summary>
 		/// Gets all the Files in one Folder (and its Subfolders)

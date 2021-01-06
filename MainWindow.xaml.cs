@@ -17,8 +17,6 @@ Build Instructions:
 
 Deploy Instructions:
 	
-	CHANGE INNOSETUP SCRIPT AFTER 1.0 SO IT DOESNT DELETE INSTALL DIR!!
-
 	Change Version Number a few Lines Above.
 	Change Version Number in both of the last lines in AssemblyInfo.cs
 	Check if BetaMode / InternalMode in Globals.cs is correct
@@ -39,16 +37,35 @@ Comments like "TODO", "TO DO", "CTRLF", "CTRL-F", and "CTRL F" are just ways of 
 
 Hybrid code can be found in AAA_HybridCode.
 		
-// Remove Hide_Features stuff for social club launch from:
-// Update check on XML
-// Settings XML
 
+Done since 1.1:
+- Download Popups now only throw one line of log. In all circumstances
+- Helper Method and Better Text for Settings change (as in wanting to Upgrade before doing XYZ, or not doing it)
+- Changed Uninstall Logic (as in what youre allowed to uninstall and what not, and what happens before that)
+- Changed some UI Texts here and there
+- Took Care of all the Version getter logic and stuff
+- Not Deleting our own Uninstaller anymore
+- Killing all Processes (even dragons, when needed) now
+- Separate "Install Componenet" Popup in case it freezes at the end for 2-3 Seconds
 
 
 To Do before 1.1:
-- Fix ReadMe:
-		=> license
-		=> Programming language
+- QOL:
+	=> README license
+	=> README Programming language
+
+- Investigate MTL
+- Are we deleting files inside DowngradeFiles (both emu and launch through social club files) when theres an update? So Upgrading / Downgrading doesnt copy no longer needed Files
+- P127 crashes because of DownloadManager on bad registry value
+- add steam_appid.txt to SocialClubFiles
+- Release RequiredFiles 14 (POST 1.2 LAUNCH, NEED 1.2 P127 LOGIC)
+
+- Jumpscript stupid additional keys nobody ever heard off...(all special chars, right side of letters on thS keyboard)
+- Social Club switcheroo inside P127...really annoying. 
+- Method which "saves" what files we ever put into GTA InstallationLocation. What are files i think of as "DowngradeFiles", what are files i ever placed in your GTA "Installation". Save in Registry. Write in DebugMode
+- Logging in general
+- FUCK YOU Manifesto on some timed rightclicks on looks tab of overlay page
+
  */
 
 using System;
@@ -447,7 +464,7 @@ namespace Project_127
 				lbl_GTA.Content = "Unsure";
 			}
 
-			lbl_GTA.Content += BuildVersionTable.GetNiceGameVersionString(Globals.BuildVersion);
+			lbl_GTA.Content += BuildVersionTable.GetNiceGameVersionString(Globals.GTABuild);
 
 			if (LauncherLogic.PollGameState() == LauncherLogic.GameStates.Running)
 			{

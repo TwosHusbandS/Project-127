@@ -80,10 +80,6 @@ Source: "C:\Users\ingow\source\repos\Project-127\bin\x64\Release\Project 127 Lau
 [UninstallDelete]
 Type: filesandordirs; Name: "{app}"
 
-[InstallDelete]
-Type: filesandordirs; Name: "{app}"
-
-;NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
 Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"

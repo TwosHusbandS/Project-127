@@ -159,23 +159,11 @@ namespace Project_127
 		/// <summary>
 		/// Gets the Version (BuildVersion) of our GTA5.exe
 		/// </summary>
-		public static Version BuildVersion
+		public static Version GTABuild
 		{
 			get
 			{
-				try
-				{
-					if (HelperClasses.FileHandling.doesFileExist(LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\gta5.exe"))
-					{
-						FileVersionInfo myFVI = FileVersionInfo.GetVersionInfo(LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\gta5.exe");
-						return new Version(myFVI.FileVersion);
-					}
-				}
-				catch
-				{
-
-				}
-				return new Version("1.0.0.0");
+				return HelperClasses.FileHandling.GetVersionFromFile(LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\gta5.exe");
 			}
 		}
 
@@ -662,14 +650,6 @@ namespace Project_127
 		public static void CheckForUpdate()
 		{
 			string XML_Autoupdate_Temp = XML_AutoUpdate;
-
-			// CTRLF CTRL F CTRL-F REMOVE THIS TODO TO DO
-			string tease = HelperClasses.FileHandling.GetXMLTagContent(XML_Autoupdate_Temp, "tease");
-			if (tease.ToLower() != "true")
-			{
-				// if user gets here from settings click...button will be there until refresh or reload...what evs.
-				HelperClasses.RegeditHandler.DeleteValue("TeasingFeatures");
-			}
 
 			HelperClasses.BuildVersionTable.ReadFromGithub();
 
@@ -1351,11 +1331,6 @@ namespace Project_127
 					HelperClasses.Logger.Log("Found old build ('.BACKUP'). Will delete it.");
 					HelperClasses.FileHandling.deleteFile(myFile);
 				}
-				if (myFile.ToLower().Contains(".exe") && !myFile.ToLower().Contains("Project 127 Launcher.exe".ToLower()))
-				{
-					HelperClasses.Logger.Log("Found exe File ('" + myFile + "'). Will delete it.");
-					HelperClasses.FileHandling.deleteFile(myFile);
-				}
 				if (myFile.ToLower().Contains("dl.zip"))
 				{
 					HelperClasses.Logger.Log("Found zip File ('DL.ZIP'). Will delete it.");
@@ -1380,14 +1355,14 @@ namespace Project_127
 
 		public static string GetGameInfoForDebug(string pFilePath)
 		{
-			if (HelperClasses.FileHandling.doesFileExist(pFilePath))
+			Version tmp = HelperClasses.FileHandling.GetVersionFromFile(pFilePath);
+			if (tmp != new Version("0.0.0.1"))
 			{
-				FileVersionInfo FVI = FileVersionInfo.GetVersionInfo(pFilePath);
-				string rtrn = " [" + new Version(FVI.FileVersion).ToString();
+				string rtrn = " [" + tmp.ToString();
 
 				try
 				{
-					rtrn += " - " + BuildVersionTable.GetNiceGameVersionString(new Version(FVI.FileVersion)) + "]";
+					rtrn += " - " + BuildVersionTable.GetNiceGameVersionString(tmp) + "]";
 				}
 				catch
 				{
