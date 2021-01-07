@@ -94,6 +94,30 @@ namespace Project_127
 			}
 		}
 
+
+		public static bool RecommendUpgraded()
+		{
+			if (LauncherLogic.InstallationState != LauncherLogic.InstallationStates.Upgraded)
+			{
+				Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "We need to Upgrade before doing that.\nAfter that you can Downgrade again.\nDo you want to Upgrade now?");
+				yesno.ShowDialog();
+				if (yesno.DialogResult == true)
+				{
+					LauncherLogic.Upgrade();
+					return true;
+				}
+				else
+				{
+					return false;
+				}
+			}
+			else
+			{
+				return true;
+			}
+		}
+
+
 		public static bool CheckIfRequiredComponentsAreInstalled(bool AskUser = false)
 		{
 			bool rtrn = true;
@@ -103,7 +127,7 @@ namespace Project_127
 				{
 					if (AskUser)
 					{
-						Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Component:\n" + myComponent.GetNiceName() + "\nmissing but needed.\nDo you want to install it?\n(Clicking no might result in Upgrading / Downgrading / Launching being disabled.)");
+						Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Component:\n'" + myComponent.GetNiceName() + "'\nmissing but needed.\nDo you want to install it?\n(Clicking no might result in Upgrading / Downgrading / Launching being disabled.)");
 						yesno.ShowDialog();
 						if (yesno.DialogResult == true)
 						{
@@ -116,7 +140,7 @@ namespace Project_127
 					}
 					else
 					{
-						new Popup(Popup.PopupWindowTypes.PopupOk, "Component:\n" + myComponent.GetNiceName() + "\nmissing but needed.\nIt will be downloaded and installed now.").ShowDialog();
+						new Popup(Popup.PopupWindowTypes.PopupOk, "Component:\n'" + myComponent.GetNiceName() + "'\nmissing but needed.\nIt will be downloaded and installed now.").ShowDialog();
 						return myComponent.Install();
 					}
 				}
@@ -130,7 +154,7 @@ namespace Project_127
 						{
 							if (AskUser)
 							{
-								Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Component:\n" + myComponent.GetNiceName() + "\nmissing but needed.\nDo you want to install it?\n(Clicking no might result in Upgrading / Downgrading / Launching being disabled.)");
+								Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Component:\n'" + myComponent.GetNiceName() + "'\nmissing but needed.\nDo you want to install it?\n(Clicking no might result in Upgrading / Downgrading / Launching being disabled.)");
 								yesno.ShowDialog();
 								if (yesno.DialogResult == true)
 								{
@@ -143,7 +167,7 @@ namespace Project_127
 							}
 							else
 							{
-								new Popup(Popup.PopupWindowTypes.PopupOk, "Component:\n" + myComponent.GetNiceName() + "\nmissing but needed.\nIt will be downloaded and installed now.").ShowDialog();
+								new Popup(Popup.PopupWindowTypes.PopupOk, "Component:\n'" + myComponent.GetNiceName() + "'\nmissing but needed.\nIt will be downloaded and installed now.").ShowDialog();
 								return myComponent.ReInstall();
 							}
 						}
@@ -153,20 +177,20 @@ namespace Project_127
 			return rtrn;
 		}
 
-		public static bool isCSLSocialClubRequired
-		{
-			get
-			{
-				foreach (Components myComponent in RequireCSLSocialClub)
-				{
-					if (myComponent.IsInstalled())
-					{
-						return true;
-					}
-				}
-				return false;
-			}
-		}
+		//public static bool isCSLSocialClubRequired
+		//{
+		//	get
+		//	{
+		//		foreach (Components myComponent in RequireCSLSocialClub)
+		//		{
+		//			if (myComponent.IsInstalled())
+		//			{
+		//				return true;
+		//			}
+		//		}
+		//		return false;
+		//	}
+		//}
 
 		public static Components[] RequireCSLSocialClub = new Components[] { Components.SCLRockstar124, Components.SCLRockstar127, Components.SCLSteam124, Components.SCLSteam127 };
 
@@ -190,7 +214,7 @@ namespace Project_127
 			Components MyComponent = (Components)System.Enum.Parse(typeof(Components), RealTag);
 			if (MyComponent.IsInstalled())
 			{
-				Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Do you want to Re-Install the following Component:\n" + MyComponent.GetNiceName());
+				Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Do you want to Re-Install the following Component:\n'" + MyComponent.GetNiceName() + "'");
 				yesno.ShowDialog();
 				if (yesno.DialogResult == true)
 				{
@@ -198,7 +222,7 @@ namespace Project_127
 					Refresh();
 					if (tmp)
 					{
-						new Popup(Popup.PopupWindowTypes.PopupOk, "Done Installing:\n" + MyComponent.GetNiceName()).ShowDialog();
+						new Popup(Popup.PopupWindowTypes.PopupOk, "Done Installing:\n'" + MyComponent.GetNiceName() + "'").ShowDialog();
 						if (MyComponent == Components.AdditionalSaveFiles)
 						{
 							ThrowShoutout();
@@ -206,7 +230,7 @@ namespace Project_127
 					}
 					else
 					{
-						new Popup(Popup.PopupWindowTypes.PopupOk, "Install failed. Try again:\n" + MyComponent.GetNiceName()).ShowDialog();
+						new Popup(Popup.PopupWindowTypes.PopupOk, "Install failed. Try again:\n'" + MyComponent.GetNiceName() + "'").ShowDialog();
 					}
 				}
 			}
@@ -216,7 +240,7 @@ namespace Project_127
 				Refresh();
 				if (tmp)
 				{
-					new Popup(Popup.PopupWindowTypes.PopupOk, "Done Installing:\n" + MyComponent.GetNiceName()).ShowDialog();
+					new Popup(Popup.PopupWindowTypes.PopupOk, "Done Installing:\n'" + MyComponent.GetNiceName() + "'").ShowDialog();
 					if (MyComponent == Components.AdditionalSaveFiles)
 					{
 						ThrowShoutout();
@@ -224,7 +248,7 @@ namespace Project_127
 				}
 				else
 				{
-					new Popup(Popup.PopupWindowTypes.PopupOk, "Install failed. Try again:\n" + MyComponent.GetNiceName()).ShowDialog();
+					new Popup(Popup.PopupWindowTypes.PopupOk, "Install failed. Try again:\n'" + MyComponent.GetNiceName() + "'").ShowDialog();
 				}
 			}
 		}
@@ -282,18 +306,34 @@ namespace Project_127
 
 			if (MyComponent == Components.Base)
 			{
-				new Popup(Popup.PopupWindowTypes.PopupOk, "Cant delete our Base Component:\n" + Components.Base.GetNiceName()).ShowDialog();
+				new Popup(Popup.PopupWindowTypes.PopupOk, "Cant delete our Base Component:\n'" + Components.Base.GetNiceName() + "'").ShowDialog();
 			}
-			else if (MyComponent == Components.SCLDowngradedSC && isCSLSocialClubRequired)
+			else
 			{
-				new Popup(Popup.PopupWindowTypes.PopupOk, "Cant delete that, because Components requiring this are installed.").ShowDialog();
-			}
-			else if (MyComponent.IsInstalled())
-			{
+				if (RequiredComponentsBasedOnSettings.Contains(MyComponent))
+				{
+					if (!ComponentManager.RecommendUpgraded())
+					{
+						new Popup(Popup.PopupWindowTypes.PopupOk, "Cant uninstall this Component, since its required and we are Downgraded.").ShowDialog();
+						return;
+					}
+				}
 				MyComponent.Uninstall();
 				Refresh();
-				new Popup(Popup.PopupWindowTypes.PopupOk, "Done deleting:\n" + MyComponent.GetNiceName()).ShowDialog();
 			}
+
+
+
+			//else if (MyComponent == Components.SCLDowngradedSC && isCSLSocialClubRequired)
+			//{
+			//	new Popup(Popup.PopupWindowTypes.PopupOk, "Cant delete that, because Components requiring this are installed.").ShowDialog();
+			//}
+			//else if (MyComponent.IsInstalled())
+			//{
+			//	MyComponent.Uninstall();
+			//	Refresh();
+			//	new Popup(Popup.PopupWindowTypes.PopupOk, "Done deleting:\n'" + MyComponent.GetNiceName() + "'").ShowDialog();
+			//}
 		}
 
 		private void btn_Install_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
@@ -304,7 +344,7 @@ namespace Project_127
 			{
 				MyComponent.Verify();
 				Refresh();
-				new Popup(Popup.PopupWindowTypes.PopupOk, "Done verifying:\n" + MyComponent.GetNiceName()).ShowDialog();
+				new Popup(Popup.PopupWindowTypes.PopupOk, "Done verifying:\n'" + MyComponent.GetNiceName() + "'").ShowDialog();
 			}
 		}
 
@@ -401,8 +441,8 @@ namespace Project_127
 		{
 			if (e.ClickCount >= 3)
 			{
-				if (Components.Base.IsInstalled())
-				{
+				//if (Components.Base.IsInstalled())
+				//{
 					Popups.PopupTextbox tmp = new PopupTextbox("Enter forced Version.\nClick cancel,\nif you dont know what youre doing.", "1.0.0.0");
 					tmp.ShowDialog();
 					if (tmp.DialogResult == true)
@@ -419,7 +459,7 @@ namespace Project_127
 							Refresh();
 						}
 					}
-				}
+				//}
 			}
 		}
 
@@ -480,19 +520,19 @@ namespace Project_127
 					rtrn = "Needed Files for P127 and Downgraded GTA";
 					break;
 				case ComponentManager.Components.SCLRockstar124:
-					rtrn = "Launching through Social Club for Rockstar 1.24";
+					rtrn = "Files for Launching through Social Club for Rockstar 1.24";
 					break;
 				case ComponentManager.Components.SCLRockstar127:
-					rtrn = "Launching through Social Club for Rockstar 1.27";
+					rtrn = "Files for Launching through Social Club for Rockstar 1.27";
 					break;
 				case ComponentManager.Components.SCLSteam124:
-					rtrn = "Launching through Social Club for Steam 1.24";
+					rtrn = "Files for Launching through Social Club for Steam 1.24";
 					break;
 				case ComponentManager.Components.SCLSteam127:
-					rtrn = "Launching through Social Club for Steam 1.27";
+					rtrn = "Files for Launching through Social Club for Steam 1.27";
 					break;
 				case ComponentManager.Components.SCLDowngradedSC:
-					rtrn = "Launching through Downgraded Social Club.";
+					rtrn = "Files for Launching through Downgraded Social Club.";
 					break;
 				case ComponentManager.Components.AdditionalSaveFiles:
 					rtrn = "Additional SaveFiles";
@@ -519,8 +559,24 @@ namespace Project_127
 				yesno.ShowDialog();
 				if (yesno.DialogResult == true)
 				{
-					Globals.MyDM.updateSubssembly(Component.GetAssemblyName(), true).GetAwaiter().GetResult();
-					return true;
+					if (ComponentManager.RequiredComponentsBasedOnSettings.Contains(Component) && Component != ComponentManager.Components.SCLDowngradedSC)
+					{
+						if (ComponentManager.RecommendUpgraded())
+						{
+							Globals.MyDM.updateSubssembly(Component.GetAssemblyName(), true).GetAwaiter().GetResult();
+							return true;
+						}
+						else
+						{
+							new Popup(Popup.PopupWindowTypes.PopupOk, "Abandoning Update of Component:\n'" + Component.GetNiceName() + "'").ShowDialog();
+							return false;
+						}
+					}
+					else
+					{
+						Globals.MyDM.updateSubssembly(Component.GetAssemblyName(), true).GetAwaiter().GetResult();
+						return true;
+					}
 				}
 			}
 			return false;
@@ -533,7 +589,9 @@ namespace Project_127
 		/// <returns></returns>
 		public static bool Install(this ComponentManager.Components Component)
 		{
-			return Globals.MyDM.getSubassembly(Component.GetAssemblyName()).GetAwaiter().GetResult();
+			PopupInstallComponent PIC = new PopupInstallComponent(Component);
+			PIC.ShowDialog();
+			return PIC.rtrn;
 		}
 
 		/// <summary>
@@ -543,7 +601,9 @@ namespace Project_127
 		/// <returns></returns>
 		public static bool ReInstall(this ComponentManager.Components Component)
 		{
-			return Globals.MyDM.getSubassembly(Component.GetAssemblyName(), true).GetAwaiter().GetResult();
+			PopupInstallComponent PIC = new PopupInstallComponent(Component, true);
+			PIC.ShowDialog();
+			return PIC.rtrn;
 		}
 
 

@@ -159,23 +159,11 @@ namespace Project_127
 		/// <summary>
 		/// Gets the Version (BuildVersion) of our GTA5.exe
 		/// </summary>
-		public static Version BuildVersion
+		public static Version GTABuild
 		{
 			get
 			{
-				try
-				{
-					if (HelperClasses.FileHandling.doesFileExist(LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\gta5.exe"))
-					{
-						FileVersionInfo myFVI = FileVersionInfo.GetVersionInfo(LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\gta5.exe");
-						return new Version(myFVI.FileVersion);
-					}
-				}
-				catch
-				{
-
-				}
-				return new Version("1.0.0.0");
+				return HelperClasses.FileHandling.GetVersionFromFile(LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\gta5.exe");
 			}
 		}
 
@@ -252,6 +240,9 @@ namespace Project_127
 		public static string Logfile { get; private set; } = ProjectInstallationPath.TrimEnd('\\') + @"\AAA - Logfile.log";
 
 
+		public static IPCPipeServer pipeServer = new IPCPipeServer("Project127Launcher");
+
+
 
 		#endregion
 
@@ -310,7 +301,7 @@ namespace Project_127
    
 			// Extra Features
 			{"EnableOverlay", "False"},
-			{"EnableAutoStartJumpScript", "True" },
+			{"EnableAutoStartJumpScript", "False" },
 			{"JumpScriptKey1", "32" },
 			{"JumpScriptKey2", "76" },
 			{"EnableAutoSetHighPriority", "True" },
@@ -526,11 +517,48 @@ namespace Project_127
 			// this makes its parent window show super early, which is ugly.
 			// NoteOverlay.OverlaySettingsChanged();
 
-			// Inits the FIleWatcher for IPC
-			InitFileWatcher();
+			// INIT the Inter-Process-Communication via Named Pipes. Shoutout to dr490n
+			initIPC();
 		}
 
 
+
+
+		/// <summary>
+		/// Sets up the IPC server
+		/// </summary>
+		private static void initIPC()
+		{
+			pipeServer.registerEndpoint("messageBox", (a) =>
+			{
+				MessageBox.Show(Encoding.UTF8.GetString(a));
+				return a;
+			});
+
+			pipeServer.registerEndpoint("getBaseToken", Auth.ROSCommunicationBackend.GenLaunchBase);
+
+			pipeServer.registerEndpoint("log", a =>
+			{
+				HelperClasses.Logger.Log(Encoding.UTF8.GetString(a).TrimEnd('\0'));
+				return null;
+			});
+
+
+			pipeServer.registerEndpoint("pleaseshow", a =>
+			{
+				MainWindow.MW.Dispatcher.Invoke(() =>
+				{
+					MainWindow.MW.menuItem_Show_Click(null, null);
+				});
+				return new byte[] { Convert.ToByte(true) };
+			});
+
+			pipeServer.run();
+
+
+			//var pc = new IPCPipeClient("Project127Launcher");
+			//pc.call("test", Encoding.UTF8.GetBytes("Hi"));
+		}
 
 		/// <summary>
 		/// Proper Exit Method. EMPTY FOR NOW. Get called when closed (user and taskmgr) and when PC is shutdown. Not when process is killed or power ist lost.
@@ -539,7 +567,6 @@ namespace Project_127
 		{
 			NoteOverlay.DisposeAllOverlayStuff();
 			Jumpscript.StopJumpscript();
-			Globals.FSW.Dispose();
 			MainWindow.MyDispatcherTimer.Stop();
 			MainWindow.MTLAuthTimer.Stop();
 			MainWindow.myMutex.ReleaseMutex();
@@ -558,85 +585,6 @@ namespace Project_127
 		#endregion
 
 		// Init and exit stuff above
-
-		// FileSystemWatcher (IPC) below
-
-		#region FileSystemWatcher (IPC)
-
-		/// <summary>
-		/// Reference to our FileSystemWatcher
-		/// </summary>
-		public static FileSystemWatcher FSW = new FileSystemWatcher();
-
-		/// <summary>
-		/// Inits our File Watcher for IPC
-		/// </summary>
-		public static void InitFileWatcher()
-		{
-			HelperClasses.Logger.Log("In InitFileWatcher() Creating FileSystemWatcher");
-
-			string MyPath = ProjectInstallationPath.TrimEnd('\\') + @"\dirtyprogramming";
-			if (HelperClasses.FileHandling.doesFileExist(MyPath))
-			{
-				HelperClasses.Logger.Log("Found dirtyprogramming File in the ProjectInstallationPath. Will Keep it there : )");
-			}
-			else
-			{
-				HelperClasses.Logger.Log("Found NO dirtyprogramming File in the ProjectInstallationPath. Will create it : )");
-				File.Create(MyPath).Dispose();
-			}
-
-			FSW = new FileSystemWatcher();
-
-			FSW.Path = ProjectInstallationPath;
-
-			// Watch for changes in LastAccess and LastWrite times, and
-			// the renaming of files or directories.
-			FSW.NotifyFilter = NotifyFilters.LastAccess
-								 | NotifyFilters.LastWrite
-								 | NotifyFilters.FileName
-								 | NotifyFilters.DirectoryName
-								 | NotifyFilters.Attributes
-								 | NotifyFilters.Size
-								 | NotifyFilters.CreationTime;
-
-			// Only watch text files.
-			//FSW.Filter = "PleaseShow.txt";
-
-			// Add event handlers.
-			FSW.Renamed += OnRename;
-			//FSW.Changed += OnCreated;
-
-			// Begin watching.
-			FSW.EnableRaisingEvents = true;
-			//HelperClasses.FileHandling.AddToDebug("In InitFileWatcher() Done with everything");
-
-		}
-
-		/// <summary>
-		/// Event when a file is renamed
-		/// </summary>
-		/// <param name="source"></param>
-		/// <param name="e"></param>
-		private static async void OnRename(object source, RenamedEventArgs e)
-		{
-			//HelperClasses.FileHandling.AddToDebug("In OnRename() - " + $"File: {e.OldFullPath} renamed to {e.FullPath}");
-
-			if (e.Name == "pleaseshow")
-			{
-				//HelperClasses.FileHandling.AddToDebug("In OnRename(). IT IS OUR FILE  YEAH");
-				HelperClasses.FileHandling.RenameFile(HelperClasses.FileHandling.PathCombine(Globals.ProjectInstallationPath, "pleaseshow"), "dirtyprogramming");
-				await Task.Delay(100);
-				MainWindow.MW.Dispatcher.Invoke(() =>
-				{
-					MainWindow.MW.menuItem_Show_Click(null, null);
-				});
-			}
-		}
-
-		#endregion
-
-		// FileSystemWatcher (IPC) above
 
 		// Update Stuff below
 
@@ -662,14 +610,6 @@ namespace Project_127
 		public static void CheckForUpdate()
 		{
 			string XML_Autoupdate_Temp = XML_AutoUpdate;
-
-			// CTRLF CTRL F CTRL-F REMOVE THIS TODO TO DO
-			string tease = HelperClasses.FileHandling.GetXMLTagContent(XML_Autoupdate_Temp, "tease");
-			if (tease.ToLower() != "true")
-			{
-				// if user gets here from settings click...button will be there until refresh or reload...what evs.
-				HelperClasses.RegeditHandler.DeleteValue("TeasingFeatures");
-			}
 
 			HelperClasses.BuildVersionTable.ReadFromGithub();
 
@@ -1351,11 +1291,6 @@ namespace Project_127
 					HelperClasses.Logger.Log("Found old build ('.BACKUP'). Will delete it.");
 					HelperClasses.FileHandling.deleteFile(myFile);
 				}
-				if (myFile.ToLower().Contains(".exe") && !myFile.ToLower().Contains("Project 127 Launcher.exe".ToLower()))
-				{
-					HelperClasses.Logger.Log("Found exe File ('" + myFile + "'). Will delete it.");
-					HelperClasses.FileHandling.deleteFile(myFile);
-				}
 				if (myFile.ToLower().Contains("dl.zip"))
 				{
 					HelperClasses.Logger.Log("Found zip File ('DL.ZIP'). Will delete it.");
@@ -1380,14 +1315,14 @@ namespace Project_127
 
 		public static string GetGameInfoForDebug(string pFilePath)
 		{
-			if (HelperClasses.FileHandling.doesFileExist(pFilePath))
+			Version tmp = HelperClasses.FileHandling.GetVersionFromFile(pFilePath);
+			if (tmp != new Version("0.0.0.1"))
 			{
-				FileVersionInfo FVI = FileVersionInfo.GetVersionInfo(pFilePath);
-				string rtrn = " [" + new Version(FVI.FileVersion).ToString();
+				string rtrn = " [" + tmp.ToString();
 
 				try
 				{
-					rtrn += " - " + BuildVersionTable.GetNiceGameVersionString(new Version(FVI.FileVersion)) + "]";
+					rtrn += " - " + BuildVersionTable.GetNiceGameVersionString(tmp) + "]";
 				}
 				catch
 				{

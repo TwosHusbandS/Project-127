@@ -151,7 +151,7 @@ namespace Project_127.HelperClasses
 		/// </summary>
 		/// <param name="pBuildVersion"></param>
 		/// <returns></returns>
-		public static string GetNiceGameVersionString(Version pBuildVersion, bool StrictGameVersion = false)
+		public static string GetNiceGameVersionString(Version pBuildVersion)
 		{
 			string rtrn = "";
 
@@ -164,15 +164,12 @@ namespace Project_127.HelperClasses
 
 					if (i == MyBuildVersionTable.Count - 1 && (pBuildVersion > MyBuildVersionTable[i].MyBuildVersion))
 					{
-						if (!StrictGameVersion)
-						{
-							rtrn = ">";
-						}
+						rtrn = ">";
 					}
 				}
 			}
 
-			if (LastVersionIwasBiggerthan == new Version("1.0") && !StrictGameVersion)
+			if (LastVersionIwasBiggerthan == new Version("1.0"))
 			{
 				rtrn = "???";
 			}
@@ -181,10 +178,8 @@ namespace Project_127.HelperClasses
 				rtrn += LastVersionIwasBiggerthan.Major + "." + LastVersionIwasBiggerthan.Minor;
 			}
 
-			if (!StrictGameVersion)
-			{
-				rtrn = "(" + rtrn + ")";
-			}
+
+			rtrn = "(" + rtrn + ")";
 
 
 			return rtrn;

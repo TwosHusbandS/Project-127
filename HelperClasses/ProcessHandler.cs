@@ -26,8 +26,10 @@ namespace Project_127.HelperClasses
 		public static void KillRockstarProcesses()
 		{
 			// TODO CTRLF add other ProcessNames
-			string ProcessNames = "gta";
-			KillProcessesContains(ProcessNames);
+			KillProcessesContains("gta");
+			KillProcessesContains("rockstar");
+			KillProcessesContains("play127");
+			KillProcessesContains("gtaddl");
 		}
 
 		/// <summary>

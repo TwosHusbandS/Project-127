@@ -88,6 +88,28 @@ namespace Project_127.HelperClasses
 
 
 
+		public static Version GetVersionFromFile(string filePath, bool defaultToHighVersion = false)
+		{
+			Version rtrn = new Version("0.0.0.1");
+			if (defaultToHighVersion)
+			{
+				rtrn = new Version("99.99.99.99");
+			}
+
+			if (HelperClasses.FileHandling.doesFileExist(filePath))
+			{
+				try
+				{
+					FileVersionInfo FVI = FileVersionInfo.GetVersionInfo(filePath);
+					rtrn = new Version(FVI.FileVersion);
+				}
+				catch { }
+			}
+
+			return rtrn;
+		}
+
+
 
 		/// <summary>
 		/// Gets all the Files in one Folder (and its Subfolders)
@@ -386,13 +408,13 @@ namespace Project_127.HelperClasses
 		public static bool URLExists(string url, int TimeOutMS = 500)
 		{
 			bool result = true;
-
-			WebRequest webRequest = WebRequest.Create(url);
-			webRequest.Timeout = TimeOutMS;
-			webRequest.Method = "HEAD";
-
+			
 			try
 			{
+				WebRequest webRequest = WebRequest.Create(url);
+				webRequest.Timeout = TimeOutMS;
+				webRequest.Method = "HEAD";
+
 				webRequest.GetResponse();
 			}
 			catch

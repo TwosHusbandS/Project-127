@@ -255,9 +255,21 @@ namespace Project_127
 
 			AddParagraph(rtb_About, "You are running Project 1.27, a tool for the GTA V Speedrunning Community. This was created for the patch 1.27 downgrade problem, which started in August of 2020. This tool has a number of features, including Downgrading, Upgrading and launching the game.");
 
-			AddParagraph(rtb_About, "If you have any issues with this program or ideas for new features,\n" + "feel free to contact me on Discord: @thS#0305");
+			AddParagraph(rtb_About, "This whole Project would not have been possible without the hard work of @dr490n, @Special For, @thS who worked on this for month in their free time, going above and beyond what was required.");
 
 			AddHyperlinkText(rtb_About, "https://www.mind.org.uk/donate", "Charity", "If you want to support us, we encourage you to donate to a ", " of your chosing.");
+
+			//dragonsreadme
+			string dragonsReadMe = HelperClasses.FileHandling.GetXMLTagContent(Globals.XML_AutoUpdate, "dragonsreadme");
+			if (HelperClasses.FileHandling.URLExists(dragonsReadMe))
+			{
+				AddHyperlinkText(rtb_About, dragonsReadMe, "here", "@d490n, who did all of the game-launch related work which made P127 possible, uploaded his work, sourcecode and documented his findings on his Github ", ".");
+			}
+			 
+
+			AddParagraph(rtb_About, "If you are having trouble with Project 1.27 or are running into any issues, please read the \"Help-Section\" and visit the GTA V Speedrun Discord and post it in the \"Project-1-27-Chat\" Channel.");
+
+			AddParagraph(rtb_About, "For anything regarding this client, feel free to contact me on Discord:\n@thS#0305");
 
 			AddParagraph(rtb_About, "");
 		}
@@ -295,7 +307,7 @@ namespace Project_127
 
 			AddParagraph(rtb_Help, "If you still cant get it to work or you wish to contact me, please RIGHT-click the Auth icon (the one with the lock icon in the top left corner) and send me the AAA - Logfile.log and the AAA - Debugfile.txt from the folder which will open (Project 1.27 Installation Directory) and include a detailed Report of what you did and whats not working.");
 
-			AddParagraph(rtb_Help, "I hope everything works for you and you dont experience any crashes or anything like that. In case you do, i sincerly apoligze for the inconvenience. Feel free to contact me for help :) Discord: @thS#0305.");
+			AddParagraph(rtb_Help, "I hope everything works for you and you dont experience any crashes or anything like that. In case you do, i sincerly apoligze for the inconvenience. Visit the GTA V Speedrun Discord and post it in the \"Project-1-27-Chat\" Channel.");
 
 			AddParagraph(rtb_Help, "I hope whoever reads this has a great day : )");
 
