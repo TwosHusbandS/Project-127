@@ -11,6 +11,7 @@ using Project_127.HelperClasses;
 using Project_127.Overlay;
 using Project_127.Popups;
 using Project_127.MySettings;
+using System.Threading;
 
 namespace Project_127.HelperClasses
 {
@@ -21,6 +22,8 @@ namespace Project_127.HelperClasses
 	{
 		// We should probably use a logging libary / framework now that I think about it...whatevs
 		// Actually implementing this probably took less time than googling "Logging class c#", and we have more control over it
+
+		private static Mutex mut = new Mutex();
 
 		/// <summary>
 		/// Init Function which gets called once at the start.
@@ -48,6 +51,7 @@ namespace Project_127.HelperClasses
 		/// <param name="pLogMessage"></param>
 		public static void Log(string pLogMessage, bool pSkipLogSetting, int pLogLevel)
 		{
+			mut.WaitOne();
 			if (pSkipLogSetting)
 			{
 				string LogMessage = "[" + DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss") + "] - ";
@@ -62,6 +66,7 @@ namespace Project_127.HelperClasses
 
 				HelperClasses.FileHandling.AddToLog(Globals.Logfile, LogMessage);
 			}
+			mut.ReleaseMutex();
 		}
 
 		/// <summary>

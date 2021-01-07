@@ -132,7 +132,14 @@ namespace Project_127.HelperClasses
                 var ret = endpoints[epTarget](input.Skip(epEnd + 1).ToArray());
                 if (ret != null)
                 {
-                    pS.Write(ret, 0, ret.Length);
+                    try
+                    {
+                        pS.Write(ret, 0, ret.Length);
+                    }
+                    catch
+                    {
+                        HelperClasses.Logger.Log("Pipe write failure");
+                    }
                 }
                 
             } 
