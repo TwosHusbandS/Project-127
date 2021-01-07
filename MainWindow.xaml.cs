@@ -58,16 +58,24 @@ Done since 1.1:
 - Recommending Upgrading before required Component Updates
 - dr490ns github link
 
+- Donezo manifesto (CLG Fans will remember)
+- dr490ns IPC (this fixes "please launch through P127")
+- dr490ns DownloadManager fixes (for crash on startup)
+
+
 To Do before 1.1:
 - QOL:
 	=> Method which "saves" what files we ever put into GTA InstallationLocation. What are files i think of as "DowngradeFiles", what are files i ever placed in your GTA "Installation". Save in Registry Write in DebugMode
 	=> README Automatic License
 	=> Logging in general
 
-- TEST P127 crashes because of DownloadManager on bad registry value
-
+- Not downloading ALL required Components on settings change
 - Social Club switcheroo inside P127...really annoying. 
-- FUCK YOU Manifesto on some timed rightclicks on looks tab of overlay page
+- Window name change thingy :D 
+- ReadMe, Patchnotes
+- Weird YES/NO POPUP. REPLICATE GAME UPDATE SCENARIO TO TEST IF THAT WORKS.
+- [ASK DRAGON IF FIXED] Overlay Multi Monitor Scaling.
+	=> Properties in GTAOverlay.cs (_YMargin and width)
 
  */
 
@@ -325,7 +333,7 @@ namespace Project_127
 		/// <summary>
 		/// Gets called when another P127 instance is already running. 
 		/// </summary>
-		public async void AlreadyRunning()
+		public void AlreadyRunning()
 		{
 
 			try

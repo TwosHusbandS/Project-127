@@ -134,12 +134,6 @@ namespace Project_127
 		/// <param name="e"></param>
 		private void btn_Upgrade_Click(object sender, RoutedEventArgs e)
 		{
-			if (!ComponentManager.CheckIfRequiredComponentsAreInstalled(true))
-			{
-				new Popups.Popup(Popups.Popup.PopupWindowTypes.PopupOk, "Cant do that because of because of missing Components").ShowDialog();
-				return;
-			}
-
 			// Confirmation Popup
 			Popup conf = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Do you want to Upgrade?");
 			conf.ShowDialog();
@@ -225,12 +219,6 @@ namespace Project_127
 		/// <param name="e"></param>
 		private void btn_Downgrade_Click(object sender, RoutedEventArgs e)
 		{
-			if (!ComponentManager.CheckIfRequiredComponentsAreInstalled(true))
-			{
-				new Popups.Popup(Popups.Popup.PopupWindowTypes.PopupOk, "Cant do that because of because of missing Components").ShowDialog();
-				return;
-			}
-
 			// Confirmation Popup
 			Popup conf = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Do you want to Downgrade?");
 			conf.ShowDialog();

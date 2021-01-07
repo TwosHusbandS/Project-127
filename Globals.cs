@@ -483,9 +483,22 @@ namespace Project_127
 					// Create Registry Key here...
 				}
 
+
+				if (Settings.LastLaunchedVersion < new Version("1.2.0.0"))
+				{
+					if (Settings.EnableLegacyAuth)
+					{
+						Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "The captcha-free-Authentication (MTL) has been improved,\nand should be working for everyone on this version.\nWould you like to enable it?");
+						yesno.ShowDialog();
+						if (yesno.DialogResult == true)
+						{
+							Settings.EnableLegacyAuth = false;
+						}
+					}
+				}
+
 				Settings.LastLaunchedVersion = Globals.ProjectVersion;
 			}
-
 
 			// Deleting all Installer and ZIP Files from own Project Installation Path
 			DeleteOldFiles();
@@ -518,6 +531,7 @@ namespace Project_127
 			// NoteOverlay.OverlaySettingsChanged();
 
 			// INIT the Inter-Process-Communication via Named Pipes. Shoutout to dr490n
+
 			initIPC();
 		}
 
@@ -540,9 +554,8 @@ namespace Project_127
 			pipeServer.registerEndpoint("log", a =>
 			{
 				HelperClasses.Logger.Log(Encoding.UTF8.GetString(a).TrimEnd('\0'));
-				return null;
+				return a.Take(1).ToArray();
 			});
-
 
 			pipeServer.registerEndpoint("pleaseshow", a =>
 			{
@@ -554,7 +567,6 @@ namespace Project_127
 			});
 
 			pipeServer.run();
-
 
 			//var pc = new IPCPipeClient("Project127Launcher");
 			//pc.call("test", Encoding.UTF8.GetBytes("Hi"));

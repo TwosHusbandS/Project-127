@@ -308,7 +308,8 @@ namespace Project_127
 
 		private void MI_ExitToTray_Click(object sender, RoutedEventArgs e)
 		{
-			this.Hide();
+			Globals.DebugPopup(Overlay.NoteOverlay.MyGTAOverlay.YMargin.ToString());
+			//this.Hide();
 		}
 
 		private void MI_Close_Click(object sender, RoutedEventArgs e)

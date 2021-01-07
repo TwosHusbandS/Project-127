@@ -198,7 +198,18 @@ namespace Project_127.Overlay
 		{
 			get
 			{
-				return _YMargin;
+				if (OverlayMode == OverlayModes.Borderless)
+				{
+					if (MainWindow.OL_MM != null)
+					{
+						return (int)MainWindow.OL_MM.ActualWidth;
+					}
+					return 80;
+				}
+				else
+				{
+					return _YMargin;
+				}
 			}
 			set
 			{
@@ -252,7 +263,9 @@ namespace Project_127.Overlay
 				{
 					if (MainWindow.OL_MM != null)
 					{
-						MainWindow.OL_MM.Width = value;
+						//MainWindow.OL_MM.Width = 100;
+						double ration = MainWindow.OL_MM.ActualWidth / MainWindow.OL_MM.Width;
+						MainWindow.OL_MM.Width = value / ration;
 					}
 				}
 			}
