@@ -408,13 +408,13 @@ namespace Project_127.HelperClasses
 		public static bool URLExists(string url, int TimeOutMS = 500)
 		{
 			bool result = true;
-
-			WebRequest webRequest = WebRequest.Create(url);
-			webRequest.Timeout = TimeOutMS;
-			webRequest.Method = "HEAD";
-
+			
 			try
 			{
+				WebRequest webRequest = WebRequest.Create(url);
+				webRequest.Timeout = TimeOutMS;
+				webRequest.Method = "HEAD";
+
 				webRequest.GetResponse();
 			}
 			catch

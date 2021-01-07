@@ -36,6 +36,7 @@
   <tease>true</tease>
   <specialbuildname></specialbuildname>
   <comment>Backwards Compability</comment>
+  <dragonsreadme></dragonsreadme>
   <authuser>https://raw.githubusercontent.com/TwosHusbandS/Project-127/master/Installer/AuthUser.txt</authuser>
   <DLLinkG>https://github.com/TwosHusbandS/Project-127/releases/download/V_Final/file.g</DLLinkG>
   <DLLinkGHash>5c706e27f1f204050450839f24e12c8a</DLLinkGHash>

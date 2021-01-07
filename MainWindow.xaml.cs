@@ -36,7 +36,10 @@ Deploy Instructions:
 Comments like "TODO", "TO DO", "CTRLF", "CTRL-F", and "CTRL F" are just ways of finding a specific line quickly via searching
 
 Hybrid code can be found in AAA_HybridCode.
-		
+	
+
+TO DO POST 1.1:
+- Release RequiredFiles 14 (POST 1.2 LAUNCH, NEED 1.2 P127 LOGIC)
 
 Done since 1.1:
 - Download Popups now only throw one line of log. In all circumstances
@@ -48,22 +51,22 @@ Done since 1.1:
 - Killing all Processes (even dragons, when needed) now
 - Separate "Install Componenet" Popup in case it freezes at the end for 2-3 Seconds
 
+- Jumpscript added more keys (probably broken on non german keyboard. Who gives a shit). ALso made it default to false.
+- Use dr490ns IPC for P127 Starting and Showing
+- Fix P127 not being able to minimize
+- not using my discord contact information anymore.
+- Recommending Upgrading before required Component Updates
+- dr490ns github link
 
 To Do before 1.1:
 - QOL:
-	=> README license
-	=> README Programming language
+	=> Method which "saves" what files we ever put into GTA InstallationLocation. What are files i think of as "DowngradeFiles", what are files i ever placed in your GTA "Installation". Save in Registry Write in DebugMode
+	=> README Automatic License
+	=> Logging in general
 
-- Investigate MTL
-- Are we deleting files inside DowngradeFiles (both emu and launch through social club files) when theres an update? So Upgrading / Downgrading doesnt copy no longer needed Files
-- P127 crashes because of DownloadManager on bad registry value
-- add steam_appid.txt to SocialClubFiles
-- Release RequiredFiles 14 (POST 1.2 LAUNCH, NEED 1.2 P127 LOGIC)
+- TEST P127 crashes because of DownloadManager on bad registry value
 
-- Jumpscript stupid additional keys nobody ever heard off...(all special chars, right side of letters on thS keyboard)
 - Social Club switcheroo inside P127...really annoying. 
-- Method which "saves" what files we ever put into GTA InstallationLocation. What are files i think of as "DowngradeFiles", what are files i ever placed in your GTA "Installation". Save in Registry. Write in DebugMode
-- Logging in general
 - FUCK YOU Manifesto on some timed rightclicks on looks tab of overlay page
 
  */
@@ -147,8 +150,6 @@ namespace Project_127
 		/// Property of the Dispatcher Timer we use to control automatic MTL session retrieval
 		/// </summary>
 		public static DispatcherTimer MTLAuthTimer;
-
-		public static IPCPipeServer pipeServer = new IPCPipeServer("Project127Launcher");
 
 		/// <summary>
 		/// Constructor of Main Window
@@ -239,8 +240,6 @@ namespace Project_127
 
 			StartMTLDispatcherTimer();
 
-			initIPC();
-
 			HelperClasses.Logger.Log("Only CEF Init to go...");
 
 			Auth.ROSIntegration.CEFInitialize();
@@ -328,36 +327,41 @@ namespace Project_127
 		/// </summary>
 		public async void AlreadyRunning()
 		{
-			// renames some File which the other instance has a System File Watcher on. Very basic IPC.
-			string myPath = Globals.ProjectInstallationPath.TrimEnd('\\') + @"\dirtyprogramming";
-			string myPathNew = Globals.ProjectInstallationPath.TrimEnd('\\') + @"\pleaseshow";
-			HelperClasses.FileHandling.RenameFile(myPath, "pleaseshow");
 
-			// waiting 2 seconds for the other instance to do stuff.
-			await Task.Delay(2000);
-
-			// if renamed file still exists, IPC failed
-			if (HelperClasses.FileHandling.doesFileExist(myPathNew))
+			try
 			{
-				Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Program is open twice.\nAttempt to talk to already running instance failed.\nForce Close Everything?");
-				yesno.ShowDialog();
-				if (yesno.DialogResult == true)
+				var pc = new IPCPipeClient("Project127Launcher");
+
+				byte[] rtrn = pc.call("pleaseshow", Encoding.UTF8.GetBytes("ThanksDragonForImplementing"));
+
+				System.Threading.Thread.Sleep(500);
+
+				if (rtrn[0] == Convert.ToByte(true))
 				{
-					foreach (Process p in HelperClasses.ProcessHandler.GetProcessesContains(Process.GetCurrentProcess().ProcessName))
-					{
-						if (p != Process.GetCurrentProcess())
-						{
-							HelperClasses.ProcessHandler.Kill(p);
-						}
-					}
-					Globals.ProperExit();
+					this.Close();
+					Environment.Exit(0);
+					return;
 				}
 			}
-			else
+			catch
 			{
-				// IPC sucess
+
+			}
+
+			Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Program is open twice.\nAttempt to talk to already running instance failed.\nForce Close Everything?");
+			yesno.ShowDialog();
+			if (yesno.DialogResult == true)
+			{
+				foreach (Process p in HelperClasses.ProcessHandler.GetProcessesContains(Process.GetCurrentProcess().ProcessName))
+				{
+					if (p != Process.GetCurrentProcess())
+					{
+						HelperClasses.ProcessHandler.Kill(p);
+					}
+				}
 				Globals.ProperExit();
 			}
+
 		}
 
 
@@ -416,30 +420,7 @@ namespace Project_127
 			MainWindow.MW.UpdateGUIDispatcherTimer();
 		}
 
-		/// <summary>
-		/// Sets up the IPC server
-		/// </summary>
-		private void initIPC()
-        {
-			pipeServer.registerEndpoint("messageBox", (a) => {
-				MessageBox.Show(Encoding.UTF8.GetString(a));
-				return a;
-			});
 
-			pipeServer.registerEndpoint("getBaseToken", Auth.ROSCommunicationBackend.GenLaunchBase);
-
-			pipeServer.registerEndpoint("log", a =>
-			{
-				HelperClasses.Logger.Log(Encoding.UTF8.GetString(a).TrimEnd('\0'));
-				return a.Take(1).ToArray();
-			});
-
-			pipeServer.run();
-
-
-			//var pc = new IPCPipeClient("Project127Launcher");
-			//pc.call("test", Encoding.UTF8.GetBytes("Hi"));
-		}
 
 		/// <summary>
 		/// Updates the GUI with relevant stuff. Gets called every 2.5 Seconds

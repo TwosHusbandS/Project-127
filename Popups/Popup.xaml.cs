@@ -60,7 +60,7 @@ namespace Project_127.Popups
 			// Add "Support Text" to bottom if error
 			if (pPopupWindowType == PopupWindowTypes.PopupOkError)
 			{
-				lbl_Main.Content = pMsg + "\n\nI suggest going to: Information -> Help\nIf this happens a lot,\nContact me on Discord:\n@thS#0305";
+				lbl_Main.Content = pMsg + "\n\nI suggest going to: Information -> Help\nIf this happens a lot,\nVisit the GTA V Speedrun Discord and post it in the \"Project-1-27-Chat\" Channel.";
 			}
 
 			// If its a "OK" Window:
