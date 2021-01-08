@@ -194,8 +194,8 @@ namespace Project_127.HelperClasses
                 foreach (XPathNavigator folderEntry in folders)
                 {
                     var fol = getSubassemblyFolder(root, folderEntry);
-                    subInfo.files.AddRange(fol.Key);
-                    if (!fol.Value)
+                    subInfo.files.AddRange(fol.Item1);
+                    if (!fol.Item2)
                     {
                         delSubassemblyFiles(subInfo.files);
                         return false;
@@ -401,7 +401,7 @@ namespace Project_127.HelperClasses
             }
             return null;
         }
-        private KeyValuePair<List<subAssemblyFile>, bool> getSubassemblyFolder(string path, XPathNavigator folderEntry)
+        private Tuple<List<subAssemblyFile>, bool> getSubassemblyFolder(string path, XPathNavigator folderEntry)
         {
             var outp = new List<subAssemblyFile>();
             path.TrimEnd("\\");
@@ -413,7 +413,7 @@ namespace Project_127.HelperClasses
                 var saf = getSubassemblyFile(path, file);
                 if (saf == null)
                 {
-                    return new KeyValuePair<List<subAssemblyFile>,bool>(outp,false);
+                    return new Tuple<List<subAssemblyFile>,bool>(outp,false);
                 }
                 outp.Add(saf);
             }
@@ -421,13 +421,13 @@ namespace Project_127.HelperClasses
             foreach (XPathNavigator folder in folders)
             {
                 var gfo = getSubassemblyFolder(path, folder);
-                outp.AddRange(gfo.Key);
-                if (!gfo.Value)
+                outp.AddRange(gfo.Item1);
+                if (!gfo.Item2)
                 {
-                    return new KeyValuePair<List<subAssemblyFile>, bool>(outp, false);
+                    return new Tuple<List<subAssemblyFile>, bool>(outp, false);
                 }
             }
-            return new KeyValuePair<List<subAssemblyFile>, bool>(outp, true);
+            return new Tuple<List<subAssemblyFile>, bool>(outp, true);
         }
 
         /// <summary>
