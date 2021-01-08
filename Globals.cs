@@ -611,7 +611,7 @@ namespace Project_127
 					return "[ERR]";
                 }
 			};
-			DynamicText.registerVarGetter("ctime", DateTime.Now.ToString);
+			DynamicText.registerVarGetter("ctime", () => DateTime.Now.ToString());
 			DynamicText.registerVarGetter("missions", () => baseHandler(
 				()=> GTAPointerPathHandler.EvalPointerPath_I32(
 					stateVarsCurrent["missionCounter"]
