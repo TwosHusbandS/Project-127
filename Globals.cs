@@ -574,10 +574,10 @@ namespace Project_127
 		private static void initDynamicTextGetters()
         {
 			/*
-			 * $mission
+			 * $missions
 			 * $sandf
 			 * $usj
-			 * $briges
+			 * $bridges
 			 * $randevs
 			 * $hobbies
 			 * $cutscene
@@ -586,48 +586,165 @@ namespace Project_127
 			 * $percent
 			 * $golfhole
 			 */
-			DynamicText.registerVarGetter("ctime", DateTime.Now.ToString);
-			DynamicText.registerVarGetter("usj", () =>
+
+			Func<Func<string>,string> baseHandler = a => 
 			{
 				if (!GTAPointerPathHandler.processFound)
-                {
+				{
 					return "[NF]";
-                }
-				else
+				}
+				else if(GTABuild != new Version(1, 0, 372, 2))
+				{
+					return "[N/A]";
+				}
+				try
                 {
-					try
-                    {
-						int usj;
-						if (GTABuild != new Version(1, 0, 372, 2))
-                        {
-							return "[N/A]";
-						}
-						if (Settings.EnableAlternativeLaunch && 
-							Settings.Retailer == Settings.Retailers.Steam)
-                        {
-							usj = GTAPointerPathHandler.EvalPointerPath_I32(new int[] {
-								0x2193E58,
-								0x10378
-							});
-						}
-                        else
-                        {
-							usj = GTAPointerPathHandler.EvalPointerPath_I32(new int[] {
-								0x2A07E70,
-								0xCE5C0
-							});
-						}
-						return usj.ToString();
-                    }
-                    catch
-                    {
-						return "[ERR]";
-                    }
+					return a();
                 }
-			});
+                catch
+                {
+					return "[ERR]";
+                }
+			};
+			DynamicText.registerVarGetter("ctime", DateTime.Now.ToString);
+			DynamicText.registerVarGetter("missions", () => baseHandler(
+				()=> GTAPointerPathHandler.EvalPointerPath_I32(
+					stateVarsCurrent["missionCounter"]
+					).ToString()
+				)
+			);
+			DynamicText.registerVarGetter("sandf", () => baseHandler(
+				() => GTAPointerPathHandler.EvalPointerPath_I32(
+					stateVarsCurrent["sAndFCounter"]
+					).ToString()
+				)
+			);
+			DynamicText.registerVarGetter("usj", () => baseHandler(
+				 () => GTAPointerPathHandler.EvalPointerPath_I32(
+					 stateVarsCurrent["uniqueStuntJumps"]
+					 ).ToString()
+				 )
+			);
+			DynamicText.registerVarGetter("bridges", () => baseHandler(
+				 () => GTAPointerPathHandler.EvalPointerPath_I32(
+					 stateVarsCurrent["bridgeCounter"]
+					 ).ToString()
+				 )
+			);
+			DynamicText.registerVarGetter("randevs", () => baseHandler(
+				 () => GTAPointerPathHandler.EvalPointerPath_I32(
+					 stateVarsCurrent["randEvCounter"]
+					 ).ToString()
+				 )
+			);
+			DynamicText.registerVarGetter("hobbies", () => baseHandler(
+				 () => GTAPointerPathHandler.EvalPointerPath_I32(
+					 stateVarsCurrent["hobbies"]
+					 ).ToString()
+				 )
+			);
+			DynamicText.registerVarGetter("cutscene", () => baseHandler(
+				 () => {
+					 var cc = GTAPointerPathHandler.EvalPointerPath(255,
+						 stateVarsCurrent["currCutscene"]);
+					 if (cc == null)
+                     {
+						 return "";
+					 }
+					 else
+                     {
+						 return Encoding.UTF8.GetString(cc.TakeWhile(a => a != '\0').ToArray());
+                     }
+				 }
+				 )
+			);
+			DynamicText.registerVarGetter("script", () => baseHandler(
+				 () => {
+					 var cc = GTAPointerPathHandler.EvalPointerPath(255,
+						 stateVarsCurrent["currScript"]);
+					 if (cc == null)
+					 {
+						 return "";
+					 }
+					 else
+					 {
+						 return Encoding.UTF8.GetString(cc.TakeWhile(a => a != '\0').ToArray());
+					 }
+				 }
+				 )
+			);
+			DynamicText.registerVarGetter("percent", () => baseHandler(
+				 () => GTAPointerPathHandler.EvalPointerPath_fp32(
+					 stateVarsCurrent["percent"]
+					 ).ToString("##0.00")
+				 )
+			);
+			DynamicText.registerVarGetter("golfhole", () => baseHandler(
+				 () => GTAPointerPathHandler.EvalPointerPath_I32(
+					 stateVarsCurrent["golfHole"]
+					 ).ToString()
+				 )
+			);
 		}
 
-		
+
+
+		/// <summary>
+		/// Dictionary with all pointer paths for 1.27 vars (steam)
+		/// </summary>
+		private static Dictionary<string, int[]> stateVarsSteam = new Dictionary<string, int[]>
+		{
+			{"missionCounter", new int[]{ 0x2A0D4B0, 0xBDA08 } },
+			{"sAndFCounter", new int[]{ 0x2A0D4B0, 0xBDA20 } },
+			{"uniqueStuntJumps", new int[]{ 0x2193E58, 0x10378 } },
+			{"bridgeCounter", new int[]{ 0x2A0D4B0, 0x30318 } },
+			{"randEvCounter", new int[]{ 0x2A0D4B0, 0xBDA28 } },
+			{"hobbies", new int[]{ 0x2A0D4B0, 0xBDA10 } },
+			{"currCutscene", new int[]{ 0x01CB8530, 0xB70 } },
+			{"currScript", new int[]{ 0x1CB8710 } },
+			//{"loading", new int[]{ 0x2157FA0 } },
+			{"percent", new int[]{ 0x0218FAD8, 0x18068 } },
+			{"golfHole", new int[]{ 0x1DDC004 } }
+
+		};
+
+		/// <summary>
+		/// Dictionary with all pointer paths for 1.27 vars (RGL)
+		/// </summary>
+		private static Dictionary<string, int[]> stateVarsRGL = new Dictionary<string, int[]>
+		{
+			{"missionCounter", new int[]{ 0x2A07E70, 0xBDA08 } },
+			{"sAndFCounter", new int[]{ 0x2A07E70, 0xBDA20 } },
+			{"uniqueStuntJumps", new int[]{ 0x2A07E70, 0xCE5C0 } },
+			{"bridgeCounter", new int[]{ 0x2A07EC8, 0x40318 } },
+			{"randEvCounter", new int[]{ 0x2A07E70, 0xBDA28 } },
+			{"hobbies", new int[]{ 0x2A07E70, 0xBDA10 } },
+			{"currCutscene", new int[]{ 0x01CB44A0, 0xB70 } },
+			{"currScript", new int[]{ 0x1CB4340 } },
+			//{"loading", new int[]{ 0x2153C30 } },
+			{"percent", new int[]{ 0x0218FAD8, 0x18068 } },
+			{"golfHole", new int[]{ 0x1DE3970 } }
+
+		};
+
+		/// <summary>
+		/// Dictionary with all pointer paths for 1.27 vars
+		/// </summary>
+		public static Dictionary<string, int[]> stateVarsCurrent
+        {
+            get
+            {
+				if (Settings.EnableAlternativeLaunch &&
+					Settings.Retailer == Settings.Retailers.Steam)
+				{
+					return stateVarsSteam;
+				}
+				else
+				{
+					return stateVarsRGL;
+				}
+			}
+        }
 
 		/// <summary>
 		/// Proper Exit Method. EMPTY FOR NOW. Get called when closed (user and taskmgr) and when PC is shutdown. Not when process is killed or power ist lost.
