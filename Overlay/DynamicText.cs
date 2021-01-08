@@ -66,7 +66,7 @@ namespace Project_127.Overlay
                         });
                         ccont.Clear();
                     }
-                    if (char.IsWhiteSpace(c))
+                    if (!char.IsLetterOrDigit(c))
                     {
                         map.Add(new mapSection
                         {

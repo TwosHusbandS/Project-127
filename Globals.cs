@@ -654,26 +654,28 @@ namespace Project_127
 						 stateVarsCurrent["currCutscene"]);
 					 if (cc == null)
                      {
-						 return "";
+						 return "NONE";
 					 }
 					 else
                      {
-						 return Encoding.UTF8.GetString(cc.TakeWhile(a => a != '\0').ToArray());
+						 var s = Encoding.UTF8.GetString(cc.TakeWhile(a => a != '\0').ToArray());
+						 return (s == "") ? "NONE" : s;
                      }
 				 }
 				 )
 			);
 			DynamicText.registerVarGetter("script", () => baseHandler(
 				 () => {
-					 var cc = GTAPointerPathHandler.EvalPointerPath(255,
+					 var cs = GTAPointerPathHandler.EvalPointerPath(255,
 						 stateVarsCurrent["currScript"]);
-					 if (cc == null)
+					 if (cs == null)
 					 {
 						 return "NONE";
 					 }
 					 else
 					 {
-						 return Encoding.UTF8.GetString(cc.TakeWhile(a => a != '\0').ToArray());
+						 var s = Encoding.UTF8.GetString(cs.TakeWhile(a => a != '\0').ToArray());
+						 return (s == "") ? "NONE" : s;
 					 }
 				 }
 				 )
@@ -689,7 +691,7 @@ namespace Project_127
 					 else
 					 {
 						 var s = Encoding.UTF8.GetString(cc.TakeWhile(a => a != '\0').ToArray());
-						 return MissionIdentifiers.getMissionInfo(s).Item1;
+						 return (s == "") ? "NONE" : MissionIdentifiers.getMissionInfo(s).Item1;
 					 }
 				 }
 				 )
