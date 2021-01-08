@@ -55,11 +55,11 @@ namespace Project_127.HelperClasses
         {
             get
             {
-                if (_prochandle != IntPtr.Zero && BaseProcess == _baseprocess)
+                if (_prochandle != IntPtr.Zero && BaseProcess.Id == _baseprocess.Id)
                 {
                     return _prochandle;
                 }
-                else if (BaseProcess != null || BaseProcess != _baseprocess)
+                else if (BaseProcess != null || BaseProcess.Id != _baseprocess.Id)
                 {
                     _baseprocess = BaseProcess;
                     _prochandle = OpenProcess(ProcessAccessFlags.QueryInformation | 
