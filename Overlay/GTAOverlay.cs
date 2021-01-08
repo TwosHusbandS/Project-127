@@ -571,7 +571,7 @@ namespace Project_127.Overlay
 			var aprx = mainText.approxBounds();
 			int boundMin = (int)(scrollInitial - aprx.Height);
 			//System.Windows.MessageBox.Show(aprx.Height.ToString());
-			_window.Graphics.Height = (int)(aprx.Height > _window.Height ? aprx.Height * 2.1 : _window.Height);
+			_window.Graphics.Height = (int)(aprx.Height > _window.Height ? aprx.Height * 2.5 : _window.Height);
 			//System.Windows.MessageBox.Show(_window.Graphics.Height.ToString());
 			var pos = mainText.position;
 			pos.Y += delta;
@@ -817,6 +817,8 @@ namespace Project_127.Overlay
 			return String.Join("\r\n", lines);
 		}
 
+
+		private TextAutoFormat ftext = new TextAutoFormat();
 		/// <summary>
 		/// Determines the max width of a line in pixels
 		/// </summary>
@@ -848,18 +850,22 @@ namespace Project_127.Overlay
 			{
 				if (wrapOnChar > 0)
 				{
-					return charWrap(_text, wrapOnChar);
+					return charWrap(ftext.frame(), wrapOnChar);
 				}
 				if (maxLineWidth > 0)
 				{
 					return autowrap;
 				}
-				return _text;
+				return ftext.frame();
 			}
 			set
 			{
-				_text = value;
-				textUpdate = true;
+				if(_text != value)
+                {
+					_text = value;
+					textUpdate = true;
+				}
+				
 			}
 		}
 
@@ -877,6 +883,7 @@ namespace Project_127.Overlay
 				if (value)
 				{
 					Task.Run(async () => approxBounds(true));
+					ftext.interpret(_text);
 				}
 			}
 		}
@@ -902,7 +909,7 @@ namespace Project_127.Overlay
 				if (textUpdate)
 				{
 					textUpdate = false;
-					var lines = _text.Split('\n');
+					var lines = ftext.frame().Split('\n');
 					var outLines = new List<string>();
 					foreach (var line in lines)
 					{

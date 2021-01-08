@@ -519,6 +519,7 @@ namespace Project_127
 
 			// INIT the Inter-Process-Communication via Named Pipes. Shoutout to dr490n
 			initIPC();
+			initTextFormatters();
 		}
 
 
@@ -540,7 +541,7 @@ namespace Project_127
 			pipeServer.registerEndpoint("log", a =>
 			{
 				HelperClasses.Logger.Log(Encoding.UTF8.GetString(a).TrimEnd('\0'));
-				return null;
+				return a.Take(1).ToArray();
 			});
 
 
@@ -560,6 +561,63 @@ namespace Project_127
 			//pc.call("test", Encoding.UTF8.GetBytes("Hi"));
 		}
 
+		private static void initTextFormatters()
+        {
+			/*
+			 * $mission
+			 * $sandf
+			 * $usj
+			 * $briges
+			 * $randevs
+			 * $hobbies
+			 * $cutscene
+			 * $script
+			 * $loading
+			 * $percent
+			 * $golfhole
+			 */
+			TextAutoFormat.registerVarGetter("ctime", DateTime.Now.ToString);
+			TextAutoFormat.registerVarGetter("usj", () =>
+			{
+				if (!GTAPointerPathHandler.processFound)
+                {
+					return "[NF]";
+                }
+				else
+                {
+					try
+                    {
+						int usj;
+						if (GTABuild != new Version(1, 0, 372, 2))
+                        {
+							return "[N/A]";
+						}
+						if (Settings.EnableAlternativeLaunch && 
+							Settings.Retailer == Settings.Retailers.Steam)
+                        {
+							usj = GTAPointerPathHandler.EvalPointerPath_I32(new int[] {
+								0x2193E58,
+								0x10378
+							});
+						}
+                        else
+                        {
+							usj = GTAPointerPathHandler.EvalPointerPath_I32(new int[] {
+								0x2A07E70,
+								0xCE5C0
+							});
+						}
+						return usj.ToString();
+                    }
+                    catch
+                    {
+						return "[ERR]";
+                    }
+                }
+			});
+		}
+
+		public static ASPointerPath GTAPointerPathHandler = new ASPointerPath("GTA5");
 		/// <summary>
 		/// Proper Exit Method. EMPTY FOR NOW. Get called when closed (user and taskmgr) and when PC is shutdown. Not when process is killed or power ist lost.
 		/// </summary>
