@@ -115,68 +115,87 @@ namespace Project_127.HelperClasses
 
         };
 
-    public static Dictionary<string, string> freaksScripts = new Dictionary<string, string> {
-        { "abigail1","Death at Sea"}, //Not required for 100% so fair...
-        { "abigail2", "What Lies Beneath"},
-        { "barry1", "Grass Roots - Michael"}, //We need them aliens
-        { "barry2", "Grass Roots - Trevor"}, //And them clowns
-        { "tonya1", "Pulling Favours"},
-        { "tonya2", "Pulling Another Favour"},
-        { "tonya3", "Pulling Favours Again"},
-        { "tonya4", "Still Pulling Favours"},
-        { "tonya5", "Pulling One Last Favour"},
-        { "hao1", "Shift Work"},
-        { "paparazzo1", "Paparazzo"},
-        { "paparazzo2", "Paparazzo - The Sex Tape"},
-        { "paparazzo3", "Paparazzo - The Partnership"}, //idk why its a seperate mission
-        { "paparazzo3a", "Paparazzo - The Meltdown"},
-        { "paparazzo4", "Paparazzo - Reality Check"},
-        { "omega1", "Far Out"},
-        { "omega2", "The Final Frontier"},
-        { "barry3a", "Grass Roots - The Pickup"},
-        { "barry4", "Grass Roots - The Smoke-in"},
-        { "extreme1", "Risk Assesstment"},
-        { "extreme2", "Liqudity Risk"},
-        { "extreme3", "Targeted Risk"},
-        { "extreme4", "Uncalculated Risk"},
-        { "fanatic3", "Exercising Demons - Franklin"},
-        { "dreyfuss1", "A Starlet in Vinewood"},
-        { "minute1", "The Civil Border Patrol"},//`MURICA
-        { "minute2", "An American Welcome"},//[EXPLITIVE REDACTED]
-        { "minute3", "Minute Man Blues"},//YEAH!
-        { "hunting1", "Target Practice"},//Cletus: Hey bud
-        { "hunting2", "Fair Game"}, // [TANK AQUIRED]
-        { "josh1", "Extra Commission"},//...
-        { "josh2", "Closing the Deal"},
-        { "josh3", "Surreal Estate"},
-        { "josh4", "Breach of Contract"},//Wait... there were four of these?
-        { "fanatic1", "Exercising Demons - Michael"},
-        { "fanatic2", "Exercising Demons - Trevor"},
-        { "maude1", "Bail Bonds"},
-        { "mrsphilips1", "Mrs. Philips"}, //Your mother is disapointed with you
-        { "mrsphilips2", "Damaged Goods"},
-        { "nigel1", "Nigel and Mrs. Thornhill"},
-        { "nigel1a", "Vinewood Souvenirs - Willy"},
-        { "nigel1b", "Vinewood Souvenirs - Tyler"},
-        { "nigel1c", "Vinewood Souvenirs - Kerry"},
-        { "nigel1d", "Vinewood Souvenirs - Mark"},
-        { "nigel2", "Vinewood Souvenirs - Al Di Napoli"},
-        { "nigel3", "Vinewood Souvenirs - The Last Act"},
-        { "rampage1", "Rampage: Rednecks"},
-        { "rampage2", "Rampage: Vagos"},
-        { "rampage3", "Rampage: Ballas"},
-        { "rampage4", "Rampage: Military"},
-        { "rampage5", "Rampage: Hipsters"},
-        { "thelastone", "The Last One" }, //The Last One
-        //Epsilon%
-        { "epsilon1", "Seeking the Truth"},//There is actually a need for these now
-        { "epsilon2", "Accepting the Truth"},
-        { "epsilon3", "Assuming the Truth"},
-        { "epsilon4", "Chasing the Truth"},
-        { "epsilon5", "Bearing the Truth"},
-        { "epsilon6", "Delivering the Truth"},
-        { "epsilon7", "Exercising the Truth"},
-        { "epsilon8", "Unknowing the Truth"}
-    };	
+        public static Dictionary<string, string> freaksScripts = new Dictionary<string, string> {
+            { "abigail1","Death at Sea"}, //Not required for 100% so fair...
+            { "abigail2", "What Lies Beneath"},
+            { "barry1", "Grass Roots - Michael"}, //We need them aliens
+            { "barry2", "Grass Roots - Trevor"}, //And them clowns
+            { "tonya1", "Pulling Favours"},
+            { "tonya2", "Pulling Another Favour"},
+            { "tonya3", "Pulling Favours Again"},
+            { "tonya4", "Still Pulling Favours"},
+            { "tonya5", "Pulling One Last Favour"},
+            { "hao1", "Shift Work"},
+            { "paparazzo1", "Paparazzo"},
+            { "paparazzo2", "Paparazzo - The Sex Tape"},
+            { "paparazzo3", "Paparazzo - The Partnership"}, //idk why its a seperate mission
+            { "paparazzo3a", "Paparazzo - The Meltdown"},
+            { "paparazzo4", "Paparazzo - Reality Check"},
+            { "omega1", "Far Out"},
+            { "omega2", "The Final Frontier"},
+            { "barry3a", "Grass Roots - The Pickup"},
+            { "barry4", "Grass Roots - The Smoke-in"},
+            { "extreme1", "Risk Assesstment"},
+            { "extreme2", "Liqudity Risk"},
+            { "extreme3", "Targeted Risk"},
+            { "extreme4", "Uncalculated Risk"},
+            { "fanatic3", "Exercising Demons - Franklin"},
+            { "dreyfuss1", "A Starlet in Vinewood"},
+            { "minute1", "The Civil Border Patrol"},//`MURICA
+            { "minute2", "An American Welcome"},//[EXPLITIVE REDACTED]
+            { "minute3", "Minute Man Blues"},//YEAH!
+            { "hunting1", "Target Practice"},//Cletus: Hey bud
+            { "hunting2", "Fair Game"}, // [TANK AQUIRED]
+            { "josh1", "Extra Commission"},//...
+            { "josh2", "Closing the Deal"},
+            { "josh3", "Surreal Estate"},
+            { "josh4", "Breach of Contract"},//Wait... there were four of these?
+            { "fanatic1", "Exercising Demons - Michael"},
+            { "fanatic2", "Exercising Demons - Trevor"},
+            { "maude1", "Bail Bonds"},
+            { "mrsphilips1", "Mrs. Philips"}, //Your mother is disapointed with you
+            { "mrsphilips2", "Damaged Goods"},
+            { "nigel1", "Nigel and Mrs. Thornhill"},
+            { "nigel1a", "Vinewood Souvenirs - Willy"},
+            { "nigel1b", "Vinewood Souvenirs - Tyler"},
+            { "nigel1c", "Vinewood Souvenirs - Kerry"},
+            { "nigel1d", "Vinewood Souvenirs - Mark"},
+            { "nigel2", "Vinewood Souvenirs - Al Di Napoli"},
+            { "nigel3", "Vinewood Souvenirs - The Last Act"},
+            { "rampage1", "Rampage: Rednecks"},
+            { "rampage2", "Rampage: Vagos"},
+            { "rampage3", "Rampage: Ballas"},
+            { "rampage4", "Rampage: Military"},
+            { "rampage5", "Rampage: Hipsters"},
+            { "thelastone", "The Last One" }, //The Last One
+            //Epsilon%
+            { "epsilon1", "Seeking the Truth"},//There is actually a need for these now
+            { "epsilon2", "Accepting the Truth"},
+            { "epsilon3", "Assuming the Truth"},
+            { "epsilon4", "Chasing the Truth"},
+            { "epsilon5", "Bearing the Truth"},
+            { "epsilon6", "Delivering the Truth"},
+            { "epsilon7", "Exercising the Truth"},
+            { "epsilon8", "Unknowing the Truth"}
+        };
+        public static Tuple<string,bool> getMissionInfo(string scriptName)
+        {
+            if (missionScripts.ContainsKey(scriptName))
+            {
+                return new Tuple<string, bool>(missionScripts[scriptName], false);
+            }
+            else if (freaksScripts.ContainsKey(scriptName))
+            {
+                return new Tuple<string, bool>(freaksScripts[scriptName], true);
+            }
+            return new Tuple<string, bool>(scriptName, false);
+        }
+        public static List<string> getAllMissions()
+        {
+            var missions = new List<string>();
+            missions.AddRange(missionScripts.Values);
+            missions.AddRange(freaksScripts.Values);
+            return missions;
+        }
     }
 }

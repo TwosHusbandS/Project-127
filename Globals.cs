@@ -168,6 +168,11 @@ namespace Project_127
 		}
 
 		/// <summary>
+		/// Contains the verion info of running GTA
+		/// </summary>
+		public static Version RunningGTABuild = new Version(0,0);
+
+		/// <summary>
 		/// Download Location of Zip File
 		/// </summary>
 		public static string ZipFileDownloadLocation = Globals.ProjectInstallationPath + @"\NewZipFile.zip";
@@ -589,11 +594,11 @@ namespace Project_127
 
 			Func<Func<string>,string> baseHandler = a => 
 			{
-				if (!GTAPointerPathHandler.processFound)
+				if (RunningGTABuild == new Version(0, 0))
 				{
 					return "[NF]";
 				}
-				else if(GTABuild != new Version(1, 0, 372, 2))
+				else if(RunningGTABuild != new Version(1, 0, 372, 2))
 				{
 					return "[N/A]";
 				}
@@ -664,11 +669,27 @@ namespace Project_127
 						 stateVarsCurrent["currScript"]);
 					 if (cc == null)
 					 {
-						 return "";
+						 return "NONE";
 					 }
 					 else
 					 {
 						 return Encoding.UTF8.GetString(cc.TakeWhile(a => a != '\0').ToArray());
+					 }
+				 }
+				 )
+			);
+			DynamicText.registerVarGetter("scriptPretty", () => baseHandler(
+				 () => {
+					 var cc = GTAPointerPathHandler.EvalPointerPath(255,
+						 stateVarsCurrent["currScript"]);
+					 if (cc == null)
+					 {
+						 return "NONE";
+					 }
+					 else
+					 {
+						 var s = Encoding.UTF8.GetString(cc.TakeWhile(a => a != '\0').ToArray());
+						 return MissionIdentifiers.getMissionInfo(s).Item1;
 					 }
 				 }
 				 )

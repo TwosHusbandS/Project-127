@@ -22,19 +22,27 @@ namespace Project_127.HelperClasses
             private set;
         }
 
-        private Process _baseprocess;
+        private Process _baseprocess = null;
+
+        private bool procChanged = false;
         private Process BaseProcess
         {
             get
             {
-                try
+                if (_baseprocess == null || _baseprocess.HasExited)
                 {
-                    return Process.GetProcessesByName("GTA5")[0];
+                    procChanged = true;
+                    _baseprocess = null;
+                    try
+                    {
+                        _baseprocess = Process.GetProcessesByName("GTA5")[0];
+                    }
+                    catch
+                    {
+                        return null;
+                    }
                 }
-                catch
-                {
-                    return null;
-                }
+                return _baseprocess;
             }
         }
         
@@ -55,13 +63,12 @@ namespace Project_127.HelperClasses
         {
             get
             {
-                if (_prochandle != IntPtr.Zero && BaseProcess.Id == _baseprocess.Id)
+                if (_prochandle != IntPtr.Zero && !procChanged)
                 {
                     return _prochandle;
                 }
-                else if (BaseProcess != null || BaseProcess.Id != _baseprocess.Id)
+                else if (BaseProcess != null || procChanged)
                 {
-                    _baseprocess = BaseProcess;
                     _prochandle = OpenProcess(ProcessAccessFlags.QueryInformation | 
                         ProcessAccessFlags.VirtualMemoryRead |
                         ProcessAccessFlags.VirtualMemoryWrite |
@@ -114,17 +121,22 @@ namespace Project_127.HelperClasses
             this.BaseModuleName = BaseModuleName;
         }
 
+        private Dictionary<string, IntPtr> baseTable = new Dictionary<string, IntPtr>();
+
         private IntPtr getModuleBase(string modulename)
         {
             var modules = BaseProcess.Modules;
-            foreach (ProcessModule module in modules)
+            if (modules.Count != baseTable.Count)
             {
-                if (System.IO.Path.GetFileNameWithoutExtension(module.ModuleName) == modulename)
+                baseTable.Clear();
+                foreach (ProcessModule module in modules)
                 {
-                    return module.BaseAddress;
+                    baseTable.Add(System.IO.Path.GetFileNameWithoutExtension(module.ModuleName), module.BaseAddress);
                 }
             }
-            return IntPtr.Zero;
+            IntPtr modBase;
+            baseTable.TryGetValue(modulename, out modBase);
+            return modBase;
         }
 
         /// <summary>
