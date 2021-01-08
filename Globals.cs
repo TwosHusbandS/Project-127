@@ -519,7 +519,9 @@ namespace Project_127
 
 			// INIT the Inter-Process-Communication via Named Pipes. Shoutout to dr490n
 			initIPC();
-			initTextFormatters();
+
+			// INIT the dynamic text handler for the overlay
+			initDynamicTextGetters();
 		}
 
 
@@ -561,7 +563,15 @@ namespace Project_127
 			//pc.call("test", Encoding.UTF8.GetBytes("Hi"));
 		}
 
-		private static void initTextFormatters()
+		/// <summary>
+		/// Handles pointer path interpretation similarly to AutoSplit
+		/// </summary>
+		public static ASPointerPath GTAPointerPathHandler = new ASPointerPath("GTA5");
+
+		/// <summary>
+		/// Sets up the overlay dynamic text handler
+		/// </summary>
+		private static void initDynamicTextGetters()
         {
 			/*
 			 * $mission
@@ -576,8 +586,8 @@ namespace Project_127
 			 * $percent
 			 * $golfhole
 			 */
-			TextAutoFormat.registerVarGetter("ctime", DateTime.Now.ToString);
-			TextAutoFormat.registerVarGetter("usj", () =>
+			DynamicText.registerVarGetter("ctime", DateTime.Now.ToString);
+			DynamicText.registerVarGetter("usj", () =>
 			{
 				if (!GTAPointerPathHandler.processFound)
                 {
@@ -617,7 +627,8 @@ namespace Project_127
 			});
 		}
 
-		public static ASPointerPath GTAPointerPathHandler = new ASPointerPath("GTA5");
+		
+
 		/// <summary>
 		/// Proper Exit Method. EMPTY FOR NOW. Get called when closed (user and taskmgr) and when PC is shutdown. Not when process is killed or power ist lost.
 		/// </summary>

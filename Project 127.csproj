@@ -234,7 +234,7 @@
     <Compile Include="Overlay\Overlay_MultipleMonitor.xaml.cs">
       <DependentUpon>Overlay_MultipleMonitor.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Overlay\TextAutoFormat.cs" />
+    <Compile Include="Overlay\DynamicText.cs" />
     <Compile Include="Popups\PopupCombobox.xaml.cs">
       <DependentUpon>PopupCombobox.xaml</DependentUpon>
     </Compile>

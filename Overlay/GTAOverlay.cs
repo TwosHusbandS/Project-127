@@ -817,8 +817,11 @@ namespace Project_127.Overlay
 			return String.Join("\r\n", lines);
 		}
 
+		/// <summary>
+		/// Dynamic text holder
+		/// </summary>
+		private DynamicText dtext = new DynamicText();
 
-		private TextAutoFormat ftext = new TextAutoFormat();
 		/// <summary>
 		/// Determines the max width of a line in pixels
 		/// </summary>
@@ -850,13 +853,13 @@ namespace Project_127.Overlay
 			{
 				if (wrapOnChar > 0)
 				{
-					return charWrap(ftext.frame(), wrapOnChar);
+					return charWrap(dtext.frame(), wrapOnChar);
 				}
 				if (maxLineWidth > 0)
 				{
 					return autowrap;
 				}
-				return ftext.frame();
+				return dtext.frame();
 			}
 			set
 			{
@@ -883,7 +886,7 @@ namespace Project_127.Overlay
 				if (value)
 				{
 					Task.Run(async () => approxBounds(true));
-					ftext.interpret(_text);
+					dtext.interpret(_text);
 				}
 			}
 		}
@@ -909,7 +912,7 @@ namespace Project_127.Overlay
 				if (textUpdate)
 				{
 					textUpdate = false;
-					var lines = ftext.frame().Split('\n');
+					var lines = dtext.frame().Split('\n');
 					var outLines = new List<string>();
 					foreach (var line in lines)
 					{

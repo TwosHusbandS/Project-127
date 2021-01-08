@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace Project_127.Overlay
 {
-    class TextAutoFormat
+    /// <summary>
+    /// Class to handle dynamic text
+    /// </summary>
+    class DynamicText
     {
         private struct mapSection {
             public int dynamicMode;
@@ -15,18 +18,28 @@ namespace Project_127.Overlay
         private static Dictionary<string, Func<string>> getters = new Dictionary<string,Func<string>>();
 
         private List<mapSection> map = new List<mapSection>();
+
+        /// <summary>
+        /// Registers a variable getter for the dynamic text(s)
+        /// </summary>
+        /// <param name="name">Name of the getter/variable</param>
+        /// <param name="getter">Getter function</param>
         public static void registerVarGetter(string name, Func<string> getter)
         {
             getters.Add(name, getter);
         }
 
-        public void interpret(string formatString)
+        /// <summary>
+        /// Parses the dynamic text descriptors into proper dynamic text
+        /// </summary>
+        /// <param name="dynamicText">Text to parse</param>
+        public void interpret(string dynamicText)
         {
             map.Clear();
             var ccont = new StringBuilder();
             bool inVar = false;
             var specifier = new StringBuilder();
-            foreach (char c in formatString)
+            foreach (char c in dynamicText)
             {
                 if (c == '$' && !inVar)
                 {
@@ -87,6 +100,10 @@ namespace Project_127.Overlay
             }
         }
 
+        /// <summary>
+        /// Generates the current text
+        /// </summary>
+        /// <returns>String representing the current state of the dynamic text</returns>
         public string frame()
         {
             try

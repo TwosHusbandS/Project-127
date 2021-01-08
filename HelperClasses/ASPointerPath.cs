@@ -8,8 +8,14 @@ using System.Threading.Tasks;
 
 namespace Project_127.HelperClasses
 {
+    /// <summary>
+    /// Class to handle pointer paths similar to those in autosplitter
+    /// </summary>
     public class ASPointerPath
     {
+        /// <summary>
+        /// Name of the base module
+        /// </summary>
         public string BaseModuleName
         {
             get;
@@ -31,7 +37,10 @@ namespace Project_127.HelperClasses
                 }
             }
         }
-    
+        
+        /// <summary>
+        /// Indicates whether or not the target process could be found
+        /// </summary>
         public bool processFound
         {
             get
@@ -96,6 +105,10 @@ namespace Project_127.HelperClasses
         [DllImport("kernel32.dll")]
         public static extern bool ReadProcessMemory(IntPtr hProcess, IntPtr lpBaseAddress, byte[] lpBuffer, int dwSize, ref int lpNumberOfBytesRead);
        
+        /// <summary>
+        /// Constructor for ASPointerPath
+        /// </summary>
+        /// <param name="BaseModuleName">Base module name; used for locating the process</param>
         public ASPointerPath(string BaseModuleName)
         {
             this.BaseModuleName = BaseModuleName;
@@ -114,11 +127,25 @@ namespace Project_127.HelperClasses
             return IntPtr.Zero;
         }
 
+        /// <summary>
+        /// Evaluates a pointer path
+        /// </summary>
+        /// <param name="sz">Number of bytes to read</param>
+        /// <param name="path">Pointer path</param>
+        /// <returns>The requested bytes</returns>
         public byte[] EvalPointerPath (int sz, IList<int> path)
         {
             return EvalPointerPath(BaseModuleName, sz, path);
             
         }
+
+        /// <summary>
+        /// Evaluates a pointer path
+        /// </summary>
+        /// <param name="modulename">Name of the target module</param>
+        /// <param name="sz">Number of bytes to read</param>
+        /// <param name="path">Pointer path</param>
+        /// <returns>The requested bytes</returns>
         public byte[] EvalPointerPath(string modulename, int sz, IList<int> path)
         {
             //getBase addres
@@ -149,19 +176,43 @@ namespace Project_127.HelperClasses
             return null;
         }
 
+        /// <summary>
+        /// Evaluates a pointer path (Int32)
+        /// </summary>
+        /// <param name="path">Pointer path</param>
+        /// <returns>Int32 value at the given pointer path</returns>
         public Int32 EvalPointerPath_I32(IList<int> path)
         {
             return BitConverter.ToInt32(EvalPointerPath(sizeof(Int32), path), 0);
         }
+
+        /// <summary>
+        /// Evaluates a pointer path (Int32)
+        /// </summary>
+        /// <param name="modulename">Name of the target module</param>
+        /// <param name="path">Pointer path</param>
+        /// <returns>Int32 value at the given pointer path</returns>
         public Int32 EvalPointerPath_I32(string modulename, IList<int> path)
         {
             return BitConverter.ToInt32(EvalPointerPath(modulename, sizeof(Int32), path), 0);
         }
 
+        /// <summary>
+        /// Evaluates a pointer path (float32)
+        /// </summary>
+        /// <param name="path">Pointer path</param>
+        /// <returns>float32 value at the given pointer path</returns>
         public float EvalPointerPath_fp32(IList<int> path)
         {
             return BitConverter.ToSingle(EvalPointerPath(sizeof(float), path), 0);
         }
+
+        /// <summary>
+        /// Evaluates a pointer path (float32)
+        /// </summary>
+        /// <param name="modulename">Name of the target module</param>
+        /// <param name="path">Pointer path</param>
+        /// <returns>float32 value at the given pointer path</returns>
         public float EvalPointerPath_fp32(string modulename, IList<int> path)
         {
             return BitConverter.ToSingle(EvalPointerPath(modulename, sizeof(float), path), 0);
