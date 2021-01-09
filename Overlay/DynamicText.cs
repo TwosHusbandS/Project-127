@@ -37,21 +37,32 @@ namespace Project_127.Overlay
             {
                 return;
             }
-            if (condition == null)
+            else if (listeners.ContainsKey(listenerTarget))
             {
-                listeners[listenerTarget] = new listenerData { wildcardTarget = chapter };
-            }
-            else if (listeners.ContainsKey(listenerTarget) && listeners[listenerTarget].wildcardTarget == -1)
-            {
-                listeners[listenerTarget].conditionTarget[condition] = chapter;
+                if (condition != null)
+                {
+                    listeners[listenerTarget].conditionTarget[condition] = chapter;
+                }
+                else
+                {
+                    listeners[listenerTarget] = new listenerData { wildcardTarget = chapter };
+                }
             }
             else if (!listeners.ContainsKey(listenerTarget))
             {
-                listeners[listenerTarget] = new listenerData { 
-                    conditionTarget = new Dictionary<string, int>(),
-                    wildcardTarget = -1
-                };
-                listeners[listenerTarget].conditionTarget[condition] = chapter;
+                if (condition != null)
+                {
+                    listeners[listenerTarget] = new listenerData
+                    {
+                        conditionTarget = new Dictionary<string, int>(),
+                        wildcardTarget = -1
+                    };
+                    listeners[listenerTarget].conditionTarget[condition] = chapter;
+                }
+                else
+                {
+                    listeners[listenerTarget] = new listenerData { wildcardTarget = chapter };
+                }
             }
         }
 
@@ -272,18 +283,16 @@ namespace Project_127.Overlay
                 {
                     listener.pstate = cstate;
                     listeners[listenerName] = listener;
-                    if (listener.wildcardTarget != -1)
+                    int targetChapter;
+                    if (listener.conditionTarget.TryGetValue(cstate, out targetChapter))
+                    {
+                        currChapidx = targetChapter;
+                        return;
+                    }
+                    else if (listener.wildcardTarget != -1)
                     {
                         currChapidx = listener.wildcardTarget;
-                    }
-                    else
-                    {
-                        int targetChapter;
-                        if (listener.conditionTarget.TryGetValue(cstate, out targetChapter))
-                        {
-                            currChapidx = targetChapter;
-                            return;
-                        }
+                        return;
                     }
                 }
             }
