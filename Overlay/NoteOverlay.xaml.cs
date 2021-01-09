@@ -543,12 +543,12 @@ namespace Project_127.Overlay
 
 		public static void OverlayNoteChapterNext()
 		{
-			throw new NotImplementedException();
+			MyGTAOverlay.nextChapter();
 		}
 
 		public static void OverlayNoteChapterPrev()
 		{
-			throw new NotImplementedException();
+			MyGTAOverlay.prevChapter();
 		}
 
 
