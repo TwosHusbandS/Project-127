@@ -12,6 +12,9 @@ using Image = GameOverlay.Drawing.Image;
 namespace Project_127.Overlay
 {
 
+	/// <summary>
+	/// Game overlay object
+	/// </summary>
 	public class GTAOverlay : IDisposable
 	{
 		// If set to false, this starts and keeps KeyboardListenerEvent running 100% of the time.
@@ -100,10 +103,25 @@ namespace Project_127.Overlay
 		private float bgImageOpac = (float).7;
 		private string bgImagePath = "";
 		private int scrollInitial = 50;
-		private overlayTextBox mainText, titleBox;
+		private basicOverlayTextBox titleBox;
+		private dynamicOverlayTextBox mainText;
 
+
+		/// <summary>
+		/// Title object
+		/// </summary>
 		public positionalText title { get; private set; }
 
+		/// <summary>
+		/// Get the current chapter title of the dynamic text
+		/// </summary>
+		public string chapterTitle
+        {
+            get
+            {
+				return mainText.chapterTitle;
+            }
+        }
 
 		/// <summary>
 		/// Internal. Determines the positioning of the overlay.
@@ -333,10 +351,10 @@ namespace Project_127.Overlay
 
 			this.Run();
 			this.Visible = false;
-			mainText = new overlayTextBox("GTAOVERLAY_MAIN");
+			mainText = new dynamicOverlayTextBox("GTAOVERLAY_MAIN");
 			attach(mainText);
 			mainText.visible = true;
-			titleBox = new overlayTextBox("title");
+			titleBox = new basicOverlayTextBox("title");
 			titleBox.text = "Project 1.27 GTA Overlay";
 			titleBox.visible = true;
 			this.attach(titleBox);
@@ -587,6 +605,22 @@ namespace Project_127.Overlay
 		}
 
 		/// <summary>
+		/// Navigate to the next chapter of dynamic text
+		/// </summary>
+		public void nextChapter()
+        {
+			mainText.nextChapter();
+        }
+
+		/// <summary>
+		/// Navigate to the previous chapter of dynamic text
+		/// </summary>
+		public void prevChapter()
+        {
+			mainText.prevChapter();
+        }
+
+		/// <summary>
 		/// Determines whether or not the overlay is visible.
 		/// </summary>
 		public bool Visible
@@ -685,6 +719,10 @@ namespace Project_127.Overlay
 		#endregion
 
 	}
+
+	/// <summary>
+	/// Interface for objects renderable by the overlay
+	/// </summary>
 	public interface overlayObject : IDisposable
 	{
 		//interface void render();
@@ -729,6 +767,9 @@ namespace Project_127.Overlay
 
 	}
 
+	/// <summary>
+	/// Interface for text objects with positioning
+	/// </summary>
 	public interface positionalText
 	{
 		/// <summary>
@@ -778,7 +819,10 @@ namespace Project_127.Overlay
 
 	}
 
-	public class overlayTextBox : overlayObject, positionalText
+	/// <summary>
+	/// Simple overlay object for displaying text
+	/// </summary>
+	public class basicOverlayTextBox : overlayObject, positionalText
 	{
 
 		private int _maxLineWidth = 0;
@@ -818,11 +862,6 @@ namespace Project_127.Overlay
 		}
 
 		/// <summary>
-		/// Dynamic text holder
-		/// </summary>
-		private DynamicText dtext = new DynamicText();
-
-		/// <summary>
 		/// Determines the max width of a line in pixels
 		/// </summary>
 		public int maxLineWidth
@@ -842,33 +881,32 @@ namespace Project_127.Overlay
 			}
 		}
 
-		private string _text = "";
+		/// <summary>
+		/// Internal text buffer
+		/// </summary>
+		protected string _text = "";
 
 		/// <summary>
 		/// Determines the text content of the textbox.
 		/// </summary>
-		public string text
+		public virtual string text
 		{
 			get
 			{
 				if (wrapOnChar > 0)
 				{
-					return charWrap(dtext.frame(), wrapOnChar);
+					return charWrap(_text, wrapOnChar);
 				}
 				if (maxLineWidth > 0)
 				{
 					return autowrap;
 				}
-				return dtext.frame();
+				return _text;
 			}
 			set
 			{
-				if(_text != value)
-                {
-					_text = value;
-					textUpdate = true;
-				}
-				
+				_text = value;
+				textUpdate = true;
 			}
 		}
 
@@ -886,7 +924,6 @@ namespace Project_127.Overlay
 				if (value)
 				{
 					Task.Run(async () => approxBounds(true));
-					dtext.interpret(_text);
 				}
 			}
 		}
@@ -912,7 +949,7 @@ namespace Project_127.Overlay
 				if (textUpdate)
 				{
 					textUpdate = false;
-					var lines = dtext.frame().Split('\n');
+					var lines = _text.Split('\n');
 					var outLines = new List<string>();
 					foreach (var line in lines)
 					{
@@ -1092,7 +1129,7 @@ namespace Project_127.Overlay
 		/// Generates an overlayTextBox object.
 		/// </summary>
 		/// <param name="id">Textbox object id</param>
-		public overlayTextBox(string id)
+		public basicOverlayTextBox(string id)
 		{
 			this.id = id;
 		}
@@ -1116,7 +1153,7 @@ namespace Project_127.Overlay
 			textUpdate = true;
 		}
 
-		public void render(Graphics gfx = null)
+		public virtual void render(Graphics gfx = null)
 		{
 			//gfx.DrawTextWithBackground(currentFont, tb,
 			if (gfx == null || text == null)
@@ -1193,5 +1230,76 @@ namespace Project_127.Overlay
 		#endregion
 
 	}
+	
+
+	/// <summary>
+	/// Overlay Texbox object with added support for dynamic text
+	/// </summary>
+	public class dynamicOverlayTextBox: basicOverlayTextBox
+    {
+		public dynamicOverlayTextBox(string id): base(id) { }
+
+		/// <summary>
+		/// Get the current chapter title of the dynamic text
+		/// </summary>
+		public string chapterTitle
+        {
+            get
+            {
+				return dt.getChapterName();
+            }
+        }
+
+		private DynamicText dt = new DynamicText();
+
+		override public string text
+        {
+			get
+            {
+				_text = dt.frame();
+				return base.text;
+            }
+            set
+            {
+				parse(value);
+            }
+        }
+
+		/// <summary>
+		/// Parses dynamic text
+		/// </summary>
+		/// <param name="dynamicUnparsed">Text to parse</param>
+		public void parse(string dynamicUnparsed)
+        {
+			dt.parse(dynamicUnparsed);
+			base.text = dt.frame();
+        }
+
+		override public void render(Graphics gfx = null)
+		{
+			_text = dt.frame();
+			base.render(gfx);
+        }
+
+		/// <summary>
+		/// Navigate to the next chapter of dynamic text
+		/// </summary>
+		public void nextChapter() 
+		{
+			dt.nextChapter();
+			base.text = dt.frame();
+		}
+
+		/// <summary>
+		/// Navigate to thr previous chapter of dynamic text
+		/// </summary>
+		public void prevChapter()
+		{
+			dt.prevChapter();
+			base.text = dt.frame();
+		}
+
+
+    }
 
 }
