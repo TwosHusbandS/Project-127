@@ -50,32 +50,40 @@ Done since 1.1:
 - Not Deleting our own Uninstaller anymore
 - Killing all Processes (even dragons, when needed) now
 - Separate "Install Componenet" Popup in case it freezes at the end for 2-3 Seconds
-
 - Jumpscript added more keys (probably broken on non german keyboard. Who gives a shit). ALso made it default to false.
 - Use dr490ns IPC for P127 Starting and Showing
 - Fix P127 not being able to minimize
 - not using my discord contact information anymore.
 - Recommending Upgrading before required Component Updates
 - dr490ns github link
-
 - Donezo manifesto (CLG Fans will remember)
 - dr490ns IPC (this fixes "please launch through P127")
 - dr490ns DownloadManager fixes (for crash on startup)
-
+- Easter egg (SWA)
+- Improved ReadMe, Help, Features, etc.
+- Improved UI Thread not freezing on Components Installation etc.
+- Removed hiding SCL stuff
+- Fixed not downloading ALL required Components on settings change
+- Added Reset and Uninstall as command line arguments (-reset and -uninstall) in case other stuff shits the bed.
+- Saving Information about every file we ever placed inside GTA Directory
+- Better detection if Upgrade / DOwngrade Files exist
+- Hugely improved Repair Method and Reset Everything mode
+- Automatically solving if Rockstar fucks us.
 
 To Do before 1.1:
 - QOL:
-	=> Method which "saves" what files we ever put into GTA InstallationLocation. What are files i think of as "DowngradeFiles", what are files i ever placed in your GTA "Installation". Save in Registry Write in DebugMode
 	=> README Automatic License
 	=> Logging in general
 
-- Not downloading ALL required Components on settings change
-- Social Club switcheroo inside P127...really annoying. 
-- Window name change thingy :D 
-- ReadMe, Patchnotes
-- Weird YES/NO POPUP. REPLICATE GAME UPDATE SCENARIO TO TEST IF THAT WORKS.
-- [ASK DRAGON IF FIXED] Overlay Multi Monitor Scaling.
+- Release WITHOUT try catch around window listener
+- Copy paste Patchnotes
+
+- Social Club switcheroo inside P127...really annoying.
+- Overlay magic method without disposing
+	=> https://discord.com/channels/771508963052748842/771508963534831641/797220232489074728
+- Overlay Multi Monitor Scaling.
 	=> Properties in GTAOverlay.cs (_YMargin and width)
+	=> https://discord.com/channels/771508963052748842/771508963534831641/793118966444851220
 
  */
 
@@ -201,14 +209,14 @@ namespace Project_127
 			myMutex = new Mutex(false, "P127_Mutex");
 			myMutex.WaitOne();
 
-			// Start the Init Process of Logger, Settings, Globals, Regedit here, since we need the Logger in the next Line if it fails...
-			Globals.Init();
-
 			// Some Background Change based on Date
 			ChangeBackgroundBasedOnSeason();
 
 			// Intepreting all Command Line shit
 			Globals.CommandLineArgumentIntepretation();
+
+			// Start the Init Process of Logger, Settings, Globals, Regedit here, since we need the Logger in the next Line if it fails...
+			Globals.Init();
 
 			if (Globals.Branch == "internal")
 			{
@@ -265,6 +273,7 @@ namespace Project_127
 				// Same as other two thingies here lolerino
 				HelperClasses.WindowChangeListener.Start();
 			}
+
 		}
 
 		#endregion
@@ -591,7 +600,7 @@ namespace Project_127
 		{
 			DateTime Now = DateTime.Now;
 
-			if (Now.Month == 4 && Now.Day == 20)
+			if ((Now.Month == 4 && Now.Day == 20) || (Now.Month == 4 && Now.Day == 22))
 			{
 				Globals.BackgroundImage = Globals.BackgroundImages.FourTwenty;
 			}

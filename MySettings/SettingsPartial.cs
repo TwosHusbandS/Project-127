@@ -1283,6 +1283,33 @@ namespace Project_127.MySettings
 		}
 
 		/// <summary>
+		/// Setting: AllFilesEverPlacedInsideGTA. Gets and Sets from Dictionary
+		/// </summary>
+		public static List<string> AllFilesEverPlacedInsideGTA
+		{
+			get
+			{
+				return GetStringListFromString(GetSetting("AllFilesEverPlacedInsideGTA"), ';');
+			}
+			set
+			{
+				SetSetting("AllFilesEverPlacedInsideGTA", String.Join(";", value.ToArray()));
+			}
+		}
+
+		public static void AllFilesEverPlacedInsideGTAMyAdd(string filename)
+		{
+			List<string> tmp = AllFilesEverPlacedInsideGTA;
+			if (!tmp.Contains(filename))
+			{
+				tmp.Add(filename);
+			}
+			AllFilesEverPlacedInsideGTA = tmp;
+		}
+
+
+
+		/// <summary>
 		/// Setting: OverlayNotesPresetA. Gets and Sets from Dictionary
 		/// </summary>
 		public static List<string> OverlayNotesPresetA

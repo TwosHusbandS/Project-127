@@ -273,10 +273,12 @@ namespace Project_127
 			*/
 
 			// Internal Settings we dont show the user
+			{"DownloadManagerInstalledSubassemblies", "" },
 			{"FirstLaunch", "True" },
 			{"LastLaunchedVersion", Globals.ProjectVersion.ToString() },
 			{"InstallationPath", Process.GetCurrentProcess().MainModule.FileName.Substring(0, Process.GetCurrentProcess().MainModule.FileName.LastIndexOf('\\')) },
 			{"EnableRememberMe", "False" },
+			{"AllFilesEverPlacedInsideGTA", "" },
 
 			// Project 1.27 Settings
 			{"GTAVInstallationPath", ""},
@@ -308,13 +310,13 @@ namespace Project_127
 
 			// Auto start Shit
 			{"EnableOnlyAutoStartProgramsWhenDowngraded", "True"},
-			{"EnableAutoStartLiveSplit", "True" },
+			{"EnableAutoStartLiveSplit", "False" },
 			{"PathLiveSplit", @"C:\Some\Path\SomeFile.exe" },
-			{"EnableAutoStartStreamProgram", "True" },
+			{"EnableAutoStartStreamProgram", "False" },
 			{"PathStreamProgram", @"C:\Some\Path\SomeFile.exe" },
-			{"EnableAutoStartFPSLimiter", "True" },
+			{"EnableAutoStartFPSLimiter", "False" },
 			{"PathFPSLimiter", @"C:\Some\Path\SomeFile.exe" },
-			{"EnableAutoStartNohboard", "True" },
+			{"EnableAutoStartNohboard", "False" },
 			{"PathNohboard", @"C:\Some\Path\SomeFile.exe" },
 
 			// Overlay shit
@@ -378,6 +380,10 @@ namespace Project_127
 			// Checks if we are doing first Launch.
 			if (Settings.FirstLaunch)
 			{
+				string msg = "Legal Disclaimer:\nWe (and Project 1.27) are not responsible for anything that happens to:\nYour Windows, your harware, your PC,\nyour GTA, your Social Club account etc.\nBy clicking 'OK' you agree to those terms.";
+
+				new Popup(Popup.PopupWindowTypes.PopupOk, msg).ShowDialog();
+
 				// Set Own Installation Path in Regedit Settings
 				HelperClasses.Logger.Log("FirstLaunch Procedure Started");
 				HelperClasses.Logger.Log("Setting Installation Path to '" + ProjectInstallationPath + "'", 1);
@@ -486,6 +492,13 @@ namespace Project_127
 
 				if (Settings.LastLaunchedVersion < new Version("1.2.0.0"))
 				{
+					string msg = "Legal Disclaimer:\nWe (and Project 1.27) are not responsible for anything that happens to:\nYour Windows, your harware, your PC,\nyour GTA, your Social Club account etc.\nBy clicking 'OK' you agree to those terms.";
+
+					new Popup(Popup.PopupWindowTypes.PopupOk, msg).ShowDialog();
+
+
+					HelperClasses.RegeditHandler.DeleteValue("TeasingFeatures");
+
 					if (Settings.EnableLegacyAuth)
 					{
 						Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "The captcha-free-Authentication (MTL) has been improved,\nand should be working for everyone on this version.\nWould you like to enable it?");
@@ -495,6 +508,61 @@ namespace Project_127
 							Settings.EnableLegacyAuth = false;
 						}
 					}
+				}
+
+
+				Settings.AllFilesEverPlacedInsideGTAMyAdd("asmjit.dll");
+				Settings.AllFilesEverPlacedInsideGTAMyAdd("botan.dll");
+				Settings.AllFilesEverPlacedInsideGTAMyAdd("launc.dll");
+				Settings.AllFilesEverPlacedInsideGTAMyAdd("origi_socialclub.dll");
+				Settings.AllFilesEverPlacedInsideGTAMyAdd("Readme.txt");
+				Settings.AllFilesEverPlacedInsideGTAMyAdd("socialclub.dll");
+				Settings.AllFilesEverPlacedInsideGTAMyAdd("tinyxml2.dll");
+
+				List<string> tmp = new List<string>();
+				tmp.AddRange(HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder("").ToList<string>());
+				tmp = tmp.Distinct().ToList();
+
+				string[] tmp1 = HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(LauncherLogic.DowngradeEmuFilePath);
+				foreach (string tmp_i in tmp1)
+				{
+					Settings.AllFilesEverPlacedInsideGTAMyAdd(tmp_i.Substring(LauncherLogic.DowngradeEmuFilePath.Length).TrimStart('\\'));
+				}
+
+				string[] tmp2 = HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(LauncherLogic.DowngradeAlternativeFilePathRockstar124);
+				foreach (string tmp_i in tmp2)
+				{
+					Settings.AllFilesEverPlacedInsideGTAMyAdd(tmp_i.Substring(LauncherLogic.DowngradeAlternativeFilePathRockstar124.Length).TrimStart('\\'));
+				}
+
+				string[] tmp3 = HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(LauncherLogic.DowngradeAlternativeFilePathRockstar127);
+				foreach (string tmp_i in tmp3)
+				{
+					Settings.AllFilesEverPlacedInsideGTAMyAdd(tmp_i.Substring(LauncherLogic.DowngradeAlternativeFilePathRockstar127.Length).TrimStart('\\'));
+				}
+
+				string[] tmp4 = HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(LauncherLogic.DowngradeAlternativeFilePathSteam127);
+				foreach (string tmp_i in tmp4)
+				{
+					Settings.AllFilesEverPlacedInsideGTAMyAdd(tmp_i.Substring(LauncherLogic.DowngradeAlternativeFilePathSteam127.Length).TrimStart('\\'));
+				}
+
+				string[] tmp5 = HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(LauncherLogic.DowngradeAlternativeFilePathSteam124);
+				foreach (string tmp_i in tmp5)
+				{
+					Settings.AllFilesEverPlacedInsideGTAMyAdd(tmp_i.Substring(LauncherLogic.DowngradeAlternativeFilePathSteam124.Length).TrimStart('\\'));
+				}
+
+				string[] tmp6 = HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(LauncherLogic.UpgradeFilePath);
+				foreach (string tmp_i in tmp6)
+				{
+					Settings.AllFilesEverPlacedInsideGTAMyAdd(tmp_i.Substring(LauncherLogic.UpgradeFilePath.Length).TrimStart('\\'));
+				}
+
+				string[] tmp7 = HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(LauncherLogic.UpgradeFilePathBackup);
+				foreach (string tmp_i in tmp7)
+				{
+					Settings.AllFilesEverPlacedInsideGTAMyAdd(tmp_i.Substring(LauncherLogic.UpgradeFilePathBackup.Length).TrimStart('\\'));
 				}
 
 				Settings.LastLaunchedVersion = Globals.ProjectVersion;
@@ -1266,9 +1334,30 @@ namespace Project_127
 						}
 					}
 				}
+				else if (args[i].ToLower() == "-reset")
+				{
+					RegeditHandler.DeleteKey();
+
+					string tmp = HelperClasses.RegeditHandler.GetValue("ZIPExtractionPath").TrimEnd('\\') + @"\Project_127_Files\";
+					HelperClasses.FileHandling.DeleteFolder(tmp);
+
+					Globals.ProperExit();
+				}
+				else if (args[i].ToLower() == "-uninstall")
+				{
+					RegeditHandler.DeleteKey();
+
+					string tmp = HelperClasses.RegeditHandler.GetValue("ZIPExtractionPath").TrimEnd('\\') + @"\Project_127_Files\";
+					HelperClasses.FileHandling.DeleteFolder(tmp);
+
+					// run uninstaller
+					string FilePath = Globals.ProjectInstallationPath.TrimEnd('\\') + @"\unins000.exe";
+					ProcessHandler.StartProcess(FilePath, Globals.ProjectInstallationPath);
+
+					Globals.ProperExit();
+				}
 			}
 		}
-
 
 
 		/// <summary>

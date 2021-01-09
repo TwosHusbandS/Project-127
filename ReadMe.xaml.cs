@@ -275,6 +275,7 @@ namespace Project_127
 			AddParagraph(rtb_About, "For anything regarding this client, feel free to contact me on Discord:\n@thS#0305");
 
 			AddParagraph(rtb_About, "");
+
 		}
 
 		/// <summary>

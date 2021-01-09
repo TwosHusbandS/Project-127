@@ -131,7 +131,10 @@ namespace Project_127
 						yesno.ShowDialog();
 						if (yesno.DialogResult == true)
 						{
-							return myComponent.Install();
+							if (!myComponent.Install())
+							{
+								rtrn = false;
+							}
 						}
 						else
 						{
@@ -141,7 +144,10 @@ namespace Project_127
 					else
 					{
 						new Popup(Popup.PopupWindowTypes.PopupOk, "Component:\n'" + myComponent.GetNiceName() + "'\nmissing but needed.\nIt will be downloaded and installed now.").ShowDialog();
-						return myComponent.Install();
+						if (!myComponent.Install())
+						{
+							rtrn = false;
+						}
 					}
 				}
 				else
@@ -158,7 +164,10 @@ namespace Project_127
 								yesno.ShowDialog();
 								if (yesno.DialogResult == true)
 								{
-									return myComponent.ReInstall();
+									if (!myComponent.ReInstall())
+									{
+										rtrn = false;
+									}
 								}
 								else
 								{
@@ -168,7 +177,10 @@ namespace Project_127
 							else
 							{
 								new Popup(Popup.PopupWindowTypes.PopupOk, "Component:\n'" + myComponent.GetNiceName() + "'\nmissing but needed.\nIt will be downloaded and installed now.").ShowDialog();
-								return myComponent.ReInstall();
+								if (!myComponent.ReInstall())
+								{
+									rtrn = false;
+								}
 							}
 						}
 					}
@@ -321,8 +333,6 @@ namespace Project_127
 				MyComponent.Uninstall();
 				Refresh();
 			}
-
-
 
 			//else if (MyComponent == Components.SCLDowngradedSC && isCSLSocialClubRequired)
 			//{

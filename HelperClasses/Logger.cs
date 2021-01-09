@@ -174,6 +174,11 @@ namespace Project_127.HelperClasses
 				DebugMessage.Add("    Size of GTA5.exe in BACKUP UpdateFiles Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.UpgradeFilePathBackup.TrimEnd('\\') + @"\GTA5.exe") + Globals.GetGameInfoForDebug(LauncherLogic.UpgradeFilePathBackup.TrimEnd('\\') + @"\GTA5.exe"));
 				DebugMessage.Add("    Size of update.rpf in BACKUP UpdateFiles Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.UpgradeFilePathBackup.TrimEnd('\\') + @"\update\update.rpf"));
 				DebugMessage.Add("    Size of playgtav.exe in BACKUP UpdateFiles Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.UpgradeFilePathBackup.TrimEnd('\\') + @"\playgtav.exe"));
+				DebugMessage.Add("Files I ever placed inside GTA: ");
+				foreach (string tmp in Settings.AllFilesEverPlacedInsideGTA)
+				{
+					DebugMessage.Add("    '" + tmp + "'");
+				}
 				DebugMessage.Add("Settings: ");
 				foreach (KeyValuePair<string, string> KVP in Globals.MySettings)
 				{
@@ -185,17 +190,7 @@ namespace Project_127.HelperClasses
 
 				// Deletes File, Creates File, Adds to it
 
-				string[] currContents = HelperClasses.FileHandling.ReadFileEachLine(DebugFile);
 
-				if (currContents.Length > DebugMessage.Count + 1)
-				{
-					Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "The file we are trying to overwrite contains more Lines than we want to write it it.\nBy overwriting it, we might lose information in the debugfile.\nDo you want to overwrite?");
-					yesno.ShowDialog();
-					if (yesno.DialogResult == false)
-					{
-						return;
-					}
-				}
 
 				HelperClasses.FileHandling.WriteStringToFileOverwrite(DebugFile, DebugMessage.ToArray());
 

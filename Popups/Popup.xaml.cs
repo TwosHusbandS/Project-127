@@ -25,6 +25,7 @@ namespace Project_127.Popups
 		public enum PopupWindowTypes
 		{
 			PopupYesNo,
+			PopupYesNoRepair,
 			PopupOk,
 			PopupOkError
 		}
@@ -91,6 +92,25 @@ namespace Project_127.Popups
 
 				Button myButtonNo = new Button();
 				myButtonNo.Content = "No";
+				myButtonNo.Style = Application.Current.FindResource("PU_btn") as Style;
+				myButtonNo.Click += btn_No_Click;
+				myGrid.Children.Add(myButtonNo);
+				Grid.SetColumn(myButtonNo, 1);
+				Grid.SetRow(myButtonNo, 1);
+			}
+			else if (pPopupWindowType == Popup.PopupWindowTypes.PopupYesNo)
+			{
+				Button myButtonYes = new Button();
+				myButtonYes.Content = "quick Repair";
+				myButtonYes.Style = Application.Current.FindResource("PU_btn") as Style;
+				myButtonYes.Click += btn_Yes_Click;
+				myGrid.Children.Add(myButtonYes);
+				Grid.SetColumn(myButtonYes, 0);
+				Grid.SetRow(myButtonYes, 1);
+				myButtonYes.Focus();
+
+				Button myButtonNo = new Button();
+				myButtonNo.Content = "deep Repair";
 				myButtonNo.Style = Application.Current.FindResource("PU_btn") as Style;
 				myButtonNo.Click += btn_No_Click;
 				myGrid.Children.Add(myButtonNo);

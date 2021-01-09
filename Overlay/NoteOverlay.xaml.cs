@@ -721,7 +721,7 @@ namespace Project_127.Overlay
 					msg += "\nSome of the least pleasant interactions ive EVER had were with some of the" + "\n";
 
 					msg += "bigger and more well known members of this community (including mods)." + "\n";
-					msg += "Shoutouts to Burhac and Darkviper btw. They were always nice and respectful." + "\n";
+					msg += "Shoutouts to Burhac, Darkviper and Toriks btw. They were always nice and respectful." + "\n";
 
 					msg += "\nThe fact that 'DarkViper fan' is used as an insult on the GTA V Speedrun Discord," + "\n";
 					msg += "yet without 3 'DarkViper fans' Speedrunning GTA V on Patch 1.27 would be dead," + "\n";
