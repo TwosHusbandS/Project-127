@@ -132,6 +132,9 @@ namespace Project_127
 
 		}
 
+
+		public static bool UpgradeSocialClubAfterGame = false;
+
 		public static void GTAClosed()
 		{
 			Jumpscript.StopJumpscript();
@@ -143,6 +146,12 @@ namespace Project_127
 				NoteOverlay.DisposeGTAOverlay();
 				HelperClasses.Keyboard.KeyboardListener.Stop();
 				HelperClasses.WindowChangeListener.Stop();
+			}
+
+			if (UpgradeSocialClubAfterGame)
+			{
+				SocialClubUpgrade();
+				UpgradeSocialClubAfterGame = false;
 			}
 		}
 
@@ -194,6 +203,8 @@ namespace Project_127
 			Unsure
 		}
 
+		public static bool RockstarFuckedUsErrorThrownAlread = false;
+
 		/// <summary>
 		/// Property of what InstallationState we are in. I want to access this from here
 		/// </summary>
@@ -201,6 +212,8 @@ namespace Project_127
 		{
 			get
 			{
+				InstallationStates rtrn = InstallationStates.Unsure;
+
 				long SizeOfGTAV = HelperClasses.FileHandling.GetSizeOfFile(GTAVFilePath.TrimEnd('\\') + @"\GTA5.exe");
 				long SizeOfUpdate = HelperClasses.FileHandling.GetSizeOfFile(GTAVFilePath.TrimEnd('\\') + @"\update\update.rpf");
 				long SizeOfPlayGTAV = HelperClasses.FileHandling.GetSizeOfFile(GTAVFilePath.TrimEnd('\\') + @"\playgtav.exe");
@@ -235,23 +248,23 @@ namespace Project_127
 					// if Sizes in GTA V Installation Path match what files we use from ZIP for downgrading
 					if (SizeOfGTAV == SizeOfDowngradeEmuGTAV && SizeOfUpdate == SizeOfDowngradeEmuUpdate && SizeOfPlayGTAV == SizeOfDowngradeEmuPlayGTAV)
 					{
-						return InstallationStates.Downgraded;
+						rtrn = InstallationStates.Downgraded;
 					}
 					else if (SizeOfGTAV == SizeOfDowngradeAlternativeSteam127GTAV && SizeOfUpdate == SizeOfDowngradeAlternativeSteam127Update)
 					{
-						return InstallationStates.Downgraded;
+						rtrn = InstallationStates.Downgraded;
 					}
 					else if (SizeOfGTAV == SizeOfDowngradeAlternativeRockstar127GTAV && SizeOfUpdate == SizeOfDowngradeAlternativeRockstar127Update)
 					{
-						return InstallationStates.Downgraded;
+						rtrn = InstallationStates.Downgraded;
 					}
 					else if (SizeOfGTAV == SizeOfDowngradeAlternativeSteam124GTAV && SizeOfUpdate == SizeOfDowngradeAlternativeSteam124Update)
 					{
-						return InstallationStates.Downgraded;
+						rtrn = InstallationStates.Downgraded;
 					}
 					else if (SizeOfGTAV == SizeOfDowngradeAlternativeRockstar124GTAV && SizeOfUpdate == SizeOfDowngradeAlternativeRockstar124Update)
 					{
-						return InstallationStates.Downgraded;
+						rtrn = InstallationStates.Downgraded;
 					}
 					// if not downgraded
 					else
@@ -260,12 +273,64 @@ namespace Project_127
 						{
 							if (BuildVersionTable.GetGameVersionOfBuild(Globals.GTABuild) > new Version(1, 30))
 							{
-								return InstallationStates.Upgraded;
+								rtrn = InstallationStates.Upgraded;
 							}
 						}
 					}
 				}
-				return InstallationStates.Unsure;
+
+
+				// DETECTING IF ROCKSTAR FUCKED US
+				if (rtrn == InstallationStates.Downgraded)
+				{
+					if (BuildVersionTable.GetGameVersionOfBuild(Globals.GTABuild) > new Version(1, 30))
+					{
+						if (!ThrewUpdateDetectedMessageAlready)
+						{
+							Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "It appears like Rockstar (or Steam and Epic although unlikely) messed up Project 1.27 Files.\nDo you want to correct them?");
+							yesno.ShowDialog();
+							if (yesno.DialogResult == true)
+							{
+								Upgrade();
+
+								if (Settings.EnableAlternativeLaunch || Settings.Retailer == Settings.Retailers.Epic)
+								{
+									ComponentManager.Components.Base.ReInstall();
+								}
+								else
+								{
+									if (Settings.Retailer == Settings.Retailers.Rockstar)
+									{
+										if (Settings.SocialClubLaunchGameVersion == "124")
+										{
+											ComponentManager.Components.SCLRockstar124.ReInstall();
+
+										}
+										else
+										{
+											ComponentManager.Components.SCLRockstar127.ReInstall();
+										}
+									}
+									else if (Settings.Retailer == Settings.Retailers.Steam)
+									{
+										if (Settings.SocialClubLaunchGameVersion == "124")
+										{
+											ComponentManager.Components.SCLSteam124.ReInstall();
+
+										}
+										else
+										{
+											ComponentManager.Components.SCLSteam127.ReInstall();
+										}
+									}
+								}
+							}
+							ThrewUpdateDetectedMessageAlready = true;
+						}
+					}
+				}
+
+				return rtrn;
 			}
 		}
 
@@ -386,6 +451,12 @@ namespace Project_127
 		/// </summary>
 		public static string GTAVFilePath { get { return Settings.GTAVInstallationPath.TrimEnd('\\') + @"\"; } }
 
+
+		/// <summary>
+		/// Property of often used variable. (EmuCfgPath)
+		/// </summary>
+		public static string EmuCfgPath { get { return Settings.GTAVInstallationPath.TrimEnd('\\') + @"\scemu.cfg"; } }
+
 		#endregion
 
 
@@ -449,19 +520,21 @@ namespace Project_127
 			IgnoreNewFilesWhileUpgradeDowngradeLogic = IgnoreNewFiles;
 
 			// Cancel any stuff when we have no files in upgrade files...simple right?
-			if (HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(UpgradeFilePath).Length <= 1)
+			if (!(HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(UpgradeFilePath).Length >= 2 && HelperClasses.BuildVersionTable.IsUpgradedGTA(UpgradeFilePath)))
 			{
+				// NO FILES TO UPGRADE
 				new Popup(Popup.PopupWindowTypes.PopupOk, "Found no Files to Upgrade with. I suggest verifying Files through steam\nor clicking \"Use Backup Files\" in Settings.\nWill abort Upgrade.").ShowDialog();
 				return;
 			}
 
 			HelperClasses.ProcessHandler.KillRockstarProcesses();
 
-			if (HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(DowngradeFilePath).Length <= 1)
+			if (!(HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(DowngradeFilePath).Length >= 2 && HelperClasses.BuildVersionTable.IsDowngradedGTA(DowngradeFilePath)))
 			{
 				new Popup(Popup.PopupWindowTypes.PopupOk, "Found no DowngradeFiles. Please make sure the required components are installed.").ShowDialog();
 				return;
 			}
+
 
 			PopupProgress tmp = new PopupProgress(PopupProgress.ProgressTypes.Upgrade, "");
 			tmp.ShowDialog();
@@ -496,7 +569,7 @@ namespace Project_127
 				return;
 			}
 
-			if (HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(DowngradeFilePath).Length <= 1)
+			if (!(HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(DowngradeFilePath).Length >= 2 && HelperClasses.BuildVersionTable.IsDowngradedGTA(DowngradeFilePath)))
 			{
 				new Popup(Popup.PopupWindowTypes.PopupOk, "Found no DowngradeFiles. Please make sure the required components are installed.").ShowDialog();
 				return;
@@ -524,12 +597,15 @@ namespace Project_127
 		/// <summary>
 		/// Method for "Repairing" our setup
 		/// </summary>
-		public static void Repair()
+		public static void Repair(bool quickRepair = false)
 		{
+
 			// Saving all the File Operations I want to do, executing this at the end of this Method
 			List<MyFileOperation> MyFileOperations = new List<MyFileOperation>();
 
-			HelperClasses.Logger.Log("Initiating Repair.", 0);
+			HelperClasses.Logger.Log("Initiating Repair. Lets do an Upgrade first.", 0);
+			LauncherLogic.Upgrade();
+			HelperClasses.Logger.Log("Initiating Repair. Done with Upgrade.", 0);
 			HelperClasses.Logger.Log("GTAV Installation Path: " + GTAVFilePath, 1);
 			HelperClasses.Logger.Log("InstallationLocation: " + Globals.ProjectInstallationPath, 1);
 			HelperClasses.Logger.Log("ZIP File Location: " + LauncherLogic.ZIPFilePath, 1);
@@ -538,11 +614,35 @@ namespace Project_127
 
 			HelperClasses.ProcessHandler.KillRockstarProcesses();
 
-			string[] FilesInUpgradeFiles = Directory.GetFiles(UpgradeFilePath, "*", SearchOption.AllDirectories);
+			if (quickRepair)
+			{
+				HelperClasses.Logger.Log("RepairMode quick.", 1);
+			}
+			else
+			{
+				HelperClasses.Logger.Log("RepairMode deep.", 1);
+				HelperClasses.Logger.Log("Deleting every File we ever placed inside GTA", 1);
+				foreach (string tmp in Settings.AllFilesEverPlacedInsideGTA)
+				{
+					MyFileOperations.Add(new MyFileOperation(MyFileOperation.FileOperations.Delete, GTAVFilePath.TrimEnd('\\') + @"\" + tmp, "", "Deleting '" + (GTAVFilePath.TrimEnd('\\') + @"\" + tmp) + "' from the GTA_INSTALLATION_PATH", 2));
+
+				}
+			}
+
+
+
+			string[] FilesInUpgradeFiles = HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(UpgradeFilePath);
 			HelperClasses.Logger.Log("Found " + FilesInUpgradeFiles.Length.ToString() + " Files in Upgrade Folder. Will try to delete them", 1);
 			foreach (string myFileName in FilesInUpgradeFiles)
 			{
 				MyFileOperations.Add(new MyFileOperation(MyFileOperation.FileOperations.Delete, myFileName, "", "Deleting '" + (myFileName) + "' from the $UpgradeFolder", 2));
+			}
+
+			string[] FilesInUpgradeBackupFiles = HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(UpgradeFilePathBackup);
+			HelperClasses.Logger.Log("Found " + FilesInUpgradeBackupFiles.Length.ToString() + " Files in Upgrade BACKUP Folder. Will try to delete them", 1);
+			foreach (string myFileName in FilesInUpgradeBackupFiles)
+			{
+				MyFileOperations.Add(new MyFileOperation(MyFileOperation.FileOperations.Delete, myFileName, "", "Deleting '" + (myFileName) + "' from the $UpgradeBackupFolder", 2));
 			}
 
 			// Actually executing the File Operations
@@ -592,6 +692,8 @@ namespace Project_127
 			}
 			else if (LauncherLogic.InstallationState == InstallationStates.Downgraded)
 			{
+				HelperClasses.FileHandling.deleteFile(EmuCfgPath);
+
 				if (!ComponentManager.CheckIfRequiredComponentsAreInstalled(true))
 				{
 					new Popups.Popup(Popups.Popup.PopupWindowTypes.PopupOk, "Cant do that because of because of missing Components").ShowDialog();
@@ -684,7 +786,7 @@ namespace Project_127
 				NewPath = Directory.GetParent(OrigPath).ToString().TrimEnd('\\') + @"\UpgradeFiles_Backup_" + NewPath.TrimEnd('\\');
 			}
 
-			if (HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(OrigPath).Length <= 1)
+			if (!(HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(UpgradeFilePath).Length >= 2 && HelperClasses.BuildVersionTable.IsUpgradedGTA(UpgradeFilePath)))
 			{
 				new Popup(Popup.PopupWindowTypes.PopupOk, "No Upgrade Files available to back up.").ShowDialog();
 				return;
@@ -744,7 +846,7 @@ namespace Project_127
 				NewPath = Directory.GetParent(OrigPath).ToString().TrimEnd('\\') + @"\UpgradeFiles_Backup_" + NewPath.TrimEnd('\\');
 			}
 
-			if (HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(NewPath).Length <= 1)
+			if (!(HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(UpgradeFilePathBackup).Length >= 2 && HelperClasses.BuildVersionTable.IsUpgradedGTA(UpgradeFilePathBackup)))
 			{
 				new Popup(Popup.PopupWindowTypes.PopupOk, "No Backup Files available.").ShowDialog();
 				return;
@@ -1172,12 +1274,231 @@ namespace Project_127
 		#endregion
 
 
-		#region Helpers
+		#region SocialClubSwitcheroo
+
+		public static string SocialClubInstallationFolder = @"C:\Program Files\Rockstar Games\Social Club";
+		public static string SocialClubTemp = @"C:\Program Files\Rockstar Games\Social Club_P127_TEMP";
+		public static string SocialClubDowngradedFolder
+		{
+			get
+			{
+				return ZIPFilePath.TrimEnd('\\') + @"\Project_127_Files\SupportFiles\DowngradedSocialClub";
+			}
+		}
+
+		public static string SCL_DLL_ADDON = @"\socialclub.dll";
+		public static string SCL_EXE_ADDON_DOWNGRADED = @"\subprocess.exe";
+		public static string SCL_EXE_ADDON_UPGRADED = @"\socialclubhelper.exe";
+
+		public enum SCL_InstallationStates
+		{
+			Upgraded,
+			Downgraded,
+			Trash
+		}
+
+		public static SCL_InstallationStates Get_SCL_InstallationState(string filePath)
+		{
+			Version vDLL = new Version("0.0.0.1");
+			Version vEXE = new Version("0.0.0.1");
+			if (HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(filePath).Length >= 10)
+			{
+				if (HelperClasses.FileHandling.doesFileExist(filePath + SCL_DLL_ADDON))
+				{
+					vDLL = HelperClasses.FileHandling.GetVersionFromFile(filePath + SCL_DLL_ADDON);
+
+					if (HelperClasses.FileHandling.doesFileExist(filePath + SCL_EXE_ADDON_DOWNGRADED) && !HelperClasses.FileHandling.doesFileExist(SCL_EXE_ADDON_UPGRADED))
+					{
+						vEXE = HelperClasses.FileHandling.GetVersionFromFile(filePath + SCL_EXE_ADDON_DOWNGRADED);
+					}
+					else
+					{
+						if (HelperClasses.FileHandling.doesFileExist(filePath + SCL_EXE_ADDON_UPGRADED) && !HelperClasses.FileHandling.doesFileExist(SCL_EXE_ADDON_DOWNGRADED))
+						{
+							vEXE = HelperClasses.FileHandling.GetVersionFromFile(filePath + SCL_EXE_ADDON_UPGRADED);
+						}
+					}
+				}
+			}
+
+			if (vEXE == new Version("0.0.0.1") || vDLL == new Version("0.0.0.1"))
+			{
+				return SCL_InstallationStates.Trash;
+			}
+			else if (vEXE <= new Version("1.2") && vDLL <= new Version("1.2"))
+			{
+				return SCL_InstallationStates.Downgraded;
+			}
+			else if (vEXE >= new Version("1.2") && vDLL >= new Version("1.2"))
+			{
+				return SCL_InstallationStates.Upgraded;
+			}
+			else
+			{
+				return SCL_InstallationStates.Trash;
+			}
+		}
 
 
+		public static bool SocialClubDowngrade()
+		{
+			HelperClasses.Logger.Log("Initiating a Social Club Downgrade", 0);
 
+			// KILL ALL PROCESSES
+			HelperClasses.Logger.Log("Killing all Social Club Processes", 1);
+			HelperClasses.ProcessHandler.KillProcesses("subprocess");
+			HelperClasses.ProcessHandler.KillProcesses("socialclubhelper");
+
+			List<MyFileOperation> tmp = new List<MyFileOperation>();
+
+			if (Get_SCL_InstallationState(SocialClubDowngradedFolder) != SCL_InstallationStates.Downgraded)
+			{
+				// ERROR, RE-INSTALL SOCIAL CLUB DOWNGRADED
+				HelperClasses.Logger.Log("$SC_DOWNGRADE_FILES isnt looking good. Asking User if he wants to re-install", 1);
+
+				string msg = "The Components needed to downgrade Social Club\nare not installed.\nWant to install them now?";
+				Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, msg);
+				yesno.ShowDialog();
+				if (yesno.DialogResult == true)
+				{
+					HelperClasses.Logger.Log("User wants to, lets download.", 1);
+
+					if (!ComponentManager.Components.SCLDowngradedSC.ReInstall())
+					{
+						HelperClasses.Logger.Log("Install failed. Will abort.", 1);
+						return false;
+					}
+				}
+				else
+				{
+					HelperClasses.Logger.Log("User does NOT want it. Will abort.", 1);
+					return false;
+				}
+			}
+
+			if (Get_SCL_InstallationState(SocialClubInstallationFolder) == SCL_InstallationStates.Downgraded)
+			{
+				HelperClasses.Logger.Log("SC Looks Downgraded already. No need to Downgrade.", 1);
+				return true;
+			}
+			else if (Get_SCL_InstallationState(SocialClubInstallationFolder) == SCL_InstallationStates.Upgraded)
+			{
+				// DELETE PREV BACKUP
+				tmp.Add(new MyFileOperation(MyFileOperation.FileOperations.Delete, SocialClubTemp, "", "Deleting previous Background Folder '" + SocialClubTemp + "'", 2, MyFileOperation.FileOrFolder.Folder));
+
+				// SAVE CURR ONE AS BACKUP VIA RENAMING
+				tmp.Add(new MyFileOperation(MyFileOperation.FileOperations.Move, SocialClubInstallationFolder, SocialClubTemp, "Saving curr Installation as Backup. Renaming '" + SocialClubInstallationFolder + "' to '" + SocialClubTemp + "'", 2, MyFileOperation.FileOrFolder.Folder));
+				tmp.Add(new MyFileOperation(MyFileOperation.FileOperations.Delete, SocialClubInstallationFolder, "", "Deleting Installation Folder: '" + SocialClubInstallationFolder + "'", 2, MyFileOperation.FileOrFolder.Folder));
+			}
+			else
+			{
+				// DELETE INSTALL FOLDER
+				tmp.Add(new MyFileOperation(MyFileOperation.FileOperations.Delete, SocialClubInstallationFolder, "", "Deleting Installation Folder: '" + SocialClubInstallationFolder + "'", 2, MyFileOperation.FileOrFolder.Folder));
+			}
+
+
+			tmp.Add(new MyFileOperation(MyFileOperation.FileOperations.Create, SocialClubInstallationFolder, "", "Creating Installation Folder for Copying: '" + SocialClubInstallationFolder + "'", 2, MyFileOperation.FileOrFolder.Folder));
+
+			// Those are WITH the "\" at the end
+			string[] FilesInSCDowngraded = HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(LauncherLogic.SocialClubDowngradedFolder);
+			string[] CorrespondingFilePathInSCInstallation = new string[FilesInSCDowngraded.Length];
+
+			// Loop through all Files in Downgrade Files Folder
+			for (int i = 0; i <= FilesInSCDowngraded.Length - 1; i++)
+			{
+				CorrespondingFilePathInSCInstallation[i] = LauncherLogic.SocialClubInstallationFolder + FilesInSCDowngraded[i].Substring(LauncherLogic.SocialClubDowngradedFolder.Length);
+
+
+				if (FilesInSCDowngraded[i].Contains(@"socialclub.dll"))
+				{
+					tmp.Add(new MyFileOperation(MyFileOperation.FileOperations.Copy, FilesInSCDowngraded[i], CorrespondingFilePathInSCInstallation[i], "Copying: '" + FilesInSCDowngraded[i] + "' to '" + CorrespondingFilePathInSCInstallation[i] + "', as part of Downgrading SC. Only one Log so we dont spam.", 2, MyFileOperation.FileOrFolder.File));
+				}
+				else
+				{
+					tmp.Add(new MyFileOperation(MyFileOperation.FileOperations.Copy, FilesInSCDowngraded[i], CorrespondingFilePathInSCInstallation[i], "", 2, MyFileOperation.FileOrFolder.File));
+				}
+			}
+
+			new PopupProgress(PopupProgress.ProgressTypes.FileOperation, "Downgrading Social Club", tmp).ShowDialog();
+
+
+			if (Get_SCL_InstallationState(SocialClubInstallationFolder) == SCL_InstallationStates.Downgraded)
+			{
+				HelperClasses.Logger.Log("SC Downgrade was sucessfull. Will return true.", 1);
+				return true;
+			}
+			else
+			{
+				HelperClasses.Logger.Log("SC Downgrade was NOT sucessfull. Will return FALSE.", 1);
+				return false;
+			}
+		}
+
+
+		public static bool SocialClubUpgrade()
+		{
+			// Might change what this returns (may return true on Upgraded and Downgraded and False on Trash i guess...)
+
+
+			HelperClasses.Logger.Log("Initiating a Social Club Upgrade", 0);
+
+			// KILL ALL PROCESSES
+			HelperClasses.Logger.Log("Killing all Social Club Processes", 1);
+			HelperClasses.ProcessHandler.KillProcesses("subprocess");
+			HelperClasses.ProcessHandler.KillProcesses("socialclubhelper");
+
+
+			if (Get_SCL_InstallationState(SocialClubInstallationFolder) == SCL_InstallationStates.Upgraded)
+			{
+				HelperClasses.Logger.Log("SC Looks Upgraded already. No need to Upgrade.", 1);
+				return true;
+			}
+			else if (Get_SCL_InstallationState(SocialClubTemp) == SCL_InstallationStates.Upgraded)
+			{
+				HelperClasses.Logger.Log("Temp / Backup Files are good. Normal Upgrade Procedure.", 1);
+
+				List<MyFileOperation> tmp = new List<MyFileOperation>();
+
+				tmp.Add(new MyFileOperation(MyFileOperation.FileOperations.Delete, SocialClubInstallationFolder, "", "Deleting Installation Folder: '" + SocialClubInstallationFolder + "'", 2, MyFileOperation.FileOrFolder.Folder));
+				tmp.Add(new MyFileOperation(MyFileOperation.FileOperations.Move, SocialClubTemp, SocialClubInstallationFolder, "Renaming Temp ('" + SocialClubTemp + "') to Installation Folder ('" + SocialClubInstallationFolder + "')", 2, MyFileOperation.FileOrFolder.Folder));
+
+				new PopupProgress(PopupProgress.ProgressTypes.FileOperation, "Upgrading Social Club", tmp).ShowDialog();
+
+				return true;
+			}
+			else
+			{
+				HelperClasses.Logger.Log("Neither the Installation nor the Temp Folder are upgraded. Lets see if any of them are Downgraded", 1);
+				if (Get_SCL_InstallationState(SocialClubInstallationFolder) == SCL_InstallationStates.Downgraded)
+				{
+					HelperClasses.Logger.Log("Installation Folder is Downgraded, lets keep it and return false.", 2);
+					return true;
+				}
+				else if (Get_SCL_InstallationState(SocialClubTemp) == SCL_InstallationStates.Downgraded)
+				{
+					HelperClasses.Logger.Log("Installation Folder is not Downgraded, Temp Folder is tho.", 1);
+					HelperClasses.Logger.Log("Will apply Temp / Backup anyways, to have a working Social Club Installation.", 1);
+
+					List<MyFileOperation> tmp = new List<MyFileOperation>();
+
+					tmp.Add(new MyFileOperation(MyFileOperation.FileOperations.Delete, SocialClubInstallationFolder, "", "Deleting Installation Folder: '" + SocialClubInstallationFolder + "'", 2, MyFileOperation.FileOrFolder.Folder));
+					tmp.Add(new MyFileOperation(MyFileOperation.FileOperations.Move, SocialClubTemp, SocialClubInstallationFolder, "Renaming Temp ('" + SocialClubTemp + "') to Installation Folder ('" + SocialClubInstallationFolder + "')", 2, MyFileOperation.FileOrFolder.Folder));
+
+					new PopupProgress(PopupProgress.ProgressTypes.FileOperation, "Upgrading / Repairing Social Club", tmp).ShowDialog();
+					return true;
+				}
+			}
+
+			if (Get_SCL_InstallationState(SocialClubInstallationFolder) == SCL_InstallationStates.Trash)
+			{
+				return false;
+			}
+			else
+			{
+				return true;
+			}
+		}
 		#endregion
-
 
 	} // End of Class
 } // End of NameSpace

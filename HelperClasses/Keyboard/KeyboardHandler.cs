@@ -69,17 +69,14 @@ namespace Project_127.HelperClasses.Keyboard
 							{
 								NoteOverlay.OverlayNoteNext();
 							}
-
-							// Not implemented 
-
-							//if (pKey == Settings.KeyOverlayScrollLeft)
-							//{
-							//	NoteOverlay.OverlayNoteChapterPrev();
-							//}
-							//if (pKey == Settings.KeyOverlayScrollRight)
-							//{
-							//	NoteOverlay.OverlayNoteChapterNext();
-							//}
+							if (pKey == Settings.KeyOverlayScrollLeft)
+							{
+								NoteOverlay.OverlayNoteChapterPrev();
+							}
+							if (pKey == Settings.KeyOverlayScrollRight)
+							{
+								NoteOverlay.OverlayNoteChapterNext();
+							}
 						}
 					}
 				}
