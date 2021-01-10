@@ -35,6 +35,7 @@ using Project_127.Popups;
 using Project_127.MySettings;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
+using Microsoft.Win32;
 
 /*
 * This file is based on LegitimacyNUI.cpp from the CitizenFX Project - http://citizen.re/
@@ -88,7 +89,24 @@ namespace Project_127.Auth
 			LaunchAfter = LaunchGameAfter;
 			HelperClasses.Logger.Log("Launching MTL...");
 			MainWindow.MTLAuthTimer.Stop();
-			Process.Start("explorer.exe", "mtl://");
+			var key = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64);
+			key = key.OpenSubKey(@"SOFTWARE\WOW6432Node\Rockstar Games\Launcher");
+			if (key == null)
+            {
+				new Popup(Popup.PopupWindowTypes.PopupOkError, "Unable to find MTL registry key").ShowDialog();
+				return;
+			}
+			var installFolder = RegeditHandler.GetValue(key, "InstallFolder");
+			if (installFolder == "")
+            {
+				Process.Start("explorer.exe", "mtl://");
+			}
+			else
+            {
+				var launcherexe = System.IO.Path.Combine(installFolder, "LauncherPatcher.exe");
+				Process.Start("explorer.exe", launcherexe);
+			}
+			//Process.Start("explorer.exe", "mtl://");
 			await Task.Delay(15000);
 			HelperClasses.Logger.Log("Waiting for session...");
 			//MainWindow.MTLAuthTimer.Interval = new TimeSpan(15000);

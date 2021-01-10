@@ -90,6 +90,8 @@ namespace Project_127
 		{
 			HelperClasses.Logger.Log("AAAA - GTAStarted()");
 
+			Globals.RunningGTABuild = Globals.GTABuild;
+
 			await Task.Delay(5000);
 
 			HelperClasses.Logger.Log("AAAA - GTAStarted() - After 2.5 Seconds wait");
@@ -136,6 +138,8 @@ namespace Project_127
 		public static void GTAClosed()
 		{
 			Jumpscript.StopJumpscript();
+
+			Globals.RunningGTABuild = new Version(0,0);
 
 			if (!GTAOverlay.DebugMode && GTAOverlay.OverlayMode == GTAOverlay.OverlayModes.Borderless)
 			{

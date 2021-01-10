@@ -186,7 +186,9 @@
     <Compile Include="ComponentManager.xaml.cs">
       <DependentUpon>ComponentManager.xaml</DependentUpon>
     </Compile>
+    <Compile Include="HelperClasses\ASPointerPath.cs" />
     <Compile Include="HelperClasses\IPCPipes.cs" />
+    <Compile Include="HelperClasses\MissionIdentifiers.cs" />
     <Compile Include="HelperClasses\Keyboard\Syntax.cs" />
     <Compile Include="MyColors.cs" />
     <Compile Include="HelperClasses\BuildVersionTable.cs" />
@@ -234,6 +236,7 @@
     <Compile Include="Overlay\Overlay_MultipleMonitor.xaml.cs">
       <DependentUpon>Overlay_MultipleMonitor.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Overlay\DynamicText.cs" />
     <Compile Include="Popups\PopupCombobox.xaml.cs">
       <DependentUpon>PopupCombobox.xaml</DependentUpon>
     </Compile>
