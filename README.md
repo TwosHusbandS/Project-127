@@ -88,6 +88,11 @@ Hi! This is a custom Client which was originally created to give all Speedrunner
 
 Over time it grew with Features and Launch - Capabilities
 
+Note:
+P127 IS NOT ACTIVELY BEING WORKED ON AND MAINTAINED BY ME (@thS / TwosHusbandS). BIG BUGS AND ISSUES WILL STILL BE FIXED, BUT DONT EXPECT NEW FEATURES.
+@dr490n / jaredtb MIGHT STILL WORK ON GAME-LAUNCH RELATED THINGS (AND THE OVERLAY), BUT DONT SPAM HIM WITH MESSAGES OR REQUESTS.
+
+
 ### Main Features
 
 * [List of Main Features here][help-url]
@@ -209,7 +214,7 @@ Discord - [@ths#0305][discord-url]
 [activelydeveloped-shield]: https://img.shields.io/maintenance/no/2021?label=Actively%20developed
 [license-shield]: https://img.shields.io/github/license/TwosHusbandS/Project-127?color=Green&label=License&style=plastic
 [license-url]: https://github.com/TwosHusbandS/Project-127/blob/master/LICENSE
-[version-shield]: https://img.shields.io/static/v1?label=Version&message=1.1-Installer&color=sucess
+[version-shield]: https://img.shields.io/static/v1?label=Version&message=1.2-Installer&color=sucess
 [help-shield]: https://img.shields.io/static/v1?label=Help&message=Here&color=important
 [features-shield]: https://img.shields.io/static/v1?label=Features&message=Click%20Me&color=blueviolet
 

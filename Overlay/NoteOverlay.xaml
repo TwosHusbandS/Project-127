@@ -34,7 +34,7 @@
         <Rectangle x:Name="Rect_HideOption5" Grid.Row="2" Grid.RowSpan="1" Grid.Column="0" Grid.ColumnSpan="3" Fill="{x:Static local:MyColors.MyColorOffWhite85}" ToolTip="Non effective when Overlay not activated"/>
 
         <Button x:Name="btn_Notes" Margin="0,10,5,10" Content="Notes" Grid.Row="3" Grid.Column="0" Click="btn_Notes_Click" Style="{StaticResource btn_hamburgeritem}"/>
-        <Button x:Name="btn_Looks" Margin="5,10,5,10" Content="Looks" Grid.Row="3" Grid.Column="1" Click="btn_Looks_Click" Style="{StaticResource btn_hamburgeritem}"/>
+        <Button x:Name="btn_Looks" Margin="5,10,5,10" Content="Looks" Grid.Row="3" Grid.Column="1" Click="btn_Looks_Click" Style="{StaticResource btn_hamburgeritem}" MouseRightButtonDown="btn_Looks_MouseRightButtonDown"/>
         <Button x:Name="btn_Keybindings" Margin="5,10,0,10" Content="Keybindings" Grid.Row="3" Grid.Column="2" Click="btn_Keybindings_Click" Style="{StaticResource btn_hamburgeritem}"/>
 
         <Border Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3" Margin="0,5,0,15" BorderBrush="{x:Static local:MyColors.SE_BorderBrush_Inner}" BorderThickness="2" Background="{x:Static local:MyColors.SE_RowBackground}">

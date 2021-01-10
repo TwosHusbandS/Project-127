@@ -128,6 +128,28 @@ namespace Project_127.HelperClasses
 			return rtrn;
 		}
 
+		/// <summary>
+		/// Returns if GTA5.exe is Downgraded. Takes both path to exe and folder.
+		/// </summary>
+		/// <param name="filePath"></param>
+		/// <returns></returns>
+		public static bool IsDowngradedGTA(string filePath)
+		{
+			filePath = filePath.ToLower().TrimEnd('\\').TrimEnd("gta5.exe");
+			return HelperClasses.BuildVersionTable.GetGameVersionOfBuild(HelperClasses.FileHandling.GetVersionFromFile(filePath + @"\gta5.exe", true)) < new Version(1, 30);
+		}
+
+		/// <summary>
+		/// Returns if GTA5.exe is Upgraded. Takes both path to exe and folder.
+		/// </summary>
+		/// <param name="filePath"></param>
+		/// <returns></returns>
+		public static bool IsUpgradedGTA(string filePath)
+		{
+			filePath = filePath.ToLower().TrimEnd('\\').TrimEnd("gta5.exe");
+			return HelperClasses.BuildVersionTable.GetGameVersionOfBuild(HelperClasses.FileHandling.GetVersionFromFile(filePath + @"\gta5.exe")) > new Version(1, 30);
+		}
+
 		public static Version GetGameVersionOfBuild(Version pBuildVersion)
 		{
 			Version LastVersionIwasBiggerthan = new Version("1.0");

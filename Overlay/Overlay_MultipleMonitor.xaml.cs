@@ -109,13 +109,10 @@ namespace Project_127.Overlay
 		/// <param name="e"></param>
 		private void Window_SourceInitialized(object sender, EventArgs e)
 		{
-			this.Width = Settings.OverlayWidth / 2;
-
 			this.Top = Settings.OL_MM_Top;
 			this.Left = Settings.OL_MM_Left;
 
 			MyHide();
-
 		}
 
 

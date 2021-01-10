@@ -25,15 +25,11 @@ namespace Project_127.Popups
 		public enum PopupWindowTypes
 		{
 			PopupYesNo,
+			PopupYesNoRepair,
 			PopupOk,
 			PopupOkError
 		}
 
-
-		/// <summary>
-		/// Public Property of stuff we return
-		/// </summary>
-		public string MyReturnString = "";
 
 
 		/// <summary>
@@ -97,6 +93,35 @@ namespace Project_127.Popups
 				Grid.SetColumn(myButtonNo, 1);
 				Grid.SetRow(myButtonNo, 1);
 			}
+			else if (pPopupWindowType == Popup.PopupWindowTypes.PopupYesNoRepair)
+			{
+				Button myButtonYes = new Button();
+				myButtonYes.Content = "quick Repair";
+				myButtonYes.Style = Application.Current.FindResource("PU_btn") as Style;
+				myButtonYes.Click += btn_QuickRepair_Click;
+				myGrid.Children.Add(myButtonYes);
+				Grid.SetColumn(myButtonYes, 0);
+				Grid.SetRow(myButtonYes, 1);
+				myButtonYes.Focus();
+
+				Button myButtonNo = new Button();
+				myButtonNo.Content = "deep Repair";
+				myButtonNo.Style = Application.Current.FindResource("PU_btn") as Style;
+				myButtonNo.Click += btn_DeepRepair_Click;
+				myGrid.Children.Add(myButtonNo);
+				Grid.SetColumn(myButtonNo, 1);
+				Grid.SetRow(myButtonNo, 1);
+
+				myGrid.RowDefinitions.Add(new RowDefinition());
+				Button myButtonCancel = new Button();
+				myButtonCancel.Content = "Cancel";
+				myButtonCancel.Style = Application.Current.FindResource("PU_btn") as Style;
+				myButtonCancel.Click += btn_Cancel_Click;
+				myGrid.Children.Add(myButtonCancel);
+				Grid.SetColumn(myButtonCancel, 0);
+				Grid.SetColumnSpan(myButtonCancel, 2);
+				Grid.SetRow(myButtonCancel, 2);
+			}
 		}
 
 
@@ -123,6 +148,43 @@ namespace Project_127.Popups
 			this.Close();
 		}
 
+
+		/// <summary>
+		/// Click on btn_QuickRepair_Click. Sets DialogResult to "Yes" and closes itself.
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void btn_QuickRepair_Click(object sender, RoutedEventArgs e)
+		{
+			this.DialogResult = true;
+			RtrnRepairMode = "QUICK";
+			this.Close();
+		}
+
+		/// <summary>
+		/// Click on btn_DeepRepair_Click. Sets DialogResult to "Yes" and closes itself.
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void btn_DeepRepair_Click(object sender, RoutedEventArgs e)
+		{
+			this.DialogResult = true;
+			RtrnRepairMode = "DEEP";
+			this.Close();
+		}
+
+		public string RtrnRepairMode = "";
+
+		/// <summary>
+		/// Click on btn_Cancel_Click. Sets DialogResult to "Yes" and closes itself.
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void btn_Cancel_Click(object sender, RoutedEventArgs e)
+		{
+			this.DialogResult = false;
+			this.Close();
+		}
 
 		/// <summary>
 		/// Click on "No". Sets DialogResult to "No" and closes itself.

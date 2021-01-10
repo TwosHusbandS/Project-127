@@ -33,10 +33,11 @@
     1.0.2189.0;1.53:
   </buildversiontable>
   <announcement></announcement>
-  <tease>true</tease>
   <specialbuildname></specialbuildname>
+  <dragonsreadme>https://github.com/jaredtb</dragonsreadme>
   <comment>Backwards Compability</comment>
-  <dragonsreadme></dragonsreadme>
+  <comment2>dont THINK anything below here is actively used</comment2>
+  <tease>true</tease>
   <authuser>https://raw.githubusercontent.com/TwosHusbandS/Project-127/master/Installer/AuthUser.txt</authuser>
   <DLLinkG>https://github.com/TwosHusbandS/Project-127/releases/download/V_Final/file.g</DLLinkG>
   <DLLinkGHash>5c706e27f1f204050450839f24e12c8a</DLLinkGHash>

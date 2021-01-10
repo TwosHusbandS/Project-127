@@ -80,7 +80,6 @@ Source: "C:\Users\ingow\source\repos\Project-127\bin\x64\Release\Project 127 Lau
 [UninstallDelete]
 Type: filesandordirs; Name: "{app}"
 
-
 [Icons]
 Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
 Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon

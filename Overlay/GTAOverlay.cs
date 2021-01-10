@@ -23,7 +23,10 @@ namespace Project_127.Overlay
 		public static bool DebugMode = false;
 		public const string targetWindowDebug = "TeamSpeak 3";
 		public const string targetWindowBorderless = "Grand Theft Auto V";
+		public const string targetWindowBorderlessEasterEgg = "Stealy Whealy Automobiley";
 		public const string targetWindowMultiMonitor = "P127 - GameOverlay";
+
+		public static bool indicateTheLessThanLegalProcurementOfMotorVehicles = false;
 
 		public static string targetWindow
 		{
@@ -43,7 +46,18 @@ namespace Project_127.Overlay
 					{
 						return targetWindowMultiMonitor;
 					}
-					return targetWindowBorderless;
+					else
+					{
+						if (indicateTheLessThanLegalProcurementOfMotorVehicles)
+						{
+							return targetWindowBorderlessEasterEgg;
+						}
+						else
+						{
+							return targetWindowBorderless;
+						}
+					}
+
 				}
 			}
 		}
@@ -193,7 +207,14 @@ namespace Project_127.Overlay
 		{
 			get
 			{
-				return _XMargin;
+				if (OverlayMode == OverlayModes.Borderless)
+				{
+					return _XMargin;
+				}
+				else
+				{
+					return 0;
+				}
 			}
 			set
 			{
@@ -207,7 +228,7 @@ namespace Project_127.Overlay
 		/// <summary>
 		/// Internal. Determines the Y offset of the overlay (from padding position.
 		/// </summary>
-		private int _YMargin { get; set; } = 40;
+		private int _YMargin { get; set; } = 0;
 
 		/// <summary>
 		/// Determines the Y offset of the overlay (from padding position).
@@ -216,7 +237,18 @@ namespace Project_127.Overlay
 		{
 			get
 			{
-				return _YMargin;
+				if (OverlayMode == OverlayModes.MultiMonitor)
+				{
+					if (MainWindow.OL_MM != null)
+					{
+						return (int)MainWindow.OL_MM.ActualHeight;
+					}
+					return 80;
+				}
+				else
+				{
+					return _YMargin;
+				}
 			}
 			set
 			{
@@ -270,7 +302,8 @@ namespace Project_127.Overlay
 				{
 					if (MainWindow.OL_MM != null)
 					{
-						MainWindow.OL_MM.Width = value;
+						double ration = MainWindow.OL_MM.ActualWidth / MainWindow.OL_MM.Width;
+						MainWindow.OL_MM.Width = value / ration;
 					}
 				}
 			}

@@ -26,6 +26,16 @@ namespace Project_127.HelperClasses
 	static class FileHandling
 	{
 
+		[DllImport("kernel32.dll")]
+		static extern bool CreateSymbolicLink(
+string lpSymlinkFileName, string lpTargetFileName, SymbolicLink dwFlags);
+
+		enum SymbolicLink
+		{
+			File = 0,
+			Directory = 1
+		}
+
 		/// <summary>
 		/// Reference to the Method which creates the hardlinks
 		/// </summary>
@@ -87,6 +97,35 @@ namespace Project_127.HelperClasses
 		}
 
 
+		public static bool SymlinkFolder(string source, string target)
+		{
+			try
+			{
+				if (isSymLink(target))
+				{
+					HelperClasses.FileHandling.DeleteFolder(target, false);
+				}
+				else if (System.IO.Directory.Exists(target))
+				{
+					HelperClasses.FileHandling.DeleteFolder(target);
+				}
+			}
+			catch
+			{
+				return false;
+			}
+			return CreateSymbolicLink(target, source, SymbolicLink.Directory);
+		}
+
+		private static bool isSymLink(string path)
+		{
+			if (!System.IO.Directory.Exists(path))
+			{
+				return false;
+			}
+			var di = new System.IO.DirectoryInfo(path);
+			return di.Attributes.HasFlag(System.IO.FileAttributes.ReparsePoint);
+		}
 
 		public static Version GetVersionFromFile(string filePath, bool defaultToHighVersion = false)
 		{
@@ -408,7 +447,7 @@ namespace Project_127.HelperClasses
 		public static bool URLExists(string url, int TimeOutMS = 500)
 		{
 			bool result = true;
-			
+
 			try
 			{
 				WebRequest webRequest = WebRequest.Create(url);
@@ -818,6 +857,9 @@ namespace Project_127.HelperClasses
 		}
 
 
+
+
+
 		/// <summary>
 		/// Creates File (and Folder(s). Overrides existing file.
 		/// </summary>
@@ -889,13 +931,13 @@ namespace Project_127.HelperClasses
 		/// Deletes a Folder
 		/// </summary>
 		/// <param name="pPath"></param>
-		public static void DeleteFolder(string pPath)
+		public static void DeleteFolder(string pPath, bool recursive = true)
 		{
 			try
 			{
 				if (doesPathExist(pPath))
 				{
-					Directory.Delete(pPath, true);
+					Directory.Delete(pPath, recursive);
 				}
 			}
 			catch (Exception e)

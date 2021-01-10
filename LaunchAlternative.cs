@@ -17,11 +17,19 @@ namespace Project_127
 		/// Launches Downgraded GTA in new / cleaner way.
 		/// </summary>
 		public static void Launch()
-		{ 
-			string filePath = LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\Play127.exe";
+		{
+			string filePath = LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\GTAStub.exe";
 			if (HelperClasses.FileHandling.doesFileExist(filePath))
 			{
-				HelperClasses.ProcessHandler.StartProcess(filePath, LauncherLogic.GTAVFilePath, "-uilanguage " + Settings.ToMyLanguageString(Settings.LanguageSelected).ToLower(), true, true);
+				if (LauncherLogic.SocialClubDowngrade())
+				{
+					LauncherLogic.UpgradeSocialClubAfterGame = true;
+					HelperClasses.ProcessHandler.StartProcess(filePath, LauncherLogic.GTAVFilePath, "-uilanguage " + Settings.ToMyLanguageString(Settings.LanguageSelected).ToLower(), true, true);
+				}
+				else
+				{
+					new Popups.Popup(Popups.Popup.PopupWindowTypes.PopupOkError, "Social Club downgrade went wrong.").ShowDialog();
+				}
 			}
 			else
 			{
