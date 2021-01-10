@@ -59,7 +59,7 @@ Done since 1.1:
 - Donezo manifesto (CLG Fans will remember)
 - dr490ns IPC (this fixes "please launch through P127")
 - dr490ns DownloadManager fixes (for crash on startup)
-- Easter egg (SWA)
+- Easter egg (SWA) + Logic to only do it on emu
 - Improved ReadMe, Help, Features, etc.
 - Improved UI Thread not freezing on Components Installation etc.
 - Removed hiding SCL stuff
@@ -70,6 +70,7 @@ Done since 1.1:
 - Hugely improved Repair Method and Reset Everything mode
 - Automatically solving if Rockstar fucks us.
 - Timer for Debug and Startup. 
+- Social Club Switcheroo inside P127
 
 To Do before 1.1:
 - QOL:
@@ -78,12 +79,7 @@ To Do before 1.1:
 
 - Release WITHOUT try catch around window listener
 - Copy paste Patchnotes
-
-- [FULLY IMPLEMENTED Social Club switcheroo inside P127 implemented
-	=> NEEDS TESTING IN ALL CASES
-	=> NEEDS TESTING SOCIAL CLUB UPDATE
-	=> NEEDS TO ACTUALLY BE CALLED
-	=> [NOT NEEDED DUE TO GTA AND RGL COMING WITH ONE] MAY SAVE LATEST INSTALLER (SHIP WITH ZIP STUFF) 
+	
 - [FULLY IMPLEMENTED] Overlay magic method without disposing
 	=> SEMI - TESTED, LOOKS GOOD THO
 	=> optional param to dispose all overlay thing method, which doesnt dispose overlay itself.

@@ -18,13 +18,28 @@ namespace Project_127
 		/// </summary>
 		public static void Launch()
 		{
-			string filePath = LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\GTAStub.exe";
+			string filePath = LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\gtastub.exe";
 			if (HelperClasses.FileHandling.doesFileExist(filePath))
 			{
 				if (LauncherLogic.SocialClubDowngrade())
 				{
 					LauncherLogic.UpgradeSocialClubAfterGame = true;
-					HelperClasses.ProcessHandler.StartProcess(filePath, LauncherLogic.GTAVFilePath, "-uilanguage " + Settings.ToMyLanguageString(Settings.LanguageSelected).ToLower(), true, true);
+
+					int AmountOfCores = Environment.ProcessorCount;
+					if (AmountOfCores < 4)
+					{
+						AmountOfCores = 4;
+					}
+					else if (AmountOfCores > 23)
+					{
+						AmountOfCores = 23;
+					}
+
+					UInt64 Possibilities = (UInt64)Math.Pow(2, AmountOfCores);
+					string MyHex = (Possibilities - 1).ToString("X");
+					string cmdLineArgs = @"/c cd /d " + "\"" + LauncherLogic.GTAVFilePath + "\"" + @" && start /affinity " + MyHex + " gtastub.exe -scOfflineOnly -uilanguage " + Settings.ToMyLanguageString(Settings.LanguageSelected).ToLower() + " && exit";
+
+					Process tmp = GSF.Identity.UserAccountControl.CreateProcessAsStandardUser(@"cmd.exe", cmdLineArgs);
 				}
 				else
 				{

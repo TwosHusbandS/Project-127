@@ -38,17 +38,13 @@ namespace Project_127.Overlay
 				}
 				else
 				{
-					if (OverlayMode == OverlayModes.Borderless)
-					{
-						return targetWindowBorderless;
-					}
-					else if (OverlayMode == OverlayModes.MultiMonitor)
+					if (OverlayMode == OverlayModes.MultiMonitor)
 					{
 						return targetWindowMultiMonitor;
 					}
 					else
 					{
-						if (indicateTheLessThanLegalProcurementOfMotorVehicles)
+						if (!MySettings.Settings.EnableAlternativeLaunch && indicateTheLessThanLegalProcurementOfMotorVehicles)
 						{
 							return targetWindowBorderlessEasterEgg;
 						}
@@ -130,12 +126,12 @@ namespace Project_127.Overlay
 		/// Get the current chapter title of the dynamic text
 		/// </summary>
 		public string chapterTitle
-        {
-            get
-            {
+		{
+			get
+			{
 				return mainText.chapterTitle;
-            }
-        }
+			}
+		}
 
 		/// <summary>
 		/// Internal. Determines the positioning of the overlay.
@@ -641,17 +637,17 @@ namespace Project_127.Overlay
 		/// Navigate to the next chapter of dynamic text
 		/// </summary>
 		public void nextChapter()
-        {
+		{
 			mainText.nextChapter();
-        }
+		}
 
 		/// <summary>
 		/// Navigate to the previous chapter of dynamic text
 		/// </summary>
 		public void prevChapter()
-        {
+		{
 			mainText.prevChapter();
-        }
+		}
 
 		/// <summary>
 		/// Determines whether or not the overlay is visible.
@@ -1263,61 +1259,61 @@ namespace Project_127.Overlay
 		#endregion
 
 	}
-	
+
 
 	/// <summary>
 	/// Overlay Texbox object with added support for dynamic text
 	/// </summary>
-	public class dynamicOverlayTextBox: basicOverlayTextBox
-    {
-		public dynamicOverlayTextBox(string id): base(id) { }
+	public class dynamicOverlayTextBox : basicOverlayTextBox
+	{
+		public dynamicOverlayTextBox(string id) : base(id) { }
 
 		/// <summary>
 		/// Get the current chapter title of the dynamic text
 		/// </summary>
 		public string chapterTitle
-        {
-            get
-            {
+		{
+			get
+			{
 				return dt.getChapterName();
-            }
-        }
+			}
+		}
 
 		private DynamicText dt = new DynamicText();
 
 		override public string text
-        {
+		{
 			get
-            {
+			{
 				_text = dt.frame();
 				return base.text;
-            }
-            set
-            {
+			}
+			set
+			{
 				parse(value);
-            }
-        }
+			}
+		}
 
 		/// <summary>
 		/// Parses dynamic text
 		/// </summary>
 		/// <param name="dynamicUnparsed">Text to parse</param>
 		public void parse(string dynamicUnparsed)
-        {
+		{
 			dt.parse(dynamicUnparsed);
 			base.text = dt.frame();
-        }
+		}
 
 		override public void render(Graphics gfx = null)
 		{
 			_text = dt.frame();
 			base.render(gfx);
-        }
+		}
 
 		/// <summary>
 		/// Navigate to the next chapter of dynamic text
 		/// </summary>
-		public void nextChapter() 
+		public void nextChapter()
 		{
 			dt.nextChapter();
 			base.text = dt.frame();
@@ -1333,6 +1329,6 @@ namespace Project_127.Overlay
 		}
 
 
-    }
+	}
 
 }
