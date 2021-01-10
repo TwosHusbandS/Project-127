@@ -52,7 +52,7 @@ namespace Project_127.HelperClasses
 		public static void Log(string pLogMessage, bool pSkipLogSetting, int pLogLevel)
 		{
 			mut.WaitOne();
-			if (pSkipLogSetting)
+			if (pSkipLogSetting && !String.IsNullOrWhiteSpace(pLogMessage))
 			{
 				string LogMessage = "[" + DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss") + "] - ";
 
@@ -117,6 +117,9 @@ namespace Project_127.HelperClasses
 		{
 			await Task.Run(() =>
 			{
+				Stopwatch tmpsw = new Stopwatch();
+				tmpsw.Start();
+
 				string MyCreationDate = HelperClasses.FileHandling.GetCreationDate(Process.GetCurrentProcess().MainModule.FileName);
 
 				// Debug Info users can give me easily...
@@ -191,11 +194,13 @@ namespace Project_127.HelperClasses
 					DebugMessage.Add("    " + KVP.Key + ": '" + KVP.Value + "'");
 				}
 
+				tmpsw.Stop();
+				DebugMessage.Add("Generating DebugFile took " + tmpsw.ElapsedMilliseconds +" ms.");
+
 				// Building DebugPath
 				string DebugFile = Globals.ProjectInstallationPath.TrimEnd('\\') + @"\AAA - DEBUG.txt";
 
 				// Deletes File, Creates File, Adds to it
-
 
 
 				HelperClasses.FileHandling.WriteStringToFileOverwrite(DebugFile, DebugMessage.ToArray());

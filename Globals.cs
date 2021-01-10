@@ -270,6 +270,8 @@ namespace Project_127
 				- "EnableAutoSteamCoreFix"
 			    - "EnableNohboardBurhac"
 				- "Theme"
+				- "EnableCopyFilesInsteadOfSyslinking_SocialClub"
+				- "TeasingFeatures"
 			*/
 
 			// Internal Settings we dont show the user
@@ -289,7 +291,7 @@ namespace Project_127
 			{"EnableSlowCompare", "False"},
 			{"EnableLegacyAuth", "False"},
 			{"Version", "127"},
-			{"EnableCopyFilesInsteadOfSyslinking_SocialClub", "False"},
+			//{"EnableCopyFilesInsteadOfSyslinking_SocialClub", "False"},
 			{"ExitWay", "Close"},
 			{"StartWay", "Maximized"},
 			{"Mode", "default"},
@@ -496,7 +498,7 @@ namespace Project_127
 
 					new Popup(Popup.PopupWindowTypes.PopupOk, msg).ShowDialog();
 
-
+					HelperClasses.RegeditHandler.DeleteValue("EnableCopyFilesInsteadOfSyslinking_SocialClub");
 					HelperClasses.RegeditHandler.DeleteValue("TeasingFeatures");
 
 					if (Settings.EnableLegacyAuth)
@@ -570,6 +572,8 @@ namespace Project_127
 
 			// Deleting all Installer and ZIP Files from own Project Installation Path
 			DeleteOldFiles();
+
+			LauncherLogic.SocialClubUpgrade();
 
 			// Throw annoucements
 			HandleAnnouncements();

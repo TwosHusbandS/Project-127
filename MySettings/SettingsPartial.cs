@@ -423,20 +423,20 @@ namespace Project_127.MySettings
 		}
 
 
-		/// <summary>
-		/// Settings EnableCopyFilesInsteadOfSyslinking_SocialClub. Gets and Sets from the Dictionary.
-		/// </summary>
-		public static bool EnableCopyFilesInsteadOfSyslinking_SocialClub
-		{
-			get
-			{
-				return GetBoolFromString(GetSetting("EnableCopyFilesInsteadOfSyslinking_SocialClub"));
-			}
-			set
-			{
-				SetSetting("EnableCopyFilesInsteadOfSyslinking_SocialClub", value.ToString());
-			}
-		}
+		///// <summary>
+		///// Settings EnableCopyFilesInsteadOfSyslinking_SocialClub. Gets and Sets from the Dictionary.
+		///// </summary>
+		//public static bool EnableCopyFilesInsteadOfSyslinking_SocialClub
+		//{
+		//	get
+		//	{
+		//		return GetBoolFromString(GetSetting("EnableCopyFilesInsteadOfSyslinking_SocialClub"));
+		//	}
+		//	set
+		//	{
+		//		SetSetting("EnableCopyFilesInsteadOfSyslinking_SocialClub", value.ToString());
+		//	}
+		//}
 
 
 
@@ -1303,8 +1303,8 @@ namespace Project_127.MySettings
 			if (!tmp.Contains(filename))
 			{
 				tmp.Add(filename);
+				AllFilesEverPlacedInsideGTA = tmp;
 			}
-			AllFilesEverPlacedInsideGTA = tmp;
 		}
 
 

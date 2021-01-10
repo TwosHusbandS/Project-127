@@ -189,7 +189,14 @@ namespace Project_127.Overlay
 		{
 			get
 			{
-				return _XMargin;
+				if (OverlayMode == OverlayModes.Borderless)
+				{
+					return _XMargin;
+				}
+				else
+				{
+					return 0;
+				}
 			}
 			set
 			{

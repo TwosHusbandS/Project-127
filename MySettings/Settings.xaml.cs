@@ -691,7 +691,7 @@ namespace Project_127.MySettings
 			ButtonMouseOverMagic(btn_cb_Set_EnableLogging);
 			ButtonMouseOverMagic(btn_cb_Set_CopyFilesInsteadOfHardlinking);
 			ButtonMouseOverMagic(btn_cb_Set_EnableAlternativeLaunch);
-			ButtonMouseOverMagic(btn_cb_Set_CopyFilesInsteadOfSyslinking_SocialClub);
+			//ButtonMouseOverMagic(btn_cb_Set_CopyFilesInsteadOfSyslinking_SocialClub);
 			ButtonMouseOverMagic(btn_cb_Set_EnablePreOrderBonus);
 			ButtonMouseOverMagic(btn_cb_Set_EnableAutoStartFPSLimiter);
 			ButtonMouseOverMagic(btn_cb_Set_EnableAutoStartLiveSplit);
@@ -867,9 +867,9 @@ namespace Project_127.MySettings
 				case "btn_cb_Set_EnableAlternativeLaunch":
 					SetCheckBoxBackground(myBtn, Settings.EnableAlternativeLaunch);
 					break;
-				case "btn_cb_Set_CopyFilesInsteadOfSyslinking_SocialClub":
-					SetCheckBoxBackground(myBtn, Settings.EnableCopyFilesInsteadOfSyslinking_SocialClub);
-					break;
+				//case "btn_cb_Set_CopyFilesInsteadOfSyslinking_SocialClub":
+				//	SetCheckBoxBackground(myBtn, Settings.EnableCopyFilesInsteadOfSyslinking_SocialClub);
+				//	break;
 				case "btn_cb_Set_EnablePreOrderBonus":
 					SetCheckBoxBackground(myBtn, Settings.EnablePreOrderBonus);
 					break;
@@ -1001,9 +1001,9 @@ namespace Project_127.MySettings
 					Settings.EnableCopyFilesInsteadOfHardlinking = !Settings.EnableCopyFilesInsteadOfHardlinking;
 					SetDefaultEnableCopyingHardlinking();
 					break;
-				case "btn_cb_Set_CopyFilesInsteadOfSyslinking_SocialClub":
-					Settings.EnableCopyFilesInsteadOfSyslinking_SocialClub = !Settings.EnableCopyFilesInsteadOfSyslinking_SocialClub;
-					break;
+				//case "btn_cb_Set_CopyFilesInsteadOfSyslinking_SocialClub":
+				//	Settings.EnableCopyFilesInsteadOfSyslinking_SocialClub = !Settings.EnableCopyFilesInsteadOfSyslinking_SocialClub;
+				//	break;
 				case "btn_cb_Set_EnablePreOrderBonus":
 					Settings.EnablePreOrderBonus = !Settings.EnablePreOrderBonus;
 					break;

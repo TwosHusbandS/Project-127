@@ -45,6 +45,7 @@ namespace Project_127.HelperClasses
 				Task.Run(() => WindowChangeListener._Start());
 				WindowChangeHander.WindowChangeEvent(GetActiveWindowTitle());
 				HelperClasses.Logger.Log("Started WindowChangeListener");
+				GC.KeepAlive(dele);
 				//myThread = new Thread(_Start);
 				//myThread.Start();
 			}
@@ -59,6 +60,7 @@ namespace Project_127.HelperClasses
 			{
 				IsRunning = false;
 				//myThread.Abort();
+				Task.Delay(100).GetAwaiter().GetResult();
 				_Stop();
 				HelperClasses.Logger.Log("Stopped WindowChangeListener");
 			}
@@ -112,7 +114,15 @@ namespace Project_127.HelperClasses
 		public static void WinEventProc(IntPtr hWinEventHook, uint eventType, IntPtr hwnd, int idObject, int idChild, uint dwEventThread, uint dwmsEventTime) //STATIC
 		{
 			//HelperClasses.Logger.Log("DEBUG WINDOW: '" + GetActiveWindowTitle() + "'",2);
-			WindowChangeHander.WindowChangeEvent(GetActiveWindowTitle());
+
+			try
+			{
+
+				WindowChangeHander.WindowChangeEvent(GetActiveWindowTitle());
+			}
+			catch
+			{
+			}
 		}
 	}
 }

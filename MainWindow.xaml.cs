@@ -69,6 +69,7 @@ Done since 1.1:
 - Better detection if Upgrade / DOwngrade Files exist
 - Hugely improved Repair Method and Reset Everything mode
 - Automatically solving if Rockstar fucks us.
+- Timer for Debug and Startup. 
 
 To Do before 1.1:
 - QOL:
@@ -78,13 +79,20 @@ To Do before 1.1:
 - Release WITHOUT try catch around window listener
 - Copy paste Patchnotes
 
-- Short timer function to debug :D wanna know how long it took
-- Social Club switcheroo inside P127 implemented
+- [FULLY IMPLEMENTED Social Club switcheroo inside P127 implemented
 	=> NEEDS TESTING IN ALL CASES
 	=> NEEDS TESTING SOCIAL CLUB UPDATE
-	=> NEEDS LOGGING
-- Overlay magic method without disposing
-	=> https://discord.com/channels/771508963052748842/771508963534831641/797220232489074728
+	=> NEEDS TO ACTUALLY BE CALLED
+	=> [NOT NEEDED DUE TO GTA AND RGL COMING WITH ONE] MAY SAVE LATEST INSTALLER (SHIP WITH ZIP STUFF) 
+- [FULLY IMPLEMENTED] Overlay magic method without disposing
+	=> SEMI - TESTED, LOOKS GOOD THO
+	=> optional param to dispose all overlay thing method, which doesnt dispose overlay itself.
+	=> use that on magic method when its enabled, so we are not disposing if it exists
+	=> check if overlay exits, re-run 90% of initoverlay code. Maybe optional param as well. If it doesnt exist, init it of course
+	=> Detect switch from overlayModes is not needed since we reset overlay and get new targetWindow and the rest of the stuff (which target window and if you can setoverl
+	=> location and margins etc. is tied to overlaymode which is tied to setting. So a re-set of the properties (what im doing in initoverlaycode isenough).
+	=> Detect switch from overlay enabled also not needed since we will properly dispose everything including overlay itself when its (enableoverlay) set to false
+- [FULLY IMPLEMENTED] Stop GarbageCollection Crash on WindowChangeListener
 - Overlay Multi Monitor Scaling.
 	=> Properties in GTAOverlay.cs (_YMargin and width)
 	=> https://discord.com/channels/771508963052748842/771508963534831641/793118966444851220
@@ -171,11 +179,16 @@ namespace Project_127
 		/// </summary>
 		public static DispatcherTimer MTLAuthTimer;
 
+		private Stopwatch StartUpStopwatch;
+
 		/// <summary>
 		/// Constructor of Main Window
 		/// </summary>
 		public MainWindow()
 		{
+			StartUpStopwatch = new Stopwatch();
+			StartUpStopwatch.Start();
+
 			// Initializing all WPF Elements
 			InitializeComponent();
 
@@ -278,7 +291,8 @@ namespace Project_127
 				HelperClasses.WindowChangeListener.Start();
 			}
 
-			HelperClasses.FileHandling.SymlinkFolder(@"G:\A-Data\Source", @"G:\A-Data\Target");
+			//LauncherLogic.SocialClubDowngrade();
+			//LauncherLogic.SocialClubUpgrade();
 		}
 
 		#endregion
@@ -300,8 +314,12 @@ namespace Project_127
 
 			NoteOverlay.OverlaySettingsChanged();
 
-			HelperClasses.Logger.Log("Startup procedure (Constructor of MainWindow) completed.");
-			HelperClasses.Logger.Log("--------------------------------------------------------");
+			StartUpStopwatch.Stop();
+
+			HelperClasses.Logger.Log("Startup procedure (Constructor of MainWindow) completed. It took " + StartUpStopwatch .ElapsedMilliseconds + " ms.");
+			HelperClasses.Logger.Log("------------------------------------------------------------------------------------");
+
+
 		}
 
 
