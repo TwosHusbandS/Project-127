@@ -102,6 +102,7 @@ namespace Project_127.Overlay
 		private readonly List<overlayObject> overlayObjects;
 		private float bgImageOpac = (float).7;
 		private string bgImagePath = "";
+		private bool bgImageChanged = false;
 		private int scrollInitial = 50;
 		private basicOverlayTextBox titleBox;
 		private dynamicOverlayTextBox mainText;
@@ -417,11 +418,12 @@ namespace Project_127.Overlay
 					gfx.DrawImage(_images["bgImage"], 0, 0, bgImageOpac);
 				}
 			}
-			else if (bgImagePath != "")
+			else if (bgImagePath != "" && bgImageChanged)
 			{
 				try
 				{
 					_images["bgImage"] = new Image(gfx, bgImagePath);
+					bgImageChanged = false;
 				}
 				catch
 				{
@@ -470,8 +472,22 @@ namespace Project_127.Overlay
 			{
 				//bgImage = new Image(_window.Graphics, path);
 				bgImagePath = path;
+				bgImageChanged = true;
 			}
 		}
+
+		/// <summary>
+		/// Sets a specific background image
+		/// </summary>
+		/// <param name="img">Image object for background image</param>
+		public void setBgImage(System.Drawing.Image img)
+        {
+			using (var ms = new System.IO.MemoryStream())
+            {
+				new System.Drawing.Bitmap(img).Save(ms, System.Drawing.Imaging.ImageFormat.Png);
+				_images["bgImage"] = new Image(_window.Graphics, ms.ToArray());
+			}
+        }
 
 		/// <summary>
 		/// Sets the text content of the overlay.
