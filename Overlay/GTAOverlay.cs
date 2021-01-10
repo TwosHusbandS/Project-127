@@ -439,7 +439,11 @@ namespace Project_127.Overlay
 				_window.Resize(_width, _height);
 			}
 			var gfx = e.Graphics;
-			gfx.ClearScene(_brushes["background"]);
+			try
+			{
+				gfx.ClearScene(_brushes["background"]);
+			}
+			catch { }
 			if (UseBackground && _images.ContainsKey("bgImage"))
 			{
 				if (UseImageFill)
