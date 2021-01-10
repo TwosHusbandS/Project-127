@@ -78,7 +78,11 @@ To Do before 1.1:
 - Release WITHOUT try catch around window listener
 - Copy paste Patchnotes
 
-- Social Club switcheroo inside P127...really annoying.
+- Short timer function to debug :D wanna know how long it took
+- Social Club switcheroo inside P127 implemented
+	=> NEEDS TESTING IN ALL CASES
+	=> NEEDS TESTING SOCIAL CLUB UPDATE
+	=> NEEDS LOGGING
 - Overlay magic method without disposing
 	=> https://discord.com/channels/771508963052748842/771508963534831641/797220232489074728
 - Overlay Multi Monitor Scaling.
@@ -274,6 +278,7 @@ namespace Project_127
 				HelperClasses.WindowChangeListener.Start();
 			}
 
+			HelperClasses.FileHandling.SymlinkFolder(@"G:\A-Data\Source", @"G:\A-Data\Target");
 		}
 
 		#endregion

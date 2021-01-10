@@ -174,6 +174,12 @@ namespace Project_127.HelperClasses
 				DebugMessage.Add("    Size of GTA5.exe in BACKUP UpdateFiles Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.UpgradeFilePathBackup.TrimEnd('\\') + @"\GTA5.exe") + Globals.GetGameInfoForDebug(LauncherLogic.UpgradeFilePathBackup.TrimEnd('\\') + @"\GTA5.exe"));
 				DebugMessage.Add("    Size of update.rpf in BACKUP UpdateFiles Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.UpgradeFilePathBackup.TrimEnd('\\') + @"\update\update.rpf"));
 				DebugMessage.Add("    Size of playgtav.exe in BACKUP UpdateFiles Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.UpgradeFilePathBackup.TrimEnd('\\') + @"\playgtav.exe"));
+
+				DebugMessage.Add("Detected Social Club InstallationStates:");
+				DebugMessage.Add("    Detect Social Club InstallationStates SC_INSTALLATION_PATH: " + LauncherLogic.Get_SCL_InstallationState(LauncherLogic.SocialClubInstallationFolder));
+				DebugMessage.Add("    Detect Social Club InstallationStates SC_DOWNGRADED_PATH: " + LauncherLogic.Get_SCL_InstallationState(LauncherLogic.SocialClubDowngradedFolder));
+				DebugMessage.Add("    Detect Social Club InstallationStates SC_TEMP_PATH: " + LauncherLogic.Get_SCL_InstallationState(LauncherLogic.SocialClubTemp));
+
 				DebugMessage.Add("Files I ever placed inside GTA: ");
 				foreach (string tmp in Settings.AllFilesEverPlacedInsideGTA)
 				{

@@ -1106,7 +1106,7 @@ namespace Project_127.MySettings
 		/// </summary>
 		public static void ResetEverything(bool uninstallAfterAutomatically = false)
 		{
-			Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "This resets the whole Project 1.27 Client including:\nSettings\nZIP Files Downloaded\nBacked up GTA Files to upgrade when downgraded\n\YOU NEED TO repair / verify GTA V through Steam / Epic / Rockstar AFTER THIS\n\nYou will be asked if you want to un-install P127 after this.");
+			Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "This resets the whole Project 1.27 Client including:\nSettings\nInstalled Components\nBacked up GTA Files to upgrade when downgraded\nYOU NEED TO repair / verify GTA V through Steam / Epic / Rockstar AFTER THIS\n\nYou will be asked if you want to un-install P127 after this.");
 			yesno.ShowDialog();
 			if (yesno.DialogResult == true)
 			{
@@ -1220,7 +1220,7 @@ namespace Project_127.MySettings
 			msg2 += "\nquick Repair:\n";
 			msg2 += "You need to repair / verify your GTA via your Retailer";
 			msg2 += "\n(Steam, Rockstar, Epic) before or after this.\n";
-			msg2 += "deep Repair:\n";
+			msg2 += "\ndeep Repair:\n";
 			msg2 += "You need to repair / verify your GTA via your Retailer";
 			msg2 += "\n(Steam, Rockstar, Epic) AFTER this.";
 			msg2 += "\nThis really removes all P127 Files and Traces\nfrom your GTA V Installation";
@@ -1229,14 +1229,16 @@ namespace Project_127.MySettings
 			yesno.ShowDialog();
 			if (yesno.DialogResult == true)
 			{
-				// Quick Repair
-				LauncherLogic.Repair(true);
+				if (yesno.RtrnRepairMode == "DEEP")
+				{
+					LauncherLogic.Repair();
+				}
+				else
+				{
+					LauncherLogic.Repair(true);
+				}
 			}
-			else
-			{
-				// Deep Repair
-				LauncherLogic.Repair();
-			}
+
 
 			MainWindow.MW.UpdateGUIDispatcherTimer();
 		}

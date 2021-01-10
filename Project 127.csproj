@@ -187,6 +187,7 @@
       <DependentUpon>ComponentManager.xaml</DependentUpon>
     </Compile>
     <Compile Include="HelperClasses\IPCPipes.cs" />
+    <Compile Include="HelperClasses\Keyboard\Syntax.cs" />
     <Compile Include="MyColors.cs" />
     <Compile Include="HelperClasses\BuildVersionTable.cs" />
     <Compile Include="HelperClasses\DataGridHelper.cs" />

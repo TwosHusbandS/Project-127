@@ -515,7 +515,7 @@ namespace Project_127
 				new Popup(Popup.PopupWindowTypes.PopupOk, "Found no DowngradeFiles. Please make sure the required components are installed.").ShowDialog();
 				return;
 			}
-		
+
 
 			PopupProgress tmp = new PopupProgress(PopupProgress.ProgressTypes.Upgrade, "");
 			tmp.ShowDialog();
@@ -605,19 +605,21 @@ namespace Project_127
 				HelperClasses.Logger.Log("Deleting every File we ever placed inside GTA", 1);
 				foreach (string tmp in Settings.AllFilesEverPlacedInsideGTA)
 				{
-					MyFileOperations.Add(new MyFileOperation(MyFileOperation.FileOperations.Delete, GTAVFilePath.TrimEnd('\\') + tmp, "", "Deleting '" + (GTAVFilePath.TrimEnd('\\') + tmp) + "' from the GTA_INSTALLATION_PATH", 2));
+					MyFileOperations.Add(new MyFileOperation(MyFileOperation.FileOperations.Delete, GTAVFilePath.TrimEnd('\\') + @"\" + tmp, "", "Deleting '" + (GTAVFilePath.TrimEnd('\\') + @"\" + tmp) + "' from the GTA_INSTALLATION_PATH", 2));
 
 				}
 			}
 
-			string[] FilesInUpgradeFiles = Directory.GetFiles(UpgradeFilePath, "*", SearchOption.AllDirectories);
+
+
+			string[] FilesInUpgradeFiles = HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(UpgradeFilePath);
 			HelperClasses.Logger.Log("Found " + FilesInUpgradeFiles.Length.ToString() + " Files in Upgrade Folder. Will try to delete them", 1);
 			foreach (string myFileName in FilesInUpgradeFiles)
 			{
 				MyFileOperations.Add(new MyFileOperation(MyFileOperation.FileOperations.Delete, myFileName, "", "Deleting '" + (myFileName) + "' from the $UpgradeFolder", 2));
 			}
 
-			string[] FilesInUpgradeBackupFiles = Directory.GetFiles(UpgradeFilePathBackup, "*", SearchOption.AllDirectories);
+			string[] FilesInUpgradeBackupFiles = HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(UpgradeFilePathBackup);
 			HelperClasses.Logger.Log("Found " + FilesInUpgradeBackupFiles.Length.ToString() + " Files in Upgrade BACKUP Folder. Will try to delete them", 1);
 			foreach (string myFileName in FilesInUpgradeBackupFiles)
 			{
@@ -1251,9 +1253,170 @@ namespace Project_127
 		#endregion
 
 
-		#region Helpers
+		#region SocialClubSwitcheroo
+
+		public static string SocialClubInstallationFolder = @"C:\Program Files\Rockstar Games\Social Club";
+		public static string SocialClubTemp = @"C:\Program Files\Rockstar Games\Social Club_P127_TEMP";
+		public static string SocialClubDowngradedFolder
+		{
+			get
+			{
+				return ZIPFilePath.TrimEnd('\\') + @"\Project_127_Files\SupportFiles\DowngradedSocialClub";
+			}
+		}
+
+		public static Version sth = new Version(1, 30);
+
+		public static string SCL_DLL_ADDON = @"\socialclub.dll";
+		public static string SCL_EXE_ADDON_DOWNGRADED = @"\subprocess.exe";
+		public static string SCL_EXE_ADDON_UPGRADED = @"\socialclubhelper.exe";
+
+		public enum SCL_InstallationStates
+		{
+			Upgraded,
+			Downgraded,
+			Trash
+		}
+
+		public static SCL_InstallationStates Get_SCL_InstallationState(string filePath)
+		{
+			Version rtrn = new Version("0.0.0.1");
+			if (HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(filePath).Length >= 10)
+			{
+				if (HelperClasses.FileHandling.doesFileExist(filePath + SCL_DLL_ADDON))
+				{
+					Logger.Log("AAAA - DFE: #" + (filePath + SCL_EXE_ADDON_DOWNGRADED) + "#: " + HelperClasses.FileHandling.doesFileExist(filePath + SCL_EXE_ADDON_DOWNGRADED));
+					Logger.Log("AAAA - DFE: #" + (filePath + SCL_EXE_ADDON_UPGRADED) + "#: " + HelperClasses.FileHandling.doesFileExist(filePath + SCL_EXE_ADDON_UPGRADED));
+					if (HelperClasses.FileHandling.doesFileExist(filePath + SCL_EXE_ADDON_DOWNGRADED) && !HelperClasses.FileHandling.doesFileExist(SCL_EXE_ADDON_UPGRADED))
+					{
+						Logger.Log("AAAA - TOP");
+
+						rtrn = HelperClasses.FileHandling.GetVersionFromFile(filePath + SCL_EXE_ADDON_DOWNGRADED);
+					}
+					else
+					{
+						if (HelperClasses.FileHandling.doesFileExist(filePath + SCL_EXE_ADDON_UPGRADED) && !HelperClasses.FileHandling.doesFileExist(SCL_EXE_ADDON_DOWNGRADED))
+						{
+							Logger.Log("AAAA - BOTTOM");
+
+							rtrn = HelperClasses.FileHandling.GetVersionFromFile(filePath + SCL_EXE_ADDON_UPGRADED);
+						}
+					}
+				}
+			}
+
+			if (rtrn == new Version("0.0.0.1"))
+			{
+				return SCL_InstallationStates.Trash;
+			}
+			else if (rtrn <= new Version("1.2"))
+			{
+				return SCL_InstallationStates.Downgraded;
+			}
+			else
+			{
+				return SCL_InstallationStates.Upgraded;
+			}
+		}
 
 
+		public static bool SocialClubDowngrade()
+		{
+			// KILL ALL PROCESSES
+			HelperClasses.ProcessHandler.KillProcessesContains("subprocess");
+			HelperClasses.ProcessHandler.KillProcessesContains("socialclubhelper");
+
+			List<MyFileOperation> tmp = new List<MyFileOperation>();
+
+			if (Get_SCL_InstallationState(SocialClubDowngradedFolder) != SCL_InstallationStates.Downgraded)
+			{
+				// ERROR, RE-INSTALL SOCIAL CLUB DOWNGRADED
+				string msg = "The Components needed to downgrade Social Club\nare not installed.\nWant to install them now?";
+				Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, msg);
+				yesno.ShowDialog();
+				if (yesno.DialogResult == true)
+				{
+					if (!ComponentManager.Components.SCLDowngradedSC.ReInstall())
+					{
+						return false;
+					}
+				}
+				else
+				{
+					return false;
+				}
+			}
+
+			if (Get_SCL_InstallationState(SocialClubInstallationFolder) == SCL_InstallationStates.Downgraded)
+			{
+				// ALL GOOD
+			}
+			else if (Get_SCL_InstallationState(SocialClubInstallationFolder) == SCL_InstallationStates.Upgraded)
+			{
+				// DELETE PREV BACKUP
+				tmp.Add(new MyFileOperation(MyFileOperation.FileOperations.Delete, SocialClubTemp, "", "LOG", 2, MyFileOperation.FileOrFolder.Folder));
+
+				// SAVE CURR ONE AS BACKUP VIA RENAMING
+				tmp.Add(new MyFileOperation(MyFileOperation.FileOperations.Move, SocialClubInstallationFolder, SocialClubTemp, "LOG", 2, MyFileOperation.FileOrFolder.Folder));
+				tmp.Add(new MyFileOperation(MyFileOperation.FileOperations.Delete, SocialClubInstallationFolder, "", "LOG", 2, MyFileOperation.FileOrFolder.Folder));
+				tmp.Add(new MyFileOperation(MyFileOperation.FileOperations.Create, SocialClubInstallationFolder, "", "LOG", 2, MyFileOperation.FileOrFolder.Folder));
+			}
+			else
+			{
+				// DELETE INSTALL FOLDER
+				tmp.Add(new MyFileOperation(MyFileOperation.FileOperations.Create, SocialClubInstallationFolder, "", "LOG", 2, MyFileOperation.FileOrFolder.Folder));
+			}
+
+			// SYMLINK / COPY TO IT
+			if (Settings.EnableCopyFilesInsteadOfSyslinking_SocialClub)
+			{
+				// Those are WITH the "\" at the end
+				string[] FilesInSCDowngraded = HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(LauncherLogic.SocialClubDowngradedFolder);
+				string[] CorrespondingFilePathInSCInstallation = new string[FilesInSCDowngraded.Length];
+
+				// Loop through all Files in Downgrade Files Folder
+				for (int i = 0; i <= FilesInSCDowngraded.Length - 1; i++)
+				{
+					CorrespondingFilePathInSCInstallation[i] = LauncherLogic.SocialClubInstallationFolder + FilesInSCDowngraded[i].Substring(LauncherLogic.DowngradeFilePath.Length);
+					tmp.Add(new MyFileOperation(MyFileOperation.FileOperations.Copy, FilesInSCDowngraded[i], CorrespondingFilePathInSCInstallation[i], "LOG", 2, MyFileOperation.FileOrFolder.File));
+				}
+
+				new PopupProgress(PopupProgress.ProgressTypes.FileOperation, "Downgrading Social Club", tmp).ShowDialog();
+			}
+			else
+			{
+				new PopupProgress(PopupProgress.ProgressTypes.FileOperation, "Downgrading Social Club", tmp).ShowDialog();
+
+				// SYMLINK FOLDERS 
+				return HelperClasses.FileHandling.SymlinkFolder(SocialClubDowngradedFolder, SocialClubInstallationFolder);
+			}
+
+			return true;
+		}
+		public static bool SocialClubUpgrade()
+		{
+			// KILL ALL PROCESSES
+			HelperClasses.ProcessHandler.KillProcessesContains("subprocess");
+			HelperClasses.ProcessHandler.KillProcessesContains("socialclubhelper");
+
+
+			if (Get_SCL_InstallationState(SocialClubInstallationFolder) == SCL_InstallationStates.Upgraded)
+			{
+				return true;
+			}
+			else if (Get_SCL_InstallationState(SocialClubTemp) == SCL_InstallationStates.Upgraded)
+			{
+				List<MyFileOperation> tmp = new List<MyFileOperation>();
+
+				tmp.Add(new MyFileOperation(MyFileOperation.FileOperations.Delete, SocialClubInstallationFolder, "", "LOG", 2, MyFileOperation.FileOrFolder.Folder));
+				tmp.Add(new MyFileOperation(MyFileOperation.FileOperations.Move, SocialClubTemp, SocialClubInstallationFolder, "LOG", 2, MyFileOperation.FileOrFolder.Folder));
+
+				new PopupProgress(PopupProgress.ProgressTypes.FileOperation, "Upgrading Social Club", tmp).ShowDialog();
+
+				return true;
+			}
+			return false;
+		}
 
 		#endregion
 

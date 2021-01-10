@@ -380,7 +380,7 @@ namespace Project_127
 			// Checks if we are doing first Launch.
 			if (Settings.FirstLaunch)
 			{
-				string msg = "Legal Disclaimer:\nWe (and Project 1.27) are not responsible for anything that happens to:\nYour Windows, your harware, your PC,\nyour GTA, your Social Club account etc.\nBy clicking 'OK' you agree to those terms.";
+				string msg = "Legal Disclaimer:\nWe (and Project 1.27) are not responsible for anything that happens to:\nYour Windows, your harware, your PC,\nyour GTA, your Social Club account etc.\nBy clicking 'OK' you agree to those terms.\n\n- The Project 1.27 Team";
 
 				new Popup(Popup.PopupWindowTypes.PopupOk, msg).ShowDialog();
 
@@ -492,7 +492,7 @@ namespace Project_127
 
 				if (Settings.LastLaunchedVersion < new Version("1.2.0.0"))
 				{
-					string msg = "Legal Disclaimer:\nWe (and Project 1.27) are not responsible for anything that happens to:\nYour Windows, your harware, your PC,\nyour GTA, your Social Club account etc.\nBy clicking 'OK' you agree to those terms.";
+					string msg = "Legal Disclaimer:\nWe (and Project 1.27) are not responsible for anything that happens to:\nYour Windows, your harware, your PC,\nyour GTA, your Social Club account etc.\nBy clicking 'OK' you agree to those terms.\n\n- The Project 1.27 Team";
 
 					new Popup(Popup.PopupWindowTypes.PopupOk, msg).ShowDialog();
 
