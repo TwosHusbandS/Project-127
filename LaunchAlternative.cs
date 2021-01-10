@@ -37,7 +37,7 @@ namespace Project_127
 
 					UInt64 Possibilities = (UInt64)Math.Pow(2, AmountOfCores);
 					string MyHex = (Possibilities - 1).ToString("X");
-					string cmdLineArgs = @"/c cd /d " + "\"" + LauncherLogic.GTAVFilePath + "\"" + @" && start /affinity " + MyHex + " gtastub.exe -scOfflineOnly -uilanguage " + Settings.ToMyLanguageString(Settings.LanguageSelected).ToLower() + " && exit";
+					string cmdLineArgs = @"/c cd /d " + "\"" + LauncherLogic.GTAVFilePath + "\"" + @" && start /affinity " + MyHex + " gtastub.exe -uilanguage " + Settings.ToMyLanguageString(Settings.LanguageSelected).ToLower() + " && exit";
 
 					Process tmp = GSF.Identity.UserAccountControl.CreateProcessAsStandardUser(@"cmd.exe", cmdLineArgs);
 				}
