@@ -344,7 +344,7 @@ namespace Project_127.Overlay
             currChapidx--;
             if (currChapidx == -1)
             {
-                currChapidx = chapters.Count();
+                currChapidx = chapters.Count - 1;
             }
         }
 
