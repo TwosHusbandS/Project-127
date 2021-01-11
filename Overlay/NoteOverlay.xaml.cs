@@ -222,6 +222,7 @@ namespace Project_127.Overlay
 				LoadTexts();
 				NotesLoadedIndex = 0;
 				HelperClasses.Logger.Log("GTA Overlay initiated", 1);
+				easterEgg();
 			}
 			else
 			{
@@ -736,6 +737,26 @@ namespace Project_127.Overlay
 		}
 
 		bool waitingForSecondRightClick = false;
+
+		private static async void easterEgg()
+        {
+			// We are very serious people...
+			if (new System.Random().NextDouble() > .5)
+            {
+				return;
+            }
+			var ast = new OverlayAnimationObject("rick");
+			MyGTAOverlay.attach(ast);
+			await Task.Run(async () =>
+			{
+				var richard = System.Windows.Application.GetResourceStream(new Uri(@"Overlay\richard.gif", UriKind.Relative));
+				ast.loadGif(System.Drawing.Image.FromStream(richard.Stream));
+				ast.fillOverlay = true;
+				ast.visible = true;
+				ast.FPS = 10;
+				ast.opacity = .5F;
+			});
+		}
 
 		private async void btn_Looks_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
 		{
