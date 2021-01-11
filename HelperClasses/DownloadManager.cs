@@ -331,7 +331,16 @@ namespace Project_127.HelperClasses
             var fullPath = System.IO.Path.Combine(Project127Files, relPath);
             var from = fileEntry.GetAttribute("subassembly", "");
             var froma = availableSubassemblies[from];
-            var fromi = installedSubassemblies[from];
+            subassemblyInfo fromi;
+            try
+            {
+                fromi = installedSubassemblies[from];
+            }
+            catch
+            {
+                getSubassembly(from, true);
+                fromi = installedSubassemblies[from];
+            }
             var files = froma.Select("./file");
 
             foreach (var file in fromi.files)
@@ -610,7 +619,7 @@ namespace Project_127.HelperClasses
                 return false;
             }
             var sa = availableSubassemblies[subassemblyName];
-            var sai = installedSubassemblies[subassemblyName];
+            //var sai = installedSubassemblies[subassemblyName];
             var reqs = sa.Select("./requires/subassembly");
             foreach (XPathNavigator req in reqs)
             {
