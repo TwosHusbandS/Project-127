@@ -311,6 +311,7 @@ namespace Project_127.HelperClasses
             }
             if (!succeeded)
             {
+                HelperClasses.Logger.Log("Failed to retrieve " + filename);
                 return null;
             }
             else
@@ -408,6 +409,7 @@ namespace Project_127.HelperClasses
                     break;
                 }
             }
+            HelperClasses.Logger.Log("Failed to retrieve " + filename);
             return null;
         }
         private Tuple<List<subAssemblyFile>, bool> getSubassemblyFolder(string path, XPathNavigator folderEntry)
