@@ -311,6 +311,7 @@ namespace Project_127.HelperClasses
             }
             if (!succeeded)
             {
+                HelperClasses.Logger.Log("Failed to retrieve " + filename);
                 return null;
             }
             else
@@ -338,7 +339,13 @@ namespace Project_127.HelperClasses
             }
             catch
             {
-                getSubassembly(from, true);
+                var stat = getSubassembly(from, true).GetAwaiter().GetResult();
+                HelperClasses.Logger.Log("Failed to retrieve " + filename);
+                HelperClasses.Logger.Log("Required subassembly " + filename + " missing!");
+                if (!stat)
+                {
+                    return null;
+                }
                 fromi = installedSubassemblies[from];
             }
             var files = froma.Select("./file");
@@ -408,6 +415,7 @@ namespace Project_127.HelperClasses
                     break;
                 }
             }
+            HelperClasses.Logger.Log("Failed to retrieve " + filename);
             return null;
         }
         private Tuple<List<subAssemblyFile>, bool> getSubassemblyFolder(string path, XPathNavigator folderEntry)
