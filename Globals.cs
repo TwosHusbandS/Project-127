@@ -663,6 +663,7 @@ namespace Project_127
 		private static void initDynamicTextGetters()
         {
 			/*
+			 * Currently Supported Variables:
 			 * $missions
 			 * $sandf
 			 * $usj
@@ -671,7 +672,7 @@ namespace Project_127
 			 * $hobbies
 			 * $cutscene
 			 * $script
-			 * $loading
+			 * $scriptPretty
 			 * $percent
 			 * $golfhole
 			 */

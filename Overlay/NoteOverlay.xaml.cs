@@ -567,11 +567,27 @@ namespace Project_127.Overlay
 		public static void OverlayNoteChapterNext()
 		{
 			MyGTAOverlay.nextChapter();
+			if (MyGTAOverlay.chapterTitle != "")
+            {
+				MyGTAOverlay.title.text = "Project 1.27 - Overlay - " + MyGTAOverlay.chapterTitle;
+			}
+            else
+            {
+				MyGTAOverlay.title.text = NotesLoadedTitle[NotesLoadedIndex];
+			}
 		}
 
 		public static void OverlayNoteChapterPrev()
 		{
 			MyGTAOverlay.prevChapter();
+			if (MyGTAOverlay.chapterTitle != "")
+			{
+				MyGTAOverlay.title.text = "Project 1.27 - Overlay - " + MyGTAOverlay.chapterTitle;
+			}
+			else
+			{
+				MyGTAOverlay.title.text = NotesLoadedTitle[NotesLoadedIndex];
+			}
 		}
 
 

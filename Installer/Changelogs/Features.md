@@ -28,6 +28,8 @@
   * can render on top of GTA (if in Borderless Mode) or on top of our own Window on other screens (Multi Monitor Mode)
   * Ability to scroll a notefile up and down and cycle through NoteFiles via Hotkeys.
   * Lots of Options regarding Files, Look and Hotkeys
+  * Ability display certain in game stats, such as number of stuntjumps or missions completed (See included notefiles for examples)
+  * More info [here](Advanced%20Notefile.md)
 * Download Manager / Component Manager
   * Download Manager for additional needed Files (depending on Features you want to use)
   * Basic Install, Re-Install and Delete Functionality.
@@ -39,7 +41,7 @@
   * Hide P127 completely
  * Backup Feature (for UpgradeFiles)
   * Ability to back up the Folder P127 uses to Upgrade your Game. 
-  * Ability to apply / use a Backuo of your UpgradeFiles.
+  * Ability to apply / use a Backup of your UpgradeFiles.
   * This means if 1.52 is latest, you back up 1.52 files, 1.53 hits, you then sometime apply the 1.52 backup, clicking "Upgraded" will get you to 1.52
 
 

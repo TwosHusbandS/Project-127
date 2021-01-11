@@ -1,7 +1,14 @@
 ### Changelog from 1.1 to 1.2:
 	
 #### New Features:
-* AAA - PLACEHOLDER DRAGON NOTE OVERLAY 
+* Note Overlay
+  * General performance improvements
+  * Addition of dynamic text markers
+    * Allows the overlay to display certain in game stats, such as number of stuntjumps or missions completed
+  * Addition of a chapter system with optional autoswitching
+    * Improves note organization
+	* Allows for pertinent notes to be displayed based on a specified states
+
 * Easter eggs
 * SCL Launch
   * Launching through downgraded social club. For more Information see the "Launching Downgraded GTA" Section [here](https://github.com/TwosHusbandS/Project-127/blob/master/Installer/Changelogs/Help.md)
