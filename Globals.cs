@@ -212,7 +212,7 @@ namespace Project_127
 		/// <summary>
 		/// Property of other Buildinfo. Will be in the top message of logs
 		/// </summary>
-		public static string BuildInfo = "V. 1.1, Build 1";
+		public static string BuildInfo = "V. 1.2, Internal 1";
 
 		/// <summary>
 		/// Returns all Command Line Args as StringArray

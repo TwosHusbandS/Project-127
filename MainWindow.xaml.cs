@@ -9,7 +9,7 @@ Actual code (partially closed source) which authentificates, handles entitlement
 Artwork, Design of GUI, GUI Behaviourehaviour, Colorchoices etc. by "@Hossel"
 Project 1.27 Client by "@thS"
 A number of other members of the team, including but not limited to @MoMo, @Diamondo25, @S.M.G, @gogsi, @Antibones, @Unemployed, @Aperture, @luky, @CrynesSs, @Daniel Kinau contributed to this project one way or another, and my thanks go out to them.
-Version: 1.0.9.8
+Version: 1.1.9.0
 
 Build Instructions:
 	Press CTRLF + F5, pray that nuget does its magic.
