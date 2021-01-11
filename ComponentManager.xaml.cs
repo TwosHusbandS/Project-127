@@ -154,9 +154,7 @@ namespace Project_127
 				{
 					if (myComponent == Components.SCLDowngradedSC)
 					{
-						string Path1 = LauncherLogic.DowngradedSocialClub.TrimEnd('\\') + @"\subprocess.exe";
-						string Path2 = LauncherLogic.DowngradedSocialClub.TrimEnd('\\') + @"\socialclub.dll";
-						if (!HelperClasses.FileHandling.doesFileExist(Path1) || !HelperClasses.FileHandling.doesFileExist(Path2))
+						if (LauncherLogic.Get_SCL_InstallationState(LauncherLogic.SCL_SC_DOWNGRADED) != LauncherLogic.SCL_InstallationStates.Downgraded)
 						{
 							if (AskUser)
 							{

@@ -26,6 +26,7 @@
   * Fixed not all required Components installing automatically
 * Jumpscript
   * Added more Keys.
+  * Added Option to import your own AHK File P127 will save and start (instead of the automatic jumpscript)
 * Two different "Repair GTA" Methods. Also saving the name of every file we ever modified or added to the GTA V Installation Folder
 * Improved ResetEverything and Uninstall Methods.
 
@@ -57,4 +58,6 @@
 * Overlay (and all Listeners and extras) One-Does-All-Logic Method improved.
   * Mainly no longer disposes existing Overlay just to create a new one
 * Stopped WindowChangeListener from getting Garbage Collected
+* Add Credential Manager Info on Debug
+* Not spamming Users (likely) SSD with 100 MB of SC Files every SC Downgrade
 

@@ -40,13 +40,11 @@ Hybrid code can be found in AAA_HybridCode.
 
 ON RELEASE OF 1.2
 - Release WITHOUT try catch around window listener
+- THINK ABOUT PROCESS KILLER FOR SOCIAL CLUB LOGIC
 - CHECK CHANGELOG / README / HELP / FEATURES FOR "PLACEHOLDER"
 - RELEASE ALL NEW FILES WITH IT (V14, new SCL Binaries)
 
 TO DO BEFORE INTERNAL TESTING
-- Change Social Club Downgrade to copy a cached thing of it to C:\ProgramFiles and rename there. And only copy  fresh when we need to.
- (dont want to spam users likely SSD with 100 MB every time...
-- Import Jumpscript File function
 - Release Internal Testing
 
 IN INTERNAL TESTING

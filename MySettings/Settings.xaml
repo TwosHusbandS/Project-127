@@ -262,6 +262,7 @@
                             <Rectangle Grid.Row="16" Grid.Column="0" Grid.ColumnSpan="3" Fill="Transparent"/>
                             <Rectangle Grid.Row="17" Grid.Column="0" Grid.ColumnSpan="3" Fill="{x:Static local:MyColors.SE_AlternateRowBackground}"/>
                             <Rectangle Grid.Row="18" Grid.Column="0" Grid.ColumnSpan="3" Fill="Transparent"/>
+                            <Rectangle Grid.Row="19" Grid.Column="0" Grid.ColumnSpan="3" Fill="{x:Static local:MyColors.SE_AlternateRowBackground}"/>
 
 
                             <Label Grid.Row="0" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Enable Project 1.27 Notes - Overlay"/>
@@ -288,31 +289,52 @@
                             <Label Grid.Row="7" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Enable Jumpscript"/>
                             <Button Grid.Row="7" Grid.Column="1" x:Name="btn_cb_Set_EnableAutoStartJumpScript"  Style="{StaticResource btn_cb}" Click="btn_cb_Click"  MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
 
-                            <Label Grid.Row="8" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="        Jumpscript Key 1"/>
-                            <Button Grid.Row="8" Grid.Column="1" x:Name="btn_Set_JumpScriptKey1"  Style="{StaticResource btn_SE_Path}" Click="btn_Set_JumpScriptKey1_Click"/>
+                            <Button Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="2" x:Name="btn_Jumpscript_Additional"  Style="{StaticResource btn_SE_Path}" Click="btn_Jumpscript_Additional_Click" Content="Additional Jumpscript Options"/>
+                            <Popup x:Name="PopupJumpscriptAdditional"  PlacementTarget="{Binding ElementName=btn_Jumpscript_Additional}" Placement="MousePoint" Width="300" Height="100"  Margin="0,0,0,0" StaysOpen="False" Closed="PopupJumpscriptAdditional_Closed" Opened="PopupJumpscriptAdditional_Opened">
+                                <Border BorderBrush="{x:Static local:MyColors.MyColorWhite}" BorderThickness="2" Background="{x:Static local:MyColors.MyColorOffBlack}" MouseLeave="Border_MouseLeave">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition/>
+                                            <RowDefinition/>
+                                        </Grid.RowDefinitions>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition/>
+                                            <ColumnDefinition/>
+                                        </Grid.ColumnDefinitions>
+                                        <Label Grid.Row="0" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Use Imported AHK File"/>
+                                        <Button Grid.Row="0" Grid.Column="1"  Style="{StaticResource btn_cb}" x:Name="btn_cb_Set_EnableJumpscriptUseCustomScript" Click="btn_cb_Click"  MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
+                                        <Button Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource btn_SE_Path}" x:Name="btn_Import_AHK" Click="btn_Import_AHK_Click"  Content="Import own AHK File"/>
+                                    </Grid>
+                                </Border>
+                            </Popup>
+                            
+                            <Label Grid.Row="9" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="        Jumpscript Key 1"/>
+                            <Button Grid.Row="9" Grid.Column="1" x:Name="btn_Set_JumpScriptKey1"  Style="{StaticResource btn_SE_Path}" Click="btn_Set_JumpScriptKey1_Click"/>
 
-                            <Label Grid.Row="9" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="        Jumpscript Key 2"/>
-                            <Button Grid.Row="9" Grid.Column="1" x:Name="btn_Set_JumpScriptKey2"  Style="{StaticResource btn_SE_Path}" Click="btn_Set_JumpScriptKey2_Click"/>
+                            <Label Grid.Row="10" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="        Jumpscript Key 2"/>
+                            <Button Grid.Row="10" Grid.Column="1" x:Name="btn_Set_JumpScriptKey2"  Style="{StaticResource btn_SE_Path}" Click="btn_Set_JumpScriptKey2_Click"/>
 
-                            <Label Grid.Row="10" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Automatically start LiveSplit on game launch"/>
-                            <Button Grid.Row="10" Grid.Column="1" x:Name="btn_cb_Set_EnableAutoStartLiveSplit"  Style="{StaticResource btn_cb}" Click="btn_cb_Click"  MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
+                            <Rectangle x:Name="Rect_HideOptions_JumpscriptKeys" Grid.Row="9" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="2" Fill="{x:Static local:MyColors.MyColorOffWhite85}" ToolTip="Non effective when using your own JumpscriptFile"/>
 
-                            <Button Grid.Row="11" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource btn_SE_Path}" x:Name="btn_Set_PathLiveSplit" Click="btn_Path_Click" MouseRightButtonDown="btn_Path_RightClick"/>
+                            <Label Grid.Row="11" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Automatically start LiveSplit on game launch"/>
+                            <Button Grid.Row="11" Grid.Column="1" x:Name="btn_cb_Set_EnableAutoStartLiveSplit"  Style="{StaticResource btn_cb}" Click="btn_cb_Click"  MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
 
-                            <Label Grid.Row="12" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Automatically start FPS Limiter on game launch"/>
-                            <Button Grid.Row="12" Grid.Column="1" x:Name="btn_cb_Set_EnableAutoStartFPSLimiter"  Style="{StaticResource btn_cb}" Click="btn_cb_Click"  MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
+                            <Button Grid.Row="12" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource btn_SE_Path}" x:Name="btn_Set_PathLiveSplit" Click="btn_Path_Click" MouseRightButtonDown="btn_Path_RightClick"/>
 
-                            <Button Grid.Row="13" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource btn_SE_Path}" x:Name="btn_Set_PathFPSLimiter" Click="btn_Path_Click" MouseRightButtonDown="btn_Path_RightClick"/>
+                            <Label Grid.Row="13" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Automatically start FPS Limiter on game launch"/>
+                            <Button Grid.Row="13" Grid.Column="1" x:Name="btn_cb_Set_EnableAutoStartFPSLimiter"  Style="{StaticResource btn_cb}" Click="btn_cb_Click"  MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
 
-                            <Label Grid.Row="14" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Automatically start Stream-Program on game launch"/>
-                            <Button Grid.Row="14" Grid.Column="1" x:Name="btn_cb_Set_EnableAutoStartStreamProgram"  Style="{StaticResource btn_cb}" Click="btn_cb_Click"  MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
+                            <Button Grid.Row="14" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource btn_SE_Path}" x:Name="btn_Set_PathFPSLimiter" Click="btn_Path_Click" MouseRightButtonDown="btn_Path_RightClick"/>
 
-                            <Button Grid.Row="15" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource btn_SE_Path}" x:Name="btn_Set_PathStreamProgram" Click="btn_Path_Click" MouseRightButtonDown="btn_Path_RightClick"/>
+                            <Label Grid.Row="15" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Automatically start Stream-Program on game launch"/>
+                            <Button Grid.Row="15" Grid.Column="1" x:Name="btn_cb_Set_EnableAutoStartStreamProgram"  Style="{StaticResource btn_cb}" Click="btn_cb_Click"  MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
 
-                            <Label Grid.Row="16" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Automatically start Nohboard on game launch"/>
-                            <Button Grid.Row="16" Grid.Column="1" x:Name="btn_cb_Set_EnableAutoStartNohboard"  Style="{StaticResource btn_cb}" Click="btn_cb_Click"  MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
+                            <Button Grid.Row="16" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource btn_SE_Path}" x:Name="btn_Set_PathStreamProgram" Click="btn_Path_Click" MouseRightButtonDown="btn_Path_RightClick"/>
 
-                            <Button Grid.Row="17" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource btn_SE_Path}" x:Name="btn_Set_PathNohboard" Click="btn_Path_Click" MouseRightButtonDown="btn_Path_RightClick"/>
+                            <Label Grid.Row="17" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Automatically start Nohboard on game launch"/>
+                            <Button Grid.Row="17" Grid.Column="1" x:Name="btn_cb_Set_EnableAutoStartNohboard"  Style="{StaticResource btn_cb}" Click="btn_cb_Click"  MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
+
+                            <Button Grid.Row="18" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource btn_SE_Path}" x:Name="btn_Set_PathNohboard" Click="btn_Path_Click" MouseRightButtonDown="btn_Path_RightClick"/>
 
 
                         </Grid>
