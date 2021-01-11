@@ -118,8 +118,8 @@ namespace Project_127.Overlay
 		private string bgImagePath = "";
 		private bool bgImageChanged = false;
 		private int scrollInitial = 50;
-		private basicOverlayTextBox titleBox;
-		private dynamicOverlayTextBox mainText;
+		private BasicOverlayTextBox titleBox;
+		private DynamicOverlayTextBox mainText;
 
 
 		/// <summary>
@@ -369,7 +369,8 @@ namespace Project_127.Overlay
 			{
 				MeasureFPS = true,
 				PerPrimitiveAntiAliasing = true,
-				TextAntiAliasing = true
+				TextAntiAliasing = true,
+				UseMultiThreadedFactories = true
 			};
 			var pos = coordFromPos(position, GetWindowRectangle(windowHandle), width, height);
 			_window = new GraphicsWindow(pos[0], pos[1], width, height, gfx)
@@ -385,10 +386,10 @@ namespace Project_127.Overlay
 
 			this.Run();
 			this.Visible = false;
-			mainText = new dynamicOverlayTextBox("GTAOVERLAY_MAIN");
+			mainText = new DynamicOverlayTextBox("GTAOVERLAY_MAIN");
 			attach(mainText);
 			mainText.visible = true;
-			titleBox = new basicOverlayTextBox("title");
+			titleBox = new BasicOverlayTextBox("title");
 			titleBox.text = "Project 1.27 GTA Overlay";
 			titleBox.visible = true;
 			this.attach(titleBox);
@@ -469,12 +470,14 @@ namespace Project_127.Overlay
 				}
 			}
 			//gfx.DrawTextWithBackground(_fonts["textFont"], _brushes["textColor"], _brushes["textBack"], textOffsetX, textOffsetY, NoteText);
-
-			foreach (var obj in overlayObjects)
+			try
 			{
-				obj.render(gfx);
+				foreach (var obj in overlayObjects)
+				{
+					obj.render(gfx);
+				}
 			}
-
+			catch { }
 		}
 
 		/// <summary>
@@ -733,6 +736,10 @@ namespace Project_127.Overlay
 			{
 				return false;
 			}
+			if (-1 != overlayObjects.FindIndex(x => x.id == t.id))
+            {
+				throw new ArgumentException("Object with given id already exists");
+            }
 			t.link(this, _window.Graphics);
 			overlayObjects.Add(t);
 			return true;
@@ -875,7 +882,7 @@ namespace Project_127.Overlay
 	/// <summary>
 	/// Simple overlay object for displaying text
 	/// </summary>
-	public class basicOverlayTextBox : overlayObject, positionalText
+	public class BasicOverlayTextBox : overlayObject, positionalText
 	{
 
 		private int _maxLineWidth = 0;
@@ -1182,7 +1189,7 @@ namespace Project_127.Overlay
 		/// Generates an overlayTextBox object.
 		/// </summary>
 		/// <param name="id">Textbox object id</param>
-		public basicOverlayTextBox(string id)
+		public BasicOverlayTextBox(string id)
 		{
 			this.id = id;
 		}
@@ -1264,9 +1271,21 @@ namespace Project_127.Overlay
 		{
 			if (!disposedValue)
 			{
-				_textFont.Dispose();
-				_textBrush.Dispose();
-				_bgBrush.Dispose();
+				try
+				{
+					_textFont.Dispose();
+				}
+				catch { }
+                try
+                {
+					_textBrush.Dispose();
+				}
+				catch { }
+				try
+				{
+					_bgBrush.Dispose();
+				}
+				catch { }
 				if (host != null)
 				{
 					host.detach(id);
@@ -1288,9 +1307,9 @@ namespace Project_127.Overlay
 	/// <summary>
 	/// Overlay Texbox object with added support for dynamic text
 	/// </summary>
-	public class dynamicOverlayTextBox: basicOverlayTextBox
+	public class DynamicOverlayTextBox: BasicOverlayTextBox
     {
-		public dynamicOverlayTextBox(string id): base(id) { }
+		public DynamicOverlayTextBox(string id): base(id) { }
 
 		/// <summary>
 		/// Get the current chapter title of the dynamic text
