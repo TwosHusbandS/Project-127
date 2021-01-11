@@ -230,6 +230,7 @@
     <Compile Include="Overlay\NoteOverlayPages\NoteOverlay_NoteFiles.xaml.cs">
       <DependentUpon>NoteOverlay_NoteFiles.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Overlay\OverlayAnimationObject.cs" />
     <Compile Include="Overlay\Overlay_Preview.xaml.cs">
       <DependentUpon>Overlay_Preview.xaml</DependentUpon>
     </Compile>
