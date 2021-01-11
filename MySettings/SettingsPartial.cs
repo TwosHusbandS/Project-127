@@ -359,6 +359,9 @@ namespace Project_127.MySettings
 					MainWindow.MW.btn_lbl_Mode.Visibility = Visibility.Hidden;
 				}
 				MainWindow.MW.btn_lbl_Mode.ToolTip = MainWindow.MW.btn_lbl_Mode.Content;
+
+				Globals.CheckForUpdate();
+				Globals.SetUpDownloadManager();
 			}
 		}
 
@@ -439,6 +442,24 @@ namespace Project_127.MySettings
 		//}
 
 
+
+		/// <summary>
+		/// Settings EnableAlternativeLaunch. Gets and Sets from the Dictionary.
+		/// </summary>
+		public static bool EnableJumpscriptUseCustomScript
+		{
+			get
+			{
+				return GetBoolFromString(GetSetting("EnableJumpscriptUseCustomScript"));
+			}
+			set
+			{
+				if (value != EnableJumpscriptUseCustomScript)
+				{
+					SetSetting("EnableJumpscriptUseCustomScript", value.ToString());
+				}
+			}
+		}
 
 		/// <summary>
 		/// Settings EnableAlternativeLaunch. Gets and Sets from the Dictionary.

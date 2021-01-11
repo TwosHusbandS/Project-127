@@ -313,6 +313,7 @@ namespace Project_127
 			{"EnableAutoStartJumpScript", "False" },
 			{"JumpScriptKey1", "32" },
 			{"JumpScriptKey2", "76" },
+			{"EnableJumpscriptUseCustomScript", "False" },
 			{"EnableAutoSetHighPriority", "True" },
 
 			// Auto start Shit
@@ -321,7 +322,7 @@ namespace Project_127
 			{"PathLiveSplit", @"C:\Some\Path\SomeFile.exe" },
 			{"EnableAutoStartStreamProgram", "False" },
 			{"PathStreamProgram", @"C:\Some\Path\SomeFile.exe" },
-			{"EnableAutoStartFPSLimiter", "False" },
+			{"EnableAutoStartFPSLimiter", "False" },	
 			{"PathFPSLimiter", @"C:\Some\Path\SomeFile.exe" },
 			{"EnableAutoStartNohboard", "False" },
 			{"PathNohboard", @"C:\Some\Path\SomeFile.exe" },

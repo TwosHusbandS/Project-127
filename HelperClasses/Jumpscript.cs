@@ -30,9 +30,9 @@ namespace Project_127.HelperClasses
 		{
 			StopJumpscript();
 
-			if (HelperClasses.FileHandling.doesFileExist(Globals.ProjectInstallationPathBinary.TrimEnd('\\') + @"\P127_Jumpscript_Custom.ahk"))
+			if (MySettings.Settings.EnableJumpscriptUseCustomScript && HelperClasses.FileHandling.doesFileExist(Globals.ProjectInstallationPathBinary.TrimEnd('\\') + @"\P127_Jumpscript_Custom.ahk"))
 			{
-				Logger.Log("Custom Jumpscript found, lets use it.");
+				Logger.Log("Custom Jumpscript found and settings enabled, lets use it.");
 
 				myJumpscript = ProcessHandler.StartProcess(Globals.ProjectInstallationPathBinary.TrimEnd('\\') + @"\P127_Jumpscript.exe", Globals.ProjectInstallationPathBinary, "P127_Jumpscript_Custom.ahk");
 			}

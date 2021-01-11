@@ -691,6 +691,7 @@ namespace Project_127.MySettings
 			ButtonMouseOverMagic(btn_cb_Set_EnableLogging);
 			ButtonMouseOverMagic(btn_cb_Set_CopyFilesInsteadOfHardlinking);
 			ButtonMouseOverMagic(btn_cb_Set_EnableAlternativeLaunch);
+			ButtonMouseOverMagic(btn_cb_Set_EnableJumpscriptUseCustomScript);
 			//ButtonMouseOverMagic(btn_cb_Set_CopyFilesInsteadOfSyslinking_SocialClub);
 			ButtonMouseOverMagic(btn_cb_Set_EnablePreOrderBonus);
 			ButtonMouseOverMagic(btn_cb_Set_EnableAutoStartFPSLimiter);
@@ -867,9 +868,13 @@ namespace Project_127.MySettings
 				case "btn_cb_Set_EnableAlternativeLaunch":
 					SetCheckBoxBackground(myBtn, Settings.EnableAlternativeLaunch);
 					break;
-				//case "btn_cb_Set_CopyFilesInsteadOfSyslinking_SocialClub":
-				//	SetCheckBoxBackground(myBtn, Settings.EnableCopyFilesInsteadOfSyslinking_SocialClub);
-				//	break;
+				case "btn_cb_Set_EnableJumpscriptUseCustomScript":
+					SetCheckBoxBackground(myBtn, Settings.EnableJumpscriptUseCustomScript);
+					break;
+					//case "btn_cb_Set_CopyFilesInsteadOfSyslinking_SocialClub":
+					//	SetCheckBoxBackground(myBtn, Settings.EnableCopyFilesInsteadOfSyslinking_SocialClub);
+					//	break;
+					
 				case "btn_cb_Set_EnablePreOrderBonus":
 					SetCheckBoxBackground(myBtn, Settings.EnablePreOrderBonus);
 					break;
@@ -964,6 +969,15 @@ namespace Project_127.MySettings
 				}
 			}
 
+			if (Settings.EnableJumpscriptUseCustomScript)
+			{
+				Rect_HideOptions_JumpscriptKeys.Visibility = Visibility.Visible;
+			}
+			else
+			{ 
+				Rect_HideOptions_JumpscriptKeys.Visibility = Visibility.Hidden;
+			}
+
 			// Remove this...
 
 			// Rect_HideOptions_Tease.Visibility = Visibility.Visible;
@@ -999,6 +1013,10 @@ namespace Project_127.MySettings
 					break;
 				case "btn_cb_Set_CopyFilesInsteadOfHardlinking":
 					Settings.EnableCopyFilesInsteadOfHardlinking = !Settings.EnableCopyFilesInsteadOfHardlinking;
+					SetDefaultEnableCopyingHardlinking();
+					break;
+				case "btn_cb_Set_EnableJumpscriptUseCustomScript":
+					Settings.EnableJumpscriptUseCustomScript = !Settings.EnableJumpscriptUseCustomScript;
 					SetDefaultEnableCopyingHardlinking();
 					break;
 				//case "btn_cb_Set_CopyFilesInsteadOfSyslinking_SocialClub":
@@ -1437,6 +1455,7 @@ namespace Project_127.MySettings
 		{
 			PopupCreateBackup.IsOpen = false;
 			PopupUseBackup.IsOpen = false;
+			PopupJumpscriptAdditional.IsOpen = false;
 		}
 
 		/// <summary>
@@ -1571,7 +1590,6 @@ namespace Project_127.MySettings
 				{
 					string DLLinkBranch = "https://github.com/TwosHusbandS/Project-127/raw/" + Globals.Branch + "/Installer/Builds/" + tb.MyReturnString.TrimEnd(".exe") + ".exe";
 					string DLLinkMaster = "https://github.com/TwosHusbandS/Project-127/raw/Master" + "/Installer/Builds/" + tb.MyReturnString.TrimEnd(".exe") + ".exe";
-
 					HelperClasses.Logger.Log("Importing Build. Links: ");
 					HelperClasses.Logger.Log("DLLinkBranch: " + DLLinkBranch);
 					HelperClasses.Logger.Log("DLLinkMaster: " + DLLinkMaster);
@@ -1591,7 +1609,6 @@ namespace Project_127.MySettings
 					HelperClasses.Logger.Log("Both not reachable...");
 
 				}
-
 
 				new Popup(Popup.PopupWindowTypes.PopupOk, "Cant find that build online.").ShowDialog();
 			}
@@ -1618,6 +1635,37 @@ namespace Project_127.MySettings
 			{
 				new Popup(Popup.PopupWindowTypes.PopupOk, "Cant do that while the game is running.").ShowDialog();
 			}
+		}
+
+		private void btn_Jumpscript_Additional_Click(object sender, RoutedEventArgs e)
+		{
+			PopupJumpscriptAdditional.IsOpen = true;
+		}
+
+		private void btn_Import_AHK_Click(object sender, RoutedEventArgs e)
+		{
+			string AHKFileLocation = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.File, "Import AHK Jumpscript", Globals.ProjectInstallationPath, pFilter: "AHK Files|*.ahk*");
+			if (HelperClasses.FileHandling.doesFileExist(AHKFileLocation))
+			{
+				string customPath = Globals.ProjectInstallationPathBinary.TrimEnd('\\') + @"\P127_Jumpscript_Custom.ahk";
+				HelperClasses.FileHandling.copyFile(AHKFileLocation, customPath);
+				Settings.EnableJumpscriptUseCustomScript = true;
+				RefreshGUI();
+			}
+			else
+			{
+				new Popup(Popup.PopupWindowTypes.PopupOk, "No AHK File selected.did").ShowDialog();
+			}
+		}
+
+		private void PopupJumpscriptAdditional_Opened(object sender, EventArgs e)
+		{
+
+		}
+
+		private void PopupJumpscriptAdditional_Closed(object sender, EventArgs e)
+		{
+
 		}
 	} // End of Class
 } // End of Namespace 

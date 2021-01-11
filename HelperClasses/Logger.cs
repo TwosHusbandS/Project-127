@@ -12,6 +12,7 @@ using Project_127.Overlay;
 using Project_127.Popups;
 using Project_127.MySettings;
 using System.Threading;
+using CredentialManagement;
 
 namespace Project_127.HelperClasses
 {
@@ -129,6 +130,7 @@ namespace Project_127.HelperClasses
 				DebugMessage.Add("BuildInfo: '" + Globals.BuildInfo + "'");
 				DebugMessage.Add("BuildTime: '" + MyCreationDate + "'");
 				DebugMessage.Add("Time Now: '" + DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss") + "'");
+				DebugMessage.Add("Time Now UTC: '" + DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss") + "'");
 				DebugMessage.Add("ZIP Version: '" + Globals.ZipVersion + "'");
 				DebugMessage.Add("Globals.Branch: '" + Globals.Branch + "'");
 				DebugMessage.Add("InternalMode (Overwites, mode / branch): '" + Globals.InternalMode + "'");
@@ -179,10 +181,10 @@ namespace Project_127.HelperClasses
 				DebugMessage.Add("    Size of playgtav.exe in BACKUP UpdateFiles Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.UpgradeFilePathBackup.TrimEnd('\\') + @"\playgtav.exe"));
 
 				DebugMessage.Add("Detected Social Club InstallationStates:");
-				DebugMessage.Add("    Detect Social Club InstallationStates SC_INSTALLATION_PATH: " + LauncherLogic.Get_SCL_InstallationState(LauncherLogic.SocialClubInstallationFolder));
-				DebugMessage.Add("    Detect Social Club InstallationStates SC_DOWNGRADED_PATH: " + LauncherLogic.Get_SCL_InstallationState(LauncherLogic.SocialClubDowngradedFolder));
-				DebugMessage.Add("    Detect Social Club InstallationStates SC_TEMP_PATH: " + LauncherLogic.Get_SCL_InstallationState(LauncherLogic.SocialClubTemp));
-
+				DebugMessage.Add("    Detect Social Club InstallationStates SC_INSTALLATION_PATH ('" + LauncherLogic.SCL_SC_Installation + "'): " + LauncherLogic.Get_SCL_InstallationState(LauncherLogic.SCL_SC_Installation));
+				DebugMessage.Add("    Detect Social Club InstallationStates SC_TEMP_BACKUP_PATH ('" + LauncherLogic.SCL_SC_TEMP_BACKUP + "'): " + LauncherLogic.Get_SCL_InstallationState(LauncherLogic.SCL_SC_TEMP_BACKUP));
+				DebugMessage.Add("    Detect Social Club InstallationStates SC_DOWNGRADED_PATH ('" + LauncherLogic.SCL_SC_DOWNGRADED + "'): " + LauncherLogic.Get_SCL_InstallationState(LauncherLogic.SCL_SC_DOWNGRADED));
+				DebugMessage.Add("    Detect Social Club InstallationStates SC_DOWNGRADED_CACHE_PATH ('" + LauncherLogic.SCL_SC_DOWNGRADED_CACHE + "'): " + LauncherLogic.Get_SCL_InstallationState(LauncherLogic.SCL_SC_DOWNGRADED_CACHE));
 				DebugMessage.Add("Files I ever placed inside GTA: ");
 				foreach (string tmp in Settings.AllFilesEverPlacedInsideGTA)
 				{
@@ -193,9 +195,30 @@ namespace Project_127.HelperClasses
 				{
 					DebugMessage.Add("    " + KVP.Key + ": '" + KVP.Value + "'");
 				}
+				try
+				{
+					// Better safe than story...(try catching cause i have no idea how that shit works)
+					using (var creds = new Credential())
+					{
+						creds.Target = "Project127Login";
+						if (!creds.Exists())
+						{
+							DebugMessage.Add("Stored Credentials (legacy Auth): NOTHING FOUND");
+						}
+						else
+						{
+							creds.Load();
+							DebugMessage.Add("Stored Credentials (legacy Auth):");
+							DebugMessage.Add("        Email: '" + creds.Username + "'");
+							DebugMessage.Add("        LastWriteTime: '" + creds.LastWriteTime.ToString("yyyy-MM-ddTHH:mm:ss") + "'");
+							DebugMessage.Add("        LastWriteTimeUTC: '" + creds.LastWriteTimeUtc.ToString("yyyy-MM-ddTHH:mm:ss") + "'");
+						}
+					}
+				}
+				catch { }
 
 				tmpsw.Stop();
-				DebugMessage.Add("Generating DebugFile took " + tmpsw.ElapsedMilliseconds +" ms.");
+				DebugMessage.Add("Generating DebugFile took " + tmpsw.ElapsedMilliseconds + " ms.");
 
 				// Building DebugPath
 				string DebugFile = Globals.ProjectInstallationPath.TrimEnd('\\') + @"\AAA - DEBUG.txt";
