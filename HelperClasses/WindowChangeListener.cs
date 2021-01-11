@@ -32,12 +32,7 @@ namespace Project_127.HelperClasses
 			dele = new WinEventDelegate(WinEventProc);
 			IntPtr m_hhook = SetWinEventHook(EVENT_SYSTEM_FOREGROUND, EVENT_SYSTEM_FOREGROUND, IntPtr.Zero, dele, 0, 0, WINEVENT_OUTOFCONTEXT);
 			IsRunning = true;
-			try
-			{
-				Application.Run();
-			}
-			catch { }
-			
+			Application.Run();
 		}
 
 		/// <summary>

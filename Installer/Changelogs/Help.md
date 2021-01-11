@@ -11,16 +11,18 @@
 * I recommend Reading through all the Settings right now, and setting P127 up to your Liking
 
 
-## Downgraded Game Launching and Authentication
+## Launching Downgraded GTA Additional Information and Authentication
 
 * You have two Options of launching the game.
   * dr490n emu (default / standard)
     * For this you only need the "Required Files"
   * Launching through downgraded Socialclub (SCL).
-    * NO CAPTCHAS.
+    * Social Club is automatically Downgraded / Upgraded
+	* Removes the need for P127 to have your Auth information (through MTL or LegacyAuth). NO CAPTCHAS
+	* Your normal GTA V Installation Settings / Savefiles etc.
     * Only available if you own GTA through Steam or Rockstar. Sorry Epic.
     * For this you need the Downgraded Social Club Files, and the SCL - GameFiles for the Game Version (1.24 or 1.27) and for your Retailer (Steam or Rockstar)
-	* They will be downloaded automatically when changing Settings, so you dont need to manually Download them.
+	  * They will be downloaded when needed changing Settings, so you dont need to manually Download them.
 
 When you are launching through the dr490n Emu, P127 needs to verify that you own GTA through Rockstars Server (for legal Reasons).
 

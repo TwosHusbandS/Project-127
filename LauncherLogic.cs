@@ -88,14 +88,10 @@ namespace Project_127
 
 		public static async void GTAStarted()
 		{
-			HelperClasses.Logger.Log("AAAA - GTAStarted()");
 
 			Globals.RunningGTABuild = Globals.GTABuild;
 
 			await Task.Delay(5000);
-
-			HelperClasses.Logger.Log("AAAA - GTAStarted() - After 2.5 Seconds wait");
-
 
 			SetGTAProcessPriority();
 
@@ -150,7 +146,7 @@ namespace Project_127
 
 			if (UpgradeSocialClubAfterGame)
 			{
-				SocialClubUpgrade();
+				SocialClubUpgrade(5000);
 				UpgradeSocialClubAfterGame = false;
 			}
 		}
@@ -1340,14 +1336,20 @@ namespace Project_127
 		}
 
 
-		public static bool SocialClubDowngrade()
+		public static bool SocialClubDowngrade(int msDelay = 0)
 		{
-			HelperClasses.Logger.Log("Initiating a Social Club Downgrade", 0);
+			if (Get_SCL_InstallationState(SocialClubInstallationFolder) == SCL_InstallationStates.Downgraded)
+			{
+				HelperClasses.Logger.Log("SC Looks Downgraded already. No need to Downgrade.", 1);
+				return true;
+			}
+
+			Task.Delay(msDelay).GetAwaiter().GetResult();
+
+			HelperClasses.Logger.Log("Initiating a Social Club Downgrade after " + msDelay + " ms of Delay", 0);
 
 			// KILL ALL PROCESSES
-			HelperClasses.Logger.Log("Killing all Social Club Processes", 1);
-			HelperClasses.ProcessHandler.KillProcesses("subprocess");
-			HelperClasses.ProcessHandler.KillProcesses("socialclubhelper");
+			SocialClubKillAllProcesses();
 
 			List<MyFileOperation> tmp = new List<MyFileOperation>();
 
@@ -1376,12 +1378,8 @@ namespace Project_127
 				}
 			}
 
-			if (Get_SCL_InstallationState(SocialClubInstallationFolder) == SCL_InstallationStates.Downgraded)
-			{
-				HelperClasses.Logger.Log("SC Looks Downgraded already. No need to Downgrade.", 1);
-				return true;
-			}
-			else if (Get_SCL_InstallationState(SocialClubInstallationFolder) == SCL_InstallationStates.Upgraded)
+
+			if (Get_SCL_InstallationState(SocialClubInstallationFolder) == SCL_InstallationStates.Upgraded)
 			{
 				// DELETE PREV BACKUP
 				tmp.Add(new MyFileOperation(MyFileOperation.FileOperations.Delete, SocialClubTemp, "", "Deleting previous Background Folder '" + SocialClubTemp + "'", 2, MyFileOperation.FileOrFolder.Folder));
@@ -1390,7 +1388,7 @@ namespace Project_127
 				tmp.Add(new MyFileOperation(MyFileOperation.FileOperations.Move, SocialClubInstallationFolder, SocialClubTemp, "Saving curr Installation as Backup. Renaming '" + SocialClubInstallationFolder + "' to '" + SocialClubTemp + "'", 2, MyFileOperation.FileOrFolder.Folder));
 				tmp.Add(new MyFileOperation(MyFileOperation.FileOperations.Delete, SocialClubInstallationFolder, "", "Deleting Installation Folder: '" + SocialClubInstallationFolder + "'", 2, MyFileOperation.FileOrFolder.Folder));
 			}
-			else
+			else if (Get_SCL_InstallationState(SocialClubInstallationFolder) != SCL_InstallationStates.Downgraded)
 			{
 				// DELETE INSTALL FOLDER
 				tmp.Add(new MyFileOperation(MyFileOperation.FileOperations.Delete, SocialClubInstallationFolder, "", "Deleting Installation Folder: '" + SocialClubInstallationFolder + "'", 2, MyFileOperation.FileOrFolder.Folder));
@@ -1434,26 +1432,55 @@ namespace Project_127
 			}
 		}
 
-
-		public static bool SocialClubUpgrade()
+		public static void SocialClubKillAllProcesses(int msDelayAfter = 250)
 		{
-			// Might change what this returns (may return true on Upgraded and Downgraded and False on Trash i guess...)
-
-
-			HelperClasses.Logger.Log("Initiating a Social Club Upgrade", 0);
-
-			// KILL ALL PROCESSES
 			HelperClasses.Logger.Log("Killing all Social Club Processes", 1);
-			HelperClasses.ProcessHandler.KillProcesses("subprocess");
-			HelperClasses.ProcessHandler.KillProcesses("socialclubhelper");
 
+			Process[] tmp = Process.GetProcesses();
+			foreach (Process p in tmp)
+			{
+				if ((p.ProcessName.ToLower() == SCL_EXE_ADDON_DOWNGRADED.TrimStart('\\').TrimEnd(".exe").ToLower()) ||
+					(p.ProcessName.ToLower() == SCL_EXE_ADDON_UPGRADED.TrimStart('\\').TrimEnd(".exe").ToLower()) ||
+					(p.ProcessName.ToLower() == "gtavlauncher") )
+				{
+					if ((p.MainModule.FileName.Contains(SocialClubInstallationFolder)) ||
+						(p.MainModule.FileName.Contains(GTAVFilePath)))
+					{
+						p.Kill();
+					}
+				}
+			}
+			Task.Delay(25).GetAwaiter().GetResult();
+			foreach (Process p in tmp)
+			{
+				if ((p.ProcessName == SCL_EXE_ADDON_DOWNGRADED.TrimStart('\\').TrimEnd(".exe")) ||
+					(p.ProcessName == SCL_EXE_ADDON_UPGRADED.TrimStart('\\').TrimEnd(".exe")))
+				{
+					if (p.MainModule.FileName.Contains(SocialClubInstallationFolder))
+					{
+						p.Kill();
+					}
+				}
+			}
+			Task.Delay(msDelayAfter).GetAwaiter().GetResult();
+		}
 
+		public static bool SocialClubUpgrade(int msDelay = 0)
+		{
 			if (Get_SCL_InstallationState(SocialClubInstallationFolder) == SCL_InstallationStates.Upgraded)
 			{
 				HelperClasses.Logger.Log("SC Looks Upgraded already. No need to Upgrade.", 1);
 				return true;
 			}
-			else if (Get_SCL_InstallationState(SocialClubTemp) == SCL_InstallationStates.Upgraded)
+
+			Task.Delay(msDelay).GetAwaiter().GetResult();
+
+			HelperClasses.Logger.Log("Initiating a Social Club Upgrade after " + msDelay + " ms of Delay", 0);
+
+			// KILL ALL PROCESSES
+			SocialClubKillAllProcesses();
+
+			if (Get_SCL_InstallationState(SocialClubTemp) == SCL_InstallationStates.Upgraded)
 			{
 				HelperClasses.Logger.Log("Temp / Backup Files are good. Normal Upgrade Procedure.", 1);
 
@@ -1489,13 +1516,13 @@ namespace Project_127
 				}
 			}
 
-			if (Get_SCL_InstallationState(SocialClubInstallationFolder) == SCL_InstallationStates.Trash)
+			if (Get_SCL_InstallationState(SocialClubInstallationFolder) != SCL_InstallationStates.Trash)
 			{
-				return false;
+				return true;
 			}
 			else
 			{
-				return true;
+				return false;
 			}
 		}
 		#endregion

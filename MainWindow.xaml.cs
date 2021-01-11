@@ -38,64 +38,26 @@ Comments like "TODO", "TO DO", "CTRLF", "CTRL-F", and "CTRL F" are just ways of 
 Hybrid code can be found in AAA_HybridCode.
 	
 
-TO DO POST 1.1:
-- Release RequiredFiles 14 (POST 1.2 LAUNCH, NEED 1.2 P127 LOGIC)
-
-Done since 1.1:
-- Download Popups now only throw one line of log. In all circumstances
-- Helper Method and Better Text for Settings change (as in wanting to Upgrade before doing XYZ, or not doing it)
-- Changed Uninstall Logic (as in what youre allowed to uninstall and what not, and what happens before that)
-- Changed some UI Texts here and there
-- Took Care of all the Version getter logic and stuff
-- Not Deleting our own Uninstaller anymore
-- Killing all Processes (even dragons, when needed) now
-- Separate "Install Componenet" Popup in case it freezes at the end for 2-3 Seconds
-- Jumpscript added more keys (probably broken on non german keyboard. Who gives a shit). ALso made it default to false.
-- Use dr490ns IPC for P127 Starting and Showing
-- Fix P127 not being able to minimize
-- not using my discord contact information anymore.
-- Recommending Upgrading before required Component Updates
-- dr490ns github link
-- Donezo manifesto (CLG Fans will remember)
-- dr490ns IPC (this fixes "please launch through P127")
-- dr490ns DownloadManager fixes (for crash on startup)
-- Easter egg (SWA)
-- Improved ReadMe, Help, Features, etc.
-- Improved UI Thread not freezing on Components Installation etc.
-- Removed hiding SCL stuff
-- Fixed not downloading ALL required Components on settings change
-- Added Reset and Uninstall as command line arguments (-reset and -uninstall) in case other stuff shits the bed.
-- Saving Information about every file we ever placed inside GTA Directory
-- Better detection if Upgrade / DOwngrade Files exist
-- Hugely improved Repair Method and Reset Everything mode
-- Automatically solving if Rockstar fucks us.
-- Timer for Debug and Startup. 
-
-To Do before 1.1:
-- QOL:
-	=> README Automatic License
-	=> Logging in general
-
+ON RELEASE OF 1.2
 - Release WITHOUT try catch around window listener
-- Copy paste Patchnotes
+- CHECK CHANGELOG / README / HELP / FEATURES FOR "PLACEHOLDER"
+- RELEASE ALL NEW FILES WITH IT (V14, new SCL Binaries)
 
-- [FULLY IMPLEMENTED Social Club switcheroo inside P127 implemented
-	=> NEEDS TESTING IN ALL CASES
-	=> NEEDS TESTING SOCIAL CLUB UPDATE
-	=> NEEDS TO ACTUALLY BE CALLED
-	=> [NOT NEEDED DUE TO GTA AND RGL COMING WITH ONE] MAY SAVE LATEST INSTALLER (SHIP WITH ZIP STUFF) 
-- [FULLY IMPLEMENTED] Overlay magic method without disposing
-	=> SEMI - TESTED, LOOKS GOOD THO
-	=> optional param to dispose all overlay thing method, which doesnt dispose overlay itself.
-	=> use that on magic method when its enabled, so we are not disposing if it exists
-	=> check if overlay exits, re-run 90% of initoverlay code. Maybe optional param as well. If it doesnt exist, init it of course
-	=> Detect switch from overlayModes is not needed since we reset overlay and get new targetWindow and the rest of the stuff (which target window and if you can setoverl
-	=> location and margins etc. is tied to overlaymode which is tied to setting. So a re-set of the properties (what im doing in initoverlaycode isenough).
-	=> Detect switch from overlay enabled also not needed since we will properly dispose everything including overlay itself when its (enableoverlay) set to false
-- [FULLY IMPLEMENTED] Stop GarbageCollection Crash on WindowChangeListener
-- Overlay Multi Monitor Scaling.
-	=> Properties in GTAOverlay.cs (_YMargin and width)
-	=> https://discord.com/channels/771508963052748842/771508963534831641/793118966444851220
+TO DO BEFORE INTERNAL TESTING
+- Change Social Club Downgrade to copy a cached thing of it to C:\ProgramFiles and rename there. And only copy  fresh when we need to.
+ (dont want to spam users likely SSD with 100 MB every time...
+- Import Jumpscript File function
+- Release Internal Testing
+
+IN INTERNAL TESTING
+	=> Overlay Multi Monitor Scaling.
+		>> Properties in GTAOverlay.cs (_YMargin and width)
+		>> When looking at it, take a look at these things dragon sent:
+		https://stackoverflow.com/questions/1918877/how-can-i-get-the-dpi-in-wpf
+		https://docs.microsoft.com/en-us/dotnet/api/system.windows.media.visualtreehelper.getdpi?redirectedfrom=MSDN&view=net-5.0#System_Windows_Media_VisualTreeHelper_GetDpi_System_Windows_Media_Visual_
+		PresentationSource source = PresentationSource.FromVisual(this);
+		source.CompositionTarget.TransformToDevice.M11 <= X scaling factor
+		source.CompositionTarget.TransformToDevice.M22 <= Y scaling factor
 
  */
 
@@ -291,8 +253,6 @@ namespace Project_127
 				HelperClasses.WindowChangeListener.Start();
 			}
 
-			//LauncherLogic.SocialClubDowngrade();
-			//LauncherLogic.SocialClubUpgrade();
 		}
 
 		#endregion
@@ -316,7 +276,7 @@ namespace Project_127
 
 			StartUpStopwatch.Stop();
 
-			HelperClasses.Logger.Log("Startup procedure (Constructor of MainWindow) completed. It took " + StartUpStopwatch .ElapsedMilliseconds + " ms.");
+			HelperClasses.Logger.Log("Startup procedure (Constructor of MainWindow) completed. It took " + StartUpStopwatch.ElapsedMilliseconds + " ms.");
 			HelperClasses.Logger.Log("------------------------------------------------------------------------------------");
 
 

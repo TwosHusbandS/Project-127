@@ -1603,13 +1603,20 @@ namespace Project_127.MySettings
 		{
 			if (LauncherLogic.GameState == LauncherLogic.GameStates.NonRunning)
 			{
-				ROSCommunicationBackend.setFlag(ROSCommunicationBackend.Flags.indicateTheLessThanLegalProcurementOfMotorVehicles, true);
-				Overlay.GTAOverlay.indicateTheLessThanLegalProcurementOfMotorVehicles = true;
-				new Popup(Popup.PopupWindowTypes.PopupOk, "'Stealy Wheely Automobiley' activated.\nRestart P127 to disable.").ShowDialog();
+				if (!Settings.EnableAlternativeLaunch)
+				{
+					ROSCommunicationBackend.setFlag(ROSCommunicationBackend.Flags.indicateTheLessThanLegalProcurementOfMotorVehicles, true);
+					Overlay.GTAOverlay.indicateTheLessThanLegalProcurementOfMotorVehicles = true;
+					new Popup(Popup.PopupWindowTypes.PopupOk, "'Stealy Wheely Automobiley' activated.\nRestart P127 to disable.").ShowDialog();
+				}
+				else
+				{
+					new Popup(Popup.PopupWindowTypes.PopupOk, "Cant do that while launching through Social Club.").ShowDialog();
+				}
 			}
 			else
 			{
-				new Popup(Popup.PopupWindowTypes.PopupOk, "Cant do that while the game is running").ShowDialog();
+				new Popup(Popup.PopupWindowTypes.PopupOk, "Cant do that while the game is running.").ShowDialog();
 			}
 		}
 	} // End of Class
