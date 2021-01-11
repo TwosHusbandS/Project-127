@@ -201,6 +201,10 @@ namespace Project_127.HelperClasses
                         return false;
                     }
                 }
+                if (installedSubassemblies.ContainsKey(subassemblyName))
+                {
+                    installedSubassemblies.Remove(subassemblyName);
+                }
                 installedSubassemblies.Add(subassemblyName, subInfo);
                 updateInstalled();
                 return true;
