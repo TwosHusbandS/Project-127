@@ -50,7 +50,7 @@ namespace Project_127.HelperClasses
             }
             else
             {
-                if (reinstall && isInstalled(subassemblyName)) 
+                if (reinstall && isInstalled(subassemblyName) && !installedSubassemblies[subassemblyName].common) 
                 {
                     delSubassembly(subassemblyName, true);
                 }
@@ -114,21 +114,47 @@ namespace Project_127.HelperClasses
                     var cfiles = s.Select("./file");
                     if (reinstall)
                     {
-                        var installedFiles = new List<string>();
+                        var ofiles = new Dictionary<string, subAssemblyFile>();
                         foreach (var file in installedSubassemblies[subassemblyName].files)
                         {
-                            installedFiles.Add(file.name);
-                            subInfo.files.Add(file);
+                            ofiles.Add(file.name, file);
                         }
+                        var reqby = getRequiredBy(subassemblyName);
+                        //delSubassembly(subassemblyName, true);
+
                         var fileInfo = new Dictionary<string, XPathNavigator>();
                         foreach (XPathNavigator file in cfiles)
                         {
-                            if (!installedFiles.Contains(file.GetAttribute("name", "")))
+                            if (!ofiles.ContainsKey(file.GetAttribute("name", "")))
                             {
                                 subInfo.files.Add(new subAssemblyFile { name = file.GetAttribute("name", ""), available = false });
                             }
+                            else
+                            {
+                                subInfo.files.Add(ofiles[file.GetAttribute("name", "")]);
+                            }
                             fileInfo.Add(file.GetAttribute("name", ""), file);
                         }
+                        foreach (var file in ofiles.Keys)
+                        {
+                            if (!fileInfo.ContainsKey(file))
+                            {
+                                foreach (var r in reqby)
+                                {
+                                    foreach (var ifile in installedSubassemblies[r].files)
+                                    {
+                                        if (ifile.name == file)
+                                        {
+                                            ifile.linked = false;
+                                        }
+                                    }
+                                    
+                                }
+
+                            }
+                        }
+
+
                         foreach (var file in subInfo.files)
                         {
                             if (file.paths.Count > 0)
@@ -162,10 +188,13 @@ namespace Project_127.HelperClasses
                             }
                         }
                         return true;
-                    }
-                    foreach (XPathNavigator file in cfiles)
+                    } 
+                    else
                     {
-                        subInfo.files.Add(new subAssemblyFile { name = file.GetAttribute("name", ""), available = false });
+                        foreach (XPathNavigator file in cfiles)
+                        {
+                            subInfo.files.Add(new subAssemblyFile { name = file.GetAttribute("name", ""), available = false });
+                        }
                     }
                     installedSubassemblies.Add(subassemblyName, subInfo);
                     updateInstalled();
@@ -236,7 +265,11 @@ namespace Project_127.HelperClasses
             foreach (var path in f.paths)
             {
                 var fullPath = System.IO.Path.Combine(Project127Files, path);
-                System.IO.File.Delete(fullPath);
+                try
+                {
+                    System.IO.File.Delete(fullPath);
+                }
+                catch { }
             }
         }
         private void delSubassemblyFiles(List<subAssemblyFile> L)
@@ -257,6 +290,23 @@ namespace Project_127.HelperClasses
             delSubassembly(subassemblyName, false);
         }
 
+        private List<string> getRequiredBy(string subassemblyName)
+        {
+            var ret = new List<string>();
+            foreach (XPathNavigator saa in availableSubassemblies.Values)
+            {
+                var reqs = saa.Select("./requires/subassembly");
+                foreach (XPathNavigator req in reqs)
+                {
+                    if (req.GetAttribute("target", "") == subassemblyName)
+                    {
+                        ret.Add(saa.GetAttribute("name", ""));
+                    }
+                }
+            }
+            return ret;
+        }
+
         private void delSubassembly(string subassemblyName, bool reqBySupress)
         {
             if (!installedSubassemblies.ContainsKey(subassemblyName))
@@ -267,23 +317,20 @@ namespace Project_127.HelperClasses
             var sar = availableSubassemblies[subassemblyName].GetAttribute("root", "");
             if (!reqBySupress)
             {
-                foreach(XPathNavigator saa in availableSubassemblies.Values)
+                foreach (var req in getRequiredBy(subassemblyName))
                 {
-                    var reqs = saa.Select("./requires/subassembly");
-                    foreach (XPathNavigator req in reqs)
-                    {
-                        if (req.GetAttribute("target","") == subassemblyName)
-                        {
-                            delSubassembly(saa.GetAttribute("name", ""));
-                        }
-                    }
+                    delSubassembly(req);
                 }
             }
             delSubassemblyFiles(sa.files);
             if (sar != "")
             {
                 var rootFullPath = System.IO.Path.Combine(Project127Files, sar);
-                System.IO.Directory.Delete(rootFullPath, true);
+                try
+                {
+                    System.IO.Directory.Delete(rootFullPath, true);
+                }
+                catch { }
             }
             installedSubassemblies.Remove(subassemblyName);
             updateInstalled();
@@ -366,13 +413,17 @@ namespace Project_127.HelperClasses
                         {
                             System.IO.File.Delete(fullPath);
                         }
-                        System.IO.File.Copy(fpafull, fullPath);
-                        return new subAssemblyFile
+                        try
                         {
-                            name = filename,
-                            linked = true,
-                            paths = new List<string>(new string[] { relPath })
-                        };
+                            System.IO.File.Copy(fpafull, fullPath);
+                            return new subAssemblyFile
+                            {
+                                name = filename,
+                                linked = true,
+                                paths = new List<string>(new string[] { relPath })
+                            };
+                        }
+                        catch { }
                     }
                     else
                     {
