@@ -1456,7 +1456,7 @@ namespace Project_127
 				if ((p.ProcessName == SCL_EXE_ADDON_DOWNGRADED.TrimStart('\\').TrimEnd(".exe")) ||
 					(p.ProcessName == SCL_EXE_ADDON_UPGRADED.TrimStart('\\').TrimEnd(".exe")))
 				{
-					if (p.MainModule.FileName.Contains(SocialClubInstallationFolder))
+					if (!p.HasExited && p.MainModule.FileName.Contains(SocialClubInstallationFolder))
 					{
 						p.Kill();
 					}

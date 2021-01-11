@@ -133,7 +133,7 @@
     </subassembly>
 
     <!--Beta 2; Update before full release-->
-    <subassembly name="AM_BASE_SUBASSEMBLY"  type="common" version="0.0.1.20">
+    <subassembly name="AM_BASE_SUBASSEMBLY"  type="common" version="0.0.1.21">
     <!--Update here for internal-->
         <file name="bink2w64.dll">
             <hash>518C9DA8D048F1DB89E835254E369EE0</hash>
@@ -144,7 +144,7 @@
             <mirror>http://gtav.anushk.net/downloadManager/subassemblies/ambase_beta2/launc.dll</mirror>
         </file>
         <file name="GTAStub.exe">
-            <hash>AC9CC5363D110BBCC71B8417C497D375</hash>
+            <hash>65FF0E2E498730DA3230A10822B455B8</hash>
             <mirror>http://gtav.anushk.net/downloadManager/subassemblies/ambase_beta2/GTAStub.exe</mirror>
         </file>
         <!--<file name="Play127.exe">
