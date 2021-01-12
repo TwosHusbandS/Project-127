@@ -741,7 +741,7 @@ namespace Project_127.Overlay
 		private static async void easterEgg()
         {
 			// We are very serious people...
-			if (new System.Random().NextDouble() > .5)
+			if (new System.Random().NextDouble() > .8)
             {
 				return;
             }
