@@ -170,7 +170,7 @@ namespace Project_127
 		/// <summary>
 		/// Contains the verion info of running GTA
 		/// </summary>
-		public static Version RunningGTABuild = new Version(0,0);
+		public static Version RunningGTABuild = new Version(0, 0);
 
 		/// <summary>
 		/// Download Location of Zip File
@@ -322,7 +322,7 @@ namespace Project_127
 			{"PathLiveSplit", @"C:\Some\Path\SomeFile.exe" },
 			{"EnableAutoStartStreamProgram", "False" },
 			{"PathStreamProgram", @"C:\Some\Path\SomeFile.exe" },
-			{"EnableAutoStartFPSLimiter", "False" },	
+			{"EnableAutoStartFPSLimiter", "False" },
 			{"PathFPSLimiter", @"C:\Some\Path\SomeFile.exe" },
 			{"EnableAutoStartNohboard", "False" },
 			{"PathNohboard", @"C:\Some\Path\SomeFile.exe" },
@@ -662,7 +662,7 @@ namespace Project_127
 		/// Sets up the overlay dynamic text handler
 		/// </summary>
 		private static void initDynamicTextGetters()
-        {
+		{
 			/*
 			 * $missions
 			 * $sandf
@@ -677,28 +677,28 @@ namespace Project_127
 			 * $golfhole
 			 */
 
-			Func<Func<string>,string> baseHandler = a => 
-			{
-				if (RunningGTABuild == new Version(0, 0))
-				{
-					return "[NF]";
-				}
-				else if(RunningGTABuild != new Version(1, 0, 372, 2))
-				{
-					return "[N/A]";
-				}
-				try
-                {
-					return a();
-                }
-                catch
-                {
-					return "[ERR]";
-                }
-			};
+			Func<Func<string>, string> baseHandler = a =>
+			 {
+				 if (RunningGTABuild == new Version(0, 0))
+				 {
+					 return "[NF]";
+				 }
+				 else if (RunningGTABuild != new Version(1, 0, 372, 2))
+				 {
+					 return "[N/A]";
+				 }
+				 try
+				 {
+					 return a();
+				 }
+				 catch
+				 {
+					 return "[ERR]";
+				 }
+			 };
 			DynamicText.registerVarGetter("ctime", () => DateTime.Now.ToString());
 			DynamicText.registerVarGetter("missions", () => baseHandler(
-				()=> GTAPointerPathHandler.EvalPointerPath_I32(
+				() => GTAPointerPathHandler.EvalPointerPath_I32(
 					stateVarsCurrent["missionCounter"]
 					).ToString()
 				)
@@ -734,23 +734,25 @@ namespace Project_127
 				 )
 			);
 			DynamicText.registerVarGetter("cutscene", () => baseHandler(
-				 () => {
+				 () =>
+				 {
 					 var cc = GTAPointerPathHandler.EvalPointerPath(255,
 						 stateVarsCurrent["currCutscene"]);
 					 if (cc == null)
-                     {
+					 {
 						 return "NONE";
 					 }
 					 else
-                     {
+					 {
 						 var s = Encoding.UTF8.GetString(cc.TakeWhile(a => a != '\0').ToArray());
 						 return (s == "") ? "NONE" : s;
-                     }
+					 }
 				 }
 				 )
 			);
 			DynamicText.registerVarGetter("script", () => baseHandler(
-				 () => {
+				 () =>
+				 {
 					 var cs = GTAPointerPathHandler.EvalPointerPath(255,
 						 stateVarsCurrent["currScript"]);
 					 if (cs == null)
@@ -766,7 +768,8 @@ namespace Project_127
 				 )
 			);
 			DynamicText.registerVarGetter("scriptPretty", () => baseHandler(
-				 () => {
+				 () =>
+				 {
 					 var cc = GTAPointerPathHandler.EvalPointerPath(255,
 						 stateVarsCurrent["currScript"]);
 					 if (cc == null)
@@ -839,9 +842,9 @@ namespace Project_127
 		/// Dictionary with all pointer paths for 1.27 vars
 		/// </summary>
 		public static Dictionary<string, int[]> stateVarsCurrent
-        {
-            get
-            {
+		{
+			get
+			{
 				if (Settings.EnableAlternativeLaunch &&
 					Settings.Retailer == Settings.Retailers.Steam)
 				{
@@ -852,7 +855,7 @@ namespace Project_127
 					return stateVarsRGL;
 				}
 			}
-        }
+		}
 
 		/// <summary>
 		/// Proper Exit Method. EMPTY FOR NOW. Get called when closed (user and taskmgr) and when PC is shutdown. Not when process is killed or power ist lost.
@@ -924,26 +927,48 @@ namespace Project_127
 				if (MyVersionOnline > Globals.ProjectVersion)
 				{
 					// Update Found.
-					HelperClasses.Logger.Log("Update found", 1);
-					Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Version: '" + MyVersionOnline.ToString() + "' found on the Server.\nVersion: '" + Globals.ProjectVersion.ToString() + "' found installed.\nDo you want to upgrade?");
-					yesno.ShowDialog();
-					// Asking User if he wants update.
-					if (yesno.DialogResult == true)
-					{
-						// User wants Update
-						HelperClasses.Logger.Log("Update found. User wants it", 1);
-						string DLPath = HelperClasses.FileHandling.GetXMLTagContent(XML_Autoupdate_Temp, "url");
-						string DLFilename = DLPath.Substring(DLPath.LastIndexOf('/') + 1);
-						string LocalFileName = Globals.ProjectInstallationPath.TrimEnd('\\') + @"\" + DLFilename;
+					HelperClasses.Logger.Log("Update found (Version Check returning true).", 1);
+					HelperClasses.Logger.Log("Checking if URL is reachable.", 1);
 
-						new PopupDownload(DLPath, LocalFileName, "Installer").ShowDialog();
-						HelperClasses.ProcessHandler.StartProcess(LocalFileName);
-						Environment.Exit(0);
+					string DLPath = HelperClasses.FileHandling.GetXMLTagContent(XML_Autoupdate_Temp, "url");
+					string DLFilename = DLPath.Substring(DLPath.LastIndexOf('/') + 1);
+					string LocalFileName = Globals.ProjectInstallationPath.TrimEnd('\\') + @"\" + DLFilename;
+
+					if (HelperClasses.FileHandling.URLExists(DLPath))
+					{
+						HelperClasses.Logger.Log("Update URL Reachabe");
+
+						Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Version: '" + MyVersionOnline.ToString() + "' found on the Server.\nVersion: '" + Globals.ProjectVersion.ToString() + "' found installed.\nDo you want to upgrade?");
+						yesno.ShowDialog();
+						// Asking User if he wants update.
+						if (yesno.DialogResult == true)
+						{
+							// User wants Update
+							HelperClasses.Logger.Log("Presented Update Choice to User. User wants it", 1);
+
+							HelperClasses.FileHandling.deleteFile(LocalFileName);
+							new PopupDownload(DLPath, LocalFileName, "Installer").ShowDialog();
+
+							if (HelperClasses.FileHandling.GetSizeOfFile(LocalFileName) > 50000)
+							{
+								HelperClasses.Logger.Log("Installer on Disk looks good, Starting Installer, Exits this now.", 1);
+								HelperClasses.ProcessHandler.StartProcess(LocalFileName);
+								Globals.ProperExit();
+							}
+							else
+							{
+								HelperClasses.Logger.Log("Installer on Disk does not look good. FileSize: '" + HelperClasses.FileHandling.GetSizeOfFile(LocalFileName) + "'. Will not start it. Will not exit this.", 1);
+							}
+						}
+						else
+						{
+							// User doesnt want update
+							HelperClasses.Logger.Log("User does not wants update", 1);
+						}
 					}
 					else
 					{
-						// User doesnt want update
-						HelperClasses.Logger.Log("Update found. User does not wants it", 1);
+						HelperClasses.Logger.Log("Cant reach URL, will abondon Update");
 					}
 				}
 				else
@@ -966,7 +991,6 @@ namespace Project_127
 			}
 
 			ReadMe.DragonsLink = dragonsReadMe;
-
 		}
 
 
