@@ -23,6 +23,7 @@ namespace Project_127.HelperClasses
 	class WindowChangeListener
 	{
 		public static bool IsRunning = false;
+		public static IntPtr m_hhook;
 
 		/// <summary>
 		/// Acual Start Method
@@ -30,7 +31,7 @@ namespace Project_127.HelperClasses
 		public static void _Start()
 		{
 			dele = new WinEventDelegate(WinEventProc);
-			IntPtr m_hhook = SetWinEventHook(EVENT_SYSTEM_FOREGROUND, EVENT_SYSTEM_FOREGROUND, IntPtr.Zero, dele, 0, 0, WINEVENT_OUTOFCONTEXT);
+			m_hhook = SetWinEventHook(EVENT_SYSTEM_FOREGROUND, EVENT_SYSTEM_FOREGROUND, IntPtr.Zero, dele, 0, 0, WINEVENT_OUTOFCONTEXT);
 			IsRunning = true;
 			Application.Run();
 		}
@@ -46,6 +47,7 @@ namespace Project_127.HelperClasses
 				WindowChangeHander.WindowChangeEvent(GetActiveWindowTitle());
 				HelperClasses.Logger.Log("Started WindowChangeListener");
 				GC.KeepAlive(dele);
+				GC.KeepAlive(m_hhook);
 				//myThread = new Thread(_Start);
 				//myThread.Start();
 			}
