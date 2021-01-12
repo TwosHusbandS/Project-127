@@ -135,6 +135,10 @@ namespace Project_127.Overlay
 				using (var ms = new System.IO.MemoryStream())
                 {
 					gifImg.Save(ms, System.Drawing.Imaging.ImageFormat.Bmp);
+					while (!gfx.IsInitialized)
+                    {
+						await Task.Delay(100);
+                    }
 					frames.Add(new GameOverlay.Drawing.Image(gfx, ms.ToArray()));
                 }
 			}

@@ -749,10 +749,6 @@ namespace Project_127.Overlay
 			MyGTAOverlay.attach(ast);
 			await Task.Run(async () =>
 			{
-				while (!MyGTAOverlay.Initialized)
-                {
-					await Task.Delay(1000);
-                }
 				var richard = System.Windows.Application.GetResourceStream(new Uri(@"Overlay\richard.gif", UriKind.Relative));
 				ast.loadGif(System.Drawing.Image.FromStream(richard.Stream));
 				ast.fillOverlay = true;
