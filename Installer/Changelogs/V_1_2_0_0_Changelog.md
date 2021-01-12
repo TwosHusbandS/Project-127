@@ -38,7 +38,7 @@
 * Fixed P127 Crashes
 
 #### Internal Improvements
-* Download Popups now only throw one line of log. In all circumstances
+* Download Popups now only throw one line of log. In all circumstances. Also logs filesize, time it took to download, hash if needed
 * Better Methods for getting Version from Files (and corresponding Game Versions)
 * Use dr490ns IPC for P127 Starting and Showing
 * dr490ns DownloadManager multiple fixes (for crash on startup)
@@ -53,4 +53,5 @@
 * Stopped WindowChangeListener from getting Garbage Collected
 * Add Credential Manager Info on Debug
 * Not spamming Users (likely) SSD with 100 MB of SC Files every SC Downgrade
-
+* More efficent and less freezing way of getting dragons github link for SCL and ENV:PATH findings
+* Improved Autoupdater of Installer (checking if URL and file exists)
