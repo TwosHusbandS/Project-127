@@ -957,6 +957,16 @@ namespace Project_127
 				// String return is fucked
 				HelperClasses.Logger.Log("Did not get most up to date Project 1.27 Version from Github. Github offline or your PC offline. Probably. Lets hope so.");
 			}
+
+			//dragonsreadme
+			string dragonsReadMe = HelperClasses.FileHandling.GetXMLTagContent(XML_Autoupdate_Temp, "dragonsreadme");
+			if (!HelperClasses.FileHandling.URLExists(dragonsReadMe))
+			{
+				dragonsReadMe = @"https://github.com/jaredtb";
+			}
+
+			ReadMe.DragonsLink = dragonsReadMe;
+
 		}
 
 
