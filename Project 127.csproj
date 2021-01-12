@@ -189,6 +189,7 @@
     <Compile Include="HelperClasses\ASPointerPath.cs" />
     <Compile Include="HelperClasses\IPCPipes.cs" />
     <Compile Include="HelperClasses\MissionIdentifiers.cs" />
+    <Compile Include="HelperClasses\WindowChangeListenerTwo.cs" />
     <Compile Include="MyColors.cs" />
     <Compile Include="HelperClasses\BuildVersionTable.cs" />
     <Compile Include="HelperClasses\DataGridHelper.cs" />

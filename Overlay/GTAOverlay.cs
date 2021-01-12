@@ -22,11 +22,26 @@ namespace Project_127.Overlay
 
 		public static bool DebugMode = false;
 		public const string targetWindowDebug = "TeamSpeak 3";
-		public const string targetWindowBorderless = "Grand Theft Auto V";
+		public const string targetWindowBorderlessDefault = "Grand Theft Auto V";
 		public const string targetWindowBorderlessEasterEgg = "Stealy Whealy Automobiley";
 		public const string targetWindowMultiMonitor = "P127 - GameOverlay";
 
 		public static bool indicateTheLessThanLegalProcurementOfMotorVehicles = false;
+
+		public static string targetWindowBorderless
+		{
+			get
+			{
+				if (indicateTheLessThanLegalProcurementOfMotorVehicles)
+				{
+					return targetWindowBorderlessEasterEgg;
+				}
+				else
+				{
+					return targetWindowBorderlessDefault;
+				}
+			}
+		}
 
 		public static string targetWindow
 		{
@@ -44,14 +59,7 @@ namespace Project_127.Overlay
 					}
 					else
 					{
-						if (!MySettings.Settings.EnableAlternativeLaunch && indicateTheLessThanLegalProcurementOfMotorVehicles)
-						{
-							return targetWindowBorderlessEasterEgg;
-						}
-						else
-						{
-							return targetWindowBorderless;
-						}
+						return targetWindowBorderless;
 					}
 
 				}
@@ -1315,9 +1323,9 @@ namespace Project_127.Overlay
 	/// <summary>
 	/// Overlay Texbox object with added support for dynamic text
 	/// </summary>
-	public class DynamicOverlayTextBox: BasicOverlayTextBox
+	public class DynamicOverlayTextBox : BasicOverlayTextBox
 	{
-		public DynamicOverlayTextBox(string id): base(id) { }
+		public DynamicOverlayTextBox(string id) : base(id) { }
 
 		/// <summary>
 		/// Get the current chapter title of the dynamic text

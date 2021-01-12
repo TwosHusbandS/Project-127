@@ -41,6 +41,9 @@ namespace Project_127.HelperClasses
 		/// </summary>
 		public static void Start()
 		{
+			WindowChangeListenerTwo.start();
+			return;
+
 			if (!WindowChangeListener.IsRunning)
 			{
 				Task.Run(() => WindowChangeListener._Start());
@@ -58,6 +61,9 @@ namespace Project_127.HelperClasses
 		/// </summary>
 		public static void Stop()
 		{
+			WindowChangeListenerTwo.stop();
+			return;
+
 			if (WindowChangeListener.IsRunning)
 			{
 				IsRunning = false;
@@ -116,7 +122,6 @@ namespace Project_127.HelperClasses
 		public static void WinEventProc(IntPtr hWinEventHook, uint eventType, IntPtr hwnd, int idObject, int idChild, uint dwEventThread, uint dwmsEventTime) //STATIC
 		{
 			//HelperClasses.Logger.Log("DEBUG WINDOW: '" + GetActiveWindowTitle() + "'",2);
-
 			try
 			{
 
