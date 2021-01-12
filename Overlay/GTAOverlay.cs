@@ -334,6 +334,17 @@ namespace Project_127.Overlay
 		}
 
 		/// <summary>
+		/// Returns bool inidcating whether the overlay is initialized
+		/// </summary>
+		public bool Initialized
+		{
+			get
+			{
+				return _window.IsInitialized;
+			}
+		}
+
+		/// <summary>
 		/// Generates the game overlay
 		/// </summary>
 		/// <param name="overlayMode">Enum if we are fullscreen or MultiMonitor Mode</param>
@@ -391,6 +402,7 @@ namespace Project_127.Overlay
 			this.attach(titleBox);
 			title = titleBox;
 		}
+
 
 		private void _window_SetupGraphics(object sender, SetupGraphicsEventArgs e)
 		{
