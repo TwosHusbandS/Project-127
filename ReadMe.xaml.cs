@@ -27,6 +27,24 @@ namespace Project_127
 		/// </summary>
 		public static ReadMeStates LastReadMeState = ReadMeStates.About;
 
+		public static string DragonsLink = "https://github.com/jaredtb";
+
+		public static async void DragonsLinkMethod(string XML = "")
+		{
+			if (XML == "")
+			{
+				XML = Globals.XML_AutoUpdate;
+			}
+
+			//dragonsreadme
+			string dragonsReadMe = HelperClasses.FileHandling.GetXMLTagContent(XML, "dragonsreadme");
+			if (HelperClasses.FileHandling.URLExists(dragonsReadMe))
+			{
+				ReadMe.DragonsLink = dragonsReadMe;
+			}
+		}
+
+
 		/// <summary>
 		/// Constructor
 		/// </summary>
@@ -259,14 +277,8 @@ namespace Project_127
 
 			AddHyperlinkText(rtb_About, "https://www.mind.org.uk/donate", "Charity", "If you want to support us, we encourage you to donate to a ", " of your chosing.");
 
-			//dragonsreadme
-			string dragonsReadMe = HelperClasses.FileHandling.GetXMLTagContent(Globals.XML_AutoUpdate, "dragonsreadme");
-			if (!HelperClasses.FileHandling.URLExists(dragonsReadMe))
-			{
-				dragonsReadMe = @"https://github.com/jaredtb";
-			}
 
-			AddHyperlinkText(rtb_About, dragonsReadMe, "here", "@d490n, who did all of the game-launch related work which made P127 possible, uploaded his work, sourcecode and documented his findings on his Github ", ".");
+			AddHyperlinkText(rtb_About, DragonsLink, "here", "@d490n, who did all of the game-launch related work which made P127 possible, uploaded his work, sourcecode and documented his findings on his Github ", ".");
 
 
 

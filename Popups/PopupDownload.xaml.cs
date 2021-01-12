@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -39,6 +40,11 @@ namespace Project_127.Popups
 		public string DownloadLocation;
 
 		/// <summary>
+		/// Stopwatch Property to time how long the download took
+		/// </summary>
+		public Stopwatch myStopWatch;
+
+		/// <summary>
 		/// Hash Property (non null if hashing is enabled)
 		/// </summary>
 		public string HashString = null;
@@ -68,6 +74,9 @@ namespace Project_127.Popups
 			HelperClasses.FileHandling.deleteFile(pDownloadLocation);
 
 			lbl_Main.Content = "Downloading " + DownloadName + "...";
+
+			myStopWatch = new Stopwatch();
+			myStopWatch.Start();
 
 			// Setting up some Webclient stuff. 
 			WebClient webClient = new WebClient();
@@ -109,7 +118,10 @@ namespace Project_127.Popups
 		/// <param name="e"></param>
 		private void DownloadCompleted(object sender, AsyncCompletedEventArgs e)
 		{
-			HelperClasses.Logger.Log("Download of '" + DownloadURL + "' to '" + DownloadLocation + "' for Reason: '" + DownloadName + "' done.");
+			long DownloadSize = HelperClasses.FileHandling.GetSizeOfFile(DownloadLocation);
+			myStopWatch.Stop();
+			long DownloadTime = myStopWatch.ElapsedMilliseconds;
+			HelperClasses.Logger.Log("Download of '" + DownloadURL + "' to '" + DownloadLocation + "' for Reason: '" + DownloadName + "' done. File is '" + DownloadSize + "' byte big, Download took '" + DownloadTime + "' ms");
 
 			lbl_Main.Content = "Download Complete.";
 			pb_Main.Value = 100;
@@ -138,7 +150,10 @@ namespace Project_127.Popups
 					b.Write(file);
 				}
 
-				HelperClasses.Logger.Log("Download of '" + DownloadURL + "' to '" + DownloadLocation + "' for Reason: '" + DownloadName + "' done. Hash: '" + HashString + "'");
+				long DownloadSize = HelperClasses.FileHandling.GetSizeOfFile(DownloadLocation);
+				myStopWatch.Stop();
+				long DownloadTime = myStopWatch.ElapsedMilliseconds;
+				HelperClasses.Logger.Log("Download of '" + DownloadURL + "' to '" + DownloadLocation + "' for Reason: '" + DownloadName + "' done. File is '" + DownloadSize + "' byte big, Download took '" + DownloadTime + "' ms. Hashstring is: '" + HashString + "'.");
 
 				this.Close();
 			}
