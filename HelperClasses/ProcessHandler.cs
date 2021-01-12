@@ -206,15 +206,18 @@ namespace Project_127.HelperClasses
 		/// <param name="pProcess"></param>
 		public static void Kill(this Process pProcess)
 		{
-			Logger.Log("Trying to kill Process '" + pProcess.ProcessName + "'", 1);
-			try
+			if (!pProcess.HasExited)
 			{
-				pProcess.Kill();
-				Logger.Log("Killed Process '" + pProcess.ProcessName + "'", 1);
-			}
-			catch
-			{
-				Logger.Log("Failed to kill Process '" + pProcess.ProcessName + "'", 1);
+				Logger.Log("Trying to kill Process '" + pProcess.ProcessName + "'", 1);
+				try
+				{
+					pProcess.Kill();
+					Logger.Log("Killed Process '" + pProcess.ProcessName + "'", 1);
+				}
+				catch
+				{
+					Logger.Log("Failed to kill Process '" + pProcess.ProcessName + "'", 1);
+				}
 			}
 		}
 
