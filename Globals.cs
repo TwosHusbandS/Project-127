@@ -934,7 +934,7 @@ namespace Project_127
 					string DLFilename = DLPath.Substring(DLPath.LastIndexOf('/') + 1);
 					string LocalFileName = Globals.ProjectInstallationPath.TrimEnd('\\') + @"\" + DLFilename;
 
-					if (HelperClasses.FileHandling.URLExists(DLPath))
+					if (HelperClasses.FileHandling.URLExists(DLPath, 750))
 					{
 						HelperClasses.Logger.Log("Update URL Reachabe");
 
@@ -983,14 +983,7 @@ namespace Project_127
 				HelperClasses.Logger.Log("Did not get most up to date Project 1.27 Version from Github. Github offline or your PC offline. Probably. Lets hope so.");
 			}
 
-			//dragonsreadme
-			string dragonsReadMe = HelperClasses.FileHandling.GetXMLTagContent(XML_Autoupdate_Temp, "dragonsreadme");
-			if (!HelperClasses.FileHandling.URLExists(dragonsReadMe))
-			{
-				dragonsReadMe = @"https://github.com/jaredtb";
-			}
-
-			ReadMe.DragonsLink = dragonsReadMe;
+			ReadMe.DragonsLinkMethod(XML_Autoupdate_Temp);
 		}
 
 
