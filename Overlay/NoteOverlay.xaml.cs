@@ -437,7 +437,7 @@ namespace Project_127.Overlay
 						MainWindow.OL_MM.Show();
 						//MainWindow.MW.Show();
 						//MainWindow.MW.Focus();
-						MainWindow.MW.Activate();
+						//MainWindow.MW.Activate();
 						HelperClasses.Keyboard.KeyboardListener.Start();
 
 						if (ShowOverlay)

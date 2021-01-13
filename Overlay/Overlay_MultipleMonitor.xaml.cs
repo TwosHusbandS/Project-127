@@ -23,11 +23,42 @@ namespace Project_127.Overlay
 	/// </summary>
 	public partial class Overlay_MultipleMonitor : Window
 	{
+
+		private int _width;
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public int trueWidth
+        {
+            get
+            {
+				return _width;
+            }
+            set
+            {
+				_width = value;
+				this.Width = _width / DpiScaleX();
+			}
+        }
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public int trueHeight
+		{
+			get
+			{
+				return (int)(this.ActualHeight * DpiScaleY());
+			}
+		}
+
 		/// <summary>
 		/// Constructor Of Multi Monitor Overlay WPF Window
 		/// </summary>
 		public Overlay_MultipleMonitor()
 		{
+
 			InitializeComponent();
 		}
 
@@ -115,6 +146,31 @@ namespace Project_127.Overlay
 			MyHide();
 		}
 
+		private void Window_LocationChanged(object sender, EventArgs e)
+		{
+			try
+			{
+				var ps = System.Windows.PresentationSource.FromVisual(this);
+
+
+				this.Width = _width / DpiScaleX(); ;
+			}
+			catch { }
+		}
+
+		private double DpiScaleX()
+		{
+			var dpi = VisualTreeHelper.GetDpi(this);
+			return dpi.DpiScaleX;
+		}
+
+		private double DpiScaleY()
+		{
+			var dpi = VisualTreeHelper.GetDpi(this);
+			return dpi.DpiScaleY;
+		}
+
+
 
 		// Whatever this sorcery is below this shit...
 
@@ -177,11 +233,12 @@ namespace Project_127.Overlay
 			return unchecked((int)intPtr.ToInt64());
 		}
 
-		[DllImport("kernel32.dll", EntryPoint = "SetLastError")]
+        [DllImport("kernel32.dll", EntryPoint = "SetLastError")]
 		public static extern void SetLastError(int dwErrorCode);
-		#endregion
 
 
+        #endregion
 
-	}
+
+    }
 }
