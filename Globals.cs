@@ -581,6 +581,8 @@ namespace Project_127
 			// Deleting all Installer and ZIP Files from own Project Installation Path
 			DeleteOldFiles();
 
+			// reading Social club install dir from registry
+			LauncherLogic.SetUpSocialClubRegistryThing();
 			LauncherLogic.SocialClubUpgrade();
 
 			// Throw annoucements
@@ -591,9 +593,6 @@ namespace Project_127
 
 			// SetUpDownloadManager
 			SetUpDownloadManager();
-
-			// reading Social club install dir from registry
-			LauncherLogic.SetUpSocialClubRegistryThing();
 
 			// OUTDATED
 			// Downloads the "big 3" gamefiles from github release
@@ -620,7 +619,6 @@ namespace Project_127
 			// INIT the dynamic text handler for the overlay
 			initDynamicTextGetters();
 		}
-
 
 
 

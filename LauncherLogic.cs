@@ -1331,7 +1331,7 @@ namespace Project_127
 		/// <summary>
 		/// Social Club Installation Path.
 		/// </summary>
-		public static string SCL_SC_Installation;
+		public static string SCL_SC_Installation = @"C:\Program Files\Rockstar Games\Social Club";
 
 		/// <summary>
 		/// TEMP BACKUP Social Club Directory we use to rename Original Social Club too.
