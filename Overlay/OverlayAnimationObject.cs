@@ -119,8 +119,9 @@ namespace Project_127.Overlay
 			this.id = id;
         }
 
-		public async void loadGif(Image gifImg)
+		public async Task loadGif(Image gifImg)
         {
+			mut.WaitOne();
 			ready = false;
 			if (gifImg.RawFormat.Guid != System.Drawing.Imaging.ImageFormat.Gif.Guid)
             {
@@ -135,13 +136,26 @@ namespace Project_127.Overlay
 				using (var ms = new System.IO.MemoryStream())
                 {
 					gifImg.Save(ms, System.Drawing.Imaging.ImageFormat.Bmp);
-					while (!gfx.IsInitialized)
+					while (!gfx.IsInitialized && !disposing)
                     {
 						await Task.Delay(100);
                     }
-					frames.Add(new GameOverlay.Drawing.Image(gfx, ms.ToArray()));
-                }
+					if (disposing)
+                    {
+						mut.ReleaseMutex();
+						return;
+                    }
+                    try
+                    {
+						frames.Add(new GameOverlay.Drawing.Image(gfx, ms.ToArray()));
+					}
+                    catch
+                    {
+						return;
+                    }
+				}
 			}
+			mut.ReleaseMutex();
 			ready = true;
 		}
 
@@ -185,9 +199,12 @@ namespace Project_127.Overlay
 
 		#region IDisposable Support
 		private bool disposedValue;
+		private bool disposing = false;
 
 		protected virtual void Dispose(bool disposing)
 		{
+			this.disposing = true;
+			mut.WaitOne();
 			if (!disposedValue)
 			{
 				foreach (var frame in frames)
@@ -202,6 +219,7 @@ namespace Project_127.Overlay
 				}
 				disposedValue = true;
 			}
+			mut.ReleaseMutex();
 		}
 
 		public void Dispose()

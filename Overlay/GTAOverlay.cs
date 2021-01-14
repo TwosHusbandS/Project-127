@@ -781,9 +781,13 @@ namespace Project_127.Overlay
 		{
 			if (!disposedValue)
 			{
-				_window.Dispose();
 				mainText.Dispose();
 				titleBox.Dispose();
+				while (overlayObjects.Count > 0)
+                {
+					overlayObjects.First().Dispose();
+                }
+				_window.Dispose();
 				disposedValue = true;
 			}
 		}

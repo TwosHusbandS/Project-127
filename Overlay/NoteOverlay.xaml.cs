@@ -750,7 +750,7 @@ namespace Project_127.Overlay
 			await Task.Run(async () =>
 			{
 				var richard = System.Windows.Application.GetResourceStream(new Uri(@"Overlay\richard.gif", UriKind.Relative));
-				ast.loadGif(System.Drawing.Image.FromStream(richard.Stream));
+				await ast.loadGif(System.Drawing.Image.FromStream(richard.Stream));
 				ast.fillOverlay = true;
 				ast.visible = true;
 				ast.FPS = 10;
