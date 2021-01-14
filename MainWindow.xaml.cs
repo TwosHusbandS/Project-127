@@ -19,6 +19,7 @@ Deploy Instructions:
 	
 	Change Version Number a few Lines Above.
 	Change Version Number in both of the last lines in AssemblyInfo.cs
+	ALSO CHANGE VERSION NUMBER IN ASSEMBLYINFO.CS FROM P127 LAUNCHER
 	Check if BetaMode / InternalMode in Globals.cs is correct
 	Check if BuildInfo in Globals.cs is correct
 	Make sure app manifest is set TO require admin
@@ -47,8 +48,37 @@ ON RELEASE OF 1.2
 TO DO BEFORE INTERNAL TESTING
 - Release Internal Testing
 
-IN INTERNAL TESTING
-	=> Overlay Multi Monitor Scaling.
+Post 1.1.9.1:
+- [DONE] It will Auth on Auth Button even if Auth is not needed due to SCL
+- [DONE] Process Priority may be set even if disabled
+- [DONE] Fix "internal" popup.
+- [DONE] Fixed "empty" logging at start.
+- [DONE] Link to section of Help (on launch / auth section, when im referring to them in other markdowns)
+- [DONE] Link to overlay_additional in changelog 1.2
+- [DONE] Add new jump script options to changelog
+- [DONE] Bold a few things in the help # about game launching
+- [DONE] Dipose / Hide Taskbar Icon on default Close (ProperExit)
+- [DONE] Settings general has a row too many i think
+- [DONE] UI Text / Rows overlapping in Settings.xaml
+- [DONE] 500 to 7500 sleep on SC Upgrade after game exit.
+- [DONE] add cfg.dat and gtastub to generating debugfile
+- [DONE] Actually checking if components are really installed (on disk)...
+- [DONE] Social Club Switcheroo to take registry into account i guess...test with reloe?
+- [DONE] Social Club Switcheroo Option to overwrite
+- [DONE] Info that rockstar needs to have auto updates disabled
+
+- Think about going from "AllFilesPlacedIntoGTA" to just "DowngradeFiles" so i can delete them safely on upgrade...
+- Copy and paste help.md into information -> help
+- Jumpscript not being killed
+- Enabling & Quicky disabling Overlay crashed P127
+- Repair GTA Installation might crash P127 if "Project_127_Files" does not exist...
+
+- MTL Failing on first Attempt
+- RGL Crashes / Blackscreens
+- Livesplit /  OBS Require Admin again
+- WPF window is being spam-activated / shown. Theory that its caused by MTL Auth. (Look at Reloe 2, log) [theory correct, "onMTLAuthCompletion" is spamm-called.]
+- Download Manager crashing on Update + ReInstall
+- Overlay Multi Monitor DPI Scaling.
 		>> Properties in GTAOverlay.cs (_YMargin and width)
 		>> When looking at it, take a look at these things dragon sent:
 		https://stackoverflow.com/questions/1918877/how-can-i-get-the-dpi-in-wpf
@@ -122,7 +152,7 @@ namespace Project_127
 		/// <summary>
 		/// Static Property to our NotifyIcon (Tray icon)
 		/// </summary>
-		private System.Windows.Forms.NotifyIcon notifyIcon = null;
+		public System.Windows.Forms.NotifyIcon notifyIcon = null;
 
 		/// <summary>
 		/// Static Property of the Mutex we use to determine if P127 is already running in another instance
@@ -197,15 +227,11 @@ namespace Project_127
 
 			if (Globals.Branch == "internal")
 			{
-				string msg = "We are in internal mode. I need testing on:\n\n" +
-					"- Upgrading / Downgrading" + "\n" +
-					"- Automatically detecting Upgrades" + "\n" +
-					"- Performance (CPU & Ram)" + "\n" +
-					"- Crashes" + "\n" +
+				string msg = "We are in internal mode. We need testing on:\n\n" +
 					"- NoteOverlay" + "\n" +
 					"- Jumpscript" + "\n" +
-					"- New SaveFileHanlder" + "\n" +
-					"- General / Normal stuff" + "\n" +
+					"- DISABLED Legacy Auth" + "\n" +
+					"- ENABLED Launch through Social Club" + "\n" +
 					"\nI do expect everything to work, so no extensive Testing needed." + "\n" +
 					"\nThanks. Appreciated. Have a great day : )";
 
@@ -250,7 +276,6 @@ namespace Project_127
 				// Same as other two thingies here lolerino
 				HelperClasses.WindowChangeListener.Start();
 			}
-
 		}
 
 		#endregion

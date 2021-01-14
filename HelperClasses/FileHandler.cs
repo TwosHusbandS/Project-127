@@ -217,20 +217,60 @@ string lpSymlinkFileName, string lpTargetFileName, SymbolicLink dwFlags);
 		/// </summary>
 		/// <param name="pFilePath"></param>
 		/// <returns></returns>
-		public static string GetCreationDate(string pFilePath)
+		public static string GetCreationDate(string pFilePath, bool UTC = false)
 		{
 			string rtrn = "";
 			if (doesFileExist(pFilePath))
 			{
 				try
 				{
-					DateTime creation = File.GetLastWriteTime(pFilePath);
+					DateTime creation;
+					if (UTC)
+					{
+						creation = File.GetCreationTimeUtc(pFilePath);
+					}
+					else
+					{
+						creation = File.GetCreationTime(pFilePath);
+					}
 					rtrn = creation.ToString("yyyy-MM-ddTHH:mm:ss");
 				}
 				catch
 				{
 					HelperClasses.Logger.Log("Getting Creation Date of File: '" + pFilePath + "' failed.");
 					new Popup(Popup.PopupWindowTypes.PopupOkError, "Getting Creation Date of File: '" + pFilePath + "' failed.").ShowDialog();
+				}
+			}
+			return rtrn;
+		}
+
+		/// <summary>
+		/// Gets the GetLastWriteDate Date of one file in "yyyy-MM-ddTHH:mm:ss" Format
+		/// </summary>
+		/// <param name="pFilePath"></param>
+		/// <returns></returns>
+		public static string GetLastWriteDate(string pFilePath, bool UTC = false)
+		{
+			string rtrn = "";
+			if (doesFileExist(pFilePath))
+			{
+				try
+				{
+					DateTime creation;
+					if (UTC)
+					{
+						creation = File.GetLastWriteTimeUtc(pFilePath);
+					}
+					else
+					{
+						creation = File.GetLastWriteTime(pFilePath);
+					}
+					rtrn = creation.ToString("yyyy-MM-ddTHH:mm:ss");
+				}
+				catch
+				{
+					HelperClasses.Logger.Log("Getting LastModified Date of File: '" + pFilePath + "' failed.");
+					new Popup(Popup.PopupWindowTypes.PopupOkError, "Getting LastModified Date of File: '" + pFilePath + "' failed.").ShowDialog();
 				}
 			}
 			return rtrn;
@@ -246,7 +286,6 @@ string lpSymlinkFileName, string lpTargetFileName, SymbolicLink dwFlags);
 			// If the file already exists, we delete it
 			if (doesFileExist(pLinkFilePath))
 			{
-				HelperClasses.Logger.Log("Creating Hardlink in: '" + pLinkFilePath + "' for existing file '" + pRealFilePath + "'. Target File already exists. Im deleting it. YOLO.", true, 0);
 				deleteFile(pLinkFilePath);
 			}
 
@@ -623,6 +662,10 @@ string lpSymlinkFileName, string lpTargetFileName, SymbolicLink dwFlags);
 			}
 		}
 
+		/// <summary>
+		/// Shoutout to Dr490n. Think I stole this off of him.
+		/// </summary>
+		/// <returns></returns>
 		public static string MostLikelyProfileFolder()
 		{
 			string profilesDir = System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
@@ -644,6 +687,11 @@ string lpSymlinkFileName, string lpTargetFileName, SymbolicLink dwFlags);
 				}
 			}
 			return highDir;
+		}
+
+		public static string GetParentFolder(string Path)
+		{
+			return Path.Substring(0, Path.TrimEnd('\\').LastIndexOf('\\'));
 		}
 
 		/// <summary>

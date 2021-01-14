@@ -24,12 +24,15 @@
     * For this you need the Downgraded Social Club Files, and the SCL - GameFiles for the Game Version (1.24 or 1.27) and for your Retailer (Steam or Rockstar)
 	  * They will be downloaded when needed changing Settings, so you dont need to manually Download them.
 
-When you are launching through the dr490n Emu, P127 needs to verify that you own GTA through Rockstars Server (for legal Reasons).
+
+Paragraph below is **NON EFFECTIVE WHEN LAUNCHING THROUGH SOCIAL CLUB**
+
+When you are launching through the **dr490n Emu**, P127 needs to **verify** that you own GTA through Rockstars Server (for legal Reasons).
 
 It can do this in two ways:
-* MTL Auth. This opens Rockstar Laucher, you sign in in the Rockstar Launcher, P127 gets your Ownership Information via that.
+* So called **MTL Auth**. This opens Rockstar Laucher, you sign in in the Rockstar Launcher, P127 gets your Ownership Information via that.
   * NO CAPTCHAS THIS WAY.
-* Legacy Auth. (Can be enabled in P127 Settings). You log into your social Club account inside P127.
+* So called **Legacy Auth**. (Can be enabled in P127 Settings). You log into your social Club account inside P127.
   * YOU WILL GET CAPTCHAS, AND YOU WILL HAVE TO LOG IN EVERY TIME YOU OPEN P127
 
 ## Help / Common Issues
@@ -50,11 +53,15 @@ It can do this in two ways:
 
 * On Legacy Auth: When P127 crashes just when you are expected to login (on click of Auth Button, or on Game Launch when not logged in already), you might fail to connect to Rockstar Server. Make sure you are connected to the internet.
 
+* On MTL Auth, if Rockstar Games Launcher opens and immediately tries to update your Game, you need to disable that option. Inside Rockstar Games Launcher, head into Settings -> My Installed Games -> Grand Theft Auto V -> and uncheck the "Enable automatic updates" box at the very top.
+
 * If something isnt right, Verifying (Rightclick on Install Button), Re-Installing or manually deleting and Installing a Component is always worth a try
 
 * If you cant see the MultiMonitor Overlay, RIGHT-click the \"Enable Multi Monitor Mode\" Checkbox to Reset its Position
+
+* If launching through Social Club does not work, and you believe the Social Club Downgrade to be the cause of this, you can try the following: Head into P127 Settings, on the checkbox of "Launch through Social Club", rightclick and enable "Force SC Installation Path"
 			
-* If something is still not working, you can always try verifying Files via Steam / Rockstar / Epic and hitting the "RESET ALL" Button inside P127 Settings.This might take a few minutes, and Project 1.27 will quit automatically when its done. Re - Open it and everything should work again.
+* If something is still not working, you can always try hitting the "RESET ALL" Button inside P127 Settings. This might take a few minutes, and Project 1.27 will quit automatically when its done. Re - Open it and everything should work again. You will need to verifying Files via Steam / Rockstar / Epic afterwards.
 
 ## Support
 

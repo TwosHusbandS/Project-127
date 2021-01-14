@@ -292,6 +292,7 @@ namespace Project_127
 			{"ZIPExtractionPath", Process.GetCurrentProcess().MainModule.FileName.Substring(0, Process.GetCurrentProcess().MainModule.FileName.LastIndexOf('\\')) },
 			{"EnableLogging", "True"},
 			{"EnableAlternativeLaunch", "False"},
+			{"EnableAlternativeLaunchForceCProgramFiles", "False"},
 			{"EnableCopyFilesInsteadOfHardlinking", "False"},
 			{"EnableSlowCompare", "False"},
 			{"EnableLegacyAuth", "False"},
@@ -516,61 +517,62 @@ namespace Project_127
 							Settings.EnableLegacyAuth = false;
 						}
 					}
-				}
 
+					Settings.TellRockstarUsersToDisableAutoUpdateIfNeeded();
 
-				Settings.AllFilesEverPlacedInsideGTAMyAdd("asmjit.dll");
-				Settings.AllFilesEverPlacedInsideGTAMyAdd("botan.dll");
-				Settings.AllFilesEverPlacedInsideGTAMyAdd("launc.dll");
-				Settings.AllFilesEverPlacedInsideGTAMyAdd("origi_socialclub.dll");
-				Settings.AllFilesEverPlacedInsideGTAMyAdd("Readme.txt");
-				Settings.AllFilesEverPlacedInsideGTAMyAdd("socialclub.dll");
-				Settings.AllFilesEverPlacedInsideGTAMyAdd("tinyxml2.dll");
+					Settings.AllFilesEverPlacedInsideGTAMyAdd("asmjit.dll");
+					Settings.AllFilesEverPlacedInsideGTAMyAdd("botan.dll");
+					Settings.AllFilesEverPlacedInsideGTAMyAdd("launc.dll");
+					Settings.AllFilesEverPlacedInsideGTAMyAdd("origi_socialclub.dll");
+					Settings.AllFilesEverPlacedInsideGTAMyAdd("Readme.txt");
+					Settings.AllFilesEverPlacedInsideGTAMyAdd("socialclub.dll");
+					Settings.AllFilesEverPlacedInsideGTAMyAdd("tinyxml2.dll");
 
-				List<string> tmp = new List<string>();
-				tmp.AddRange(HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder("").ToList<string>());
-				tmp = tmp.Distinct().ToList();
+					List<string> tmp = new List<string>();
+					tmp.AddRange(HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder("").ToList<string>());
+					tmp = tmp.Distinct().ToList();
 
-				string[] tmp1 = HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(LauncherLogic.DowngradeEmuFilePath);
-				foreach (string tmp_i in tmp1)
-				{
-					Settings.AllFilesEverPlacedInsideGTAMyAdd(tmp_i.Substring(LauncherLogic.DowngradeEmuFilePath.Length).TrimStart('\\'));
-				}
+					string[] tmp1 = HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(LauncherLogic.DowngradeEmuFilePath);
+					foreach (string tmp_i in tmp1)
+					{
+						Settings.AllFilesEverPlacedInsideGTAMyAdd(tmp_i.Substring(LauncherLogic.DowngradeEmuFilePath.Length).TrimStart('\\'));
+					}
 
-				string[] tmp2 = HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(LauncherLogic.DowngradeAlternativeFilePathRockstar124);
-				foreach (string tmp_i in tmp2)
-				{
-					Settings.AllFilesEverPlacedInsideGTAMyAdd(tmp_i.Substring(LauncherLogic.DowngradeAlternativeFilePathRockstar124.Length).TrimStart('\\'));
-				}
+					string[] tmp2 = HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(LauncherLogic.DowngradeAlternativeFilePathRockstar124);
+					foreach (string tmp_i in tmp2)
+					{
+						Settings.AllFilesEverPlacedInsideGTAMyAdd(tmp_i.Substring(LauncherLogic.DowngradeAlternativeFilePathRockstar124.Length).TrimStart('\\'));
+					}
 
-				string[] tmp3 = HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(LauncherLogic.DowngradeAlternativeFilePathRockstar127);
-				foreach (string tmp_i in tmp3)
-				{
-					Settings.AllFilesEverPlacedInsideGTAMyAdd(tmp_i.Substring(LauncherLogic.DowngradeAlternativeFilePathRockstar127.Length).TrimStart('\\'));
-				}
+					string[] tmp3 = HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(LauncherLogic.DowngradeAlternativeFilePathRockstar127);
+					foreach (string tmp_i in tmp3)
+					{
+						Settings.AllFilesEverPlacedInsideGTAMyAdd(tmp_i.Substring(LauncherLogic.DowngradeAlternativeFilePathRockstar127.Length).TrimStart('\\'));
+					}
 
-				string[] tmp4 = HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(LauncherLogic.DowngradeAlternativeFilePathSteam127);
-				foreach (string tmp_i in tmp4)
-				{
-					Settings.AllFilesEverPlacedInsideGTAMyAdd(tmp_i.Substring(LauncherLogic.DowngradeAlternativeFilePathSteam127.Length).TrimStart('\\'));
-				}
+					string[] tmp4 = HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(LauncherLogic.DowngradeAlternativeFilePathSteam127);
+					foreach (string tmp_i in tmp4)
+					{
+						Settings.AllFilesEverPlacedInsideGTAMyAdd(tmp_i.Substring(LauncherLogic.DowngradeAlternativeFilePathSteam127.Length).TrimStart('\\'));
+					}
 
-				string[] tmp5 = HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(LauncherLogic.DowngradeAlternativeFilePathSteam124);
-				foreach (string tmp_i in tmp5)
-				{
-					Settings.AllFilesEverPlacedInsideGTAMyAdd(tmp_i.Substring(LauncherLogic.DowngradeAlternativeFilePathSteam124.Length).TrimStart('\\'));
-				}
+					string[] tmp5 = HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(LauncherLogic.DowngradeAlternativeFilePathSteam124);
+					foreach (string tmp_i in tmp5)
+					{
+						Settings.AllFilesEverPlacedInsideGTAMyAdd(tmp_i.Substring(LauncherLogic.DowngradeAlternativeFilePathSteam124.Length).TrimStart('\\'));
+					}
 
-				string[] tmp6 = HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(LauncherLogic.UpgradeFilePath);
-				foreach (string tmp_i in tmp6)
-				{
-					Settings.AllFilesEverPlacedInsideGTAMyAdd(tmp_i.Substring(LauncherLogic.UpgradeFilePath.Length).TrimStart('\\'));
-				}
+					string[] tmp6 = HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(LauncherLogic.UpgradeFilePath);
+					foreach (string tmp_i in tmp6)
+					{
+						Settings.AllFilesEverPlacedInsideGTAMyAdd(tmp_i.Substring(LauncherLogic.UpgradeFilePath.Length).TrimStart('\\'));
+					}
 
-				string[] tmp7 = HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(LauncherLogic.UpgradeFilePathBackup);
-				foreach (string tmp_i in tmp7)
-				{
-					Settings.AllFilesEverPlacedInsideGTAMyAdd(tmp_i.Substring(LauncherLogic.UpgradeFilePathBackup.Length).TrimStart('\\'));
+					string[] tmp7 = HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(LauncherLogic.UpgradeFilePathBackup);
+					foreach (string tmp_i in tmp7)
+					{
+						Settings.AllFilesEverPlacedInsideGTAMyAdd(tmp_i.Substring(LauncherLogic.UpgradeFilePathBackup.Length).TrimStart('\\'));
+					}
 				}
 
 				Settings.LastLaunchedVersion = Globals.ProjectVersion;
@@ -579,6 +581,8 @@ namespace Project_127
 			// Deleting all Installer and ZIP Files from own Project Installation Path
 			DeleteOldFiles();
 
+			// reading Social club install dir from registry
+			LauncherLogic.SetUpSocialClubRegistryThing();
 			LauncherLogic.SocialClubUpgrade();
 
 			// Throw annoucements
@@ -615,7 +619,6 @@ namespace Project_127
 			// INIT the dynamic text handler for the overlay
 			initDynamicTextGetters();
 		}
-
 
 
 
@@ -868,6 +871,8 @@ namespace Project_127
 			MainWindow.MyDispatcherTimer.Stop();
 			MainWindow.MTLAuthTimer.Stop();
 			MainWindow.myMutex.ReleaseMutex();
+			MainWindow.MW.notifyIcon.Visible = false;
+			MainWindow.MW.notifyIcon.Dispose();
 			HelperClasses.Logger.Log("Program closed. Proper Exit. Ended normally");
 			try
 			{

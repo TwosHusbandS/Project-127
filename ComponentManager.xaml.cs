@@ -152,33 +152,30 @@ namespace Project_127
 				}
 				else
 				{
-					if (myComponent == Components.SCLDowngradedSC)
+					if (!myComponent.IsOnDisk())
 					{
-						if (LauncherLogic.Get_SCL_InstallationState(LauncherLogic.SCL_SC_DOWNGRADED) != LauncherLogic.SCL_InstallationStates.Downgraded)
+						if (AskUser)
 						{
-							if (AskUser)
+							Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Component:\n'" + myComponent.GetNiceName() + "'\not found on Disk but needed.\nDo you want to install it?\n(Clicking no might result in Upgrading / Downgrading / Launching being disabled.)");
+							yesno.ShowDialog();
+							if (yesno.DialogResult == true)
 							{
-								Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Component:\n'" + myComponent.GetNiceName() + "'\nmissing but needed.\nDo you want to install it?\n(Clicking no might result in Upgrading / Downgrading / Launching being disabled.)");
-								yesno.ShowDialog();
-								if (yesno.DialogResult == true)
-								{
-									if (!myComponent.ReInstall())
-									{
-										rtrn = false;
-									}
-								}
-								else
+								if (!myComponent.ReInstall())
 								{
 									rtrn = false;
 								}
 							}
 							else
 							{
-								new Popup(Popup.PopupWindowTypes.PopupOk, "Component:\n'" + myComponent.GetNiceName() + "'\nmissing but needed.\nIt will be downloaded and installed now.").ShowDialog();
-								if (!myComponent.ReInstall())
-								{
-									rtrn = false;
-								}
+								rtrn = false;
+							}
+						}
+						else
+						{
+							new Popup(Popup.PopupWindowTypes.PopupOk, "Component:\n'" + myComponent.GetNiceName() + "'\nmissing but needed.\nIt will be downloaded and installed now.").ShowDialog();
+							if (!myComponent.ReInstall())
+							{
+								rtrn = false;
 							}
 						}
 					}
@@ -451,22 +448,22 @@ namespace Project_127
 			{
 				//if (Components.Base.IsInstalled())
 				//{
-					Popups.PopupTextbox tmp = new PopupTextbox("Enter forced Version.\nClick cancel,\nif you dont know what youre doing.", "1.0.0.0");
-					tmp.ShowDialog();
-					if (tmp.DialogResult == true)
+				Popups.PopupTextbox tmp = new PopupTextbox("Enter forced Version.\nClick cancel,\nif you dont know what youre doing.", "1.0.0.0");
+				tmp.ShowDialog();
+				if (tmp.DialogResult == true)
+				{
+					Version tmpV = new Version("0.0.0.1");
+					try
 					{
-						Version tmpV = new Version("0.0.0.1");
-						try
-						{
-							tmpV = new Version(tmp.MyReturnString);
-						}
-						catch { }
-						if (tmpV != new Version("0.0.0.1"))
-						{
-							Components.Base.ForceSetInstalled(tmpV);
-							Refresh();
-						}
+						tmpV = new Version(tmp.MyReturnString);
 					}
+					catch { }
+					if (tmpV != new Version("0.0.0.1"))
+					{
+						Components.Base.ForceSetInstalled(tmpV);
+						Refresh();
+					}
+				}
 				//}
 			}
 		}
@@ -557,6 +554,29 @@ namespace Project_127
 		public static void ForceSetInstalled(this ComponentManager.Components Component, Version myVersion)
 		{
 			Globals.MyDM.setVersion(Component.GetAssemblyName(), myVersion);
+		}
+
+		public static bool IsOnDisk(this ComponentManager.Components Component)
+		{
+			switch (Component)
+			{
+				case ComponentManager.Components.Base:
+					return LauncherLogic.IsDowngradedGTA(LauncherLogic.DowngradeEmuFilePath);
+				case ComponentManager.Components.SCLDowngradedSC:
+					 return (LauncherLogic.Get_SCL_InstallationState(LauncherLogic.SCL_SC_Installation) == LauncherLogic.SCL_InstallationStates.Downgraded);
+				case ComponentManager.Components.SCLRockstar124:
+					return LauncherLogic.IsDowngradedGTA(LauncherLogic.DowngradeAlternativeFilePathRockstar124);
+				case ComponentManager.Components.SCLRockstar127:
+					return LauncherLogic.IsDowngradedGTA(LauncherLogic.DowngradeAlternativeFilePathRockstar127);
+				case ComponentManager.Components.SCLSteam124:
+					return LauncherLogic.IsDowngradedGTA(LauncherLogic.DowngradeAlternativeFilePathSteam124);
+				case ComponentManager.Components.SCLSteam127:
+					return LauncherLogic.IsDowngradedGTA(LauncherLogic.DowngradeAlternativeFilePathSteam127);
+				case ComponentManager.Components.AdditionalSaveFiles:
+					return true;
+				default:
+					return true;
+			}
 		}
 
 		public static bool UpdateLogic(this ComponentManager.Components Component)

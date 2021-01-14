@@ -146,7 +146,7 @@ namespace Project_127
 
 			if (UpgradeSocialClubAfterGame)
 			{
-				SocialClubUpgrade(5000);
+				SocialClubUpgrade(7500);
 				UpgradeSocialClubAfterGame = false;
 			}
 		}
@@ -458,6 +458,18 @@ namespace Project_127
 
 		public static void AuthClick(bool StartGameImmediatelyAfter = false)
 		{
+			if (Settings.EnableAlternativeLaunch)
+			{
+				Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "You do not need to auth,\nbased on your current settings.\n\nDo you still want to auth?");
+				yesno.ShowDialog();
+				if (yesno.DialogResult == false)
+				{
+					return;
+				}
+			}
+
+
+
 			if (!MySettings.Settings.EnableLegacyAuth)
 			{
 				if (LauncherLogic.AuthState == LauncherLogic.AuthStates.NotAuth)
@@ -548,6 +560,30 @@ namespace Project_127
 			IgnoreNewFilesWhileUpgradeDowngradeLogic = false;
 
 			HelperClasses.Logger.Log("Done Upgrading");
+		}
+
+
+		public static bool IsDowngradedGTA(string MyDowngradePath)
+		{
+			if (HelperClasses.FileHandling.doesPathExist(MyDowngradePath))
+			{
+				string GTA5Exe = MyDowngradePath.TrimEnd('\\') + @"\gta5.exe";
+				string Updaterpf = MyDowngradePath.TrimEnd('\\') + @"\update\update.rpf";
+				string launcher1 = MyDowngradePath.TrimEnd('\\') + @"\playgtav.exe";
+				string launcher2 = MyDowngradePath.TrimEnd('\\') + @"\gtastub.exe";
+				if (HelperClasses.BuildVersionTable.GetGameVersionOfBuild(HelperClasses.FileHandling.GetVersionFromFile(GTA5Exe)) < new Version(1, 30))
+				{
+					if (HelperClasses.FileHandling.GetSizeOfFile(Updaterpf) > 1000)
+					{
+						if ((HelperClasses.FileHandling.GetSizeOfFile(launcher1) > 50) ||
+							(HelperClasses.FileHandling.GetSizeOfFile(launcher2) > 50))
+						{
+							return true;
+						}
+					}
+				}
+			}
+			return false;
 		}
 
 		/// <summary>
@@ -1121,7 +1157,6 @@ namespace Project_127
 			await Task.Delay(2500);
 			HelperClasses.Logger.Log("Waited a good bit");
 
-			HelperClasses.Logger.Log("Trying to Set GTAV Process Priority to High");
 			SetGTAProcessPriority();
 
 			// If we DONT only auto start when downgraded OR if we are downgraded
@@ -1245,6 +1280,7 @@ namespace Project_127
 		{
 			if (Settings.EnableAutoSetHighPriority)
 			{
+				HelperClasses.Logger.Log("Trying to Set GTAV Process Priority to High");
 				try
 				{
 					Process[] processes = HelperClasses.ProcessHandler.GetProcesses("gta5");
@@ -1272,6 +1308,26 @@ namespace Project_127
 
 		#region SocialClubSwitcheroo
 
+
+		public static void SetUpSocialClubRegistryThing()
+		{
+			SCL_SC_Installation = @"C:\Program Files\Rockstar Games\Social Club";
+
+			if (Settings.EnableAlternativeLaunchForceCProgramFiles)
+			{
+				return;
+			}
+
+			RegistryKey myRK = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64).OpenSubKey(@"SOFTWARE\WOW6432Node\Rockstar Games\Rockstar Games Social Club");
+			string RegeditInstallPath = HelperClasses.RegeditHandler.GetValue(myRK, "InstallFolder");
+			if (Get_SCL_InstallationState(RegeditInstallPath) != SCL_InstallationStates.Trash)
+			{
+				SCL_SC_Installation = RegeditInstallPath;
+			}
+		}
+
+
+
 		/// <summary>
 		/// Social Club Installation Path.
 		/// </summary>
@@ -1280,12 +1336,12 @@ namespace Project_127
 		/// <summary>
 		/// TEMP BACKUP Social Club Directory we use to rename Original Social Club too.
 		/// </summary>
-		public static string SCL_SC_TEMP_BACKUP = @"C:\Program Files\Rockstar Games\Social Club_P127_TEMP_BACKUP";
+		public static string SCL_SC_TEMP_BACKUP { get { return HelperClasses.FileHandling.GetParentFolder(SCL_SC_Installation).TrimEnd('\\') + @"\Social Club_P127_TEMP_BACKUP"; ; } }
 
 		/// <summary>
 		/// "CACHED" Downgraded Social Club inside C:\Program Files\Rockstar Games
 		/// </summary>
-		public static string SCL_SC_DOWNGRADED_CACHE = @"C:\Program Files\Rockstar Games\Social Club_P127_DOWNGRADED_CACHE";
+		public static string SCL_SC_DOWNGRADED_CACHE { get { return HelperClasses.FileHandling.GetParentFolder(SCL_SC_Installation).TrimEnd('\\') + @"\Social Club_P127_DOWNGRADED_CACHE"; ; } }
 
 		/// <summary>
 		/// Path to Downgraded SC Files inside $P127_Files
@@ -1537,7 +1593,7 @@ namespace Project_127
 			}
 		}
 
-	
+
 
 		/// <summary>
 		/// Upgrades Social Club if needed. RETURNS TRUE IF INSTALLATION OF SC IS USABLE (Upgraded OR Downgraded)
@@ -1641,6 +1697,10 @@ namespace Project_127
 				return false;
 			}
 		}
+
+
+
+
 		#endregion
 
 	} // End of Class

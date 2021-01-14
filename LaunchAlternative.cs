@@ -48,7 +48,7 @@ namespace Project_127
 			}
 			else
 			{
-				new Popups.Popup(Popups.Popup.PopupWindowTypes.PopupOkError, "Cant find the required File ('Play127.exe')\ninside your GTA Installation.\nSomething went wrong").ShowDialog();
+				new Popups.Popup(Popups.Popup.PopupWindowTypes.PopupOkError, "Cant find the required File ('gtastub.exe')\ninside your GTA Installation.\nSomething went wrong").ShowDialog();
 			}
 		}
 

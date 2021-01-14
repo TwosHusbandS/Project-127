@@ -691,6 +691,7 @@ namespace Project_127.MySettings
 			ButtonMouseOverMagic(btn_cb_Set_EnableLogging);
 			ButtonMouseOverMagic(btn_cb_Set_CopyFilesInsteadOfHardlinking);
 			ButtonMouseOverMagic(btn_cb_Set_EnableAlternativeLaunch);
+			ButtonMouseOverMagic(btn_cb_Set_EnableAlternativeLaunchForceCProgramFiles);
 			ButtonMouseOverMagic(btn_cb_Set_EnableJumpscriptUseCustomScript);
 			//ButtonMouseOverMagic(btn_cb_Set_CopyFilesInsteadOfSyslinking_SocialClub);
 			ButtonMouseOverMagic(btn_cb_Set_EnablePreOrderBonus);
@@ -871,10 +872,10 @@ namespace Project_127.MySettings
 				case "btn_cb_Set_EnableJumpscriptUseCustomScript":
 					SetCheckBoxBackground(myBtn, Settings.EnableJumpscriptUseCustomScript);
 					break;
-					//case "btn_cb_Set_CopyFilesInsteadOfSyslinking_SocialClub":
-					//	SetCheckBoxBackground(myBtn, Settings.EnableCopyFilesInsteadOfSyslinking_SocialClub);
-					//	break;
-					
+				//case "btn_cb_Set_CopyFilesInsteadOfSyslinking_SocialClub":
+				//	SetCheckBoxBackground(myBtn, Settings.EnableCopyFilesInsteadOfSyslinking_SocialClub);
+				//	break;
+
 				case "btn_cb_Set_EnablePreOrderBonus":
 					SetCheckBoxBackground(myBtn, Settings.EnablePreOrderBonus);
 					break;
@@ -886,6 +887,9 @@ namespace Project_127.MySettings
 					break;
 				case "btn_cb_Set_EnableAutoStartLiveSplit":
 					SetCheckBoxBackground(myBtn, Settings.EnableAutoStartLiveSplit);
+					break;
+				case "btn_cb_Set_EnableAlternativeLaunchForceCProgramFiles":
+					SetCheckBoxBackground(myBtn, Settings.EnableAlternativeLaunchForceCProgramFiles);
 					break;
 				case "btn_cb_Set_EnableAutoStartFPSLimiter":
 					SetCheckBoxBackground(myBtn, Settings.EnableAutoStartFPSLimiter);
@@ -974,7 +978,7 @@ namespace Project_127.MySettings
 				Rect_HideOptions_JumpscriptKeys.Visibility = Visibility.Visible;
 			}
 			else
-			{ 
+			{
 				Rect_HideOptions_JumpscriptKeys.Visibility = Visibility.Hidden;
 			}
 
@@ -1017,7 +1021,9 @@ namespace Project_127.MySettings
 					break;
 				case "btn_cb_Set_EnableJumpscriptUseCustomScript":
 					Settings.EnableJumpscriptUseCustomScript = !Settings.EnableJumpscriptUseCustomScript;
-					SetDefaultEnableCopyingHardlinking();
+					break;
+				case "btn_cb_Set_EnableAlternativeLaunchForceCProgramFiles":
+					Settings.EnableAlternativeLaunchForceCProgramFiles = !Settings.EnableAlternativeLaunchForceCProgramFiles;
 					break;
 				//case "btn_cb_Set_CopyFilesInsteadOfSyslinking_SocialClub":
 				//	Settings.EnableCopyFilesInsteadOfSyslinking_SocialClub = !Settings.EnableCopyFilesInsteadOfSyslinking_SocialClub;
@@ -1456,6 +1462,7 @@ namespace Project_127.MySettings
 			PopupCreateBackup.IsOpen = false;
 			PopupUseBackup.IsOpen = false;
 			PopupJumpscriptAdditional.IsOpen = false;
+			PopupEnableAlternativeLaunch.IsOpen = false;
 		}
 
 		/// <summary>
@@ -1525,9 +1532,6 @@ namespace Project_127.MySettings
 				btn_UseBackupName.Content = prevName;
 				return;
 			}
-
-
-			Globals.DebugPopup(newName);
 
 			LauncherLogic.UseBackup(combox_UseBackup.SelectedItem.ToString());
 		}
@@ -1667,5 +1671,32 @@ namespace Project_127.MySettings
 		{
 
 		}
+
+		private void PopupEnableAlternativeLaunch_Closed(object sender, EventArgs e)
+		{
+
+		}
+
+		private void PopupEnableAlternativeLaunch_Opened(object sender, EventArgs e)
+		{
+
+		}
+
+		private void btn_cb_Set_EnableAlternativeLaunch_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+		{
+			PopupEnableAlternativeLaunch.IsOpen = true;
+		}
+
+		public static void TellRockstarUsersToDisableAutoUpdateIfNeeded()
+		{
+			if (Settings.EnableAlternativeLaunch && Settings.Retailer == Retailers.Rockstar)
+			{
+				string msg = "You need to stop Rockstar Game Launcher\nfrom automatically Updating your GTA.\nOtherwise certain features might not work.\n\nTo do this:\nInside Rockstar Games Launcher,\nhead into Settings\n-> My Installed Games\n->Grand Theft Auto V\n-> uncheck the \"Enable automatic updates\" checkbox at the very top.";
+				new Popup(Popup.PopupWindowTypes.PopupOk, msg).ShowDialog();
+			}
+
+		}
+
+
 	} // End of Class
 } // End of Namespace 
