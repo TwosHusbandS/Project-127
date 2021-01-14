@@ -246,7 +246,7 @@ namespace Project_127.Overlay
 				{
 					if (MainWindow.OL_MM != null)
 					{
-						return (int)MainWindow.OL_MM.ActualHeight;
+						return (int)MainWindow.OL_MM.trueHeight;
 					}
 					return 80;
 				}
@@ -307,8 +307,9 @@ namespace Project_127.Overlay
 				{
 					if (MainWindow.OL_MM != null)
 					{
-						double ration = MainWindow.OL_MM.ActualWidth / MainWindow.OL_MM.Width;
-						MainWindow.OL_MM.Width = value / ration;
+						//double ration = MainWindow.OL_MM.ActualWidth / MainWindow.OL_MM.Width;
+						//MainWindow.OL_MM.Width = value / ration;
+						MainWindow.OL_MM.trueWidth = value;
 					}
 				}
 			}
@@ -780,9 +781,13 @@ namespace Project_127.Overlay
 		{
 			if (!disposedValue)
 			{
-				_window.Dispose();
 				mainText.Dispose();
 				titleBox.Dispose();
+				while (overlayObjects.Count > 0)
+                {
+					overlayObjects.First().Dispose();
+                }
+				_window.Dispose();
 				disposedValue = true;
 			}
 		}
