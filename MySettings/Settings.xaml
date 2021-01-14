@@ -59,7 +59,6 @@
                                 <RowDefinition Height="40"/>
                                 <RowDefinition Height="40"/>
                                 <RowDefinition Height="40"/>
-                                <RowDefinition Height="40"/>
 
                             </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
@@ -103,8 +102,20 @@
                             <Button Grid.Row="5" Grid.Column="1" x:Name="btn_cb_Set_LegacyAuth" Style="{StaticResource btn_cb}" Click="btn_cb_Click"  MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
 
                             <Label Grid.Row="6" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Launch through Social Club"/>
-                            <Button Grid.Row="6" Grid.Column="1" x:Name="btn_cb_Set_EnableAlternativeLaunch" Style="{StaticResource btn_cb}" Click="btn_cb_Click"  MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
-
+                            <Button Grid.Row="6" Grid.Column="1" x:Name="btn_cb_Set_EnableAlternativeLaunch" Style="{StaticResource btn_cb}" Click="btn_cb_Click"  MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave" MouseRightButtonDown="btn_cb_Set_EnableAlternativeLaunch_MouseRightButtonDown"/>
+                            <Popup x:Name="PopupEnableAlternativeLaunch"  PlacementTarget="{Binding ElementName=btn_CreateBackup}" Placement="MousePoint" Width="200" Height="140"  Margin="0,0,0,0" StaysOpen="False" Closed="PopupEnableAlternativeLaunch_Closed" Opened="PopupEnableAlternativeLaunch_Opened">
+                                <Border BorderBrush="{x:Static local:MyColors.MyColorWhite}" BorderThickness="2" Background="{x:Static local:MyColors.MyColorOffBlack}" MouseLeave="Border_MouseLeave">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition/>
+                                            <RowDefinition/>
+                                        </Grid.RowDefinitions>
+                                        <Label Grid.Row="0" Content="Force SC Installation Path" Style="{StaticResource lbl_Set_Info}"/>
+                                        <Button Grid.Row="1" x:Name="btn_cb_Set_EnableAlternativeLaunchForceCProgramFiles" Style="{StaticResource btn_cb}" Click="btn_cb_Click"  MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
+                                    </Grid>
+                                </Border>
+                            </Popup>
+                            
                             <Label Grid.Row="7" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Social Club Launch Game Version: "/>
                             <ComboBox Grid.Row="7" Grid.Column="1" Margin="10,5" Style="{StaticResource cobo}" x:Name="combox_Set_SocialClubGameVersion" SelectionChanged="combox_Set_SocialClubGameVersion_SelectionChanged"/>
 
@@ -236,6 +247,7 @@
                                 <RowDefinition Height="40"/>
                                 <RowDefinition Height="40"/>
                                 <RowDefinition Height="40"/>
+                                <RowDefinition Height="40"/>
 
                             </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
@@ -262,7 +274,6 @@
                             <Rectangle Grid.Row="16" Grid.Column="0" Grid.ColumnSpan="3" Fill="Transparent"/>
                             <Rectangle Grid.Row="17" Grid.Column="0" Grid.ColumnSpan="3" Fill="{x:Static local:MyColors.SE_AlternateRowBackground}"/>
                             <Rectangle Grid.Row="18" Grid.Column="0" Grid.ColumnSpan="3" Fill="Transparent"/>
-                            <Rectangle Grid.Row="19" Grid.Column="0" Grid.ColumnSpan="3" Fill="{x:Static local:MyColors.SE_AlternateRowBackground}"/>
 
 
                             <Label Grid.Row="0" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Enable Project 1.27 Notes - Overlay"/>
@@ -272,7 +283,6 @@
                             <Button Grid.Row="1" Grid.Column="1" x:Name="btn_cb_Set_EnableOverlayMultiMonitor"  Style="{StaticResource btn_cb}" Click="btn_cb_Click"  MouseEnter="btn_MouseEnter" ToolTip="Rightclick checkbox to reset Location" MouseRightButtonDown="btn_cb_Set_EnableOverlayMultiMonitor_MouseRightButtonDown" MouseLeave="btn_MouseLeave"/>
 
                             <Rectangle x:Name="Rect_HideOption_OverlayMM" Grid.Row="1" Grid.RowSpan="1" Grid.Column="0" Grid.ColumnSpan="2" Fill="{x:Static local:MyColors.MyColorOffWhite85}" ToolTip="Non effective when Overlay not activated"/>
-
 
                             <Button Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource btn_SE_Path}" x:Name="btn_Set_Overlay_Notes" Click="btn_Set_Overlay_Notes_Click" Content="Change Notes of Overlay"/>
 

@@ -23,6 +23,7 @@
   * No need of having an AutoHotkey Installation
   * No need of having a ScriptFile
   * Ability to change Hotkeys inside P127
+  * Option to provide own ScriptFile in case the integrated Jumpscript does not work.
 * NoteOverlay
   * Overlay which draws a textfile on top of either GTA to read Notes during Long runs
   * can render on top of GTA (if in Borderless Mode) or on top of our own Window on other screens (Multi Monitor Mode)

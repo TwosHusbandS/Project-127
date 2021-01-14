@@ -40,10 +40,11 @@ namespace Project_127.HelperClasses
 
 			string MyCreationDate = HelperClasses.FileHandling.GetCreationDate(Process.GetCurrentProcess().MainModule.FileName);
 
-			HelperClasses.Logger.Log("", true, 0);
-			HelperClasses.Logger.Log("", true, 0);
+			HelperClasses.Logger.Log("-", true, 0);
+			HelperClasses.Logger.Log("-", true, 0);
+			HelperClasses.Logger.Log("-", true, 0);
 			HelperClasses.Logger.Log(" === Project - 127 Started (Version: '" + Globals.ProjectVersion + "' BuildInfo: '" + Globals.BuildInfo + "' Built at: '" + MyCreationDate + "' Central European Time) ===", true, 0);
-			HelperClasses.Logger.Log("Logging initiated", true, 0);
+			HelperClasses.Logger.Log("Logging initiated. Time to the left is local time and NOT UTC. See Debug for more Info", true, 0);
 		}
 
 		/// <summary>
@@ -121,14 +122,16 @@ namespace Project_127.HelperClasses
 				Stopwatch tmpsw = new Stopwatch();
 				tmpsw.Start();
 
-				string MyCreationDate = HelperClasses.FileHandling.GetCreationDate(Process.GetCurrentProcess().MainModule.FileName);
 
 				// Debug Info users can give me easily...
 				List<string> DebugMessage = new List<string>();
 
 				DebugMessage.Add("Project 1.27 Version: '" + Globals.ProjectVersion + "'");
 				DebugMessage.Add("BuildInfo: '" + Globals.BuildInfo + "'");
-				DebugMessage.Add("BuildTime: '" + MyCreationDate + "'");
+				DebugMessage.Add("BuildCreated: '" + HelperClasses.FileHandling.GetCreationDate(Process.GetCurrentProcess().MainModule.FileName) + "'");
+				DebugMessage.Add("BuildCreatedUTC: '" + HelperClasses.FileHandling.GetCreationDate(Process.GetCurrentProcess().MainModule.FileName, true) + "'");
+				DebugMessage.Add("BuildLastModified: '" + HelperClasses.FileHandling.GetCreationDate(Process.GetCurrentProcess().MainModule.FileName) + "'");
+				DebugMessage.Add("BuildLastModifiedUTC: '" + HelperClasses.FileHandling.GetCreationDate(Process.GetCurrentProcess().MainModule.FileName, true) + "'");
 				DebugMessage.Add("Time Now: '" + DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss") + "'");
 				DebugMessage.Add("Time Now UTC: '" + DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss") + "'");
 				DebugMessage.Add("ZIP Version: '" + Globals.ZipVersion + "'");
@@ -151,6 +154,7 @@ namespace Project_127.HelperClasses
 				DebugMessage.Add("    Size of GTA5.exe in GTAV Installation Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\GTA5.exe") + Globals.GetGameInfoForDebug(LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\GTA5.exe"));
 				DebugMessage.Add("    Size of update.rpf in GTAV Installation Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\update\update.rpf"));
 				DebugMessage.Add("    Size of playgtav.exe in GTAV Installation Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\playgtav.exe"));
+				DebugMessage.Add("    Size of gtastub.exe in GTAV Installation Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\gtastub.exe"));
 				DebugMessage.Add("    ------------------------------------------------");
 				DebugMessage.Add("    Size of GTA5.exe in DowngradeFiles (Emu) Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeEmuFilePath.TrimEnd('\\') + @"\GTA5.exe") + Globals.GetGameInfoForDebug(LauncherLogic.DowngradeEmuFilePath.TrimEnd('\\') + @"\GTA5.exe"));
 				DebugMessage.Add("    Size of update.rpf in DowngradeFiles (Emu) Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeEmuFilePath.TrimEnd('\\') + @"\update\update.rpf"));
@@ -158,33 +162,56 @@ namespace Project_127.HelperClasses
 				DebugMessage.Add("    ------------------------------------------------");
 				DebugMessage.Add("    Size of GTA5.exe in DowngradeFiles (SocialClubLaunch Steam 124) Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeAlternativeFilePathSteam124.TrimEnd('\\') + @"\GTA5.exe") + Globals.GetGameInfoForDebug(LauncherLogic.DowngradeAlternativeFilePathSteam124.TrimEnd('\\') + @"\GTA5.exe"));
 				DebugMessage.Add("    Size of update.rpf in DowngradeFiles (SocialClubLaunch Steam 124) Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeAlternativeFilePathSteam124.TrimEnd('\\') + @"\update\update.rpf"));
-				DebugMessage.Add("    Size of playgtav.exe in DowngradeFiles (SocialClubLaunch Steam 124) Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeAlternativeFilePathSteam124.TrimEnd('\\') + @"\playgtav.exe"));
+				DebugMessage.Add("    Size of gtastub.exe in DowngradeFiles (SocialClubLaunch Steam 124) Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeAlternativeFilePathSteam124.TrimEnd('\\') + @"\gtastub.exe"));
 				DebugMessage.Add("    ------------------------------------------------");
 				DebugMessage.Add("    Size of GTA5.exe in DowngradeFiles (SocialClubLaunch Steam 127) Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeAlternativeFilePathSteam127.TrimEnd('\\') + @"\GTA5.exe") + Globals.GetGameInfoForDebug(LauncherLogic.DowngradeAlternativeFilePathSteam127.TrimEnd('\\') + @"\GTA5.exe"));
 				DebugMessage.Add("    Size of update.rpf in DowngradeFiles (SocialClubLaunch Steam 127) Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeAlternativeFilePathSteam127.TrimEnd('\\') + @"\update\update.rpf"));
-				DebugMessage.Add("    Size of playgtav.exe in DowngradeFiles (SocialClubLaunch Steam 127) Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeAlternativeFilePathSteam127.TrimEnd('\\') + @"\playgtav.exe"));
+				DebugMessage.Add("    Size of gtastub.exe in DowngradeFiles (SocialClubLaunch Steam 127) Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeAlternativeFilePathSteam127.TrimEnd('\\') + @"\gtastub.exe"));
 				DebugMessage.Add("    ------------------------------------------------");
 				DebugMessage.Add("    Size of GTA5.exe in DowngradeFiles (SocialClubLaunch Rockstar 124) Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeAlternativeFilePathRockstar124.TrimEnd('\\') + @"\GTA5.exe") + Globals.GetGameInfoForDebug(LauncherLogic.DowngradeAlternativeFilePathRockstar124.TrimEnd('\\') + @"\GTA5.exe"));
 				DebugMessage.Add("    Size of update.rpf in DowngradeFiles (SocialClubLaunch Rockstar 124) Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeAlternativeFilePathRockstar124.TrimEnd('\\') + @"\update\update.rpf"));
-				DebugMessage.Add("    Size of playgtav.exe in DowngradeFiles (SocialClubLaunch Rockstar 124) Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeAlternativeFilePathRockstar124.TrimEnd('\\') + @"\playgtav.exe"));
+				DebugMessage.Add("    Size of gtastub.exe in DowngradeFiles (SocialClubLaunch Rockstar 124) Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeAlternativeFilePathRockstar124.TrimEnd('\\') + @"\gtastub.exe"));
 				DebugMessage.Add("    ------------------------------------------------");
 				DebugMessage.Add("    Size of GTA5.exe in DowngradeFiles (SocialClubLaunch Rockstar 127) Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeAlternativeFilePathRockstar127.TrimEnd('\\') + @"\GTA5.exe") + Globals.GetGameInfoForDebug(LauncherLogic.DowngradeAlternativeFilePathRockstar127.TrimEnd('\\') + @"\GTA5.exe"));
 				DebugMessage.Add("    Size of update.rpf in DowngradeFiles (SocialClubLaunch Rockstar 127) Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeAlternativeFilePathRockstar127.TrimEnd('\\') + @"\update\update.rpf"));
-				DebugMessage.Add("    Size of playgtav.exe in DowngradeFiles (SocialClubLaunch Rockstar 127) Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeAlternativeFilePathRockstar127.TrimEnd('\\') + @"\playgtav.exe"));
+				DebugMessage.Add("    Size of gtastub.exe in DowngradeFiles (SocialClubLaunch Rockstar 127) Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeAlternativeFilePathRockstar127.TrimEnd('\\') + @"\gtastub.exe"));
 				DebugMessage.Add("    ------------------------------------------------");
 				DebugMessage.Add("    Size of GTA5.exe in UpdateFiles Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.UpgradeFilePath.TrimEnd('\\') + @"\GTA5.exe") + Globals.GetGameInfoForDebug(LauncherLogic.UpgradeFilePath.TrimEnd('\\') + @"\GTA5.exe"));
 				DebugMessage.Add("    Size of update.rpf in UpdateFiles Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.UpgradeFilePath.TrimEnd('\\') + @"\update\update.rpf"));
 				DebugMessage.Add("    Size of playgtav.exe in UpdateFiles Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.UpgradeFilePath.TrimEnd('\\') + @"\playgtav.exe"));
+				DebugMessage.Add("    Size of gtastub.exe in UpdateFiles Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.UpgradeFilePath.TrimEnd('\\') + @"\gtastub.exe"));
 				DebugMessage.Add("    ------------------------------------------------");
 				DebugMessage.Add("    Size of GTA5.exe in BACKUP UpdateFiles Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.UpgradeFilePathBackup.TrimEnd('\\') + @"\GTA5.exe") + Globals.GetGameInfoForDebug(LauncherLogic.UpgradeFilePathBackup.TrimEnd('\\') + @"\GTA5.exe"));
 				DebugMessage.Add("    Size of update.rpf in BACKUP UpdateFiles Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.UpgradeFilePathBackup.TrimEnd('\\') + @"\update\update.rpf"));
 				DebugMessage.Add("    Size of playgtav.exe in BACKUP UpdateFiles Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.UpgradeFilePathBackup.TrimEnd('\\') + @"\playgtav.exe"));
+				DebugMessage.Add("    Size of gtastub.exe in BACKUP UpdateFiles Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.UpgradeFilePathBackup.TrimEnd('\\') + @"\gtastub.exe"));
 
 				DebugMessage.Add("Detected Social Club InstallationStates:");
 				DebugMessage.Add("    Detect Social Club InstallationStates SC_INSTALLATION_PATH ('" + LauncherLogic.SCL_SC_Installation + "'): " + LauncherLogic.Get_SCL_InstallationState(LauncherLogic.SCL_SC_Installation));
 				DebugMessage.Add("    Detect Social Club InstallationStates SC_TEMP_BACKUP_PATH ('" + LauncherLogic.SCL_SC_TEMP_BACKUP + "'): " + LauncherLogic.Get_SCL_InstallationState(LauncherLogic.SCL_SC_TEMP_BACKUP));
 				DebugMessage.Add("    Detect Social Club InstallationStates SC_DOWNGRADED_PATH ('" + LauncherLogic.SCL_SC_DOWNGRADED + "'): " + LauncherLogic.Get_SCL_InstallationState(LauncherLogic.SCL_SC_DOWNGRADED));
 				DebugMessage.Add("    Detect Social Club InstallationStates SC_DOWNGRADED_CACHE_PATH ('" + LauncherLogic.SCL_SC_DOWNGRADED_CACHE + "'): " + LauncherLogic.Get_SCL_InstallationState(LauncherLogic.SCL_SC_DOWNGRADED_CACHE));
+
+				DebugMessage.Add("All possible CFG.dat");
+				string GTAProfilePath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\Rockstar Games\GTA V\Profiles\";
+				string[] GTAProfiles = HelperClasses.FileHandling.GetSubFolders(GTAProfilePath);
+				foreach (string GTAProfile in GTAProfiles)
+				{
+					string cfgdatPath = GTAProfile.TrimEnd('\\') + @"\cfg.dat";
+					long size = HelperClasses.FileHandling.GetSizeOfFile(cfgdatPath);
+					if (size > 0)
+					{
+						DebugMessage.Add("    '" + cfgdatPath + "', fileSize: '" + size + "'");
+						DebugMessage.Add("         CreationTime: '" + HelperClasses.FileHandling.GetCreationDate(cfgdatPath) + "', CreationTimeUTC: '" + HelperClasses.FileHandling.GetCreationDate(cfgdatPath, true) + "'"); ;
+						DebugMessage.Add("         LastModified: '" + HelperClasses.FileHandling.GetLastWriteDate(cfgdatPath) + "', LastModifiedUTC: '" + HelperClasses.FileHandling.GetLastWriteDate(cfgdatPath, true) + "'"); ;
+					}
+					else
+					{
+						DebugMessage.Add("    '" + cfgdatPath + "', fileSize: '" + size + "' (doesnt exist)");
+					}
+				}
+				DebugMessage.Add("    >>>   Dragons Logic (probably) detects and uses this cfg.dat: '" + HelperClasses.FileHandling.MostLikelyProfileFolder().TrimEnd('\\') + @"\cfg.dat" + "'");
+
 				DebugMessage.Add("Files I ever placed inside GTA: ");
 				foreach (string tmp in Settings.AllFilesEverPlacedInsideGTA)
 				{

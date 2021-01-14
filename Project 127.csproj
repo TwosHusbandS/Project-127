@@ -399,6 +399,7 @@
     </EmbeddedResource>
     <None Include="app.manifest" />
     <None Include="Installer\Changelog.md" />
+    <None Include="Installer\Changelogs\Advanced Notefile.md" />
     <None Include="Installer\Changelogs\Help.md" />
     <None Include="Installer\Changelogs\Features.md" />
     <None Include="Installer\Changelogs\V_1_2_0_0_Changelog.md" />

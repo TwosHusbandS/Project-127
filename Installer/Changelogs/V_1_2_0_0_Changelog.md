@@ -8,10 +8,10 @@
   * Addition of a chapter system with optional autoswitching
     * Improves note organization
 	* Allows for pertinent notes to be displayed based on a specified states
-
+  * More Information [here](Advanced%20Notefile.md)
 * Easter eggs
 * SCL Launch
-  * Launching through downgraded social club. For more Information see the "Launching Downgraded GTA" Section [here](https://github.com/TwosHusbandS/Project-127/blob/master/Installer/Changelogs/Help.md)
+  * Launching through downgraded social club. For more Information see the "Launching Downgraded GTA" Section [here](Help.md#launching-downgraded-gta-additional-information-and-authentication)
     * Social Club is automatically Downgraded / Upgraded
 	* Removes the need for P127 to have your Auth information (through MTL or LegacyAuth)
 	* Your normal GTA V Installation Settings / Savefiles etc.
@@ -19,7 +19,7 @@
 * Automatic Detection (and Correction) if Rockstar changed our Files in a specific way. This fixes "Downgraded (1.53)"
 
 #### Improved Features:
-* MTL Auth for Emu improvements. Should be working for everyone. For more Information see the "Launching Downgraded GTA" Section [here](https://github.com/TwosHusbandS/Project-127/blob/master/Installer/Changelogs/Help.md)
+* MTL Auth for Emu improvements. Should be working for everyone. For more Information see the "Launching Downgraded GTA" Section [here](Help.md#launching-downgraded-gta-additional-information-and-authentication)
 * Improved Logic of ComponenetManager
   * What you are allowed to uninstall under circumstances
   * When and how it will be recommended to install Components
@@ -29,6 +29,7 @@
   * Added Option to import your own AHK File P127 will save and start (instead of the automatic jumpscript)
 * Two different "Repair GTA" Methods. Also saving the name of every file we ever modified or added to the GTA V Installation Folder
 * Improved ResetEverything and Uninstall Methods.
+* P127 will know recognize when Rockstar fucked our Files and offer a repair.
 
 #### Improved UI / UX
 * Improved UI Texts across the board

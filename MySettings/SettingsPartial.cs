@@ -444,7 +444,7 @@ namespace Project_127.MySettings
 
 
 		/// <summary>
-		/// Settings EnableAlternativeLaunch. Gets and Sets from the Dictionary.
+		/// Settings EnableJumpscriptUseCustomScript. Gets and Sets from the Dictionary.
 		/// </summary>
 		public static bool EnableJumpscriptUseCustomScript
 		{
@@ -485,6 +485,27 @@ namespace Project_127.MySettings
 				{
 					new Popup(Popup.PopupWindowTypes.PopupOk, "Setting was not changed.");
 					return;
+				}
+				Settings.TellRockstarUsersToDisableAutoUpdateIfNeeded();
+			}
+		}
+
+
+		/// <summary>
+		/// Settings EnableAlternativeLaunchForceCProgramFiles. Gets and Sets from the Dictionary.
+		/// </summary>
+		public static bool EnableAlternativeLaunchForceCProgramFiles
+		{
+			get
+			{
+				return GetBoolFromString(GetSetting("EnableAlternativeLaunchForceCProgramFiles"));
+			}
+			set
+			{
+				if (value != EnableAlternativeLaunchForceCProgramFiles)
+				{
+					SetSetting("EnableAlternativeLaunchForceCProgramFiles", value.ToString());
+					LauncherLogic.SetUpSocialClubRegistryThing();
 				}
 			}
 		}
@@ -576,7 +597,7 @@ namespace Project_127.MySettings
 		}
 
 		/// <summary>
-		/// Settings Retailer. Gets and Sets from Dictionary.
+		/// Settings LanguageSelected. Gets and Sets from Dictionary.
 		/// </summary>
 		public static Languages LanguageSelected
 		{
@@ -692,6 +713,7 @@ namespace Project_127.MySettings
 					{
 						SetSetting("Retailer", value.ToString());
 					}
+					Settings.TellRockstarUsersToDisableAutoUpdateIfNeeded();
 				}
 			}
 		}
