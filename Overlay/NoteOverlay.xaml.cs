@@ -728,12 +728,12 @@ namespace Project_127.Overlay
 		/// <param name="e"></param>
 		private void btn_cb_Set_OverlayMultiMonitorMode_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
 		{
-			NoteOverlay.OverlaySettingsChanged();
+			//NoteOverlay.OverlaySettingsChanged();
 
-			Settings.OL_MM_Left = 0;
-			Settings.OL_MM_Top = 0;
+			MainWindow.OL_MM.Left = 0;
+			MainWindow.OL_MM.Top = 0;
 
-			NoteOverlay.OverlaySettingsChanged();
+			//NoteOverlay.OverlaySettingsChanged();
 		}
 
 		bool waitingForSecondRightClick = false;
@@ -741,7 +741,7 @@ namespace Project_127.Overlay
 		private static async void easterEgg()
         {
 			// We are very serious people...
-			if (new System.Random().NextDouble() > .8)
+			//if (new System.Random().NextDouble() > .8)
             {
 				return;
             }
