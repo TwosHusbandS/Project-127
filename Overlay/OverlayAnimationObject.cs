@@ -135,7 +135,8 @@ namespace Project_127.Overlay
 				gifImg.SelectActiveFrame(dimension, i);
 				using (var ms = new System.IO.MemoryStream())
                 {
-					gifImg.Save(ms, System.Drawing.Imaging.ImageFormat.Bmp);
+					var bmp = new Bitmap(gifImg);
+					bmp.Save(ms, System.Drawing.Imaging.ImageFormat.Bmp);
 					while (!gfx.IsInitialized && !disposing)
                     {
 						await Task.Delay(100);
@@ -147,7 +148,7 @@ namespace Project_127.Overlay
                     }
                     try
                     {
-						frames.Add(new GameOverlay.Drawing.Image(gfx, ms.ToArray()));
+						frames.Add(new GameOverlay.Drawing.Image(gfx.GetRenderTarget(), ms.ToArray()));
 					}
                     catch
                     {
