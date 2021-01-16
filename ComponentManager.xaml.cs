@@ -671,7 +671,7 @@ namespace Project_127
 			{
 				myLbl.Content = "Not Installed";
 				myLbl.Foreground = MyColors.MyColorOrange;
-				myLbl.ToolTip = "";
+				myLbl.ToolTip = "Not Installed";
 			}
 		}
 

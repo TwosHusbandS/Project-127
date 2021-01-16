@@ -80,10 +80,15 @@ Post 1.1.9.1:
 - [DONE] Removed DebugPopup Option on LoadGif
 - [DONE] [ABONDED IDEA] Think about going from "AllFilesPlacedIntoGTA" to just "DowngradeFiles" so i can delete them safely on upgrade...
 - [DONE] [BUG NOT THERE] Livesplit /  OBS Require Admin again
+- [DONE] ToolTip on Not Installed Componenets fixed.
+- [DONE] Option to enable / disble ScriptHook on Downgraded GTA.
 
 - Copy and paste help.md into information -> help
+- "Translate" stuff above into Changelog / Patchnotes.
 
+- Backend for "Settings.EnableScripthookOnDowngraded" on SCL Binary, Emu Binary, Emu P127 Backend / Launchflags.
 - SCL Failing on my machine...(due to old cfg.dat)
+- SCL Failing on Reloes and Yoshis machine.
 - Do we even investigate rickroll? or just leave it out?
 - MTL Failing on first Attempt [Apparently? Not sure if trustworthy...]
 - RGL Crashes / Blackscreens [Apparently? Not sure if trustworthy...]

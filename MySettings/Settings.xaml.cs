@@ -696,6 +696,7 @@ namespace Project_127.MySettings
 			//ButtonMouseOverMagic(btn_cb_Set_CopyFilesInsteadOfSyslinking_SocialClub);
 			ButtonMouseOverMagic(btn_cb_Set_EnablePreOrderBonus);
 			ButtonMouseOverMagic(btn_cb_Set_EnableAutoStartFPSLimiter);
+			ButtonMouseOverMagic(btn_cb_Set_EnableScripthookOnDowngraded);
 			ButtonMouseOverMagic(btn_cb_Set_EnableAutoStartLiveSplit);
 			ButtonMouseOverMagic(btn_cb_Set_EnableAutoStartNohboard);
 			ButtonMouseOverMagic(btn_cb_Set_EnableOverlay);
@@ -885,6 +886,9 @@ namespace Project_127.MySettings
 				case "btn_cb_Set_OnlyAutoStartProgramsWhenDowngraded":
 					SetCheckBoxBackground(myBtn, Settings.EnableOnlyAutoStartProgramsWhenDowngraded);
 					break;
+				case "btn_cb_Set_EnableScripthookOnDowngraded":
+					SetCheckBoxBackground(myBtn, Settings.EnableScripthookOnDowngraded);
+					break;
 				case "btn_cb_Set_EnableAutoStartLiveSplit":
 					SetCheckBoxBackground(myBtn, Settings.EnableAutoStartLiveSplit);
 					break;
@@ -1013,6 +1017,10 @@ namespace Project_127.MySettings
 					break;
 				case "btn_cb_Set_EnableAlternativeLaunch":
 					Settings.EnableAlternativeLaunch = !Settings.EnableAlternativeLaunch;
+					RefreshIfOptionsHide();
+					break;
+				case "btn_cb_Set_EnableScripthookOnDowngraded":
+					Settings.EnableScripthookOnDowngraded = !Settings.EnableScripthookOnDowngraded;
 					RefreshIfOptionsHide();
 					break;
 				case "btn_cb_Set_CopyFilesInsteadOfHardlinking":

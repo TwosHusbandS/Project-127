@@ -308,6 +308,7 @@ namespace Project_127
 			{"InGameName", "HiMomImOnYoutube"},
 			{"EnablePreOrderBonus", "False"},
 			{"EnableDontLaunchThroughSteam", "False"},
+			{"EnableScripthookOnDowngraded", "False"},
    
 			// Extra Features
 			{"EnableOverlay", "False"},

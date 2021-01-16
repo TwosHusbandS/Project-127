@@ -771,6 +771,22 @@ namespace Project_127.MySettings
 		}
 
 
+
+		/// <summary>
+		/// Settings EnableScripthookOnDowngraded. Gets and Sets from the Dictionary.
+		/// </summary>
+		public static bool EnableScripthookOnDowngraded
+		{
+			get
+			{
+				return GetBoolFromString(GetSetting("EnableScripthookOnDowngraded"));
+			}
+			set
+			{
+				SetSetting("EnableScripthookOnDowngraded", value.ToString());
+			}
+		}
+
 		/// <summary>
 		/// Settings EnableAutoStartLiveSplit. Gets and Sets from the Dictionary.
 		/// </summary>
