@@ -157,14 +157,19 @@ string lpSymlinkFileName, string lpTargetFileName, SymbolicLink dwFlags);
 		/// <returns></returns>
 		public static string[] GetFilesFromFolderAndSubFolder(string pPath)
 		{
-			if (doesPathExist(pPath))
+			try
 			{
-				return (Directory.GetFiles(pPath, "*", SearchOption.AllDirectories));
+
+				if (doesPathExist(pPath))
+				{
+					return (Directory.GetFiles(pPath, "*", SearchOption.AllDirectories));
+				}
 			}
-			else
+			catch
 			{
-				return (new string[0]);
+
 			}
+			return (new string[0]);
 		}
 
 		/// <summary>
@@ -514,11 +519,11 @@ string lpSymlinkFileName, string lpTargetFileName, SymbolicLink dwFlags);
 		/// <returns></returns>
 		public static bool AreFilesEqual(string pFilePathA, string pFilePathB, bool SlowButStable)
 		{
-			Stopwatch sw = new Stopwatch();
-			sw.Start();
+			//Stopwatch sw = new Stopwatch();
+			//sw.Start();
 			bool Sth = AreFilesEqualReal(pFilePathA, pFilePathB, SlowButStable);
-			sw.Stop();
-			HelperClasses.Logger.Log("AAAA - It took '" + sw.ElapsedMilliseconds + "' ms to compare: '" + pFilePathA + "' and '" + pFilePathB + "'. Result is: " + Sth.ToString());
+			//sw.Stop();
+			//HelperClasses.Logger.Log("AAAA - It took '" + sw.ElapsedMilliseconds + "' ms to compare: '" + pFilePathA + "' and '" + pFilePathB + "'. Result is: " + Sth.ToString());
 			return Sth;
 		}
 
@@ -868,7 +873,6 @@ string lpSymlinkFileName, string lpTargetFileName, SymbolicLink dwFlags);
 				if (doesFileExist(pFilePath))
 				{
 					File.Delete(pFilePath);
-
 				}
 			}
 			catch (Exception e)

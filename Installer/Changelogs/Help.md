@@ -57,11 +57,14 @@ It can do this in two ways:
 
 * If something isnt right, Verifying (Rightclick on Install Button), Re-Installing or manually deleting and Installing a Component is always worth a try
 
-* If you cant see the MultiMonitor Overlay, RIGHT-click the \"Enable Multi Monitor Mode\" Checkbox to Reset its Position
+* You can reset the information which Compoenents are installed and in which Version by tripple right-clicking the "Refresh" Button inside the ComponenetManager.
 
-* If launching through Social Club does not work, and you believe the Social Club Downgrade to be the cause of this, you can try the following: Head into P127 Settings, on the checkbox of "Launch through Social Club", rightclick and enable "Force SC Installation Path"
+* If you cant see the MultiMonitor Overlay, RIGHT-click the \"Enable Multi Monitor Mode\" Checkbox to Reset its Position
 			
+* If launching through Social Club does not work, and you believe the Social Club Downgrade to be the cause of this, you can try the following: Head into P127 Settings, on the checkbox of "Launch through Social Club", rightclick and enable "Force SC Installation Path"
+
 * If something is still not working, you can always try hitting the "RESET ALL" Button inside P127 Settings. This might take a few minutes, and Project 1.27 will quit automatically when its done. Re - Open it and everything should work again. You will need to verifying Files via Steam / Rockstar / Epic afterwards.
+
 
 ## Support
 

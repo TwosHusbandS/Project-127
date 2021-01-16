@@ -27,6 +27,7 @@ namespace Project_127.HelperClasses
 		{
 			// TODO CTRLF add other ProcessNames
 			KillProcessesContains("gta");
+			KillProcessesContains("gtastub");
 			KillProcessesContains("rockstar");
 			KillProcessesContains("play127");
 			KillProcessesContains("gtaddl");
@@ -47,7 +48,7 @@ namespace Project_127.HelperClasses
 		public static void KillRelevantProcesses()
 		{
 			KillRockstarProcesses();
-			KillSteamProcesses();
+			// KillSteamProcesses();
 		}
 
 		/// <summary>

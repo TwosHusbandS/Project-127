@@ -66,26 +66,28 @@ Post 1.1.9.1:
 - [DONE] Social Club Switcheroo to take registry into account i guess...test with reloe?
 - [DONE] Social Club Switcheroo Option to overwrite
 - [DONE] Info that rockstar needs to have auto updates disabled
+- [DONE] UX Changes towards reset overlay MM location
+- [DONE] Overlay Multi Monitor DPI Scaling. Shoutout dragon
+- [DONE] Enabling & Quicky disabling Overlay crashed P127. Shoutout dragon
+- [DONE] WPF window is being spam-activated / shown. Theory that its caused by MTL Auth. (Look at Reloe 2, log) [theory correct, "onMTLAuthCompletion" is spamm-called.]
+- [DONE] GTA starting 50 times.
+- [DONE] Jumpscript not being killed
+- [DONE] Repair GTA Installation might crash P127 if "Project_127_Files" does not exist...
+- [DONE] ComponentManager force install all versions.
+- [DONE] Full re-set of whats installed on tripple rightclick refres hin Componenet Manager. Added that to help section.
+- [DONE] Calling SC - Upgrade on Upgraded Game Launch
+- [DONE] Removed old debug logstatements from public version, not needed, code runs fine.
+- [DONE] Removed DebugPopup Option on LoadGif
+- [DONE] [ABONDED IDEA] Think about going from "AllFilesPlacedIntoGTA" to just "DowngradeFiles" so i can delete them safely on upgrade...
+- [DONE] [BUG NOT THERE] Livesplit /  OBS Require Admin again
 
-- Think about going from "AllFilesPlacedIntoGTA" to just "DowngradeFiles" so i can delete them safely on upgrade...
 - Copy and paste help.md into information -> help
-- Jumpscript not being killed
-- Enabling & Quicky disabling Overlay crashed P127
-- Repair GTA Installation might crash P127 if "Project_127_Files" does not exist...
 
-- MTL Failing on first Attempt
-- RGL Crashes / Blackscreens
-- Livesplit /  OBS Require Admin again
-- WPF window is being spam-activated / shown. Theory that its caused by MTL Auth. (Look at Reloe 2, log) [theory correct, "onMTLAuthCompletion" is spamm-called.]
-- Download Manager crashing on Update + ReInstall
-- Overlay Multi Monitor DPI Scaling.
-		>> Properties in GTAOverlay.cs (_YMargin and width)
-		>> When looking at it, take a look at these things dragon sent:
-		https://stackoverflow.com/questions/1918877/how-can-i-get-the-dpi-in-wpf
-		https://docs.microsoft.com/en-us/dotnet/api/system.windows.media.visualtreehelper.getdpi?redirectedfrom=MSDN&view=net-5.0#System_Windows_Media_VisualTreeHelper_GetDpi_System_Windows_Media_Visual_
-		PresentationSource source = PresentationSource.FromVisual(this);
-		source.CompositionTarget.TransformToDevice.M11 <= X scaling factor
-		source.CompositionTarget.TransformToDevice.M22 <= Y scaling factor
+- SCL Failing on my machine...(due to old cfg.dat)
+- Do we even investigate rickroll? or just leave it out?
+- MTL Failing on first Attempt [Apparently? Not sure if trustworthy...]
+- RGL Crashes / Blackscreens [Apparently? Not sure if trustworthy...]
+- Unit / Integration Test DownloadManager on everything
 
  */
 

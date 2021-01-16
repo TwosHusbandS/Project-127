@@ -699,6 +699,9 @@ namespace Project_127
 			{
 				HelperClasses.Logger.Log("Installation State Upgraded Detected.", 1);
 
+				// Checking if we can Upgrade Social Club before launchin Upgraded
+				LauncherLogic.SocialClubUpgrade();
+
 				// If Steam
 				if (Settings.Retailer == Settings.Retailers.Steam)
 				{

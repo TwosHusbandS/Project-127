@@ -128,6 +128,7 @@ namespace Project_127.Overlay
 				return;
             }
 			var dimension = new System.Drawing.Imaging.FrameDimension(gifImg.FrameDimensionsList[0]);
+
 			// Number of frames
 			int frameCount = gifImg.GetFrameCount(dimension);
 			for (var i = 0; i < frameCount; i++)

@@ -569,11 +569,11 @@ namespace Project_127.Overlay
 		{
 			MyGTAOverlay.nextChapter();
 			if (MyGTAOverlay.chapterTitle != "")
-            {
+			{
 				MyGTAOverlay.title.text = "Project 1.27 - Overlay - " + MyGTAOverlay.chapterTitle;
 			}
-            else
-            {
+			else
+			{
 				MyGTAOverlay.title.text = NotesLoadedTitle[NotesLoadedIndex];
 			}
 		}
@@ -728,23 +728,30 @@ namespace Project_127.Overlay
 		/// <param name="e"></param>
 		private void btn_cb_Set_OverlayMultiMonitorMode_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
 		{
-			//NoteOverlay.OverlaySettingsChanged();
+			if (Settings.EnableOverlay &&
+				GTAOverlay.OverlayMode == GTAOverlay.OverlayModes.MultiMonitor &&
+				MainWindow.OL_MM != null)
+			{
 
-			MainWindow.OL_MM.Left = 0;
-			MainWindow.OL_MM.Top = 0;
-
-			//NoteOverlay.OverlaySettingsChanged();
+				MainWindow.OL_MM.Left = 0;
+				MainWindow.OL_MM.Top = 0;
+				NoteOverlay.OverlaySetVisible();
+			}
+			else
+			{
+				new Popups.Popup(Popups.Popup.PopupWindowTypes.PopupOk, "This is supposed to be rightclicken when you have\nOverlay enabled, Multi Monitor mode enabled\nand you want to reset the Location of it.").ShowDialog();
+			}
 		}
 
 		bool waitingForSecondRightClick = false;
 
 		private static async void easterEgg()
-        {
+		{
 			// We are very serious people...
 			//if (new System.Random().NextDouble() > .8)
-            {
+			{
 				return;
-            }
+			}
 			var ast = new OverlayAnimationObject("rick");
 			MyGTAOverlay.attach(ast);
 			await Task.Run(async () =>

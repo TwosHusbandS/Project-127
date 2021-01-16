@@ -156,7 +156,7 @@ namespace Project_127
 					{
 						if (AskUser)
 						{
-							Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Component:\n'" + myComponent.GetNiceName() + "'\not found on Disk but needed.\nDo you want to install it?\n(Clicking no might result in Upgrading / Downgrading / Launching being disabled.)");
+							Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Component:\n'" + myComponent.GetNiceName() + "'\nnot found on Disk but needed.\nDo you want to install it?\n(Clicking no might result in Upgrading / Downgrading / Launching being disabled.)");
 							yesno.ShowDialog();
 							if (yesno.DialogResult == true)
 							{
@@ -442,12 +442,13 @@ namespace Project_127
 
 		}
 
-		private void btn_lbl_FilesMain_Name_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+		private void btn_lbl_Component_Name_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
 		{
 			if (e.ClickCount >= 3)
 			{
-				//if (Components.Base.IsInstalled())
-				//{
+				string RealTag = ((Button)sender).Tag.ToString().TrimStart("Files".ToCharArray());
+				Components MyComponent = (Components)System.Enum.Parse(typeof(Components), RealTag);
+
 				Popups.PopupTextbox tmp = new PopupTextbox("Enter forced Version.\nClick cancel,\nif you dont know what youre doing.", "1.0.0.0");
 				tmp.ShowDialog();
 				if (tmp.DialogResult == true)
@@ -460,11 +461,10 @@ namespace Project_127
 					catch { }
 					if (tmpV != new Version("0.0.0.1"))
 					{
-						Components.Base.ForceSetInstalled(tmpV);
+						MyComponent.ForceSetInstalled(tmpV);
 						Refresh();
 					}
 				}
-				//}
 			}
 		}
 
@@ -563,7 +563,7 @@ namespace Project_127
 				case ComponentManager.Components.Base:
 					return LauncherLogic.IsDowngradedGTA(LauncherLogic.DowngradeEmuFilePath);
 				case ComponentManager.Components.SCLDowngradedSC:
-					 return (LauncherLogic.Get_SCL_InstallationState(LauncherLogic.SCL_SC_Installation) == LauncherLogic.SCL_InstallationStates.Downgraded);
+					return (LauncherLogic.Get_SCL_InstallationState(LauncherLogic.SCL_SC_DOWNGRADED) == LauncherLogic.SCL_InstallationStates.Downgraded);
 				case ComponentManager.Components.SCLRockstar124:
 					return LauncherLogic.IsDowngradedGTA(LauncherLogic.DowngradeAlternativeFilePathRockstar124);
 				case ComponentManager.Components.SCLRockstar127:
