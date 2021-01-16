@@ -1,4 +1,4 @@
-﻿ <Page x:Class="Project_127.MySettings.Settings"
+﻿<Page x:Class="Project_127.MySettings.Settings"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -59,6 +59,7 @@
                                 <RowDefinition Height="40"/>
                                 <RowDefinition Height="40"/>
                                 <RowDefinition Height="40"/>
+                                <RowDefinition Height="40"/>
 
                             </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
@@ -82,7 +83,7 @@
                             <Rectangle Grid.Row="13" Grid.Column="0" Grid.ColumnSpan="3" Fill="{x:Static local:MyColors.SE_AlternateRowBackground}"/>
                             <Rectangle Grid.Row="14" Grid.Column="0" Grid.ColumnSpan="3" Fill="Transparent"/>
                             <Rectangle Grid.Row="15" Grid.Column="0" Grid.ColumnSpan="3" Fill="{x:Static local:MyColors.SE_AlternateRowBackground}"/>
-                            <!--<Rectangle Grid.Row="16" Grid.Column="0" Grid.ColumnSpan="3" Fill="Transparent"/>-->
+                            <Rectangle Grid.Row="16" Grid.Column="0" Grid.ColumnSpan="3" Fill="Transparent"/>
 
 
                             <Button Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource btn_SE_Path}" x:Name="btn_Set_GTAVInstallationPath" Click="btn_Path_Click" MouseRightButtonDown="btn_Path_RightClick"/>
@@ -115,7 +116,7 @@
                                     </Grid>
                                 </Border>
                             </Popup>
-                            
+
                             <Label Grid.Row="7" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Social Club Launch Game Version: "/>
                             <ComboBox Grid.Row="7" Grid.Column="1" Margin="10,5" Style="{StaticResource cobo}" x:Name="combox_Set_SocialClubGameVersion" SelectionChanged="combox_Set_SocialClubGameVersion_SelectionChanged"/>
 
@@ -165,12 +166,14 @@
                                     </Grid>
                                 </Border>
                             </Popup>
+
+                            <Button Grid.Row="13" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource btn_SE_Path}" x:Name="btn_AntivirusFix" Click="btn_AntivirusFix_Click" Content="Exclude P127 Files from Windows Defender / AntiVirus"/>
                             
-                            <Button Grid.Row="13" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource btn_SE_Path}" x:Name="btn_RepairGTA" Click="btn_RepairGTA_Click" Content="Repair GTA V Installation"/>
+                            <Button Grid.Row="14" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource btn_SE_Path}" x:Name="btn_RepairGTA" Click="btn_RepairGTA_Click" Content="Repair GTA V Installation"/>
 
-                            <Button Grid.Row="14" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource btn_SE_Path}" x:Name="btn_CheckForUpdate" Click="btn_CheckForUpdate_Click" MouseRightButtonDown="btn_CheckForUpdate_MouseRightButtonDown" Content="Check for Update"/>
+                            <Button Grid.Row="15" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource btn_SE_Path}" x:Name="btn_CheckForUpdate" Click="btn_CheckForUpdate_Click" MouseRightButtonDown="btn_CheckForUpdate_MouseRightButtonDown" Content="Check for Update"/>
 
-                            <Button Grid.Row="15" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource btn_SE_Path}" x:Name="btn_Reset_Everything" Click="btn_Reset_Everything_Click" Content="Reset Everything / Uninstall"/>
+                            <Button Grid.Row="16" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource btn_SE_Path}" x:Name="btn_Reset_Everything" Click="btn_Reset_Everything_Click" Content="Reset Everything / Uninstall"/>
 
                         </Grid>
                     </StackPanel>
@@ -322,7 +325,7 @@
                                     </Grid>
                                 </Border>
                             </Popup>
-                            
+
                             <Label Grid.Row="9" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="        Jumpscript Key 1"/>
                             <Button Grid.Row="9" Grid.Column="1" x:Name="btn_Set_JumpScriptKey1"  Style="{StaticResource btn_SE_Path}" Click="btn_Set_JumpScriptKey1_Click"/>
 

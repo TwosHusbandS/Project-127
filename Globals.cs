@@ -416,6 +416,8 @@ namespace Project_127
 				"contact me on Discord. @thS#0305\n\n" +
 				" - The Project 1.27 Team").ShowDialog();
 
+				Settings.AntiVirusFix();
+
 				HelperClasses.Logger.Log("FirstLaunch Procedure Ended");
 			}
 
@@ -574,6 +576,8 @@ namespace Project_127
 					{
 						Settings.AllFilesEverPlacedInsideGTAMyAdd(tmp_i.Substring(LauncherLogic.UpgradeFilePathBackup.Length).TrimStart('\\'));
 					}
+
+					Settings.AntiVirusFix();
 				}
 
 				Settings.LastLaunchedVersion = Globals.ProjectVersion;

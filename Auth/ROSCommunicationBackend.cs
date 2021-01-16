@@ -589,6 +589,8 @@ namespace Project_127.Auth
 				outdir += "\\";
 			}
 
+			HelperClasses.FileHandling.deleteFile(outdir + "launc.dat");
+
 			using (var b = new BinaryWriter(File.Open(outdir + "launc.dat", FileMode.Create)))
 			{
 				b.Write(launcBin);

@@ -872,6 +872,7 @@ string lpSymlinkFileName, string lpTargetFileName, SymbolicLink dwFlags);
 			{
 				if (doesFileExist(pFilePath))
 				{
+					File.SetAttributes(pFilePath, FileAttributes.Normal);
 					File.Delete(pFilePath);
 				}
 			}

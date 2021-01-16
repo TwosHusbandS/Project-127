@@ -49,42 +49,9 @@ TO DO BEFORE INTERNAL TESTING
 - Release Internal Testing
 
 Post 1.1.9.1:
-- [DONE] It will Auth on Auth Button even if Auth is not needed due to SCL
-- [DONE] Process Priority may be set even if disabled
-- [DONE] Fix "internal" popup.
-- [DONE] Fixed "empty" logging at start.
-- [DONE] Link to section of Help (on launch / auth section, when im referring to them in other markdowns)
-- [DONE] Link to overlay_additional in changelog 1.2
-- [DONE] Add new jump script options to changelog
-- [DONE] Bold a few things in the help # about game launching
-- [DONE] Dipose / Hide Taskbar Icon on default Close (ProperExit)
-- [DONE] Settings general has a row too many i think
-- [DONE] UI Text / Rows overlapping in Settings.xaml
-- [DONE] 500 to 7500 sleep on SC Upgrade after game exit.
-- [DONE] add cfg.dat and gtastub to generating debugfile
-- [DONE] Actually checking if components are really installed (on disk)...
-- [DONE] Social Club Switcheroo to take registry into account i guess...test with reloe?
-- [DONE] Social Club Switcheroo Option to overwrite
-- [DONE] Info that rockstar needs to have auto updates disabled
-- [DONE] UX Changes towards reset overlay MM location
-- [DONE] Overlay Multi Monitor DPI Scaling. Shoutout dragon
-- [DONE] Enabling & Quicky disabling Overlay crashed P127. Shoutout dragon
-- [DONE] WPF window is being spam-activated / shown. Theory that its caused by MTL Auth. (Look at Reloe 2, log) [theory correct, "onMTLAuthCompletion" is spamm-called.]
-- [DONE] GTA starting 50 times.
-- [DONE] Jumpscript not being killed
-- [DONE] Repair GTA Installation might crash P127 if "Project_127_Files" does not exist...
-- [DONE] ComponentManager force install all versions.
-- [DONE] Full re-set of whats installed on tripple rightclick refres hin Componenet Manager. Added that to help section.
-- [DONE] Calling SC - Upgrade on Upgraded Game Launch
-- [DONE] Removed old debug logstatements from public version, not needed, code runs fine.
-- [DONE] Removed DebugPopup Option on LoadGif
-- [DONE] [ABONDED IDEA] Think about going from "AllFilesPlacedIntoGTA" to just "DowngradeFiles" so i can delete them safely on upgrade...
-- [DONE] [BUG NOT THERE] Livesplit /  OBS Require Admin again
-- [DONE] ToolTip on Not Installed Componenets fixed.
-- [DONE] Option to enable / disble ScriptHook on Downgraded GTA.
 
 - Copy and paste help.md into information -> help
-- "Translate" stuff above into Changelog / Patchnotes.
+- Unit / Integration Test DownloadManager on everything
 
 - Backend for "Settings.EnableScripthookOnDowngraded" on SCL Binary, Emu Binary, Emu P127 Backend / Launchflags.
 - SCL Failing on my machine...(due to old cfg.dat)
@@ -92,7 +59,6 @@ Post 1.1.9.1:
 - Do we even investigate rickroll? or just leave it out?
 - MTL Failing on first Attempt [Apparently? Not sure if trustworthy...]
 - RGL Crashes / Blackscreens [Apparently? Not sure if trustworthy...]
-- Unit / Integration Test DownloadManager on everything
 
  */
 

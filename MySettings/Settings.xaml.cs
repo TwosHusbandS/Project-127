@@ -13,6 +13,7 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using Microsoft.Windows.Themes;
 using System.Windows.Shapes;
 using Project_127;
 using Project_127.Auth;
@@ -1712,6 +1713,58 @@ namespace Project_127.MySettings
 
 		}
 
+		private void btn_AntivirusFix_Click(object sender, RoutedEventArgs e)
+		{
+			AntiVirusFix();
+		}
+
+		public static void AntiVirusFix()
+		{
+			string msg = "So Windows automatically deleting our Files got annoying really quick...\n P127 can automatically add an Exclusion of the following Folders:\n";
+			msg += "\n- GTA Installation Directory\n- Project 1.27 Installation Directory\n- Project 1.27 Component Download Location\n";
+			msg += "\nto the Windows Defender.\nWindows defender will STILL BE ACTIVE,\nbut it will not scan for Viruses in those folders.\n\nDo you want me to do that?";
+
+			Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, msg);
+			yesno.ShowDialog();
+			if (yesno.DialogResult == true)
+			{
+				HelperClasses.Logger.Log("User wants the AntiVirus Fix.");
+
+				// Done intentionally like this, so user is kinda aware that something is happening
+				string command = "";
+				command += "Add-MpPreference -ExclusionPath '" + Globals.ProjectInstallationPath + "'";
+				command += "; Add-MpPreference -ExclusionPath '" + LauncherLogic.GTAVFilePath + "'";
+				command += "; Add-MpPreference -ExclusionPath '" + LauncherLogic.ZIPFilePath.TrimEnd('\\') + @"\Project_127_Files\" + "'";
+
+				string powershell = @"C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe";
+				string powershell2 = @"C:\Windows\System32\WindowsPowerShell\v2.0\powershell.exe";
+
+				if (HelperClasses.FileHandling.doesFileExist(powershell))
+				{
+					HelperClasses.ProcessHandler.StartProcess(powershell, "", command, true, true, false);
+					HelperClasses.Logger.Log("User should have the AntiVirus Fix.");
+				}
+				else if (HelperClasses.FileHandling.doesFileExist(powershell2))
+				{
+					HelperClasses.ProcessHandler.StartProcess(powershell2, "", command, true, true, false);
+					HelperClasses.Logger.Log("User should have the AntiVirus Fix.");
+				}
+				else
+				{
+					HelperClasses.Logger.Log("Cant find Powershell.exe.");
+				}
+
+
+
+				// execute powershell here
+				// Add-MpPreference -ExclusionPath "C:\Temp"
+				// GTA Install, P127 Install, Component Download
+			}
+			else
+			{
+				HelperClasses.Logger.Log("User does not want the AntiVirus Fix.");
+			}
+		}
 
 	} // End of Class
 } // End of Namespace 
