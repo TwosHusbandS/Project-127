@@ -136,12 +136,12 @@ namespace Project_127.HelperClasses
 			foreach (Process p in tmp)
 			{
 				// Checking if its gtavlauncher or one of the social club executables
-				if ((p.ProcessName.ToLower() == LauncherLogic.SCL_EXE_ADDON_DOWNGRADED.TrimStart('\\').TrimEnd(".exe").ToLower()) ||
-					(p.ProcessName.ToLower() == LauncherLogic.SCL_EXE_ADDON_UPGRADED.TrimStart('\\').TrimEnd(".exe").ToLower()) ||
+				if ((p.ProcessName.ToLower() == LaunchAlternative.SCL_EXE_ADDON_DOWNGRADED.TrimStart('\\').TrimEnd(".exe").ToLower()) ||
+					(p.ProcessName.ToLower() == LaunchAlternative.SCL_EXE_ADDON_UPGRADED.TrimStart('\\').TrimEnd(".exe").ToLower()) ||
 					(p.ProcessName.ToLower() == "gtavlauncher"))
 				{
 					// check if its actually a process from SC Install dir or GTA Install dir
-					if ((!p.HasExited && p.MainModule.FileName.Contains(LauncherLogic.SCL_SC_Installation)) ||
+					if ((!p.HasExited && p.MainModule.FileName.Contains(LaunchAlternative.SCL_SC_Installation)) ||
 						(!p.HasExited && p.MainModule.FileName.Contains(LauncherLogic.GTAVFilePath)))
 					{
 						ProcessHandler.Kill(p);
@@ -157,12 +157,12 @@ namespace Project_127.HelperClasses
 			foreach (Process p in tmp)
 			{
 				// Checking if its gtavlauncher or one of the social club executables
-				if ((p.ProcessName.ToLower() == LauncherLogic.SCL_EXE_ADDON_DOWNGRADED.TrimStart('\\').TrimEnd(".exe").ToLower()) ||
-					(p.ProcessName.ToLower() == LauncherLogic.SCL_EXE_ADDON_UPGRADED.TrimStart('\\').TrimEnd(".exe").ToLower()) ||
+				if ((p.ProcessName.ToLower() == LaunchAlternative.SCL_EXE_ADDON_DOWNGRADED.TrimStart('\\').TrimEnd(".exe").ToLower()) ||
+					(p.ProcessName.ToLower() == LaunchAlternative.SCL_EXE_ADDON_UPGRADED.TrimStart('\\').TrimEnd(".exe").ToLower()) ||
 					(p.ProcessName.ToLower() == "gtavlauncher"))
 				{
 					// check if its actually a process from SC Install dir or GTA Install dir
-					if ((!p.HasExited && p.MainModule.FileName.Contains(LauncherLogic.SCL_SC_Installation)) ||
+					if ((!p.HasExited && p.MainModule.FileName.Contains(LaunchAlternative.SCL_SC_Installation)) ||
 						(!p.HasExited && p.MainModule.FileName.Contains(LauncherLogic.GTAVFilePath)))
 					{
 						ProcessHandler.Kill(p);

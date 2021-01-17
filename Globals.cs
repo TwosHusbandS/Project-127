@@ -587,8 +587,8 @@ namespace Project_127
 			DeleteOldFiles();
 
 			// reading Social club install dir from registry
-			LauncherLogic.SetUpSocialClubRegistryThing();
-			LauncherLogic.SocialClubUpgrade();
+			LaunchAlternative.SetUpSocialClubRegistryThing();
+			LaunchAlternative.SocialClubUpgrade();
 
 			// Throw annoucements
 			HandleAnnouncements();
@@ -634,7 +634,7 @@ namespace Project_127
 		{
 			pipeServer.registerEndpoint("messageBox", (a) =>
 			{
-				MessageBox.Show(Encoding.UTF8.GetString(a));
+				Globals.DebugPopup(Encoding.UTF8.GetString(a));
 				return a;
 			});
 
@@ -1564,15 +1564,23 @@ namespace Project_127
 			// Code for internal mode is in Globals.Internalmode Getter
 
 			// Need to be in following Format
-			// "-CommandLineArg Value"
+			// #-examplearg exampleparam#
+			// or
+			// #-examplearg#
+			// ATM NO SUPPORT FOR #-examplearg "exampleparam"#
+
 			string[] args = Globals.CommandLineArgs;
 
 			for (int i = 0; i <= args.Length - 1; i++)
 			{
-				if (args[i].ToLower() == "-background")
+				// i+1 exists
+				if (i < args.Length - 1)
 				{
-					// i+1 exists
-					if (i < args.Length - 1)
+					// FOR THIS: 
+					// #-examplearg exampleparam#
+
+					// Checks with "2 - part" command line like: "-name test"
+					if (args[i].ToLower() == "-background")
 					{
 						Globals.BackgroundImages Tmp = Globals.BackgroundImages.Main;
 						try
@@ -1585,8 +1593,33 @@ namespace Project_127
 							new Popup(Popup.PopupWindowTypes.PopupOkError, "Error converting Command Line Argument to Background Image.\n" + e.ToString()).ShowDialog();
 						}
 					}
+					else if (args[i].ToLower() == "-authstateoverwrite")
+					{
+						if (args[i].ToLower() == "true")
+						{
+							LauncherLogic.AuthStateOverWrite = true;
+						}
+						else
+						{
+							LauncherLogic.AuthStateOverWrite = false;
+						}
+					}
+					else if (args[i].ToLower() == "-useemudebugfile")
+					{
+						if (args[i].ToLower() == "true")
+						{
+							LauncherLogic.UseEmuConfigFile = true;
+						}
+						else
+						{
+							LauncherLogic.UseEmuConfigFile = false;
+						}
+					}
+
+					continue;
 				}
-				else if (args[i].ToLower() == "-reset")
+				
+				if (args[i].ToLower() == "-reset")
 				{
 					RegeditHandler.DeleteKey();
 
@@ -1608,119 +1641,121 @@ namespace Project_127
 
 					Globals.ProperExit();
 				}
-			}
-		}
+			
+
+	}
+}
 
 
-		/// <summary>
-		/// Deleting all Old Files (Installer and ZIP Files) from the Installation Folder
-		/// </summary>
-		private static void DeleteOldFiles()
+/// <summary>
+/// Deleting all Old Files (Installer and ZIP Files) from the Installation Folder
+/// </summary>
+private static void DeleteOldFiles()
+{
+	HelperClasses.Logger.Log("Checking if there is an old Installer or ZIP Files in the Project InstallationPath during startup procedure.");
+
+	// Looping through all Files in the Installation Path
+	foreach (string myFile in HelperClasses.FileHandling.GetFilesFromFolder(Globals.ProjectInstallationPath))
+	{
+		// If it contains the word installer, delete it
+		if (myFile.ToLower().Contains("installer"))
 		{
-			HelperClasses.Logger.Log("Checking if there is an old Installer or ZIP Files in the Project InstallationPath during startup procedure.");
-
-			// Looping through all Files in the Installation Path
-			foreach (string myFile in HelperClasses.FileHandling.GetFilesFromFolder(Globals.ProjectInstallationPath))
-			{
-				// If it contains the word installer, delete it
-				if (myFile.ToLower().Contains("installer"))
-				{
-					HelperClasses.Logger.Log("Found old installer File ('" + HelperClasses.FileHandling.PathSplitUp(myFile)[1] + "') in the Directory. Will delete it.");
-					HelperClasses.FileHandling.deleteFile(myFile);
-				}
-				// If it is the Name of the ZIP File we download, we delete it
-				if (myFile == Globals.ZipFileDownloadLocation)
-				{
-					HelperClasses.Logger.Log("Found old ZIP File ('" + HelperClasses.FileHandling.PathSplitUp(myFile)[1] + "') in the Directory. Will delete it.");
-					HelperClasses.FileHandling.deleteFile(myFile);
-				}
-				if (myFile.ToLower().Contains("pleaseshow"))
-				{
-					HelperClasses.Logger.Log("Found pleaseshow File in the Directory. Will delete it.");
-					HelperClasses.FileHandling.deleteFile(myFile);
-				}
-				if (myFile.ToLower().Contains("Project 1.27.exe" + ".BACKUP"))
-				{
-					HelperClasses.Logger.Log("Found old build ('.BACKUP'). Will delete it.");
-					HelperClasses.FileHandling.deleteFile(myFile);
-				}
-				if (myFile.ToLower().Contains("dl.zip"))
-				{
-					HelperClasses.Logger.Log("Found zip File ('DL.ZIP'). Will delete it.");
-					HelperClasses.FileHandling.deleteFile(myFile);
-				}
-			}
+			HelperClasses.Logger.Log("Found old installer File ('" + HelperClasses.FileHandling.PathSplitUp(myFile)[1] + "') in the Directory. Will delete it.");
+			HelperClasses.FileHandling.deleteFile(myFile);
 		}
-
-
-		private static void HandleAnnouncements()
+		// If it is the Name of the ZIP File we download, we delete it
+		if (myFile == Globals.ZipFileDownloadLocation)
 		{
-			string MyAnnoucment = HelperClasses.FileHandling.GetXMLTagContent(XML_AutoUpdate, "announcement");
-			if (MyAnnoucment != "")
-			{
-				MyAnnoucment = MyAnnoucment.Replace(@"\n", "\n");
-				new Popup(Popup.PopupWindowTypes.PopupOk, MyAnnoucment);
-			}
+			HelperClasses.Logger.Log("Found old ZIP File ('" + HelperClasses.FileHandling.PathSplitUp(myFile)[1] + "') in the Directory. Will delete it.");
+			HelperClasses.FileHandling.deleteFile(myFile);
 		}
-
-
-
-
-		public static string GetGameInfoForDebug(string pFilePath)
+		if (myFile.ToLower().Contains("pleaseshow"))
 		{
-			Version tmp = HelperClasses.FileHandling.GetVersionFromFile(pFilePath);
-			if (tmp != new Version("0.0.0.1"))
-			{
-				string rtrn = " [" + tmp.ToString();
-
-				try
-				{
-					rtrn += " - " + BuildVersionTable.GetNiceGameVersionString(tmp) + "]";
-				}
-				catch
-				{
-					rtrn += "]";
-				}
-
-				return rtrn;
-
-			}
-			return "";
+			HelperClasses.Logger.Log("Found pleaseshow File in the Directory. Will delete it.");
+			HelperClasses.FileHandling.deleteFile(myFile);
 		}
-
-
-
-
-		/// <summary>
-		/// Replacing substring with other substring, ignores cases. Used for replacing hardlink with copy in some logs when needed
-		/// </summary>
-		/// <param name="input"></param>
-		/// <param name="search"></param>
-		/// <param name="replacement"></param>
-		/// <returns></returns>
-		public static string ReplaceCaseInsensitive(string input, string search, string replacement)
+		if (myFile.ToLower().Contains("Project 1.27.exe" + ".BACKUP"))
 		{
-			string result = Regex.Replace(
-				input,
-				Regex.Escape(search),
-				replacement.Replace("$", "$$"),
-				RegexOptions.IgnoreCase
-			);
-			return result;
+			HelperClasses.Logger.Log("Found old build ('.BACKUP'). Will delete it.");
+			HelperClasses.FileHandling.deleteFile(myFile);
 		}
-
-
-
-
-
-		/// <summary>
-		/// DebugPopup Method. Just opens Messagebox with pMsg
-		/// </summary>
-		/// <param name="pMsg"></param>
-		public static void DebugPopup(string pMsg)
+		if (myFile.ToLower().Contains("dl.zip"))
 		{
-			System.Windows.Forms.MessageBox.Show(pMsg);
+			HelperClasses.Logger.Log("Found zip File ('DL.ZIP'). Will delete it.");
+			HelperClasses.FileHandling.deleteFile(myFile);
 		}
+	}
+}
+
+
+private static void HandleAnnouncements()
+{
+	string MyAnnoucment = HelperClasses.FileHandling.GetXMLTagContent(XML_AutoUpdate, "announcement");
+	if (MyAnnoucment != "")
+	{
+		MyAnnoucment = MyAnnoucment.Replace(@"\n", "\n");
+		new Popup(Popup.PopupWindowTypes.PopupOk, MyAnnoucment);
+	}
+}
+
+
+
+
+public static string GetGameInfoForDebug(string pFilePath)
+{
+	Version tmp = HelperClasses.FileHandling.GetVersionFromFile(pFilePath);
+	if (tmp != new Version("0.0.0.1"))
+	{
+		string rtrn = " [" + tmp.ToString();
+
+		try
+		{
+			rtrn += " - " + BuildVersionTable.GetNiceGameVersionString(tmp) + "]";
+		}
+		catch
+		{
+			rtrn += "]";
+		}
+
+		return rtrn;
+
+	}
+	return "";
+}
+
+
+
+
+/// <summary>
+/// Replacing substring with other substring, ignores cases. Used for replacing hardlink with copy in some logs when needed
+/// </summary>
+/// <param name="input"></param>
+/// <param name="search"></param>
+/// <param name="replacement"></param>
+/// <returns></returns>
+public static string ReplaceCaseInsensitive(string input, string search, string replacement)
+{
+	string result = Regex.Replace(
+		input,
+		Regex.Escape(search),
+		replacement.Replace("$", "$$"),
+		RegexOptions.IgnoreCase
+	);
+	return result;
+}
+
+
+
+
+
+/// <summary>
+/// DebugPopup Method. Just opens Messagebox with pMsg
+/// </summary>
+/// <param name="pMsg"></param>
+public static void DebugPopup(string pMsg)
+{
+	System.Windows.Forms.MessageBox.Show(pMsg);
+}
 
 
 

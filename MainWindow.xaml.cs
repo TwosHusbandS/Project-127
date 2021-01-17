@@ -50,15 +50,15 @@ TO DO BEFORE INTERNAL TESTING
 
 Post 1.1.9.1:
 
-- Copy and paste help.md into information -> help
 - Unit / Integration Test DownloadManager on everything
+- build zip v 14
 
 - Backend for "Settings.EnableScripthookOnDowngraded" on SCL Binary, Emu Binary, Emu P127 Backend / Launchflags.
 - SCL Failing on my machine...(due to old cfg.dat)
 - SCL Failing on Reloes and Yoshis machine.
 - Do we even investigate rickroll? or just leave it out?
 - MTL Failing on first Attempt [Apparently? Not sure if trustworthy...]
-- RGL Crashes / Blackscreens [Apparently? Not sure if trustworthy...]
+- RGL Crashes / Blackscreens sometimes [Apparently? Not sure if trustworthy...]
 
  */
 
@@ -249,6 +249,16 @@ namespace Project_127
 				// Same as other two thingies here lolerino
 				HelperClasses.WindowChangeListener.Start();
 			}
+
+			Globals.DebugPopup("A");
+
+			HelperClasses.FileHandling.deleteFile(LauncherLogic.EmuCfgPath);
+			string[] LaunchOptions = new string[4];
+			LaunchOptions[0] = "PreOrderBonus: \"" + Settings.EnablePreOrderBonus.ToString() + "\"";
+			LaunchOptions[1] = "InGameName: \"" + Settings.InGameName + "\"";
+			LaunchOptions[2] = "SavePath: \"" + Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\Rockstar Games\GTA V\Profiles\Project127\GTA V\0F74F4C4" + "\"";
+			LaunchOptions[3] = "WindowTitleTomfoolery: \"" + Overlay.GTAOverlay.targetWindowBorderless + "\"";
+			HelperClasses.FileHandling.WriteStringToFileOverwrite(LauncherLogic.EmuCfgPath, LaunchOptions);
 		}
 
 		#endregion

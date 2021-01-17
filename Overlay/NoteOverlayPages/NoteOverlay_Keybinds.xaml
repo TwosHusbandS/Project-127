@@ -41,9 +41,9 @@
         <Button Grid.Row="3" Grid.Column="1" Style="{StaticResource btn_SE_Path}" x:Name="btn_OverlayHotkeyNotePrev" Click="btn_OverlayHotkeyNotePrev_Click"/>
         <Label Grid.Row="4" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="  Overlay Load Next Note"/>
         <Button Grid.Row="4" Grid.Column="1" Style="{StaticResource btn_SE_Path}" x:Name="btn_OverlayHotkeyNoteNext" Click="btn_OverlayHotkeyNoteNext_Click"/>
-        <Label Grid.Row="5" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="  Overlay Scroll Left Hotkey"/>
+        <Label Grid.Row="5" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="  Overlay Prev Chapter Hotkey"/>
         <Button Grid.Row="5" Grid.Column="1" Style="{StaticResource btn_SE_Path}" x:Name="btn_OverlayHotkeyScrollLeft" Click="btn_OverlayHotkeyScrollLeft_Click"/>
-        <Label Grid.Row="6" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="  Overlay Scroll Right Hotkey"/>
+        <Label Grid.Row="6" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="  Overlay Next Chapter Hotkey"/>
         <Button Grid.Row="6" Grid.Column="1" Style="{StaticResource btn_SE_Path}" x:Name="btn_OverlayHotkeyScrollRight" Click="btn_OverlayHotkeyScrollRight_Click"/>
 
         <Popup>

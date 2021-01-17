@@ -49,6 +49,7 @@
 * Social Club Downgrading now takes Registry Location into account
 * ToolTip on Not Installed Componenets fixed.
 * Throwing ToolTip to recommend Settings for RockstarGamesLauncher if needed.
+* Improved UX in debug-help options
 
 
 #### BugFixes:
@@ -83,7 +84,9 @@
 * Overlay (and all Listeners and extras) One-Does-All-Logic Method improved.
   * Mainly no longer disposes existing Overlay just to create a new one
 * Stopped WindowChangeListener from getting Garbage Collected
+* Doing what i do best. Moved code around.
 * Add Credential Manager Info on Debug
+* Added Debug Command Line Args for often used testing things as part of general Code Improvement.
 * Not spamming Users (likely) SSD with 100 MB of SC Files every SC Downgrade
 * More efficent and less freezing way of getting dragons github link for SCL and ENV:PATH findings
 * Improved Autoupdater of Installer (checking if URL and file exists)

@@ -187,10 +187,10 @@ namespace Project_127.HelperClasses
 				DebugMessage.Add("    Size of gtastub.exe in BACKUP UpdateFiles Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.UpgradeFilePathBackup.TrimEnd('\\') + @"\gtastub.exe"));
 
 				DebugMessage.Add("Detected Social Club InstallationStates:");
-				DebugMessage.Add("    Detect Social Club InstallationStates SC_INSTALLATION_PATH ('" + LauncherLogic.SCL_SC_Installation + "'): " + LauncherLogic.Get_SCL_InstallationState(LauncherLogic.SCL_SC_Installation));
-				DebugMessage.Add("    Detect Social Club InstallationStates SC_TEMP_BACKUP_PATH ('" + LauncherLogic.SCL_SC_TEMP_BACKUP + "'): " + LauncherLogic.Get_SCL_InstallationState(LauncherLogic.SCL_SC_TEMP_BACKUP));
-				DebugMessage.Add("    Detect Social Club InstallationStates SC_DOWNGRADED_PATH ('" + LauncherLogic.SCL_SC_DOWNGRADED + "'): " + LauncherLogic.Get_SCL_InstallationState(LauncherLogic.SCL_SC_DOWNGRADED));
-				DebugMessage.Add("    Detect Social Club InstallationStates SC_DOWNGRADED_CACHE_PATH ('" + LauncherLogic.SCL_SC_DOWNGRADED_CACHE + "'): " + LauncherLogic.Get_SCL_InstallationState(LauncherLogic.SCL_SC_DOWNGRADED_CACHE));
+				DebugMessage.Add("    Detect Social Club InstallationStates SC_INSTALLATION_PATH ('" + LaunchAlternative.SCL_SC_Installation + "'): " + LaunchAlternative.Get_SCL_InstallationState(LaunchAlternative.SCL_SC_Installation));
+				DebugMessage.Add("    Detect Social Club InstallationStates SC_TEMP_BACKUP_PATH ('" + LaunchAlternative.SCL_SC_TEMP_BACKUP + "'): " + LaunchAlternative.Get_SCL_InstallationState(LaunchAlternative.SCL_SC_TEMP_BACKUP));
+				DebugMessage.Add("    Detect Social Club InstallationStates SC_DOWNGRADED_PATH ('" + LaunchAlternative.SCL_SC_DOWNGRADED + "'): " + LaunchAlternative.Get_SCL_InstallationState(LaunchAlternative.SCL_SC_DOWNGRADED));
+				DebugMessage.Add("    Detect Social Club InstallationStates SC_DOWNGRADED_CACHE_PATH ('" + LaunchAlternative.SCL_SC_DOWNGRADED_CACHE + "'): " + LaunchAlternative.Get_SCL_InstallationState(LaunchAlternative.SCL_SC_DOWNGRADED_CACHE));
 
 				DebugMessage.Add("All possible CFG.dat");
 				string GTAProfilePath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\Rockstar Games\GTA V\Profiles\";

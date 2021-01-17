@@ -173,6 +173,23 @@ namespace Project_127.Overlay
 		}
 
 
+		public static void ResetPosition()
+		{
+			if (Settings.EnableOverlay &&
+			GTAOverlay.OverlayMode == GTAOverlay.OverlayModes.MultiMonitor &&
+			MainWindow.OL_MM != null)
+			{
+
+				MainWindow.OL_MM.Left = 0;
+				MainWindow.OL_MM.Top = 0;
+				NoteOverlay.OverlaySetVisible();
+			}
+			else
+			{
+				Settings.OL_MM_Left = 0;
+				Settings.OL_MM_Top = 0;
+			}
+		}
 
 		// Whatever this sorcery is below this shit...
 

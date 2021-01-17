@@ -505,7 +505,7 @@ namespace Project_127.MySettings
 				if (value != EnableAlternativeLaunchForceCProgramFiles)
 				{
 					SetSetting("EnableAlternativeLaunchForceCProgramFiles", value.ToString());
-					LauncherLogic.SetUpSocialClubRegistryThing();
+					LaunchAlternative.SetUpSocialClubRegistryThing();
 				}
 			}
 		}

@@ -449,14 +449,14 @@ namespace Project_127
 				string RealTag = ((Button)sender).Tag.ToString().TrimStart("Files".ToCharArray());
 				Components MyComponent = (Components)System.Enum.Parse(typeof(Components), RealTag);
 
-				Popups.PopupTextbox tmp = new PopupTextbox("Enter forced Version.\nClick cancel,\nif you dont know what youre doing.", "1.0.0.0");
+				Popups.PopupTextbox tmp = new PopupTextbox("Enter forced Version.\nClick cancel,\nif you dont know what youre doing.", MyComponent.GetInstalledVersion().ToString());
 				tmp.ShowDialog();
 				if (tmp.DialogResult == true)
 				{
 					Version tmpV = new Version("0.0.0.1");
 					try
 					{
-						tmpV = new Version(tmp.MyReturnString);
+						tmpV = new Version(tmp.MyReturnString); 
 					}
 					catch { }
 					if (tmpV != new Version("0.0.0.1"))
@@ -563,7 +563,7 @@ namespace Project_127
 				case ComponentManager.Components.Base:
 					return LauncherLogic.IsDowngradedGTA(LauncherLogic.DowngradeEmuFilePath);
 				case ComponentManager.Components.SCLDowngradedSC:
-					return (LauncherLogic.Get_SCL_InstallationState(LauncherLogic.SCL_SC_DOWNGRADED) == LauncherLogic.SCL_InstallationStates.Downgraded);
+					return (LaunchAlternative.Get_SCL_InstallationState(LaunchAlternative.SCL_SC_DOWNGRADED) == LaunchAlternative.SCL_InstallationStates.Downgraded);
 				case ComponentManager.Components.SCLRockstar124:
 					return LauncherLogic.IsDowngradedGTA(LauncherLogic.DowngradeAlternativeFilePathRockstar124);
 				case ComponentManager.Components.SCLRockstar127:

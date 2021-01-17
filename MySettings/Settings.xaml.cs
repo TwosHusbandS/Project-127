@@ -1214,6 +1214,13 @@ namespace Project_127.MySettings
 		/// <param name="e"></param>
 		private void btn_RepairGTA_Click(object sender, RoutedEventArgs e)
 		{
+			RepairGTA_UserInteraction();
+			MainWindow.MW.UpdateGUIDispatcherTimer();
+		}
+
+
+		public static void RepairGTA_UserInteraction()
+		{
 			if (!LauncherLogic.IsGTAVInstallationPathCorrect())
 			{
 
@@ -1271,11 +1278,7 @@ namespace Project_127.MySettings
 					LauncherLogic.Repair(true);
 				}
 			}
-
-
-			MainWindow.MW.UpdateGUIDispatcherTimer();
 		}
-
 
 		/// <summary>
 		/// Create Backup Click
@@ -1562,19 +1565,7 @@ namespace Project_127.MySettings
 		/// <param name="e"></param>
 		private void btn_cb_Set_EnableOverlayMultiMonitor_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
 		{
-			if (Settings.EnableOverlay &&
-				GTAOverlay.OverlayMode == GTAOverlay.OverlayModes.MultiMonitor &&
-				MainWindow.OL_MM != null)
-			{
-
-				MainWindow.OL_MM.Left = 0;
-				MainWindow.OL_MM.Top = 0;
-				NoteOverlay.OverlaySetVisible();
-			}
-			else
-			{
-				new Popups.Popup(Popups.Popup.PopupWindowTypes.PopupOk, "This is supposed to be rightclicken when you have\nOverlay enabled, Multi Monitor mode enabled\nand you want to reset the Location of it.").ShowDialog();
-			}
+			Overlay.Overlay_MultipleMonitor.ResetPosition();
 		}
 
 		/// <summary>

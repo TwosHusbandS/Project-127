@@ -728,19 +728,7 @@ namespace Project_127.Overlay
 		/// <param name="e"></param>
 		private void btn_cb_Set_OverlayMultiMonitorMode_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
 		{
-			if (Settings.EnableOverlay &&
-				GTAOverlay.OverlayMode == GTAOverlay.OverlayModes.MultiMonitor &&
-				MainWindow.OL_MM != null)
-			{
-
-				MainWindow.OL_MM.Left = 0;
-				MainWindow.OL_MM.Top = 0;
-				NoteOverlay.OverlaySetVisible();
-			}
-			else
-			{
-				new Popups.Popup(Popups.Popup.PopupWindowTypes.PopupOk, "This is supposed to be rightclicken when you have\nOverlay enabled, Multi Monitor mode enabled\nand you want to reset the Location of it.").ShowDialog();
-			}
+			Overlay_MultipleMonitor.ResetPosition();
 		}
 
 		bool waitingForSecondRightClick = false;

@@ -92,14 +92,15 @@ Note:
 P127 IS NOT ACTIVELY BEING WORKED ON AND MAINTAINED BY ME (@thS / TwosHusbandS). BIG BUGS AND ISSUES WILL STILL BE FIXED, BUT DONT EXPECT NEW FEATURES.
 @dr490n / jaredtb MIGHT STILL WORK ON GAME-LAUNCH RELATED THINGS (AND THE OVERLAY), BUT DONT SPAM HIM WITH MESSAGES OR REQUESTS.
 
+### Help, How to get started, Support & Contact
+
+* [Help, How to get started, Support & Contact][help-url]
+
 
 ### Main Features
 
-* [List of Main Features here][help-url]
+* [List of Main Features here][features-url]
 
-### Help
-
-* [Help and How to get started][features-url]
 
 ### Built With
 
