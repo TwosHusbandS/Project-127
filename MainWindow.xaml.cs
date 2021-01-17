@@ -41,19 +41,20 @@ Hybrid code can be found in AAA_HybridCode.
 
 ON RELEASE OF 1.2
 - Release WITHOUT try catch around window listener
-- THINK ABOUT PROCESS KILLER FOR SOCIAL CLUB LOGIC
-- CHECK CHANGELOG / README / HELP / FEATURES FOR "PLACEHOLDER"
 - RELEASE ALL NEW FILES WITH IT (V14, new SCL Binaries)
 
-TO DO BEFORE INTERNAL TESTING
-- Release Internal Testing
-
 Post 1.1.9.1:
-
 - Unit / Integration Test DownloadManager on everything
 - build zip v 14
-
-- Backend for "Settings.EnableScripthookOnDowngraded" on SCL Binary, Emu Binary, Emu P127 Backend / Launchflags.
+- "Settings.EnableScripthookOnDowngraded"
+	>> [DONE] Settings Backend
+	>> [DONE] Settings Frontend
+	>> [DONE] Writing it on emu config
+	>> SCL Binary support
+	>> EMU Binary support
+	   => via config
+	   => via launch flags
+	   => Actual Setting the launch flag when needed...
 - SCL Failing on my machine...(due to old cfg.dat)
 - SCL Failing on Reloes and Yoshis machine.
 - Do we even investigate rickroll? or just leave it out?
@@ -249,16 +250,7 @@ namespace Project_127
 				// Same as other two thingies here lolerino
 				HelperClasses.WindowChangeListener.Start();
 			}
-
-			Globals.DebugPopup("A");
-
-			HelperClasses.FileHandling.deleteFile(LauncherLogic.EmuCfgPath);
-			string[] LaunchOptions = new string[4];
-			LaunchOptions[0] = "PreOrderBonus: \"" + Settings.EnablePreOrderBonus.ToString() + "\"";
-			LaunchOptions[1] = "InGameName: \"" + Settings.InGameName + "\"";
-			LaunchOptions[2] = "SavePath: \"" + Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\Rockstar Games\GTA V\Profiles\Project127\GTA V\0F74F4C4" + "\"";
-			LaunchOptions[3] = "WindowTitleTomfoolery: \"" + Overlay.GTAOverlay.targetWindowBorderless + "\"";
-			HelperClasses.FileHandling.WriteStringToFileOverwrite(LauncherLogic.EmuCfgPath, LaunchOptions);
+			
 		}
 
 		#endregion

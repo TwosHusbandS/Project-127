@@ -472,7 +472,7 @@ namespace Project_127.MySettings
 			}
 			set
 			{
-				if (ComponentManager.RecommendUpgraded())
+				if (ComponentManager.RecommendUpgradedGTA())
 				{
 					SetSetting("EnableAlternativeLaunch", value.ToString());
 					if (!ComponentManager.CheckIfRequiredComponentsAreInstalled(true))
@@ -646,7 +646,7 @@ namespace Project_127.MySettings
 			{
 				if (value != SocialClubLaunchGameVersion)
 				{
-					if (ComponentManager.RecommendUpgraded())
+					if (ComponentManager.RecommendUpgradedGTA())
 					{
 						SetSetting("Version", value);
 						if (!ComponentManager.CheckIfRequiredComponentsAreInstalled(true))
@@ -689,7 +689,7 @@ namespace Project_127.MySettings
 					if (Settings.EnableAlternativeLaunch)
 					{
 						Retailers OldRetailer = Retailer;
-						if (ComponentManager.RecommendUpgraded())
+						if (ComponentManager.RecommendUpgradedGTA())
 						{
 							SetSetting("Retailer", value.ToString());
 							if (value == Retailers.Epic)

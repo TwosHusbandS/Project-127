@@ -273,7 +273,7 @@ namespace Project_127
 
 			AddParagraph(rtb_About, "You are running Project 1.27, a tool for the GTA V Speedrunning Community. This was created for the patch 1.27 downgrade problem, which started in August of 2020. This tool has a number of features, including Downgrading, Upgrading and launching the game.");
 
-			AddParagraph(rtb_About, "This whole Project would not have been possible without the hard work of @dr490n, @Special For, @thS who worked on this for month in their free time, going above and beyond what was required.");
+			AddParagraph(rtb_About, "This whole Project would not have been possible without the hard work of @dr490n, @Special For, @thS who worked on this for months in their free time, going above and beyond what was required.");
 
 			AddHyperlinkText(rtb_About, "https://www.mind.org.uk/donate", "Charity", "If you want to support us, we encourage you to donate to a ", " of your chosing.");
 

@@ -16,6 +16,7 @@
     * Social Club is automatically Downgraded / Upgraded
 	* Removes the need for P127 to have your Auth information (through MTL or LegacyAuth)
 	* Your normal GTA V Installation Settings / Savefiles etc.
+	* Automatically detecting if offline auth token is expired.
 * Added Reset and Uninstall as command line arguments (-reset and -uninstall).
 * Automatic Detection (and Correction) if Rockstar changed our Files in a specific way. This fixes "Downgraded (1.52)"
 * Option to enable / disable the loading of ScriptHook on Downgraded GTA

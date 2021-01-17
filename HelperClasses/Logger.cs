@@ -38,7 +38,7 @@ namespace Project_127.HelperClasses
 			}
 
 
-			string MyCreationDate = HelperClasses.FileHandling.GetCreationDate(Process.GetCurrentProcess().MainModule.FileName);
+			string MyCreationDate = HelperClasses.FileHandling.GetCreationDate(Process.GetCurrentProcess().MainModule.FileName).ToString("yyyy-MM-ddTHH:mm:ss");
 
 			HelperClasses.Logger.Log("-", true, 0);
 			HelperClasses.Logger.Log("-", true, 0);
@@ -128,10 +128,10 @@ namespace Project_127.HelperClasses
 
 				DebugMessage.Add("Project 1.27 Version: '" + Globals.ProjectVersion + "'");
 				DebugMessage.Add("BuildInfo: '" + Globals.BuildInfo + "'");
-				DebugMessage.Add("BuildCreated: '" + HelperClasses.FileHandling.GetCreationDate(Process.GetCurrentProcess().MainModule.FileName) + "'");
-				DebugMessage.Add("BuildCreatedUTC: '" + HelperClasses.FileHandling.GetCreationDate(Process.GetCurrentProcess().MainModule.FileName, true) + "'");
-				DebugMessage.Add("BuildLastModified: '" + HelperClasses.FileHandling.GetCreationDate(Process.GetCurrentProcess().MainModule.FileName) + "'");
-				DebugMessage.Add("BuildLastModifiedUTC: '" + HelperClasses.FileHandling.GetCreationDate(Process.GetCurrentProcess().MainModule.FileName, true) + "'");
+				DebugMessage.Add("BuildCreated: '" + HelperClasses.FileHandling.GetCreationDate(Process.GetCurrentProcess().MainModule.FileName).ToString("yyyy-MM-ddTHH:mm:ss") + "'");
+				DebugMessage.Add("BuildCreatedUTC: '" + HelperClasses.FileHandling.GetCreationDate(Process.GetCurrentProcess().MainModule.FileName, true).ToString("yyyy-MM-ddTHH:mm:ss") + "'");
+				DebugMessage.Add("BuildLastModified: '" + HelperClasses.FileHandling.GetCreationDate(Process.GetCurrentProcess().MainModule.FileName).ToString("yyyy-MM-ddTHH:mm:ss") + "'");
+				DebugMessage.Add("BuildLastModifiedUTC: '" + HelperClasses.FileHandling.GetCreationDate(Process.GetCurrentProcess().MainModule.FileName, true).ToString("yyyy-MM-ddTHH:mm:ss") + "'");
 				DebugMessage.Add("Time Now: '" + DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss") + "'");
 				DebugMessage.Add("Time Now UTC: '" + DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss") + "'");
 				DebugMessage.Add("ZIP Version: '" + Globals.ZipVersion + "'");
@@ -202,8 +202,8 @@ namespace Project_127.HelperClasses
 					if (size > 0)
 					{
 						DebugMessage.Add("    '" + cfgdatPath + "', fileSize: '" + size + "'");
-						DebugMessage.Add("         CreationTime: '" + HelperClasses.FileHandling.GetCreationDate(cfgdatPath) + "', CreationTimeUTC: '" + HelperClasses.FileHandling.GetCreationDate(cfgdatPath, true) + "'"); ;
-						DebugMessage.Add("         LastModified: '" + HelperClasses.FileHandling.GetLastWriteDate(cfgdatPath) + "', LastModifiedUTC: '" + HelperClasses.FileHandling.GetLastWriteDate(cfgdatPath, true) + "'"); ;
+						DebugMessage.Add("         CreationTime: '" + HelperClasses.FileHandling.GetCreationDate(cfgdatPath).ToString("yyyy-MM-ddTHH:mm:ss") + "', CreationTimeUTC: '" + HelperClasses.FileHandling.GetCreationDate(cfgdatPath, true).ToString("yyyy-MM-ddTHH:mm:ss") + "'"); ;
+						DebugMessage.Add("         LastModified: '" + HelperClasses.FileHandling.GetLastWriteDate(cfgdatPath).ToString("yyyy-MM-ddTHH:mm:ss") + "', LastModifiedUTC: '" + HelperClasses.FileHandling.GetLastWriteDate(cfgdatPath, true).ToString("yyyy-MM-ddTHH:mm:ss") + "'"); ;
 					}
 					else
 					{
