@@ -440,7 +440,7 @@ namespace Project_127
 				string RealTag = ((Button)sender).Tag.ToString().TrimStart("Files".ToCharArray());
 				Components MyComponent = (Components)System.Enum.Parse(typeof(Components), RealTag);
 
-				Popups.PopupTextbox tmp = new PopupTextbox("Enter forced Version.\nClick cancel,\nif you dont know what youre doing.", MyComponent.GetInstalledVersion().ToString());
+				Popups.PopupTextbox tmp = new PopupTextbox("Enter forced Version for Component:\n'" + MyComponent + "'.\nClick cancel,\nif you dont know what youre doing.", MyComponent.GetInstalledVersion().ToString());
 				tmp.ShowDialog();
 				if (tmp.DialogResult == true)
 				{
