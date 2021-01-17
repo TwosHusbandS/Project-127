@@ -88,6 +88,7 @@
 * Doing what i do best. Moved code around.
 * Add Credential Manager Info on Debug
 * Added Debug Command Line Args for often used testing things as part of general Code Improvement.
+* Lots of Future-Proofing. With debugoptions, tripplerightclick, official config support, 2 Auth ways, 2 Launch ways.
 * Not spamming Users (likely) SSD with 100 MB of SC Files every SC Downgrade
 * More efficent and less freezing way of getting dragons github link for SCL and ENV:PATH findings
 * Improved Autoupdater of Installer (checking if URL and file exists)
