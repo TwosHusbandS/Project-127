@@ -37,8 +37,9 @@ namespace Project_127.HelperClasses
         /// </summary>
         /// <param name="subassemblyName">Name of subassembly to be installed</param>
         /// <param name="reinstall">Determines whether or not reinstall is enabled</param>
+        /// <param name="reinstallRecurse">Determines whether to reinstall all required assemblies</param>
         /// <returns>Boolean indicating whether install succeded or not</returns>
-        public async Task<bool> getSubassembly(string subassemblyName, bool reinstall = false)
+        public async Task<bool> getSubassembly(string subassemblyName, bool reinstall = false, bool reinstallRecurse = true)
         {
             if (!availableSubassemblies.ContainsKey(subassemblyName))
             {
@@ -46,6 +47,10 @@ namespace Project_127.HelperClasses
             } 
             else if (installedSubassemblies.ContainsKey(subassemblyName) && !reinstall)
             {
+                if (isUpdateAvalailable(subassemblyName))
+                {
+                    return await updateSubssembly(subassemblyName);
+                }
                 return true;
             }
             else
@@ -69,7 +74,7 @@ namespace Project_127.HelperClasses
                 var reqs = s.Select("./requires/subassembly");
                 foreach (XPathNavigator req in reqs)
                 {
-                    await getSubassembly(req.GetAttribute("target", ""));
+                    await getSubassembly(req.GetAttribute("target", ""), reinstall & reinstallRecurse, reinstallRecurse);
                 }
                 if (s.GetAttribute("type", "").ToLower() == "zip")
                 {
@@ -390,7 +395,7 @@ namespace Project_127.HelperClasses
             }
             catch
             {
-                var stat = getSubassembly(from, true).GetAwaiter().GetResult();
+                var stat = getSubassembly(from).GetAwaiter().GetResult();
                 HelperClasses.Logger.Log("Failed to retrieve " + filename);
                 HelperClasses.Logger.Log("Required subassembly " + filename + " missing!");
                 if (!stat)
@@ -689,7 +694,7 @@ namespace Project_127.HelperClasses
                 await updateSubssembly(req.GetAttribute("target", ""));
             }
             
-            return await getSubassembly(subassemblyName, true);
+            return await getSubassembly(subassemblyName, true, false);
         }
 
         /// <summary>
