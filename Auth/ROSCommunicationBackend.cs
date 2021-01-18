@@ -482,6 +482,7 @@ namespace Project_127.Auth
 				}), session.sessionKey);
 			//addLaunchExtension("saveDirOverride", Encoding.UTF8.GetBytes());
 			setFlag(Flags.preorder, Settings.EnablePreOrderBonus);
+			setFlag(Flags.supressASILoading, !Settings.EnableScripthookOnDowngraded);
 			LKey.Add(laflags);
 
 			byte[] reqHeaders = HeaderBuild(
@@ -884,7 +885,7 @@ namespace Project_127.Auth
 		public enum Flags
 		{
 			preorder,
-			RES1,
+			supressASILoading,
 			indicateTheLessThanLegalProcurementOfMotorVehicles,
 			RES3,
 			RES4,

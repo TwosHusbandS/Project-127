@@ -9,6 +9,9 @@ namespace Project_127.Overlay
 {
     class OverlayAnimationObject: overlayObject
     {
+		/// <summary>
+		/// Determines the position of the animation
+		/// </summary>
         public GameOverlay.Drawing.Point position
         {
             get
@@ -26,18 +29,25 @@ namespace Project_127.Overlay
         public bool visible { get; set; }
         public string id { get; private set; }
         public bool linked { get; private set; }
+
+		/// <summary>
+		/// Determines whether overlay scaling is enabled
+		/// </summary>
 		public bool enableScaling { get; set; } 
+
+		/// <summary>
+		/// Determines the opacity of the rendered animation
+		/// </summary>
 		public float opacity { get; set; }
 		
-		private Point point2 { get; set; }
 		private GTAOverlay host;
 		private GameOverlay.Drawing.Graphics gfx;
 		private List<GameOverlay.Drawing.Image> frames = new List<GameOverlay.Drawing.Image>();
 		private int frameIndex = 0;
 		private bool _fillOverlay = false;
-		private System.Threading.Mutex mut = new System.Threading.Mutex();
+		private System.Threading.SemaphoreSlim sem = new System.Threading.SemaphoreSlim(1, 1);
 		private bool ready = false;
-		private double frameFactor = 1;
+		//private double frameFactor = 1;
 		private Rectangle _renderRect;
 		private GameOverlay.Drawing.Image currentFrame
         {
@@ -53,15 +63,22 @@ namespace Project_127.Overlay
             }
         }
 
+		/// <summary>
+		/// Determines the dimensions/positon of the animation
+		/// </summary>
 		public Rectangle renderRect
 		{
 			get
 			{
-				if (enableScaling)
+				if (_fillOverlay)
+				{
+					return new Rectangle(0, 0, host.width, host.height);
+				}
+				else if (enableScaling)
                 {
 					return _renderRect;
                 }
-                else
+				else
                 {
 					return new Rectangle();
                 }
@@ -82,6 +99,9 @@ namespace Project_127.Overlay
             } 
 		}
 
+		/// <summary>
+		/// Determines whether or not the animation will fill the entire overlay
+		/// </summary>
 		public bool fillOverlay
         {
             get
@@ -102,26 +122,36 @@ namespace Project_127.Overlay
             }
         }
 
-		public double FPS
-        {
-            get
-            {
-				return gfx.FPS * frameFactor;
-            }
-            set
-            {
-				frameFactor = value / gfx.FPS;
-            }
-        }
+		/// <summary>
+		/// Determines the FPS of the animation
+		/// </summary>
+		public double FPS { get; set; }
 
+		private double frameFactor
+		{
+			get
+			{
+				return FPS / gfx.FPS;
+			}
+		}
+
+		/// <summary>
+		/// Animation object, used to render frame animations on the overlay
+		/// </summary>
+		/// <param name="id">Identifier of the object</param>
 		public OverlayAnimationObject(string id)
         {
 			this.id = id;
         }
 
+
+		/// <summary>
+		/// Loads frames from a GIF
+		/// </summary>
+		/// <param name="gifImg">GIF Image</param>
 		public async Task loadGif(Image gifImg)
         {
-			mut.WaitOne();
+			sem.Wait();
 			ready = false;
 			if (gifImg.RawFormat.Guid != System.Drawing.Imaging.ImageFormat.Gif.Guid)
             {
@@ -138,13 +168,13 @@ namespace Project_127.Overlay
                 {
 					var bmp = new Bitmap(gifImg);
 					bmp.Save(ms, System.Drawing.Imaging.ImageFormat.Bmp);
-					while (!gfx.IsInitialized && !disposing)
+					while (!host.Initialized && !disposing)
                     {
 						await Task.Delay(100);
                     }
 					if (disposing)
                     {
-						mut.ReleaseMutex();
+						sem.Release();
 						return;
                     }
                     try
@@ -153,13 +183,120 @@ namespace Project_127.Overlay
 					}
                     catch
                     {
+						sem.Release();
 						return;
                     }
 				}
 			}
-			mut.ReleaseMutex();
+			sem.Release();
 			ready = true;
 		}
+
+		/// <summary>
+		/// Deletes all animation frames
+		/// </summary>
+		public async void clearFrames()
+        {
+			ready = false;
+			sem.Wait();
+			frames.Clear();
+			sem.Release();
+        }
+
+		/// <summary>
+		/// Adds a animation frame
+		/// </summary>
+		/// <param name="img">Frame image</param>
+		public async Task addFrame(Image img)
+        {
+			ready = false;
+			sem.Wait();
+			using (var ms = new System.IO.MemoryStream())
+			{
+				while (!host.Initialized && !disposing)
+				{
+					await Task.Delay(100);
+				}
+				img.Save(ms, img.RawFormat);
+				try
+				{
+					addFrame(new GameOverlay.Drawing.Image(gfx, ms.ToArray()));
+				}
+				catch
+				{
+					sem.Release();
+					return;
+				}
+			}
+			sem.Release();
+			ready = true;
+		}
+
+		/// <summary>
+		/// Adds multiple animation frames
+		/// </summary>
+		/// <param name="imgs">Frame images</param>
+		public async void addFrames(IList<Image> imgs)
+		{
+			foreach (var img in imgs)
+            {
+				await addFrame(img);
+				if (disposing)
+                {
+					return;
+                }
+            }
+		}
+
+		/// <summary>
+		/// Adds a animation frame
+		/// </summary>
+		/// <param name="img">Frame image</param>
+		public void addFrame(GameOverlay.Drawing.Image img)
+        {
+			frames.Add(img);
+			ready = true;
+        }
+
+		/// <summary>
+		/// Adds multiple animation frames
+		/// </summary>
+		/// <param name="imgs">Frame images</param>
+		public async void addFrames(IList<GameOverlay.Drawing.Image> imgs)
+		{
+			ready = false;
+			sem.Wait();
+			frames.AddRange(imgs);
+			sem.Release();
+			ready = true;
+		}
+
+		/// <summary>
+		/// Gets an image from a resource identifier
+		/// </summary>
+		/// <param name="u">Resource Identifier</param>
+		/// <returns>Image genned from URI</returns>
+		public async Task<GameOverlay.Drawing.Image> imageFromURI(Uri u)
+        {
+			var res = System.Windows.Application.GetResourceStream(u);
+			using (var ms = new System.IO.MemoryStream())
+            {
+				res.Stream.CopyTo(ms);
+				sem.Wait();
+				while (!host.Initialized)
+				{
+					await Task.Delay(100);
+					if (disposing)
+                    {
+						sem.Release();
+						return null;
+                    }
+				}
+				var img = new GameOverlay.Drawing.Image(gfx, ms.ToArray());
+				sem.Release();
+				return img;
+			}
+        }
 
 		public void render(GameOverlay.Drawing.Graphics gfx = null)
 		{
@@ -206,7 +343,7 @@ namespace Project_127.Overlay
 		protected virtual void Dispose(bool disposing)
 		{
 			this.disposing = true;
-			mut.WaitOne();
+			sem.Wait();
 			if (!disposedValue)
 			{
 				foreach (var frame in frames)
@@ -221,7 +358,7 @@ namespace Project_127.Overlay
 				}
 				disposedValue = true;
 			}
-			mut.ReleaseMutex();
+			sem.Release();
 		}
 
 		public void Dispose()
