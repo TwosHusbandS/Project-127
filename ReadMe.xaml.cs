@@ -273,7 +273,7 @@ namespace Project_127
 
 			AddParagraph(rtb_About, "You are running Project 1.27, a tool for the GTA V Speedrunning Community. This was created for the patch 1.27 downgrade problem, which started in August of 2020. This tool has a number of features, including Downgrading, Upgrading and launching the game.");
 
-			AddParagraph(rtb_About, "This whole Project would not have been possible without the hard work of @dr490n, @Special For, @thS who worked on this for month in their free time, going above and beyond what was required.");
+			AddParagraph(rtb_About, "This whole Project would not have been possible without the hard work of @dr490n, @Special For, @thS who worked on this for months in their free time, going above and beyond what was required.");
 
 			AddHyperlinkText(rtb_About, "https://www.mind.org.uk/donate", "Charity", "If you want to support us, we encourage you to donate to a ", " of your chosing.");
 
@@ -312,6 +312,8 @@ namespace Project_127
 
 			AddParagraph(rtb_Help, "If the dr490n emu not work for you, enable \"Launch through Social Club\" inside General P127 Settings.");
 
+			AddParagraph(rtb_Help, "If the dr490n emu doesnt seem to take some options(InGameName, PreOrderBonus) into account, try launching P127 with the command line args: \"-useemudebugfile true\"");
+			
 			AddParagraph(rtb_Help, "On Legacy Auth: When the Auth / Login appears to load infinitely, re - start the auth - process by hitting the \"X\" inside the top right corner once, and then trying again.If that doesnt work, you can try to re-start Project 1.27, and wait a few  minutes.If its still not working, Rockstar just might not like your IP.In this case try using a Hotspot from your phone or a VPN or any other internet connection.");
 
 			AddParagraph(rtb_Help, "On Legacy Auth: When P127 crashes just when you are expected to login(on click of Auth Button, or on Game Launch when not logged in already), you might fail to connect to Rockstar Server. Make sure you are connected to the internet.");

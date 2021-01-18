@@ -23,7 +23,7 @@ namespace Project_127.Overlay
 		public static bool DebugMode = false;
 		public const string targetWindowDebug = "TeamSpeak 3";
 		public const string targetWindowBorderlessDefault = "Grand Theft Auto V";
-		public const string targetWindowBorderlessEasterEgg = "Stealy Whealy Automobiley";
+		public const string targetWindowBorderlessEasterEgg = "Stealy Wheely Automobiley 5";
 		public const string targetWindowMultiMonitor = "P127 - GameOverlay";
 
 		public static bool indicateTheLessThanLegalProcurementOfMotorVehicles = false;

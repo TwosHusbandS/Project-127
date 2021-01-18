@@ -1228,7 +1228,7 @@ namespace Project_127.MySettings
 
 				string msg = "Error: GTA V Installation Path incorrect.\nGTAV Installation Path: '" + LauncherLogic.GTAVFilePath + "'";
 
-				if (Globals.Branch != "master")
+				if (Globals.P127Branch != "master")
 				{
 					Popup yesno2 = new Popup(Popup.PopupWindowTypes.PopupYesNo, msg + "\n. Force this Repair?");
 					yesno2.ShowDialog();
@@ -1362,13 +1362,16 @@ namespace Project_127.MySettings
 		/// <param name="e"></param>
 		private void lbl_SettingsHeader_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
 		{
-			if (SettingsState == SettingsStates.General)
+			if (e.ClickCount >= 3)
 			{
-				new PopupMode().ShowDialog();
-			}
-			else if (SettingsState == SettingsStates.GTA)
-			{
-				btn_SettingsGTA_MouseRightButtonDown(null, null);
+				if (SettingsState == SettingsStates.General)
+				{
+					new PopupMode().ShowDialog();
+				}
+				else if (SettingsState == SettingsStates.GTA)
+				{
+					btn_SettingsGTA_MouseRightButtonDown(null, null);
+				}
 			}
 		}
 
@@ -1575,7 +1578,10 @@ namespace Project_127.MySettings
 		/// <param name="e"></param>
 		private void btn_SettingsGeneral_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
 		{
-			new PopupMode().ShowDialog();
+			if (e.ClickCount >= 3)
+			{
+				new PopupMode().ShowDialog();
+			}
 		}
 
 		/// <summary>
@@ -1599,7 +1605,7 @@ namespace Project_127.MySettings
 				}
 				else if (tb.MyReturnString != "")
 				{
-					string DLLinkBranch = "https://github.com/TwosHusbandS/Project-127/raw/" + Globals.Branch + "/Installer/Builds/" + tb.MyReturnString.TrimEnd(".exe") + ".exe";
+					string DLLinkBranch = "https://github.com/TwosHusbandS/Project-127/raw/" + Globals.P127Branch + "/Installer/Builds/" + tb.MyReturnString.TrimEnd(".exe") + ".exe";
 					string DLLinkMaster = "https://github.com/TwosHusbandS/Project-127/raw/Master" + "/Installer/Builds/" + tb.MyReturnString.TrimEnd(".exe") + ".exe";
 					HelperClasses.Logger.Log("Importing Build. Links: ");
 					HelperClasses.Logger.Log("DLLinkBranch: " + DLLinkBranch);
@@ -1626,21 +1632,14 @@ namespace Project_127.MySettings
 		}
 
 
-
 		private void btn_SettingsGTA_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
 		{
 			if (LauncherLogic.GameState == LauncherLogic.GameStates.NonRunning)
 			{
-				if (!Settings.EnableAlternativeLaunch)
-				{
-					ROSCommunicationBackend.setFlag(ROSCommunicationBackend.Flags.indicateTheLessThanLegalProcurementOfMotorVehicles, true);
-					Overlay.GTAOverlay.indicateTheLessThanLegalProcurementOfMotorVehicles = true;
-					new Popup(Popup.PopupWindowTypes.PopupOk, "'Stealy Wheely Automobiley' activated.\nRestart P127 to disable.").ShowDialog();
-				}
-				else
-				{
-					new Popup(Popup.PopupWindowTypes.PopupOk, "Cant do that while launching through Social Club.").ShowDialog();
-				}
+				ROSCommunicationBackend.setFlag(ROSCommunicationBackend.Flags.indicateTheLessThanLegalProcurementOfMotorVehicles, true);
+				Overlay.GTAOverlay.indicateTheLessThanLegalProcurementOfMotorVehicles = true;
+				Settings.GTAWindowTitle = Overlay.GTAOverlay.targetWindowBorderlessEasterEgg;
+				new Popup(Popup.PopupWindowTypes.PopupOk, "'Stealy Wheely Automobiley V' activated.\nRestart P127 to disable.").ShowDialog();
 			}
 			else
 			{
@@ -1665,7 +1664,7 @@ namespace Project_127.MySettings
 			}
 			else
 			{
-				new Popup(Popup.PopupWindowTypes.PopupOk, "No AHK File selected.did").ShowDialog();
+				new Popup(Popup.PopupWindowTypes.PopupOk, "No AHK File selected.").ShowDialog();
 			}
 		}
 

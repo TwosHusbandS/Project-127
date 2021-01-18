@@ -43,7 +43,6 @@
                     </Grid>
 
 
-
                     <Button x:Name="btn_lbl_Mode" Style="{StaticResource btn}" Height="40"  MouseRightButtonDown="btn_lbl_Mode_MouseRightButtonDown" 
                             VerticalAlignment="Top" HorizontalAlignment="Left" HorizontalContentAlignment="Left" FontSize="20" Foreground="{x:Static local:MyColors.MyColorOrange}"
                             Background="Transparent" Margin="10,75,10,10" Width="250" BorderThickness="0"/>

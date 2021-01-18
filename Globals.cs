@@ -80,7 +80,7 @@ namespace Project_127
 			get
 			{
 				string masterURL = "https://raw.githubusercontent.com/TwosHusbandS/Project-127/master/Installer/Update.xml";
-				string modeURL = "https://raw.githubusercontent.com/TwosHusbandS/Project-127/" + Branch.ToLower() + "/Installer/Update.xml";
+				string modeURL = "https://raw.githubusercontent.com/TwosHusbandS/Project-127/" + P127Branch.ToLower() + "/Installer/Update.xml";
 
 				string modeXML = HelperClasses.FileHandling.GetStringFromURL(modeURL, true);
 
@@ -104,7 +104,7 @@ namespace Project_127
 			get
 			{
 				string masterURL = "https://raw.githubusercontent.com/TwosHusbandS/Project-127/master/Installer/DownloadManager.xml";
-				string modeURL = "https://raw.githubusercontent.com/TwosHusbandS/Project-127/" + Branch + "/Installer/DownloadManager.xml";
+				string modeURL = "https://raw.githubusercontent.com/TwosHusbandS/Project-127/" +DMBranch + "/Installer/DownloadManager.xml";
 
 				string modeXML = HelperClasses.FileHandling.GetStringFromURL(modeURL, true);
 				if (!String.IsNullOrWhiteSpace(modeXML))
@@ -126,7 +126,7 @@ namespace Project_127
 			get
 			{
 				string masterURL = "https://raw.githubusercontent.com/TwosHusbandS/Project-127/master/Installer/DownloadManager.xml";
-				string modeURL = "https://raw.githubusercontent.com/TwosHusbandS/Project-127/" + Branch + "/Installer/DownloadManager.xml";
+				string modeURL = "https://raw.githubusercontent.com/TwosHusbandS/Project-127/" + DMBranch + "/Installer/DownloadManager.xml";
 				if (String.IsNullOrWhiteSpace(HelperClasses.FileHandling.GetStringFromURL(modeURL, true)))
 				{
 					return masterURL;
@@ -140,7 +140,7 @@ namespace Project_127
 
 		/// Gets the Branch we are in as actual branch.
 		/// </summary>
-		public static string Branch
+		public static string P127Branch
 		{
 			get
 			{
@@ -148,11 +148,29 @@ namespace Project_127
 				{
 					return "internal";
 				}
-				if (Project_127.MySettings.Settings.Mode.ToLower() == "default")
+				if (Project_127.MySettings.Settings.P127Mode.ToLower() == "default")
 				{
 					return "master";
 				}
-				return Project_127.MySettings.Settings.Mode.ToLower();
+				return Project_127.MySettings.Settings.P127Mode.ToLower();
+			}
+		}
+
+		/// Gets the Branch we are in as actual branch.
+		/// </summary>
+		public static string DMBranch
+		{
+			get
+			{
+				if (InternalMode)
+				{
+					return "internal";
+				}
+				if (Project_127.MySettings.Settings.DMMode.ToLower() == "default")
+				{
+					return "master";
+				}
+				return Project_127.MySettings.Settings.DMMode.ToLower();
 			}
 		}
 
@@ -212,7 +230,7 @@ namespace Project_127
 		/// <summary>
 		/// Property of other Buildinfo. Will be in the top message of logs
 		/// </summary>
-		public static string BuildInfo = "Very Very Special Built for Special";
+		public static string BuildInfo = "P127-V: 1.2, Build Nr: 1";
 
 		/// <summary>
 		/// Returns all Command Line Args as StringArray
@@ -296,11 +314,13 @@ namespace Project_127
 			{"EnableCopyFilesInsteadOfHardlinking", "False"},
 			{"EnableSlowCompare", "False"},
 			{"EnableLegacyAuth", "False"},
+			{"GTAWindowTitle", "Grand Theft Auto V"},
 			{"Version", "127"},
 			//{"EnableCopyFilesInsteadOfSyslinking_SocialClub", "False"},
 			{"ExitWay", "Close"},
 			{"StartWay", "Maximized"},
 			{"Mode", "default"},
+			{"DMMode", "default"},
 	
 			// GTA V Settings
 			{"Retailer", "Steam"},
@@ -484,7 +504,7 @@ namespace Project_127
 					Globals.SetUpDownloadManager(false);
 					ComponentManager.ZIPVersionSwitcheroo();
 
-					Settings.Mode = "default";
+					Settings.P127Mode = "default";
 
 					HelperClasses.FileHandling.createPath(MySaveFile.BackupSavesPath.TrimEnd('\\') + @"\New Folder");
 					HelperClasses.FileHandling.createPath(MySaveFile.BackupSavesPath.TrimEnd('\\') + @"\YouCanRightclick");
@@ -498,12 +518,14 @@ namespace Project_127
 						}
 					}
 					HelperClasses.RegeditHandler.SetValue("TeasingFeatures", "True");
-					// Create Registry Key here...
 				}
 
 
 				if (Settings.LastLaunchedVersion < new Version("1.2.0.0"))
 				{
+					Settings.P127Mode = "default";
+					Settings.DMMode = "default";
+
 					string msg = "Legal Disclaimer:\nWe (and Project 1.27) are not responsible for anything that happens to:\nYour Windows, your harware, your PC,\nyour GTA, your Social Club account etc.\nBy clicking 'OK' you agree to those terms.\n\n- The Project 1.27 Team";
 
 					new Popup(Popup.PopupWindowTypes.PopupOk, msg).ShowDialog();
@@ -620,6 +642,8 @@ namespace Project_127
 			// INIT the Inter-Process-Communication via Named Pipes. Shoutout to dr490n
 
 			initIPC();
+
+			Settings.GTAWindowTitle = GTAOverlay.targetWindowBorderlessDefault;
 
 			// INIT the dynamic text handler for the overlay
 			initDynamicTextGetters();
@@ -1618,7 +1642,7 @@ namespace Project_127
 
 					continue;
 				}
-				
+
 				if (args[i].ToLower() == "-reset")
 				{
 					RegeditHandler.DeleteKey();
@@ -1641,121 +1665,121 @@ namespace Project_127
 
 					Globals.ProperExit();
 				}
-			
-
-	}
-}
 
 
-/// <summary>
-/// Deleting all Old Files (Installer and ZIP Files) from the Installation Folder
-/// </summary>
-private static void DeleteOldFiles()
-{
-	HelperClasses.Logger.Log("Checking if there is an old Installer or ZIP Files in the Project InstallationPath during startup procedure.");
-
-	// Looping through all Files in the Installation Path
-	foreach (string myFile in HelperClasses.FileHandling.GetFilesFromFolder(Globals.ProjectInstallationPath))
-	{
-		// If it contains the word installer, delete it
-		if (myFile.ToLower().Contains("installer"))
-		{
-			HelperClasses.Logger.Log("Found old installer File ('" + HelperClasses.FileHandling.PathSplitUp(myFile)[1] + "') in the Directory. Will delete it.");
-			HelperClasses.FileHandling.deleteFile(myFile);
-		}
-		// If it is the Name of the ZIP File we download, we delete it
-		if (myFile == Globals.ZipFileDownloadLocation)
-		{
-			HelperClasses.Logger.Log("Found old ZIP File ('" + HelperClasses.FileHandling.PathSplitUp(myFile)[1] + "') in the Directory. Will delete it.");
-			HelperClasses.FileHandling.deleteFile(myFile);
-		}
-		if (myFile.ToLower().Contains("pleaseshow"))
-		{
-			HelperClasses.Logger.Log("Found pleaseshow File in the Directory. Will delete it.");
-			HelperClasses.FileHandling.deleteFile(myFile);
-		}
-		if (myFile.ToLower().Contains("Project 1.27.exe" + ".BACKUP"))
-		{
-			HelperClasses.Logger.Log("Found old build ('.BACKUP'). Will delete it.");
-			HelperClasses.FileHandling.deleteFile(myFile);
-		}
-		if (myFile.ToLower().Contains("dl.zip"))
-		{
-			HelperClasses.Logger.Log("Found zip File ('DL.ZIP'). Will delete it.");
-			HelperClasses.FileHandling.deleteFile(myFile);
-		}
-	}
-}
-
-
-private static void HandleAnnouncements()
-{
-	string MyAnnoucment = HelperClasses.FileHandling.GetXMLTagContent(XML_AutoUpdate, "announcement");
-	if (MyAnnoucment != "")
-	{
-		MyAnnoucment = MyAnnoucment.Replace(@"\n", "\n");
-		new Popup(Popup.PopupWindowTypes.PopupOk, MyAnnoucment);
-	}
-}
-
-
-
-
-public static string GetGameInfoForDebug(string pFilePath)
-{
-	Version tmp = HelperClasses.FileHandling.GetVersionFromFile(pFilePath);
-	if (tmp != new Version("0.0.0.1"))
-	{
-		string rtrn = " [" + tmp.ToString();
-
-		try
-		{
-			rtrn += " - " + BuildVersionTable.GetNiceGameVersionString(tmp) + "]";
-		}
-		catch
-		{
-			rtrn += "]";
+			}
 		}
 
-		return rtrn;
 
-	}
-	return "";
-}
+		/// <summary>
+		/// Deleting all Old Files (Installer and ZIP Files) from the Installation Folder
+		/// </summary>
+		private static void DeleteOldFiles()
+		{
+			HelperClasses.Logger.Log("Checking if there is an old Installer or ZIP Files in the Project InstallationPath during startup procedure.");
+
+			// Looping through all Files in the Installation Path
+			foreach (string myFile in HelperClasses.FileHandling.GetFilesFromFolder(Globals.ProjectInstallationPath))
+			{
+				// If it contains the word installer, delete it
+				if (myFile.ToLower().Contains("installer"))
+				{
+					HelperClasses.Logger.Log("Found old installer File ('" + HelperClasses.FileHandling.PathSplitUp(myFile)[1] + "') in the Directory. Will delete it.");
+					HelperClasses.FileHandling.deleteFile(myFile);
+				}
+				// If it is the Name of the ZIP File we download, we delete it
+				if (myFile == Globals.ZipFileDownloadLocation)
+				{
+					HelperClasses.Logger.Log("Found old ZIP File ('" + HelperClasses.FileHandling.PathSplitUp(myFile)[1] + "') in the Directory. Will delete it.");
+					HelperClasses.FileHandling.deleteFile(myFile);
+				}
+				if (myFile.ToLower().Contains("pleaseshow"))
+				{
+					HelperClasses.Logger.Log("Found pleaseshow File in the Directory. Will delete it.");
+					HelperClasses.FileHandling.deleteFile(myFile);
+				}
+				if (myFile.ToLower().Contains("Project 1.27.exe" + ".BACKUP"))
+				{
+					HelperClasses.Logger.Log("Found old build ('.BACKUP'). Will delete it.");
+					HelperClasses.FileHandling.deleteFile(myFile);
+				}
+				if (myFile.ToLower().Contains("dl.zip"))
+				{
+					HelperClasses.Logger.Log("Found zip File ('DL.ZIP'). Will delete it.");
+					HelperClasses.FileHandling.deleteFile(myFile);
+				}
+			}
+		}
+
+
+		private static void HandleAnnouncements()
+		{
+			string MyAnnoucment = HelperClasses.FileHandling.GetXMLTagContent(XML_AutoUpdate, "announcement");
+			if (MyAnnoucment != "")
+			{
+				MyAnnoucment = MyAnnoucment.Replace(@"\n", "\n");
+				new Popup(Popup.PopupWindowTypes.PopupOk, MyAnnoucment);
+			}
+		}
 
 
 
 
-/// <summary>
-/// Replacing substring with other substring, ignores cases. Used for replacing hardlink with copy in some logs when needed
-/// </summary>
-/// <param name="input"></param>
-/// <param name="search"></param>
-/// <param name="replacement"></param>
-/// <returns></returns>
-public static string ReplaceCaseInsensitive(string input, string search, string replacement)
-{
-	string result = Regex.Replace(
-		input,
-		Regex.Escape(search),
-		replacement.Replace("$", "$$"),
-		RegexOptions.IgnoreCase
-	);
-	return result;
-}
+		public static string GetGameInfoForDebug(string pFilePath)
+		{
+			Version tmp = HelperClasses.FileHandling.GetVersionFromFile(pFilePath);
+			if (tmp != new Version("0.0.0.1"))
+			{
+				string rtrn = " [" + tmp.ToString();
+
+				try
+				{
+					rtrn += " - " + BuildVersionTable.GetNiceGameVersionString(tmp) + "]";
+				}
+				catch
+				{
+					rtrn += "]";
+				}
+
+				return rtrn;
+
+			}
+			return "";
+		}
+
+
+
+
+		/// <summary>
+		/// Replacing substring with other substring, ignores cases. Used for replacing hardlink with copy in some logs when needed
+		/// </summary>
+		/// <param name="input"></param>
+		/// <param name="search"></param>
+		/// <param name="replacement"></param>
+		/// <returns></returns>
+		public static string ReplaceCaseInsensitive(string input, string search, string replacement)
+		{
+			string result = Regex.Replace(
+				input,
+				Regex.Escape(search),
+				replacement.Replace("$", "$$"),
+				RegexOptions.IgnoreCase
+			);
+			return result;
+		}
 
 
 
 
 
-/// <summary>
-/// DebugPopup Method. Just opens Messagebox with pMsg
-/// </summary>
-/// <param name="pMsg"></param>
-public static void DebugPopup(string pMsg)
-{
-	System.Windows.Forms.MessageBox.Show(pMsg);
-}
+		/// <summary>
+		/// DebugPopup Method. Just opens Messagebox with pMsg
+		/// </summary>
+		/// <param name="pMsg"></param>
+		public static void DebugPopup(string pMsg)
+		{
+			System.Windows.Forms.MessageBox.Show(pMsg);
+		}
 
 
 

@@ -29,7 +29,7 @@ namespace Project_127.HelperClasses
 			{
 				Logger.Log("Custom Jumpscript found and settings enabled, lets use it.");
 
-				ProcessHandler.StartProcess(Globals.ProjectInstallationPathBinary.TrimEnd('\\') + @"\P127_Jumpscript.exe", Globals.ProjectInstallationPathBinary, "P127_Jumpscript_Custom.ahk");
+				ProcessHandler.StartProcess(Globals.ProjectInstallationPathBinary.TrimEnd('\\') + @"\P127_Jumpscript.exe", pCommandLineArguments: "P127_Jumpscript_Custom.ahk");
 			}
 			else
 			{

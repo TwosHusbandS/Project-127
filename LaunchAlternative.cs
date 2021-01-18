@@ -22,11 +22,38 @@ namespace Project_127
 		public static void Launch()
 		{
 			string filePath = LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\gtastub.exe";
+
+			HelperClasses.Logger.Log("SCL - Launch");
+
 			if (HelperClasses.FileHandling.doesFileExist(filePath))
 			{
+				HelperClasses.Logger.Log("SCL - Launch, GTA Stub exists");
+				if (!IsCfgDatUpToDate())
+				{
+					HelperClasses.Logger.Log("SCL - Launch, cfg.dat is NOT up to date.");
+
+					Popup yesno2 = new Popup(Popup.PopupWindowTypes.PopupYesNo, "The file rockstar uses for offline authentication\nis (probably) expired and wont work.\nUpgrade GTA and launch into main menu\nto generate a new one.\n\nWant me to try to launch anyways?");
+					yesno2.ShowDialog();
+					if (yesno2.DialogResult == true)
+					{
+						HelperClasses.Logger.Log("SCL - Launch, cfg.dat is NOT up to date, user wants to try anyways...lets go");
+					}
+					else
+					{
+						HelperClasses.Logger.Log("SCL - Launch, cfg.dat is NOT up to date, user does NOT want to try anyways...returning here");
+						return;
+					}
+				}
+				else
+				{
+					HelperClasses.Logger.Log("SCL - Launch, cfg.dat IS up to date.");
+				}
+
 				if (SocialClubDowngrade())
 				{
 					LauncherLogic.UpgradeSocialClubAfterGame = true;
+
+					HelperClasses.Logger.Log("SCL - Launch, Social Club Downgrade WAS successfull.");
 
 					int AmountOfCores = Environment.ProcessorCount;
 					if (AmountOfCores < 4)
@@ -42,15 +69,20 @@ namespace Project_127
 					string MyHex = (Possibilities - 1).ToString("X");
 					string cmdLineArgs = @"/c cd /d " + "\"" + LauncherLogic.GTAVFilePath + "\"" + @" && start /affinity " + MyHex + " gtastub.exe -uilanguage " + Settings.ToMyLanguageString(Settings.LanguageSelected).ToLower() + " && exit";
 
+					HelperClasses.Logger.Log("SCL - Launch, Starting GTAStub with cmdlineargs now.");
+
 					Process tmp = GSF.Identity.UserAccountControl.CreateProcessAsStandardUser(@"cmd.exe", cmdLineArgs);
 				}
 				else
 				{
+					HelperClasses.Logger.Log("SCL - Launch, Social Club Downgrade was NOT successfull.");
 					new Popups.Popup(Popups.Popup.PopupWindowTypes.PopupOkError, "Social Club downgrade went wrong.").ShowDialog();
 				}
 			}
 			else
 			{
+				HelperClasses.Logger.Log("SCL - Launch, GTA Stub does NOT exists");
+
 				new Popups.Popup(Popups.Popup.PopupWindowTypes.PopupOkError, "Cant find the required File ('gtastub.exe')\ninside your GTA Installation.\nSomething went wrong").ShowDialog();
 			}
 		}
@@ -187,24 +219,24 @@ namespace Project_127
 				if (Get_SCL_InstallationState(SCL_SC_DOWNGRADED) != SCL_InstallationStates.Downgraded)
 				{
 					// ERROR, RE-INSTALL SOCIAL CLUB DOWNGRADED
-					HelperClasses.Logger.Log("$SC_DOWNGRADE_FILES isnt looking good. Asking User if he wants to re-install", 1);
+					HelperClasses.Logger.Log("SCL - $SC_DOWNGRADE_FILES isnt looking good. Asking User if he wants to re-install", 1);
 
 					string msg = "The Components needed to downgrade Social Club\nare not installed.\nWant to install them now?";
 					Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, msg);
 					yesno.ShowDialog();
 					if (yesno.DialogResult == true)
 					{
-						HelperClasses.Logger.Log("User wants to, lets download.", 1);
+						HelperClasses.Logger.Log("SCL - User wants to, lets download.", 1);
 
 						if (!ComponentManager.Components.SCLDowngradedSC.ReInstall())
 						{
-							HelperClasses.Logger.Log("Install failed. Will abort.", 1);
+							HelperClasses.Logger.Log("SCL - Install failed. Will abort.", 1);
 							return false;
 						}
 					}
 					else
 					{
-						HelperClasses.Logger.Log("User does NOT want it. Will abort.", 1);
+						HelperClasses.Logger.Log("SCL - User does NOT want it. Will abort.", 1);
 						return false;
 					}
 				}
@@ -264,13 +296,13 @@ namespace Project_127
 			// exit if we are already correct
 			if (Get_SCL_InstallationState(SCL_SC_Installation) == SCL_InstallationStates.Downgraded)
 			{
-				HelperClasses.Logger.Log("SC Looks Downgraded already. No need to Downgrade.", 1);
+				HelperClasses.Logger.Log("SCL - SC Looks Downgraded already. No need to Downgrade.", 1);
 				return true;
 			}
 
 			Task.Delay(msDelay).GetAwaiter().GetResult();
 
-			HelperClasses.Logger.Log("Initiating a Social Club Downgrade after " + msDelay + " ms of Delay", 0);
+			HelperClasses.Logger.Log("SCL - Initiating a Social Club Downgrade after " + msDelay + " ms of Delay", 0);
 
 			// KILL ALL PROCESSES
 			HelperClasses.ProcessHandler.SocialClubKillAllProcesses();
@@ -336,12 +368,12 @@ namespace Project_127
 			// returning based on actual folder contents, not what we think should be in there.
 			if (Get_SCL_InstallationState(SCL_SC_Installation) == SCL_InstallationStates.Downgraded)
 			{
-				HelperClasses.Logger.Log("SC Downgrade was sucessfull. Will return true.", 1);
+				HelperClasses.Logger.Log("SCL - SC Downgrade was sucessfull. Will return true.", 1);
 				return true;
 			}
 			else
 			{
-				HelperClasses.Logger.Log("SC Downgrade was NOT sucessfull. Will return FALSE.", 1);
+				HelperClasses.Logger.Log("SCL - SC Downgrade was NOT sucessfull. Will return FALSE.", 1);
 				return false;
 			}
 		}
@@ -357,14 +389,14 @@ namespace Project_127
 		{
 			if (Get_SCL_InstallationState(SCL_SC_Installation) == SCL_InstallationStates.Upgraded)
 			{
-				HelperClasses.Logger.Log("SC Looks Upgraded already. No need to Upgrade.", 1);
+				HelperClasses.Logger.Log("SCL - SC Looks Upgraded already. No need to Upgrade.", 1);
 				return true;
 			}
 
 			// Waiting msDelay if wanted (after GTAClosed)
 			Task.Delay(msDelay).GetAwaiter().GetResult();
 
-			HelperClasses.Logger.Log("Initiating a Social Club Upgrade after " + msDelay + " ms of Delay", 0);
+			HelperClasses.Logger.Log("SCL - Initiating a Social Club Upgrade after " + msDelay + " ms of Delay", 0);
 
 			// KILL ALL PROCESSES
 			HelperClasses.ProcessHandler.SocialClubKillAllProcesses();
@@ -374,7 +406,7 @@ namespace Project_127
 			// If backup is correct
 			if (Get_SCL_InstallationState(SCL_SC_TEMP_BACKUP) == SCL_InstallationStates.Upgraded)
 			{
-				HelperClasses.Logger.Log("Temp / Backup Files are good. Normal Upgrade Procedure.", 1);
+				HelperClasses.Logger.Log("SCL - Temp / Backup Files are good. Normal Upgrade Procedure.", 1);
 
 				// Save "Downgraded_CACHE" if we can
 				if (Get_SCL_InstallationState(SCL_SC_DOWNGRADED_CACHE) != SCL_InstallationStates.Downgraded && Get_SCL_InstallationState(SCL_SC_Installation) == SCL_InstallationStates.Downgraded)
@@ -396,18 +428,18 @@ namespace Project_127
 			else
 			{
 				// install folder and temp folder are both not upgraded
-				HelperClasses.Logger.Log("Neither the Installation nor the Temp Folder are upgraded. Lets see if any of them are Downgraded", 1);
+				HelperClasses.Logger.Log("SCL - Neither the Installation nor the Temp Folder are upgraded. Lets see if any of them are Downgraded", 1);
 
 				// if install dir is Downgraded
 				if (Get_SCL_InstallationState(SCL_SC_Installation) == SCL_InstallationStates.Downgraded)
 				{
 					// keeping it since its usable and will auto-upgrade
-					HelperClasses.Logger.Log("Installation Folder is Downgraded, lets keep it.", 2);
+					HelperClasses.Logger.Log("SCL - Installation Folder is Downgraded, lets keep it.", 2);
 				}
 				else if (Get_SCL_InstallationState(SCL_SC_TEMP_BACKUP) == SCL_InstallationStates.Downgraded)
 				{
-					HelperClasses.Logger.Log("Installation Folder is not Downgraded (nor Updated), Temp Folder is tho.", 1);
-					HelperClasses.Logger.Log("Will apply Temp / Backup anyways, to have a working Social Club Installation.", 1);
+					HelperClasses.Logger.Log("SCL - Installation Folder is not Downgraded (nor Updated), Temp Folder is tho.", 1);
+					HelperClasses.Logger.Log("SCL - Will apply Temp / Backup anyways, to have a working Social Club Installation.", 1);
 
 					tmp.Add(new MyFileOperation(MyFileOperation.FileOperations.Delete, SCL_SC_Installation, "", "Deleting Installation Folder: '" + SCL_SC_Installation + "'", 2, MyFileOperation.FileOrFolder.Folder));
 
@@ -417,18 +449,18 @@ namespace Project_127
 				{
 					// Install and TEMP Backup path both are trash. Maybe we can reuse downgrade cache as new upgraded
 
-					HelperClasses.Logger.Log("Installation Folder is not Downgraded (nor Updated), Temp Folder is not Downgraded (nor Updated) either.", 1);
-					HelperClasses.Logger.Log("Lets see if we can save ourselves with the Downgraded Cache folder.", 1);
+					HelperClasses.Logger.Log("SCL - Installation Folder is not Downgraded (nor Updated), Temp Folder is not Downgraded (nor Updated) either.", 1);
+					HelperClasses.Logger.Log("SCL - Lets see if we can save ourselves with the Downgraded Cache folder.", 1);
 					if (Get_SCL_InstallationState(SCL_SC_DOWNGRADED_CACHE) != SCL_InstallationStates.Trash)
 					{
-						HelperClasses.Logger.Log("SCL_SC_DOWNGRADED_CACHE Folder is not Trash. Yay.", 2);
+						HelperClasses.Logger.Log("SCL - SCL_SC_DOWNGRADED_CACHE Folder is not Trash. Yay.", 2);
 
 						tmp.Add(new MyFileOperation(MyFileOperation.FileOperations.Delete, SCL_SC_Installation, "", "Deleting Installation Folder: '" + SCL_SC_Installation + "'", 2, MyFileOperation.FileOrFolder.Folder));
 						tmp.Add(new MyFileOperation(MyFileOperation.FileOperations.Move, SCL_SC_DOWNGRADED_CACHE, SCL_SC_Installation, "Renaming DowngradedCache ('" + SCL_SC_DOWNGRADED_CACHE + "') to Installation Folder ('" + SCL_SC_Installation + "')", 2, MyFileOperation.FileOrFolder.Folder));
 					}
 					else
 					{
-						HelperClasses.Logger.Log("Welp looks like everything is trash User gotta deal with it I guess.", 1);
+						HelperClasses.Logger.Log("SCL - Welp looks like everything is trash User gotta deal with it I guess.", 1);
 
 					}
 				}
@@ -452,128 +484,39 @@ namespace Project_127
 		}
 
 
-
-
 		#endregion
 
+		public static bool IsCfgDatUpToDate()
+		{
+			HelperClasses.Logger.Log("SCL - Checking if cfg.dat is up to date.", 1);
+
+			string cfgdat = HelperClasses.FileHandling.MostLikelyProfileFolder().TrimEnd('\\') + @"\cfg.dat";
+
+			if (HelperClasses.FileHandling.doesFileExist(cfgdat))
+			{
+				DateTime tmp = HelperClasses.FileHandling.GetLastWriteDate(cfgdat);
+				if (tmp != DateTime.MinValue)
+				{
+					HelperClasses.Logger.Log("SCL - most likely cfg.dat exists (LastWriteDate returns good value).", 2);
+					TimeSpan asdf = DateTime.Now - tmp;
+					if (asdf.TotalDays <= 27)
+					{
+						HelperClasses.Logger.Log("SCL - most likely cfg.dat is less than 27 days old. Will not throw popup", 2);
+						return true;
+					}
+					else
+					{
+						HelperClasses.Logger.Log("SCL - most likely cfg.dat is older than 27 days. Will throw popup", 2);
+						return false;
+					}
+				}
+			}
+			HelperClasses.Logger.Log("SCL - most likely cfg.dat does NOT exists (or LastWriteDate returns garbage). Will throw popup", 2);
+			return false;
+		}
 
 
-		// Method is getting called when it should be.
-		// Since we dont have the files and file mangement yet, you have to make sure files exist and files are in $GTA_Installation_Path
 
-		// This is only being called when 
-		// we are launching downgraded and alternative way of launching is enabled
-
-		// In future / when we have files and file management code this will only be called when Files inside GTA Installation are the correct ones (alternative steam or alternative rockstar)
-
-		// "MySettings.Settings.Retailer" of enum type "MySettings.Settings.Retailers" gives Info which Retailer we have (steam, rockstar, epic)
-
-		// Both not connected to UI, but in effect. Can get and set from registry. Can be changed manually in registry ("True" or "False")
-		// "MySettings.Settings.EnableAlternativeLaunch" bool, gets and sets from registry. If we want to launch through social club. Has to be true, since im checking for it when calling this method.
-		// "MySettings.Settings.EnableCopyFilesInsteadOfHardlinking_SocialClub" bool, gets and sets from registry. if we want to copy instead of hardlinking for social club stuff
-
-		// Point to the paths (probably non existing and empty at this point)
-		// "LauncherLogic.DowngradeAlternativeFilePathSteam"
-		// "LauncherLogic.DowngradeAlternativeFilePathRockstar"
-		// "LauncherLogic.SocialClubFilePathSteam"
-		// "LauncherLogic.SocialClubFilePathRockstar"
-
-
-		//NOTE: this is just testing example code, not meant for final release (yet)
-
-		//var dm = new HelperClasses.DownloadManager(Globals.URL_DownloadManager);// <= xml isn't there yet
-		//switch (MySettings.Settings.Retailer)
-		//{
-		//    case MySettings.Settings.Retailers.Epic:
-		//        //Error
-		//        System.Windows.MessageBox.Show("Socialclub mode not supported on Epic!");
-		//        return;
-		//    case MySettings.Settings.Retailers.Steam:
-		//        if ((dm.getVersion("AM_124_STEAM") == new Version(0, 0) && MySettings.Settings.SocialClubLaunchGameVersion == "124")
-		//            ||(dm.getVersion("AM_127_STEAM") == new Version(0, 0) && MySettings.Settings.SocialClubLaunchGameVersion == "127"))
-		//        {
-
-		//            //Error
-		//            Popups.Popup confirmation = new Popups.Popup(
-		//                Popups.Popup.PopupWindowTypes.PopupYesNo,
-		//                "Required subassembly not installed;\n Would you like to install it?"
-		//                );
-		//            //Add switch logic
-		//            confirmation.ShowDialog();
-		//            if ((bool)confirmation.DialogResult)
-		//            {
-		//                var success = false;
-		//                if (MySettings.Settings.SocialClubLaunchGameVersion == "124")
-		//                {
-		//                    success = dm.getSubassembly("AM_124_STEAM").Result;
-		//                }
-		//                else
-		//                {
-		//                    success = dm.getSubassembly("AM_127_STEAM").Result;
-		//                }
-		//                if (!success)
-		//                {
-		//                    new Popups.Popup(
-		//                        Popups.Popup.PopupWindowTypes.PopupOkError,
-		//                        "Required subassembly failed to install!"
-		//                        ).ShowDialog();
-		//                    return;
-		//                }
-		//            }
-		//            else
-		//            {
-		//                return;
-		//            }
-		//            return;
-		//        }//also check correct files in place
-		//        break;
-		//    case MySettings.Settings.Retailers.Rockstar:
-		//        if ((dm.getVersion("AM_124_ROCKSTAR") == new Version(0, 0) && MySettings.Settings.SocialClubLaunchGameVersion == "124")
-		//            || (dm.getVersion("AM_127_ROCKSTAR") == new Version(0, 0) && MySettings.Settings.SocialClubLaunchGameVersion == "127"))
-		//        {
-		//            //Error
-		//            Popups.Popup confirmation = new Popups.Popup(
-		//                Popups.Popup.PopupWindowTypes.PopupYesNo,
-		//                "Required subassembly not installed;\n Would you like to install it?"
-		//                );
-		//            //Add switch logic
-		//            confirmation.ShowDialog();
-		//            if ((bool)confirmation.DialogResult)
-		//            {
-		//                var success = false;
-		//                if (MySettings.Settings.SocialClubLaunchGameVersion == "124")
-		//                {
-		//                    success = dm.getSubassembly("AM_124_ROCKSTAR").Result;
-		//                }
-		//                else
-		//                {
-		//                    success = dm.getSubassembly("AM_127_ROCKSTAR").Result;
-		//                }
-		//                if (!success)
-		//                {
-		//                    new Popups.Popup(
-		//                        Popups.Popup.PopupWindowTypes.PopupOkError,
-		//                        "Required subassembly failed to install!"
-		//                        ).ShowDialog();
-		//                    return;
-		//                }
-		//            }
-		//            else
-		//            {
-		//                return;
-		//            }
-		//        } //also check correct files in place
-		//        break;
-		//    default:
-		//        goto case MySettings.Settings.Retailers.Epic;
-		//}
-		////Ensured Copy
-		//var targetEXE = System.IO.Path.Combine(MySettings.Settings.GTAVInstallationPath, "Play127.exe");
-		//Process.Start(targetEXE);
-
-
-		// also let me know when you want me to call the Methods regarding Social club installation repair and checks below
-		// Can call them on Game Lauch, on Game exit, on P127 launch, on P127 exit (everything but taskkill and power outtage), pre Downgrade / Upgrade / etc.
 
 	}
 }

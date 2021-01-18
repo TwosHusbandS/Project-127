@@ -35,30 +35,31 @@ Deploy Instructions:
 	Merge branch into master
 
 Comments like "TODO", "TO DO", "CTRLF", "CTRL-F", and "CTRL F" are just ways of finding a specific line quickly via searching
-
 Hybrid code can be found in AAA_HybridCode.
-	
 
 ON RELEASE OF 1.2
-- Release WITHOUT try catch around window listener
-- THINK ABOUT PROCESS KILLER FOR SOCIAL CLUB LOGIC
-- CHECK CHANGELOG / README / HELP / FEATURES FOR "PLACEHOLDER"
+- [DONE] V14s built, hashes and added to Update.xml
+- AUTOUPDATE STUFF (P127 INSTALLER AS WELL AS ZIP)
 - RELEASE ALL NEW FILES WITH IT (V14, new SCL Binaries)
+- WRITE RELEASE NOTES
+- RIGHT_CLICK_README
+- CHECK DOWNLOAD MANAGER FIXES BY DRAGON
+- DRAGONS TO GET ALL BINARIES AND DOWNLOAD MANAGER.XML CORRECT
 
-TO DO BEFORE INTERNAL TESTING
-- Release Internal Testing
+
 
 Post 1.1.9.1:
-
-- Unit / Integration Test DownloadManager on everything
-- build zip v 14
-
-- Backend for "Settings.EnableScripthookOnDowngraded" on SCL Binary, Emu Binary, Emu P127 Backend / Launchflags.
-- SCL Failing on my machine...(due to old cfg.dat)
-- SCL Failing on Reloes and Yoshis machine.
-- Do we even investigate rickroll? or just leave it out?
-- MTL Failing on first Attempt [Apparently? Not sure if trustworthy...]
-- RGL Crashes / Blackscreens sometimes [Apparently? Not sure if trustworthy...]
+- [DONE] Unit / Integration Test DownloadManager on everything
+- [DONE] build zip v 14
+- "Settings.EnableScripthookOnDowngraded"
+	>> [DONE] Settings Backend
+	>> [DONE] Settings Frontend
+	>> [DONE] Writing it on emu config
+	>> SCL Binary support
+	>> [DONE] EMU Binary support
+	   => [DONE] via config
+	   => [DONE] via launch flags
+	   => [DONE] Actual Setting the launch flag when needed...
 
  */
 
@@ -198,7 +199,7 @@ namespace Project_127
 			// Start the Init Process of Logger, Settings, Globals, Regedit here, since we need the Logger in the next Line if it fails...
 			Globals.Init();
 
-			if (Globals.Branch == "internal")
+			if (Globals.P127Branch == "internal")
 			{
 				string msg = "We are in internal mode. We need testing on:\n\n" +
 					"- NoteOverlay" + "\n" +
@@ -216,9 +217,9 @@ namespace Project_127
 			SetButtonMouseOverMagic(btn_Auth);
 			SetButtonMouseOverMagic(btn_Hamburger);
 			Globals.HamburgerMenuState = Globals.HamburgerMenuStates.Hidden;
-			if (Settings.Mode.ToLower() != "default")
+			if (Settings.P127Mode.ToLower() != "default")
 			{
-				MainWindow.MW.btn_lbl_Mode.Content = "Curr Mode: '" + MySettings.Settings.Mode.ToLower() + "'";
+				MainWindow.MW.btn_lbl_Mode.Content = "Curr P127 Mode: '" + MySettings.Settings.P127Mode.ToLower() + "'";
 				MainWindow.MW.btn_lbl_Mode.Visibility = Visibility.Visible;
 			}
 			else
@@ -249,16 +250,6 @@ namespace Project_127
 				// Same as other two thingies here lolerino
 				HelperClasses.WindowChangeListener.Start();
 			}
-
-			Globals.DebugPopup("A");
-
-			HelperClasses.FileHandling.deleteFile(LauncherLogic.EmuCfgPath);
-			string[] LaunchOptions = new string[4];
-			LaunchOptions[0] = "PreOrderBonus: \"" + Settings.EnablePreOrderBonus.ToString() + "\"";
-			LaunchOptions[1] = "InGameName: \"" + Settings.InGameName + "\"";
-			LaunchOptions[2] = "SavePath: \"" + Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\Rockstar Games\GTA V\Profiles\Project127\GTA V\0F74F4C4" + "\"";
-			LaunchOptions[3] = "WindowTitleTomfoolery: \"" + Overlay.GTAOverlay.targetWindowBorderless + "\"";
-			HelperClasses.FileHandling.WriteStringToFileOverwrite(LauncherLogic.EmuCfgPath, LaunchOptions);
 		}
 
 		#endregion

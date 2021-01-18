@@ -336,9 +336,9 @@ namespace Project_127.MySettings
 		}
 
 		/// <summary>
-		/// Settings Mode. Gets and Sets from the Dictionary.
+		/// Settings P127Mode. Mode / Branch for Update.xml Gets and Sets from the Dictionary.
 		/// </summary>
-		public static string Mode
+		public static string P127Mode
 		{
 			get
 			{
@@ -346,22 +346,47 @@ namespace Project_127.MySettings
 			}
 			set
 			{
-				SetSetting("Mode", value);
-
-				if (value.ToLower() != "default")
+				if (value != P127Mode)
 				{
-					MainWindow.MW.btn_lbl_Mode.Content = "Curr Mode: '" + MySettings.Settings.Mode.ToLower() + "'";
-					MainWindow.MW.btn_lbl_Mode.Visibility = Visibility.Visible;
-				}
-				else
-				{
-					MainWindow.MW.btn_lbl_Mode.Content = "";
-					MainWindow.MW.btn_lbl_Mode.Visibility = Visibility.Hidden;
-				}
-				MainWindow.MW.btn_lbl_Mode.ToolTip = MainWindow.MW.btn_lbl_Mode.Content;
+					SetSetting("Mode", value);
 
-				Globals.CheckForUpdate();
-				Globals.SetUpDownloadManager();
+					if (value.ToLower() != "default")
+					{
+						MainWindow.MW.btn_lbl_Mode.Content = "Curr P127 Mode: '" + value.ToLower() + "'";
+						MainWindow.MW.btn_lbl_Mode.Visibility = Visibility.Visible;
+					}
+					else
+					{
+						MainWindow.MW.btn_lbl_Mode.Content = "";
+						MainWindow.MW.btn_lbl_Mode.Visibility = Visibility.Hidden;
+					}
+					MainWindow.MW.btn_lbl_Mode.ToolTip = MainWindow.MW.btn_lbl_Mode.Content;
+
+					Globals.CheckForUpdate();
+				}
+			}
+		}
+
+
+		/// <summary>
+		/// Settings DMMode. Mode / Branch for DownloadManager.xml Gets and Sets from the Dictionary.
+		/// </summary>
+		public static string DMMode
+		{
+			get
+			{
+				return GetSetting("DMMode");
+			}
+			set
+			{
+				if (value != DMMode)
+				{
+					SetSetting("DMMode", value);
+
+					ComponentManager.SetMode(value.ToLower());
+
+					Globals.SetUpDownloadManager();
+				}
 			}
 		}
 
@@ -472,7 +497,7 @@ namespace Project_127.MySettings
 			}
 			set
 			{
-				if (ComponentManager.RecommendUpgraded())
+				if (ComponentManager.RecommendUpgradedGTA())
 				{
 					SetSetting("EnableAlternativeLaunch", value.ToString());
 					if (!ComponentManager.CheckIfRequiredComponentsAreInstalled(true))
@@ -646,7 +671,7 @@ namespace Project_127.MySettings
 			{
 				if (value != SocialClubLaunchGameVersion)
 				{
-					if (ComponentManager.RecommendUpgraded())
+					if (ComponentManager.RecommendUpgradedGTA())
 					{
 						SetSetting("Version", value);
 						if (!ComponentManager.CheckIfRequiredComponentsAreInstalled(true))
@@ -689,7 +714,7 @@ namespace Project_127.MySettings
 					if (Settings.EnableAlternativeLaunch)
 					{
 						Retailers OldRetailer = Retailer;
-						if (ComponentManager.RecommendUpgraded())
+						if (ComponentManager.RecommendUpgradedGTA())
 						{
 							SetSetting("Retailer", value.ToString());
 							if (value == Retailers.Epic)
@@ -1471,6 +1496,19 @@ namespace Project_127.MySettings
 			set
 			{
 				SetSetting("OverlayNotesMain", String.Join(";", value.ToArray()));
+			}
+		}
+
+
+		public static string GTAWindowTitle
+		{
+			get
+			{
+				return GetSetting("GTAWindowTitle");
+			}
+			set
+			{
+				SetSetting("GTAWindowTitle", value);
 			}
 		}
 

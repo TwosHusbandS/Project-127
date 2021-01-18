@@ -8,8 +8,8 @@
     Title="Popup" 
         Background="{x:Static local:MyColors.PU_Background}"
         WindowStyle="None" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" MouseLeftButtonDown="Window_MouseLeftButtonDown"
-        Height="200"
-        Width="400"
+        Height="300"
+        Width="550"
         SizeToContent="Manual"
         Icon="/Artwork/icon.png">
     <Border BorderBrush="{x:Static local:MyColors.PU_BorderBrush}" BorderThickness="2" >
@@ -18,6 +18,8 @@
                 <RowDefinition x:Name="myRow0" Height="*"/>
                 <RowDefinition x:Name="myRow1" Height="*"/>
                 <RowDefinition x:Name="myRow2" Height="*"/>
+                <RowDefinition x:Name="myRow3" Height="*"/>
+                <RowDefinition x:Name="myRow4" Height="*"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition x:Name="myColumn0" Width="*"/>
@@ -25,15 +27,21 @@
                 <ColumnDefinition x:Name="myColumn2" Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <Label x:Name="lbl_Static" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="1" Style="{StaticResource lbl}" Content="Current Mode:"/>
+            <Label x:Name="lbl_Static" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="1" Style="{StaticResource lbl}" Content="Current P127 Mode:"/>
             <Label x:Name="lbl_CurrMode" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" Style="{StaticResource lbl}" Content="''"/>
 
-            <Label x:Name="lbl_Static2" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="1" Style="{StaticResource lbl}" Content="New Mode:"/>
+            <Label x:Name="lbl_Static2" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="1" Style="{StaticResource lbl}" Content="New P127:"/>
             <TextBox x:Name="tb_Main" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Style="{StaticResource tb}" TextChanged="tb_Main_TextChanged" KeyDown="MyTextBox_KeyDown"/>
 
-            <Button x:Name="btn_Reset" Grid.Row="2" Grid.Column="0" Style="{StaticResource PU_btn}" Content="Reset" Click="btn_Reset_Click"/>
-            <Button x:Name="btn_SetNew" Grid.Row="2" Grid.Column="1" Style="{StaticResource PU_btn}" Content="Set Mode" Click="btn_SetNew_Click"/>
-            <Button x:Name="btn_Exit" Grid.Row="2" Grid.Column="2" Style="{StaticResource PU_btn}" Content="Exit" Click="btn_Exit_Click"/>
+            <Label x:Name="lbl_Static_DM" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="1" Style="{StaticResource lbl}" Content="Current DM Mode:"/>
+            <Label x:Name="lbl_CurrMode_DM" Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Style="{StaticResource lbl}" Content="''"/>
+
+            <Label x:Name="lbl_Static2_DM" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="1" Style="{StaticResource lbl}" Content="New DM:"/>
+            <TextBox x:Name="tb_Main_DM" Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2" Style="{StaticResource tb}" TextChanged="tb_Main_TextChanged" KeyDown="MyTextBox_KeyDown"/>
+
+            <Button x:Name="btn_Reset" Grid.Row="4" Grid.Column="0" Style="{StaticResource PU_btn}" Content="Reset" Click="btn_Reset_Click"/>
+            <Button x:Name="btn_SetNew" Grid.Row="4" Grid.Column="1" Style="{StaticResource PU_btn}" Content="Set Mode" Click="btn_SetNew_Click"/>
+            <Button x:Name="btn_Exit" Grid.Row="4" Grid.Column="2" Style="{StaticResource PU_btn}" Content="Exit" Click="btn_Exit_Click"/>
 
         </Grid>
 
