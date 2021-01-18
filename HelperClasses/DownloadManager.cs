@@ -146,11 +146,16 @@ namespace Project_127.HelperClasses
                             {
                                 foreach (var r in reqby)
                                 {
+                                    if (!installedSubassemblies.ContainsKey(r))
+                                    {
+                                        continue;
+                                    }
                                     foreach (var ifile in installedSubassemblies[r].files)
                                     {
                                         if (ifile.name == file)
                                         {
                                             ifile.linked = false;
+                                            break;
                                         }
                                     }
                                     
@@ -192,6 +197,8 @@ namespace Project_127.HelperClasses
                                 System.IO.File.Delete(fullPath);
                             }
                         }
+                        installedSubassemblies[subassemblyName] = subInfo;
+                        updateInstalled();
                         return true;
                     } 
                     else
