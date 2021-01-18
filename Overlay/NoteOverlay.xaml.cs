@@ -738,14 +738,19 @@ namespace Project_127.Overlay
 			// We are very serious people...
 			//if (new System.Random().NextDouble() > .8)
 			{
-				return;
+				//return;
 			}
 			var ast = new OverlayAnimationObject("rick");
 			MyGTAOverlay.attach(ast);
 			await Task.Run(async () =>
 			{
-				var richard = System.Windows.Application.GetResourceStream(new Uri(@"Overlay\richard.gif", UriKind.Relative));
-				await ast.loadGif(System.Drawing.Image.FromStream(richard.Stream));
+				for (int i = 1; i<=50; i++)
+                {
+					var frameName = i.ToString("000") + ".jpg";
+					ast.addFrame(await ast.imageFromURI(new Uri(@"Overlay\richard\" + frameName, UriKind.Relative)));
+                }
+				//var richard = System.Windows.Application.GetResourceStream(new Uri(@"Overlay\richard.gif", UriKind.Relative));
+				//await ast.loadGif(System.Drawing.Image.FromStream(richard.Stream));
 				ast.fillOverlay = true;
 				ast.visible = true;
 				ast.FPS = 10;
