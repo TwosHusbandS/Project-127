@@ -343,15 +343,9 @@ namespace Project_127.Overlay
 		}
 
 		/// <summary>
-		/// Returns bool inidcating whether the overlay is initialized
+		/// Returns bool inidcating whether the overlay is initialized and ready
 		/// </summary>
-		public bool Initialized
-		{
-			get
-			{
-				return _window.IsInitialized;
-			}
-		}
+		public bool Initialized { get; private set; }
 
 		/// <summary>
 		/// Generates the game overlay
@@ -439,6 +433,7 @@ namespace Project_127.Overlay
 
 		private void _window_DrawGraphics(object sender, DrawGraphicsEventArgs e)
 		{
+			Initialized = true;
 			//var wb = new WindowBounds();
 			//WindowHelper.GetWindowBounds(WindowHelper.FindWindow(targetWindow), out wb);
 			var pos = coordFromPos(Position, GetWindowRectangle(WindowHelper.FindWindow(targetWindow)), _window.Width, _window.Height);

@@ -47,7 +47,7 @@ namespace Project_127.Overlay
 		private bool _fillOverlay = false;
 		private System.Threading.SemaphoreSlim sem = new System.Threading.SemaphoreSlim(1, 1);
 		private bool ready = false;
-		private double frameFactor = 1;
+		//private double frameFactor = 1;
 		private Rectangle _renderRect;
 		private GameOverlay.Drawing.Image currentFrame
         {
@@ -70,11 +70,15 @@ namespace Project_127.Overlay
 		{
 			get
 			{
-				if (enableScaling)
+				if (_fillOverlay)
+				{
+					return new Rectangle(0, 0, host.width, host.height);
+				}
+				else if (enableScaling)
                 {
 					return _renderRect;
                 }
-                else
+				else
                 {
 					return new Rectangle();
                 }
@@ -121,17 +125,15 @@ namespace Project_127.Overlay
 		/// <summary>
 		/// Determines the FPS of the animation
 		/// </summary>
-		public double FPS
-        {
-            get
-            {
-				return gfx.FPS * frameFactor;
-            }
-            set
-            {
-				frameFactor = value / gfx.FPS;
-            }
-        }
+		public double FPS { get; set; }
+
+		private double frameFactor
+		{
+			get
+			{
+				return FPS / gfx.FPS;
+			}
+		}
 
 		/// <summary>
 		/// Animation object, used to render frame animations on the overlay
@@ -166,7 +168,7 @@ namespace Project_127.Overlay
                 {
 					var bmp = new Bitmap(gifImg);
 					bmp.Save(ms, System.Drawing.Imaging.ImageFormat.Bmp);
-					while (!gfx.IsInitialized && !disposing)
+					while (!host.Initialized && !disposing)
                     {
 						await Task.Delay(100);
                     }
@@ -211,7 +213,7 @@ namespace Project_127.Overlay
 			sem.Wait();
 			using (var ms = new System.IO.MemoryStream())
 			{
-				while (!gfx.IsInitialized && !disposing)
+				while (!host.Initialized && !disposing)
 				{
 					await Task.Delay(100);
 				}
@@ -281,7 +283,7 @@ namespace Project_127.Overlay
             {
 				res.Stream.CopyTo(ms);
 				sem.Wait();
-				while (!gfx.IsInitialized)
+				while (!host.Initialized)
 				{
 					await Task.Delay(100);
 					if (disposing)
