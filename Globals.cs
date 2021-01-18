@@ -230,7 +230,7 @@ namespace Project_127
 		/// <summary>
 		/// Property of other Buildinfo. Will be in the top message of logs
 		/// </summary>
-		public static string BuildInfo = "Very Very Special Built for Special";
+		public static string BuildInfo = "P127-V: 1.2, Build Nr: 1";
 
 		/// <summary>
 		/// Returns all Command Line Args as StringArray
@@ -314,6 +314,7 @@ namespace Project_127
 			{"EnableCopyFilesInsteadOfHardlinking", "False"},
 			{"EnableSlowCompare", "False"},
 			{"EnableLegacyAuth", "False"},
+			{"GTAWindowTitle", "Grand Theft Auto V"},
 			{"Version", "127"},
 			//{"EnableCopyFilesInsteadOfSyslinking_SocialClub", "False"},
 			{"ExitWay", "Close"},
@@ -641,6 +642,8 @@ namespace Project_127
 			// INIT the Inter-Process-Communication via Named Pipes. Shoutout to dr490n
 
 			initIPC();
+
+			Settings.GTAWindowTitle = GTAOverlay.targetWindowBorderlessDefault;
 
 			// INIT the dynamic text handler for the overlay
 			initDynamicTextGetters();

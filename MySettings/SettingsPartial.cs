@@ -1494,6 +1494,19 @@ namespace Project_127.MySettings
 		}
 
 
+		public static string GTAWindowTitle
+		{
+			get
+			{
+				return GetSetting("GTAWindowTitle");
+			}
+			set
+			{
+				SetSetting("GTAWindowTitle", value);
+			}
+		}
+
+
 		/// <summary>
 		/// Settings EnableRememberMe. Gets and Sets from the Dictionary.
 		/// <summary>

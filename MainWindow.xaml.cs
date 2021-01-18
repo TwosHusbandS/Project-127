@@ -45,18 +45,16 @@ ON RELEASE OF 1.2
 
 Post 1.1.9.1:
 - [DONE] Unit / Integration Test DownloadManager on everything
-- build zip v 14
+- [DONE] build zip v 14
 - "Settings.EnableScripthookOnDowngraded"
 	>> [DONE] Settings Backend
 	>> [DONE] Settings Frontend
 	>> [DONE] Writing it on emu config
 	>> SCL Binary support
-	>> EMU Binary support
-	   => via config
-	   => via launch flags
-	   => Actual Setting the launch flag when needed...
-- SCL Failing on my machine...(due to old cfg.dat)
-- SCL Failing on Reloes and Yoshis machine.
+	>> [DONE] EMU Binary support
+	   => [DONE] via config
+	   => [DONE] via launch flags
+	   => [DONE] Actual Setting the launch flag when needed...
 - Do we even investigate rickroll? or just leave it out?
 - MTL Failing on first Attempt [Apparently? Not sure if trustworthy...]
 - RGL Crashes / Blackscreens sometimes [Apparently? Not sure if trustworthy...]
