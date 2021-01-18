@@ -97,30 +97,30 @@ namespace Project_127
 
 		public static bool RecommendUpgradedGTA()
 		{
-			HelperClasses.Logger.Log("Recommending an Upgraded GTA before Uninstall / Updating Componenets.");
+			HelperClasses.Logger.Log("ComponentMngr - Recommending an Upgraded GTA before Uninstall / Updating Componenets.");
 			if (LauncherLogic.InstallationState != LauncherLogic.InstallationStates.Upgraded)
 			{
-				HelperClasses.Logger.Log("GTA NOT Upgraded. Asking User", 1);
+				HelperClasses.Logger.Log("ComponentMngr - GTA NOT Upgraded. Asking User", 1);
 
 				Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "We need to Upgrade before doing that.\nAfter that you can Downgrade again.\nDo you want to Upgrade now?");
 				yesno.ShowDialog();
 				if (yesno.DialogResult == true)
 				{
-					HelperClasses.Logger.Log("User wants Upgrade, lets do it and return true.", 1);
+					HelperClasses.Logger.Log("ComponentMngr - User wants Upgrade, lets do it and return true.", 1);
 
 					LauncherLogic.Upgrade();
 					return true;
 				}
 				else
 				{
-					HelperClasses.Logger.Log("User does NOT want to Upgrade, lets return false.", 1);
+					HelperClasses.Logger.Log("ComponentMngr - User does NOT want to Upgrade, lets return false.", 1);
 
 					return false;
 				}
 			}
 			else
 			{
-				HelperClasses.Logger.Log("Already Upgraded GTA,", 1);
+				HelperClasses.Logger.Log("ComponentMngr - Already Upgraded GTA,", 1);
 				return true;
 			}
 		}
@@ -129,35 +129,45 @@ namespace Project_127
 		public static bool CheckIfRequiredComponentsAreInstalled(bool AskUser = false)
 		{
 			bool rtrn = true;
-			HelperClasses.Logger.Log("Checking if all required Components are installed");
+			HelperClasses.Logger.Log("ComponentMngr - Checking if all required Components are installed. AskUser: '" + AskUser + "'");
 
 			foreach (Components myComponent in RequiredComponentsBasedOnSettings)
 			{
 				if (!myComponent.IsInstalled())
 				{
-					HelperClasses.Logger.Log("Component: '" + myComponent + "' not installed, but needed, will install OR ask user.", 1);
-
 					if (AskUser)
 					{
+						HelperClasses.Logger.Log("ComponentMngr - Component: '" + myComponent + "' not installed, but needed, will ask user.", 1);
+
 						Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Component:\n'" + myComponent.GetNiceName() + "'\nmissing but needed.\nDo you want to install it?\n(Clicking no might result in Upgrading / Downgrading / Launching being disabled.)");
 						yesno.ShowDialog();
 						if (yesno.DialogResult == true)
 						{
+							HelperClasses.Logger.Log("ComponentMngr - User wants it, installing. Will log if install failed.", 2);
+
 							if (!myComponent.Install())
 							{
+								HelperClasses.Logger.Log("ComponentMngr - Install failed, will return false.", 2);
+
 								rtrn = false;
 							}
 						}
 						else
 						{
+							HelperClasses.Logger.Log("ComponentMngr - User does NOT want it, will return false.", 2);
+
 							rtrn = false;
 						}
 					}
 					else
 					{
+						HelperClasses.Logger.Log("ComponentMngr - Component: '" + myComponent + "' not installed, but needed, will install. Will log if install failed.", 1);
+
 						new Popup(Popup.PopupWindowTypes.PopupOk, "Component:\n'" + myComponent.GetNiceName() + "'\nmissing but needed.\nIt will be downloaded and installed now.").ShowDialog();
 						if (!myComponent.Install())
 						{
+							HelperClasses.Logger.Log("ComponentMngr - Install failed, will return false.", 2);
+
 							rtrn = false;
 						}
 					}
@@ -166,36 +176,46 @@ namespace Project_127
 				{
 					if (!myComponent.IsOnDisk())
 					{
-						HelperClasses.Logger.Log("Component: '" + myComponent + "' installed but NOT on disk, but needed, will install OR ask user.", 1);
-
 						if (AskUser)
 						{
+							HelperClasses.Logger.Log("ComponentMngr - Component: '" + myComponent + "' installed but NOT on disk, but needed, ask user. Will log if install failed.", 1);
+
 							Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Component:\n'" + myComponent.GetNiceName() + "'\nnot found on Disk but needed.\nDo you want to install it?\n(Clicking no might result in Upgrading / Downgrading / Launching being disabled.)");
 							yesno.ShowDialog();
 							if (yesno.DialogResult == true)
 							{
+								HelperClasses.Logger.Log("ComponentMngr - User wants it, installing. Will log if install failed.", 2);
+
 								if (!myComponent.ReInstall())
 								{
+									HelperClasses.Logger.Log("ComponentMngr - Install failed, will return false.", 2);
+
 									rtrn = false;
 								}
 							}
 							else
 							{
+								HelperClasses.Logger.Log("ComponentMngr - User does NOT want it, will return false.", 2);
+
 								rtrn = false;
 							}
 						}
 						else
 						{
+							HelperClasses.Logger.Log("ComponentMngr - Component: '" + myComponent + "' installed but NOT on disk, but needed, will install. Will log if install failed.", 1);
+
 							new Popup(Popup.PopupWindowTypes.PopupOk, "Component:\n'" + myComponent.GetNiceName() + "'\nmissing but needed.\nIt will be downloaded and installed now.").ShowDialog();
 							if (!myComponent.ReInstall())
 							{
+								HelperClasses.Logger.Log("ComponentMngr - Install failed, will return false.", 2);
+
 								rtrn = false;
 							}
 						}
 					}
 					else
 					{
-						HelperClasses.Logger.Log("Component: '" + myComponent + "' installed AND on disk", 1);
+						HelperClasses.Logger.Log("ComponentMngr - Component: '" + myComponent + "' installed AND on disk", 1);
 					}
 				}
 			}
@@ -314,6 +334,7 @@ namespace Project_127
 
 			if (MyComponent == Components.Base)
 			{
+				HelperClasses.Logger.Log("ComponentMngr - Cant uninstall Base Component");
 				new Popup(Popup.PopupWindowTypes.PopupOk, "Cant delete our Base Component:\n'" + Components.Base.GetNiceName() + "'").ShowDialog();
 			}
 			else
@@ -322,8 +343,8 @@ namespace Project_127
 				{
 					if (!ComponentManager.RecommendUpgradedGTA())
 					{
+						HelperClasses.Logger.Log("ComponentMngr - Cant uninstall Component: '" + MyComponent + "', since its required and user failed the RecommendUpgradedGTA check");
 						new Popup(Popup.PopupWindowTypes.PopupOk, "Cant uninstall this Component, since its required and we are Downgraded.").ShowDialog();
-						HelperClasses.Logger.Log("Cant uninstall Component: '" + MyComponent + "', since its required and user failed the RecommendUpgradedGTA check");
 						return;
 					}
 				}
@@ -544,10 +565,10 @@ namespace Project_127
 
 		public static void ForceSetInstalled(this ComponentManager.Components Component, Version myVersion)
 		{
-			HelperClasses.Logger.Log("Forcing SetInstalled Component: '" + Component + "' (Subassemblyname: '" + Component.GetAssemblyName() + "') to version: '" + myVersion.ToString() + "'"); ;
+			HelperClasses.Logger.Log("ComponentMngr - Forcing SetInstalled Component: '" + Component + "' (Subassemblyname: '" + Component.GetAssemblyName() + "') to version: '" + myVersion.ToString() + "'"); ;
 			Globals.MyDM.setVersion(Component.GetAssemblyName(), myVersion);
 
-#if DEBUG
+//#if DEBUG
 
 			HelperClasses.Logger.Log("Just forced an Installation SetInstalled. Currerntly this is the State:",4);
 			foreach (ComponentManager.Components myComponent in ComponentManager.AllComponents)
@@ -555,7 +576,7 @@ namespace Project_127
 					HelperClasses.Logger.Log("    Component: '" + myComponent.ToString() + "', Installed: '" + myComponent.IsInstalled() + "'. Version: '" + myComponent.GetInstalledVersion() + "'",5);
 				}
 
-#endif
+//#endif
 
 		}
 
@@ -584,11 +605,11 @@ namespace Project_127
 
 		public static bool UpdateLogic(this ComponentManager.Components Component)
 		{
-			HelperClasses.Logger.Log("Checking if Update for Component: '" + Component + "' (Subassemblyname: '" + Component.GetAssemblyName() + "') is available.");
+			HelperClasses.Logger.Log("ComponentMngr - Checking if Update for Component: '" + Component + "' (Subassemblyname: '" + Component.GetAssemblyName() + "') is available.");
 
 			if (Globals.MyDM.isUpdateAvalailable(Component.GetAssemblyName()))
 			{
-				HelperClasses.Logger.Log("It is");
+				HelperClasses.Logger.Log("ComponentMngr - It is");
 				Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Update for: '" + Component.GetNiceName() + "' available.\nDo you want to Download it?");
 				yesno.ShowDialog();
 				if (yesno.DialogResult == true)
@@ -597,27 +618,27 @@ namespace Project_127
 					{
 						if (ComponentManager.RecommendUpgradedGTA())
 						{
-							HelperClasses.Logger.Log("User wants update. Passed RecommendUpgradedGTA check.");
+							HelperClasses.Logger.Log("ComponentMngr - User wants update. Passed RecommendUpgradedGTA check.");
 							Globals.MyDM.updateSubssembly(Component.GetAssemblyName(), true).GetAwaiter().GetResult();
 							return true;
 						}
 						else
 						{
-							HelperClasses.Logger.Log("User wants update. Failed RecommendUpgradedGTA check. Will abondon update.");
+							HelperClasses.Logger.Log("ComponentMngr - User wants update. Failed RecommendUpgradedGTA check. Will abondon update.");
 							new Popup(Popup.PopupWindowTypes.PopupOk, "Abandoning Update of Component:\n'" + Component.GetNiceName() + "'").ShowDialog();
 							return false;
 						}
 					}
 					else
 					{
-						HelperClasses.Logger.Log("User wants update.");
+						HelperClasses.Logger.Log("ComponentMngr - User wants update.");
 						Globals.MyDM.updateSubssembly(Component.GetAssemblyName(), true).GetAwaiter().GetResult();
 						return true;
 					}
 				}
-				HelperClasses.Logger.Log("User does NOT want update.");
+				HelperClasses.Logger.Log("ComponentMngr - User does NOT want update.");
 			}
-			HelperClasses.Logger.Log("No Update found.");
+			HelperClasses.Logger.Log("ComponentMngr - No Update found.");
 			return false;
 		}
 
@@ -628,7 +649,7 @@ namespace Project_127
 		/// <returns></returns>
 		public static bool Install(this ComponentManager.Components Component)
 		{
-			HelperClasses.Logger.Log("Installing Component: '" + Component + "' (Subassemblyname: '" + Component.GetAssemblyName() + "')"); ;
+			HelperClasses.Logger.Log("ComponentMngr - Installing Component: '" + Component + "' (Subassemblyname: '" + Component.GetAssemblyName() + "')"); ;
 			PopupInstallComponent PIC = new PopupInstallComponent(Component);
 			PIC.ShowDialog();
 			return PIC.rtrn;
@@ -641,7 +662,7 @@ namespace Project_127
 		/// <returns></returns>
 		public static bool ReInstall(this ComponentManager.Components Component)
 		{
-			HelperClasses.Logger.Log("Re-Installing Component: '" + Component + "' (Subassemblyname: '" + Component.GetAssemblyName() + "')"); ;
+			HelperClasses.Logger.Log("ComponentMngr - Re-Installing Component: '" + Component + "' (Subassemblyname: '" + Component.GetAssemblyName() + "')"); ;
 			PopupInstallComponent PIC = new PopupInstallComponent(Component, true);
 			PIC.ShowDialog();
 			return PIC.rtrn;
@@ -654,7 +675,7 @@ namespace Project_127
 		/// <param name="Component"></param>
 		public static void Uninstall(this ComponentManager.Components Component)
 		{
-			HelperClasses.Logger.Log("Uninstalling Component: '" + Component + "' (Subassemblyname: '" + Component.GetAssemblyName() + "')"); ;
+			HelperClasses.Logger.Log("ComponentMngr - Uninstalling Component: '" + Component + "' (Subassemblyname: '" + Component.GetAssemblyName() + "')"); ;
 			Globals.MyDM.delSubassembly(Component.GetAssemblyName());
 		}
 
@@ -665,7 +686,7 @@ namespace Project_127
 		/// <returns></returns>
 		public static bool Verify(this ComponentManager.Components Component)
 		{
-			HelperClasses.Logger.Log("Verifying Component: '" + Component + "' (Subassemblyname: '" + Component.GetAssemblyName() + "')"); ;
+			HelperClasses.Logger.Log("ComponentMngr - Verifying Component: '" + Component + "' (Subassemblyname: '" + Component.GetAssemblyName() + "')"); ;
 			return Globals.MyDM.verifySubassembly(Component.GetAssemblyName()).GetAwaiter().GetResult();
 		}
 
