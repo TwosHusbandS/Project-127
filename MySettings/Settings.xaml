@@ -28,7 +28,7 @@
         <Button x:Name="btn_SettingsGTA" Margin="5,10,5,10" Content="GTA Settings" Grid.Row="1" Grid.Column="1" Click="btn_SettingsGTA_Click" Style="{StaticResource btn_hamburgeritem}" MouseRightButtonDown="btn_SettingsGTA_MouseRightButtonDown"/>
         <Button x:Name="btn_SettingsExtra" Margin="5,10,0,10" Content="Extra Features" Grid.Row="1" Grid.Column="2" Click="btn_SettingsExtra_Click" Style="{StaticResource btn_hamburgeritem}"/>
 
-        <Button Style="{StaticResource btn_SM}" x:Name="btn_Reset" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3" Margin="0,10" Content="Reset Settings" Click="btn_Reset_Click"/>
+        <Button Style="{StaticResource btn_SM}" x:Name="btn_Reset" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3" Margin="0,10" Content="Reset Settings to Default" Click="btn_Reset_Click"/>
 
         <Border  Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" Margin="0,0" BorderBrush="{x:Static local:MyColors.SE_BorderBrush_Inner}" BorderThickness="2" Background="{x:Static local:MyColors.SE_RowBackground}">
             <Grid>

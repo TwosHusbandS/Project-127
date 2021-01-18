@@ -80,7 +80,7 @@ namespace Project_127
 			get
 			{
 				string masterURL = "https://raw.githubusercontent.com/TwosHusbandS/Project-127/master/Installer/Update.xml";
-				string modeURL = "https://raw.githubusercontent.com/TwosHusbandS/Project-127/" + Branch.ToLower() + "/Installer/Update.xml";
+				string modeURL = "https://raw.githubusercontent.com/TwosHusbandS/Project-127/" + P127Branch.ToLower() + "/Installer/Update.xml";
 
 				string modeXML = HelperClasses.FileHandling.GetStringFromURL(modeURL, true);
 
@@ -104,7 +104,7 @@ namespace Project_127
 			get
 			{
 				string masterURL = "https://raw.githubusercontent.com/TwosHusbandS/Project-127/master/Installer/DownloadManager.xml";
-				string modeURL = "https://raw.githubusercontent.com/TwosHusbandS/Project-127/" + Branch + "/Installer/DownloadManager.xml";
+				string modeURL = "https://raw.githubusercontent.com/TwosHusbandS/Project-127/" +DMBranch + "/Installer/DownloadManager.xml";
 
 				string modeXML = HelperClasses.FileHandling.GetStringFromURL(modeURL, true);
 				if (!String.IsNullOrWhiteSpace(modeXML))
@@ -126,7 +126,7 @@ namespace Project_127
 			get
 			{
 				string masterURL = "https://raw.githubusercontent.com/TwosHusbandS/Project-127/master/Installer/DownloadManager.xml";
-				string modeURL = "https://raw.githubusercontent.com/TwosHusbandS/Project-127/" + Branch + "/Installer/DownloadManager.xml";
+				string modeURL = "https://raw.githubusercontent.com/TwosHusbandS/Project-127/" + DMBranch + "/Installer/DownloadManager.xml";
 				if (String.IsNullOrWhiteSpace(HelperClasses.FileHandling.GetStringFromURL(modeURL, true)))
 				{
 					return masterURL;
@@ -140,7 +140,7 @@ namespace Project_127
 
 		/// Gets the Branch we are in as actual branch.
 		/// </summary>
-		public static string Branch
+		public static string P127Branch
 		{
 			get
 			{
@@ -148,11 +148,29 @@ namespace Project_127
 				{
 					return "internal";
 				}
-				if (Project_127.MySettings.Settings.Mode.ToLower() == "default")
+				if (Project_127.MySettings.Settings.P127Mode.ToLower() == "default")
 				{
 					return "master";
 				}
-				return Project_127.MySettings.Settings.Mode.ToLower();
+				return Project_127.MySettings.Settings.P127Mode.ToLower();
+			}
+		}
+
+		/// Gets the Branch we are in as actual branch.
+		/// </summary>
+		public static string DMBranch
+		{
+			get
+			{
+				if (InternalMode)
+				{
+					return "internal";
+				}
+				if (Project_127.MySettings.Settings.DMMode.ToLower() == "default")
+				{
+					return "master";
+				}
+				return Project_127.MySettings.Settings.DMMode.ToLower();
 			}
 		}
 
@@ -301,6 +319,7 @@ namespace Project_127
 			{"ExitWay", "Close"},
 			{"StartWay", "Maximized"},
 			{"Mode", "default"},
+			{"DMMode", "default"},
 	
 			// GTA V Settings
 			{"Retailer", "Steam"},
@@ -484,7 +503,7 @@ namespace Project_127
 					Globals.SetUpDownloadManager(false);
 					ComponentManager.ZIPVersionSwitcheroo();
 
-					Settings.Mode = "default";
+					Settings.P127Mode = "default";
 
 					HelperClasses.FileHandling.createPath(MySaveFile.BackupSavesPath.TrimEnd('\\') + @"\New Folder");
 					HelperClasses.FileHandling.createPath(MySaveFile.BackupSavesPath.TrimEnd('\\') + @"\YouCanRightclick");
@@ -503,7 +522,8 @@ namespace Project_127
 
 				if (Settings.LastLaunchedVersion < new Version("1.2.0.0"))
 				{
-					Settings.Mode = "default";
+					Settings.P127Mode = "default";
+					Settings.DMMode = "default";
 
 					string msg = "Legal Disclaimer:\nWe (and Project 1.27) are not responsible for anything that happens to:\nYour Windows, your harware, your PC,\nyour GTA, your Social Club account etc.\nBy clicking 'OK' you agree to those terms.\n\n- The Project 1.27 Team";
 

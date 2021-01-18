@@ -44,7 +44,7 @@ ON RELEASE OF 1.2
 - RELEASE ALL NEW FILES WITH IT (V14, new SCL Binaries)
 
 Post 1.1.9.1:
-- Unit / Integration Test DownloadManager on everything
+- [DONE] Unit / Integration Test DownloadManager on everything
 - build zip v 14
 - "Settings.EnableScripthookOnDowngraded"
 	>> [DONE] Settings Backend
@@ -199,7 +199,7 @@ namespace Project_127
 			// Start the Init Process of Logger, Settings, Globals, Regedit here, since we need the Logger in the next Line if it fails...
 			Globals.Init();
 
-			if (Globals.Branch == "internal")
+			if (Globals.P127Branch == "internal")
 			{
 				string msg = "We are in internal mode. We need testing on:\n\n" +
 					"- NoteOverlay" + "\n" +
@@ -217,9 +217,9 @@ namespace Project_127
 			SetButtonMouseOverMagic(btn_Auth);
 			SetButtonMouseOverMagic(btn_Hamburger);
 			Globals.HamburgerMenuState = Globals.HamburgerMenuStates.Hidden;
-			if (Settings.Mode.ToLower() != "default")
+			if (Settings.P127Mode.ToLower() != "default")
 			{
-				MainWindow.MW.btn_lbl_Mode.Content = "Curr Mode: '" + MySettings.Settings.Mode.ToLower() + "'";
+				MainWindow.MW.btn_lbl_Mode.Content = "Curr P127 Mode: '" + MySettings.Settings.P127Mode.ToLower() + "'";
 				MainWindow.MW.btn_lbl_Mode.Visibility = Visibility.Visible;
 			}
 			else

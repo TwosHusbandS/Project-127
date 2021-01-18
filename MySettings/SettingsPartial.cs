@@ -336,9 +336,9 @@ namespace Project_127.MySettings
 		}
 
 		/// <summary>
-		/// Settings Mode. Gets and Sets from the Dictionary.
+		/// Settings P127Mode. Mode / Branch for Update.xml Gets and Sets from the Dictionary.
 		/// </summary>
-		public static string Mode
+		public static string P127Mode
 		{
 			get
 			{
@@ -350,7 +350,7 @@ namespace Project_127.MySettings
 
 				if (value.ToLower() != "default")
 				{
-					MainWindow.MW.btn_lbl_Mode.Content = "Curr Mode: '" + MySettings.Settings.Mode.ToLower() + "'";
+					MainWindow.MW.btn_lbl_Mode.Content = "Curr P127 Mode: '" + value.ToLower() + "'";
 					MainWindow.MW.btn_lbl_Mode.Visibility = Visibility.Visible;
 				}
 				else
@@ -361,6 +361,25 @@ namespace Project_127.MySettings
 				MainWindow.MW.btn_lbl_Mode.ToolTip = MainWindow.MW.btn_lbl_Mode.Content;
 
 				Globals.CheckForUpdate();
+			}
+		}
+
+
+		/// <summary>
+		/// Settings DMMode. Mode / Branch for DownloadManager.xml Gets and Sets from the Dictionary.
+		/// </summary>
+		public static string DMMode
+		{
+			get
+			{
+				return GetSetting("DMMode");
+			}
+			set
+			{
+				SetSetting("DMMode", value);
+
+				ComponentManager.SetMode(value.ToLower());
+
 				Globals.SetUpDownloadManager();
 			}
 		}

@@ -21,6 +21,8 @@ namespace Project_127
 	/// </summary>
 	public partial class ComponentManager : Page
 	{
+		private static Label MyDirtyProgramming;
+
 		public enum Components
 		{
 			Base,
@@ -228,6 +230,27 @@ namespace Project_127
 		{
 			InitializeComponent();
 			ButtonMouseOverMagic(btn_Refresh);
+			MyDirtyProgramming = lbl_ComponentManager_Mode;
+			SetMode(MySettings.Settings.DMMode);
+		}
+
+		public static void SetMode(string Mode)
+		{
+			Mode = Mode.ToLower();
+			if (MyDirtyProgramming != null)
+			{
+				if (String.IsNullOrEmpty(Mode) || Mode == "default")
+				{
+					MyDirtyProgramming.Content = "";
+					MyDirtyProgramming.Visibility = Visibility.Hidden;
+				}
+				else
+				{
+					MyDirtyProgramming.Content = "Curr DM Mode: " + Mode;
+					MyDirtyProgramming.Visibility = Visibility.Visible;
+				}
+				MyDirtyProgramming.ToolTip = MyDirtyProgramming.Content;
+			}
 		}
 
 		private void Page_Loaded(object sender, RoutedEventArgs e)
@@ -493,6 +516,84 @@ namespace Project_127
 				}
 			}
 		}
+
+		private void btn_lbl_Mode_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+		{
+			if (e.ClickCount >= 3)
+			{
+				new PopupMode().ShowDialog();
+			}
+		}
+
+
+		private void btn_Uninstall_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+		{
+			if (e.ClickCount >= 3)
+			{
+				Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Did you mean to click this?");
+				yesno.ShowDialog();
+				if (yesno.DialogResult == false)
+				{
+					return;
+				}
+
+				HelperClasses.Logger.Log("ComponentMngr - User wants to hidden import ZIP for Component.");
+				PopupTextbox tmp = new PopupTextbox("Enter the Link provided by us.", "");
+				tmp.ShowDialog();
+				if (HelperClasses.FileHandling.URLExists(tmp.MyReturnString))
+				{
+					HelperClasses.Logger.Log("ComponentMngr - Link ('" + tmp.MyReturnString + "') exists.", 1);
+					
+					string localFilePath = Globals.ProjectInstallationPath.TrimEnd('\\') + @"\CustomFile.zip";
+					HelperClasses.FileHandling.deleteFile(localFilePath);
+					new PopupDownload(tmp.MyReturnString, localFilePath, "Downloading Custom Files").ShowDialog();
+					if (HelperClasses.FileHandling.doesFileExist(localFilePath))
+					{
+						HelperClasses.Logger.Log("ComponentMngr - File post Download found ('" + localFilePath + "').", 1);
+
+						string RealTag = ((Button)sender).Tag.ToString().TrimStart("Files".ToCharArray());
+						Components MyComponent = (Components)System.Enum.Parse(typeof(Components), RealTag);
+
+						HelperClasses.Logger.Log("ComponentMngr - Component: '" + MyComponent + "', ZIPPath where we extract for that one: '" + MyComponent.GetPathWhereZIPIsExtracted() + "'.", 1);
+
+						new PopupProgress(PopupProgress.ProgressTypes.ZIPFile, "Extracting File", null, MyComponent.GetPathWhereZIPIsExtracted()).ShowDialog();
+
+						HelperClasses.Logger.Log("ComponentMngr - Guess the ZIP Extraction worked since we got here...", 1);
+
+						Version FI = MyComponent.GetInstalledVersion();
+						if (FI == new Version("0.0.0.0"))
+						{
+							FI = new Version("1.0.0.0");
+						}
+
+						PopupTextbox tmp2 = new PopupTextbox("Enter the Version you want to force.", FI.ToString());
+						tmp2.ShowDialog();
+
+						try
+						{
+							FI = new Version(tmp2.MyReturnString);
+						}
+						catch { }
+
+						HelperClasses.Logger.Log("ComponentMngr - ForceSetting the Component ('" + MyComponent + "'), to Version: '" + FI.ToString() + "'.", 1);
+
+						MyComponent.ForceSetInstalled(FI);
+
+						Refresh();
+					}
+					else
+					{
+						HelperClasses.Logger.Log("ComponentMngr - File cant be found post DL ('" + localFilePath + "').", 1);
+						new Popup(Popup.PopupWindowTypes.PopupOk, "Cant find the downloaded File on Disk.\nWill abort");
+					}
+				}
+				else
+				{
+					HelperClasses.Logger.Log("ComponentMngr - Link ('" + tmp.MyReturnString + "') does NOT exist.", 1);
+					new Popup(Popup.PopupWindowTypes.PopupOk, "Cant find that File online.\nWill abort");
+				}
+			}
+		}
 	}
 
 
@@ -568,16 +669,37 @@ namespace Project_127
 			HelperClasses.Logger.Log("ComponentMngr - Forcing SetInstalled Component: '" + Component + "' (Subassemblyname: '" + Component.GetAssemblyName() + "') to version: '" + myVersion.ToString() + "'"); ;
 			Globals.MyDM.setVersion(Component.GetAssemblyName(), myVersion);
 
-//#if DEBUG
-
+#if DEBUG
 			HelperClasses.Logger.Log("Just forced an Installation SetInstalled. Currerntly this is the State:",4);
 			foreach (ComponentManager.Components myComponent in ComponentManager.AllComponents)
 				{
-					HelperClasses.Logger.Log("    Component: '" + myComponent.ToString() + "', Installed: '" + myComponent.IsInstalled() + "'. Version: '" + myComponent.GetInstalledVersion() + "'",5);
+					HelperClasses.Logger.Log("    ComponentMngr - Component: '" + myComponent.ToString() + "', Installed: '" + myComponent.IsInstalled() + "'. Version: '" + myComponent.GetInstalledVersion() + "'",5);
 				}
+#endif
 
-//#endif
+		}
 
+		public static string GetPathWhereZIPIsExtracted(this ComponentManager.Components Component)
+		{
+			switch (Component)
+			{
+				case ComponentManager.Components.Base:
+					return LauncherLogic.ZIPFilePath;
+				case ComponentManager.Components.SCLDowngradedSC:
+					return LaunchAlternative.SCL_SC_DOWNGRADED;
+				case ComponentManager.Components.SCLRockstar124:
+					return LauncherLogic.DowngradeAlternativeFilePathRockstar124;
+				case ComponentManager.Components.SCLRockstar127:
+					return LauncherLogic.DowngradeAlternativeFilePathRockstar127;
+				case ComponentManager.Components.SCLSteam124:
+					return LauncherLogic.DowngradeAlternativeFilePathSteam124;
+				case ComponentManager.Components.SCLSteam127:
+					return LauncherLogic.DowngradeAlternativeFilePathSteam127;
+				case ComponentManager.Components.AdditionalSaveFiles:
+					return LauncherLogic.ZIPFilePath.TrimEnd('\\') + @"\Project_127_Files\SupportFiles\SaveFiles";
+				default:
+					return LauncherLogic.ZIPFilePath.TrimEnd('\\') + @"\Project_127_Files";
+			}
 		}
 
 		public static bool IsOnDisk(this ComponentManager.Components Component)

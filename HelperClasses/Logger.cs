@@ -135,7 +135,8 @@ namespace Project_127.HelperClasses
 				DebugMessage.Add("Time Now: '" + DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss") + "'");
 				DebugMessage.Add("Time Now UTC: '" + DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss") + "'");
 				DebugMessage.Add("ZIP Version: '" + Globals.ZipVersion + "'");
-				DebugMessage.Add("Globals.Branch: '" + Globals.Branch + "'");
+				DebugMessage.Add("Globals.P127Branch: '" + Globals.P127Branch + "'");
+				DebugMessage.Add("Globals.DMBranch: '" + Globals.DMBranch + "'");
 				DebugMessage.Add("InternalMode (Overwites, mode / branch): '" + Globals.InternalMode + "'");
 				DebugMessage.Add("Project 1.27 Installation Path '" + Globals.ProjectInstallationPath + "'");
 				DebugMessage.Add("Project 1.27 Installation Path Binary '" + Globals.ProjectInstallationPathBinary + "'");
