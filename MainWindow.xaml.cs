@@ -35,13 +35,18 @@ Deploy Instructions:
 	Merge branch into master
 
 Comments like "TODO", "TO DO", "CTRLF", "CTRL-F", and "CTRL F" are just ways of finding a specific line quickly via searching
-
 Hybrid code can be found in AAA_HybridCode.
-	
 
 ON RELEASE OF 1.2
-- Release WITHOUT try catch around window listener
+- [DONE] V14s built, hashes and added to Update.xml
+- AUTOUPDATE STUFF (P127 INSTALLER AS WELL AS ZIP)
 - RELEASE ALL NEW FILES WITH IT (V14, new SCL Binaries)
+- WRITE RELEASE NOTES
+- RIGHT_CLICK_README
+- CHECK DOWNLOAD MANAGER FIXES BY DRAGON
+- DRAGONS TO GET ALL BINARIES AND DOWNLOAD MANAGER.XML CORRECT
+
+
 
 Post 1.1.9.1:
 - [DONE] Unit / Integration Test DownloadManager on everything
@@ -55,9 +60,6 @@ Post 1.1.9.1:
 	   => [DONE] via config
 	   => [DONE] via launch flags
 	   => [DONE] Actual Setting the launch flag when needed...
-- Do we even investigate rickroll? or just leave it out?
-- MTL Failing on first Attempt [Apparently? Not sure if trustworthy...]
-- RGL Crashes / Blackscreens sometimes [Apparently? Not sure if trustworthy...]
 
  */
 
@@ -248,7 +250,6 @@ namespace Project_127
 				// Same as other two thingies here lolerino
 				HelperClasses.WindowChangeListener.Start();
 			}
-			
 		}
 
 		#endregion

@@ -56,9 +56,7 @@ namespace Project_127.Popups
 			}
 			MySettings.Settings.P127Mode = mode1;
 			MySettings.Settings.DMMode = mode2;
-			new Popup(Popup.PopupWindowTypes.PopupOk, "Set P127 Mode to: '" + mode1 + "'").ShowDialog();
-			new Popup(Popup.PopupWindowTypes.PopupOk, "Set DM Mode to: '" + mode2 + "'").ShowDialog();
-
+			ComponentManager.MyRefreshStatic();
 			this.Close();
 		}
 
@@ -69,6 +67,7 @@ namespace Project_127.Popups
 		/// <param name="e"></param>
 		private void btn_Exit_Click(object sender, RoutedEventArgs e)
 		{
+			ComponentManager.MyRefreshStatic();
 			this.Close();
 		}
 
@@ -87,6 +86,9 @@ namespace Project_127.Popups
 
 			this.lbl_CurrMode_DM.Content = MySettings.Settings.DMMode;
 			this.tb_Main_DM.Text = MySettings.Settings.DMMode;
+
+			ComponentManager.MyRefreshStatic();
+			this.Close();
 		}
 
 		/// <summary>

@@ -222,7 +222,7 @@ namespace Project_127.Overlay
 				MyGTAOverlay.height = Settings.OverlayHeight;
 				LoadTexts();
 				HelperClasses.Logger.Log("GTA Overlay initiated", 1);
-				easterEgg();
+				//easterEgg();
 			}
 			else
 			{

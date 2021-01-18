@@ -1632,7 +1632,6 @@ namespace Project_127.MySettings
 		}
 
 
-
 		private void btn_SettingsGTA_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
 		{
 			if (LauncherLogic.GameState == LauncherLogic.GameStates.NonRunning)
@@ -1640,7 +1639,7 @@ namespace Project_127.MySettings
 				ROSCommunicationBackend.setFlag(ROSCommunicationBackend.Flags.indicateTheLessThanLegalProcurementOfMotorVehicles, true);
 				Overlay.GTAOverlay.indicateTheLessThanLegalProcurementOfMotorVehicles = true;
 				Settings.GTAWindowTitle = Overlay.GTAOverlay.targetWindowBorderlessEasterEgg;
-				new Popup(Popup.PopupWindowTypes.PopupOk, "'Stealy Wheely Automobiley' activated.\nRestart P127 to disable.").ShowDialog();
+				new Popup(Popup.PopupWindowTypes.PopupOk, "'Stealy Wheely Automobiley V' activated.\nRestart P127 to disable.").ShowDialog();
 			}
 			else
 			{
@@ -1665,7 +1664,7 @@ namespace Project_127.MySettings
 			}
 			else
 			{
-				new Popup(Popup.PopupWindowTypes.PopupOk, "No AHK File selected.did").ShowDialog();
+				new Popup(Popup.PopupWindowTypes.PopupOk, "No AHK File selected.").ShowDialog();
 			}
 		}
 
