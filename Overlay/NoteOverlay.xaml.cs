@@ -758,11 +758,11 @@ namespace Project_127.Overlay
 				ast.visible = false;
 				ast.FPS = 10;
 				ast.opacity = .5F;
-				dtast = new System.Windows.Threading.DispatcherTimer();
-				dtast.Tick += new EventHandler(easterEggLoop);
-				dtast.Interval = TimeSpan.FromMilliseconds(2500);
-				dtast.Start();
 			});
+			dtast = new System.Windows.Threading.DispatcherTimer();
+			dtast.Tick += new EventHandler(easterEggLoop);
+			dtast.Interval = TimeSpan.FromMilliseconds(2500);
+			dtast.Start();
 		}
 
 		public static void easterEggLoop(object sender, EventArgs e)
@@ -776,6 +776,14 @@ namespace Project_127.Overlay
 			if (percent == 100)
             {
 				ast.visible = true;
+				if (MyGTAOverlay.Visible)
+                {
+					/*var synth = new System.Speech.Synthesis.SpeechSynthesizer();
+					synth.SetOutputToDefaultAudioDevice();
+					synth.SpeakAsync(@"We're no strangers to love.  You know the rules. and so, due ayye, A full commitments what im think king uhhve
+, you wouldn't get dis from,, any uhhve-uhr guy. ayye just wanna tell-you how-I-um feel-ing; Gotta make-you, under stand, Never-gonna give you up,
+Never-gonna let you down, Never-gonna run around-and, dez-urt you");*/
+				}
             }
 
 		}
