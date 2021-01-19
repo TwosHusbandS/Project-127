@@ -157,14 +157,19 @@ string lpSymlinkFileName, string lpTargetFileName, SymbolicLink dwFlags);
 		/// <returns></returns>
 		public static string[] GetFilesFromFolderAndSubFolder(string pPath)
 		{
-			if (doesPathExist(pPath))
+			try
 			{
-				return (Directory.GetFiles(pPath, "*", SearchOption.AllDirectories));
+
+				if (doesPathExist(pPath))
+				{
+					return (Directory.GetFiles(pPath, "*", SearchOption.AllDirectories));
+				}
 			}
-			else
+			catch
 			{
-				return (new string[0]);
+
 			}
+			return (new string[0]);
 		}
 
 		/// <summary>
@@ -182,6 +187,13 @@ string lpSymlinkFileName, string lpTargetFileName, SymbolicLink dwFlags);
 			{
 				return (new string[0]);
 			}
+		}
+
+		public static void LogHash(string pFilePath)
+		{
+			string Size = GetSizeOfFile(pFilePath).ToString();
+			string Hash = GetHashFromFile(pFilePath);
+			HelperClasses.Logger.Log("FilePath: '" + pFilePath + "', Size: '" + Size + "', Has: '" + Hash + "'.");
 		}
 
 
@@ -217,14 +229,13 @@ string lpSymlinkFileName, string lpTargetFileName, SymbolicLink dwFlags);
 		/// </summary>
 		/// <param name="pFilePath"></param>
 		/// <returns></returns>
-		public static string GetCreationDate(string pFilePath, bool UTC = false)
+		public static DateTime GetCreationDate(string pFilePath, bool UTC = false)
 		{
-			string rtrn = "";
+			DateTime creation = DateTime.MinValue;
 			if (doesFileExist(pFilePath))
 			{
 				try
 				{
-					DateTime creation;
 					if (UTC)
 					{
 						creation = File.GetCreationTimeUtc(pFilePath);
@@ -233,7 +244,7 @@ string lpSymlinkFileName, string lpTargetFileName, SymbolicLink dwFlags);
 					{
 						creation = File.GetCreationTime(pFilePath);
 					}
-					rtrn = creation.ToString("yyyy-MM-ddTHH:mm:ss");
+					return creation;
 				}
 				catch
 				{
@@ -241,7 +252,7 @@ string lpSymlinkFileName, string lpTargetFileName, SymbolicLink dwFlags);
 					new Popup(Popup.PopupWindowTypes.PopupOkError, "Getting Creation Date of File: '" + pFilePath + "' failed.").ShowDialog();
 				}
 			}
-			return rtrn;
+			return creation;
 		}
 
 		/// <summary>
@@ -249,14 +260,14 @@ string lpSymlinkFileName, string lpTargetFileName, SymbolicLink dwFlags);
 		/// </summary>
 		/// <param name="pFilePath"></param>
 		/// <returns></returns>
-		public static string GetLastWriteDate(string pFilePath, bool UTC = false)
+		public static DateTime GetLastWriteDate(string pFilePath, bool UTC = false)
 		{
-			string rtrn = "";
+			DateTime creation = DateTime.MinValue;
+			//rtrn = creation.ToString("yyyy-MM-ddTHH:mm:ss");
 			if (doesFileExist(pFilePath))
 			{
 				try
 				{
-					DateTime creation;
 					if (UTC)
 					{
 						creation = File.GetLastWriteTimeUtc(pFilePath);
@@ -265,7 +276,7 @@ string lpSymlinkFileName, string lpTargetFileName, SymbolicLink dwFlags);
 					{
 						creation = File.GetLastWriteTime(pFilePath);
 					}
-					rtrn = creation.ToString("yyyy-MM-ddTHH:mm:ss");
+					return creation;
 				}
 				catch
 				{
@@ -273,7 +284,7 @@ string lpSymlinkFileName, string lpTargetFileName, SymbolicLink dwFlags);
 					new Popup(Popup.PopupWindowTypes.PopupOkError, "Getting LastModified Date of File: '" + pFilePath + "' failed.").ShowDialog();
 				}
 			}
-			return rtrn;
+			return creation;
 		}
 
 		/// <summary>
@@ -514,11 +525,11 @@ string lpSymlinkFileName, string lpTargetFileName, SymbolicLink dwFlags);
 		/// <returns></returns>
 		public static bool AreFilesEqual(string pFilePathA, string pFilePathB, bool SlowButStable)
 		{
-			Stopwatch sw = new Stopwatch();
-			sw.Start();
+			//Stopwatch sw = new Stopwatch();
+			//sw.Start();
 			bool Sth = AreFilesEqualReal(pFilePathA, pFilePathB, SlowButStable);
-			sw.Stop();
-			HelperClasses.Logger.Log("AAAA - It took '" + sw.ElapsedMilliseconds + "' ms to compare: '" + pFilePathA + "' and '" + pFilePathB + "'. Result is: " + Sth.ToString());
+			//sw.Stop();
+			//HelperClasses.Logger.Log("AAAA - It took '" + sw.ElapsedMilliseconds + "' ms to compare: '" + pFilePathA + "' and '" + pFilePathB + "'. Result is: " + Sth.ToString());
 			return Sth;
 		}
 
@@ -867,8 +878,8 @@ string lpSymlinkFileName, string lpTargetFileName, SymbolicLink dwFlags);
 			{
 				if (doesFileExist(pFilePath))
 				{
+					File.SetAttributes(pFilePath, FileAttributes.Normal);
 					File.Delete(pFilePath);
-
 				}
 			}
 			catch (Exception e)

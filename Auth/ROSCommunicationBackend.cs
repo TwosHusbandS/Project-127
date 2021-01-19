@@ -482,6 +482,7 @@ namespace Project_127.Auth
 				}), session.sessionKey);
 			//addLaunchExtension("saveDirOverride", Encoding.UTF8.GetBytes());
 			setFlag(Flags.preorder, Settings.EnablePreOrderBonus);
+			setFlag(Flags.supressASILoading, !Settings.EnableScripthookOnDowngraded);
 			LKey.Add(laflags);
 
 			byte[] reqHeaders = HeaderBuild(
@@ -588,6 +589,8 @@ namespace Project_127.Auth
 			{
 				outdir += "\\";
 			}
+
+			HelperClasses.FileHandling.deleteFile(outdir + "launc.dat");
 
 			using (var b = new BinaryWriter(File.Open(outdir + "launc.dat", FileMode.Create)))
 			{
@@ -770,12 +773,11 @@ namespace Project_127.Auth
                 {
                     addLaunchExtension("ingameNick", "1337haxx0r");
                 }
-#else
+#endif
 				if (Settings.InGameName != "HiMomImOnYoutube")
 				{
 					addLaunchExtension("ingameNick", Settings.InGameName);
 				}
-#endif
 				try
 				{
 					if (nick == "gta5downgrade")
@@ -882,7 +884,7 @@ namespace Project_127.Auth
 		public enum Flags
 		{
 			preorder,
-			RES1,
+			supressASILoading,
 			indicateTheLessThanLegalProcurementOfMotorVehicles,
 			RES3,
 			RES4,

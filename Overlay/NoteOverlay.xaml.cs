@@ -16,6 +16,7 @@ using System.Windows.Shapes;
 using Project_127.HelperClasses;
 using Project_127.MySettings;
 using System.Diagnostics;
+using System.Windows.Threading;
 
 namespace Project_127.Overlay
 {
@@ -220,7 +221,6 @@ namespace Project_127.Overlay
 				MyGTAOverlay.width = Settings.OverlayWidth;
 				MyGTAOverlay.height = Settings.OverlayHeight;
 				LoadTexts();
-				NotesLoadedIndex = 0;
 				HelperClasses.Logger.Log("GTA Overlay initiated", 1);
 				easterEgg();
 			}
@@ -569,11 +569,11 @@ namespace Project_127.Overlay
 		{
 			MyGTAOverlay.nextChapter();
 			if (MyGTAOverlay.chapterTitle != "")
-            {
+			{
 				MyGTAOverlay.title.text = "Project 1.27 - Overlay - " + MyGTAOverlay.chapterTitle;
 			}
-            else
-            {
+			else
+			{
 				MyGTAOverlay.title.text = NotesLoadedTitle[NotesLoadedIndex];
 			}
 		}
@@ -728,34 +728,63 @@ namespace Project_127.Overlay
 		/// <param name="e"></param>
 		private void btn_cb_Set_OverlayMultiMonitorMode_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
 		{
-			NoteOverlay.OverlaySettingsChanged();
-
-			Settings.OL_MM_Left = 0;
-			Settings.OL_MM_Top = 0;
-
-			NoteOverlay.OverlaySettingsChanged();
+			Overlay_MultipleMonitor.ResetPosition();
 		}
 
 		bool waitingForSecondRightClick = false;
 
+		private static OverlayAnimationObject ast;
+		private static DispatcherTimer dtast;
 		private static async void easterEgg()
-        {
+		{
 			// We are very serious people...
-			if (new System.Random().NextDouble() > .8)
-            {
-				return;
-            }
-			var ast = new OverlayAnimationObject("rick");
+			//if (new System.Random().NextDouble() > .8)
+			{
+				//return;
+			}
+			ast = new OverlayAnimationObject("rick");
 			MyGTAOverlay.attach(ast);
 			await Task.Run(async () =>
 			{
-				var richard = System.Windows.Application.GetResourceStream(new Uri(@"Overlay\richard.gif", UriKind.Relative));
-				await ast.loadGif(System.Drawing.Image.FromStream(richard.Stream));
+				for (int i = 1; i<=50; i++)
+                {
+					var frameName = i.ToString("000") + ".jpg";
+					ast.addFrame(await ast.imageFromURI(new Uri(@"Overlay\richard\" + frameName, UriKind.Relative)));
+                }
+				//var richard = System.Windows.Application.GetResourceStream(new Uri(@"Overlay\richard.gif", UriKind.Relative));
+				//await ast.loadGif(System.Drawing.Image.FromStream(richard.Stream));
 				ast.fillOverlay = true;
-				ast.visible = true;
+				ast.visible = false;
 				ast.FPS = 10;
 				ast.opacity = .5F;
 			});
+			dtast = new System.Windows.Threading.DispatcherTimer();
+			dtast.Tick += new EventHandler(easterEggLoop);
+			dtast.Interval = TimeSpan.FromMilliseconds(2500);
+			dtast.Start();
+		}
+
+		public static void easterEggLoop(object sender, EventArgs e)
+		{
+			float percent = 0;
+            try
+            {
+				percent = Globals.GTAPointerPathHandler.EvalPointerPath_fp32(Globals.stateVarsCurrent["percent"]);
+			}
+            catch { }
+			if (percent == 100)
+            {
+				ast.visible = true;
+				if (MyGTAOverlay.Visible)
+                {
+					/*var synth = new System.Speech.Synthesis.SpeechSynthesizer();
+					synth.SetOutputToDefaultAudioDevice();
+					synth.SpeakAsync(@"We're no strangers to love.  You know the rules. and so, due ayye, A full commitments what im think king uhhve
+, you wouldn't get dis from,, any uhhve-uhr guy. ayye just wanna tell-you how-I-um feel-ing; Gotta make-you, under stand, Never-gonna give you up,
+Never-gonna let you down, Never-gonna run around-and, dez-urt you");*/
+				}
+            }
+
 		}
 
 		private async void btn_Looks_MouseRightButtonDown(object sender, MouseButtonEventArgs e)

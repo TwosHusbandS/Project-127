@@ -115,7 +115,7 @@ namespace Project_127.Auth
 			//Timer when auth: minimize MTL, foreground p127
 			MTLwait = new System.Windows.Threading.DispatcherTimer();
 			MTLwait.Tick += new EventHandler(onMTLAuthCompletion);
-			MTLwait.Interval = new TimeSpan(2000);
+			MTLwait.Interval = TimeSpan.FromMilliseconds(2000);
 			MTLwait.Start();
 		}
 
@@ -151,7 +151,6 @@ namespace Project_127.Auth
 				}
 				return;
             }
-
 		}
 
 		public ROSIntegration(bool pLaunchAfter = false)

@@ -80,7 +80,7 @@ namespace Project_127
 			get
 			{
 				string masterURL = "https://raw.githubusercontent.com/TwosHusbandS/Project-127/master/Installer/Update.xml";
-				string modeURL = "https://raw.githubusercontent.com/TwosHusbandS/Project-127/" + Branch.ToLower() + "/Installer/Update.xml";
+				string modeURL = "https://raw.githubusercontent.com/TwosHusbandS/Project-127/" + P127Branch.ToLower() + "/Installer/Update.xml";
 
 				string modeXML = HelperClasses.FileHandling.GetStringFromURL(modeURL, true);
 
@@ -104,7 +104,7 @@ namespace Project_127
 			get
 			{
 				string masterURL = "https://raw.githubusercontent.com/TwosHusbandS/Project-127/master/Installer/DownloadManager.xml";
-				string modeURL = "https://raw.githubusercontent.com/TwosHusbandS/Project-127/" + Branch + "/Installer/DownloadManager.xml";
+				string modeURL = "https://raw.githubusercontent.com/TwosHusbandS/Project-127/" +DMBranch + "/Installer/DownloadManager.xml";
 
 				string modeXML = HelperClasses.FileHandling.GetStringFromURL(modeURL, true);
 				if (!String.IsNullOrWhiteSpace(modeXML))
@@ -126,7 +126,7 @@ namespace Project_127
 			get
 			{
 				string masterURL = "https://raw.githubusercontent.com/TwosHusbandS/Project-127/master/Installer/DownloadManager.xml";
-				string modeURL = "https://raw.githubusercontent.com/TwosHusbandS/Project-127/" + Branch + "/Installer/DownloadManager.xml";
+				string modeURL = "https://raw.githubusercontent.com/TwosHusbandS/Project-127/" + DMBranch + "/Installer/DownloadManager.xml";
 				if (String.IsNullOrWhiteSpace(HelperClasses.FileHandling.GetStringFromURL(modeURL, true)))
 				{
 					return masterURL;
@@ -140,7 +140,7 @@ namespace Project_127
 
 		/// Gets the Branch we are in as actual branch.
 		/// </summary>
-		public static string Branch
+		public static string P127Branch
 		{
 			get
 			{
@@ -148,11 +148,29 @@ namespace Project_127
 				{
 					return "internal";
 				}
-				if (Project_127.MySettings.Settings.Mode.ToLower() == "default")
+				if (Project_127.MySettings.Settings.P127Mode.ToLower() == "default")
 				{
 					return "master";
 				}
-				return Project_127.MySettings.Settings.Mode.ToLower();
+				return Project_127.MySettings.Settings.P127Mode.ToLower();
+			}
+		}
+
+		/// Gets the Branch we are in as actual branch.
+		/// </summary>
+		public static string DMBranch
+		{
+			get
+			{
+				if (InternalMode)
+				{
+					return "internal";
+				}
+				if (Project_127.MySettings.Settings.DMMode.ToLower() == "default")
+				{
+					return "master";
+				}
+				return Project_127.MySettings.Settings.DMMode.ToLower();
 			}
 		}
 
@@ -212,7 +230,7 @@ namespace Project_127
 		/// <summary>
 		/// Property of other Buildinfo. Will be in the top message of logs
 		/// </summary>
-		public static string BuildInfo = "V. 1.2, Internal 1";
+		public static string BuildInfo = "P127-Version: 1.2, Build Nr: 2";
 
 		/// <summary>
 		/// Returns all Command Line Args as StringArray
@@ -296,11 +314,13 @@ namespace Project_127
 			{"EnableCopyFilesInsteadOfHardlinking", "False"},
 			{"EnableSlowCompare", "False"},
 			{"EnableLegacyAuth", "False"},
+			{"GTAWindowTitle", "Grand Theft Auto V"},
 			{"Version", "127"},
 			//{"EnableCopyFilesInsteadOfSyslinking_SocialClub", "False"},
 			{"ExitWay", "Close"},
 			{"StartWay", "Maximized"},
 			{"Mode", "default"},
+			{"DMMode", "default"},
 	
 			// GTA V Settings
 			{"Retailer", "Steam"},
@@ -308,6 +328,7 @@ namespace Project_127
 			{"InGameName", "HiMomImOnYoutube"},
 			{"EnablePreOrderBonus", "False"},
 			{"EnableDontLaunchThroughSteam", "False"},
+			{"EnableScripthookOnDowngraded", "False"},
    
 			// Extra Features
 			{"EnableOverlay", "False"},
@@ -389,7 +410,7 @@ namespace Project_127
 			// Checks if we are doing first Launch.
 			if (Settings.FirstLaunch)
 			{
-				string msg = "Legal Disclaimer:\nWe (and Project 1.27) are not responsible for anything that happens to:\nYour Windows, your harware, your PC,\nyour GTA, your Social Club account etc.\nBy clicking 'OK' you agree to those terms.\n\n- The Project 1.27 Team";
+				string msg = "Legal Disclaimer:\nWe (and Project 1.27) are not responsible for anything that happens to:\nYour Windows, your hardware, your PC,\nyour GTA, your Social Club account etc.\nBy clicking 'OK' you agree to those terms.\n\n- The Project 1.27 Team";
 
 				new Popup(Popup.PopupWindowTypes.PopupOk, msg).ShowDialog();
 
@@ -414,6 +435,8 @@ namespace Project_127
 				"If anything does not work as expected, \n" +
 				"contact me on Discord. @thS#0305\n\n" +
 				" - The Project 1.27 Team").ShowDialog();
+
+				Settings.AntiVirusFix();
 
 				HelperClasses.Logger.Log("FirstLaunch Procedure Ended");
 			}
@@ -481,7 +504,7 @@ namespace Project_127
 					Globals.SetUpDownloadManager(false);
 					ComponentManager.ZIPVersionSwitcheroo();
 
-					Settings.Mode = "default";
+					Settings.P127Mode = "default";
 
 					HelperClasses.FileHandling.createPath(MySaveFile.BackupSavesPath.TrimEnd('\\') + @"\New Folder");
 					HelperClasses.FileHandling.createPath(MySaveFile.BackupSavesPath.TrimEnd('\\') + @"\YouCanRightclick");
@@ -495,12 +518,14 @@ namespace Project_127
 						}
 					}
 					HelperClasses.RegeditHandler.SetValue("TeasingFeatures", "True");
-					// Create Registry Key here...
 				}
 
 
 				if (Settings.LastLaunchedVersion < new Version("1.2.0.0"))
 				{
+					Settings.P127Mode = "default";
+					Settings.DMMode = "default";
+
 					string msg = "Legal Disclaimer:\nWe (and Project 1.27) are not responsible for anything that happens to:\nYour Windows, your harware, your PC,\nyour GTA, your Social Club account etc.\nBy clicking 'OK' you agree to those terms.\n\n- The Project 1.27 Team";
 
 					new Popup(Popup.PopupWindowTypes.PopupOk, msg).ShowDialog();
@@ -573,6 +598,8 @@ namespace Project_127
 					{
 						Settings.AllFilesEverPlacedInsideGTAMyAdd(tmp_i.Substring(LauncherLogic.UpgradeFilePathBackup.Length).TrimStart('\\'));
 					}
+
+					Settings.AntiVirusFix();
 				}
 
 				Settings.LastLaunchedVersion = Globals.ProjectVersion;
@@ -582,8 +609,8 @@ namespace Project_127
 			DeleteOldFiles();
 
 			// reading Social club install dir from registry
-			LauncherLogic.SetUpSocialClubRegistryThing();
-			LauncherLogic.SocialClubUpgrade();
+			LaunchAlternative.SetUpSocialClubRegistryThing();
+			LaunchAlternative.SocialClubUpgrade();
 
 			// Throw annoucements
 			HandleAnnouncements();
@@ -616,6 +643,8 @@ namespace Project_127
 
 			initIPC();
 
+			Settings.GTAWindowTitle = GTAOverlay.targetWindowBorderlessDefault;
+
 			// INIT the dynamic text handler for the overlay
 			initDynamicTextGetters();
 		}
@@ -629,7 +658,7 @@ namespace Project_127
 		{
 			pipeServer.registerEndpoint("messageBox", (a) =>
 			{
-				MessageBox.Show(Encoding.UTF8.GetString(a));
+				Globals.DebugPopup(Encoding.UTF8.GetString(a));
 				return a;
 			});
 
@@ -1559,15 +1588,23 @@ namespace Project_127
 			// Code for internal mode is in Globals.Internalmode Getter
 
 			// Need to be in following Format
-			// "-CommandLineArg Value"
+			// #-examplearg exampleparam#
+			// or
+			// #-examplearg#
+			// ATM NO SUPPORT FOR #-examplearg "exampleparam"#
+
 			string[] args = Globals.CommandLineArgs;
 
 			for (int i = 0; i <= args.Length - 1; i++)
 			{
-				if (args[i].ToLower() == "-background")
+				// i+1 exists
+				if (i < args.Length - 1)
 				{
-					// i+1 exists
-					if (i < args.Length - 1)
+					// FOR THIS: 
+					// #-examplearg exampleparam#
+
+					// Checks with "2 - part" command line like: "-name test"
+					if (args[i].ToLower() == "-background")
 					{
 						Globals.BackgroundImages Tmp = Globals.BackgroundImages.Main;
 						try
@@ -1580,8 +1617,33 @@ namespace Project_127
 							new Popup(Popup.PopupWindowTypes.PopupOkError, "Error converting Command Line Argument to Background Image.\n" + e.ToString()).ShowDialog();
 						}
 					}
+					else if (args[i].ToLower() == "-authstateoverwrite")
+					{
+						if (args[i].ToLower() == "true")
+						{
+							LauncherLogic.AuthStateOverWrite = true;
+						}
+						else
+						{
+							LauncherLogic.AuthStateOverWrite = false;
+						}
+					}
+					else if (args[i].ToLower() == "-useemudebugfile")
+					{
+						if (args[i].ToLower() == "true")
+						{
+							LauncherLogic.UseEmuConfigFile = true;
+						}
+						else
+						{
+							LauncherLogic.UseEmuConfigFile = false;
+						}
+					}
+
+					continue;
 				}
-				else if (args[i].ToLower() == "-reset")
+
+				if (args[i].ToLower() == "-reset")
 				{
 					RegeditHandler.DeleteKey();
 
@@ -1603,6 +1665,8 @@ namespace Project_127
 
 					Globals.ProperExit();
 				}
+
+
 			}
 		}
 

@@ -75,15 +75,15 @@ namespace Project_127.HelperClasses
 			if (MyBuildVersionTable.Count < 2)
 			{
 				new BuildVersionTable("1.0.323.0", "1.24");
-				new BuildVersionTable("1.0.350.0", "1.26");
-				new BuildVersionTable("1.0.372.0", "1.27");
+				new BuildVersionTable("1.0.350.0", "1.25");
+				new BuildVersionTable("1.0.350.1", "1.26");
+				new BuildVersionTable("1.0.350.3", "1.27");
 				new BuildVersionTable("1.0.393.0", "1.28");
 				new BuildVersionTable("1.0.463.0", "1.29");
 				new BuildVersionTable("1.0.505.0", "1.30");
 				new BuildVersionTable("1.0.573.0", "1.31");
 				new BuildVersionTable("1.0.617.0", "1.32");
 				new BuildVersionTable("1.0.678.0", "1.33");
-				new BuildVersionTable("1.0.757.0", "1.34");
 				new BuildVersionTable("1.0.757.0", "1.34");
 				new BuildVersionTable("1.0.791.0", "1.35");
 				new BuildVersionTable("1.0.877.0", "1.36");
@@ -101,7 +101,6 @@ namespace Project_127.HelperClasses
 				new BuildVersionTable("1.0.1868.0", "1.50");
 				new BuildVersionTable("1.0.2060.0", "1.51");
 				new BuildVersionTable("1.0.2060.1", "1.52");
-				new BuildVersionTable("1.0.2189.0", "1.53");
 			}
 
 		}

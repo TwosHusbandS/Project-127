@@ -14,11 +14,6 @@ namespace Project_127.HelperClasses
 	class Jumpscript
 	{
 		/// <summary>
-		/// Process we start / stop
-		/// </summary>
-		static Process myJumpscript;
-
-		/// <summary>
 		/// Bool if Jumpscript is running
 		/// </summary>
 		public static bool IsRunning;
@@ -34,7 +29,7 @@ namespace Project_127.HelperClasses
 			{
 				Logger.Log("Custom Jumpscript found and settings enabled, lets use it.");
 
-				myJumpscript = ProcessHandler.StartProcess(Globals.ProjectInstallationPathBinary.TrimEnd('\\') + @"\P127_Jumpscript.exe", Globals.ProjectInstallationPathBinary, "P127_Jumpscript_Custom.ahk");
+				ProcessHandler.StartProcess(Globals.ProjectInstallationPathBinary.TrimEnd('\\') + @"\P127_Jumpscript.exe", pCommandLineArguments: "P127_Jumpscript_Custom.ahk");
 			}
 			else
 			{
@@ -49,7 +44,7 @@ namespace Project_127.HelperClasses
 				myList.Add("#IfWinActive");
 				FileHandling.WriteStringToFileOverwrite(Globals.ProjectInstallationPathBinary.TrimEnd('\\') + @"\P127_Jumpscript.ahk", myList.ToArray());
 
-				myJumpscript = ProcessHandler.StartProcess(Globals.ProjectInstallationPathBinary.TrimEnd('\\') + @"\P127_Jumpscript.exe");
+				ProcessHandler.StartProcess(Globals.ProjectInstallationPathBinary.TrimEnd('\\') + @"\P127_Jumpscript.exe");
 			}
 
 
@@ -63,14 +58,11 @@ namespace Project_127.HelperClasses
 		/// </summary>
 		public static void StopJumpscript()
 		{
-			if (myJumpscript != null)
-			{
-				HelperClasses.ProcessHandler.Kill(myJumpscript);
-				myJumpscript = null;
-				HelperClasses.FileHandling.deleteFile(Globals.ProjectInstallationPathBinary.TrimEnd('\\') + @"\P127_Jumpscript.ahk");
-				HelperClasses.Logger.Log("Stopped Jumpscript");
-				IsRunning = false;
-			}
+			HelperClasses.ProcessHandler.KillProcessesContains("P127_Jumpscript");
+			HelperClasses.FileHandling.deleteFile(Globals.ProjectInstallationPathBinary.TrimEnd('\\') + @"\P127_Jumpscript.ahk");
+			HelperClasses.Logger.Log("Stopped Jumpscript");
+			IsRunning = false;
+
 		}
 
 
@@ -221,7 +213,7 @@ namespace Project_127.HelperClasses
 			{
 				rtrn = rtrn.Replace("NumPad", "Numpad");
 			}
-		
+
 
 			// Translate this:
 			// https://docs.microsoft.com/en-us/dotnet/api/system.windows.forms.keys?view=netcore-3.1

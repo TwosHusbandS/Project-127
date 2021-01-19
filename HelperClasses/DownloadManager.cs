@@ -37,8 +37,9 @@ namespace Project_127.HelperClasses
         /// </summary>
         /// <param name="subassemblyName">Name of subassembly to be installed</param>
         /// <param name="reinstall">Determines whether or not reinstall is enabled</param>
+        /// <param name="reinstallRecurse">Determines whether to reinstall all required assemblies</param>
         /// <returns>Boolean indicating whether install succeded or not</returns>
-        public async Task<bool> getSubassembly(string subassemblyName, bool reinstall = false)
+        public async Task<bool> getSubassembly(string subassemblyName, bool reinstall = false, bool reinstallRecurse = true)
         {
             if (!availableSubassemblies.ContainsKey(subassemblyName))
             {
@@ -46,6 +47,10 @@ namespace Project_127.HelperClasses
             } 
             else if (installedSubassemblies.ContainsKey(subassemblyName) && !reinstall)
             {
+                if (isUpdateAvalailable(subassemblyName))
+                {
+                    return await updateSubssembly(subassemblyName);
+                }
                 return true;
             }
             else
@@ -69,7 +74,7 @@ namespace Project_127.HelperClasses
                 var reqs = s.Select("./requires/subassembly");
                 foreach (XPathNavigator req in reqs)
                 {
-                    await getSubassembly(req.GetAttribute("target", ""));
+                    await getSubassembly(req.GetAttribute("target", ""), reinstall & reinstallRecurse, reinstallRecurse);
                 }
                 if (s.GetAttribute("type", "").ToLower() == "zip")
                 {
@@ -87,6 +92,7 @@ namespace Project_127.HelperClasses
                         succeeded = s.SelectSingleNode("./hash").Value.ToLower() == zipmd5;
                         if (!succeeded)
                         {
+							HelperClasses.Logger.Log("Hash comparison inside Download Manager failed.");
                             continue;
                         }
                         new PopupProgress(PopupProgress.ProgressTypes.ZIPFile, zipdlpath).ShowDialog();
@@ -141,11 +147,16 @@ namespace Project_127.HelperClasses
                             {
                                 foreach (var r in reqby)
                                 {
+                                    if (!installedSubassemblies.ContainsKey(r))
+                                    {
+                                        continue;
+                                    }
                                     foreach (var ifile in installedSubassemblies[r].files)
                                     {
                                         if (ifile.name == file)
                                         {
                                             ifile.linked = false;
+                                            break;
                                         }
                                     }
                                     
@@ -177,7 +188,8 @@ namespace Project_127.HelperClasses
                                 }
                                 if (!succeeded)
                                 {
-                                    return false;
+									HelperClasses.Logger.Log("Hash comparison inside Download Manager failed.");
+									return false;
                                 }
                                 foreach (var path in file.paths)
                                 {
@@ -187,6 +199,8 @@ namespace Project_127.HelperClasses
                                 System.IO.File.Delete(fullPath);
                             }
                         }
+                        installedSubassemblies[subassemblyName] = subInfo;
+                        updateInstalled();
                         return true;
                     } 
                     else
@@ -362,7 +376,8 @@ namespace Project_127.HelperClasses
             }
             if (!succeeded)
             {
-                HelperClasses.Logger.Log("Failed to retrieve " + filename);
+				HelperClasses.Logger.Log("Hash comparison inside Download Manager failed.");
+				HelperClasses.Logger.Log("Failed to retrieve " + filename);
                 return null;
             }
             else
@@ -390,7 +405,7 @@ namespace Project_127.HelperClasses
             }
             catch
             {
-                var stat = getSubassembly(from, true).GetAwaiter().GetResult();
+                var stat = getSubassembly(from).GetAwaiter().GetResult();
                 HelperClasses.Logger.Log("Failed to retrieve " + filename);
                 HelperClasses.Logger.Log("Required subassembly " + filename + " missing!");
                 if (!stat)
@@ -470,7 +485,8 @@ namespace Project_127.HelperClasses
                     break;
                 }
             }
-            HelperClasses.Logger.Log("Failed to retrieve " + filename);
+			HelperClasses.Logger.Log("Hash comparison inside Download Manager failed.");
+			HelperClasses.Logger.Log("Failed to retrieve " + filename);
             return null;
         }
         private Tuple<List<subAssemblyFile>, bool> getSubassemblyFolder(string path, XPathNavigator folderEntry)
@@ -689,7 +705,7 @@ namespace Project_127.HelperClasses
                 await updateSubssembly(req.GetAttribute("target", ""));
             }
             
-            return await getSubassembly(subassemblyName, true);
+            return await getSubassembly(subassemblyName, true, false);
         }
 
         /// <summary>

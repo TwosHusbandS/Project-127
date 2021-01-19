@@ -41,7 +41,7 @@ namespace Project_127
 		/// <param name="e"></param>
 		private void btn_Hamburger_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
 		{
-			if (Globals.Branch != "master")
+			if (Globals.P127Branch != "master")
 			{
 				// Opens the File
 				HelperClasses.ProcessHandler.StartProcess(@"C:\Windows\System32\notepad.exe", pCommandLineArguments: Globals.Logfile);
@@ -175,7 +175,7 @@ namespace Project_127
 
 				string msg = "Error: GTA V Installation Path incorrect or ZIP Version == 0.\nGTAV Installation Path: '" + LauncherLogic.GTAVFilePath + "'\nInstallationState (probably): '" + LauncherLogic.InstallationState.ToString() + "'\nZip Version: " + Globals.ZipVersion + ".";
 
-				if (Globals.Branch != "master")
+				if (Globals.P127Branch != "master")
 				{
 					Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, msg + "\n. Force this Upgrade?");
 					yesno.ShowDialog();
@@ -260,7 +260,7 @@ namespace Project_127
 
 				string msg = "Error: GTA V Installation Path incorrect or ZIP Version == 0.\nGTAV Installation Path: '" + LauncherLogic.GTAVFilePath + "'\nInstallationState (probably): '" + LauncherLogic.InstallationState.ToString() + "'\nZip Version: " + Globals.ZipVersion + ".";
 
-				if (Globals.Branch != "master")
+				if (Globals.P127Branch != "master")
 				{
 					Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, msg + "\n. Force this Downgrade?");
 					yesno.ShowDialog();
@@ -406,9 +406,12 @@ namespace Project_127
 		/// <param name="e"></param>
 		private void btn_lbl_Mode_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
 		{
-			if (Settings.Mode.ToLower() != "default")
+			if (Settings.P127Mode.ToLower() != "default")
 			{
-				new PopupMode().ShowDialog();
+				if (e.ClickCount >= 3)
+				{
+					new PopupMode().ShowDialog();
+				}
 			}
 		}
 

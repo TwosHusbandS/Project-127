@@ -10,6 +10,7 @@
   * Not Possible for users on Epic
   * no more logging into social club and dealing with captchas inside P127
   * Ability to launch 1.27 and 1.24 Rockstar and Steam
+  * Automatically detecting if offline auth token is expired.
 * SaveFileHandler with special GTA V Speedrun Categories as well as a 100% Savefile for Practicing
   * Basic Functionality you would expect from a SaveFileHandler. Folder support, Rightclick Support, Keyboard Support.
 * Automatically doing things on Game Launch:

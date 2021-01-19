@@ -75,13 +75,13 @@ namespace Project_127.Overlay.NoteOverlayPages
 
 			dg_Files.ItemsSource = MyNoteFiles;
 
-			LoadMainNotes();
+			LoadMainNotes(true);
 		}
 
 		/// <summary>
 		/// Loading the "Main" Notes
 		/// </summary>
-		public void LoadMainNotes()
+		public void LoadMainNotes(bool DontLoadTexts = false)
 		{
 			while (MyNoteFiles.Count > 0)
 			{
@@ -96,7 +96,7 @@ namespace Project_127.Overlay.NoteOverlayPages
 				MyLNF.Add(new MyNoteFile(mystring));
 			}
 
-			MyNoteFiles.MyAdd(MyLNF);
+			MyNoteFiles.MyAdd(MyLNF, DontLoadTexts);
 
 			HelperClasses.DataGridHelper.SelectFirst(dg_Files);
 		}
@@ -279,7 +279,7 @@ namespace Project_127.Overlay.NoteOverlayPages
 		/// Refreshing an Observable Collection
 		/// </summary>
 		/// <param name="OC"></param>
-		public static void Refresh(ObservableCollection<MyNoteFile> OC)
+		public static void Refresh(ObservableCollection<MyNoteFile> OC, bool DontLoadTexts = false)
 		{
 			List<string> tmp = new List<string>();
 			foreach (MyNoteFile temp in OC)
@@ -288,7 +288,10 @@ namespace Project_127.Overlay.NoteOverlayPages
 			}
 			Settings.OverlayNotesMain = tmp;
 
-			NoteOverlay.LoadTexts();
+			if (!DontLoadTexts)
+			{
+				NoteOverlay.LoadTexts();
+			}
 		}
 
 
@@ -297,7 +300,7 @@ namespace Project_127.Overlay.NoteOverlayPages
 		/// </summary>
 		/// <param name="OC"></param>
 		/// <param name="MNFL"></param>
-		public static void MyAdd(this ObservableCollection<MyNoteFile> OC, List<MyNoteFile> MNFL)
+		public static void MyAdd(this ObservableCollection<MyNoteFile> OC, List<MyNoteFile> MNFL, bool DontLoadTexts = false)
 		{
 			foreach (MyNoteFile MNF in MNFL)
 			{
@@ -307,7 +310,7 @@ namespace Project_127.Overlay.NoteOverlayPages
 				}
 			}
 
-			Refresh(OC);
+			Refresh(OC, DontLoadTexts);
 		}
 
 		/// <summary>

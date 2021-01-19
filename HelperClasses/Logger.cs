@@ -38,7 +38,7 @@ namespace Project_127.HelperClasses
 			}
 
 
-			string MyCreationDate = HelperClasses.FileHandling.GetCreationDate(Process.GetCurrentProcess().MainModule.FileName);
+			string MyCreationDate = HelperClasses.FileHandling.GetCreationDate(Process.GetCurrentProcess().MainModule.FileName).ToString("yyyy-MM-ddTHH:mm:ss");
 
 			HelperClasses.Logger.Log("-", true, 0);
 			HelperClasses.Logger.Log("-", true, 0);
@@ -128,14 +128,15 @@ namespace Project_127.HelperClasses
 
 				DebugMessage.Add("Project 1.27 Version: '" + Globals.ProjectVersion + "'");
 				DebugMessage.Add("BuildInfo: '" + Globals.BuildInfo + "'");
-				DebugMessage.Add("BuildCreated: '" + HelperClasses.FileHandling.GetCreationDate(Process.GetCurrentProcess().MainModule.FileName) + "'");
-				DebugMessage.Add("BuildCreatedUTC: '" + HelperClasses.FileHandling.GetCreationDate(Process.GetCurrentProcess().MainModule.FileName, true) + "'");
-				DebugMessage.Add("BuildLastModified: '" + HelperClasses.FileHandling.GetCreationDate(Process.GetCurrentProcess().MainModule.FileName) + "'");
-				DebugMessage.Add("BuildLastModifiedUTC: '" + HelperClasses.FileHandling.GetCreationDate(Process.GetCurrentProcess().MainModule.FileName, true) + "'");
+				DebugMessage.Add("BuildCreated: '" + HelperClasses.FileHandling.GetCreationDate(Process.GetCurrentProcess().MainModule.FileName).ToString("yyyy-MM-ddTHH:mm:ss") + "'");
+				DebugMessage.Add("BuildCreatedUTC: '" + HelperClasses.FileHandling.GetCreationDate(Process.GetCurrentProcess().MainModule.FileName, true).ToString("yyyy-MM-ddTHH:mm:ss") + "'");
+				DebugMessage.Add("BuildLastModified: '" + HelperClasses.FileHandling.GetCreationDate(Process.GetCurrentProcess().MainModule.FileName).ToString("yyyy-MM-ddTHH:mm:ss") + "'");
+				DebugMessage.Add("BuildLastModifiedUTC: '" + HelperClasses.FileHandling.GetCreationDate(Process.GetCurrentProcess().MainModule.FileName, true).ToString("yyyy-MM-ddTHH:mm:ss") + "'");
 				DebugMessage.Add("Time Now: '" + DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss") + "'");
 				DebugMessage.Add("Time Now UTC: '" + DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss") + "'");
 				DebugMessage.Add("ZIP Version: '" + Globals.ZipVersion + "'");
-				DebugMessage.Add("Globals.Branch: '" + Globals.Branch + "'");
+				DebugMessage.Add("Globals.P127Branch: '" + Globals.P127Branch + "'");
+				DebugMessage.Add("Globals.DMBranch: '" + Globals.DMBranch + "'");
 				DebugMessage.Add("InternalMode (Overwites, mode / branch): '" + Globals.InternalMode + "'");
 				DebugMessage.Add("Project 1.27 Installation Path '" + Globals.ProjectInstallationPath + "'");
 				DebugMessage.Add("Project 1.27 Installation Path Binary '" + Globals.ProjectInstallationPathBinary + "'");
@@ -187,10 +188,10 @@ namespace Project_127.HelperClasses
 				DebugMessage.Add("    Size of gtastub.exe in BACKUP UpdateFiles Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.UpgradeFilePathBackup.TrimEnd('\\') + @"\gtastub.exe"));
 
 				DebugMessage.Add("Detected Social Club InstallationStates:");
-				DebugMessage.Add("    Detect Social Club InstallationStates SC_INSTALLATION_PATH ('" + LauncherLogic.SCL_SC_Installation + "'): " + LauncherLogic.Get_SCL_InstallationState(LauncherLogic.SCL_SC_Installation));
-				DebugMessage.Add("    Detect Social Club InstallationStates SC_TEMP_BACKUP_PATH ('" + LauncherLogic.SCL_SC_TEMP_BACKUP + "'): " + LauncherLogic.Get_SCL_InstallationState(LauncherLogic.SCL_SC_TEMP_BACKUP));
-				DebugMessage.Add("    Detect Social Club InstallationStates SC_DOWNGRADED_PATH ('" + LauncherLogic.SCL_SC_DOWNGRADED + "'): " + LauncherLogic.Get_SCL_InstallationState(LauncherLogic.SCL_SC_DOWNGRADED));
-				DebugMessage.Add("    Detect Social Club InstallationStates SC_DOWNGRADED_CACHE_PATH ('" + LauncherLogic.SCL_SC_DOWNGRADED_CACHE + "'): " + LauncherLogic.Get_SCL_InstallationState(LauncherLogic.SCL_SC_DOWNGRADED_CACHE));
+				DebugMessage.Add("    Detect Social Club InstallationStates SC_INSTALLATION_PATH ('" + LaunchAlternative.SCL_SC_Installation + "'): " + LaunchAlternative.Get_SCL_InstallationState(LaunchAlternative.SCL_SC_Installation));
+				DebugMessage.Add("    Detect Social Club InstallationStates SC_TEMP_BACKUP_PATH ('" + LaunchAlternative.SCL_SC_TEMP_BACKUP + "'): " + LaunchAlternative.Get_SCL_InstallationState(LaunchAlternative.SCL_SC_TEMP_BACKUP));
+				DebugMessage.Add("    Detect Social Club InstallationStates SC_DOWNGRADED_PATH ('" + LaunchAlternative.SCL_SC_DOWNGRADED + "'): " + LaunchAlternative.Get_SCL_InstallationState(LaunchAlternative.SCL_SC_DOWNGRADED));
+				DebugMessage.Add("    Detect Social Club InstallationStates SC_DOWNGRADED_CACHE_PATH ('" + LaunchAlternative.SCL_SC_DOWNGRADED_CACHE + "'): " + LaunchAlternative.Get_SCL_InstallationState(LaunchAlternative.SCL_SC_DOWNGRADED_CACHE));
 
 				DebugMessage.Add("All possible CFG.dat");
 				string GTAProfilePath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\Rockstar Games\GTA V\Profiles\";
@@ -202,8 +203,8 @@ namespace Project_127.HelperClasses
 					if (size > 0)
 					{
 						DebugMessage.Add("    '" + cfgdatPath + "', fileSize: '" + size + "'");
-						DebugMessage.Add("         CreationTime: '" + HelperClasses.FileHandling.GetCreationDate(cfgdatPath) + "', CreationTimeUTC: '" + HelperClasses.FileHandling.GetCreationDate(cfgdatPath, true) + "'"); ;
-						DebugMessage.Add("         LastModified: '" + HelperClasses.FileHandling.GetLastWriteDate(cfgdatPath) + "', LastModifiedUTC: '" + HelperClasses.FileHandling.GetLastWriteDate(cfgdatPath, true) + "'"); ;
+						DebugMessage.Add("         CreationTime: '" + HelperClasses.FileHandling.GetCreationDate(cfgdatPath).ToString("yyyy-MM-ddTHH:mm:ss") + "', CreationTimeUTC: '" + HelperClasses.FileHandling.GetCreationDate(cfgdatPath, true).ToString("yyyy-MM-ddTHH:mm:ss") + "'"); ;
+						DebugMessage.Add("         LastModified: '" + HelperClasses.FileHandling.GetLastWriteDate(cfgdatPath).ToString("yyyy-MM-ddTHH:mm:ss") + "', LastModifiedUTC: '" + HelperClasses.FileHandling.GetLastWriteDate(cfgdatPath, true).ToString("yyyy-MM-ddTHH:mm:ss") + "'"); ;
 					}
 					else
 					{

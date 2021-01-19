@@ -125,6 +125,10 @@ namespace Project_127.HelperClasses
 
         private IntPtr getModuleBase(string modulename)
         {
+            if (BaseProcess == null)
+            {
+                throw new Exception();
+            }
             var modules = BaseProcess.Modules;
             if (modules.Count != baseTable.Count)
             {
