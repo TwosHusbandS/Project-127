@@ -574,7 +574,6 @@
     <Resource Include="Overlay\richard\048.jpg" />
     <Resource Include="Overlay\richard\049.jpg" />
     <Resource Include="Overlay\richard\050.jpg" />
-    <Resource Include="Overlay\richard.gif" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

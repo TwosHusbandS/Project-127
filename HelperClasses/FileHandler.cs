@@ -189,6 +189,13 @@ string lpSymlinkFileName, string lpTargetFileName, SymbolicLink dwFlags);
 			}
 		}
 
+		public static void LogHash(string pFilePath)
+		{
+			string Size = GetSizeOfFile(pFilePath).ToString();
+			string Hash = GetHashFromFile(pFilePath);
+			HelperClasses.Logger.Log("FilePath: '" + pFilePath + "', Size: '" + Size + "', Has: '" + Hash + "'.");
+		}
+
 
 		/// <summary>
 		/// Creates the Path of a FilePath

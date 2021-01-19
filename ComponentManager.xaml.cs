@@ -536,13 +536,6 @@ namespace Project_127
 		{
 			if (e.ClickCount >= 3)
 			{
-				Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Did you mean to click this?");
-				yesno.ShowDialog();
-				if (yesno.DialogResult == false)
-				{
-					return;
-				}
-
 				HelperClasses.Logger.Log("ComponentMngr - User wants to hidden import ZIP for Component.");
 				PopupTextbox tmp = new PopupTextbox("Enter the Link provided by us.", "");
 				tmp.ShowDialog();

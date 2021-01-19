@@ -92,6 +92,7 @@ namespace Project_127.HelperClasses
                         succeeded = s.SelectSingleNode("./hash").Value.ToLower() == zipmd5;
                         if (!succeeded)
                         {
+							HelperClasses.Logger.Log("Hash comparison inside Download Manager failed.");
                             continue;
                         }
                         new PopupProgress(PopupProgress.ProgressTypes.ZIPFile, zipdlpath).ShowDialog();
@@ -187,7 +188,8 @@ namespace Project_127.HelperClasses
                                 }
                                 if (!succeeded)
                                 {
-                                    return false;
+									HelperClasses.Logger.Log("Hash comparison inside Download Manager failed.");
+									return false;
                                 }
                                 foreach (var path in file.paths)
                                 {
@@ -374,7 +376,8 @@ namespace Project_127.HelperClasses
             }
             if (!succeeded)
             {
-                HelperClasses.Logger.Log("Failed to retrieve " + filename);
+				HelperClasses.Logger.Log("Hash comparison inside Download Manager failed.");
+				HelperClasses.Logger.Log("Failed to retrieve " + filename);
                 return null;
             }
             else
@@ -482,7 +485,8 @@ namespace Project_127.HelperClasses
                     break;
                 }
             }
-            HelperClasses.Logger.Log("Failed to retrieve " + filename);
+			HelperClasses.Logger.Log("Hash comparison inside Download Manager failed.");
+			HelperClasses.Logger.Log("Failed to retrieve " + filename);
             return null;
         }
         private Tuple<List<subAssemblyFile>, bool> getSubassemblyFolder(string path, XPathNavigator folderEntry)

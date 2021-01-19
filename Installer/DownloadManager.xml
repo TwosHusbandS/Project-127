@@ -212,8 +212,8 @@
 
     <subassembly name="EMU_BASE_SUBASSEMBLY" type="common" version ="1.14.0.0">
         <file name="PlayGTAV.exe">
-            <hash>078DC056B21FF674F5807809E423268F</hash>
-            <mirror>http://gtav.anushk.net/downloadManager/subassemblies/emuv13/PlayGTAV.exe</mirror>
+            <hash>5F4F8AE07CC5EED5204583B99E9889C0</hash>
+            <mirror>http://gtav.anushk.net/downloadManager/subassemblies/emuv14/PlayGTAV.exe</mirror>
         </file>
         <file name="launc.dll">
             <hash>D3450084CD84FC61215843D64D25FE65</hash>
@@ -241,9 +241,9 @@
         </file>
     </subassembly>
 
-    <subassembly name="MISC_FILES" type="zip" version="1.13.0.0">
-        <hash>F1CEDD2117F177D9A2BF5629D2F17069</hash>
-        <mirror>http://gtav.anushk.net/MISC_FILES_V13_BETA.zip</mirror>
+    <subassembly name="MISC_FILES" type="zip" version="1.14.0.0">
+        <hash>89F0471094C6082B74020F871180AB1D</hash>
+        <mirror>http://gtav.anushk.net/MISC_FILES_V14.zip</mirror>
     </subassembly>
 
     <!--<subassembly name="ADDITIONAL_SAVEFILES" type="zip" version="1.0.0.0">

@@ -35,33 +35,16 @@ Deploy Instructions:
 	Merge branch into master
 
 Comments like "TODO", "TO DO", "CTRLF", "CTRL-F", and "CTRL F" are just ways of finding a specific line quickly via searching
+
 Hybrid code can be found in AAA_HybridCode.
 
 ON RELEASE OF 1.2
-- [DONE] V14s built, hashes and added to Update.xml
 - AUTOUPDATE STUFF (P127 INSTALLER AS WELL AS ZIP)
 - RELEASE ALL NEW FILES WITH IT (V14, new SCL Binaries)
-- WRITE RELEASE NOTES
 - RIGHT_CLICK_README
-- CHECK DOWNLOAD MANAGER FIXES BY DRAGON
-- DRAGONS TO GET ALL BINARIES AND DOWNLOAD MANAGER.XML CORRECT
 
 
-
-Post 1.1.9.1:
-- [DONE] Unit / Integration Test DownloadManager on everything
-- [DONE] build zip v 14
-- "Settings.EnableScripthookOnDowngraded"
-	>> [DONE] Settings Backend
-	>> [DONE] Settings Frontend
-	>> [DONE] Writing it on emu config
-	>> SCL Binary support
-	>> [DONE] EMU Binary support
-	   => [DONE] via config
-	   => [DONE] via launch flags
-	   => [DONE] Actual Setting the launch flag when needed...
-
- */
+*/
 
 using System;
 using System.Collections.Generic;
@@ -250,6 +233,7 @@ namespace Project_127
 				// Same as other two thingies here lolerino
 				HelperClasses.WindowChangeListener.Start();
 			}
+
 		}
 
 		#endregion
@@ -276,7 +260,11 @@ namespace Project_127
 			HelperClasses.Logger.Log("Startup procedure (Constructor of MainWindow) completed. It took " + StartUpStopwatch.ElapsedMilliseconds + " ms.");
 			HelperClasses.Logger.Log("------------------------------------------------------------------------------------");
 
+			string Path1 = @"F:\SteamLibrary\steamapps\common\Grand Theft Auto V\Project_127_Files_V14_Small.zip";
+			string Path2 = @"F:\SteamLibrary\steamapps\common\Grand Theft Auto V\Project_127_Files_V14_Big.zip";
 
+			HelperClasses.FileHandling.LogHash(Path1);
+			HelperClasses.FileHandling.LogHash(Path2);
 		}
 
 

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <item>
-  <version>1.1.9.1</version>
-  <url>https://github.com/TwosHusbandS/Project-127/raw/working/Installer/Project_127_Installer_V_1_1_9_1.exe</url>
+  <version>1.2.0.0</version>
+  <url>https://github.com/TwosHusbandS/Project-127/raw/internal/Installer/Project_127_Installer_V_1_2_0_0.exe</url>
   <buildversiontable>
     1.0.323.0;1.24:
     1.0.350.0;1.25:
@@ -35,6 +35,9 @@
   <announcement></announcement>
   <specialbuildname></specialbuildname>
   <dragonsreadme>https://github.com/jaredtb</dragonsreadme>
+  <zip>https://gtav.anushk.net/Project_127_Files_V14_Big.zip</zip>
+  <bigzipmd5>690108ce3e0b5289630de1a074d56553</bigzipmd5>
+  <zipversion>14</zipversion>
   <comment>Backwards Compability</comment>
   <comment2>dont THINK anything below here is actively used</comment2>
   <tease>true</tease>
@@ -45,9 +48,6 @@
   <DLLinkUHash>1f2c8c0fd9f83d6ad82d9a0aa2567562</DLLinkUHash>
   <DLLinkX>https://github.com/TwosHusbandS/Project-127/releases/download/V_Final/file.x</DLLinkX>
   <DLLinkXHash>683610e269ba60c5fcc7a9f6d1a8bfd5</DLLinkXHash>
-  <zip>https://gtav.anushk.net/Project_127_Files_V14_Big.zip</zip>
-  <bigzipmd5>690108ce3e0b5289630de1a074d56553</bigzipmd5>
-  <zipversion>12</zipversion>
   <zipmd5>82178aaca3a4efc796c70a7bafa25fc1</zipmd5>
   <zip0>https://gtav.anushk.net/Project_127_Files_V14_Small.zip</zip0>
   <zip1>https://anonfiles.com/naO8d1q2pd/Project_127_Files_V12_Small_zip</zip1>
