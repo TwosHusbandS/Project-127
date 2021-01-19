@@ -773,12 +773,11 @@ namespace Project_127.Auth
                 {
                     addLaunchExtension("ingameNick", "1337haxx0r");
                 }
-#else
+#endif
 				if (Settings.InGameName != "HiMomImOnYoutube")
 				{
 					addLaunchExtension("ingameNick", Settings.InGameName);
 				}
-#endif
 				try
 				{
 					if (nick == "gta5downgrade")
