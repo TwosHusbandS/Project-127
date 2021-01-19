@@ -230,7 +230,7 @@ namespace Project_127
 		/// <summary>
 		/// Property of other Buildinfo. Will be in the top message of logs
 		/// </summary>
-		public static string BuildInfo = "P127-Version: 1.2, Build Nr: 2";
+		public static string BuildInfo = "P127-Version: 1.2, Build Nr: 3";
 
 		/// <summary>
 		/// Returns all Command Line Args as StringArray

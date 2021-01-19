@@ -260,11 +260,6 @@ namespace Project_127
 			HelperClasses.Logger.Log("Startup procedure (Constructor of MainWindow) completed. It took " + StartUpStopwatch.ElapsedMilliseconds + " ms.");
 			HelperClasses.Logger.Log("------------------------------------------------------------------------------------");
 
-			string Path1 = @"F:\SteamLibrary\steamapps\common\Grand Theft Auto V\Project_127_Files_V14_Small.zip";
-			string Path2 = @"F:\SteamLibrary\steamapps\common\Grand Theft Auto V\Project_127_Files_V14_Big.zip";
-
-			HelperClasses.FileHandling.LogHash(Path1);
-			HelperClasses.FileHandling.LogHash(Path2);
 		}
 
 
