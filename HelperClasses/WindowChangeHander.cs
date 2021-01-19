@@ -25,6 +25,8 @@ namespace Project_127.HelperClasses
 		/// <param name="WindowTitle"></param>
 		public static void WindowChangeEvent(string WindowTitle)
 		{
+			//HelperClasses.Logger.Log("Window Change Event: '" + WindowTitle + "'");
+
 			if (MySettings.Settings.EnableOverlay && GTAOverlay.OverlayMode == GTAOverlay.OverlayModes.Borderless)
 			{
 				if (WindowTitle == GTAOverlay.targetWindowBorderless && LastWindowTitle != GTAOverlay.targetWindowBorderless)

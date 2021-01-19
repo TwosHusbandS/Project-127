@@ -80,7 +80,7 @@ namespace Project_127
 			get
 			{
 				string masterURL = "https://raw.githubusercontent.com/TwosHusbandS/Project-127/master/Installer/Update.xml";
-				string modeURL = "https://raw.githubusercontent.com/TwosHusbandS/Project-127/" + Branch.ToLower() + "/Installer/Update.xml";
+				string modeURL = "https://raw.githubusercontent.com/TwosHusbandS/Project-127/" + P127Branch.ToLower() + "/Installer/Update.xml";
 
 				string modeXML = HelperClasses.FileHandling.GetStringFromURL(modeURL, true);
 
@@ -104,7 +104,7 @@ namespace Project_127
 			get
 			{
 				string masterURL = "https://raw.githubusercontent.com/TwosHusbandS/Project-127/master/Installer/DownloadManager.xml";
-				string modeURL = "https://raw.githubusercontent.com/TwosHusbandS/Project-127/" + Branch + "/Installer/DownloadManager.xml";
+				string modeURL = "https://raw.githubusercontent.com/TwosHusbandS/Project-127/" +DMBranch + "/Installer/DownloadManager.xml";
 
 				string modeXML = HelperClasses.FileHandling.GetStringFromURL(modeURL, true);
 				if (!String.IsNullOrWhiteSpace(modeXML))
@@ -126,7 +126,7 @@ namespace Project_127
 			get
 			{
 				string masterURL = "https://raw.githubusercontent.com/TwosHusbandS/Project-127/master/Installer/DownloadManager.xml";
-				string modeURL = "https://raw.githubusercontent.com/TwosHusbandS/Project-127/" + Branch + "/Installer/DownloadManager.xml";
+				string modeURL = "https://raw.githubusercontent.com/TwosHusbandS/Project-127/" + DMBranch + "/Installer/DownloadManager.xml";
 				if (String.IsNullOrWhiteSpace(HelperClasses.FileHandling.GetStringFromURL(modeURL, true)))
 				{
 					return masterURL;
@@ -140,7 +140,7 @@ namespace Project_127
 
 		/// Gets the Branch we are in as actual branch.
 		/// </summary>
-		public static string Branch
+		public static string P127Branch
 		{
 			get
 			{
@@ -148,36 +148,47 @@ namespace Project_127
 				{
 					return "internal";
 				}
-				if (Project_127.MySettings.Settings.Mode.ToLower() == "default")
+				if (Project_127.MySettings.Settings.P127Mode.ToLower() == "default")
 				{
 					return "master";
 				}
-				return Project_127.MySettings.Settings.Mode.ToLower();
+				return Project_127.MySettings.Settings.P127Mode.ToLower();
+			}
+		}
+
+		/// Gets the Branch we are in as actual branch.
+		/// </summary>
+		public static string DMBranch
+		{
+			get
+			{
+				if (InternalMode)
+				{
+					return "internal";
+				}
+				if (Project_127.MySettings.Settings.DMMode.ToLower() == "default")
+				{
+					return "master";
+				}
+				return Project_127.MySettings.Settings.DMMode.ToLower();
 			}
 		}
 
 		/// <summary>
 		/// Gets the Version (BuildVersion) of our GTA5.exe
 		/// </summary>
-		public static Version BuildVersion
+		public static Version GTABuild
 		{
 			get
 			{
-				try
-				{
-					if (HelperClasses.FileHandling.doesFileExist(LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\gta5.exe"))
-					{
-						FileVersionInfo myFVI = FileVersionInfo.GetVersionInfo(LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\gta5.exe");
-						return new Version(myFVI.FileVersion);
-					}
-				}
-				catch
-				{
-
-				}
-				return new Version("1.0.0.0");
+				return HelperClasses.FileHandling.GetVersionFromFile(LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\gta5.exe");
 			}
 		}
+
+		/// <summary>
+		/// Contains the verion info of running GTA
+		/// </summary>
+		public static Version RunningGTABuild = new Version(0, 0);
 
 		/// <summary>
 		/// Download Location of Zip File
@@ -219,7 +230,7 @@ namespace Project_127
 		/// <summary>
 		/// Property of other Buildinfo. Will be in the top message of logs
 		/// </summary>
-		public static string BuildInfo = "V. 1.1, Build 1";
+		public static string BuildInfo = "P127-Version: 1.2, Build Nr: 3";
 
 		/// <summary>
 		/// Returns all Command Line Args as StringArray
@@ -252,6 +263,9 @@ namespace Project_127
 		public static string Logfile { get; private set; } = ProjectInstallationPath.TrimEnd('\\') + @"\AAA - Logfile.log";
 
 
+		public static IPCPipeServer pipeServer = new IPCPipeServer("Project127Launcher");
+
+
 
 		#endregion
 
@@ -279,27 +293,34 @@ namespace Project_127
 				- "EnableAutoSteamCoreFix"
 			    - "EnableNohboardBurhac"
 				- "Theme"
+				- "EnableCopyFilesInsteadOfSyslinking_SocialClub"
+				- "TeasingFeatures"
 			*/
 
 			// Internal Settings we dont show the user
+			{"DownloadManagerInstalledSubassemblies", "" },
 			{"FirstLaunch", "True" },
 			{"LastLaunchedVersion", Globals.ProjectVersion.ToString() },
 			{"InstallationPath", Process.GetCurrentProcess().MainModule.FileName.Substring(0, Process.GetCurrentProcess().MainModule.FileName.LastIndexOf('\\')) },
 			{"EnableRememberMe", "False" },
+			{"AllFilesEverPlacedInsideGTA", "" },
 
 			// Project 1.27 Settings
 			{"GTAVInstallationPath", ""},
 			{"ZIPExtractionPath", Process.GetCurrentProcess().MainModule.FileName.Substring(0, Process.GetCurrentProcess().MainModule.FileName.LastIndexOf('\\')) },
 			{"EnableLogging", "True"},
 			{"EnableAlternativeLaunch", "False"},
+			{"EnableAlternativeLaunchForceCProgramFiles", "False"},
 			{"EnableCopyFilesInsteadOfHardlinking", "False"},
 			{"EnableSlowCompare", "False"},
 			{"EnableLegacyAuth", "False"},
+			{"GTAWindowTitle", "Grand Theft Auto V"},
 			{"Version", "127"},
-			{"EnableCopyFilesInsteadOfSyslinking_SocialClub", "False"},
+			//{"EnableCopyFilesInsteadOfSyslinking_SocialClub", "False"},
 			{"ExitWay", "Close"},
 			{"StartWay", "Maximized"},
 			{"Mode", "default"},
+			{"DMMode", "default"},
 	
 			// GTA V Settings
 			{"Retailer", "Steam"},
@@ -307,23 +328,25 @@ namespace Project_127
 			{"InGameName", "HiMomImOnYoutube"},
 			{"EnablePreOrderBonus", "False"},
 			{"EnableDontLaunchThroughSteam", "False"},
+			{"EnableScripthookOnDowngraded", "False"},
    
 			// Extra Features
 			{"EnableOverlay", "False"},
-			{"EnableAutoStartJumpScript", "True" },
+			{"EnableAutoStartJumpScript", "False" },
 			{"JumpScriptKey1", "32" },
 			{"JumpScriptKey2", "76" },
+			{"EnableJumpscriptUseCustomScript", "False" },
 			{"EnableAutoSetHighPriority", "True" },
 
 			// Auto start Shit
 			{"EnableOnlyAutoStartProgramsWhenDowngraded", "True"},
-			{"EnableAutoStartLiveSplit", "True" },
+			{"EnableAutoStartLiveSplit", "False" },
 			{"PathLiveSplit", @"C:\Some\Path\SomeFile.exe" },
-			{"EnableAutoStartStreamProgram", "True" },
+			{"EnableAutoStartStreamProgram", "False" },
 			{"PathStreamProgram", @"C:\Some\Path\SomeFile.exe" },
-			{"EnableAutoStartFPSLimiter", "True" },
+			{"EnableAutoStartFPSLimiter", "False" },
 			{"PathFPSLimiter", @"C:\Some\Path\SomeFile.exe" },
-			{"EnableAutoStartNohboard", "True" },
+			{"EnableAutoStartNohboard", "False" },
 			{"PathNohboard", @"C:\Some\Path\SomeFile.exe" },
 
 			// Overlay shit
@@ -387,6 +410,10 @@ namespace Project_127
 			// Checks if we are doing first Launch.
 			if (Settings.FirstLaunch)
 			{
+				string msg = "Legal Disclaimer:\nWe (and Project 1.27) are not responsible for anything that happens to:\nYour Windows, your hardware, your PC,\nyour GTA, your Social Club account etc.\nBy clicking 'OK' you agree to those terms.\n\n- The Project 1.27 Team";
+
+				new Popup(Popup.PopupWindowTypes.PopupOk, msg).ShowDialog();
+
 				// Set Own Installation Path in Regedit Settings
 				HelperClasses.Logger.Log("FirstLaunch Procedure Started");
 				HelperClasses.Logger.Log("Setting Installation Path to '" + ProjectInstallationPath + "'", 1);
@@ -408,6 +435,8 @@ namespace Project_127
 				"If anything does not work as expected, \n" +
 				"contact me on Discord. @thS#0305\n\n" +
 				" - The Project 1.27 Team").ShowDialog();
+
+				Settings.AntiVirusFix();
 
 				HelperClasses.Logger.Log("FirstLaunch Procedure Ended");
 			}
@@ -475,7 +504,7 @@ namespace Project_127
 					Globals.SetUpDownloadManager(false);
 					ComponentManager.ZIPVersionSwitcheroo();
 
-					Settings.Mode = "default";
+					Settings.P127Mode = "default";
 
 					HelperClasses.FileHandling.createPath(MySaveFile.BackupSavesPath.TrimEnd('\\') + @"\New Folder");
 					HelperClasses.FileHandling.createPath(MySaveFile.BackupSavesPath.TrimEnd('\\') + @"\YouCanRightclick");
@@ -489,15 +518,99 @@ namespace Project_127
 						}
 					}
 					HelperClasses.RegeditHandler.SetValue("TeasingFeatures", "True");
-					// Create Registry Key here...
+				}
+
+
+				if (Settings.LastLaunchedVersion < new Version("1.2.0.0"))
+				{
+					Settings.P127Mode = "default";
+					Settings.DMMode = "default";
+
+					string msg = "Legal Disclaimer:\nWe (and Project 1.27) are not responsible for anything that happens to:\nYour Windows, your harware, your PC,\nyour GTA, your Social Club account etc.\nBy clicking 'OK' you agree to those terms.\n\n- The Project 1.27 Team";
+
+					new Popup(Popup.PopupWindowTypes.PopupOk, msg).ShowDialog();
+
+					HelperClasses.RegeditHandler.DeleteValue("EnableCopyFilesInsteadOfSyslinking_SocialClub");
+					HelperClasses.RegeditHandler.DeleteValue("TeasingFeatures");
+
+					if (Settings.EnableLegacyAuth)
+					{
+						Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "The captcha-free-Authentication (MTL) has been improved,\nand should be working for everyone on this version.\nWould you like to enable it?");
+						yesno.ShowDialog();
+						if (yesno.DialogResult == true)
+						{
+							Settings.EnableLegacyAuth = false;
+						}
+					}
+
+					Settings.TellRockstarUsersToDisableAutoUpdateIfNeeded();
+
+					Settings.AllFilesEverPlacedInsideGTAMyAdd("asmjit.dll");
+					Settings.AllFilesEverPlacedInsideGTAMyAdd("botan.dll");
+					Settings.AllFilesEverPlacedInsideGTAMyAdd("launc.dll");
+					Settings.AllFilesEverPlacedInsideGTAMyAdd("origi_socialclub.dll");
+					Settings.AllFilesEverPlacedInsideGTAMyAdd("Readme.txt");
+					Settings.AllFilesEverPlacedInsideGTAMyAdd("socialclub.dll");
+					Settings.AllFilesEverPlacedInsideGTAMyAdd("tinyxml2.dll");
+
+					List<string> tmp = new List<string>();
+					tmp.AddRange(HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder("").ToList<string>());
+					tmp = tmp.Distinct().ToList();
+
+					string[] tmp1 = HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(LauncherLogic.DowngradeEmuFilePath);
+					foreach (string tmp_i in tmp1)
+					{
+						Settings.AllFilesEverPlacedInsideGTAMyAdd(tmp_i.Substring(LauncherLogic.DowngradeEmuFilePath.Length).TrimStart('\\'));
+					}
+
+					string[] tmp2 = HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(LauncherLogic.DowngradeAlternativeFilePathRockstar124);
+					foreach (string tmp_i in tmp2)
+					{
+						Settings.AllFilesEverPlacedInsideGTAMyAdd(tmp_i.Substring(LauncherLogic.DowngradeAlternativeFilePathRockstar124.Length).TrimStart('\\'));
+					}
+
+					string[] tmp3 = HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(LauncherLogic.DowngradeAlternativeFilePathRockstar127);
+					foreach (string tmp_i in tmp3)
+					{
+						Settings.AllFilesEverPlacedInsideGTAMyAdd(tmp_i.Substring(LauncherLogic.DowngradeAlternativeFilePathRockstar127.Length).TrimStart('\\'));
+					}
+
+					string[] tmp4 = HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(LauncherLogic.DowngradeAlternativeFilePathSteam127);
+					foreach (string tmp_i in tmp4)
+					{
+						Settings.AllFilesEverPlacedInsideGTAMyAdd(tmp_i.Substring(LauncherLogic.DowngradeAlternativeFilePathSteam127.Length).TrimStart('\\'));
+					}
+
+					string[] tmp5 = HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(LauncherLogic.DowngradeAlternativeFilePathSteam124);
+					foreach (string tmp_i in tmp5)
+					{
+						Settings.AllFilesEverPlacedInsideGTAMyAdd(tmp_i.Substring(LauncherLogic.DowngradeAlternativeFilePathSteam124.Length).TrimStart('\\'));
+					}
+
+					string[] tmp6 = HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(LauncherLogic.UpgradeFilePath);
+					foreach (string tmp_i in tmp6)
+					{
+						Settings.AllFilesEverPlacedInsideGTAMyAdd(tmp_i.Substring(LauncherLogic.UpgradeFilePath.Length).TrimStart('\\'));
+					}
+
+					string[] tmp7 = HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(LauncherLogic.UpgradeFilePathBackup);
+					foreach (string tmp_i in tmp7)
+					{
+						Settings.AllFilesEverPlacedInsideGTAMyAdd(tmp_i.Substring(LauncherLogic.UpgradeFilePathBackup.Length).TrimStart('\\'));
+					}
+
+					Settings.AntiVirusFix();
 				}
 
 				Settings.LastLaunchedVersion = Globals.ProjectVersion;
 			}
 
-
 			// Deleting all Installer and ZIP Files from own Project Installation Path
 			DeleteOldFiles();
+
+			// reading Social club install dir from registry
+			LaunchAlternative.SetUpSocialClubRegistryThing();
+			LaunchAlternative.SocialClubUpgrade();
 
 			// Throw annoucements
 			HandleAnnouncements();
@@ -526,11 +639,256 @@ namespace Project_127
 			// this makes its parent window show super early, which is ugly.
 			// NoteOverlay.OverlaySettingsChanged();
 
-			// Inits the FIleWatcher for IPC
-			InitFileWatcher();
+			// INIT the Inter-Process-Communication via Named Pipes. Shoutout to dr490n
+
+			initIPC();
+
+			Settings.GTAWindowTitle = GTAOverlay.targetWindowBorderlessDefault;
+
+			// INIT the dynamic text handler for the overlay
+			initDynamicTextGetters();
 		}
 
 
+
+		/// <summary>
+		/// Sets up the IPC server
+		/// </summary>
+		private static void initIPC()
+		{
+			pipeServer.registerEndpoint("messageBox", (a) =>
+			{
+				Globals.DebugPopup(Encoding.UTF8.GetString(a));
+				return a;
+			});
+
+			pipeServer.registerEndpoint("getBaseToken", Auth.ROSCommunicationBackend.GenLaunchBase);
+
+			pipeServer.registerEndpoint("log", a =>
+			{
+				HelperClasses.Logger.Log(Encoding.UTF8.GetString(a).TrimEnd('\0'));
+				return a.Take(1).ToArray();
+			});
+
+			pipeServer.registerEndpoint("pleaseshow", a =>
+			{
+				MainWindow.MW.Dispatcher.Invoke(() =>
+				{
+					MainWindow.MW.menuItem_Show_Click(null, null);
+				});
+				return new byte[] { Convert.ToByte(true) };
+			});
+
+			pipeServer.run();
+
+			//var pc = new IPCPipeClient("Project127Launcher");
+			//pc.call("test", Encoding.UTF8.GetBytes("Hi"));
+		}
+
+		/// <summary>
+		/// Handles pointer path interpretation similarly to AutoSplit
+		/// </summary>
+		public static ASPointerPath GTAPointerPathHandler = new ASPointerPath("GTA5");
+
+		/// <summary>
+		/// Sets up the overlay dynamic text handler
+		/// </summary>
+		private static void initDynamicTextGetters()
+		{
+			/*
+			 * Currently Supported Variables:
+			 * $missions
+			 * $sandf
+			 * $usj
+			 * $bridges
+			 * $randevs
+			 * $hobbies
+			 * $cutscene
+			 * $script
+			 * $scriptPretty
+			 * $percent
+			 * $golfhole
+			 */
+
+			Func<Func<string>, string> baseHandler = a =>
+			 {
+				 if (RunningGTABuild == new Version(0, 0))
+				 {
+					 return "[NF]";
+				 }
+				 else if (RunningGTABuild != new Version(1, 0, 372, 2))
+				 {
+					 return "[N/A]";
+				 }
+				 try
+				 {
+					 return a();
+				 }
+				 catch
+				 {
+					 return "[ERR]";
+				 }
+			 };
+			DynamicText.registerVarGetter("ctime", () => DateTime.Now.ToString());
+			DynamicText.registerVarGetter("missions", () => baseHandler(
+				() => GTAPointerPathHandler.EvalPointerPath_I32(
+					stateVarsCurrent["missionCounter"]
+					).ToString()
+				)
+			);
+			DynamicText.registerVarGetter("sandf", () => baseHandler(
+				() => GTAPointerPathHandler.EvalPointerPath_I32(
+					stateVarsCurrent["sAndFCounter"]
+					).ToString()
+				)
+			);
+			DynamicText.registerVarGetter("usj", () => baseHandler(
+				 () => GTAPointerPathHandler.EvalPointerPath_I32(
+					 stateVarsCurrent["uniqueStuntJumps"]
+					 ).ToString()
+				 )
+			);
+			DynamicText.registerVarGetter("bridges", () => baseHandler(
+				 () => GTAPointerPathHandler.EvalPointerPath_I32(
+					 stateVarsCurrent["bridgeCounter"]
+					 ).ToString()
+				 )
+			);
+			DynamicText.registerVarGetter("randevs", () => baseHandler(
+				 () => GTAPointerPathHandler.EvalPointerPath_I32(
+					 stateVarsCurrent["randEvCounter"]
+					 ).ToString()
+				 )
+			);
+			DynamicText.registerVarGetter("hobbies", () => baseHandler(
+				 () => GTAPointerPathHandler.EvalPointerPath_I32(
+					 stateVarsCurrent["hobbies"]
+					 ).ToString()
+				 )
+			);
+			DynamicText.registerVarGetter("cutscene", () => baseHandler(
+				 () =>
+				 {
+					 var cc = GTAPointerPathHandler.EvalPointerPath(255,
+						 stateVarsCurrent["currCutscene"]);
+					 if (cc == null)
+					 {
+						 return "NONE";
+					 }
+					 else
+					 {
+						 var s = Encoding.UTF8.GetString(cc.TakeWhile(a => a != '\0').ToArray());
+						 return (s == "") ? "NONE" : s;
+					 }
+				 }
+				 )
+			);
+			DynamicText.registerVarGetter("script", () => baseHandler(
+				 () =>
+				 {
+					 var cs = GTAPointerPathHandler.EvalPointerPath(255,
+						 stateVarsCurrent["currScript"]);
+					 if (cs == null)
+					 {
+						 return "NONE";
+					 }
+					 else
+					 {
+						 var s = Encoding.UTF8.GetString(cs.TakeWhile(a => a != '\0').ToArray());
+						 return (s == "") ? "NONE" : s;
+					 }
+				 }
+				 )
+			);
+			DynamicText.registerVarGetter("scriptPretty", () => baseHandler(
+				 () =>
+				 {
+					 var cc = GTAPointerPathHandler.EvalPointerPath(255,
+						 stateVarsCurrent["currScript"]);
+					 if (cc == null)
+					 {
+						 return "NONE";
+					 }
+					 else
+					 {
+						 var s = Encoding.UTF8.GetString(cc.TakeWhile(a => a != '\0').ToArray());
+						 return (s == "") ? "NONE" : MissionIdentifiers.getMissionInfo(s).Item1;
+					 }
+				 }
+				 )
+			);
+			DynamicText.registerVarGetter("percent", () => baseHandler(
+				 () => GTAPointerPathHandler.EvalPointerPath_fp32(
+					 stateVarsCurrent["percent"]
+					 ).ToString("##0.00")
+				 )
+			);
+			DynamicText.registerVarGetter("golfhole", () => baseHandler(
+				 () => GTAPointerPathHandler.EvalPointerPath_I32(
+					 stateVarsCurrent["golfHole"]
+					 ).ToString()
+				 )
+			);
+		}
+
+
+
+		/// <summary>
+		/// Dictionary with all pointer paths for 1.27 vars (steam)
+		/// </summary>
+		private static Dictionary<string, int[]> stateVarsSteam = new Dictionary<string, int[]>
+		{
+			{"missionCounter", new int[]{ 0x2A0D4B0, 0xBDA08 } },
+			{"sAndFCounter", new int[]{ 0x2A0D4B0, 0xBDA20 } },
+			{"uniqueStuntJumps", new int[]{ 0x2193E58, 0x10378 } },
+			{"bridgeCounter", new int[]{ 0x2A0D4B0, 0x30318 } },
+			{"randEvCounter", new int[]{ 0x2A0D4B0, 0xBDA28 } },
+			{"hobbies", new int[]{ 0x2A0D4B0, 0xBDA10 } },
+			{"currCutscene", new int[]{ 0x01CB8530, 0xB70 } },
+			{"currScript", new int[]{ 0x1CB8710 } },
+			//{"loading", new int[]{ 0x2157FA0 } },
+			{"percent", new int[]{ 0x0218FAD8, 0x18068 } },
+			{"golfHole", new int[]{ 0x1DDC004 } }
+
+		};
+
+		/// <summary>
+		/// Dictionary with all pointer paths for 1.27 vars (RGL)
+		/// </summary>
+		private static Dictionary<string, int[]> stateVarsRGL = new Dictionary<string, int[]>
+		{
+			{"missionCounter", new int[]{ 0x2A07E70, 0xBDA08 } },
+			{"sAndFCounter", new int[]{ 0x2A07E70, 0xBDA20 } },
+			{"uniqueStuntJumps", new int[]{ 0x2A07E70, 0xCE5C0 } },
+			{"bridgeCounter", new int[]{ 0x2A07EC8, 0x40318 } },
+			{"randEvCounter", new int[]{ 0x2A07E70, 0xBDA28 } },
+			{"hobbies", new int[]{ 0x2A07E70, 0xBDA10 } },
+			{"currCutscene", new int[]{ 0x01CB44A0, 0xB70 } },
+			{"currScript", new int[]{ 0x1CB4340 } },
+			//{"loading", new int[]{ 0x2153C30 } },
+			{"percent", new int[]{ 0x0218FAD8, 0x18068 } },
+			{"golfHole", new int[]{ 0x1DE3970 } }
+
+		};
+
+		/// <summary>
+		/// Dictionary with all pointer paths for 1.27 vars
+		/// </summary>
+		public static Dictionary<string, int[]> stateVarsCurrent
+		{
+			get
+			{
+				if (Settings.EnableAlternativeLaunch &&
+					Settings.Retailer == Settings.Retailers.Steam)
+				{
+					return stateVarsSteam;
+				}
+				else
+				{
+					return stateVarsRGL;
+				}
+			}
+		}
 
 		/// <summary>
 		/// Proper Exit Method. EMPTY FOR NOW. Get called when closed (user and taskmgr) and when PC is shutdown. Not when process is killed or power ist lost.
@@ -539,10 +897,11 @@ namespace Project_127
 		{
 			NoteOverlay.DisposeAllOverlayStuff();
 			Jumpscript.StopJumpscript();
-			Globals.FSW.Dispose();
 			MainWindow.MyDispatcherTimer.Stop();
 			MainWindow.MTLAuthTimer.Stop();
 			MainWindow.myMutex.ReleaseMutex();
+			MainWindow.MW.notifyIcon.Visible = false;
+			MainWindow.MW.notifyIcon.Dispose();
 			HelperClasses.Logger.Log("Program closed. Proper Exit. Ended normally");
 			try
 			{
@@ -558,85 +917,6 @@ namespace Project_127
 		#endregion
 
 		// Init and exit stuff above
-
-		// FileSystemWatcher (IPC) below
-
-		#region FileSystemWatcher (IPC)
-
-		/// <summary>
-		/// Reference to our FileSystemWatcher
-		/// </summary>
-		public static FileSystemWatcher FSW = new FileSystemWatcher();
-
-		/// <summary>
-		/// Inits our File Watcher for IPC
-		/// </summary>
-		public static void InitFileWatcher()
-		{
-			HelperClasses.Logger.Log("In InitFileWatcher() Creating FileSystemWatcher");
-
-			string MyPath = ProjectInstallationPath.TrimEnd('\\') + @"\dirtyprogramming";
-			if (HelperClasses.FileHandling.doesFileExist(MyPath))
-			{
-				HelperClasses.Logger.Log("Found dirtyprogramming File in the ProjectInstallationPath. Will Keep it there : )");
-			}
-			else
-			{
-				HelperClasses.Logger.Log("Found NO dirtyprogramming File in the ProjectInstallationPath. Will create it : )");
-				File.Create(MyPath).Dispose();
-			}
-
-			FSW = new FileSystemWatcher();
-
-			FSW.Path = ProjectInstallationPath;
-
-			// Watch for changes in LastAccess and LastWrite times, and
-			// the renaming of files or directories.
-			FSW.NotifyFilter = NotifyFilters.LastAccess
-								 | NotifyFilters.LastWrite
-								 | NotifyFilters.FileName
-								 | NotifyFilters.DirectoryName
-								 | NotifyFilters.Attributes
-								 | NotifyFilters.Size
-								 | NotifyFilters.CreationTime;
-
-			// Only watch text files.
-			//FSW.Filter = "PleaseShow.txt";
-
-			// Add event handlers.
-			FSW.Renamed += OnRename;
-			//FSW.Changed += OnCreated;
-
-			// Begin watching.
-			FSW.EnableRaisingEvents = true;
-			//HelperClasses.FileHandling.AddToDebug("In InitFileWatcher() Done with everything");
-
-		}
-
-		/// <summary>
-		/// Event when a file is renamed
-		/// </summary>
-		/// <param name="source"></param>
-		/// <param name="e"></param>
-		private static async void OnRename(object source, RenamedEventArgs e)
-		{
-			//HelperClasses.FileHandling.AddToDebug("In OnRename() - " + $"File: {e.OldFullPath} renamed to {e.FullPath}");
-
-			if (e.Name == "pleaseshow")
-			{
-				//HelperClasses.FileHandling.AddToDebug("In OnRename(). IT IS OUR FILE  YEAH");
-				HelperClasses.FileHandling.RenameFile(HelperClasses.FileHandling.PathCombine(Globals.ProjectInstallationPath, "pleaseshow"), "dirtyprogramming");
-				await Task.Delay(100);
-				MainWindow.MW.Dispatcher.Invoke(() =>
-				{
-					MainWindow.MW.menuItem_Show_Click(null, null);
-				});
-			}
-		}
-
-		#endregion
-
-		// FileSystemWatcher (IPC) above
 
 		// Update Stuff below
 
@@ -663,14 +943,6 @@ namespace Project_127
 		{
 			string XML_Autoupdate_Temp = XML_AutoUpdate;
 
-			// CTRLF CTRL F CTRL-F REMOVE THIS TODO TO DO
-			string tease = HelperClasses.FileHandling.GetXMLTagContent(XML_Autoupdate_Temp, "tease");
-			if (tease.ToLower() != "true")
-			{
-				// if user gets here from settings click...button will be there until refresh or reload...what evs.
-				HelperClasses.RegeditHandler.DeleteValue("TeasingFeatures");
-			}
-
 			HelperClasses.BuildVersionTable.ReadFromGithub();
 
 			// Check online File for Version.
@@ -690,26 +962,48 @@ namespace Project_127
 				if (MyVersionOnline > Globals.ProjectVersion)
 				{
 					// Update Found.
-					HelperClasses.Logger.Log("Update found", 1);
-					Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Version: '" + MyVersionOnline.ToString() + "' found on the Server.\nVersion: '" + Globals.ProjectVersion.ToString() + "' found installed.\nDo you want to upgrade?");
-					yesno.ShowDialog();
-					// Asking User if he wants update.
-					if (yesno.DialogResult == true)
-					{
-						// User wants Update
-						HelperClasses.Logger.Log("Update found. User wants it", 1);
-						string DLPath = HelperClasses.FileHandling.GetXMLTagContent(XML_Autoupdate_Temp, "url");
-						string DLFilename = DLPath.Substring(DLPath.LastIndexOf('/') + 1);
-						string LocalFileName = Globals.ProjectInstallationPath.TrimEnd('\\') + @"\" + DLFilename;
+					HelperClasses.Logger.Log("Update found (Version Check returning true).", 1);
+					HelperClasses.Logger.Log("Checking if URL is reachable.", 1);
 
-						new PopupDownload(DLPath, LocalFileName, "Installer").ShowDialog();
-						HelperClasses.ProcessHandler.StartProcess(LocalFileName);
-						Environment.Exit(0);
+					string DLPath = HelperClasses.FileHandling.GetXMLTagContent(XML_Autoupdate_Temp, "url");
+					string DLFilename = DLPath.Substring(DLPath.LastIndexOf('/') + 1);
+					string LocalFileName = Globals.ProjectInstallationPath.TrimEnd('\\') + @"\" + DLFilename;
+
+					if (HelperClasses.FileHandling.URLExists(DLPath, 750))
+					{
+						HelperClasses.Logger.Log("Update URL Reachabe");
+
+						Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Version: '" + MyVersionOnline.ToString() + "' found on the Server.\nVersion: '" + Globals.ProjectVersion.ToString() + "' found installed.\nDo you want to upgrade?");
+						yesno.ShowDialog();
+						// Asking User if he wants update.
+						if (yesno.DialogResult == true)
+						{
+							// User wants Update
+							HelperClasses.Logger.Log("Presented Update Choice to User. User wants it", 1);
+
+							HelperClasses.FileHandling.deleteFile(LocalFileName);
+							new PopupDownload(DLPath, LocalFileName, "Installer").ShowDialog();
+
+							if (HelperClasses.FileHandling.GetSizeOfFile(LocalFileName) > 50000)
+							{
+								HelperClasses.Logger.Log("Installer on Disk looks good, Starting Installer, Exits this now.", 1);
+								HelperClasses.ProcessHandler.StartProcess(LocalFileName);
+								Globals.ProperExit();
+							}
+							else
+							{
+								HelperClasses.Logger.Log("Installer on Disk does not look good. FileSize: '" + HelperClasses.FileHandling.GetSizeOfFile(LocalFileName) + "'. Will not start it. Will not exit this.", 1);
+							}
+						}
+						else
+						{
+							// User doesnt want update
+							HelperClasses.Logger.Log("User does not wants update", 1);
+						}
 					}
 					else
 					{
-						// User doesnt want update
-						HelperClasses.Logger.Log("Update found. User does not wants it", 1);
+						HelperClasses.Logger.Log("Cant reach URL, will abondon Update");
 					}
 				}
 				else
@@ -723,6 +1017,8 @@ namespace Project_127
 				// String return is fucked
 				HelperClasses.Logger.Log("Did not get most up to date Project 1.27 Version from Github. Github offline or your PC offline. Probably. Lets hope so.");
 			}
+
+			ReadMe.DragonsLinkMethod(XML_Autoupdate_Temp);
 		}
 
 
@@ -1292,15 +1588,23 @@ namespace Project_127
 			// Code for internal mode is in Globals.Internalmode Getter
 
 			// Need to be in following Format
-			// "-CommandLineArg Value"
+			// #-examplearg exampleparam#
+			// or
+			// #-examplearg#
+			// ATM NO SUPPORT FOR #-examplearg "exampleparam"#
+
 			string[] args = Globals.CommandLineArgs;
 
 			for (int i = 0; i <= args.Length - 1; i++)
 			{
-				if (args[i].ToLower() == "-background")
+				// i+1 exists
+				if (i < args.Length - 1)
 				{
-					// i+1 exists
-					if (i < args.Length - 1)
+					// FOR THIS: 
+					// #-examplearg exampleparam#
+
+					// Checks with "2 - part" command line like: "-name test"
+					if (args[i].ToLower() == "-background")
 					{
 						Globals.BackgroundImages Tmp = Globals.BackgroundImages.Main;
 						try
@@ -1313,10 +1617,58 @@ namespace Project_127
 							new Popup(Popup.PopupWindowTypes.PopupOkError, "Error converting Command Line Argument to Background Image.\n" + e.ToString()).ShowDialog();
 						}
 					}
+					else if (args[i].ToLower() == "-authstateoverwrite")
+					{
+						if (args[i].ToLower() == "true")
+						{
+							LauncherLogic.AuthStateOverWrite = true;
+						}
+						else
+						{
+							LauncherLogic.AuthStateOverWrite = false;
+						}
+					}
+					else if (args[i].ToLower() == "-useemudebugfile")
+					{
+						if (args[i].ToLower() == "true")
+						{
+							LauncherLogic.UseEmuConfigFile = true;
+						}
+						else
+						{
+							LauncherLogic.UseEmuConfigFile = false;
+						}
+					}
+
+					continue;
 				}
+
+				if (args[i].ToLower() == "-reset")
+				{
+					RegeditHandler.DeleteKey();
+
+					string tmp = HelperClasses.RegeditHandler.GetValue("ZIPExtractionPath").TrimEnd('\\') + @"\Project_127_Files\";
+					HelperClasses.FileHandling.DeleteFolder(tmp);
+
+					Globals.ProperExit();
+				}
+				else if (args[i].ToLower() == "-uninstall")
+				{
+					RegeditHandler.DeleteKey();
+
+					string tmp = HelperClasses.RegeditHandler.GetValue("ZIPExtractionPath").TrimEnd('\\') + @"\Project_127_Files\";
+					HelperClasses.FileHandling.DeleteFolder(tmp);
+
+					// run uninstaller
+					string FilePath = Globals.ProjectInstallationPath.TrimEnd('\\') + @"\unins000.exe";
+					ProcessHandler.StartProcess(FilePath, Globals.ProjectInstallationPath);
+
+					Globals.ProperExit();
+				}
+
+
 			}
 		}
-
 
 
 		/// <summary>
@@ -1351,11 +1703,6 @@ namespace Project_127
 					HelperClasses.Logger.Log("Found old build ('.BACKUP'). Will delete it.");
 					HelperClasses.FileHandling.deleteFile(myFile);
 				}
-				if (myFile.ToLower().Contains(".exe") && !myFile.ToLower().Contains("Project 127 Launcher.exe".ToLower()))
-				{
-					HelperClasses.Logger.Log("Found exe File ('" + myFile + "'). Will delete it.");
-					HelperClasses.FileHandling.deleteFile(myFile);
-				}
 				if (myFile.ToLower().Contains("dl.zip"))
 				{
 					HelperClasses.Logger.Log("Found zip File ('DL.ZIP'). Will delete it.");
@@ -1380,14 +1727,14 @@ namespace Project_127
 
 		public static string GetGameInfoForDebug(string pFilePath)
 		{
-			if (HelperClasses.FileHandling.doesFileExist(pFilePath))
+			Version tmp = HelperClasses.FileHandling.GetVersionFromFile(pFilePath);
+			if (tmp != new Version("0.0.0.1"))
 			{
-				FileVersionInfo FVI = FileVersionInfo.GetVersionInfo(pFilePath);
-				string rtrn = " [" + new Version(FVI.FileVersion).ToString();
+				string rtrn = " [" + tmp.ToString();
 
 				try
 				{
-					rtrn += " - " + BuildVersionTable.GetNiceGameVersionString(new Version(FVI.FileVersion)) + "]";
+					rtrn += " - " + BuildVersionTable.GetNiceGameVersionString(tmp) + "]";
 				}
 				catch
 				{

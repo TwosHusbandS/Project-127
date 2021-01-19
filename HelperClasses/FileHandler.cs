@@ -26,6 +26,16 @@ namespace Project_127.HelperClasses
 	static class FileHandling
 	{
 
+		[DllImport("kernel32.dll")]
+		static extern bool CreateSymbolicLink(
+string lpSymlinkFileName, string lpTargetFileName, SymbolicLink dwFlags);
+
+		enum SymbolicLink
+		{
+			File = 0,
+			Directory = 1
+		}
+
 		/// <summary>
 		/// Reference to the Method which creates the hardlinks
 		/// </summary>
@@ -87,6 +97,57 @@ namespace Project_127.HelperClasses
 		}
 
 
+		public static bool SymlinkFolder(string source, string target)
+		{
+			try
+			{
+				if (isSymLink(target))
+				{
+					HelperClasses.FileHandling.DeleteFolder(target, false);
+				}
+				else if (System.IO.Directory.Exists(target))
+				{
+					HelperClasses.FileHandling.DeleteFolder(target);
+				}
+			}
+			catch
+			{
+				return false;
+			}
+			return CreateSymbolicLink(target, source, SymbolicLink.Directory);
+		}
+
+		private static bool isSymLink(string path)
+		{
+			if (!System.IO.Directory.Exists(path))
+			{
+				return false;
+			}
+			var di = new System.IO.DirectoryInfo(path);
+			return di.Attributes.HasFlag(System.IO.FileAttributes.ReparsePoint);
+		}
+
+		public static Version GetVersionFromFile(string filePath, bool defaultToHighVersion = false)
+		{
+			Version rtrn = new Version("0.0.0.1");
+			if (defaultToHighVersion)
+			{
+				rtrn = new Version("99.99.99.99");
+			}
+
+			if (HelperClasses.FileHandling.doesFileExist(filePath))
+			{
+				try
+				{
+					FileVersionInfo FVI = FileVersionInfo.GetVersionInfo(filePath);
+					rtrn = new Version(FVI.FileVersion);
+				}
+				catch { }
+			}
+
+			return rtrn;
+		}
+
 
 
 		/// <summary>
@@ -96,14 +157,19 @@ namespace Project_127.HelperClasses
 		/// <returns></returns>
 		public static string[] GetFilesFromFolderAndSubFolder(string pPath)
 		{
-			if (doesPathExist(pPath))
+			try
 			{
-				return (Directory.GetFiles(pPath, "*", SearchOption.AllDirectories));
+
+				if (doesPathExist(pPath))
+				{
+					return (Directory.GetFiles(pPath, "*", SearchOption.AllDirectories));
+				}
 			}
-			else
+			catch
 			{
-				return (new string[0]);
+
 			}
+			return (new string[0]);
 		}
 
 		/// <summary>
@@ -121,6 +187,13 @@ namespace Project_127.HelperClasses
 			{
 				return (new string[0]);
 			}
+		}
+
+		public static void LogHash(string pFilePath)
+		{
+			string Size = GetSizeOfFile(pFilePath).ToString();
+			string Hash = GetHashFromFile(pFilePath);
+			HelperClasses.Logger.Log("FilePath: '" + pFilePath + "', Size: '" + Size + "', Has: '" + Hash + "'.");
 		}
 
 
@@ -156,15 +229,22 @@ namespace Project_127.HelperClasses
 		/// </summary>
 		/// <param name="pFilePath"></param>
 		/// <returns></returns>
-		public static string GetCreationDate(string pFilePath)
+		public static DateTime GetCreationDate(string pFilePath, bool UTC = false)
 		{
-			string rtrn = "";
+			DateTime creation = DateTime.MinValue;
 			if (doesFileExist(pFilePath))
 			{
 				try
 				{
-					DateTime creation = File.GetLastWriteTime(pFilePath);
-					rtrn = creation.ToString("yyyy-MM-ddTHH:mm:ss");
+					if (UTC)
+					{
+						creation = File.GetCreationTimeUtc(pFilePath);
+					}
+					else
+					{
+						creation = File.GetCreationTime(pFilePath);
+					}
+					return creation;
 				}
 				catch
 				{
@@ -172,7 +252,39 @@ namespace Project_127.HelperClasses
 					new Popup(Popup.PopupWindowTypes.PopupOkError, "Getting Creation Date of File: '" + pFilePath + "' failed.").ShowDialog();
 				}
 			}
-			return rtrn;
+			return creation;
+		}
+
+		/// <summary>
+		/// Gets the GetLastWriteDate Date of one file in "yyyy-MM-ddTHH:mm:ss" Format
+		/// </summary>
+		/// <param name="pFilePath"></param>
+		/// <returns></returns>
+		public static DateTime GetLastWriteDate(string pFilePath, bool UTC = false)
+		{
+			DateTime creation = DateTime.MinValue;
+			//rtrn = creation.ToString("yyyy-MM-ddTHH:mm:ss");
+			if (doesFileExist(pFilePath))
+			{
+				try
+				{
+					if (UTC)
+					{
+						creation = File.GetLastWriteTimeUtc(pFilePath);
+					}
+					else
+					{
+						creation = File.GetLastWriteTime(pFilePath);
+					}
+					return creation;
+				}
+				catch
+				{
+					HelperClasses.Logger.Log("Getting LastModified Date of File: '" + pFilePath + "' failed.");
+					new Popup(Popup.PopupWindowTypes.PopupOkError, "Getting LastModified Date of File: '" + pFilePath + "' failed.").ShowDialog();
+				}
+			}
+			return creation;
 		}
 
 		/// <summary>
@@ -185,7 +297,6 @@ namespace Project_127.HelperClasses
 			// If the file already exists, we delete it
 			if (doesFileExist(pLinkFilePath))
 			{
-				HelperClasses.Logger.Log("Creating Hardlink in: '" + pLinkFilePath + "' for existing file '" + pRealFilePath + "'. Target File already exists. Im deleting it. YOLO.", true, 0);
 				deleteFile(pLinkFilePath);
 			}
 
@@ -253,8 +364,11 @@ namespace Project_127.HelperClasses
 			}
 			catch (Exception e)
 			{
-				new Popup(Popup.PopupWindowTypes.PopupOkError, "Moving Path: '" + Source + "' to '" + Dest + "' failed.\nI suggest you restart the Program and contact me if it happens again.\n\nErrorMessage:\n" + e.ToString()).ShowDialog();
-				HelperClasses.Logger.Log("Moving Path: '" + Source + "' to '" + Dest + "' failed.", true, 0);
+				MainWindow.MW.Dispatcher.Invoke(() =>
+				{
+					HelperClasses.Logger.Log("Moving Path: '" + Source + "' to '" + Dest + "' failed.", true, 0);
+					new Popup(Popup.PopupWindowTypes.PopupOkError, "Moving Path: '" + Source + "' to '" + Dest + "' failed.\nI suggest you restart the Program and contact me if it happens again.\n\nErrorMessage:\n" + e.ToString()).ShowDialog();
+				});
 			}
 		}
 
@@ -308,7 +422,6 @@ namespace Project_127.HelperClasses
 			catch (Exception e)
 			{
 				new Popup(Popup.PopupWindowTypes.PopupOkError, "Writing to Log failed. File was probably deleted after start of Program.\nI suggest you restart the Program and contact me if it happens again.\n\nErrorMessage:\n" + e.ToString()).ShowDialog();
-				//System.Windows.Forms.MessageBox.Show("Writing to Log failed. File was probably deleted after start of Program.\n\nLogmessage:'" + pLineContent + "'\nI suggest you restart the Program and contact me if it happens again.\n\nErrorMessage:\n" + e.ToString());
 			}
 		}
 
@@ -387,12 +500,12 @@ namespace Project_127.HelperClasses
 		{
 			bool result = true;
 
-			WebRequest webRequest = WebRequest.Create(url);
-			webRequest.Timeout = TimeOutMS;
-			webRequest.Method = "HEAD";
-
 			try
 			{
+				WebRequest webRequest = WebRequest.Create(url);
+				webRequest.Timeout = TimeOutMS;
+				webRequest.Method = "HEAD";
+
 				webRequest.GetResponse();
 			}
 			catch
@@ -412,11 +525,11 @@ namespace Project_127.HelperClasses
 		/// <returns></returns>
 		public static bool AreFilesEqual(string pFilePathA, string pFilePathB, bool SlowButStable)
 		{
-			Stopwatch sw = new Stopwatch();
-			sw.Start();
+			//Stopwatch sw = new Stopwatch();
+			//sw.Start();
 			bool Sth = AreFilesEqualReal(pFilePathA, pFilePathB, SlowButStable);
-			sw.Stop();
-			HelperClasses.Logger.Log("AAAA - It took '" + sw.ElapsedMilliseconds + "' ms to compare: '" + pFilePathA + "' and '" + pFilePathB + "'. Result is: " + Sth.ToString());
+			//sw.Stop();
+			//HelperClasses.Logger.Log("AAAA - It took '" + sw.ElapsedMilliseconds + "' ms to compare: '" + pFilePathA + "' and '" + pFilePathB + "'. Result is: " + Sth.ToString());
 			return Sth;
 		}
 
@@ -560,6 +673,10 @@ namespace Project_127.HelperClasses
 			}
 		}
 
+		/// <summary>
+		/// Shoutout to Dr490n. Think I stole this off of him.
+		/// </summary>
+		/// <returns></returns>
 		public static string MostLikelyProfileFolder()
 		{
 			string profilesDir = System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
@@ -581,6 +698,11 @@ namespace Project_127.HelperClasses
 				}
 			}
 			return highDir;
+		}
+
+		public static string GetParentFolder(string Path)
+		{
+			return Path.Substring(0, Path.TrimEnd('\\').LastIndexOf('\\'));
 		}
 
 		/// <summary>
@@ -756,8 +878,8 @@ namespace Project_127.HelperClasses
 			{
 				if (doesFileExist(pFilePath))
 				{
+					File.SetAttributes(pFilePath, FileAttributes.Normal);
 					File.Delete(pFilePath);
-
 				}
 			}
 			catch (Exception e)
@@ -794,6 +916,9 @@ namespace Project_127.HelperClasses
 				HelperClasses.Logger.Log("Copying File ['" + pSource + "' to '" + pDestination + "'] failed since trycatch failed." + e.Message.ToString(), true, 0);
 			}
 		}
+
+
+
 
 
 		/// <summary>
@@ -867,13 +992,13 @@ namespace Project_127.HelperClasses
 		/// Deletes a Folder
 		/// </summary>
 		/// <param name="pPath"></param>
-		public static void DeleteFolder(string pPath)
+		public static void DeleteFolder(string pPath, bool recursive = true)
 		{
 			try
 			{
 				if (doesPathExist(pPath))
 				{
-					Directory.Delete(pPath, true);
+					Directory.Delete(pPath, recursive);
 				}
 			}
 			catch (Exception e)

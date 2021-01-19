@@ -88,12 +88,10 @@ namespace Project_127
 
 		public static async void GTAStarted()
 		{
-			HelperClasses.Logger.Log("AAAA - GTAStarted()");
+
+			Globals.RunningGTABuild = Globals.GTABuild;
 
 			await Task.Delay(5000);
-
-			HelperClasses.Logger.Log("AAAA - GTAStarted() - After 2.5 Seconds wait");
-
 
 			SetGTAProcessPriority();
 
@@ -130,15 +128,26 @@ namespace Project_127
 
 		}
 
+
+		public static bool UpgradeSocialClubAfterGame = false;
+
 		public static void GTAClosed()
 		{
 			Jumpscript.StopJumpscript();
+
+			Globals.RunningGTABuild = new Version(0, 0);
 
 			if (!GTAOverlay.DebugMode && GTAOverlay.OverlayMode == GTAOverlay.OverlayModes.Borderless)
 			{
 				NoteOverlay.DisposeGTAOverlay();
 				HelperClasses.Keyboard.KeyboardListener.Stop();
 				HelperClasses.WindowChangeListener.Stop();
+			}
+
+			if (UpgradeSocialClubAfterGame)
+			{
+				LaunchAlternative.SocialClubDowngrade(7500);
+				UpgradeSocialClubAfterGame = false;
 			}
 		}
 
@@ -153,7 +162,15 @@ namespace Project_127
 			Auth = 1
 		}
 
-		private static bool AuthStateOverWrite = false;
+		/// <summary>
+		/// Overwrites the AuthState. Enable to test some UI, and UX choices.
+		/// </summary>
+		public static bool AuthStateOverWrite = false;
+
+		/// <summary>
+		/// Uses a config file for the emu. To debug emu without it taking P127 Settings Settings.
+		/// </summary>
+		public static bool UseEmuConfigFile = false;
 
 		/// <summary>
 		/// AuthState Property
@@ -190,6 +207,8 @@ namespace Project_127
 			Unsure
 		}
 
+		public static bool RockstarFuckedUsErrorThrownAlread = false;
+
 		/// <summary>
 		/// Property of what InstallationState we are in. I want to access this from here
 		/// </summary>
@@ -197,6 +216,8 @@ namespace Project_127
 		{
 			get
 			{
+				InstallationStates rtrn = InstallationStates.Unsure;
+
 				long SizeOfGTAV = HelperClasses.FileHandling.GetSizeOfFile(GTAVFilePath.TrimEnd('\\') + @"\GTA5.exe");
 				long SizeOfUpdate = HelperClasses.FileHandling.GetSizeOfFile(GTAVFilePath.TrimEnd('\\') + @"\update\update.rpf");
 				long SizeOfPlayGTAV = HelperClasses.FileHandling.GetSizeOfFile(GTAVFilePath.TrimEnd('\\') + @"\playgtav.exe");
@@ -231,38 +252,89 @@ namespace Project_127
 					// if Sizes in GTA V Installation Path match what files we use from ZIP for downgrading
 					if (SizeOfGTAV == SizeOfDowngradeEmuGTAV && SizeOfUpdate == SizeOfDowngradeEmuUpdate && SizeOfPlayGTAV == SizeOfDowngradeEmuPlayGTAV)
 					{
-						return InstallationStates.Downgraded;
+						rtrn = InstallationStates.Downgraded;
 					}
 					else if (SizeOfGTAV == SizeOfDowngradeAlternativeSteam127GTAV && SizeOfUpdate == SizeOfDowngradeAlternativeSteam127Update)
 					{
-						return InstallationStates.Downgraded;
+						rtrn = InstallationStates.Downgraded;
 					}
 					else if (SizeOfGTAV == SizeOfDowngradeAlternativeRockstar127GTAV && SizeOfUpdate == SizeOfDowngradeAlternativeRockstar127Update)
 					{
-						return InstallationStates.Downgraded;
+						rtrn = InstallationStates.Downgraded;
 					}
 					else if (SizeOfGTAV == SizeOfDowngradeAlternativeSteam124GTAV && SizeOfUpdate == SizeOfDowngradeAlternativeSteam124Update)
 					{
-						return InstallationStates.Downgraded;
+						rtrn = InstallationStates.Downgraded;
 					}
 					else if (SizeOfGTAV == SizeOfDowngradeAlternativeRockstar124GTAV && SizeOfUpdate == SizeOfDowngradeAlternativeRockstar124Update)
 					{
-						return InstallationStates.Downgraded;
+						rtrn = InstallationStates.Downgraded;
 					}
 					// if not downgraded
 					else
 					{
 						if (SizeOfGTAV > 0 && SizeOfUpdate > 0 && SizeOfPlayGTAV > 0)
 						{
-							FileVersionInfo FVI = FileVersionInfo.GetVersionInfo(GTAVFilePath.TrimEnd('\\') + @"\GTA5.exe");
-							if (new Version(BuildVersionTable.GetNiceGameVersionString(new Version(FVI.FileVersion), true)) > new Version(1, 30))
+							if (BuildVersionTable.GetGameVersionOfBuild(Globals.GTABuild) > new Version(1, 30))
 							{
-								return InstallationStates.Upgraded;
-							} 
+								rtrn = InstallationStates.Upgraded;
+							}
 						}
 					}
 				}
-				return InstallationStates.Unsure;
+
+
+				// DETECTING IF ROCKSTAR FUCKED US
+				if (rtrn == InstallationStates.Downgraded)
+				{
+					if (BuildVersionTable.GetGameVersionOfBuild(Globals.GTABuild) > new Version(1, 30))
+					{
+						if (!ThrewUpdateDetectedMessageAlready)
+						{
+							Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "It appears like Rockstar (or Steam and Epic although unlikely) messed up Project 1.27 Files.\nDo you want to correct them?");
+							yesno.ShowDialog();
+							if (yesno.DialogResult == true)
+							{
+								Upgrade();
+
+								if (Settings.EnableAlternativeLaunch || Settings.Retailer == Settings.Retailers.Epic)
+								{
+									ComponentManager.Components.Base.ReInstall();
+								}
+								else
+								{
+									if (Settings.Retailer == Settings.Retailers.Rockstar)
+									{
+										if (Settings.SocialClubLaunchGameVersion == "124")
+										{
+											ComponentManager.Components.SCLRockstar124.ReInstall();
+
+										}
+										else
+										{
+											ComponentManager.Components.SCLRockstar127.ReInstall();
+										}
+									}
+									else if (Settings.Retailer == Settings.Retailers.Steam)
+									{
+										if (Settings.SocialClubLaunchGameVersion == "124")
+										{
+											ComponentManager.Components.SCLSteam124.ReInstall();
+
+										}
+										else
+										{
+											ComponentManager.Components.SCLSteam127.ReInstall();
+										}
+									}
+								}
+							}
+							ThrewUpdateDetectedMessageAlready = true;
+						}
+					}
+				}
+
+				return rtrn;
 			}
 		}
 
@@ -383,11 +455,29 @@ namespace Project_127
 		/// </summary>
 		public static string GTAVFilePath { get { return Settings.GTAVInstallationPath.TrimEnd('\\') + @"\"; } }
 
+
+		/// <summary>
+		/// Property of often used variable. (EmuCfgPath)
+		/// </summary>
+		public static string EmuCfgPath { get { return Settings.GTAVInstallationPath.TrimEnd('\\') + @"\scemu.cfg"; } }
+
 		#endregion
 
 
 		public static void AuthClick(bool StartGameImmediatelyAfter = false)
 		{
+			if (Settings.EnableAlternativeLaunch)
+			{
+				Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "You do not need to auth,\nbased on your current settings.\n\nDo you still want to auth?");
+				yesno.ShowDialog();
+				if (yesno.DialogResult == false)
+				{
+					return;
+				}
+			}
+
+
+
 			if (!MySettings.Settings.EnableLegacyAuth)
 			{
 				if (LauncherLogic.AuthState == LauncherLogic.AuthStates.NotAuth)
@@ -437,22 +527,30 @@ namespace Project_127
 		{
 			HelperClasses.ProcessHandler.KillRockstarProcesses();
 
+			if (!ComponentManager.CheckIfRequiredComponentsAreInstalled(true))
+			{
+				new Popups.Popup(Popups.Popup.PopupWindowTypes.PopupOk, "Cant do that because of because of missing Components").ShowDialog();
+				return;
+			}
+
 			IgnoreNewFilesWhileUpgradeDowngradeLogic = IgnoreNewFiles;
 
 			// Cancel any stuff when we have no files in upgrade files...simple right?
-			if (HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(UpgradeFilePath).Length <= 1)
+			if (!(HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(UpgradeFilePath).Length >= 2 && HelperClasses.BuildVersionTable.IsUpgradedGTA(UpgradeFilePath)))
 			{
+				// NO FILES TO UPGRADE
 				new Popup(Popup.PopupWindowTypes.PopupOk, "Found no Files to Upgrade with. I suggest verifying Files through steam\nor clicking \"Use Backup Files\" in Settings.\nWill abort Upgrade.").ShowDialog();
 				return;
 			}
 
 			HelperClasses.ProcessHandler.KillRockstarProcesses();
 
-			if (HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(DowngradeFilePath).Length <= 1)
+			if (!(HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(DowngradeFilePath).Length >= 2 && HelperClasses.BuildVersionTable.IsDowngradedGTA(DowngradeFilePath)))
 			{
 				new Popup(Popup.PopupWindowTypes.PopupOk, "Found no DowngradeFiles. Please make sure the required components are installed.").ShowDialog();
 				return;
 			}
+
 
 			PopupProgress tmp = new PopupProgress(PopupProgress.ProgressTypes.Upgrade, "");
 			tmp.ShowDialog();
@@ -472,6 +570,30 @@ namespace Project_127
 			HelperClasses.Logger.Log("Done Upgrading");
 		}
 
+
+		public static bool IsDowngradedGTA(string MyDowngradePath)
+		{
+			if (HelperClasses.FileHandling.doesPathExist(MyDowngradePath))
+			{
+				string GTA5Exe = MyDowngradePath.TrimEnd('\\') + @"\gta5.exe";
+				string Updaterpf = MyDowngradePath.TrimEnd('\\') + @"\update\update.rpf";
+				string launcher1 = MyDowngradePath.TrimEnd('\\') + @"\playgtav.exe";
+				string launcher2 = MyDowngradePath.TrimEnd('\\') + @"\gtastub.exe";
+				if (HelperClasses.BuildVersionTable.GetGameVersionOfBuild(HelperClasses.FileHandling.GetVersionFromFile(GTA5Exe)) < new Version(1, 30))
+				{
+					if (HelperClasses.FileHandling.GetSizeOfFile(Updaterpf) > 1000)
+					{
+						if ((HelperClasses.FileHandling.GetSizeOfFile(launcher1) > 50) ||
+							(HelperClasses.FileHandling.GetSizeOfFile(launcher2) > 50))
+						{
+							return true;
+						}
+					}
+				}
+			}
+			return false;
+		}
+
 		/// <summary>
 		/// Method for Downgrading
 		/// </summary>
@@ -481,7 +603,13 @@ namespace Project_127
 
 			IgnoreNewFilesWhileUpgradeDowngradeLogic = IgnoreNewFiles;
 
-			if (HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(DowngradeFilePath).Length <= 1)
+			if (!ComponentManager.CheckIfRequiredComponentsAreInstalled(true))
+			{
+				new Popups.Popup(Popups.Popup.PopupWindowTypes.PopupOk, "Cant do that because of because of missing Components").ShowDialog();
+				return;
+			}
+
+			if (!(HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(DowngradeFilePath).Length >= 2 && HelperClasses.BuildVersionTable.IsDowngradedGTA(DowngradeFilePath)))
 			{
 				new Popup(Popup.PopupWindowTypes.PopupOk, "Found no DowngradeFiles. Please make sure the required components are installed.").ShowDialog();
 				return;
@@ -509,12 +637,15 @@ namespace Project_127
 		/// <summary>
 		/// Method for "Repairing" our setup
 		/// </summary>
-		public static void Repair()
+		public static void Repair(bool quickRepair = false)
 		{
+
 			// Saving all the File Operations I want to do, executing this at the end of this Method
 			List<MyFileOperation> MyFileOperations = new List<MyFileOperation>();
 
-			HelperClasses.Logger.Log("Initiating Repair.", 0);
+			HelperClasses.Logger.Log("Initiating Repair. Lets do an Upgrade first.", 0);
+			LauncherLogic.Upgrade();
+			HelperClasses.Logger.Log("Initiating Repair. Done with Upgrade.", 0);
 			HelperClasses.Logger.Log("GTAV Installation Path: " + GTAVFilePath, 1);
 			HelperClasses.Logger.Log("InstallationLocation: " + Globals.ProjectInstallationPath, 1);
 			HelperClasses.Logger.Log("ZIP File Location: " + LauncherLogic.ZIPFilePath, 1);
@@ -523,11 +654,35 @@ namespace Project_127
 
 			HelperClasses.ProcessHandler.KillRockstarProcesses();
 
-			string[] FilesInUpgradeFiles = Directory.GetFiles(UpgradeFilePath, "*", SearchOption.AllDirectories);
+			if (quickRepair)
+			{
+				HelperClasses.Logger.Log("RepairMode quick.", 1);
+			}
+			else
+			{
+				HelperClasses.Logger.Log("RepairMode deep.", 1);
+				HelperClasses.Logger.Log("Deleting every File we ever placed inside GTA", 1);
+				foreach (string tmp in Settings.AllFilesEverPlacedInsideGTA)
+				{
+					MyFileOperations.Add(new MyFileOperation(MyFileOperation.FileOperations.Delete, GTAVFilePath.TrimEnd('\\') + @"\" + tmp, "", "Deleting '" + (GTAVFilePath.TrimEnd('\\') + @"\" + tmp) + "' from the GTA_INSTALLATION_PATH", 2));
+
+				}
+			}
+
+
+
+			string[] FilesInUpgradeFiles = HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(UpgradeFilePath);
 			HelperClasses.Logger.Log("Found " + FilesInUpgradeFiles.Length.ToString() + " Files in Upgrade Folder. Will try to delete them", 1);
 			foreach (string myFileName in FilesInUpgradeFiles)
 			{
 				MyFileOperations.Add(new MyFileOperation(MyFileOperation.FileOperations.Delete, myFileName, "", "Deleting '" + (myFileName) + "' from the $UpgradeFolder", 2));
+			}
+
+			string[] FilesInUpgradeBackupFiles = HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(UpgradeFilePathBackup);
+			HelperClasses.Logger.Log("Found " + FilesInUpgradeBackupFiles.Length.ToString() + " Files in Upgrade BACKUP Folder. Will try to delete them", 1);
+			foreach (string myFileName in FilesInUpgradeBackupFiles)
+			{
+				MyFileOperations.Add(new MyFileOperation(MyFileOperation.FileOperations.Delete, myFileName, "", "Deleting '" + (myFileName) + "' from the $UpgradeBackupFolder", 2));
 			}
 
 			// Actually executing the File Operations
@@ -551,6 +706,9 @@ namespace Project_127
 			if (LauncherLogic.InstallationState == InstallationStates.Upgraded)
 			{
 				HelperClasses.Logger.Log("Installation State Upgraded Detected.", 1);
+
+				// Checking if we can Upgrade Social Club before launchin Upgraded
+				LaunchAlternative.SocialClubUpgrade();
 
 				// If Steam
 				if (Settings.Retailer == Settings.Retailers.Steam)
@@ -607,9 +765,22 @@ namespace Project_127
 					if (!AuthStateOverWrite)
 					{
 						HelperClasses.Logger.Log("Letting Dragon work his magic");
-						await ROSCommunicationBackend.GenToken();
+						await ROSCommunicationBackend.GenLaunchToken();
 					}
 
+					HelperClasses.FileHandling.deleteFile(EmuCfgPath);
+					if (UseEmuConfigFile)
+					{
+						string[] LaunchOptions = new string[4];
+						LaunchOptions[0] = "PreOrderBonus: \"" + Settings.EnablePreOrderBonus.ToString() + "\"";
+						LaunchOptions[1] = "InGameName: \"" + Settings.InGameName + "\"";
+						LaunchOptions[2] = "SavePath: \"" + Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\Rockstar Games\GTA V\Profiles\Project127\GTA V\0F74F4C4" + "\"";
+						LaunchOptions[3] = "EnableScripthookOnDowngraded: \"" + Settings.EnableScripthookOnDowngraded.ToString() + "\"";
+						
+	  
+						LaunchOptions[3] = "WindowTitleTomfoolery: \"" + Overlay.GTAOverlay.targetWindowBorderless + "\"";
+						HelperClasses.FileHandling.WriteStringToFileOverwrite(EmuCfgPath, LaunchOptions);
+					}
 
 					// If Steam
 					if (Settings.Retailer == Settings.Retailers.Steam && !Settings.EnableDontLaunchThroughSteam)
@@ -669,7 +840,7 @@ namespace Project_127
 				NewPath = Directory.GetParent(OrigPath).ToString().TrimEnd('\\') + @"\UpgradeFiles_Backup_" + NewPath.TrimEnd('\\');
 			}
 
-			if (HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(OrigPath).Length <= 1)
+			if (!(HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(UpgradeFilePath).Length >= 2 && HelperClasses.BuildVersionTable.IsUpgradedGTA(UpgradeFilePath)))
 			{
 				new Popup(Popup.PopupWindowTypes.PopupOk, "No Upgrade Files available to back up.").ShowDialog();
 				return;
@@ -729,7 +900,7 @@ namespace Project_127
 				NewPath = Directory.GetParent(OrigPath).ToString().TrimEnd('\\') + @"\UpgradeFiles_Backup_" + NewPath.TrimEnd('\\');
 			}
 
-			if (HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(NewPath).Length <= 1)
+			if (!(HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(UpgradeFilePathBackup).Length >= 2 && HelperClasses.BuildVersionTable.IsUpgradedGTA(UpgradeFilePathBackup)))
 			{
 				new Popup(Popup.PopupWindowTypes.PopupOk, "No Backup Files available.").ShowDialog();
 				return;
@@ -1008,7 +1179,6 @@ namespace Project_127
 			await Task.Delay(2500);
 			HelperClasses.Logger.Log("Waited a good bit");
 
-			HelperClasses.Logger.Log("Trying to Set GTAV Process Priority to High");
 			SetGTAProcessPriority();
 
 			// If we DONT only auto start when downgraded OR if we are downgraded
@@ -1132,6 +1302,7 @@ namespace Project_127
 		{
 			if (Settings.EnableAutoSetHighPriority)
 			{
+				HelperClasses.Logger.Log("Trying to Set GTAV Process Priority to High");
 				try
 				{
 					Process[] processes = HelperClasses.ProcessHandler.GetProcesses("gta5");
@@ -1152,77 +1323,6 @@ namespace Project_127
 			}
 		}
 
-
-
-		#endregion
-
-
-		#region GTAUpdateDetection
-
-
-		/// <summary>
-		/// Checks if update hit, asks User, handles User interaction. Returns if it handled an update.
-		/// </summary>
-		public static bool HandleUpdates()
-		{
-			HelperClasses.Logger.Log("Checking if an Update hit");
-			if (HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(LauncherLogic.UpgradeFilePath).Length > 1)
-			{
-				if (DidUpdateHit())
-				{
-					if (ThrewUpdateDetectedMessageAlready == false)
-					{
-						ThrewUpdateDetectedMessageAlready = true;
-
-						HelperClasses.Logger.Log("Apparently it did. Lets see if the user wants a repair");
-						Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Detected an automatic Update of GTA.\nDo you want to use your current state of GTA V\nas your new \"Upgraded\" Files?\nI recommend \"Yes\"\nThis will create a Backup of the Files P127 uses for Upgrading");
-						yesno.ShowDialog();
-						if (yesno.DialogResult == true)
-						{
-							HelperClasses.Logger.Log("User does want it. Initiating CreateBackup()");
-
-							HelperClasses.ProcessHandler.KillRockstarProcesses();
-
-							LauncherLogic.CreateBackup();
-
-							// Dont repair, so we still have UpgradeFiles folder from before backup. We need it.
-							//LauncherLogic.Repair();
-
-							return true;
-						}
-						else
-						{
-							HelperClasses.Logger.Log("User doesnt want it. Alright then");
-						}
-					}
-					else
-					{
-						HelperClasses.Logger.Log("Update detected but we threw a popup already");
-					}
-				}
-				else
-				{
-					HelperClasses.Logger.Log("No update detected");
-				}
-			}
-			else
-			{
-				HelperClasses.Logger.Log("No Files in $Upgrade_Files, so im not even checking if update hit");
-			}
-			return false;
-		}
-
-		/// <summary>
-		///  Returns Bool whether or not we think that an update hit.
-		/// </summary>
-		/// <returns></returns>
-		public static bool DidUpdateHit()
-		{
-			//PopupProgress tmp = new PopupProgress(PopupProgress.ProgressTypes.DidUpdateHit, "");
-			//tmp.ShowDialog();
-			//return tmp.RtrnBool;
-			return false;
-		}
 
 
 		#endregion

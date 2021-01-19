@@ -75,15 +75,15 @@ namespace Project_127.HelperClasses
 			if (MyBuildVersionTable.Count < 2)
 			{
 				new BuildVersionTable("1.0.323.0", "1.24");
-				new BuildVersionTable("1.0.350.0", "1.26");
-				new BuildVersionTable("1.0.372.0", "1.27");
+				new BuildVersionTable("1.0.350.0", "1.25");
+				new BuildVersionTable("1.0.350.1", "1.26");
+				new BuildVersionTable("1.0.350.3", "1.27");
 				new BuildVersionTable("1.0.393.0", "1.28");
 				new BuildVersionTable("1.0.463.0", "1.29");
 				new BuildVersionTable("1.0.505.0", "1.30");
 				new BuildVersionTable("1.0.573.0", "1.31");
 				new BuildVersionTable("1.0.617.0", "1.32");
 				new BuildVersionTable("1.0.678.0", "1.33");
-				new BuildVersionTable("1.0.757.0", "1.34");
 				new BuildVersionTable("1.0.757.0", "1.34");
 				new BuildVersionTable("1.0.791.0", "1.35");
 				new BuildVersionTable("1.0.877.0", "1.36");
@@ -101,7 +101,6 @@ namespace Project_127.HelperClasses
 				new BuildVersionTable("1.0.1868.0", "1.50");
 				new BuildVersionTable("1.0.2060.0", "1.51");
 				new BuildVersionTable("1.0.2060.1", "1.52");
-				new BuildVersionTable("1.0.2189.0", "1.53");
 			}
 
 		}
@@ -128,6 +127,28 @@ namespace Project_127.HelperClasses
 			return rtrn;
 		}
 
+		/// <summary>
+		/// Returns if GTA5.exe is Downgraded. Takes both path to exe and folder.
+		/// </summary>
+		/// <param name="filePath"></param>
+		/// <returns></returns>
+		public static bool IsDowngradedGTA(string filePath)
+		{
+			filePath = filePath.ToLower().TrimEnd('\\').TrimEnd("gta5.exe");
+			return HelperClasses.BuildVersionTable.GetGameVersionOfBuild(HelperClasses.FileHandling.GetVersionFromFile(filePath + @"\gta5.exe", true)) < new Version(1, 30);
+		}
+
+		/// <summary>
+		/// Returns if GTA5.exe is Upgraded. Takes both path to exe and folder.
+		/// </summary>
+		/// <param name="filePath"></param>
+		/// <returns></returns>
+		public static bool IsUpgradedGTA(string filePath)
+		{
+			filePath = filePath.ToLower().TrimEnd('\\').TrimEnd("gta5.exe");
+			return HelperClasses.BuildVersionTable.GetGameVersionOfBuild(HelperClasses.FileHandling.GetVersionFromFile(filePath + @"\gta5.exe")) > new Version(1, 30);
+		}
+
 		public static Version GetGameVersionOfBuild(Version pBuildVersion)
 		{
 			Version LastVersionIwasBiggerthan = new Version("1.0");
@@ -151,7 +172,7 @@ namespace Project_127.HelperClasses
 		/// </summary>
 		/// <param name="pBuildVersion"></param>
 		/// <returns></returns>
-		public static string GetNiceGameVersionString(Version pBuildVersion, bool StrictGameVersion = false)
+		public static string GetNiceGameVersionString(Version pBuildVersion)
 		{
 			string rtrn = "";
 
@@ -164,15 +185,12 @@ namespace Project_127.HelperClasses
 
 					if (i == MyBuildVersionTable.Count - 1 && (pBuildVersion > MyBuildVersionTable[i].MyBuildVersion))
 					{
-						if (!StrictGameVersion)
-						{
-							rtrn = ">";
-						}
+						rtrn = ">";
 					}
 				}
 			}
 
-			if (LastVersionIwasBiggerthan == new Version("1.0") && !StrictGameVersion)
+			if (LastVersionIwasBiggerthan == new Version("1.0"))
 			{
 				rtrn = "???";
 			}
@@ -181,10 +199,8 @@ namespace Project_127.HelperClasses
 				rtrn += LastVersionIwasBiggerthan.Major + "." + LastVersionIwasBiggerthan.Minor;
 			}
 
-			if (!StrictGameVersion)
-			{
-				rtrn = "(" + rtrn + ")";
-			}
+
+			rtrn = "(" + rtrn + ")";
 
 
 			return rtrn;

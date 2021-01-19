@@ -336,9 +336,9 @@ namespace Project_127.MySettings
 		}
 
 		/// <summary>
-		/// Settings Mode. Gets and Sets from the Dictionary.
+		/// Settings P127Mode. Mode / Branch for Update.xml Gets and Sets from the Dictionary.
 		/// </summary>
-		public static string Mode
+		public static string P127Mode
 		{
 			get
 			{
@@ -346,19 +346,47 @@ namespace Project_127.MySettings
 			}
 			set
 			{
-				SetSetting("Mode", value);
+				if (value != P127Mode)
+				{
+					SetSetting("Mode", value);
 
-				if (value.ToLower() != "default")
-				{
-					MainWindow.MW.btn_lbl_Mode.Content = "Curr Mode: '" + MySettings.Settings.Mode.ToLower() + "'";
-					MainWindow.MW.btn_lbl_Mode.Visibility = Visibility.Visible;
+					if (value.ToLower() != "default")
+					{
+						MainWindow.MW.btn_lbl_Mode.Content = "Curr P127 Mode: '" + value.ToLower() + "'";
+						MainWindow.MW.btn_lbl_Mode.Visibility = Visibility.Visible;
+					}
+					else
+					{
+						MainWindow.MW.btn_lbl_Mode.Content = "";
+						MainWindow.MW.btn_lbl_Mode.Visibility = Visibility.Hidden;
+					}
+					MainWindow.MW.btn_lbl_Mode.ToolTip = MainWindow.MW.btn_lbl_Mode.Content;
+
+					Globals.CheckForUpdate();
 				}
-				else
+			}
+		}
+
+
+		/// <summary>
+		/// Settings DMMode. Mode / Branch for DownloadManager.xml Gets and Sets from the Dictionary.
+		/// </summary>
+		public static string DMMode
+		{
+			get
+			{
+				return GetSetting("DMMode");
+			}
+			set
+			{
+				if (value != DMMode)
 				{
-					MainWindow.MW.btn_lbl_Mode.Content = "";
-					MainWindow.MW.btn_lbl_Mode.Visibility = Visibility.Hidden;
+					SetSetting("DMMode", value);
+
+					ComponentManager.SetMode(value.ToLower());
+
+					Globals.SetUpDownloadManager();
 				}
-				MainWindow.MW.btn_lbl_Mode.ToolTip = MainWindow.MW.btn_lbl_Mode.Content;
 			}
 		}
 
@@ -423,18 +451,38 @@ namespace Project_127.MySettings
 		}
 
 
+		///// <summary>
+		///// Settings EnableCopyFilesInsteadOfSyslinking_SocialClub. Gets and Sets from the Dictionary.
+		///// </summary>
+		//public static bool EnableCopyFilesInsteadOfSyslinking_SocialClub
+		//{
+		//	get
+		//	{
+		//		return GetBoolFromString(GetSetting("EnableCopyFilesInsteadOfSyslinking_SocialClub"));
+		//	}
+		//	set
+		//	{
+		//		SetSetting("EnableCopyFilesInsteadOfSyslinking_SocialClub", value.ToString());
+		//	}
+		//}
+
+
+
 		/// <summary>
-		/// Settings EnableCopyFilesInsteadOfSyslinking_SocialClub. Gets and Sets from the Dictionary.
+		/// Settings EnableJumpscriptUseCustomScript. Gets and Sets from the Dictionary.
 		/// </summary>
-		public static bool EnableCopyFilesInsteadOfSyslinking_SocialClub
+		public static bool EnableJumpscriptUseCustomScript
 		{
 			get
 			{
-				return GetBoolFromString(GetSetting("EnableCopyFilesInsteadOfSyslinking_SocialClub"));
+				return GetBoolFromString(GetSetting("EnableJumpscriptUseCustomScript"));
 			}
 			set
 			{
-				SetSetting("EnableCopyFilesInsteadOfSyslinking_SocialClub", value.ToString());
+				if (value != EnableJumpscriptUseCustomScript)
+				{
+					SetSetting("EnableJumpscriptUseCustomScript", value.ToString());
+				}
 			}
 		}
 
@@ -449,27 +497,7 @@ namespace Project_127.MySettings
 			}
 			set
 			{
-				if (LauncherLogic.InstallationState != LauncherLogic.InstallationStates.Upgraded)
-				{
-					Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Before you do that, we need to be Upgraded.\nDo you want to Upgrade now?");
-					yesno.ShowDialog();
-					if (yesno.DialogResult == true)
-					{
-						LauncherLogic.Upgrade();
-						SetSetting("EnableAlternativeLaunch", value.ToString());
-						if (!ComponentManager.CheckIfRequiredComponentsAreInstalled(true))
-						{
-							SetSetting("EnableAlternativeLaunch", (!value).ToString());
-							return;
-						}
-					}
-					else
-					{
-						new Popup(Popup.PopupWindowTypes.PopupOk, "Setting was not changed.");
-						return;
-					}
-				}
-				else
+				if (ComponentManager.RecommendUpgradedGTA())
 				{
 					SetSetting("EnableAlternativeLaunch", value.ToString());
 					if (!ComponentManager.CheckIfRequiredComponentsAreInstalled(true))
@@ -477,6 +505,32 @@ namespace Project_127.MySettings
 						SetSetting("EnableAlternativeLaunch", (!value).ToString());
 						return;
 					}
+				}
+				else
+				{
+					new Popup(Popup.PopupWindowTypes.PopupOk, "Setting was not changed.");
+					return;
+				}
+				Settings.TellRockstarUsersToDisableAutoUpdateIfNeeded();
+			}
+		}
+
+
+		/// <summary>
+		/// Settings EnableAlternativeLaunchForceCProgramFiles. Gets and Sets from the Dictionary.
+		/// </summary>
+		public static bool EnableAlternativeLaunchForceCProgramFiles
+		{
+			get
+			{
+				return GetBoolFromString(GetSetting("EnableAlternativeLaunchForceCProgramFiles"));
+			}
+			set
+			{
+				if (value != EnableAlternativeLaunchForceCProgramFiles)
+				{
+					SetSetting("EnableAlternativeLaunchForceCProgramFiles", value.ToString());
+					LaunchAlternative.SetUpSocialClubRegistryThing();
 				}
 			}
 		}
@@ -568,7 +622,7 @@ namespace Project_127.MySettings
 		}
 
 		/// <summary>
-		/// Settings Retailer. Gets and Sets from Dictionary.
+		/// Settings LanguageSelected. Gets and Sets from Dictionary.
 		/// </summary>
 		public static Languages LanguageSelected
 		{
@@ -617,34 +671,7 @@ namespace Project_127.MySettings
 			{
 				if (value != SocialClubLaunchGameVersion)
 				{
-					if (LauncherLogic.InstallationState != LauncherLogic.InstallationStates.Upgraded)
-					{
-						Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Before you do that, we need to be Upgraded.\nDo you want to Upgrade now?");
-						yesno.ShowDialog();
-						if (yesno.DialogResult == true)
-						{
-							LauncherLogic.Upgrade();
-							SetSetting("Version", value);
-							if (!ComponentManager.CheckIfRequiredComponentsAreInstalled(true))
-							{
-								if (value == "124")
-								{
-									SetSetting("Version", "127");
-								}
-								else
-								{
-									SetSetting("Version", "124");
-								}
-								return;
-							}
-						}
-						else
-						{
-							new Popup(Popup.PopupWindowTypes.PopupOk, "Setting was not changed.");
-							return;
-						}
-					}
-					else
+					if (ComponentManager.RecommendUpgradedGTA())
 					{
 						SetSetting("Version", value);
 						if (!ComponentManager.CheckIfRequiredComponentsAreInstalled(true))
@@ -659,6 +686,11 @@ namespace Project_127.MySettings
 							}
 							return;
 						}
+					}
+					else
+					{
+						new Popup(Popup.PopupWindowTypes.PopupOk, "Setting was not changed.");
+						return;
 					}
 				}
 			}
@@ -682,31 +714,7 @@ namespace Project_127.MySettings
 					if (Settings.EnableAlternativeLaunch)
 					{
 						Retailers OldRetailer = Retailer;
-						if (LauncherLogic.InstallationState != LauncherLogic.InstallationStates.Upgraded)
-						{
-							Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Before you do that, we need to be Upgraded.\nDo you want to Upgrade now?");
-							yesno.ShowDialog();
-							if (yesno.DialogResult == true)
-							{
-								LauncherLogic.Upgrade();
-								SetSetting("Retailer", value.ToString());
-								if (value == Retailers.Epic)
-								{
-									Settings.EnableAlternativeLaunch = false;
-								}
-								if (!ComponentManager.CheckIfRequiredComponentsAreInstalled(true))
-								{
-									SetSetting("Retailer", OldRetailer.ToString());
-									return;
-								}
-							}
-							else
-							{
-								new Popup(Popup.PopupWindowTypes.PopupOk, "Retailer was not changed.");
-								return;
-							}
-						}
-						else
+						if (ComponentManager.RecommendUpgradedGTA())
 						{
 							SetSetting("Retailer", value.ToString());
 							if (value == Retailers.Epic)
@@ -719,11 +727,18 @@ namespace Project_127.MySettings
 								return;
 							}
 						}
+						else
+						{
+							new Popup(Popup.PopupWindowTypes.PopupOk, "Retailer was not changed.");
+							return;
+						}
+
 					}
 					else
 					{
 						SetSetting("Retailer", value.ToString());
 					}
+					Settings.TellRockstarUsersToDisableAutoUpdateIfNeeded();
 				}
 			}
 		}
@@ -780,6 +795,22 @@ namespace Project_127.MySettings
 			}
 		}
 
+
+
+		/// <summary>
+		/// Settings EnableScripthookOnDowngraded. Gets and Sets from the Dictionary.
+		/// </summary>
+		public static bool EnableScripthookOnDowngraded
+		{
+			get
+			{
+				return GetBoolFromString(GetSetting("EnableScripthookOnDowngraded"));
+			}
+			set
+			{
+				SetSetting("EnableScripthookOnDowngraded", value.ToString());
+			}
+		}
 
 		/// <summary>
 		/// Settings EnableAutoStartLiveSplit. Gets and Sets from the Dictionary.
@@ -1336,6 +1367,33 @@ namespace Project_127.MySettings
 		}
 
 		/// <summary>
+		/// Setting: AllFilesEverPlacedInsideGTA. Gets and Sets from Dictionary
+		/// </summary>
+		public static List<string> AllFilesEverPlacedInsideGTA
+		{
+			get
+			{
+				return GetStringListFromString(GetSetting("AllFilesEverPlacedInsideGTA"), ';');
+			}
+			set
+			{
+				SetSetting("AllFilesEverPlacedInsideGTA", String.Join(";", value.ToArray()));
+			}
+		}
+
+		public static void AllFilesEverPlacedInsideGTAMyAdd(string filename)
+		{
+			List<string> tmp = AllFilesEverPlacedInsideGTA;
+			if (!tmp.Contains(filename))
+			{
+				tmp.Add(filename);
+				AllFilesEverPlacedInsideGTA = tmp;
+			}
+		}
+
+
+
+		/// <summary>
 		/// Setting: OverlayNotesPresetA. Gets and Sets from Dictionary
 		/// </summary>
 		public static List<string> OverlayNotesPresetA
@@ -1438,6 +1496,19 @@ namespace Project_127.MySettings
 			set
 			{
 				SetSetting("OverlayNotesMain", String.Join(";", value.ToArray()));
+			}
+		}
+
+
+		public static string GTAWindowTitle
+		{
+			get
+			{
+				return GetSetting("GTAWindowTitle");
+			}
+			set
+			{
+				SetSetting("GTAWindowTitle", value);
 			}
 		}
 

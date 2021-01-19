@@ -9,7 +9,7 @@
         Title="Project - 1.27"
          Height="540" Width="1600"
         WindowStyle="None" 
-        ResizeMode="NoResize"
+        ResizeMode="CanMinimize"
         AllowsTransparency="False" 
         Loaded="Window_Loaded"
         MouseLeftButtonDown="Window_MouseLeftButtonDown" 
@@ -41,7 +41,6 @@
                         <Button x:Name="btn_Settings" Grid.Row="5" Style="{StaticResource btn_hamburgeritem}" BorderThickness="0" Content="Settings" Click="btn_Settings_Click" MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
                         <Button x:Name="btn_ReadMe" Grid.Row="6" Style="{StaticResource btn_hamburgeritem}" BorderThickness="0" Content="Information" Click="btn_ReadMe_Click" MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
                     </Grid>
-
 
 
                     <Button x:Name="btn_lbl_Mode" Style="{StaticResource btn}" Height="40"  MouseRightButtonDown="btn_lbl_Mode_MouseRightButtonDown" 

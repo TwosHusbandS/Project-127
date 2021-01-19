@@ -10,13 +10,13 @@
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="45"/>
-            <RowDefinition Height="45"/>
-            <RowDefinition Height="45"/>
-            <RowDefinition Height="45"/>
-            <RowDefinition Height="45"/>
-            <RowDefinition Height="45"/>
-            <RowDefinition Height="45"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
@@ -28,8 +28,8 @@
         <Rectangle Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Fill="Transparent"/>
         <Rectangle Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Fill="{x:Static local:MyColors.SE_AlternateRowBackground}"/>
         <Rectangle Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Fill="Transparent"/>
-        <!--<Rectangle Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" Fill="{x:Static local:Globals.SE_AlternateRowBackground}"/>
-        <Rectangle Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2" Fill="Transparent"/>-->
+        <Rectangle Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" Fill="{x:Static local:MyColors.SE_AlternateRowBackground}"/>
+        <Rectangle Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2" Fill="Transparent"/>
 
         <Label Grid.Row="0" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="  Overlay Toggle Hotkey"/>
         <Button Grid.Row="0" Grid.Column="1" Style="{StaticResource btn_SE_Path}" x:Name="btn_OverlayHotkeyToggle" Click="btn_OverlayHotkeyToggle_Click"/>
@@ -41,11 +41,10 @@
         <Button Grid.Row="3" Grid.Column="1" Style="{StaticResource btn_SE_Path}" x:Name="btn_OverlayHotkeyNotePrev" Click="btn_OverlayHotkeyNotePrev_Click"/>
         <Label Grid.Row="4" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="  Overlay Load Next Note"/>
         <Button Grid.Row="4" Grid.Column="1" Style="{StaticResource btn_SE_Path}" x:Name="btn_OverlayHotkeyNoteNext" Click="btn_OverlayHotkeyNoteNext_Click"/>
-
-        <!--<Label Grid.Row="5" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="  Overlay Scroll Left Hotkey"/>
+        <Label Grid.Row="5" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="  Overlay Prev Chapter Hotkey"/>
         <Button Grid.Row="5" Grid.Column="1" Style="{StaticResource btn_SE_Path}" x:Name="btn_OverlayHotkeyScrollLeft" Click="btn_OverlayHotkeyScrollLeft_Click"/>
-        <Label Grid.Row="6" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="  Overlay Scroll Right Hotkey"/>
-        <Button Grid.Row="6" Grid.Column="1" Style="{StaticResource btn_SE_Path}" x:Name="btn_OverlayHotkeyScrollRight" Click="btn_OverlayHotkeyScrollRight_Click"/>-->
+        <Label Grid.Row="6" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="  Overlay Next Chapter Hotkey"/>
+        <Button Grid.Row="6" Grid.Column="1" Style="{StaticResource btn_SE_Path}" x:Name="btn_OverlayHotkeyScrollRight" Click="btn_OverlayHotkeyScrollRight_Click"/>
 
         <Popup>
 

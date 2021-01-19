@@ -37,8 +37,9 @@ namespace Project_127.HelperClasses
         /// </summary>
         /// <param name="subassemblyName">Name of subassembly to be installed</param>
         /// <param name="reinstall">Determines whether or not reinstall is enabled</param>
+        /// <param name="reinstallRecurse">Determines whether to reinstall all required assemblies</param>
         /// <returns>Boolean indicating whether install succeded or not</returns>
-        public async Task<bool> getSubassembly(string subassemblyName, bool reinstall = false)
+        public async Task<bool> getSubassembly(string subassemblyName, bool reinstall = false, bool reinstallRecurse = true)
         {
             if (!availableSubassemblies.ContainsKey(subassemblyName))
             {
@@ -46,11 +47,15 @@ namespace Project_127.HelperClasses
             } 
             else if (installedSubassemblies.ContainsKey(subassemblyName) && !reinstall)
             {
+                if (isUpdateAvalailable(subassemblyName))
+                {
+                    return await updateSubssembly(subassemblyName);
+                }
                 return true;
             }
             else
             {
-                if (reinstall && isInstalled(subassemblyName)) 
+                if (reinstall && isInstalled(subassemblyName) && !installedSubassemblies[subassemblyName].common) 
                 {
                     delSubassembly(subassemblyName, true);
                 }
@@ -69,7 +74,7 @@ namespace Project_127.HelperClasses
                 var reqs = s.Select("./requires/subassembly");
                 foreach (XPathNavigator req in reqs)
                 {
-                    await getSubassembly(req.GetAttribute("target", ""));
+                    await getSubassembly(req.GetAttribute("target", ""), reinstall & reinstallRecurse, reinstallRecurse);
                 }
                 if (s.GetAttribute("type", "").ToLower() == "zip")
                 {
@@ -87,6 +92,7 @@ namespace Project_127.HelperClasses
                         succeeded = s.SelectSingleNode("./hash").Value.ToLower() == zipmd5;
                         if (!succeeded)
                         {
+							HelperClasses.Logger.Log("Hash comparison inside Download Manager failed.");
                             continue;
                         }
                         new PopupProgress(PopupProgress.ProgressTypes.ZIPFile, zipdlpath).ShowDialog();
@@ -114,21 +120,52 @@ namespace Project_127.HelperClasses
                     var cfiles = s.Select("./file");
                     if (reinstall)
                     {
-                        var installedFiles = new List<string>();
+                        var ofiles = new Dictionary<string, subAssemblyFile>();
                         foreach (var file in installedSubassemblies[subassemblyName].files)
                         {
-                            installedFiles.Add(file.name);
-                            subInfo.files.Add(file);
+                            ofiles.Add(file.name, file);
                         }
+                        var reqby = getRequiredBy(subassemblyName);
+                        //delSubassembly(subassemblyName, true);
+
                         var fileInfo = new Dictionary<string, XPathNavigator>();
                         foreach (XPathNavigator file in cfiles)
                         {
-                            if (!installedFiles.Contains(file.GetAttribute("name", "")))
+                            if (!ofiles.ContainsKey(file.GetAttribute("name", "")))
                             {
                                 subInfo.files.Add(new subAssemblyFile { name = file.GetAttribute("name", ""), available = false });
                             }
+                            else
+                            {
+                                subInfo.files.Add(ofiles[file.GetAttribute("name", "")]);
+                            }
                             fileInfo.Add(file.GetAttribute("name", ""), file);
                         }
+                        foreach (var file in ofiles.Keys)
+                        {
+                            if (!fileInfo.ContainsKey(file))
+                            {
+                                foreach (var r in reqby)
+                                {
+                                    if (!installedSubassemblies.ContainsKey(r))
+                                    {
+                                        continue;
+                                    }
+                                    foreach (var ifile in installedSubassemblies[r].files)
+                                    {
+                                        if (ifile.name == file)
+                                        {
+                                            ifile.linked = false;
+                                            break;
+                                        }
+                                    }
+                                    
+                                }
+
+                            }
+                        }
+
+
                         foreach (var file in subInfo.files)
                         {
                             if (file.paths.Count > 0)
@@ -151,7 +188,8 @@ namespace Project_127.HelperClasses
                                 }
                                 if (!succeeded)
                                 {
-                                    return false;
+									HelperClasses.Logger.Log("Hash comparison inside Download Manager failed.");
+									return false;
                                 }
                                 foreach (var path in file.paths)
                                 {
@@ -161,11 +199,16 @@ namespace Project_127.HelperClasses
                                 System.IO.File.Delete(fullPath);
                             }
                         }
+                        installedSubassemblies[subassemblyName] = subInfo;
+                        updateInstalled();
                         return true;
-                    }
-                    foreach (XPathNavigator file in cfiles)
+                    } 
+                    else
                     {
-                        subInfo.files.Add(new subAssemblyFile { name = file.GetAttribute("name", ""), available = false });
+                        foreach (XPathNavigator file in cfiles)
+                        {
+                            subInfo.files.Add(new subAssemblyFile { name = file.GetAttribute("name", ""), available = false });
+                        }
                     }
                     installedSubassemblies.Add(subassemblyName, subInfo);
                     updateInstalled();
@@ -194,12 +237,16 @@ namespace Project_127.HelperClasses
                 foreach (XPathNavigator folderEntry in folders)
                 {
                     var fol = getSubassemblyFolder(root, folderEntry);
-                    subInfo.files.AddRange(fol.Key);
-                    if (!fol.Value)
+                    subInfo.files.AddRange(fol.Item1);
+                    if (!fol.Item2)
                     {
                         delSubassemblyFiles(subInfo.files);
                         return false;
                     }
+                }
+                if (installedSubassemblies.ContainsKey(subassemblyName))
+                {
+                    installedSubassemblies.Remove(subassemblyName);
                 }
                 installedSubassemblies.Add(subassemblyName, subInfo);
                 updateInstalled();
@@ -232,7 +279,11 @@ namespace Project_127.HelperClasses
             foreach (var path in f.paths)
             {
                 var fullPath = System.IO.Path.Combine(Project127Files, path);
-                System.IO.File.Delete(fullPath);
+                try
+                {
+                    System.IO.File.Delete(fullPath);
+                }
+                catch { }
             }
         }
         private void delSubassemblyFiles(List<subAssemblyFile> L)
@@ -253,6 +304,23 @@ namespace Project_127.HelperClasses
             delSubassembly(subassemblyName, false);
         }
 
+        private List<string> getRequiredBy(string subassemblyName)
+        {
+            var ret = new List<string>();
+            foreach (XPathNavigator saa in availableSubassemblies.Values)
+            {
+                var reqs = saa.Select("./requires/subassembly");
+                foreach (XPathNavigator req in reqs)
+                {
+                    if (req.GetAttribute("target", "") == subassemblyName)
+                    {
+                        ret.Add(saa.GetAttribute("name", ""));
+                    }
+                }
+            }
+            return ret;
+        }
+
         private void delSubassembly(string subassemblyName, bool reqBySupress)
         {
             if (!installedSubassemblies.ContainsKey(subassemblyName))
@@ -263,23 +331,20 @@ namespace Project_127.HelperClasses
             var sar = availableSubassemblies[subassemblyName].GetAttribute("root", "");
             if (!reqBySupress)
             {
-                foreach(XPathNavigator saa in availableSubassemblies.Values)
+                foreach (var req in getRequiredBy(subassemblyName))
                 {
-                    var reqs = saa.Select("./requires/subassembly");
-                    foreach (XPathNavigator req in reqs)
-                    {
-                        if (req.GetAttribute("target","") == subassemblyName)
-                        {
-                            delSubassembly(saa.GetAttribute("name", ""));
-                        }
-                    }
+                    delSubassembly(req);
                 }
             }
             delSubassemblyFiles(sa.files);
             if (sar != "")
             {
                 var rootFullPath = System.IO.Path.Combine(Project127Files, sar);
-                System.IO.Directory.Delete(rootFullPath, true);
+                try
+                {
+                    System.IO.Directory.Delete(rootFullPath, true);
+                }
+                catch { }
             }
             installedSubassemblies.Remove(subassemblyName);
             updateInstalled();
@@ -311,6 +376,8 @@ namespace Project_127.HelperClasses
             }
             if (!succeeded)
             {
+				HelperClasses.Logger.Log("Hash comparison inside Download Manager failed.");
+				HelperClasses.Logger.Log("Failed to retrieve " + filename);
                 return null;
             }
             else
@@ -331,7 +398,22 @@ namespace Project_127.HelperClasses
             var fullPath = System.IO.Path.Combine(Project127Files, relPath);
             var from = fileEntry.GetAttribute("subassembly", "");
             var froma = availableSubassemblies[from];
-            var fromi = installedSubassemblies[from];
+            subassemblyInfo fromi;
+            try
+            {
+                fromi = installedSubassemblies[from];
+            }
+            catch
+            {
+                var stat = getSubassembly(from).GetAwaiter().GetResult();
+                HelperClasses.Logger.Log("Failed to retrieve " + filename);
+                HelperClasses.Logger.Log("Required subassembly " + filename + " missing!");
+                if (!stat)
+                {
+                    return null;
+                }
+                fromi = installedSubassemblies[from];
+            }
             var files = froma.Select("./file");
 
             foreach (var file in fromi.files)
@@ -346,13 +428,17 @@ namespace Project_127.HelperClasses
                         {
                             System.IO.File.Delete(fullPath);
                         }
-                        System.IO.File.Copy(fpafull, fullPath);
-                        return new subAssemblyFile
+                        try
                         {
-                            name = filename,
-                            linked = true,
-                            paths = new List<string>(new string[] { relPath })
-                        };
+                            System.IO.File.Copy(fpafull, fullPath);
+                            return new subAssemblyFile
+                            {
+                                name = filename,
+                                linked = true,
+                                paths = new List<string>(new string[] { relPath })
+                            };
+                        }
+                        catch { }
                     }
                     else
                     {
@@ -399,9 +485,11 @@ namespace Project_127.HelperClasses
                     break;
                 }
             }
+			HelperClasses.Logger.Log("Hash comparison inside Download Manager failed.");
+			HelperClasses.Logger.Log("Failed to retrieve " + filename);
             return null;
         }
-        private KeyValuePair<List<subAssemblyFile>, bool> getSubassemblyFolder(string path, XPathNavigator folderEntry)
+        private Tuple<List<subAssemblyFile>, bool> getSubassemblyFolder(string path, XPathNavigator folderEntry)
         {
             var outp = new List<subAssemblyFile>();
             path.TrimEnd("\\");
@@ -413,7 +501,7 @@ namespace Project_127.HelperClasses
                 var saf = getSubassemblyFile(path, file);
                 if (saf == null)
                 {
-                    return new KeyValuePair<List<subAssemblyFile>,bool>(outp,false);
+                    return new Tuple<List<subAssemblyFile>,bool>(outp,false);
                 }
                 outp.Add(saf);
             }
@@ -421,13 +509,13 @@ namespace Project_127.HelperClasses
             foreach (XPathNavigator folder in folders)
             {
                 var gfo = getSubassemblyFolder(path, folder);
-                outp.AddRange(gfo.Key);
-                if (!gfo.Value)
+                outp.AddRange(gfo.Item1);
+                if (!gfo.Item2)
                 {
-                    return new KeyValuePair<List<subAssemblyFile>, bool>(outp, false);
+                    return new Tuple<List<subAssemblyFile>, bool>(outp, false);
                 }
             }
-            return new KeyValuePair<List<subAssemblyFile>, bool>(outp, true);
+            return new Tuple<List<subAssemblyFile>, bool>(outp, true);
         }
 
         /// <summary>
@@ -610,14 +698,14 @@ namespace Project_127.HelperClasses
                 return false;
             }
             var sa = availableSubassemblies[subassemblyName];
-            var sai = installedSubassemblies[subassemblyName];
+            //var sai = installedSubassemblies[subassemblyName];
             var reqs = sa.Select("./requires/subassembly");
             foreach (XPathNavigator req in reqs)
             {
                 await updateSubssembly(req.GetAttribute("target", ""));
             }
             
-            return await getSubassembly(subassemblyName, true);
+            return await getSubassembly(subassemblyName, true, false);
         }
 
         /// <summary>
@@ -665,7 +753,16 @@ namespace Project_127.HelperClasses
             }
             if (HelperClasses.RegeditHandler.DoesValueExists("DownloadManagerInstalledSubassemblies"))
             {
-                installedSubassemblies = json.Deserialize<Dictionary<string, subassemblyInfo>>(HelperClasses.RegeditHandler.GetValue("DownloadManagerInstalledSubassemblies"));
+                try
+                {
+                    installedSubassemblies = json.Deserialize<Dictionary<string, subassemblyInfo>>(HelperClasses.RegeditHandler.GetValue("DownloadManagerInstalledSubassemblies"));
+                }
+                catch (Exception e)
+                {
+                    Logger.Log("Error in reading installed assemblies: ");
+                    Logger.Log(e.ToString());
+                    installedSubassemblies = new Dictionary<string, subassemblyInfo>();
+                }
             }
             else
             {

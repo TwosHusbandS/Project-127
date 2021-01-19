@@ -9,7 +9,7 @@ Actual code (partially closed source) which authentificates, handles entitlement
 Artwork, Design of GUI, GUI Behaviourehaviour, Colorchoices etc. by "@Hossel"
 Project 1.27 Client by "@thS"
 A number of other members of the team, including but not limited to @MoMo, @Diamondo25, @S.M.G, @gogsi, @Antibones, @Unemployed, @Aperture, @luky, @CrynesSs, @Daniel Kinau contributed to this project one way or another, and my thanks go out to them.
-Version: 1.0.9.8
+Version: 1.1.9.1
 
 Build Instructions:
 	Press CTRLF + F5, pray that nuget does its magic.
@@ -17,10 +17,9 @@ Build Instructions:
 
 Deploy Instructions:
 	
-	CHANGE INNOSETUP SCRIPT AFTER 1.0 SO IT DOESNT DELETE INSTALL DIR!!
-
 	Change Version Number a few Lines Above.
 	Change Version Number in both of the last lines in AssemblyInfo.cs
+	ALSO CHANGE VERSION NUMBER IN ASSEMBLYINFO.CS FROM P127 LAUNCHER
 	Check if BetaMode / InternalMode in Globals.cs is correct
 	Check if BuildInfo in Globals.cs is correct
 	Make sure app manifest is set TO require admin
@@ -38,18 +37,14 @@ Deploy Instructions:
 Comments like "TODO", "TO DO", "CTRLF", "CTRL-F", and "CTRL F" are just ways of finding a specific line quickly via searching
 
 Hybrid code can be found in AAA_HybridCode.
-		
-// Remove Hide_Features stuff for social club launch from:
-// Update check on XML
-// Settings XML
+
+ON RELEASE OF 1.2
+- AUTOUPDATE STUFF (P127 INSTALLER AS WELL AS ZIP)
+- RELEASE ALL NEW FILES WITH IT (V14, new SCL Binaries)
+- RIGHT_CLICK_README
 
 
-
-To Do before 1.1:
-- Fix ReadMe:
-		=> license
-		=> Programming language
- */
+*/
 
 using System;
 using System.Collections.Generic;
@@ -114,7 +109,7 @@ namespace Project_127
 		/// <summary>
 		/// Static Property to our NotifyIcon (Tray icon)
 		/// </summary>
-		private System.Windows.Forms.NotifyIcon notifyIcon = null;
+		public System.Windows.Forms.NotifyIcon notifyIcon = null;
 
 		/// <summary>
 		/// Static Property of the Mutex we use to determine if P127 is already running in another instance
@@ -131,11 +126,16 @@ namespace Project_127
 		/// </summary>
 		public static DispatcherTimer MTLAuthTimer;
 
+		private Stopwatch StartUpStopwatch;
+
 		/// <summary>
 		/// Constructor of Main Window
 		/// </summary>
 		public MainWindow()
 		{
+			StartUpStopwatch = new Stopwatch();
+			StartUpStopwatch.Start();
+
 			// Initializing all WPF Elements
 			InitializeComponent();
 
@@ -173,26 +173,22 @@ namespace Project_127
 			myMutex = new Mutex(false, "P127_Mutex");
 			myMutex.WaitOne();
 
-			// Start the Init Process of Logger, Settings, Globals, Regedit here, since we need the Logger in the next Line if it fails...
-			Globals.Init();
-
 			// Some Background Change based on Date
 			ChangeBackgroundBasedOnSeason();
 
 			// Intepreting all Command Line shit
 			Globals.CommandLineArgumentIntepretation();
 
-			if (Globals.Branch == "internal")
+			// Start the Init Process of Logger, Settings, Globals, Regedit here, since we need the Logger in the next Line if it fails...
+			Globals.Init();
+
+			if (Globals.P127Branch == "internal")
 			{
-				string msg = "We are in internal mode. I need testing on:\n\n" +
-					"- Upgrading / Downgrading" + "\n" +
-					"- Automatically detecting Upgrades" + "\n" +
-					"- Performance (CPU & Ram)" + "\n" +
-					"- Crashes" + "\n" +
+				string msg = "We are in internal mode. We need testing on:\n\n" +
 					"- NoteOverlay" + "\n" +
 					"- Jumpscript" + "\n" +
-					"- New SaveFileHanlder" + "\n" +
-					"- General / Normal stuff" + "\n" +
+					"- DISABLED Legacy Auth" + "\n" +
+					"- ENABLED Launch through Social Club" + "\n" +
 					"\nI do expect everything to work, so no extensive Testing needed." + "\n" +
 					"\nThanks. Appreciated. Have a great day : )";
 
@@ -204,9 +200,9 @@ namespace Project_127
 			SetButtonMouseOverMagic(btn_Auth);
 			SetButtonMouseOverMagic(btn_Hamburger);
 			Globals.HamburgerMenuState = Globals.HamburgerMenuStates.Hidden;
-			if (Settings.Mode.ToLower() != "default")
+			if (Settings.P127Mode.ToLower() != "default")
 			{
-				MainWindow.MW.btn_lbl_Mode.Content = "Curr Mode: '" + MySettings.Settings.Mode.ToLower() + "'";
+				MainWindow.MW.btn_lbl_Mode.Content = "Curr P127 Mode: '" + MySettings.Settings.P127Mode.ToLower() + "'";
 				MainWindow.MW.btn_lbl_Mode.Visibility = Visibility.Visible;
 			}
 			else
@@ -237,6 +233,7 @@ namespace Project_127
 				// Same as other two thingies here lolerino
 				HelperClasses.WindowChangeListener.Start();
 			}
+
 		}
 
 		#endregion
@@ -258,8 +255,11 @@ namespace Project_127
 
 			NoteOverlay.OverlaySettingsChanged();
 
-			HelperClasses.Logger.Log("Startup procedure (Constructor of MainWindow) completed.");
-			HelperClasses.Logger.Log("--------------------------------------------------------");
+			StartUpStopwatch.Stop();
+
+			HelperClasses.Logger.Log("Startup procedure (Constructor of MainWindow) completed. It took " + StartUpStopwatch.ElapsedMilliseconds + " ms.");
+			HelperClasses.Logger.Log("------------------------------------------------------------------------------------");
+
 		}
 
 
@@ -305,38 +305,43 @@ namespace Project_127
 		/// <summary>
 		/// Gets called when another P127 instance is already running. 
 		/// </summary>
-		public async void AlreadyRunning()
+		public void AlreadyRunning()
 		{
-			// renames some File which the other instance has a System File Watcher on. Very basic IPC.
-			string myPath = Globals.ProjectInstallationPath.TrimEnd('\\') + @"\dirtyprogramming";
-			string myPathNew = Globals.ProjectInstallationPath.TrimEnd('\\') + @"\pleaseshow";
-			HelperClasses.FileHandling.RenameFile(myPath, "pleaseshow");
 
-			// waiting 2 seconds for the other instance to do stuff.
-			await Task.Delay(2000);
-
-			// if renamed file still exists, IPC failed
-			if (HelperClasses.FileHandling.doesFileExist(myPathNew))
+			try
 			{
-				Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Program is open twice.\nAttempt to talk to already running instance failed.\nForce Close Everything?");
-				yesno.ShowDialog();
-				if (yesno.DialogResult == true)
+				var pc = new IPCPipeClient("Project127Launcher");
+
+				byte[] rtrn = pc.call("pleaseshow", Encoding.UTF8.GetBytes("ThanksDragonForImplementing"));
+
+				System.Threading.Thread.Sleep(500);
+
+				if (rtrn[0] == Convert.ToByte(true))
 				{
-					foreach (Process p in HelperClasses.ProcessHandler.GetProcessesContains(Process.GetCurrentProcess().ProcessName))
-					{
-						if (p != Process.GetCurrentProcess())
-						{
-							HelperClasses.ProcessHandler.Kill(p);
-						}
-					}
-					Globals.ProperExit();
+					this.Close();
+					Environment.Exit(0);
+					return;
 				}
 			}
-			else
+			catch
 			{
-				// IPC sucess
+
+			}
+
+			Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Program is open twice.\nAttempt to talk to already running instance failed.\nForce Close Everything?");
+			yesno.ShowDialog();
+			if (yesno.DialogResult == true)
+			{
+				foreach (Process p in HelperClasses.ProcessHandler.GetProcessesContains(Process.GetCurrentProcess().ProcessName))
+				{
+					if (p != Process.GetCurrentProcess())
+					{
+						HelperClasses.ProcessHandler.Kill(p);
+					}
+				}
 				Globals.ProperExit();
 			}
+
 		}
 
 
@@ -396,6 +401,7 @@ namespace Project_127
 		}
 
 
+
 		/// <summary>
 		/// Updates the GUI with relevant stuff. Gets called every 2.5 Seconds
 		/// </summary>
@@ -419,7 +425,7 @@ namespace Project_127
 				lbl_GTA.Content = "Unsure";
 			}
 
-			lbl_GTA.Content += BuildVersionTable.GetNiceGameVersionString(Globals.BuildVersion);
+			lbl_GTA.Content += BuildVersionTable.GetNiceGameVersionString(Globals.GTABuild);
 
 			if (LauncherLogic.PollGameState() == LauncherLogic.GameStates.Running)
 			{
@@ -443,7 +449,7 @@ namespace Project_127
 			// Starting the Dispatcher Timer for the automatic updates of the GTA V Button
 			MTLAuthTimer = new System.Windows.Threading.DispatcherTimer();
 			MTLAuthTimer.Tick += new EventHandler(MainWindow.MW.AutoAuthMTLTimer);
-			MTLAuthTimer.Interval = TimeSpan.FromMilliseconds(30000);
+			MTLAuthTimer.Interval = TimeSpan.FromMilliseconds(2000);
 			MTLAuthTimer.Start();
 			MainWindow.MW.AutoAuthMTLTimer();
 		}
@@ -455,6 +461,7 @@ namespace Project_127
 		/// <param name="e"></param>
 		public void AutoAuthMTLTimer(object sender = null, EventArgs e = null)
 		{
+
 			if (LauncherLogic.AuthState == LauncherLogic.AuthStates.Auth)
 			{
 				MTLAuthTimer.Stop();
@@ -556,7 +563,7 @@ namespace Project_127
 		{
 			DateTime Now = DateTime.Now;
 
-			if (Now.Month == 4 && Now.Day == 20)
+			if ((Now.Month == 4 && Now.Day == 20) || (Now.Month == 4 && Now.Day == 22))
 			{
 				Globals.BackgroundImage = Globals.BackgroundImages.FourTwenty;
 			}

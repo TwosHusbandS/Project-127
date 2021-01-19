@@ -284,6 +284,8 @@ namespace Project_127.Popups
 					CorrespondingFilePathInGTALocation[i] = LauncherLogic.GTAVFilePath + FilesInDowngradeFiles[i].Substring(LauncherLogic.DowngradeFilePath.Length);
 					CorrespondingFilePathInUpgradeFiles[i] = LauncherLogic.UpgradeFilePath + FilesInDowngradeFiles[i].Substring(LauncherLogic.DowngradeFilePath.Length);
 
+					string tmpFileWePlace = FilesInDowngradeFiles[i].Substring(LauncherLogic.DowngradeFilePath.Length).TrimStart('\\');
+
 
 					if (LauncherLogic.IgnoreNewFilesWhileUpgradeDowngradeLogic)
 					{
@@ -322,7 +324,7 @@ namespace Project_127.Popups
 									{
 										FileVersionInfo myFVI = FileVersionInfo.GetVersionInfo(tmp);
 										Version myVersion = new Version(myFVI.FileVersion);
-										if (BuildVersionTable.GetGameVersionOfBuild(myVersion) > new Version("1.30"))
+										if (BuildVersionTable.GetGameVersionOfBuild(Globals.GTABuild) > new Version(1, 30))
 										{
 											if (!UpdatePopupThrownAlready)
 											{
@@ -352,12 +354,14 @@ namespace Project_127.Popups
 								}
 
 								// Move to $UpgradeFiles
+								Settings.AllFilesEverPlacedInsideGTAMyAdd(tmpFileWePlace);
 								MyFileOperationsTmp.Add(new MyFileOperation(MyFileOperation.FileOperations.Move, CorrespondingFilePathInGTALocation[i], CorrespondingFilePathInUpgradeFiles[i], "Backing up '" + CorrespondingFilePathInGTALocation[i] + "' from GTA V Installation Path to $UpgradeFiles via Moving, since it either doenst exist there yet, or the file from $GTA_Installation_Path is a new one", 1));
 							}
 						}
 					}
 
 					// Creates actual Hard Link (this will further down check if we should copy based on settings in MyFileOperation.Execute())
+					Settings.AllFilesEverPlacedInsideGTAMyAdd(tmpFileWePlace);
 					MyFileOperationsTmp.Add(new MyFileOperation(MyFileOperation.FileOperations.Hardlink, FilesInDowngradeFiles[i], CorrespondingFilePathInGTALocation[i], "Will create HardLink in '" + CorrespondingFilePathInGTALocation[i] + "' to the file in '" + FilesInDowngradeFiles[i] + "'", 1));
 				}
 
@@ -400,6 +404,7 @@ namespace Project_127.Popups
 				string[] CorrespondingFilePathInGTALocation = new string[FilesInDowngradeAndUpgradePathInDowngradedPathFormat.Count];
 				string[] CorrespondingFilePathInUpgradeFiles = new string[FilesInDowngradeAndUpgradePathInDowngradedPathFormat.Count];
 
+
 				// Loop through all Files in Downgrade Files Folder
 				for (int i = 0; i <= FilesInDowngradeAndUpgradePathInDowngradedPathFormat.Count - 1; i++)
 				{
@@ -415,6 +420,7 @@ namespace Project_127.Popups
 					// Build the Corresponding theoretical Filenames for Upgrade Folder and GTA V Installation Folder
 					CorrespondingFilePathInGTALocation[i] = LauncherLogic.GTAVFilePath + FilesInDowngradeAndUpgradePathInDowngradedPathFormat[i].Substring(LauncherLogic.DowngradeFilePath.Length);
 					CorrespondingFilePathInUpgradeFiles[i] = LauncherLogic.UpgradeFilePath + FilesInDowngradeAndUpgradePathInDowngradedPathFormat[i].Substring(LauncherLogic.DowngradeFilePath.Length);
+					string tmpFileWePlace = FilesInDowngradeAndUpgradePathInDowngradedPathFormat[i].Substring(LauncherLogic.DowngradeFilePath.Length).TrimStart('\\');
 
 
 					if (LauncherLogic.IgnoreNewFilesWhileUpgradeDowngradeLogic)
@@ -453,7 +459,7 @@ namespace Project_127.Popups
 									{
 										FileVersionInfo myFVI = FileVersionInfo.GetVersionInfo(tmp);
 										Version myVersion = new Version(myFVI.FileVersion);
-										if (BuildVersionTable.GetGameVersionOfBuild(myVersion) > new Version("1.30"))
+										if (BuildVersionTable.GetGameVersionOfBuild(Globals.GTABuild) > new Version(1, 30))
 										{
 											if (!UpdatePopupThrownAlready)
 											{
@@ -483,6 +489,7 @@ namespace Project_127.Popups
 								}
 
 								// Move to $UpgradeFiles
+								Settings.AllFilesEverPlacedInsideGTAMyAdd(tmpFileWePlace);
 								MyFileOperationsTmp.Add(new MyFileOperation(MyFileOperation.FileOperations.Move, CorrespondingFilePathInGTALocation[i], CorrespondingFilePathInUpgradeFiles[i], "Backing up '" + CorrespondingFilePathInGTALocation[i] + "' from GTA V Installation Path to $UpgradeFiles via Moving, since it either doenst exist there yet, or the file from $GTA_Installation_Path is a new one", 1));
 								ListOfFilePathsAboutToBeInUpgradeFiles.Add(CorrespondingFilePathInUpgradeFiles[i]);
 							}
@@ -491,6 +498,7 @@ namespace Project_127.Popups
 
 
 					// file we are moving there if file inside GTA matches no files is non existing at this point
+					Settings.AllFilesEverPlacedInsideGTAMyAdd(tmpFileWePlace);
 					if (HelperClasses.FileHandling.doesFileExist(CorrespondingFilePathInUpgradeFiles[i]) || ListOfFilePathsAboutToBeInUpgradeFiles.Contains(CorrespondingFilePathInUpgradeFiles[i]))
 					{
 						// Creates actual Hard Link (this will further down check if we should copy based on settings in MyFileOperation.Execute())

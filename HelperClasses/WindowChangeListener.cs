@@ -23,6 +23,7 @@ namespace Project_127.HelperClasses
 	class WindowChangeListener
 	{
 		public static bool IsRunning = false;
+		public static IntPtr m_hhook;
 
 		/// <summary>
 		/// Acual Start Method
@@ -30,7 +31,7 @@ namespace Project_127.HelperClasses
 		public static void _Start()
 		{
 			dele = new WinEventDelegate(WinEventProc);
-			IntPtr m_hhook = SetWinEventHook(EVENT_SYSTEM_FOREGROUND, EVENT_SYSTEM_FOREGROUND, IntPtr.Zero, dele, 0, 0, WINEVENT_OUTOFCONTEXT);
+			m_hhook = SetWinEventHook(EVENT_SYSTEM_FOREGROUND, EVENT_SYSTEM_FOREGROUND, IntPtr.Zero, dele, 0, 0, WINEVENT_OUTOFCONTEXT);
 			IsRunning = true;
 			Application.Run();
 		}
@@ -40,11 +41,16 @@ namespace Project_127.HelperClasses
 		/// </summary>
 		public static void Start()
 		{
+			WindowChangeListenerTwo.start();
+			return;
+
 			if (!WindowChangeListener.IsRunning)
 			{
 				Task.Run(() => WindowChangeListener._Start());
 				WindowChangeHander.WindowChangeEvent(GetActiveWindowTitle());
 				HelperClasses.Logger.Log("Started WindowChangeListener");
+				GC.KeepAlive(dele);
+				GC.KeepAlive(m_hhook);
 				//myThread = new Thread(_Start);
 				//myThread.Start();
 			}
@@ -55,10 +61,14 @@ namespace Project_127.HelperClasses
 		/// </summary>
 		public static void Stop()
 		{
+			WindowChangeListenerTwo.stop();
+			return;
+
 			if (WindowChangeListener.IsRunning)
 			{
 				IsRunning = false;
 				//myThread.Abort();
+				Task.Delay(100).GetAwaiter().GetResult();
 				_Stop();
 				HelperClasses.Logger.Log("Stopped WindowChangeListener");
 			}
@@ -112,7 +122,14 @@ namespace Project_127.HelperClasses
 		public static void WinEventProc(IntPtr hWinEventHook, uint eventType, IntPtr hwnd, int idObject, int idChild, uint dwEventThread, uint dwmsEventTime) //STATIC
 		{
 			//HelperClasses.Logger.Log("DEBUG WINDOW: '" + GetActiveWindowTitle() + "'",2);
-			WindowChangeHander.WindowChangeEvent(GetActiveWindowTitle());
+			try
+			{
+
+				WindowChangeHander.WindowChangeEvent(GetActiveWindowTitle());
+			}
+			catch
+			{
+			}
 		}
 	}
 }

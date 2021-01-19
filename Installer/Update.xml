@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <item>
-  <version>1.1.0.0</version>
-  <url>https://github.com/TwosHusbandS/Project-127/raw/master/Installer/Project_127_Installer_V_1_1_0_0.exe</url>
+  <version>1.2.0.0</version>
+  <url>https://github.com/TwosHusbandS/Project-127/raw/master/Installer/Project_127_Installer_V_1_2_0_0.exe</url>
   <buildversiontable>
     1.0.323.0;1.24:
-    1.0.350.0;1.26:
-    1.0.372.0;1.27:
+    1.0.350.0;1.25:
+    1.0.350.1;1.26:
+    1.0.350.3;1.27:
     1.0.393.0;1.28:
     1.0.463.0;1.29:
     1.0.505.0;1.30:
@@ -30,12 +31,16 @@
     1.0.1868.0;1.50:
     1.0.2060.0;1.51:
     1.0.2060.1;1.52:
-    1.0.2189.0;1.53:
   </buildversiontable>
   <announcement></announcement>
-  <tease>true</tease>
   <specialbuildname></specialbuildname>
+  <dragonsreadme>https://github.com/jaredtb</dragonsreadme>
+  <zip>https://gtav.anushk.net/Project_127_Files_V14_Big.zip</zip>
+  <bigzipmd5>690108ce3e0b5289630de1a074d56553</bigzipmd5>
+  <zipversion>14</zipversion>
   <comment>Backwards Compability</comment>
+  <comment2>dont THINK anything below here is actively used</comment2>
+  <tease>true</tease>
   <authuser>https://raw.githubusercontent.com/TwosHusbandS/Project-127/master/Installer/AuthUser.txt</authuser>
   <DLLinkG>https://github.com/TwosHusbandS/Project-127/releases/download/V_Final/file.g</DLLinkG>
   <DLLinkGHash>5c706e27f1f204050450839f24e12c8a</DLLinkGHash>
@@ -43,11 +48,8 @@
   <DLLinkUHash>1f2c8c0fd9f83d6ad82d9a0aa2567562</DLLinkUHash>
   <DLLinkX>https://github.com/TwosHusbandS/Project-127/releases/download/V_Final/file.x</DLLinkX>
   <DLLinkXHash>683610e269ba60c5fcc7a9f6d1a8bfd5</DLLinkXHash>
-  <zip>https://gtav.anushk.net/Project_127_Files_V12_Big.zip</zip>
-  <bigzipmd5>ffd3bcb436f8de26d84c30075403b7e1</bigzipmd5>
-  <zipversion>12</zipversion>
-  <zipmd5>d6337904f957a64f34f4451be51b14b6</zipmd5>
-  <zip0>https://gtav.anushk.net/Project_127_Files_V12_Small.zip</zip0>
+  <zipmd5>82178aaca3a4efc796c70a7bafa25fc1</zipmd5>
+  <zip0>https://gtav.anushk.net/Project_127_Files_V14_Small.zip</zip0>
   <zip1>https://anonfiles.com/naO8d1q2pd/Project_127_Files_V12_Small_zip</zip1>
   <zip2>https://anonfiles.com/7eO3d0q3p4/Project_127_Files_V12_Small_zip</zip2>
   <zip3>https://anonfiles.com/RfO4d8qcp6/Project_127_Files_V12_Small_zip</zip3>

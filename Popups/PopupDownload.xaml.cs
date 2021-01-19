@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -39,6 +40,11 @@ namespace Project_127.Popups
 		public string DownloadLocation;
 
 		/// <summary>
+		/// Stopwatch Property to time how long the download took
+		/// </summary>
+		public Stopwatch myStopWatch;
+
+		/// <summary>
 		/// Hash Property (non null if hashing is enabled)
 		/// </summary>
 		public string HashString = null;
@@ -64,15 +70,13 @@ namespace Project_127.Popups
 			DownloadLocation = pDownloadLocation;
 			DownloadName = pMessage;
 
-			// Logging
-			HelperClasses.Logger.Log("Download Popup: DownloadURL: '" + pDownloadURL.ToString() + "'");
-			HelperClasses.Logger.Log("Download Popup: DownloadLocation: '" + pDownloadLocation.ToString() + "'");
-			HelperClasses.Logger.Log("Download Popup: pMessage: '" + pMessage.ToString() + "'");
-
 			HelperClasses.FileHandling.createPathOfFile(pDownloadLocation);
 			HelperClasses.FileHandling.deleteFile(pDownloadLocation);
 
 			lbl_Main.Content = "Downloading " + DownloadName + "...";
+
+			myStopWatch = new Stopwatch();
+			myStopWatch.Start();
 
 			// Setting up some Webclient stuff. 
 			WebClient webClient = new WebClient();
@@ -86,7 +90,6 @@ namespace Project_127.Popups
 				webClient.DownloadDataCompleted += new DownloadDataCompletedEventHandler(DownloadCompletedAutoHash);
 
 			}
-			HelperClasses.Logger.Log("Download Popup: Starting Download");
 
 			// TryCatch of the actual Download
 			try
@@ -102,7 +105,7 @@ namespace Project_127.Popups
 			}
 			catch (Exception e)
 			{
-				HelperClasses.Logger.Log("Download of '" + pMessage.ToString() + "' failed for some reason." + e.Message);
+				HelperClasses.Logger.Log("Download of '" + pDownloadURL + "' to '" + pDownloadLocation + "' for Reason: '" + pMessage + "' failed for some reason." + e.Message);
 				// No Popup here, Popup will appear in Method which called this
 			}
 		}
@@ -115,7 +118,11 @@ namespace Project_127.Popups
 		/// <param name="e"></param>
 		private void DownloadCompleted(object sender, AsyncCompletedEventArgs e)
 		{
-			HelperClasses.Logger.Log("Download Popup: Download Done");
+			long DownloadSize = HelperClasses.FileHandling.GetSizeOfFile(DownloadLocation);
+			myStopWatch.Stop();
+			long DownloadTime = myStopWatch.ElapsedMilliseconds;
+			HelperClasses.Logger.Log("Download of '" + DownloadURL + "' to '" + DownloadLocation + "' for Reason: '" + DownloadName + "' done. File is '" + DownloadSize + "' byte big, Download took '" + DownloadTime + "' ms");
+
 			lbl_Main.Content = "Download Complete.";
 			pb_Main.Value = 100;
 			this.Close();
@@ -130,10 +137,8 @@ namespace Project_127.Popups
 		{
 			try
 			{
-				HelperClasses.Logger.Log("Download Popup: Download Done");
 				lbl_Main.Content = "Download Complete.";
 				byte[] file = e.Result;
-				HelperClasses.Logger.Log("Download Popup: Computing Hash");
 				using (var md5 = MD5.Create())
 				{
 					var hash = md5.ComputeHash(file);
@@ -144,6 +149,12 @@ namespace Project_127.Popups
 				{
 					b.Write(file);
 				}
+
+				long DownloadSize = HelperClasses.FileHandling.GetSizeOfFile(DownloadLocation);
+				myStopWatch.Stop();
+				long DownloadTime = myStopWatch.ElapsedMilliseconds;
+				HelperClasses.Logger.Log("Download of '" + DownloadURL + "' to '" + DownloadLocation + "' for Reason: '" + DownloadName + "' done. File is '" + DownloadSize + "' byte big, Download took '" + DownloadTime + "' ms. Hashstring is: '" + HashString + "'.");
+
 				this.Close();
 			}
 			catch

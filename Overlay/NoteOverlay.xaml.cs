@@ -16,6 +16,7 @@ using System.Windows.Shapes;
 using Project_127.HelperClasses;
 using Project_127.MySettings;
 using System.Diagnostics;
+using System.Windows.Threading;
 
 namespace Project_127.Overlay
 {
@@ -220,8 +221,8 @@ namespace Project_127.Overlay
 				MyGTAOverlay.width = Settings.OverlayWidth;
 				MyGTAOverlay.height = Settings.OverlayHeight;
 				LoadTexts();
-				NotesLoadedIndex = 0;
 				HelperClasses.Logger.Log("GTA Overlay initiated", 1);
+				easterEgg();
 			}
 			else
 			{
@@ -289,7 +290,7 @@ namespace Project_127.Overlay
 		}
 
 
-	
+
 		/// <summary>
 		/// Making Overlay Visible
 		/// </summary>
@@ -393,9 +394,12 @@ namespace Project_127.Overlay
 		/// <summary>
 		/// Disposing everything to do with the Overlay
 		/// </summary>
-		public static void DisposeAllOverlayStuff()
+		public static void DisposeAllOverlayStuff(bool keepOverlay = false)
 		{
-			NoteOverlay.DisposeGTAOverlay();
+			if (!keepOverlay)
+			{
+				NoteOverlay.DisposeGTAOverlay();
+			}
 			if (MainWindow.OL_MM != null)
 			{
 				MainWindow.OL_MM.Close();
@@ -421,7 +425,7 @@ namespace Project_127.Overlay
 				}
 				else if (Settings.EnableOverlay == true)
 				{
-					DisposeAllOverlayStuff();
+					DisposeAllOverlayStuff(true);
 
 					if (GTAOverlay.OverlayMode == GTAOverlay.OverlayModes.MultiMonitor)
 					{
@@ -433,9 +437,8 @@ namespace Project_127.Overlay
 						MainWindow.OL_MM.Show();
 						//MainWindow.MW.Show();
 						//MainWindow.MW.Focus();
-						MainWindow.MW.Activate();
-						NoteOverlay.InitGTAOverlay();
-						HelperClasses.Keyboard.KeyboardListener.Start(); 
+						//MainWindow.MW.Activate();
+						HelperClasses.Keyboard.KeyboardListener.Start();
 
 						if (ShowOverlay)
 						{
@@ -449,7 +452,6 @@ namespace Project_127.Overlay
 							// Only Start Stop shit here when the overlay is not in debugmode
 							if (!GTAOverlay.DebugMode && GTAOverlay.OverlayMode == GTAOverlay.OverlayModes.Borderless)
 							{
-								NoteOverlay.InitGTAOverlay();
 								HelperClasses.WindowChangeListener.Start();
 							}
 						}
@@ -463,6 +465,28 @@ namespace Project_127.Overlay
 							MM_WasOpen = false;
 						}
 						LoadPreview();
+					}
+
+
+					if (IsOverlayInit())
+					{
+						MyGTAOverlay.setTextColors(Settings.OverlayForeground, Color.Transparent);
+						MyGTAOverlay.setBackgroundColor(Settings.OverlayBackground);
+						MyGTAOverlay.setFont(Settings.OverlayTextFont, Settings.OverlayTextSize);
+						MyGTAOverlay.Position = Settings.OverlayLocation;
+						MyGTAOverlay.XMargin = Settings.OverlayMarginX;
+						MyGTAOverlay.YMargin = Settings.OverlayMarginY;
+						MyGTAOverlay.width = Settings.OverlayWidth;
+						MyGTAOverlay.height = Settings.OverlayHeight;
+						if (!((GTAOverlay.OverlayMode == GTAOverlay.OverlayModes.Borderless) && (HelperClasses.WindowChangeListener.GetActiveWindowTitle() == GTAOverlay.targetWindow)))
+						{
+							OverlaySetInvisible();
+						}
+						HelperClasses.Logger.Log("GTA Overlay re-initiated", 1);
+					}
+					else
+					{
+						NoteOverlay.InitGTAOverlay();
 					}
 				}
 				Overlay.NoteOverlayPages.NoteOverlay_Look.RefreshIfHideOrNot();
@@ -543,12 +567,28 @@ namespace Project_127.Overlay
 
 		public static void OverlayNoteChapterNext()
 		{
-			throw new NotImplementedException();
+			MyGTAOverlay.nextChapter();
+			if (MyGTAOverlay.chapterTitle != "")
+			{
+				MyGTAOverlay.title.text = "Project 1.27 - Overlay - " + MyGTAOverlay.chapterTitle;
+			}
+			else
+			{
+				MyGTAOverlay.title.text = NotesLoadedTitle[NotesLoadedIndex];
+			}
 		}
 
 		public static void OverlayNoteChapterPrev()
 		{
-			throw new NotImplementedException();
+			MyGTAOverlay.prevChapter();
+			if (MyGTAOverlay.chapterTitle != "")
+			{
+				MyGTAOverlay.title.text = "Project 1.27 - Overlay - " + MyGTAOverlay.chapterTitle;
+			}
+			else
+			{
+				MyGTAOverlay.title.text = NotesLoadedTitle[NotesLoadedIndex];
+			}
 		}
 
 
@@ -688,12 +728,109 @@ namespace Project_127.Overlay
 		/// <param name="e"></param>
 		private void btn_cb_Set_OverlayMultiMonitorMode_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
 		{
-			NoteOverlay.OverlaySettingsChanged();
+			Overlay_MultipleMonitor.ResetPosition();
+		}
 
-			Settings.OL_MM_Left = 0;
-			Settings.OL_MM_Top = 0;
+		bool waitingForSecondRightClick = false;
 
-			NoteOverlay.OverlaySettingsChanged();
+		private static OverlayAnimationObject ast;
+		private static DispatcherTimer dtast;
+		private static async void easterEgg()
+		{
+			// We are very serious people...
+			//if (new System.Random().NextDouble() > .8)
+			{
+				//return;
+			}
+			ast = new OverlayAnimationObject("rick");
+			MyGTAOverlay.attach(ast);
+			await Task.Run(async () =>
+			{
+				for (int i = 1; i<=50; i++)
+                {
+					var frameName = i.ToString("000") + ".jpg";
+					ast.addFrame(await ast.imageFromURI(new Uri(@"Overlay\richard\" + frameName, UriKind.Relative)));
+                }
+				//var richard = System.Windows.Application.GetResourceStream(new Uri(@"Overlay\richard.gif", UriKind.Relative));
+				//await ast.loadGif(System.Drawing.Image.FromStream(richard.Stream));
+				ast.fillOverlay = true;
+				ast.visible = false;
+				ast.FPS = 10;
+				ast.opacity = .5F;
+			});
+			dtast = new System.Windows.Threading.DispatcherTimer();
+			dtast.Tick += new EventHandler(easterEggLoop);
+			dtast.Interval = TimeSpan.FromMilliseconds(2500);
+			dtast.Start();
+		}
+
+		public static void easterEggLoop(object sender, EventArgs e)
+		{
+			float percent = 0;
+            try
+            {
+				percent = Globals.GTAPointerPathHandler.EvalPointerPath_fp32(Globals.stateVarsCurrent["percent"]);
+			}
+            catch { }
+			if (percent == 100)
+            {
+				ast.visible = true;
+				if (MyGTAOverlay.Visible)
+                {
+					/*var synth = new System.Speech.Synthesis.SpeechSynthesizer();
+					synth.SetOutputToDefaultAudioDevice();
+					synth.SpeakAsync(@"We're no strangers to love.  You know the rules. and so, due ayye, A full commitments what im think king uhhve
+, you wouldn't get dis from,, any uhhve-uhr guy. ayye just wanna tell-you how-I-um feel-ing; Gotta make-you, under stand, Never-gonna give you up,
+Never-gonna let you down, Never-gonna run around-and, dez-urt you");*/
+				}
+            }
+
+		}
+
+		private async void btn_Looks_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+		{
+			//if (e.ClickCount >= 3)
+			//{
+			//	if (!waitingForSecondRightClick)
+			//	{
+			//		await Task.Delay(1000);
+			//		waitingForSecondRightClick = true;
+			//		await Task.Delay(5000);
+			//		waitingForSecondRightClick = false;
+			//	}
+			//	else
+			//	{
+			//		string msg = "";
+			//		msg += "Speaking of 'Look'..." + "\n";
+
+			//		msg += "From an outside perspective the GTA 5 Speedrunning Community really doesnt look good." + "\n";
+
+			//		msg += "\nThe whole 'verified' system basically establishes a two-class-society." + "\n";
+			//		msg += "People get insulted left and right and nobody gives a shit." + "\n";
+			//		msg += "\nSome of the least pleasant interactions ive EVER had were with some of the" + "\n";
+
+			//		msg += "bigger and more well known members of this community (including mods)." + "\n";
+			//		msg += "Shoutouts to Burhac, Darkviper and Toriks btw. They were always nice and respectful." + "\n";
+
+			//		msg += "\nThe fact that 'DarkViper fan' is used as an insult on the GTA V Speedrun Discord," + "\n";
+			//		msg += "yet without 3 'DarkViper fans' Speedrunning GTA V on Patch 1.27 would be dead," + "\n";
+			//		msg += "is pretty funny if you ask me..." + "\n";
+
+			//		msg += "\nI have been THIS close to quit working on P127 due to comments and behaviour" + "\n";
+			//		msg += "of the entire community on more than one occasion. And tbh. I should have." + "\n";
+			//		msg += "Some of you are a bunch of ungrateful entitled bastards." + "\n";
+			//		msg += " Y'all can be thankful I'm petty enough to write this manifesto," + "\n";
+			//		msg += "but wasn't petty enough to pull the killswitch on P127 in moments where I've had it up to here." + "\n";
+
+			//		msg += "\nHow fucking hard can it be not to be a dick and treat people with respect? Seriously. FFS." + "\n";
+			//		msg += "\nSincerly, @thS" + "\n";
+
+
+			//		//msg += "\n" + "\n";
+			//		//msg += "" + "\n";
+			//		new Popups.Popup(Popups.Popup.PopupWindowTypes.PopupOk, msg).ShowDialog();
+			//	}
+			//}
 		}
 	}
 }

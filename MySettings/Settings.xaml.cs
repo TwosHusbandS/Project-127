@@ -13,6 +13,7 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using Microsoft.Windows.Themes;
 using System.Windows.Shapes;
 using Project_127;
 using Project_127.Auth;
@@ -175,7 +176,7 @@ namespace Project_127.MySettings
 
 			// Setting ZIP Extract Path now
 			HelperClasses.Logger.Log("GTA V Path set, now onto the ZIP Folder");
-			Popup yesnoconfirm = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Project 1.27 needs a Folder where it extracts the Content of the ZIP File to store all Sorts of Files and Data\nIt is recommend to do this on the same Drive / Partition as your GTAV Installation Path\nBest Case (and default Location) is your GTAV Path.\nDo you want to use your GTAV Path?");
+			Popup yesnoconfirm = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Project 1.27 needs a Folder where it installs all of its Components and saves Files for Upgrading and Downgrading.\nIt is recommend to do this on the same Drive / Partition as your GTAV Installation Path\nBest Case (and default Location) is your GTAV Path.\nDo you want to use your GTAV Path?");
 			yesnoconfirm.ShowDialog();
 
 			// If User wants default Settings
@@ -669,7 +670,7 @@ namespace Project_127.MySettings
 				Settings.LoadSettings();
 			}
 			btn_Set_GTAVInstallationPath.Content = "GTA V Installation Path: " + Settings.GTAVInstallationPath;
-			btn_Set_ZIPExtractionPath.Content = "ZIP Extraction Path: " + Settings.ZIPExtractionPath;
+			btn_Set_ZIPExtractionPath.Content = "Components Installation Path: " + Settings.ZIPExtractionPath;
 			btn_Set_PathFPSLimiter.Content = "FPS Limiter Path: " + Settings.PathFPSLimiter;
 			btn_Set_PathLiveSplit.Content = "LiveSplit Path: " + Settings.PathLiveSplit;
 			btn_Set_PathStreamProgram.Content = "Stream Program Path: " + Settings.PathStreamProgram;
@@ -691,9 +692,12 @@ namespace Project_127.MySettings
 			ButtonMouseOverMagic(btn_cb_Set_EnableLogging);
 			ButtonMouseOverMagic(btn_cb_Set_CopyFilesInsteadOfHardlinking);
 			ButtonMouseOverMagic(btn_cb_Set_EnableAlternativeLaunch);
-			ButtonMouseOverMagic(btn_cb_Set_CopyFilesInsteadOfSyslinking_SocialClub);
+			ButtonMouseOverMagic(btn_cb_Set_EnableAlternativeLaunchForceCProgramFiles);
+			ButtonMouseOverMagic(btn_cb_Set_EnableJumpscriptUseCustomScript);
+			//ButtonMouseOverMagic(btn_cb_Set_CopyFilesInsteadOfSyslinking_SocialClub);
 			ButtonMouseOverMagic(btn_cb_Set_EnablePreOrderBonus);
 			ButtonMouseOverMagic(btn_cb_Set_EnableAutoStartFPSLimiter);
+			ButtonMouseOverMagic(btn_cb_Set_EnableScripthookOnDowngraded);
 			ButtonMouseOverMagic(btn_cb_Set_EnableAutoStartLiveSplit);
 			ButtonMouseOverMagic(btn_cb_Set_EnableAutoStartNohboard);
 			ButtonMouseOverMagic(btn_cb_Set_EnableOverlay);
@@ -867,9 +871,13 @@ namespace Project_127.MySettings
 				case "btn_cb_Set_EnableAlternativeLaunch":
 					SetCheckBoxBackground(myBtn, Settings.EnableAlternativeLaunch);
 					break;
-				case "btn_cb_Set_CopyFilesInsteadOfSyslinking_SocialClub":
-					SetCheckBoxBackground(myBtn, Settings.EnableCopyFilesInsteadOfSyslinking_SocialClub);
+				case "btn_cb_Set_EnableJumpscriptUseCustomScript":
+					SetCheckBoxBackground(myBtn, Settings.EnableJumpscriptUseCustomScript);
 					break;
+				//case "btn_cb_Set_CopyFilesInsteadOfSyslinking_SocialClub":
+				//	SetCheckBoxBackground(myBtn, Settings.EnableCopyFilesInsteadOfSyslinking_SocialClub);
+				//	break;
+
 				case "btn_cb_Set_EnablePreOrderBonus":
 					SetCheckBoxBackground(myBtn, Settings.EnablePreOrderBonus);
 					break;
@@ -879,8 +887,14 @@ namespace Project_127.MySettings
 				case "btn_cb_Set_OnlyAutoStartProgramsWhenDowngraded":
 					SetCheckBoxBackground(myBtn, Settings.EnableOnlyAutoStartProgramsWhenDowngraded);
 					break;
+				case "btn_cb_Set_EnableScripthookOnDowngraded":
+					SetCheckBoxBackground(myBtn, Settings.EnableScripthookOnDowngraded);
+					break;
 				case "btn_cb_Set_EnableAutoStartLiveSplit":
 					SetCheckBoxBackground(myBtn, Settings.EnableAutoStartLiveSplit);
+					break;
+				case "btn_cb_Set_EnableAlternativeLaunchForceCProgramFiles":
+					SetCheckBoxBackground(myBtn, Settings.EnableAlternativeLaunchForceCProgramFiles);
 					break;
 				case "btn_cb_Set_EnableAutoStartFPSLimiter":
 					SetCheckBoxBackground(myBtn, Settings.EnableAutoStartFPSLimiter);
@@ -924,11 +938,6 @@ namespace Project_127.MySettings
 		{
 			Rect_HideOptions_Tease.Visibility = Visibility.Hidden;
 
-			if (HelperClasses.RegeditHandler.GetValue("TeasingFeatures") != "True")
-			{
-				Rect_HideOptions_ClosedBetaSocialClubLaunch.Visibility = Visibility.Hidden;
-			}
-
 			if (Settings.EnableOverlay)
 			{
 				Rect_HideOption_OverlayMM.Visibility = Visibility.Hidden;
@@ -969,6 +978,15 @@ namespace Project_127.MySettings
 				}
 			}
 
+			if (Settings.EnableJumpscriptUseCustomScript)
+			{
+				Rect_HideOptions_JumpscriptKeys.Visibility = Visibility.Visible;
+			}
+			else
+			{
+				Rect_HideOptions_JumpscriptKeys.Visibility = Visibility.Hidden;
+			}
+
 			// Remove this...
 
 			// Rect_HideOptions_Tease.Visibility = Visibility.Visible;
@@ -1002,13 +1020,23 @@ namespace Project_127.MySettings
 					Settings.EnableAlternativeLaunch = !Settings.EnableAlternativeLaunch;
 					RefreshIfOptionsHide();
 					break;
+				case "btn_cb_Set_EnableScripthookOnDowngraded":
+					Settings.EnableScripthookOnDowngraded = !Settings.EnableScripthookOnDowngraded;
+					RefreshIfOptionsHide();
+					break;
 				case "btn_cb_Set_CopyFilesInsteadOfHardlinking":
 					Settings.EnableCopyFilesInsteadOfHardlinking = !Settings.EnableCopyFilesInsteadOfHardlinking;
 					SetDefaultEnableCopyingHardlinking();
 					break;
-				case "btn_cb_Set_CopyFilesInsteadOfSyslinking_SocialClub":
-					Settings.EnableCopyFilesInsteadOfSyslinking_SocialClub = !Settings.EnableCopyFilesInsteadOfSyslinking_SocialClub;
+				case "btn_cb_Set_EnableJumpscriptUseCustomScript":
+					Settings.EnableJumpscriptUseCustomScript = !Settings.EnableJumpscriptUseCustomScript;
 					break;
+				case "btn_cb_Set_EnableAlternativeLaunchForceCProgramFiles":
+					Settings.EnableAlternativeLaunchForceCProgramFiles = !Settings.EnableAlternativeLaunchForceCProgramFiles;
+					break;
+				//case "btn_cb_Set_CopyFilesInsteadOfSyslinking_SocialClub":
+				//	Settings.EnableCopyFilesInsteadOfSyslinking_SocialClub = !Settings.EnableCopyFilesInsteadOfSyslinking_SocialClub;
+				//	break;
 				case "btn_cb_Set_EnablePreOrderBonus":
 					Settings.EnablePreOrderBonus = !Settings.EnablePreOrderBonus;
 					break;
@@ -1109,9 +1137,9 @@ namespace Project_127.MySettings
 		/// <summary>
 		/// Resetting Everything
 		/// </summary>
-		public static void ResetEverything()
+		public static void ResetEverything(bool uninstallAfterAutomatically = false)
 		{
-			Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "This resets the whole Project 1.27 Client including:\nSettings\nZIP Files Downloaded\nBacked up GTA Files to upgrade when downgraded\n\nYou need to repair GTA V through Steam / Epic / Rockstar after this\n(if its not already Up-To-Date)\n\nYou will be asked if you want to re-install P127 after this.");
+			Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "This resets the whole Project 1.27 Client including:\nSettings\nInstalled Components\nBacked up GTA Files to upgrade when downgraded\nYOU NEED TO repair / verify GTA V through Steam / Epic / Rockstar AFTER THIS\n\nYou will be asked if you want to un-install P127 after this.");
 			yesno.ShowDialog();
 			if (yesno.DialogResult == true)
 			{
@@ -1122,6 +1150,10 @@ namespace Project_127.MySettings
 				HelperClasses.Logger.Log("Making an Upgrade.");
 				LauncherLogic.Upgrade();
 				HelperClasses.Logger.Log("Done making an Upgrade.", 1);
+
+				HelperClasses.Logger.Log("Lets make a full Repair.");
+				LauncherLogic.Repair();
+				HelperClasses.Logger.Log("Done making an a full Repair.", 1);
 
 				HelperClasses.Logger.Log("Deleting all Regedit Values.");
 				RegeditHandler.DeleteKey();
@@ -1182,40 +1214,71 @@ namespace Project_127.MySettings
 		/// <param name="e"></param>
 		private void btn_RepairGTA_Click(object sender, RoutedEventArgs e)
 		{
-			Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "This Method is supposed to be called when there was a Game Update.\nOr you verified Files through Steam.\nIs that the case?");
+			RepairGTA_UserInteraction();
+			MainWindow.MW.UpdateGUIDispatcherTimer();
+		}
+
+
+		public static void RepairGTA_UserInteraction()
+		{
+			if (!LauncherLogic.IsGTAVInstallationPathCorrect())
+			{
+
+				HelperClasses.Logger.Log("GTA V Installation Path not found or incorrect. User will get Popup");
+
+				string msg = "Error: GTA V Installation Path incorrect.\nGTAV Installation Path: '" + LauncherLogic.GTAVFilePath + "'";
+
+				if (Globals.P127Branch != "master")
+				{
+					Popup yesno2 = new Popup(Popup.PopupWindowTypes.PopupYesNo, msg + "\n. Force this Repair?");
+					yesno2.ShowDialog();
+					if (yesno2.DialogResult == false)
+					{
+						return;
+					}
+				}
+				else
+				{
+					new Popup(Popup.PopupWindowTypes.PopupOkError, msg).ShowDialog();
+				}
+			}
+
+			if (HelperClasses.BuildVersionTable.IsUpgradedGTA(LauncherLogic.UpgradeFilePathBackup))
+			{
+				string msg3 = "Found Backup for UpgradeFiles.\nDo you want to try that instead of Repairing?";
+				Popup yesno2 = new Popup(Popup.PopupWindowTypes.PopupYesNo, msg3);
+				yesno2.ShowDialog();
+				if (yesno2.DialogResult == true)
+				{
+					LauncherLogic.UseBackup();
+					return;
+				}
+			}
+
+			string msg2 = "";
+			msg2 += "Do you want to do a quick Repair or a deep Repair?\n";
+			msg2 += "\nquick Repair:\n";
+			msg2 += "You need to repair / verify your GTA via your Retailer";
+			msg2 += "\n(Steam, Rockstar, Epic) before or after this.\n";
+			msg2 += "\ndeep Repair:\n";
+			msg2 += "You need to repair / verify your GTA via your Retailer";
+			msg2 += "\n(Steam, Rockstar, Epic) AFTER this.";
+			msg2 += "\nThis really removes all P127 Files and Traces\nfrom your GTA V Installation";
+			//quick repair is true
+			Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNoRepair, msg2);
 			yesno.ShowDialog();
 			if (yesno.DialogResult == true)
 			{
-				if (LauncherLogic.IsGTAVInstallationPathCorrect() && Globals.ZipVersion != 0)
+				if (yesno.RtrnRepairMode == "DEEP")
 				{
 					LauncherLogic.Repair();
 				}
 				else
 				{
-
-					HelperClasses.Logger.Log("GTA V Installation Path not found or incorrect. User will get Popup");
-
-					string msg = "Error: GTA V Installation Path incorrect or ZIP Version == 0.\nGTAV Installation Path: '" + LauncherLogic.GTAVFilePath + "'\nInstallationState (probably): '" + LauncherLogic.InstallationState.ToString() + "'\nZip Version: " + Globals.ZipVersion + ".";
-
-					if (Globals.Branch != "master")
-					{
-						Popup yesno2 = new Popup(Popup.PopupWindowTypes.PopupYesNo, msg + "\n. Force this Repair?");
-						yesno2.ShowDialog();
-						if (yesno2.DialogResult == true)
-						{
-							LauncherLogic.Repair();
-						}
-					}
-					else
-					{
-						new Popup(Popup.PopupWindowTypes.PopupOkError, msg).ShowDialog();
-					}
+					LauncherLogic.Repair(true);
 				}
 			}
-
-			MainWindow.MW.UpdateGUIDispatcherTimer();
 		}
-
 
 		/// <summary>
 		/// Create Backup Click
@@ -1292,7 +1355,6 @@ namespace Project_127.MySettings
 			SettingsState = SettingsStates.Extra;
 		}
 
-
 		/// <summary>
 		/// Rightclick Settings Header to get Mode Popup
 		/// </summary>
@@ -1300,9 +1362,16 @@ namespace Project_127.MySettings
 		/// <param name="e"></param>
 		private void lbl_SettingsHeader_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
 		{
-			if (SettingsState == SettingsStates.General)
+			if (e.ClickCount >= 3)
 			{
-				new PopupMode().ShowDialog();
+				if (SettingsState == SettingsStates.General)
+				{
+					new PopupMode().ShowDialog();
+				}
+				else if (SettingsState == SettingsStates.GTA)
+				{
+					btn_SettingsGTA_MouseRightButtonDown(null, null);
+				}
 			}
 		}
 
@@ -1407,6 +1476,8 @@ namespace Project_127.MySettings
 		{
 			PopupCreateBackup.IsOpen = false;
 			PopupUseBackup.IsOpen = false;
+			PopupJumpscriptAdditional.IsOpen = false;
+			PopupEnableAlternativeLaunch.IsOpen = false;
 		}
 
 		/// <summary>
@@ -1468,7 +1539,7 @@ namespace Project_127.MySettings
 			}
 
 			string newName = LauncherLogic.ZIPFilePath.TrimEnd('\\') + @"\Project_127_Files\UpgradeFiles_Backup_" + combox_UseBackup.SelectedItem.ToString();
-			if (HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(newName).Length <= 1)
+			if (!(HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(newName).Length >= 2))
 			{
 				string prevName = btn_UseBackupName.Content.ToString();
 				btn_UseBackupName.Content = "No Files in that Folder";
@@ -1476,9 +1547,6 @@ namespace Project_127.MySettings
 				btn_UseBackupName.Content = prevName;
 				return;
 			}
-
-
-			Globals.DebugPopup(newName);
 
 			LauncherLogic.UseBackup(combox_UseBackup.SelectedItem.ToString());
 		}
@@ -1500,12 +1568,7 @@ namespace Project_127.MySettings
 		/// <param name="e"></param>
 		private void btn_cb_Set_EnableOverlayMultiMonitor_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
 		{
-			NoteOverlay.OverlaySettingsChanged();
-
-			Settings.OL_MM_Left = 0;
-			Settings.OL_MM_Top = 0;
-
-			NoteOverlay.OverlaySettingsChanged();
+			Overlay.Overlay_MultipleMonitor.ResetPosition();
 		}
 
 		/// <summary>
@@ -1515,7 +1578,10 @@ namespace Project_127.MySettings
 		/// <param name="e"></param>
 		private void btn_SettingsGeneral_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
 		{
-			new PopupMode().ShowDialog();
+			if (e.ClickCount >= 3)
+			{
+				new PopupMode().ShowDialog();
+			}
 		}
 
 		/// <summary>
@@ -1539,9 +1605,8 @@ namespace Project_127.MySettings
 				}
 				else if (tb.MyReturnString != "")
 				{
-					string DLLinkBranch = "https://github.com/TwosHusbandS/Project-127/raw/" + Globals.Branch + "/Installer/Builds/" + tb.MyReturnString.TrimEnd(".exe") + ".exe";
+					string DLLinkBranch = "https://github.com/TwosHusbandS/Project-127/raw/" + Globals.P127Branch + "/Installer/Builds/" + tb.MyReturnString.TrimEnd(".exe") + ".exe";
 					string DLLinkMaster = "https://github.com/TwosHusbandS/Project-127/raw/Master" + "/Installer/Builds/" + tb.MyReturnString.TrimEnd(".exe") + ".exe";
-
 					HelperClasses.Logger.Log("Importing Build. Links: ");
 					HelperClasses.Logger.Log("DLLinkBranch: " + DLLinkBranch);
 					HelperClasses.Logger.Log("DLLinkMaster: " + DLLinkMaster);
@@ -1562,23 +1627,134 @@ namespace Project_127.MySettings
 
 				}
 
-
 				new Popup(Popup.PopupWindowTypes.PopupOk, "Cant find that build online.").ShowDialog();
 			}
 		}
 
-		private void Rect_HideOptions_ClosedBetaSocialClubLaunch_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+
+		private void btn_SettingsGTA_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
 		{
-			if (e.ClickCount >= 3)
+			if (LauncherLogic.GameState == LauncherLogic.GameStates.NonRunning)
 			{
-				PopupTextbox pTb = new PopupTextbox("", "");
-				pTb.ShowDialog();
-				if (pTb.MyReturnString.ToLower() == "letmein")
-				{
-					HelperClasses.RegeditHandler.DeleteValue("TeasingFeatures");
-					RefreshIfOptionsHide();
-				}
+				ROSCommunicationBackend.setFlag(ROSCommunicationBackend.Flags.indicateTheLessThanLegalProcurementOfMotorVehicles, true);
+				Overlay.GTAOverlay.indicateTheLessThanLegalProcurementOfMotorVehicles = true;
+				Settings.GTAWindowTitle = Overlay.GTAOverlay.targetWindowBorderlessEasterEgg;
+				new Popup(Popup.PopupWindowTypes.PopupOk, "'Stealy Wheely Automobiley V' activated.\nRestart P127 to disable.").ShowDialog();
+			}
+			else
+			{
+				new Popup(Popup.PopupWindowTypes.PopupOk, "Cant do that while the game is running.").ShowDialog();
 			}
 		}
+
+		private void btn_Jumpscript_Additional_Click(object sender, RoutedEventArgs e)
+		{
+			PopupJumpscriptAdditional.IsOpen = true;
+		}
+
+		private void btn_Import_AHK_Click(object sender, RoutedEventArgs e)
+		{
+			string AHKFileLocation = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.File, "Import AHK Jumpscript", Globals.ProjectInstallationPath, pFilter: "AHK Files|*.ahk*");
+			if (HelperClasses.FileHandling.doesFileExist(AHKFileLocation))
+			{
+				string customPath = Globals.ProjectInstallationPathBinary.TrimEnd('\\') + @"\P127_Jumpscript_Custom.ahk";
+				HelperClasses.FileHandling.copyFile(AHKFileLocation, customPath);
+				Settings.EnableJumpscriptUseCustomScript = true;
+				RefreshGUI();
+			}
+			else
+			{
+				new Popup(Popup.PopupWindowTypes.PopupOk, "No AHK File selected.").ShowDialog();
+			}
+		}
+
+		private void PopupJumpscriptAdditional_Opened(object sender, EventArgs e)
+		{
+
+		}
+
+		private void PopupJumpscriptAdditional_Closed(object sender, EventArgs e)
+		{
+
+		}
+
+		private void PopupEnableAlternativeLaunch_Closed(object sender, EventArgs e)
+		{
+
+		}
+
+		private void PopupEnableAlternativeLaunch_Opened(object sender, EventArgs e)
+		{
+
+		}
+
+		private void btn_cb_Set_EnableAlternativeLaunch_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+		{
+			PopupEnableAlternativeLaunch.IsOpen = true;
+		}
+
+		public static void TellRockstarUsersToDisableAutoUpdateIfNeeded()
+		{
+			if (Settings.EnableAlternativeLaunch && Settings.Retailer == Retailers.Rockstar)
+			{
+				string msg = "You need to stop Rockstar Game Launcher\nfrom automatically Updating your GTA.\nOtherwise certain features might not work.\n\nTo do this:\nInside Rockstar Games Launcher,\nhead into Settings\n-> My Installed Games\n->Grand Theft Auto V\n-> uncheck the \"Enable automatic updates\" checkbox at the very top.";
+				new Popup(Popup.PopupWindowTypes.PopupOk, msg).ShowDialog();
+			}
+
+		}
+
+		private void btn_AntivirusFix_Click(object sender, RoutedEventArgs e)
+		{
+			AntiVirusFix();
+		}
+
+		public static void AntiVirusFix()
+		{
+			string msg = "So Windows automatically deleting our Files got annoying really quick...\n P127 can automatically add an Exclusion of the following Folders:\n";
+			msg += "\n- GTA Installation Directory\n- Project 1.27 Installation Directory\n- Project 1.27 Component Download Location\n";
+			msg += "\nto the Windows Defender.\nWindows defender will STILL BE ACTIVE,\nbut it will not scan for Viruses in those folders.\n\nDo you want me to do that?";
+
+			Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, msg);
+			yesno.ShowDialog();
+			if (yesno.DialogResult == true)
+			{
+				HelperClasses.Logger.Log("User wants the AntiVirus Fix.");
+
+				// Done intentionally like this, so user is kinda aware that something is happening
+				string command = "";
+				command += "Add-MpPreference -ExclusionPath '" + Globals.ProjectInstallationPath + "'";
+				command += "; Add-MpPreference -ExclusionPath '" + LauncherLogic.GTAVFilePath + "'";
+				command += "; Add-MpPreference -ExclusionPath '" + LauncherLogic.ZIPFilePath.TrimEnd('\\') + @"\Project_127_Files\" + "'";
+
+				string powershell = @"C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe";
+				string powershell2 = @"C:\Windows\System32\WindowsPowerShell\v2.0\powershell.exe";
+
+				if (HelperClasses.FileHandling.doesFileExist(powershell))
+				{
+					HelperClasses.ProcessHandler.StartProcess(powershell, "", command, true, true, false);
+					HelperClasses.Logger.Log("User should have the AntiVirus Fix.");
+				}
+				else if (HelperClasses.FileHandling.doesFileExist(powershell2))
+				{
+					HelperClasses.ProcessHandler.StartProcess(powershell2, "", command, true, true, false);
+					HelperClasses.Logger.Log("User should have the AntiVirus Fix.");
+				}
+				else
+				{
+					HelperClasses.Logger.Log("Cant find Powershell.exe.");
+				}
+
+
+
+				// execute powershell here
+				// Add-MpPreference -ExclusionPath "C:\Temp"
+				// GTA Install, P127 Install, Component Download
+			}
+			else
+			{
+				HelperClasses.Logger.Log("User does not want the AntiVirus Fix.");
+			}
+		}
+
 	} // End of Class
 } // End of Namespace 

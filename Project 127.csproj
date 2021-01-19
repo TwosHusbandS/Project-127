@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="packages\CefSharp.Wpf.84.4.10\build\CefSharp.Wpf.props" Condition="Exists('packages\CefSharp.Wpf.84.4.10\build\CefSharp.Wpf.props')" />
-  <Import Project="packages\CefSharp.Common.84.4.10\build\CefSharp.Common.props" Condition="Exists('packages\CefSharp.Common.84.4.10\build\CefSharp.Common.props')" />
-  <Import Project="packages\cef.redist.x86.84.4.1\build\cef.redist.x86.props" Condition="Exists('packages\cef.redist.x86.84.4.1\build\cef.redist.x86.props')" />
-  <Import Project="packages\cef.redist.x64.84.4.1\build\cef.redist.x64.props" Condition="Exists('packages\cef.redist.x64.84.4.1\build\cef.redist.x64.props')" />
+  <Import Project="packages\CefSharp.Wpf.86.0.241\build\CefSharp.Wpf.props" Condition="Exists('packages\CefSharp.Wpf.86.0.241\build\CefSharp.Wpf.props')" />
+  <Import Project="packages\CefSharp.Common.86.0.241\build\CefSharp.Common.props" Condition="Exists('packages\CefSharp.Common.86.0.241\build\CefSharp.Common.props')" />
+  <Import Project="packages\cef.redist.x86.86.0.24\build\cef.redist.x86.props" Condition="Exists('packages\cef.redist.x86.86.0.24\build\cef.redist.x86.props')" />
+  <Import Project="packages\cef.redist.x64.86.0.24\build\cef.redist.x64.props" Condition="Exists('packages\cef.redist.x64.86.0.24\build\cef.redist.x64.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -13,7 +13,7 @@
     <OutputType>WinExe</OutputType>
     <RootNamespace>Project_127</RootNamespace>
     <AssemblyName>Project 1.27</AssemblyName>
-    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
@@ -109,8 +109,8 @@
     <Reference Include="GSF.Core, Version=2.3.302.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>packages\GSF.Core.2.3.302\lib\net46\GSF.Core.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=1.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>packages\Microsoft.Bcl.AsyncInterfaces.1.1.0\lib\net461\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
+    <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=5.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Bcl.AsyncInterfaces.5.0.0\lib\net461\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
     </Reference>
     <Reference Include="PresentationFramework.Aero" />
     <Reference Include="SharpDX, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
@@ -132,6 +132,7 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Management" />
     <Reference Include="System.Memory, Version=4.0.1.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>packages\System.Memory.4.5.4\lib\net461\System.Memory.dll</HintPath>
     </Reference>
@@ -139,14 +140,14 @@
     <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
     </Reference>
-    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.6.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>packages\System.Runtime.CompilerServices.Unsafe.4.7.1\lib\net461\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\System.Runtime.CompilerServices.Unsafe.5.0.0\lib\net45\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
     </Reference>
-    <Reference Include="System.Text.Encodings.Web, Version=4.0.5.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>packages\System.Text.Encodings.Web.4.7.1\lib\net461\System.Text.Encodings.Web.dll</HintPath>
+    <Reference Include="System.Text.Encodings.Web, Version=5.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>packages\System.Text.Encodings.Web.5.0.0\lib\net461\System.Text.Encodings.Web.dll</HintPath>
     </Reference>
-    <Reference Include="System.Text.Json, Version=4.0.1.2, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>packages\System.Text.Json.4.7.2\lib\net461\System.Text.Json.dll</HintPath>
+    <Reference Include="System.Text.Json, Version=5.0.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>packages\System.Text.Json.5.0.1\lib\net461\System.Text.Json.dll</HintPath>
     </Reference>
     <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>packages\System.Threading.Tasks.Extensions.4.5.4\lib\net461\System.Threading.Tasks.Extensions.dll</HintPath>
@@ -182,10 +183,14 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Auth\CEFResourceHandler.cs" />
-    <Compile Include="Auth\MTLAuth.cs" />
+    <Compile Include="Auth\MTLInterface.cs" />
     <Compile Include="ComponentManager.xaml.cs">
       <DependentUpon>ComponentManager.xaml</DependentUpon>
     </Compile>
+    <Compile Include="HelperClasses\ASPointerPath.cs" />
+    <Compile Include="HelperClasses\IPCPipes.cs" />
+    <Compile Include="HelperClasses\MissionIdentifiers.cs" />
+    <Compile Include="HelperClasses\WindowChangeListenerTwo.cs" />
     <Compile Include="MyColors.cs" />
     <Compile Include="HelperClasses\BuildVersionTable.cs" />
     <Compile Include="HelperClasses\DataGridHelper.cs" />
@@ -226,14 +231,19 @@
     <Compile Include="Overlay\NoteOverlayPages\NoteOverlay_NoteFiles.xaml.cs">
       <DependentUpon>NoteOverlay_NoteFiles.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Overlay\OverlayAnimationObject.cs" />
     <Compile Include="Overlay\Overlay_Preview.xaml.cs">
       <DependentUpon>Overlay_Preview.xaml</DependentUpon>
     </Compile>
     <Compile Include="Overlay\Overlay_MultipleMonitor.xaml.cs">
       <DependentUpon>Overlay_MultipleMonitor.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Overlay\DynamicText.cs" />
     <Compile Include="Popups\PopupCombobox.xaml.cs">
       <DependentUpon>PopupCombobox.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Popups\PopupInstallComponent.xaml.cs">
+      <DependentUpon>PopupInstallComponent.xaml</DependentUpon>
     </Compile>
     <Compile Include="Popups\PopupMode.xaml.cs">
       <DependentUpon>PopupMode.xaml</DependentUpon>
@@ -316,6 +326,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Popups\PopupInstallComponent.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Popups\PopupMode.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -386,8 +400,10 @@
     </EmbeddedResource>
     <None Include="app.manifest" />
     <None Include="Installer\Changelog.md" />
+    <None Include="Installer\Changelogs\Advanced Notefile.md" />
     <None Include="Installer\Changelogs\Help.md" />
     <None Include="Installer\Changelogs\Features.md" />
+    <None Include="Installer\Changelogs\V_1_2_0_0_Changelog.md" />
     <None Include="Installer\Changelogs\V_1_1_0_0_Changelog.md" />
     <None Include="Installer\Changelogs\V_0_0_4_0_Changelog.md" />
     <None Include="Installer\Changelogs\V_0_0_3_1_Changelog.md" />
@@ -508,21 +524,58 @@
     <Content Include="MTLInterface.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Resource Include="Overlay\richard\001.jpg" />
+    <Resource Include="Overlay\richard\002.jpg" />
+    <Resource Include="Overlay\richard\003.jpg" />
+    <Resource Include="Overlay\richard\004.jpg" />
+    <Resource Include="Overlay\richard\005.jpg" />
+    <Resource Include="Overlay\richard\006.jpg" />
+    <Resource Include="Overlay\richard\007.jpg" />
+    <Resource Include="Overlay\richard\008.jpg" />
+    <Resource Include="Overlay\richard\009.jpg" />
+    <Resource Include="Overlay\richard\010.jpg" />
+    <Resource Include="Overlay\richard\011.jpg" />
+    <Resource Include="Overlay\richard\012.jpg" />
+    <Resource Include="Overlay\richard\013.jpg" />
+    <Resource Include="Overlay\richard\014.jpg" />
+    <Resource Include="Overlay\richard\015.jpg" />
+    <Resource Include="Overlay\richard\016.jpg" />
+    <Resource Include="Overlay\richard\017.jpg" />
+    <Resource Include="Overlay\richard\018.jpg" />
+    <Resource Include="Overlay\richard\019.jpg" />
+    <Resource Include="Overlay\richard\020.jpg" />
+    <Resource Include="Overlay\richard\021.jpg" />
+    <Resource Include="Overlay\richard\022.jpg" />
+    <Resource Include="Overlay\richard\023.jpg" />
+    <Resource Include="Overlay\richard\024.jpg" />
+    <Resource Include="Overlay\richard\025.jpg" />
+    <Resource Include="Overlay\richard\026.jpg" />
+    <Resource Include="Overlay\richard\027.jpg" />
+    <Resource Include="Overlay\richard\028.jpg" />
+    <Resource Include="Overlay\richard\029.jpg" />
+    <Resource Include="Overlay\richard\030.jpg" />
+    <Resource Include="Overlay\richard\031.jpg" />
+    <Resource Include="Overlay\richard\032.jpg" />
+    <Resource Include="Overlay\richard\033.jpg" />
+    <Resource Include="Overlay\richard\034.jpg" />
+    <Resource Include="Overlay\richard\035.jpg" />
+    <Resource Include="Overlay\richard\036.jpg" />
+    <Resource Include="Overlay\richard\037.jpg" />
+    <Resource Include="Overlay\richard\038.jpg" />
+    <Resource Include="Overlay\richard\039.jpg" />
+    <Resource Include="Overlay\richard\040.jpg" />
+    <Resource Include="Overlay\richard\041.jpg" />
+    <Resource Include="Overlay\richard\042.jpg" />
+    <Resource Include="Overlay\richard\043.jpg" />
+    <Resource Include="Overlay\richard\044.jpg" />
+    <Resource Include="Overlay\richard\045.jpg" />
+    <Resource Include="Overlay\richard\046.jpg" />
+    <Resource Include="Overlay\richard\047.jpg" />
+    <Resource Include="Overlay\richard\048.jpg" />
+    <Resource Include="Overlay\richard\049.jpg" />
+    <Resource Include="Overlay\richard\050.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('packages\cef.redist.x64.84.4.1\build\cef.redist.x64.props')" Text="$([System.String]::Format('$(ErrorText)', 'packages\cef.redist.x64.84.4.1\build\cef.redist.x64.props'))" />
-    <Error Condition="!Exists('packages\cef.redist.x86.84.4.1\build\cef.redist.x86.props')" Text="$([System.String]::Format('$(ErrorText)', 'packages\cef.redist.x86.84.4.1\build\cef.redist.x86.props'))" />
-    <Error Condition="!Exists('packages\CefSharp.Common.84.4.10\build\CefSharp.Common.props')" Text="$([System.String]::Format('$(ErrorText)', 'packages\CefSharp.Common.84.4.10\build\CefSharp.Common.props'))" />
-    <Error Condition="!Exists('packages\CefSharp.Common.84.4.10\build\CefSharp.Common.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\CefSharp.Common.84.4.10\build\CefSharp.Common.targets'))" />
-    <Error Condition="!Exists('packages\CefSharp.Wpf.84.4.10\build\CefSharp.Wpf.props')" Text="$([System.String]::Format('$(ErrorText)', 'packages\CefSharp.Wpf.84.4.10\build\CefSharp.Wpf.props'))" />
-    <Error Condition="!Exists('packages\CefSharp.Wpf.84.4.10\build\CefSharp.Wpf.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\CefSharp.Wpf.84.4.10\build\CefSharp.Wpf.targets'))" />
-  </Target>
-  <Import Project="packages\CefSharp.Common.84.4.10\build\CefSharp.Common.targets" Condition="Exists('packages\CefSharp.Common.84.4.10\build\CefSharp.Common.targets')" />
-  <Import Project="packages\CefSharp.Wpf.84.4.10\build\CefSharp.Wpf.targets" Condition="Exists('packages\CefSharp.Wpf.84.4.10\build\CefSharp.Wpf.targets')" />
   <PropertyGroup>
     <PreBuildEvent>
     </PreBuildEvent>
@@ -532,4 +585,17 @@
 copy "$(TargetDir)LICENSE_JUMPSCRIPT" "$(ProjectDir)\bin\x64\Release\LICENSE_JUMPSCRIPT"
 copy "$(ProjectDir)AAA_HybridCode\Jumpscript\P127_Jumpscript.exe" "$(TargetDir)P127_Jumpscript.exe"</PostBuildEvent>
   </PropertyGroup>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('packages\cef.redist.x64.86.0.24\build\cef.redist.x64.props')" Text="$([System.String]::Format('$(ErrorText)', 'packages\cef.redist.x64.86.0.24\build\cef.redist.x64.props'))" />
+    <Error Condition="!Exists('packages\cef.redist.x86.86.0.24\build\cef.redist.x86.props')" Text="$([System.String]::Format('$(ErrorText)', 'packages\cef.redist.x86.86.0.24\build\cef.redist.x86.props'))" />
+    <Error Condition="!Exists('packages\CefSharp.Common.86.0.241\build\CefSharp.Common.props')" Text="$([System.String]::Format('$(ErrorText)', 'packages\CefSharp.Common.86.0.241\build\CefSharp.Common.props'))" />
+    <Error Condition="!Exists('packages\CefSharp.Common.86.0.241\build\CefSharp.Common.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\CefSharp.Common.86.0.241\build\CefSharp.Common.targets'))" />
+    <Error Condition="!Exists('packages\CefSharp.Wpf.86.0.241\build\CefSharp.Wpf.props')" Text="$([System.String]::Format('$(ErrorText)', 'packages\CefSharp.Wpf.86.0.241\build\CefSharp.Wpf.props'))" />
+    <Error Condition="!Exists('packages\CefSharp.Wpf.86.0.241\build\CefSharp.Wpf.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\CefSharp.Wpf.86.0.241\build\CefSharp.Wpf.targets'))" />
+  </Target>
+  <Import Project="packages\CefSharp.Common.86.0.241\build\CefSharp.Common.targets" Condition="Exists('packages\CefSharp.Common.86.0.241\build\CefSharp.Common.targets')" />
+  <Import Project="packages\CefSharp.Wpf.86.0.241\build\CefSharp.Wpf.targets" Condition="Exists('packages\CefSharp.Wpf.86.0.241\build\CefSharp.Wpf.targets')" />
 </Project>

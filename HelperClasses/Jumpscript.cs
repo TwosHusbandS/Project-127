@@ -14,11 +14,6 @@ namespace Project_127.HelperClasses
 	class Jumpscript
 	{
 		/// <summary>
-		/// Process we start / stop
-		/// </summary>
-		static Process myJumpscript;
-
-		/// <summary>
 		/// Bool if Jumpscript is running
 		/// </summary>
 		public static bool IsRunning;
@@ -30,20 +25,28 @@ namespace Project_127.HelperClasses
 		{
 			StopJumpscript();
 
-			List<string> myList = new List<string>();
+			if (MySettings.Settings.EnableJumpscriptUseCustomScript && HelperClasses.FileHandling.doesFileExist(Globals.ProjectInstallationPathBinary.TrimEnd('\\') + @"\P127_Jumpscript_Custom.ahk"))
+			{
+				Logger.Log("Custom Jumpscript found and settings enabled, lets use it.");
 
-			myList.Add("#NoTrayIcon");
-			myList.Add("#SingleInstance Force");
-			myList.Add("#MaxHotkeysPerInterval 10000");
-			myList.Add("#UseHook");
-			myList.Add("#IfWinActive " + Overlay.GTAOverlay.targetWindowBorderless);
-			myList.Add(KeyToString(MySettings.Settings.JumpScriptKey1) + "::" + KeyToString(MySettings.Settings.JumpScriptKey2));
-			myList.Add(KeyToString(MySettings.Settings.JumpScriptKey2) + "::" + KeyToString(MySettings.Settings.JumpScriptKey1));
-			myList.Add("#IfWinActive");
+				ProcessHandler.StartProcess(Globals.ProjectInstallationPathBinary.TrimEnd('\\') + @"\P127_Jumpscript.exe", pCommandLineArguments: "P127_Jumpscript_Custom.ahk");
+			}
+			else
+			{
+				List<string> myList = new List<string>();
+				myList.Add("#NoTrayIcon");
+				myList.Add("#SingleInstance Force");
+				myList.Add("#MaxHotkeysPerInterval 10000");
+				myList.Add("#UseHook");
+				myList.Add("#IfWinActive " + Overlay.GTAOverlay.targetWindowBorderless);
+				myList.Add(KeyToString(MySettings.Settings.JumpScriptKey1) + "::" + KeyToString(MySettings.Settings.JumpScriptKey2));
+				myList.Add(KeyToString(MySettings.Settings.JumpScriptKey2) + "::" + KeyToString(MySettings.Settings.JumpScriptKey1));
+				myList.Add("#IfWinActive");
+				FileHandling.WriteStringToFileOverwrite(Globals.ProjectInstallationPathBinary.TrimEnd('\\') + @"\P127_Jumpscript.ahk", myList.ToArray());
 
-			FileHandling.WriteStringToFileOverwrite(Globals.ProjectInstallationPathBinary.TrimEnd('\\') + @"\P127_Jumpscript.ahk", myList.ToArray());
+				ProcessHandler.StartProcess(Globals.ProjectInstallationPathBinary.TrimEnd('\\') + @"\P127_Jumpscript.exe");
+			}
 
-			myJumpscript = ProcessHandler.StartProcess(Globals.ProjectInstallationPathBinary.TrimEnd('\\') + @"\P127_Jumpscript.exe");
 
 			Logger.Log("(Re-)Started Jumpscript");
 
@@ -55,14 +58,11 @@ namespace Project_127.HelperClasses
 		/// </summary>
 		public static void StopJumpscript()
 		{
-			if (myJumpscript != null)
-			{
-				HelperClasses.ProcessHandler.Kill(myJumpscript);
-				myJumpscript = null;
-				HelperClasses.FileHandling.deleteFile(Globals.ProjectInstallationPathBinary.TrimEnd('\\') + @"\P127_Jumpscript.ahk");
-				HelperClasses.Logger.Log("Stopped Jumpscript");
-				IsRunning = false;
-			}
+			HelperClasses.ProcessHandler.KillProcessesContains("P127_Jumpscript");
+			HelperClasses.FileHandling.deleteFile(Globals.ProjectInstallationPathBinary.TrimEnd('\\') + @"\P127_Jumpscript.ahk");
+			HelperClasses.Logger.Log("Stopped Jumpscript");
+			IsRunning = false;
+
 		}
 
 
@@ -97,9 +97,41 @@ namespace Project_127.HelperClasses
 			{
 				rtrn = "PgDn";
 			}
-			else if (96 <= (int)pKey || (int)pKey <= 105)
+			else if (pKey == Keys.OemOpenBrackets)
 			{
-				rtrn = rtrn.Replace("NumPad", "Numpad");
+				rtrn = "ß";
+			}
+			else if (pKey == Keys.Oem6)
+			{
+				rtrn = "´";
+			}
+			else if (pKey == Keys.Oemplus)
+			{
+				rtrn = "+";
+			}
+			else if (pKey == Keys.OemQuestion)
+			{
+				rtrn = "#";
+			}
+			else if (pKey == Keys.Oem5)
+			{
+				rtrn = "^";
+			}
+			else if (pKey == Keys.Oemcomma)
+			{
+				rtrn = ",";
+			}
+			else if (pKey == Keys.OemPeriod)
+			{
+				rtrn = ".";
+			}
+			else if (pKey == Keys.OemMinus)
+			{
+				rtrn = "^";
+			}
+			else if (pKey == Keys.OemBackslash)
+			{
+				rtrn = "<";
 			}
 			else if (pKey == Keys.Multiply)
 			{
@@ -149,14 +181,6 @@ namespace Project_127.HelperClasses
 			{
 				rtrn = "LAlt";
 			}
-			else if (166 <= (int)pKey || (int)pKey <= 172)
-			{
-				rtrn = rtrn.Replace("Browser", "Browser_");
-			}
-			else if (173 <= (int)pKey || (int)pKey <= 175)
-			{
-				rtrn = rtrn.Replace("Volume", "Volume_");
-			}
 			else if (pKey == Keys.MediaNextTrack)
 			{
 				rtrn = "Media_Next";
@@ -177,6 +201,19 @@ namespace Project_127.HelperClasses
 			{
 				rtrn = "Space";
 			}
+			else if (166 <= (int)pKey || (int)pKey <= 172)
+			{
+				rtrn = rtrn.Replace("Browser", "Browser_");
+			}
+			else if (173 <= (int)pKey || (int)pKey <= 175)
+			{
+				rtrn = rtrn.Replace("Volume", "Volume_");
+			}
+			else if (96 <= (int)pKey || (int)pKey <= 105)
+			{
+				rtrn = rtrn.Replace("NumPad", "Numpad");
+			}
+
 
 			// Translate this:
 			// https://docs.microsoft.com/en-us/dotnet/api/system.windows.forms.keys?view=netcore-3.1

@@ -12,6 +12,9 @@ using Image = GameOverlay.Drawing.Image;
 namespace Project_127.Overlay
 {
 
+	/// <summary>
+	/// Game overlay object
+	/// </summary>
 	public class GTAOverlay : IDisposable
 	{
 		// If set to false, this starts and keeps KeyboardListenerEvent running 100% of the time.
@@ -19,8 +22,26 @@ namespace Project_127.Overlay
 
 		public static bool DebugMode = false;
 		public const string targetWindowDebug = "TeamSpeak 3";
-		public const string targetWindowBorderless = "Grand Theft Auto V";
+		public const string targetWindowBorderlessDefault = "Grand Theft Auto V";
+		public const string targetWindowBorderlessEasterEgg = "Stealy Wheely Automobiley 5";
 		public const string targetWindowMultiMonitor = "P127 - GameOverlay";
+
+		public static bool indicateTheLessThanLegalProcurementOfMotorVehicles = false;
+
+		public static string targetWindowBorderless
+		{
+			get
+			{
+				if (indicateTheLessThanLegalProcurementOfMotorVehicles)
+				{
+					return targetWindowBorderlessEasterEgg;
+				}
+				else
+				{
+					return targetWindowBorderlessDefault;
+				}
+			}
+		}
 
 		public static string targetWindow
 		{
@@ -32,15 +53,15 @@ namespace Project_127.Overlay
 				}
 				else
 				{
-					if (OverlayMode == OverlayModes.Borderless)
-					{
-						return targetWindowBorderless;
-					}
-					else if (OverlayMode == OverlayModes.MultiMonitor)
+					if (OverlayMode == OverlayModes.MultiMonitor)
 					{
 						return targetWindowMultiMonitor;
 					}
-					return targetWindowBorderless;
+					else
+					{
+						return targetWindowBorderless;
+					}
+
 				}
 			}
 		}
@@ -99,11 +120,27 @@ namespace Project_127.Overlay
 		private readonly List<overlayObject> overlayObjects;
 		private float bgImageOpac = (float).7;
 		private string bgImagePath = "";
+		private bool bgImageChanged = false;
 		private int scrollInitial = 50;
-		private overlayTextBox mainText, titleBox;
+		private BasicOverlayTextBox titleBox;
+		private DynamicOverlayTextBox mainText;
 
+
+		/// <summary>
+		/// Title object
+		/// </summary>
 		public positionalText title { get; private set; }
 
+		/// <summary>
+		/// Get the current chapter title of the dynamic text
+		/// </summary>
+		public string chapterTitle
+		{
+			get
+			{
+				return mainText.chapterTitle;
+			}
+		}
 
 		/// <summary>
 		/// Internal. Determines the positioning of the overlay.
@@ -175,7 +212,14 @@ namespace Project_127.Overlay
 		{
 			get
 			{
-				return _XMargin;
+				if (OverlayMode == OverlayModes.Borderless)
+				{
+					return _XMargin;
+				}
+				else
+				{
+					return 0;
+				}
 			}
 			set
 			{
@@ -189,7 +233,7 @@ namespace Project_127.Overlay
 		/// <summary>
 		/// Internal. Determines the Y offset of the overlay (from padding position.
 		/// </summary>
-		private int _YMargin { get; set; } = 40;
+		private int _YMargin { get; set; } = 0;
 
 		/// <summary>
 		/// Determines the Y offset of the overlay (from padding position).
@@ -198,7 +242,18 @@ namespace Project_127.Overlay
 		{
 			get
 			{
-				return _YMargin;
+				if (OverlayMode == OverlayModes.MultiMonitor)
+				{
+					if (MainWindow.OL_MM != null)
+					{
+						return (int)MainWindow.OL_MM.trueHeight;
+					}
+					return 80;
+				}
+				else
+				{
+					return _YMargin;
+				}
 			}
 			set
 			{
@@ -252,7 +307,9 @@ namespace Project_127.Overlay
 				{
 					if (MainWindow.OL_MM != null)
 					{
-						MainWindow.OL_MM.Width = value;
+						//double ration = MainWindow.OL_MM.ActualWidth / MainWindow.OL_MM.Width;
+						//MainWindow.OL_MM.Width = value / ration;
+						MainWindow.OL_MM.trueWidth = value;
 					}
 				}
 			}
@@ -286,6 +343,11 @@ namespace Project_127.Overlay
 		}
 
 		/// <summary>
+		/// Returns bool inidcating whether the overlay is initialized and ready
+		/// </summary>
+		public bool Initialized { get; private set; }
+
+		/// <summary>
 		/// Generates the game overlay
 		/// </summary>
 		/// <param name="overlayMode">Enum if we are fullscreen or MultiMonitor Mode</param>
@@ -317,7 +379,8 @@ namespace Project_127.Overlay
 			{
 				MeasureFPS = true,
 				PerPrimitiveAntiAliasing = true,
-				TextAntiAliasing = true
+				TextAntiAliasing = true,
+				UseMultiThreadedFactories = true
 			};
 			var pos = coordFromPos(position, GetWindowRectangle(windowHandle), width, height);
 			_window = new GraphicsWindow(pos[0], pos[1], width, height, gfx)
@@ -333,15 +396,16 @@ namespace Project_127.Overlay
 
 			this.Run();
 			this.Visible = false;
-			mainText = new overlayTextBox("GTAOVERLAY_MAIN");
+			mainText = new DynamicOverlayTextBox("GTAOVERLAY_MAIN");
 			attach(mainText);
 			mainText.visible = true;
-			titleBox = new overlayTextBox("title");
+			titleBox = new BasicOverlayTextBox("title");
 			titleBox.text = "Project 1.27 GTA Overlay";
 			titleBox.visible = true;
 			this.attach(titleBox);
 			title = titleBox;
 		}
+
 
 		private void _window_SetupGraphics(object sender, SetupGraphicsEventArgs e)
 		{
@@ -369,6 +433,7 @@ namespace Project_127.Overlay
 
 		private void _window_DrawGraphics(object sender, DrawGraphicsEventArgs e)
 		{
+			Initialized = true;
 			//var wb = new WindowBounds();
 			//WindowHelper.GetWindowBounds(WindowHelper.FindWindow(targetWindow), out wb);
 			var pos = coordFromPos(Position, GetWindowRectangle(WindowHelper.FindWindow(targetWindow)), _window.Width, _window.Height);
@@ -387,7 +452,11 @@ namespace Project_127.Overlay
 				_window.Resize(_width, _height);
 			}
 			var gfx = e.Graphics;
-			gfx.ClearScene(_brushes["background"]);
+			try
+			{
+				gfx.ClearScene(_brushes["background"]);
+			}
+			catch { }
 			if (UseBackground && _images.ContainsKey("bgImage"))
 			{
 				if (UseImageFill)
@@ -399,11 +468,12 @@ namespace Project_127.Overlay
 					gfx.DrawImage(_images["bgImage"], 0, 0, bgImageOpac);
 				}
 			}
-			else if (bgImagePath != "")
+			else if (bgImagePath != "" && bgImageChanged)
 			{
 				try
 				{
 					_images["bgImage"] = new Image(gfx, bgImagePath);
+					bgImageChanged = false;
 				}
 				catch
 				{
@@ -412,12 +482,14 @@ namespace Project_127.Overlay
 				}
 			}
 			//gfx.DrawTextWithBackground(_fonts["textFont"], _brushes["textColor"], _brushes["textBack"], textOffsetX, textOffsetY, NoteText);
-
-			foreach (var obj in overlayObjects)
+			try
 			{
-				obj.render(gfx);
+				foreach (var obj in overlayObjects)
+				{
+					obj.render(gfx);
+				}
 			}
-
+			catch { }
 		}
 
 		/// <summary>
@@ -452,6 +524,20 @@ namespace Project_127.Overlay
 			{
 				//bgImage = new Image(_window.Graphics, path);
 				bgImagePath = path;
+				bgImageChanged = true;
+			}
+		}
+
+		/// <summary>
+		/// Sets a specific background image
+		/// </summary>
+		/// <param name="img">Image object for background image</param>
+		public void setBgImage(System.Drawing.Image img)
+		{
+			using (var ms = new System.IO.MemoryStream())
+			{
+				new System.Drawing.Bitmap(img).Save(ms, System.Drawing.Imaging.ImageFormat.Png);
+				_images["bgImage"] = new Image(_window.Graphics, ms.ToArray());
 			}
 		}
 
@@ -571,7 +657,7 @@ namespace Project_127.Overlay
 			var aprx = mainText.approxBounds();
 			int boundMin = (int)(scrollInitial - aprx.Height);
 			//System.Windows.MessageBox.Show(aprx.Height.ToString());
-			_window.Graphics.Height = (int)(aprx.Height > _window.Height ? aprx.Height * 2.1 : _window.Height);
+			_window.Graphics.Height = (int)(aprx.Height > _window.Height ? aprx.Height * 2.5 : _window.Height);
 			//System.Windows.MessageBox.Show(_window.Graphics.Height.ToString());
 			var pos = mainText.position;
 			pos.Y += delta;
@@ -584,6 +670,22 @@ namespace Project_127.Overlay
 				pos.Y = boundMin;
 			}
 			mainText.position = pos;
+		}
+
+		/// <summary>
+		/// Navigate to the next chapter of dynamic text
+		/// </summary>
+		public void nextChapter()
+		{
+			mainText.nextChapter();
+		}
+
+		/// <summary>
+		/// Navigate to the previous chapter of dynamic text
+		/// </summary>
+		public void prevChapter()
+		{
+			mainText.prevChapter();
 		}
 
 		/// <summary>
@@ -646,6 +748,10 @@ namespace Project_127.Overlay
 			{
 				return false;
 			}
+			if (-1 != overlayObjects.FindIndex(x => x.id == t.id))
+			{
+				throw new ArgumentException("Object with given id already exists");
+			}
 			t.link(this, _window.Graphics);
 			overlayObjects.Add(t);
 			return true;
@@ -670,9 +776,13 @@ namespace Project_127.Overlay
 		{
 			if (!disposedValue)
 			{
-				_window.Dispose();
 				mainText.Dispose();
 				titleBox.Dispose();
+				while (overlayObjects.Count > 0)
+                {
+					overlayObjects.First().Dispose();
+                }
+				_window.Dispose();
 				disposedValue = true;
 			}
 		}
@@ -685,6 +795,10 @@ namespace Project_127.Overlay
 		#endregion
 
 	}
+
+	/// <summary>
+	/// Interface for objects renderable by the overlay
+	/// </summary>
 	public interface overlayObject : IDisposable
 	{
 		//interface void render();
@@ -729,6 +843,9 @@ namespace Project_127.Overlay
 
 	}
 
+	/// <summary>
+	/// Interface for text objects with positioning
+	/// </summary>
 	public interface positionalText
 	{
 		/// <summary>
@@ -778,7 +895,10 @@ namespace Project_127.Overlay
 
 	}
 
-	public class overlayTextBox : overlayObject, positionalText
+	/// <summary>
+	/// Simple overlay object for displaying text
+	/// </summary>
+	public class BasicOverlayTextBox : overlayObject, positionalText
 	{
 
 		private int _maxLineWidth = 0;
@@ -837,12 +957,15 @@ namespace Project_127.Overlay
 			}
 		}
 
-		private string _text = "";
+		/// <summary>
+		/// Internal text buffer
+		/// </summary>
+		protected string _text = "";
 
 		/// <summary>
 		/// Determines the text content of the textbox.
 		/// </summary>
-		public string text
+		public virtual string text
 		{
 			get
 			{
@@ -1082,7 +1205,7 @@ namespace Project_127.Overlay
 		/// Generates an overlayTextBox object.
 		/// </summary>
 		/// <param name="id">Textbox object id</param>
-		public overlayTextBox(string id)
+		public BasicOverlayTextBox(string id)
 		{
 			this.id = id;
 		}
@@ -1106,7 +1229,7 @@ namespace Project_127.Overlay
 			textUpdate = true;
 		}
 
-		public void render(Graphics gfx = null)
+		public virtual void render(Graphics gfx = null)
 		{
 			//gfx.DrawTextWithBackground(currentFont, tb,
 			if (gfx == null || text == null)
@@ -1164,9 +1287,21 @@ namespace Project_127.Overlay
 		{
 			if (!disposedValue)
 			{
-				_textFont.Dispose();
-				_textBrush.Dispose();
-				_bgBrush.Dispose();
+				try
+				{
+					_textFont.Dispose();
+				}
+				catch { }
+				try
+				{
+					_textBrush.Dispose();
+				}
+				catch { }
+				try
+				{
+					_bgBrush.Dispose();
+				}
+				catch { }
 				if (host != null)
 				{
 					host.detach(id);
@@ -1181,6 +1316,77 @@ namespace Project_127.Overlay
 			GC.SuppressFinalize(this);
 		}
 		#endregion
+
+	}
+
+
+	/// <summary>
+	/// Overlay Texbox object with added support for dynamic text
+	/// </summary>
+	public class DynamicOverlayTextBox : BasicOverlayTextBox
+	{
+		public DynamicOverlayTextBox(string id) : base(id) { }
+
+		/// <summary>
+		/// Get the current chapter title of the dynamic text
+		/// </summary>
+		public string chapterTitle
+		{
+			get
+			{
+				return dt.getChapterName();
+			}
+		}
+
+		private DynamicText dt = new DynamicText();
+
+		override public string text
+		{
+			get
+			{
+				_text = dt.frame();
+				return base.text;
+			}
+			set
+			{
+				parse(value);
+			}
+		}
+
+		/// <summary>
+		/// Parses dynamic text
+		/// </summary>
+		/// <param name="dynamicUnparsed">Text to parse</param>
+		public void parse(string dynamicUnparsed)
+		{
+			dt.parse(dynamicUnparsed);
+			base.text = dt.frame();
+		}
+
+		override public void render(Graphics gfx = null)
+		{
+			_text = dt.frame();
+			base.render(gfx);
+		}
+
+		/// <summary>
+		/// Navigate to the next chapter of dynamic text
+		/// </summary>
+		public void nextChapter()
+		{
+			dt.nextChapter();
+			base.text = dt.frame();
+		}
+
+		/// <summary>
+		/// Navigate to thr previous chapter of dynamic text
+		/// </summary>
+		public void prevChapter()
+		{
+			dt.prevChapter();
+			base.text = dt.frame();
+		}
+
 
 	}
 

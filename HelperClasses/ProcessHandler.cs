@@ -26,8 +26,11 @@ namespace Project_127.HelperClasses
 		public static void KillRockstarProcesses()
 		{
 			// TODO CTRLF add other ProcessNames
-			string ProcessNames = "gta";
-			KillProcessesContains(ProcessNames);
+			KillProcessesContains("gta");
+			KillProcessesContains("gtastub");
+			KillProcessesContains("rockstar");
+			KillProcessesContains("play127");
+			KillProcessesContains("gtaddl");
 		}
 
 		/// <summary>
@@ -45,7 +48,7 @@ namespace Project_127.HelperClasses
 		public static void KillRelevantProcesses()
 		{
 			KillRockstarProcesses();
-			KillSteamProcesses();
+			// KillSteamProcesses();
 		}
 
 		/// <summary>
@@ -121,6 +124,56 @@ namespace Project_127.HelperClasses
 		}
 
 
+		/// <summary>
+		/// Killing all Social Club Related Processes
+		/// </summary>
+		/// <param name="msDelayAfter"></param>
+		public static void SocialClubKillAllProcesses(int msDelayAfter = 250)
+		{
+			HelperClasses.Logger.Log("Killing all Social Club Processes", 1);
+
+			Process[] tmp = Process.GetProcesses();
+			foreach (Process p in tmp)
+			{
+				// Checking if its gtavlauncher or one of the social club executables
+				if ((p.ProcessName.ToLower() == LaunchAlternative.SCL_EXE_ADDON_DOWNGRADED.TrimStart('\\').TrimEnd(".exe").ToLower()) ||
+					(p.ProcessName.ToLower() == LaunchAlternative.SCL_EXE_ADDON_UPGRADED.TrimStart('\\').TrimEnd(".exe").ToLower()) ||
+					(p.ProcessName.ToLower() == "gtavlauncher"))
+				{
+					// check if its actually a process from SC Install dir or GTA Install dir
+					if ((!p.HasExited && p.MainModule.FileName.Contains(LaunchAlternative.SCL_SC_Installation)) ||
+						(!p.HasExited && p.MainModule.FileName.Contains(LauncherLogic.GTAVFilePath)))
+					{
+						ProcessHandler.Kill(p);
+					}
+				}
+			}
+
+			// wait 25 seconds
+			Task.Delay(25).GetAwaiter().GetResult();
+
+			// Just making sure shit is really closed
+			tmp = Process.GetProcesses();
+			foreach (Process p in tmp)
+			{
+				// Checking if its gtavlauncher or one of the social club executables
+				if ((p.ProcessName.ToLower() == LaunchAlternative.SCL_EXE_ADDON_DOWNGRADED.TrimStart('\\').TrimEnd(".exe").ToLower()) ||
+					(p.ProcessName.ToLower() == LaunchAlternative.SCL_EXE_ADDON_UPGRADED.TrimStart('\\').TrimEnd(".exe").ToLower()) ||
+					(p.ProcessName.ToLower() == "gtavlauncher"))
+				{
+					// check if its actually a process from SC Install dir or GTA Install dir
+					if ((!p.HasExited && p.MainModule.FileName.Contains(LaunchAlternative.SCL_SC_Installation)) ||
+						(!p.HasExited && p.MainModule.FileName.Contains(LauncherLogic.GTAVFilePath)))
+					{
+						ProcessHandler.Kill(p);
+					}
+				}
+			}
+
+			// Waiting 250 ms after killing for process to really let go off file
+			Task.Delay(msDelayAfter).GetAwaiter().GetResult();
+		}
+
 
 		/// <summary>
 		/// Kills all processes with that name
@@ -154,15 +207,18 @@ namespace Project_127.HelperClasses
 		/// <param name="pProcess"></param>
 		public static void Kill(this Process pProcess)
 		{
-			Logger.Log("Trying to kill Process '" + pProcess.ProcessName + "'", 1);
-			try
+			if (!pProcess.HasExited)
 			{
-				pProcess.Kill();
-				Logger.Log("Killed Process '" + pProcess.ProcessName + "'", 1);
-			}
-			catch
-			{
-				Logger.Log("Failed to kill Process '" + pProcess.ProcessName + "'", 1);
+				Logger.Log("Trying to kill Process '" + pProcess.ProcessName + "'", 1);
+				try
+				{
+					pProcess.Kill();
+					Logger.Log("Killed Process '" + pProcess.ProcessName + "'", 1);
+				}
+				catch
+				{
+					Logger.Log("Failed to kill Process '" + pProcess.ProcessName + "'", 1);
+				}
 			}
 		}
 
