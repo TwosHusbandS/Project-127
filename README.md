@@ -90,8 +90,8 @@ Hi! This is a custom Client which was originally created to give all Speedrunner
 Over time it grew with Features and Launch - Capabilities
 
 Note:
-P127 IS NOT ACTIVELY BEING WORKED ON AND MAINTAINED BY ME (@thS / TwosHusbandS). BIG BUGS AND ISSUES WILL STILL BE FIXED, BUT DONT EXPECT NEW FEATURES.
-@dr490n / jaredtb MIGHT STILL WORK ON GAME-LAUNCH RELATED THINGS (AND THE OVERLAY), BUT DONT SPAM HIM WITH MESSAGES OR REQUESTS.
+
+Project 1.27 now has the stability, user experience and core features we envisioned at the start of this project. While @dr490n and me (@thS / TwosHusbandS) both have ideas for potentially improvements and we may get around to working on them at some point, Project 1.27 is not under active development as of this very second (January of 2021). Big bugfixes etc. will still happen if needed, but we are making no promises either way. We want to thank everyone who has been a part of this incredible journey.
 
 ### Help, How to get started, Support & Contact
 
