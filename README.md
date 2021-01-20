@@ -28,6 +28,7 @@ Shamelessly stolen from: https://github.com/othneildrew/Best-README-Template
 [![Discord][discord-shield]][discord-url]
 [![Twitter][twitter-shield]][twitter-url]
 [![MIT License][license-shield]][license-url]
+[![Maintained][maintained-shield]][maintained-url]
 [![Installer][version-shield]][installer-latest-url]
 [![Help][help-shield]][help-url]
 [![Features][features-shield]][features-url]
@@ -207,17 +208,18 @@ Discord - [@ths#0305][discord-url]
 [features-url]: https://github.com/TwosHusbandS/Project-127/blob/master/Installer/Changelogs/Features.md
 [help-url]: https://github.com/TwosHusbandS/Project-127/blob/master/Installer/Changelogs/Help.md
 [p127-url]: https://github.com/TwosHusbandS/Project-127/
-[twitter-shield]: https://img.shields.io/twitter/url?color=blue&label=Twitter&logo=Red&logoColor=Green&style=plastic&url=https%3A%2F%2Ftwitter.com%2FthSbizz
-[discord-shield]: https://img.shields.io/twitter/url?color=lightgray&label=Discord&logo=red&style=plastic&url=https%3A%2F%2Fdiscordapp.com%2Fusers%2F612259615291342861
+[twitter-shield]: https://img.shields.io/badge/Twitter-@thSbizz-1DA1F2?style=plastic&logo=Twitter
+[discord-shield]: https://img.shields.io/badge/Discord-@thS%230305-7289DA?style=plastic&logo=Discord
 [changelogs-url]: https://github.com/TwosHusbandS/Project-127/tree/master/Installer/Changelogs
 [installer-folder-url]: https://github.com/TwosHusbandS/Project-127/tree/master/Installer
 [installer-latest-url]: https://github.com/TwosHusbandS/Project-127/raw/master/Installer/Project_127_Installer_Latest.exe
-[activelydeveloped-shield]: https://img.shields.io/maintenance/no/2021?label=Actively%20developed
-[license-shield]: https://img.shields.io/github/license/TwosHusbandS/Project-127?color=Green&label=License&style=plastic
+[license-shield]: https://img.shields.io/badge/License-MIT-4DC71F?style=plastic
 [license-url]: https://github.com/TwosHusbandS/Project-127/blob/master/LICENSE
-[version-shield]: https://img.shields.io/static/v1?label=Version&message=1.2-Installer&color=sucess
-[help-shield]: https://img.shields.io/static/v1?label=Help&message=Here&color=important
-[features-shield]: https://img.shields.io/static/v1?label=Features&message=Click%20Me&color=blueviolet
+[maintained-shield]: https://img.shields.io/badge/Maintained-Not_actively_(as_of_2021)-FFDB3A?style=plastic
+[maintained-url]: #about-the-project
+[version-shield]: https://img.shields.io/badge/Version-1.1_Installer-4DC71F?style=plastic
+[help-shield]: https://img.shields.io/badge/Help-Here-F48041?style=plastic
+[features-shield]: https://img.shields.io/badge/Features-Click_Me-8B36DAstyle=plastic
 
 
 
