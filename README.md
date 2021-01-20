@@ -215,7 +215,7 @@ Discord - [@ths#0305][discord-url]
 [installer-latest-url]: https://github.com/TwosHusbandS/Project-127/raw/master/Installer/Project_127_Installer_Latest.exe
 [license-shield]: https://img.shields.io/badge/License-MIT-4DC71F?style=plastic
 [license-url]: https://github.com/TwosHusbandS/Project-127/blob/master/LICENSE
-[maintained-shield]: https://img.shields.io/badge/Maintained-Not_actively-FFDB3A?style=plastic
+[maintained-shield]: https://img.shields.io/badge/Maintained-No-FFDB3A?style=plastic
 [maintained-url]: #about-the-project
 [version-shield]: https://img.shields.io/badge/Version-1.1_Installer-4DC71F?style=plastic
 [help-shield]: https://img.shields.io/badge/Help-Here-F48041?style=plastic
