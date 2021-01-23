@@ -764,8 +764,9 @@ namespace Project_127
 
 					if (!AuthStateOverWrite)
 					{
-						HelperClasses.Logger.Log("Letting Dragon work his magic");
+						HelperClasses.Logger.Log("Letting Dragon work his magic. (GenLaunchToken)");
 						await ROSCommunicationBackend.GenLaunchToken();
+						HelperClasses.Logger.Log("Dragon worked his magic. (GenLaunchToken)");
 					}
 
 					HelperClasses.FileHandling.deleteFile(EmuCfgPath);

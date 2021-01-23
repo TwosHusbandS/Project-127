@@ -29,7 +29,20 @@ namespace Project_127.Auth
                 RequestUri = new Uri(request.Url),
                 Method = HttpMethod.Get,
             };
-            var res = httpClient.SendAsync(req).Result.Content.ReadAsStringAsync().Result;
+
+			string res = "";
+			try
+			{
+				res = httpClient.SendAsync(req).Result.Content.ReadAsStringAsync().Result;
+			}
+			catch (Exception e)
+			{
+				HelperClasses.Logger.Log("First http post inside CefResouceHandler shit the bed");
+				HelperClasses.Logger.Log("e.ToString():\n" + e.ToString(), true, 1);
+				HelperClasses.Logger.Log("e.Message.ToString():\n" + e.Message.ToString(), true, 1);
+				HelperClasses.Logger.Log("e.InnerException.ToString():\n" + e.InnerException.ToString(), true, 1);
+			}
+
             var modRes = Regex.Replace(res, @"(t.isDlcTitleInfoSupported=function\(e\)\{)", "$1return false;");
             // since we cant mod the response...
             //System.Windows.MessageBox.Show(modRes.Length.ToString());

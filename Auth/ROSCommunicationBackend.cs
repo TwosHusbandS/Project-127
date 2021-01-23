@@ -365,15 +365,15 @@ namespace Project_127.Auth
 		}
 
 		public static async Task<bool> LoginMTL()
-        {
+		{
 #if DEBUG
 			HelperClasses.Logger.Log("Checking for MTL Session");
 #endif
 			var s = MTLInterface.GetMTLSession();
 			if (s == null || !s.isValid())
-            {
+			{
 				return false;
-            }
+			}
 			session = s;
 			HelperClasses.Logger.Log("Session retrieved");
 			var res = await GenLaunchToken();
@@ -393,7 +393,7 @@ namespace Project_127.Auth
 		}
 
 		private static async Task<tokenGenResponse> GenTitleAccessToken(byte[] challenge)
-        {
+		{
 			tokenGenResponse tgr = new tokenGenResponse();
 
 			if (session == null || !session.isValid())
@@ -431,7 +431,19 @@ namespace Project_127.Auth
 
 			var reqInfo = string.Format("{0}, {1}, {2}", req.RequestUri, req.Headers, GetROSVersionString());
 
-			var res = await httpClient.SendAsync(req);
+			HttpResponseMessage res = new HttpResponseMessage();
+			try
+			{
+				res = await httpClient.SendAsync(req);
+			}
+			catch (Exception e)
+			{
+				HelperClasses.Logger.Log("First http post inside RosCommunicationBackend shit the bed");
+				HelperClasses.Logger.Log("e.ToString():\n" + e.ToString(), true, 1);
+				HelperClasses.Logger.Log("e.Message.ToString():\n" + e.Message.ToString(), true, 1);
+				HelperClasses.Logger.Log("e.InnerException.ToString():\n" + e.InnerException.ToString(), true, 1);
+			}
+
 			if (!res.IsSuccessStatusCode)
 			{
 				tgr.error = true;
@@ -467,7 +479,7 @@ namespace Project_127.Auth
 		}
 
 		private static List<byte> GenLaunchBase(byte[] challenge, string acctoken)
-        {
+		{
 
 			//req2.Headers.TryAddWithoutValidation("locale", "en-US");
 			//req2.Headers.TryAddWithoutValidation("machineHash", btoa(mh));
@@ -508,7 +520,7 @@ namespace Project_127.Auth
 		/// </summary>
 		/// <returns>Launch token base (or null on failed auth)</returns>
 		public static byte[] GenLaunchBase()
-        {
+		{
 			var RNG = new RNGCryptoServiceProvider();
 			var challenge = new byte[8];
 			RNG.GetBytes(challenge);
@@ -522,24 +534,30 @@ namespace Project_127.Auth
 			var acctoken = titleAccessTokenResponse.text;
 
 			return GenLaunchBase(challenge, acctoken).ToArray();
-        }
+		}
 
 		/// <summary>
 		/// Generates a token for the GTA Launcher
 		/// </summary>
 		public static async Task<tokenGenResponse> GenLaunchToken()
 		{
+			HelperClasses.Logger.Log("GenLaunchToken - A");
+
 			tokenGenResponse tgr = new tokenGenResponse();
 
 			var RNG = new RNGCryptoServiceProvider();
 			var challenge = new byte[8];
 			RNG.GetBytes(challenge);
 
+			HelperClasses.Logger.Log("GenLaunchToken - B");
+
 			var titleAccessTokenResponse = await GenTitleAccessToken(challenge);
 			if (titleAccessTokenResponse.error)
-            {
+			{
 				return titleAccessTokenResponse;
-            }
+			}
+
+			HelperClasses.Logger.Log("GenLaunchToken - C");
 
 			var acctoken = titleAccessTokenResponse.text;
 
@@ -559,6 +577,7 @@ namespace Project_127.Auth
 			//LKey.Add(0);
 			//LKey.Add(0);
 
+			HelperClasses.Logger.Log("GenLaunchToken - D");
 
 
 			/* Just some Logging Statements
@@ -601,9 +620,13 @@ namespace Project_127.Auth
 			// HelperClasses.Logger.Log("Token generated. DoesExist: " + HelperClasses.FileHandling.doesFileExist(OutputFilePath));
 
 
+			HelperClasses.Logger.Log("GenLaunchToken - E");
+
 			tgr.error = false;
 			tgr.status = 200;
 			tgr.text = "Launcher token data written";
+
+			HelperClasses.Logger.Log("GenLaunchToken - F");
 
 			var req2 = new HttpRequestMessage
 			{
@@ -619,12 +642,29 @@ namespace Project_127.Auth
 			req2.Headers.ConnectionClose = true;
 			req2.Headers.ExpectContinue = false;
 
+			HelperClasses.Logger.Log("GenLaunchToken - G");
+
 			req2.Content = new ByteArrayContent(reqBody2);
 			req2.Content.Headers.ContentType = new MediaTypeHeaderValue("application/x-www-form-urlencoded");
-			var res = await httpClient.SendAsync(req2);
+
+
+			HttpResponseMessage res = new HttpResponseMessage();
+			try
+			{
+				res = await httpClient.SendAsync(req2);
+			}
+			catch (Exception e)
+			{
+				HelperClasses.Logger.Log("Second http post inside RosCommunicationBackend shit the bed");
+				HelperClasses.Logger.Log("e.ToString():\n" + e.ToString(), true, 1);
+				HelperClasses.Logger.Log("e.Message.ToString():\n" + e.Message.ToString(), true, 1);
+				HelperClasses.Logger.Log("e.InnerException.ToString():\n" + e.InnerException.ToString(), true, 1);
+			}
 
 			if (!res.IsSuccessStatusCode)
 			{
+				HelperClasses.Logger.Log("GenLaunchToken - H1");
+
 				tgr.error = true;
 				tgr.text = String.Format("Ownership Verification Error {0}: {1}\r\n{2}",
 					(int)res.StatusCode, res.StatusCode, res.Content.ReadAsStringAsync().Result);
@@ -632,12 +672,20 @@ namespace Project_127.Auth
 			}
 			else
 			{
+				HelperClasses.Logger.Log("GenLaunchToken - H2");
+
 				var rawResp = res.Content.ReadAsByteArrayAsync().Result;
 				string exmldoc = Encoding.UTF8.GetString(DecryptROSData(rawResp, rawResp.Length, session.sessionKey));
 				var exml = new XPathDocument(new StringReader(exmldoc));
 				var enav = exml.CreateNavigator();
+
+				HelperClasses.Logger.Log("GenLaunchToken - H3");
+
 				if (NavGetOrDefault(enav, "//*[local-name()='Response']/*[local-name()='Status']", 0) == 0) //you are here
 				{
+					HelperClasses.Logger.Log("GenLaunchToken - H4 - True");
+
+
 					tgr.error = true;
 					tgr.text = String.Format("Ownership error: could not get entitlement block "
 						+ "from the Social Club. Error code: \n{0}/{1}",
@@ -651,7 +699,7 @@ namespace Project_127.Auth
 			}
 			return tgr;
 
-			
+
 			//return tgr;
 		}
 

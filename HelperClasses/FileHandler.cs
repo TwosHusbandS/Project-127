@@ -716,6 +716,13 @@ string lpSymlinkFileName, string lpTargetFileName, SymbolicLink dwFlags);
 
 			try
 			{
+				ServicePointManager.Expect100Continue = true;
+				ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls
+					   | SecurityProtocolType.Tls11
+					   | SecurityProtocolType.Tls12
+					   | SecurityProtocolType.Ssl3;
+
+
 				rtrn = new System.Net.Http.HttpClient().GetStringAsync(pURL).GetAwaiter().GetResult();
 			}
 			catch (Exception e)
@@ -726,6 +733,9 @@ string lpSymlinkFileName, string lpTargetFileName, SymbolicLink dwFlags);
 					Globals.OfflineErrorThrown = true;
 				}
 				HelperClasses.Logger.Log("GetStringFromURL failed. Probably Network related. URL = '" + pURL + "'", true, 0);
+				HelperClasses.Logger.Log("e.ToString():\n" + e.ToString(), true, 1);
+				HelperClasses.Logger.Log("e.Message.ToString():\n" + e.Message.ToString(), true, 1);
+				HelperClasses.Logger.Log("e.InnerException.ToString():\n" + e.InnerException.ToString(), true, 1);
 			}
 
 			return rtrn;
