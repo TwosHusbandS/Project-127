@@ -279,6 +279,11 @@ namespace Project_127
 				yesno.ShowDialog();
 				if (yesno.DialogResult == true)
 				{
+					if (MyComponent == Components.SCLDowngradedSC)
+					{
+						LaunchAlternative.SocialClubReset();
+					}
+
 					bool tmp = MyComponent.ReInstall();
 					if (tmp)
 					{
@@ -379,6 +384,12 @@ namespace Project_127
 						return;
 					}
 				}
+
+				if (MyComponent == Components.SCLDowngradedSC)
+				{
+					LaunchAlternative.SocialClubReset();
+				}
+
 				MyComponent.Uninstall();
 			}
 		}
@@ -516,6 +527,7 @@ namespace Project_127
 				yesno.ShowDialog();
 				if (yesno.DialogResult == true)
 				{
+					LaunchAlternative.SocialClubReset();
 					HelperClasses.RegeditHandler.SetValue("DownloadManagerInstalledSubassemblies", "");
 					Globals.SetUpDownloadManager(true);
 				}

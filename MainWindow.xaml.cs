@@ -46,7 +46,7 @@ Stuff to fix post 1.1:
 5) MTL Error + P127 Foreground stuff is still being doen in loop https://discord.com/channels/501661012844347392/748877687019536384/802128277631533076
 6) ReadMe PowerUser instructions. + Fix existing Help Section
 7) [DONE] Log GetStringFromURL with actual exception
-8) Reset Social Club folders outside of $P217_Files Post SCL_Social Club install / reinstall / verify
+8) [DONE] Reset Social Club folders outside of $P217_Files Post SCL_Social Club install / reinstall / verify
 9) Other UI /UX for Launch and Auth Methods. Have them as enums in settings and as radio-buttons-functionality buttons
 10) Tooltips on Paths inside Settings
 11) think about moving ResetSettings inside general P127 Settings

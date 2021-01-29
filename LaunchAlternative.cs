@@ -380,6 +380,16 @@ namespace Project_127
 
 
 
+		public static void SocialClubReset(int msDelay = 0)
+		{
+			HelperClasses.Logger.Log("SCL - RESETTING SC FOLDERS. DELETING EVERYTHING CUSTOM", 1);
+			SocialClubUpgrade(msDelay);
+			HelperClasses.FileHandling.DeleteFolder(SCL_SC_DOWNGRADED);
+			HelperClasses.FileHandling.DeleteFolder(SCL_SC_DOWNGRADED_CACHE);
+			HelperClasses.FileHandling.DeleteFolder(SCL_SC_TEMP_BACKUP);
+		}
+
+
 		/// <summary>
 		/// Upgrades Social Club if needed. RETURNS TRUE IF INSTALLATION OF SC IS USABLE (Upgraded OR Downgraded)
 		/// </summary>

@@ -1149,6 +1149,7 @@ namespace Project_127.MySettings
 
 				HelperClasses.Logger.Log("Making an Upgrade.");
 				LauncherLogic.Upgrade();
+				LaunchAlternative.SocialClubReset();
 				HelperClasses.Logger.Log("Done making an Upgrade.", 1);
 
 				HelperClasses.Logger.Log("Lets make a full Repair.");
@@ -1167,7 +1168,7 @@ namespace Project_127.MySettings
 				yesno2.ShowDialog();
 				if (yesno2.DialogResult == true)
 				{
-					HelperClasses.Logger.Log("User wants no uninstall...Gonna close this now I guess...cya");
+					HelperClasses.Logger.Log("User wants to uninstall...Gonna close this now I guess...cya");
 					HelperClasses.Logger.Log("=");
 					HelperClasses.Logger.Log("=");
 					HelperClasses.Logger.Log("=");
@@ -1187,7 +1188,7 @@ namespace Project_127.MySettings
 				}
 				else
 				{
-					HelperClasses.Logger.Log("User wants no uninstall...Gonna close this now I guess...cya");
+					HelperClasses.Logger.Log("User wants NO uninstall...Gonna close this now I guess...cya");
 					HelperClasses.Logger.Log("=");
 					HelperClasses.Logger.Log("=");
 					HelperClasses.Logger.Log("=");
