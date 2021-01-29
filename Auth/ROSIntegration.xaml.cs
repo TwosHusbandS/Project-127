@@ -268,6 +268,7 @@ namespace Project_127.Auth
 					var pass = System.Net.WebUtility.UrlEncode(passField);
 					var email = System.Net.WebUtility.UrlEncode(emField);
 					var csender = String.Format(credSenderJS, email, pass);
+					Task.Delay(100).GetAwaiter().GetResult();
 					frame.ExecuteJavaScriptAsync(csender);
 				}
 				else

@@ -44,6 +44,7 @@ Stuff to fix post 1.1:
 - ReadMe PowerUser instructions. + Fix existing Help Section
 - Push Trevor% File with everything i guess...
 
+[DONE] Potentially fixed remember me issue...
 [DONE] i am throwing the "pls disable auto popup" when retailer is rockstar and when legacy auth is disabled. I should also check that "launch through social club" is disabled
 [DONE] im error checking something twice, making UX a bit wonky. If you change retailer (and have SCL enabled) it will prompt you to download the new things. If you dont want to, it wont change retailer. Even tho it will also check before game launch and before downgrade
 [DONE | Will be Fixed with New UI / UX for launch options] Hiding options on GTA Setting sometimes hides twice...Nothing bad, but just different color-strength on hidden stuff.
