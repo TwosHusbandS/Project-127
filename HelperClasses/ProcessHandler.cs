@@ -12,6 +12,7 @@ using Project_127.HelperClasses;
 using Project_127.Overlay;
 using Project_127.Popups;
 using Project_127.MySettings;
+using Microsoft.Win32;
 
 namespace Project_127.HelperClasses
 {
@@ -128,25 +129,37 @@ namespace Project_127.HelperClasses
 		/// Killing all Social Club Related Processes
 		/// </summary>
 		/// <param name="msDelayAfter"></param>
-		public static void SocialClubKillAllProcesses(int msDelayAfter = 250)
+		public static void SocialClubKillAllProcesses(int msDelayAfter = 150)
 		{
+			RegistryKey myRK = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64).CreateSubKey("SOFTWARE").CreateSubKey("WOW6432Node").CreateSubKey("Microsoft").CreateSubKey("Windows").CreateSubKey("CurrentVersion").CreateSubKey("Uninstall").CreateSubKey("Rockstar Games Launcher");
+			string tmpInstallDir = HelperClasses.RegeditHandler.GetValue(myRK, "InstallLocation");
+
 			HelperClasses.Logger.Log("Killing all Social Club Processes", 1);
 
 			Process[] tmp = Process.GetProcesses();
 			foreach (Process p in tmp)
 			{
-				// Checking if its gtavlauncher or one of the social club executables
-				if ((p.ProcessName.ToLower() == LaunchAlternative.SCL_EXE_ADDON_DOWNGRADED.TrimStart('\\').TrimEnd(".exe").ToLower()) ||
-					(p.ProcessName.ToLower() == LaunchAlternative.SCL_EXE_ADDON_UPGRADED.TrimStart('\\').TrimEnd(".exe").ToLower()) ||
-					(p.ProcessName.ToLower() == "gtavlauncher"))
+				//// Checking if its gtavlauncher or one of the social club executables
+				//if ((p.ProcessName.ToLower() == LaunchAlternative.SCL_EXE_ADDON_DOWNGRADED.TrimStart('\\').TrimEnd(".exe").ToLower()) ||
+				//	(p.ProcessName.ToLower() == LaunchAlternative.SCL_EXE_ADDON_UPGRADED.TrimStart('\\').TrimEnd(".exe").ToLower()) ||
+				//	(p.ProcessName.ToLower() == "gtavlauncher"))
+				//{
+				// check if its actually a process from SC Install dir or GTA Install dir
+				try
 				{
-					// check if its actually a process from SC Install dir or GTA Install dir
-					if ((!p.HasExited && p.MainModule.FileName.Contains(LaunchAlternative.SCL_SC_Installation)) ||
-						(!p.HasExited && p.MainModule.FileName.Contains(LauncherLogic.GTAVFilePath)))
+					if ((p.MainModule.FileName.ToLower().Contains(LaunchAlternative.SCL_SC_Installation.TrimEnd('\\').ToLower())) ||
+						(p.MainModule.FileName.ToLower().Contains(LauncherLogic.GTAVFilePath.TrimEnd('\\').ToLower())) ||
+						(p.MainModule.FileName.ToLower().Contains(tmpInstallDir.TrimEnd('\\').ToLower())) ||
+						(p.MainModule.FileName.ToLower().Contains(@"C:\Program Files\Rockstar Games".TrimEnd('\\').ToLower())))
 					{
 						ProcessHandler.Kill(p);
 					}
 				}
+				catch 
+				{
+				}
+
+				//}
 			}
 
 			// wait 25 seconds
@@ -156,21 +169,30 @@ namespace Project_127.HelperClasses
 			tmp = Process.GetProcesses();
 			foreach (Process p in tmp)
 			{
-				// Checking if its gtavlauncher or one of the social club executables
-				if ((p.ProcessName.ToLower() == LaunchAlternative.SCL_EXE_ADDON_DOWNGRADED.TrimStart('\\').TrimEnd(".exe").ToLower()) ||
-					(p.ProcessName.ToLower() == LaunchAlternative.SCL_EXE_ADDON_UPGRADED.TrimStart('\\').TrimEnd(".exe").ToLower()) ||
-					(p.ProcessName.ToLower() == "gtavlauncher"))
+				//// Checking if its gtavlauncher or one of the social club executables
+				//if ((p.ProcessName.ToLower() == LaunchAlternative.SCL_EXE_ADDON_DOWNGRADED.TrimStart('\\').TrimEnd(".exe").ToLower()) ||
+				//	(p.ProcessName.ToLower() == LaunchAlternative.SCL_EXE_ADDON_UPGRADED.TrimStart('\\').TrimEnd(".exe").ToLower()) ||
+				//	(p.ProcessName.ToLower() == "gtavlauncher"))
+				//{
+				// check if its actually a process from SC Install dir or GTA Install dir
+				try
 				{
-					// check if its actually a process from SC Install dir or GTA Install dir
-					if ((!p.HasExited && p.MainModule.FileName.Contains(LaunchAlternative.SCL_SC_Installation)) ||
-						(!p.HasExited && p.MainModule.FileName.Contains(LauncherLogic.GTAVFilePath)))
+					if ((p.MainModule.FileName.ToLower().Contains(LaunchAlternative.SCL_SC_Installation.TrimEnd('\\').ToLower())) ||
+						(p.MainModule.FileName.ToLower().Contains(LauncherLogic.GTAVFilePath.TrimEnd('\\').ToLower())) ||
+						(p.MainModule.FileName.ToLower().Contains(tmpInstallDir.TrimEnd('\\').ToLower())) ||
+						(p.MainModule.FileName.ToLower().Contains(@"C:\Program Files\Rockstar Games".TrimEnd('\\').ToLower())))
 					{
 						ProcessHandler.Kill(p);
 					}
 				}
+				catch
+				{
+				}
+
+				//}
 			}
 
-			// Waiting 250 ms after killing for process to really let go off file
+			// Waiting 150 ms after killing for process to really let go off file
 			Task.Delay(msDelayAfter).GetAwaiter().GetResult();
 		}
 

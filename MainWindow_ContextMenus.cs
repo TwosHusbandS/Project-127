@@ -147,6 +147,7 @@ namespace Project_127
 		/// <param name="e"></param>
 		public void menuItem_Show_Click(object Sender, EventArgs e)
 		{
+
 			this.WindowState = System.Windows.WindowState.Normal;
 			this.Show();
 			this.Activate();
