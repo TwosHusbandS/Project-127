@@ -482,7 +482,7 @@ namespace Project_127
 			{
 				if (LauncherLogic.AuthState == LauncherLogic.AuthStates.NotAuth)
 				{
-					Auth.ROSIntegration.MTLAttemptCompletedAlready = false;
+					Auth.ROSIntegration.AuthErrorMessageThrownAlready = false;
 					Auth.ROSIntegration.MTLAuth(StartGameImmediatelyAfter);
 				}
 				else

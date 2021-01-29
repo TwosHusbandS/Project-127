@@ -85,24 +85,24 @@ namespace Project_127.Auth
 		}
 
 		public static async void MTLAuth(bool LaunchGameAfter = false)
-        {
+		{
 			LaunchAfter = LaunchGameAfter;
 			HelperClasses.Logger.Log("Launching MTL...");
 			MainWindow.MTLAuthTimer.Stop();
 			var key = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64);
 			key = key.OpenSubKey(@"SOFTWARE\WOW6432Node\Rockstar Games\Launcher");
 			if (key == null)
-            {
+			{
 				new Popup(Popup.PopupWindowTypes.PopupOkError, "Unable to find MTL registry key").ShowDialog();
 				return;
 			}
 			var installFolder = RegeditHandler.GetValue(key, "InstallFolder");
 			if (installFolder == "")
-            {
+			{
 				Process.Start("explorer.exe", "mtl://");
 			}
 			else
-            {
+			{
 				var launcherexe = System.IO.Path.Combine(installFolder, "LauncherPatcher.exe");
 				Process.Start("explorer.exe", launcherexe);
 			}
@@ -124,42 +124,45 @@ namespace Project_127.Auth
 		[DllImport("user32.dll")]
 		private static extern bool ShowWindowAsync(IntPtr hWnd, int nCmdShow);
 
-		public static bool MTLAttemptCompletedAlready = false;
+		public static bool AuthErrorMessageThrownAlready = false;
 
 		private static void onMTLAuthCompletion(object sender = null, EventArgs e = null)
-        {
+		{
 			if (LauncherLogic.AuthState == LauncherLogic.AuthStates.Auth)
-            {
+			{
 				HelperClasses.Logger.Log("Got session");
 				MTLwait.Stop();
-				Process[] ps = Process.GetProcessesByName("SocialClubHelper");
-				IntPtr mtlWindow = new IntPtr();
-				foreach (var p in ps)
-                {
-					if (p.MainWindowTitle.ToLower().Contains("Rockstar Games Launcher".ToLower()))
-                    {
-						mtlWindow = p.MainWindowHandle;
-						break;
-                    }
-                }
-				if (mtlWindow != IntPtr.Zero)
-                {
-					ShowWindowAsync(mtlWindow, 11);//Minimize
-                }
-
-				if (!MTLAttemptCompletedAlready)
+				if (!AuthErrorMessageThrownAlready)
 				{
+					HelperClasses.Logger.Log("Will ignore everything else, since Error Message / Success Message was thrown already");
+
+					Process[] ps = Process.GetProcessesByName("SocialClubHelper");
+					IntPtr mtlWindow = new IntPtr();
+					foreach (var p in ps)
+					{
+						if (p.MainWindowTitle.ToLower().Contains("Rockstar Games Launcher".ToLower()))
+						{
+							mtlWindow = p.MainWindowHandle;
+							break;
+						}
+					}
+					if (mtlWindow != IntPtr.Zero)
+					{
+						ShowWindowAsync(mtlWindow, 11);//Minimize
+					}
+
+
 					MainWindow.MW.menuItem_Show_Click(null, null);
 					if (LaunchAfter)
 					{
 						LauncherLogic.Launch();
 					}
 
-					MTLAttemptCompletedAlready = true;
+					AuthErrorMessageThrownAlready = true;
 				}
 
 				return;
-            }
+			}
 		}
 
 		public ROSIntegration(bool pLaunchAfter = false)
@@ -368,7 +371,7 @@ namespace Project_127.Auth
 					else
 					{
 						HelperClasses.Logger.Log("Login Failure");
-						System.Windows.Forms.MessageBox.Show("Login Failure");
+						new Popup(Popup.PopupWindowTypes.PopupOk,"Login Failure").ShowDialog();
 					}
 
 					this.Dispatcher.Invoke(() => this.Visibility = Visibility.Hidden);

@@ -1396,6 +1396,8 @@ namespace Project_127
 						MainWindow.MW.btn_NoteOverlay.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
 						break;
 					case PageStates.Auth:
+						Auth.ROSIntegration.AuthErrorMessageThrownAlready = false;
+
 						if (Globals.LaunchAfterAuth)
 						{
 							Globals.LaunchAfterAuth = false;
