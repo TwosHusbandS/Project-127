@@ -13,7 +13,6 @@
             <RowDefinition Height="70"/>
             <RowDefinition Height="60"/>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="60"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
@@ -28,9 +27,7 @@
         <Button x:Name="btn_SettingsGTA" Margin="5,10,5,10" Content="GTA Settings" Grid.Row="1" Grid.Column="1" Click="btn_SettingsGTA_Click" Style="{StaticResource btn_hamburgeritem}" MouseRightButtonDown="btn_SettingsGTA_MouseRightButtonDown"/>
         <Button x:Name="btn_SettingsExtra" Margin="5,10,0,10" Content="Extra Features" Grid.Row="1" Grid.Column="2" Click="btn_SettingsExtra_Click" Style="{StaticResource btn_hamburgeritem}"/>
 
-        <Button Style="{StaticResource btn_SM}" x:Name="btn_Reset" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3" Margin="0,10" Content="Reset Settings to Default" Click="btn_Reset_Click"/>
-
-        <Border  Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" Margin="0,0" BorderBrush="{x:Static local:MyColors.SE_BorderBrush_Inner}" BorderThickness="2" Background="{x:Static local:MyColors.SE_RowBackground}">
+        <Border  Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" Margin="0,0,0,20" BorderBrush="{x:Static local:MyColors.SE_BorderBrush_Inner}" BorderThickness="2" Background="{x:Static local:MyColors.SE_RowBackground}">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="40"/>
@@ -43,6 +40,7 @@
                     <StackPanel x:Name="sp_Settings_General">
                         <Grid x:Name="Grid_Settings_General">
                             <Grid.RowDefinitions>
+                                <RowDefinition Height="40"/>
                                 <RowDefinition Height="40"/>
                                 <RowDefinition Height="40"/>
                                 <RowDefinition Height="40"/>
@@ -84,6 +82,7 @@
                             <Rectangle Grid.Row="14" Grid.Column="0" Grid.ColumnSpan="3" Fill="Transparent"/>
                             <Rectangle Grid.Row="15" Grid.Column="0" Grid.ColumnSpan="3" Fill="{x:Static local:MyColors.SE_AlternateRowBackground}"/>
                             <Rectangle Grid.Row="16" Grid.Column="0" Grid.ColumnSpan="3" Fill="Transparent"/>
+                            <Rectangle Grid.Row="17" Grid.Column="0" Grid.ColumnSpan="3" Fill="{x:Static local:MyColors.SE_AlternateRowBackground}"/>
 
 
                             <Button Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource btn_SE_Path}" x:Name="btn_Set_GTAVInstallationPath" Click="btn_Path_Click" MouseRightButtonDown="btn_Path_RightClick"/>
@@ -174,6 +173,8 @@
                             <Button Grid.Row="15" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource btn_SE_Path}" x:Name="btn_CheckForUpdate" Click="btn_CheckForUpdate_Click" MouseRightButtonDown="btn_CheckForUpdate_MouseRightButtonDown" Content="Check for Update"/>
 
                             <Button Grid.Row="16" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource btn_SE_Path}" x:Name="btn_Reset_Everything" Click="btn_Reset_Everything_Click" Content="Reset Everything / Uninstall"/>
+
+                            <Button Grid.Row="17" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource btn_SE_Path}" x:Name="btn_Reset" Click="btn_Reset_Click" Content="Reset Settings to Default"/>
 
                         </Grid>
                     </StackPanel>

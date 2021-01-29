@@ -49,7 +49,7 @@ Stuff to fix post 1.1:
 8) [DONE] Reset Social Club folders outside of $P217_Files Post SCL_Social Club install / reinstall / verify
 9) Other UI /UX for Launch and Auth Methods. Have them as enums in settings and as radio-buttons-functionality buttons
 10) [DONE] Tooltips on Paths inside Settings
-11) think about moving ResetSettings inside general P127 Settings
+11) [DONE] think about moving ResetSettings inside general P127 Settings
 12) [DONE] add UTC now to Logger on startup
 13) [DONE] improved Debug : )
 14) [DONE] Change this popup text https://discord.com/channels/501661012844347392/748877687019536384/803720895205867524
