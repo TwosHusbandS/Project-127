@@ -28,6 +28,7 @@ Shamelessly stolen from: https://github.com/othneildrew/Best-README-Template
 [![Discord][discord-shield]][discord-url]
 [![Twitter][twitter-shield]][twitter-url]
 [![MIT License][license-shield]][license-url]
+[![Maintained][maintained-shield]][maintained-url]
 [![Installer][version-shield]][installer-latest-url]
 [![Help][help-shield]][help-url]
 [![Features][features-shield]][features-url]
@@ -46,11 +47,11 @@ Shamelessly stolen from: https://github.com/othneildrew/Best-README-Template
   <p align="center">
     Custom Client / Launcher for Speedrunning GTA.
     <br />
-    <a href="https://www.youtube.com/watch?v=PLACEHOLDER">View Demo</a>
+    <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ">View Demo</a>
 	.
     <a href="#contact">Contact me</a>
 	.
-	<a href="Installer/Changelogs/V_1_1_0_0_Changelog.md">Changelog</a>
+	<a href="Installer/Changelogs/V_1_2_0_0_Changelog.md">Changelog</a>
   </p>
 </p>
 
@@ -89,8 +90,8 @@ Hi! This is a custom Client which was originally created to give all Speedrunner
 Over time it grew with Features and Launch - Capabilities
 
 Note:
-P127 IS NOT ACTIVELY BEING WORKED ON AND MAINTAINED BY ME (@thS / TwosHusbandS). BIG BUGS AND ISSUES WILL STILL BE FIXED, BUT DONT EXPECT NEW FEATURES.
-@dr490n / jaredtb MIGHT STILL WORK ON GAME-LAUNCH RELATED THINGS (AND THE OVERLAY), BUT DONT SPAM HIM WITH MESSAGES OR REQUESTS.
+
+Project 1.27 now has the stability, user experience and core features we envisioned at the start of this project. While @dr490n and me (@thS / TwosHusbandS) both have ideas for potentially improvements and we may get around to working on them at some point, Project 1.27 is not under active development as of this very second (January of 2021). Big bugfixes etc. will still happen if needed, but we are making no promises either way. We want to thank everyone who has been a part of this incredible journey.
 
 ### Help, How to get started, Support & Contact
 
@@ -207,18 +208,18 @@ Discord - [@ths#0305][discord-url]
 [features-url]: https://github.com/TwosHusbandS/Project-127/blob/master/Installer/Changelogs/Features.md
 [help-url]: https://github.com/TwosHusbandS/Project-127/blob/master/Installer/Changelogs/Help.md
 [p127-url]: https://github.com/TwosHusbandS/Project-127/
-[twitter-shield]: https://img.shields.io/twitter/url?color=blue&label=Twitter&logo=Red&logoColor=Green&style=plastic&url=https%3A%2F%2Ftwitter.com%2FthSbizz
-[discord-shield]: https://img.shields.io/twitter/url?color=lightgray&label=Discord&logo=red&style=plastic&url=https%3A%2F%2Fdiscordapp.com%2Fusers%2F612259615291342861
+[twitter-shield]: https://img.shields.io/badge/Twitter-@thSbizz-1DA1F2?style=plastic&logo=Twitter
+[discord-shield]: https://img.shields.io/badge/Discord-@thS%230305-7289DA?style=plastic&logo=Discord
 [changelogs-url]: https://github.com/TwosHusbandS/Project-127/tree/master/Installer/Changelogs
 [installer-folder-url]: https://github.com/TwosHusbandS/Project-127/tree/master/Installer
 [installer-latest-url]: https://github.com/TwosHusbandS/Project-127/raw/master/Installer/Project_127_Installer_Latest.exe
-[activelydeveloped-shield]: https://img.shields.io/maintenance/no/2021?label=Actively%20developed
-[license-shield]: https://img.shields.io/github/license/TwosHusbandS/Project-127?color=Green&label=License&style=plastic
+[license-shield]: https://img.shields.io/badge/License-MIT-4DC71F?style=plastic
 [license-url]: https://github.com/TwosHusbandS/Project-127/blob/master/LICENSE
-[version-shield]: https://img.shields.io/static/v1?label=Version&message=1.2-Installer&color=sucess
-[help-shield]: https://img.shields.io/static/v1?label=Help&message=Here&color=important
-[features-shield]: https://img.shields.io/static/v1?label=Features&message=Click%20Me&color=blueviolet
-
+[maintained-shield]: https://img.shields.io/badge/Maintained-No-FFDB3A?style=plastic
+[maintained-url]: #about-the-project
+[version-shield]: https://img.shields.io/badge/Version-1.1_Installer-4DC71F?style=plastic
+[help-shield]: https://img.shields.io/badge/Help-Here-F48041?style=plastic
+[features-shield]: https://img.shields.io/badge/Features-Click_Me-802BCF?style=plastic
 
 
 
