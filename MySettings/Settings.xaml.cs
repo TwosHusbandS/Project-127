@@ -670,11 +670,17 @@ namespace Project_127.MySettings
 				Settings.LoadSettings();
 			}
 			btn_Set_GTAVInstallationPath.Content = "GTA V Installation Path: " + Settings.GTAVInstallationPath;
+			btn_Set_GTAVInstallationPath.ToolTip = Settings.GTAVInstallationPath;
 			btn_Set_ZIPExtractionPath.Content = "Components Installation Path: " + Settings.ZIPExtractionPath;
+			btn_Set_ZIPExtractionPath.ToolTip = Settings.ZIPExtractionPath;
 			btn_Set_PathFPSLimiter.Content = "FPS Limiter Path: " + Settings.PathFPSLimiter;
+			btn_Set_PathFPSLimiter.ToolTip = Settings.PathFPSLimiter;
 			btn_Set_PathLiveSplit.Content = "LiveSplit Path: " + Settings.PathLiveSplit;
+			btn_Set_PathLiveSplit.ToolTip = Settings.PathLiveSplit;
 			btn_Set_PathStreamProgram.Content = "Stream Program Path: " + Settings.PathStreamProgram;
+			btn_Set_PathStreamProgram.ToolTip = Settings.PathStreamProgram;
 			btn_Set_PathNohboard.Content = "Nohboard Path: " + Settings.PathNohboard;
+			btn_Set_PathNohboard.ToolTip = Settings.PathNohboard;
 
 			btn_Import_Zip.Content = "Import ZIP Manually (Current Version: " + Globals.ZipVersion + ")";
 
