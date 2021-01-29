@@ -726,6 +726,9 @@ string lpSymlinkFileName, string lpTargetFileName, SymbolicLink dwFlags);
 					Globals.OfflineErrorThrown = true;
 				}
 				HelperClasses.Logger.Log("GetStringFromURL failed. Probably Network related. URL = '" + pURL + "'", true, 0);
+				HelperClasses.Logger.Log("e.ToString():\n" + e.ToString(), true, 1);
+				HelperClasses.Logger.Log("e.Message.ToString():\n" + e.Message.ToString(), true, 1);
+				HelperClasses.Logger.Log("e.InnerException.ToString():\n" + e.InnerException.ToString(), true, 1);
 			}
 
 			return rtrn;

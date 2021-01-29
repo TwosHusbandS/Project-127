@@ -13,6 +13,7 @@ using Project_127.Popups;
 using Project_127.MySettings;
 using System.Threading;
 using CredentialManagement;
+using Microsoft.Win32;
 
 namespace Project_127.HelperClasses
 {
@@ -44,6 +45,8 @@ namespace Project_127.HelperClasses
 			HelperClasses.Logger.Log("-", true, 0);
 			HelperClasses.Logger.Log("-", true, 0);
 			HelperClasses.Logger.Log(" === Project - 127 Started (Version: '" + Globals.ProjectVersion + "' BuildInfo: '" + Globals.BuildInfo + "' Built at: '" + MyCreationDate + "' Central European Time) ===", true, 0);
+			HelperClasses.Logger.Log("    Time Now: '" + DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss") + "'", true, 0);
+			HelperClasses.Logger.Log("    Time Now UTC: '" + DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss") + "'", true, 0);
 			HelperClasses.Logger.Log("Logging initiated. Time to the left is local time and NOT UTC. See Debug for more Info", true, 0);
 		}
 
@@ -123,17 +126,27 @@ namespace Project_127.HelperClasses
 				tmpsw.Start();
 
 
+				//Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion
+				//RegisteredOwner
+
+				RegistryKey myRK = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64).CreateSubKey("SOFTWARE").CreateSubKey("Microsoft").CreateSubKey("Windows NT").CreateSubKey("CurrentVersion");
+				string AdditionalDebug1 = HelperClasses.RegeditHandler.GetValue(myRK, "RegisteredOwner");
+
+				RegistryKey myRK2 = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64).CreateSubKey("SOFTWARE").CreateSubKey("Microsoft").CreateSubKey("Cryptography NT");
+				string AdditionalDebug2 = HelperClasses.RegeditHandler.GetValue(myRK2, "MachineGuid");
+
+
 				// Debug Info users can give me easily...
 				List<string> DebugMessage = new List<string>();
 
 				DebugMessage.Add("Project 1.27 Version: '" + Globals.ProjectVersion + "'");
 				DebugMessage.Add("BuildInfo: '" + Globals.BuildInfo + "'");
-				DebugMessage.Add("BuildCreated: '" + HelperClasses.FileHandling.GetCreationDate(Process.GetCurrentProcess().MainModule.FileName).ToString("yyyy-MM-ddTHH:mm:ss") + "'");
-				DebugMessage.Add("BuildCreatedUTC: '" + HelperClasses.FileHandling.GetCreationDate(Process.GetCurrentProcess().MainModule.FileName, true).ToString("yyyy-MM-ddTHH:mm:ss") + "'");
-				DebugMessage.Add("BuildLastModified: '" + HelperClasses.FileHandling.GetCreationDate(Process.GetCurrentProcess().MainModule.FileName).ToString("yyyy-MM-ddTHH:mm:ss") + "'");
-				DebugMessage.Add("BuildLastModifiedUTC: '" + HelperClasses.FileHandling.GetCreationDate(Process.GetCurrentProcess().MainModule.FileName, true).ToString("yyyy-MM-ddTHH:mm:ss") + "'");
-				DebugMessage.Add("Time Now: '" + DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss") + "'");
-				DebugMessage.Add("Time Now UTC: '" + DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss") + "'");
+				DebugMessage.Add("    BuildCreated: '" + HelperClasses.FileHandling.GetCreationDate(Process.GetCurrentProcess().MainModule.FileName).ToString("yyyy-MM-ddTHH:mm:ss") + "'");
+				DebugMessage.Add("    BuildCreatedUTC: '" + HelperClasses.FileHandling.GetCreationDate(Process.GetCurrentProcess().MainModule.FileName, true).ToString("yyyy-MM-ddTHH:mm:ss") + "'");
+				DebugMessage.Add("    BuildLastModified: '" + HelperClasses.FileHandling.GetCreationDate(Process.GetCurrentProcess().MainModule.FileName).ToString("yyyy-MM-ddTHH:mm:ss") + "'");
+				DebugMessage.Add("    BuildLastModifiedUTC: '" + HelperClasses.FileHandling.GetCreationDate(Process.GetCurrentProcess().MainModule.FileName, true).ToString("yyyy-MM-ddTHH:mm:ss") + "'");
+				DebugMessage.Add("    Time Now: '" + DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss") + "'");
+				DebugMessage.Add("    Time Now UTC: '" + DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss") + "'");
 				DebugMessage.Add("ZIP Version: '" + Globals.ZipVersion + "'");
 				DebugMessage.Add("Globals.P127Branch: '" + Globals.P127Branch + "'");
 				DebugMessage.Add("Globals.DMBranch: '" + Globals.DMBranch + "'");
@@ -242,6 +255,8 @@ namespace Project_127.HelperClasses
 							DebugMessage.Add("        LastWriteTimeUTC: '" + creds.LastWriteTimeUtc.ToString("yyyy-MM-ddTHH:mm:ss") + "'");
 						}
 					}
+					DebugMessage.Add("Windows-Email: '" + AdditionalDebug1 + "'");
+					DebugMessage.Add("Windows-UUID: '" + AdditionalDebug2 + "'");
 				}
 				catch { }
 

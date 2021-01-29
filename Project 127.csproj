@@ -131,6 +131,7 @@
     </Reference>
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Data" />
+    <Reference Include="System.DirectoryServices.AccountManagement" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Management" />
     <Reference Include="System.Memory, Version=4.0.1.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
@@ -519,6 +520,7 @@
     <Resource Include="Installer\DownloadManager.xml" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Installer\NewSetup.iss" />
     <Content Include="MTLInterface.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
