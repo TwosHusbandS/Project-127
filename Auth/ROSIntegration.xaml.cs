@@ -124,6 +124,8 @@ namespace Project_127.Auth
 		[DllImport("user32.dll")]
 		private static extern bool ShowWindowAsync(IntPtr hWnd, int nCmdShow);
 
+		public static bool MTLAttemptCompletedAlready = false;
+
 		private static void onMTLAuthCompletion(object sender = null, EventArgs e = null)
         {
 			if (LauncherLogic.AuthState == LauncherLogic.AuthStates.Auth)
@@ -144,11 +146,18 @@ namespace Project_127.Auth
                 {
 					ShowWindowAsync(mtlWindow, 11);//Minimize
                 }
-				MainWindow.MW.menuItem_Show_Click(null, null);
-				if (LaunchAfter)
+
+				if (!MTLAttemptCompletedAlready)
 				{
-					LauncherLogic.Launch();
+					MainWindow.MW.menuItem_Show_Click(null, null);
+					if (LaunchAfter)
+					{
+						LauncherLogic.Launch();
+					}
+
+					MTLAttemptCompletedAlready = true;
 				}
+
 				return;
             }
 		}

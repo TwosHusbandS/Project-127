@@ -53,7 +53,7 @@ Stuff to fix post 1.1:
 12) [DONE] add UTC now to Logger on startup
 13) [DONE] improved Debug : )
 14) [DONE] Change this popup text https://discord.com/channels/501661012844347392/748877687019536384/803720895205867524
-15) Fix this bug: https://discord.com/channels/501661012844347392/748877687019536384/803748189299539978
+15) [DONE] Fix this bug: https://discord.com/channels/501661012844347392/748877687019536384/803748189299539978
 16) [DONE] Might still load files and subfiles on startup of savefilemanager
 17) Rightclick loaded note file to edit with notepad
 18) Note Overlay Title thingy
