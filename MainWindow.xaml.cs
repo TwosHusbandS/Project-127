@@ -38,11 +38,26 @@ Comments like "TODO", "TO DO", "CTRLF", "CTRL-F", and "CTRL F" are just ways of 
 
 Hybrid code can be found in AAA_HybridCode.
 
-ON RELEASE OF 1.2
-- AUTOUPDATE STUFF (P127 INSTALLER AS WELL AS ZIP)
-- RELEASE ALL NEW FILES WITH IT (V14, new SCL Binaries)
-- RIGHT_CLICK_README
-
+Stuff to fix post 1.1:
+1) download / component manager is still freezing UI for a few seconds post-install
+2) i am throwing the "pls disable auto popup" when retailer is rockstar and when legacy auth is disabled. I should also check that "launch through social club" is disabled
+3) im error checking something twice, making UX a bit wonky. If you change retailer (and have SCL enabled) it will prompt you to download the new things. If you dont want to, it wont change retailer. Even tho it will also check before game launch and before downgrade
+4) Hiding options on GTA Setting sometimes hides twice...
+5) ON RELEASE OF 1.2 https://discord.com/channels/501661012844347392/748877687019536384/802128277631533076
+6) ReadMe PowerUser instructions. + Fix existing Help Section
+7) Log GetStringFromURL with actual exception
+8) Reset Social Club folders outside of $P217_Files Post SCL_Social Club install / reinstall / verify
+9) Other UI /UX for Launch and Auth Methods. Have them as enums in settings and as radio-buttons-functionality buttons
+10) Tooltips on Paths inside Settings
+11) think about moving ResetSettings inside general P127 Settings
+12) add UTC now to Logger on startup
+13) Change this popup text https://discord.com/channels/501661012844347392/748877687019536384/803720895205867524
+13) improved Debug : )
+14) Fix this bug: https://discord.com/channels/501661012844347392/748877687019536384/803748189299539978
+15) Might still load files and subfiles on startup of savefilemanager
+16) Rightclick loaded note file to edit with notepad
+17) Note Overlay Title thingy
+18) kill processes from guy https://discord.com/channels/501661012844347392/748877687019536384/803593329652269086
 
 */
 

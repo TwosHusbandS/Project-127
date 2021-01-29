@@ -408,9 +408,7 @@
     <None Include="Installer\Changelogs\V_0_0_4_0_Changelog.md" />
     <None Include="Installer\Changelogs\V_0_0_3_1_Changelog.md" />
     <None Include="Installer\Changelogs\V_0_0_3_0_Changelog.md" />
-    <None Include="LICENSE_JUMPSCRIPT">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    <None Include="JUMPSCRIPT_LICENSE" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -582,7 +580,7 @@
   </PropertyGroup>
   <PropertyGroup>
     <PostBuildEvent>copy "$(TargetDir)LICENSE" "$(ProjectDir)\bin\x64\Release\LICENSE"
-copy "$(TargetDir)LICENSE_JUMPSCRIPT" "$(ProjectDir)\bin\x64\Release\LICENSE_JUMPSCRIPT"
+copy "$(TargetDir)JUMPSCRIPT_LICENSE" "$(ProjectDir)\bin\x64\Release\JUMPSCRIPT_LICENSE"
 copy "$(ProjectDir)AAA_HybridCode\Jumpscript\P127_Jumpscript.exe" "$(TargetDir)P127_Jumpscript.exe"</PostBuildEvent>
   </PropertyGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
