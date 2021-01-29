@@ -477,12 +477,12 @@ namespace Project_127
 			}
 
 
+			Auth.ROSIntegration.AuthErrorMessageThrownAlready = false;
 
 			if (!MySettings.Settings.EnableLegacyAuth)
 			{
 				if (LauncherLogic.AuthState == LauncherLogic.AuthStates.NotAuth)
 				{
-					Auth.ROSIntegration.AuthErrorMessageThrownAlready = false;
 					Auth.ROSIntegration.MTLAuth(StartGameImmediatelyAfter);
 				}
 				else

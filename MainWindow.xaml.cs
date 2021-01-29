@@ -42,7 +42,7 @@ Stuff to fix post 1.1:
 1) download / component manager is still freezing UI for a few seconds post-install
 2) [DONE] i am throwing the "pls disable auto popup" when retailer is rockstar and when legacy auth is disabled. I should also check that "launch through social club" is disabled
 3) [DONE] im error checking something twice, making UX a bit wonky. If you change retailer (and have SCL enabled) it will prompt you to download the new things. If you dont want to, it wont change retailer. Even tho it will also check before game launch and before downgrade
-4) Hiding options on GTA Setting sometimes hides twice...
+4) [DONE | Will be Fixed with New UI / UX for launch options] Hiding options on GTA Setting sometimes hides twice...Nothing bad, but just different color-strength on hidden stuff.
 5) [DONE] MTL Error + P127 Foreground stuff is still being doen in loop https://discord.com/channels/501661012844347392/748877687019536384/802128277631533076
 6) ReadMe PowerUser instructions. + Fix existing Help Section
 7) [DONE] Log GetStringFromURL with actual exception
