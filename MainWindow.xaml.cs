@@ -39,26 +39,28 @@ Comments like "TODO", "TO DO", "CTRLF", "CTRL-F", and "CTRL F" are just ways of 
 Hybrid code can be found in AAA_HybridCode.
 
 Stuff to fix post 1.1:
-1) download / component manager is still freezing UI for a few seconds post-install
-2) [DONE] i am throwing the "pls disable auto popup" when retailer is rockstar and when legacy auth is disabled. I should also check that "launch through social club" is disabled
-3) [DONE] im error checking something twice, making UX a bit wonky. If you change retailer (and have SCL enabled) it will prompt you to download the new things. If you dont want to, it wont change retailer. Even tho it will also check before game launch and before downgrade
-4) [DONE | Will be Fixed with New UI / UX for launch options] Hiding options on GTA Setting sometimes hides twice...Nothing bad, but just different color-strength on hidden stuff.
-5) [DONE] MTL Error + P127 Foreground stuff is still being doen in loop https://discord.com/channels/501661012844347392/748877687019536384/802128277631533076
-6) ReadMe PowerUser instructions. + Fix existing Help Section
-7) [DONE] Log GetStringFromURL with actual exception
-8) [DONE] Reset Social Club folders outside of $P217_Files Post SCL_Social Club install / reinstall / verify
-9) Other UI /UX for Launch and Auth Methods. Have them as enums in settings and as radio-buttons-functionality buttons
-10) [DONE] Tooltips on Paths inside Settings
-11) [DONE] think about moving ResetSettings inside general P127 Settings
-12) [DONE] add UTC now to Logger on startup
-13) [DONE] improved Debug : )
-14) [DONE] Change this popup text https://discord.com/channels/501661012844347392/748877687019536384/803720895205867524
-15) [DONE] Fix this bug: https://discord.com/channels/501661012844347392/748877687019536384/803748189299539978
-16) [DONE] Might still load files and subfiles on startup of savefilemanager
-17) [DONE] Rightclick loaded note file to edit with notepad
-18) [DONE] Note Overlay Title thingy
-19) [DONE] kill processes from guy https://discord.com/channels/501661012844347392/748877687019536384/803593329652269086
-20) [DONE] Check if RollingLog actually works
+- Download / component manager is still freezing UI for a few seconds post-install
+- Other UI /UX for Launch and Auth Methods. Have them as enums in settings and as radio-buttons-functionality buttons
+- ReadMe PowerUser instructions. + Fix existing Help Section
+- Push Trevor% File with everything i guess...
+
+[DONE] i am throwing the "pls disable auto popup" when retailer is rockstar and when legacy auth is disabled. I should also check that "launch through social club" is disabled
+[DONE] im error checking something twice, making UX a bit wonky. If you change retailer (and have SCL enabled) it will prompt you to download the new things. If you dont want to, it wont change retailer. Even tho it will also check before game launch and before downgrade
+[DONE | Will be Fixed with New UI / UX for launch options] Hiding options on GTA Setting sometimes hides twice...Nothing bad, but just different color-strength on hidden stuff.
+[DONE] MTL Error + P127 Foreground stuff is still being doen in loop https://discord.com/channels/501661012844347392/748877687019536384/802128277631533076
+[DONE] Log GetStringFromURL with actual exception
+[DONE] Reset Social Club folders outside of $P217_Files Post SCL_Social Club install / reinstall / verify
+[DONE] Tooltips on Paths inside Settings
+[DONE] think about moving ResetSettings inside general P127 Settings
+[DONE] add UTC now to Logger on startup
+[DONE] improved Debug : )
+[DONE] Change this popup text https://discord.com/channels/501661012844347392/748877687019536384/803720895205867524
+[DONE] Fix this bug: https://discord.com/channels/501661012844347392/748877687019536384/803748189299539978
+[DONE] Might still load files and subfiles on startup of savefilemanager
+[DONE] Rightclick loaded note file to edit with notepad
+[DONE] Note Overlay Title thingy
+[DONE] kill processes from guy https://discord.com/channels/501661012844347392/748877687019536384/803593329652269086
+[DONE] Check if RollingLog actually works
 
 */
 
