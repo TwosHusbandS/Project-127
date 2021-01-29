@@ -1695,7 +1695,7 @@ namespace Project_127.MySettings
 
 		public static void TellRockstarUsersToDisableAutoUpdateIfNeeded()
 		{
-			if (Settings.EnableAlternativeLaunch && Settings.Retailer == Retailers.Rockstar)
+			if (Settings.Retailer == Retailers.Rockstar && !Settings.EnableLegacyAuth && !Settings.EnableAlternativeLaunch)
 			{
 				string msg = "You need to stop Rockstar Game Launcher\nfrom automatically Updating your GTA.\nOtherwise certain features might not work.\n\nTo do this:\nInside Rockstar Games Launcher,\nhead into Settings\n-> My Installed Games\n->Grand Theft Auto V\n-> uncheck the \"Enable automatic updates\" checkbox at the very top.";
 				new Popup(Popup.PopupWindowTypes.PopupOk, msg).ShowDialog();

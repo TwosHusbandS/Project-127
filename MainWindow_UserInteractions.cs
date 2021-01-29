@@ -141,7 +141,7 @@ namespace Project_127
 
 			// Actual Upgrade Button Code
 			HelperClasses.Logger.Log("Clicked the Upgrade Button");
-			if (LauncherLogic.IsGTAVInstallationPathCorrect() && Globals.ZipVersion != 0)
+			if (LauncherLogic.IsGTAVInstallationPathCorrect())
 			{
 				if (LauncherLogic.InstallationState == LauncherLogic.InstallationStates.Downgraded)
 				{
@@ -173,7 +173,7 @@ namespace Project_127
 			{
 				HelperClasses.Logger.Log("GTA V Installation Path not found or incorrect. User will get Popup");
 
-				string msg = "Error: GTA V Installation Path incorrect or ZIP Version == 0.\nGTAV Installation Path: '" + LauncherLogic.GTAVFilePath + "'\nInstallationState (probably): '" + LauncherLogic.InstallationState.ToString() + "'\nZip Version: " + Globals.ZipVersion + ".";
+				string msg = "Error:\nGTA V Installation Path is incorrect.";
 
 				if (Globals.P127Branch != "master")
 				{
@@ -258,7 +258,7 @@ namespace Project_127
 			{
 				HelperClasses.Logger.Log("GTA V Installation Path not found or incorrect. User will get Popup");
 
-				string msg = "Error: GTA V Installation Path incorrect or ZIP Version == 0.\nGTAV Installation Path: '" + LauncherLogic.GTAVFilePath + "'\nInstallationState (probably): '" + LauncherLogic.InstallationState.ToString() + "'\nZip Version: " + Globals.ZipVersion + ".";
+				string msg = "Error:\nGTA V Installation Path is incorrect.";
 
 				if (Globals.P127Branch != "master")
 				{

@@ -713,7 +713,6 @@ namespace Project_127.MySettings
 				{
 					if (Settings.EnableAlternativeLaunch)
 					{
-						Retailers OldRetailer = Retailer;
 						if (ComponentManager.RecommendUpgradedGTA())
 						{
 							SetSetting("Retailer", value.ToString());
@@ -723,13 +722,13 @@ namespace Project_127.MySettings
 							}
 							if (!ComponentManager.CheckIfRequiredComponentsAreInstalled(true))
 							{
-								SetSetting("Retailer", OldRetailer.ToString());
+								new Popup(Popup.PopupWindowTypes.PopupOk, "Retailer was changed,\nbut you will need to download the Componenets later.").ShowDialog();
 								return;
 							}
 						}
 						else
 						{
-							new Popup(Popup.PopupWindowTypes.PopupOk, "Retailer was not changed.");
+							new Popup(Popup.PopupWindowTypes.PopupOk, "Retailer was not changed.").ShowDialog();
 							return;
 						}
 

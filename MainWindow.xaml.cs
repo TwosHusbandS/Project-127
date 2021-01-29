@@ -40,8 +40,8 @@ Hybrid code can be found in AAA_HybridCode.
 
 Stuff to fix post 1.1:
 1) download / component manager is still freezing UI for a few seconds post-install
-2) i am throwing the "pls disable auto popup" when retailer is rockstar and when legacy auth is disabled. I should also check that "launch through social club" is disabled
-3) im error checking something twice, making UX a bit wonky. If you change retailer (and have SCL enabled) it will prompt you to download the new things. If you dont want to, it wont change retailer. Even tho it will also check before game launch and before downgrade
+2) [DONE] i am throwing the "pls disable auto popup" when retailer is rockstar and when legacy auth is disabled. I should also check that "launch through social club" is disabled
+3) [DONE] im error checking something twice, making UX a bit wonky. If you change retailer (and have SCL enabled) it will prompt you to download the new things. If you dont want to, it wont change retailer. Even tho it will also check before game launch and before downgrade
 4) Hiding options on GTA Setting sometimes hides twice...
 5) MTL Error + P127 Foreground stuff is still being doen in loop https://discord.com/channels/501661012844347392/748877687019536384/802128277631533076
 6) ReadMe PowerUser instructions. + Fix existing Help Section
@@ -52,13 +52,13 @@ Stuff to fix post 1.1:
 11) think about moving ResetSettings inside general P127 Settings
 12) [DONE] add UTC now to Logger on startup
 13) [DONE] improved Debug : )
-14) Change this popup text https://discord.com/channels/501661012844347392/748877687019536384/803720895205867524
+14) [DONE] Change this popup text https://discord.com/channels/501661012844347392/748877687019536384/803720895205867524
 15) Fix this bug: https://discord.com/channels/501661012844347392/748877687019536384/803748189299539978
-16) Might still load files and subfiles on startup of savefilemanager
+16) [DONE] Might still load files and subfiles on startup of savefilemanager
 17) Rightclick loaded note file to edit with notepad
 18) Note Overlay Title thingy
 19) kill processes from guy https://discord.com/channels/501661012844347392/748877687019536384/803593329652269086
-20) Check if RollingLog actually works
+20) [DONE] Check if RollingLog actually works
 
 */
 

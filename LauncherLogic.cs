@@ -529,7 +529,7 @@ namespace Project_127
 
 			if (!ComponentManager.CheckIfRequiredComponentsAreInstalled(true))
 			{
-				new Popups.Popup(Popups.Popup.PopupWindowTypes.PopupOk, "Cant do that because of because of missing Components").ShowDialog();
+				new Popups.Popup(Popups.Popup.PopupWindowTypes.PopupOkError, "Error:\nCant do that because of because of missing Components").ShowDialog();
 				return;
 			}
 
