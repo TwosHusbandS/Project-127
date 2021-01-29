@@ -270,6 +270,34 @@ namespace Project_127.Overlay.NoteOverlayPages
 			}
 		}
 
+		private async void dg_Files_PreviewMouseRightButtonDown(object sender, MouseButtonEventArgs e)
+		{
+			DataGrid myDataGrid = (DataGrid)sender;
+
+			if (myDataGrid != null)
+			{
+				e.Handled = false;
+				// making the selection 0
+				myDataGrid.SelectedItem = null;
+
+				// then simulating leftclick where the mouse is
+				HelperClasses.MouseSender.DoMouseClick();
+
+				await Task.Delay(50);
+
+				MyNoteFile MNF = (MyNoteFile)myDataGrid.SelectedItem;
+
+				if (MNF != null)
+				{
+					if (HelperClasses.FileHandling.doesFileExist(MNF.FilePath))
+					{
+						ProcessHandler.StartProcess(@"C:\Windows\System32\notepad.exe", pCommandLineArguments: MNF.FilePath);
+					}
+				}
+
+				myDataGrid.Focus();
+			}
+		}
 	}
 
 

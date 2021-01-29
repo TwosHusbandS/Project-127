@@ -55,7 +55,7 @@ Stuff to fix post 1.1:
 14) [DONE] Change this popup text https://discord.com/channels/501661012844347392/748877687019536384/803720895205867524
 15) [DONE] Fix this bug: https://discord.com/channels/501661012844347392/748877687019536384/803748189299539978
 16) [DONE] Might still load files and subfiles on startup of savefilemanager
-17) Rightclick loaded note file to edit with notepad
+17) [DONE] Rightclick loaded note file to edit with notepad
 18) Note Overlay Title thingy
 19) [DONE] kill processes from guy https://discord.com/channels/501661012844347392/748877687019536384/803593329652269086
 20) [DONE] Check if RollingLog actually works
