@@ -138,7 +138,15 @@ namespace Project_127.Overlay
 		{
 			get
 			{
-				return mainText.chapterTitle;
+				string tmp = mainText.chapterTitle;
+				if (tmp == "base")
+				{
+					return "";
+				}
+				else
+				{
+					return tmp;
+				}
 			}
 		}
 
@@ -549,11 +557,6 @@ namespace Project_127.Overlay
 		{
 			HelperClasses.Logger.Log("Overlay text updated");
 			this.text = text;
-			//<<<<<<< working
-			//			this.text = text;
-			//=======
-			//			mainText.text = text;
-			//>>>>>>> dev_ths_new
 		}
 
 		/// <summary>

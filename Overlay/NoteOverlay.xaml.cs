@@ -222,7 +222,7 @@ namespace Project_127.Overlay
 				MyGTAOverlay.height = Settings.OverlayHeight;
 				LoadTexts();
 				HelperClasses.Logger.Log("GTA Overlay initiated", 1);
-				//easterEgg();
+				easterEgg();
 			}
 			else
 			{
@@ -558,7 +558,7 @@ namespace Project_127.Overlay
 					NotesLoadedIndex = pNotesLoadedNewIndex;
 					MyGTAOverlay.setText(NotesLoaded[pNotesLoadedNewIndex]);
 					MyGTAOverlay.title.text = NotesLoadedTitle[pNotesLoadedNewIndex];
-					double tmp = (Overlay.NoteOverlayPages.NoteOverlay_Look.OverlayTextSize + 4) * 1.5 + 20;
+					double tmp = (Overlay.NoteOverlayPages.NoteOverlay_Look.OverlayTextSize + 10) * 2 + 20;
 					MyGTAOverlay.SetInitialScrollPosition((int)tmp);
 				}
 			}
@@ -570,24 +570,24 @@ namespace Project_127.Overlay
 			MyGTAOverlay.nextChapter();
 			if (MyGTAOverlay.chapterTitle != "")
 			{
-				MyGTAOverlay.title.text = "Project 1.27 - Overlay - " + MyGTAOverlay.chapterTitle;
+				MyGTAOverlay.title.text = NotesLoadedTitle[NotesLoadedIndex] + "\n" + MyGTAOverlay.chapterTitle + "\n";
 			}
 			else
 			{
-				MyGTAOverlay.title.text = NotesLoadedTitle[NotesLoadedIndex];
+				MyGTAOverlay.title.text = NotesLoadedTitle[NotesLoadedIndex] + "\n";
 			}
 		}
-
+		
 		public static void OverlayNoteChapterPrev()
 		{
 			MyGTAOverlay.prevChapter();
 			if (MyGTAOverlay.chapterTitle != "")
 			{
-				MyGTAOverlay.title.text = "Project 1.27 - Overlay - " + MyGTAOverlay.chapterTitle;
+				MyGTAOverlay.title.text = NotesLoadedTitle[NotesLoadedIndex] + "\n" + MyGTAOverlay.chapterTitle + "\n";
 			}
 			else
 			{
-				MyGTAOverlay.title.text = NotesLoadedTitle[NotesLoadedIndex];
+				MyGTAOverlay.title.text = NotesLoadedTitle[NotesLoadedIndex] + "\n";
 			}
 		}
 
@@ -730,8 +730,6 @@ namespace Project_127.Overlay
 		{
 			Overlay_MultipleMonitor.ResetPosition();
 		}
-
-		bool waitingForSecondRightClick = false;
 
 		private static OverlayAnimationObject ast;
 		private static DispatcherTimer dtast;
