@@ -44,15 +44,9 @@ Stuff to fix post 1.1:
 	=> [DONE] States Instead Of Settings 
 	=> [DONE] Retancle logic of when we can change retailer and those settings
 	=> New UI
-		>> Create new Style for buttons. Squared. With gray border and white text. White text and white border when moused over.
-		>> Make traditional buttons that style
-		>> move "import GTA V Settings", 2 down
-		>> place 3 row height grid starting on row index 3
-			- top half is label centered "LaunchMethod"
-			- bottom half is split. Left part is radio button, right part is radio button
-		>> under than sub,subpages always taking half a row at the top, half a row on the buttom margin
-			- Colored bordered, disabled fill in colored grey transparent color
-			- normal row structure
+		>> Connect options to backend, make sure to check which side is checking error
+		>> add rendering the correct colored one on the top, the other one at bottom, rightclick to enable editing
+		>> add new stuff to hide settings stuff
 
 - ReadMe PowerUser instructions. + Fix existing Help Section
 - Push Trevor% File with everything i guess...

@@ -697,10 +697,8 @@ namespace Project_127.MySettings
 			ButtonMouseOverMagic(btn_Refresh);
 			ButtonMouseOverMagic(btn_cb_Set_EnableLogging);
 			ButtonMouseOverMagic(btn_cb_Set_CopyFilesInsteadOfHardlinking);
-			ButtonMouseOverMagic(btn_cb_Set_EnableAlternativeLaunch);
 			ButtonMouseOverMagic(btn_cb_Set_EnableAlternativeLaunchForceCProgramFiles);
 			ButtonMouseOverMagic(btn_cb_Set_EnableJumpscriptUseCustomScript);
-			//ButtonMouseOverMagic(btn_cb_Set_CopyFilesInsteadOfSyslinking_SocialClub);
 			ButtonMouseOverMagic(btn_cb_Set_EnablePreOrderBonus);
 			ButtonMouseOverMagic(btn_cb_Set_EnableAutoStartFPSLimiter);
 			ButtonMouseOverMagic(btn_cb_Set_EnableScripthookOnDowngraded);
@@ -714,7 +712,30 @@ namespace Project_127.MySettings
 			ButtonMouseOverMagic(btn_cb_Set_EnableDontLaunchThroughSteam);
 			ButtonMouseOverMagic(btn_cb_Set_EnableAutoStartJumpScript);
 			ButtonMouseOverMagic(btn_cb_Set_SlowCompare);
-			ButtonMouseOverMagic(btn_cb_Set_LegacyAuth);
+
+			if (LauncherLogic.LaunchWay == LauncherLogic.LaunchWays.SocialClubLaunch)
+			{
+				btn_LaunchWays_SCL.Style = Application.Current.FindResource("btn_LaunchWays_SCL_Enabled") as Style;
+				btn_LaunchWays_DragonEmu.Style = Application.Current.FindResource("btn_LaunchWays_DragonEmu") as Style;
+				brdr_LaunchWays.BorderBrush = MyColors.MyColorSCL;
+			}
+			else
+			{
+				btn_LaunchWays_SCL.Style = Application.Current.FindResource("btn_LaunchWays_SCL") as Style;
+				btn_LaunchWays_DragonEmu.Style = Application.Current.FindResource("btn_LaunchWays_DragonEmu_Enabled") as Style;
+				brdr_LaunchWays.BorderBrush = MyColors.MyColorEmu;
+			}
+
+			if (LauncherLogic.AuthWay == LauncherLogic.AuthWays.MTL)
+			{
+				btn_AuthMethod_LegacyAuth.Style = Application.Current.FindResource("btn_AuthWay") as Style;
+				btn_AuthMethod_MTL.Style = Application.Current.FindResource("btn_AuthWay_Enabled") as Style;
+			}
+			else
+			{
+				btn_AuthMethod_LegacyAuth.Style = Application.Current.FindResource("btn_AuthWay_Enabled") as Style;
+				btn_AuthMethod_MTL.Style = Application.Current.FindResource("btn_AuthWay") as Style;
+			}
 
 			RefreshIfOptionsHide();
 		}
@@ -776,7 +797,7 @@ namespace Project_127.MySettings
 					btn_SettingsGTA.Style = Application.Current.FindResource("btn_hamburgeritem_selected") as Style;
 					btn_SettingsExtra.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
 
-					lbl_SettingsHeader.Content = "GTA Settings";
+					lbl_SettingsHeader.Content = "GTA &amp; Launch Settings";
 					sv_Settings_GTA.ScrollToVerticalOffset(0);
 				}
 				else if (value == SettingsStates.Extra)
@@ -862,11 +883,11 @@ namespace Project_127.MySettings
 						MainWindow.MW.SetControlBackground(btn_Refresh, "Artwork/refresh.png");
 					}
 					break;
+				case "btn_cb_Set_EnableAlternativeLaunchForceCProgramFiles":
+					SetCheckBoxBackground(myBtn, Settings.EnableAlternativeLaunchForceCProgramFiles);
+					break;
 				case "btn_cb_Set_EnableLogging":
 					SetCheckBoxBackground(myBtn, Settings.EnableLogging);
-					break;
-				case "btn_cb_Set_LegacyAuth":
-					SetCheckBoxBackground(myBtn, Settings.EnableLegacyAuth);
 					break;
 				case "btn_cb_Set_SlowCompare":
 					SetCheckBoxBackground(myBtn, Settings.EnableSlowCompare);
@@ -874,16 +895,9 @@ namespace Project_127.MySettings
 				case "btn_cb_Set_CopyFilesInsteadOfHardlinking":
 					SetCheckBoxBackground(myBtn, Settings.EnableCopyFilesInsteadOfHardlinking);
 					break;
-				case "btn_cb_Set_EnableAlternativeLaunch":
-					SetCheckBoxBackground(myBtn, Settings.EnableAlternativeLaunch);
-					break;
 				case "btn_cb_Set_EnableJumpscriptUseCustomScript":
 					SetCheckBoxBackground(myBtn, Settings.EnableJumpscriptUseCustomScript);
 					break;
-				//case "btn_cb_Set_CopyFilesInsteadOfSyslinking_SocialClub":
-				//	SetCheckBoxBackground(myBtn, Settings.EnableCopyFilesInsteadOfSyslinking_SocialClub);
-				//	break;
-
 				case "btn_cb_Set_EnablePreOrderBonus":
 					SetCheckBoxBackground(myBtn, Settings.EnablePreOrderBonus);
 					break;
@@ -898,9 +912,6 @@ namespace Project_127.MySettings
 					break;
 				case "btn_cb_Set_EnableAutoStartLiveSplit":
 					SetCheckBoxBackground(myBtn, Settings.EnableAutoStartLiveSplit);
-					break;
-				case "btn_cb_Set_EnableAlternativeLaunchForceCProgramFiles":
-					SetCheckBoxBackground(myBtn, Settings.EnableAlternativeLaunchForceCProgramFiles);
 					break;
 				case "btn_cb_Set_EnableAutoStartFPSLimiter":
 					SetCheckBoxBackground(myBtn, Settings.EnableAutoStartFPSLimiter);
@@ -942,8 +953,6 @@ namespace Project_127.MySettings
 		/// </summary>
 		private void RefreshIfOptionsHide()
 		{
-			Rect_HideOptions_Tease.Visibility = Visibility.Hidden;
-
 			if (Settings.EnableOverlay)
 			{
 				Rect_HideOption_OverlayMM.Visibility = Visibility.Hidden;
@@ -951,37 +960,6 @@ namespace Project_127.MySettings
 			else
 			{
 				Rect_HideOption_OverlayMM.Visibility = Visibility.Visible;
-			}
-
-			if (Settings.Retailer != Retailers.Steam)
-			{
-				Rect_HideOption_HideFromSteam.Visibility = Visibility.Visible;
-			}
-			else
-			{
-				Rect_HideOption_HideFromSteam.Visibility = Visibility.Hidden;
-			}
-
-			if (Settings.Retailer == Retailers.Epic)
-			{
-				Rect_HideOptions_AllLaunchThroughSocialClubThings.Visibility = Visibility.Visible;
-				Rect_HideOptions_LaunchThroughSocialClubOptions.Visibility = Visibility.Hidden;
-				Rect_HideOptions_OrigEmu.Visibility = Visibility.Hidden;
-			}
-			else
-			{
-				Rect_HideOptions_AllLaunchThroughSocialClubThings.Visibility = Visibility.Hidden;
-
-				if (LauncherLogic.LaunchWay == LauncherLogic.LaunchWays.SocialClubLaunch)
-				{
-					Rect_HideOptions_LaunchThroughSocialClubOptions.Visibility = Visibility.Hidden;
-					Rect_HideOptions_OrigEmu.Visibility = Visibility.Visible;
-				}
-				else
-				{
-					Rect_HideOptions_LaunchThroughSocialClubOptions.Visibility = Visibility.Visible;
-					Rect_HideOptions_OrigEmu.Visibility = Visibility.Hidden;
-				}
 			}
 
 			if (Settings.EnableJumpscriptUseCustomScript)
@@ -992,14 +970,20 @@ namespace Project_127.MySettings
 			{
 				Rect_HideOptions_JumpscriptKeys.Visibility = Visibility.Hidden;
 			}
-
-			// Remove this...
-
-			// Rect_HideOptions_Tease.Visibility = Visibility.Visible;
-			// Rect_HideOptions.Visibility = Visibility.Hidden;
-			// Rect_HideOptions2.Visibility = Visibility.Hidden;
-			// Rect_HideOptions3.Visibility = Visibility.Hidden;
 		}
+
+		private void btn_LaunchWays_SCL_Click(object sender, RoutedEventArgs e)
+		{
+
+		}
+
+		private void btn_LaunchWays_SCL_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+		{
+			PopupEnableAlternativeLaunch.IsOpen = true;
+		}
+
+
+
 
 
 		/// <summary>
@@ -1016,15 +1000,8 @@ namespace Project_127.MySettings
 				case "btn_cb_Set_EnableLogging":
 					Settings.EnableLogging = !Settings.EnableLogging;
 					break;
-				case "btn_cb_Set_LegacyAuth":
-					Settings.EnableLegacyAuth = !Settings.EnableLegacyAuth;
-					break;
 				case "btn_cb_Set_SlowCompare":
 					Settings.EnableSlowCompare = !Settings.EnableSlowCompare;
-					break;
-				case "btn_cb_Set_EnableAlternativeLaunch":
-					Settings.EnableAlternativeLaunch = !Settings.EnableAlternativeLaunch;
-					RefreshIfOptionsHide();
 					break;
 				case "btn_cb_Set_EnableScripthookOnDowngraded":
 					Settings.EnableScripthookOnDowngraded = !Settings.EnableScripthookOnDowngraded;
@@ -1040,9 +1017,6 @@ namespace Project_127.MySettings
 				case "btn_cb_Set_EnableAlternativeLaunchForceCProgramFiles":
 					Settings.EnableAlternativeLaunchForceCProgramFiles = !Settings.EnableAlternativeLaunchForceCProgramFiles;
 					break;
-				//case "btn_cb_Set_CopyFilesInsteadOfSyslinking_SocialClub":
-				//	Settings.EnableCopyFilesInsteadOfSyslinking_SocialClub = !Settings.EnableCopyFilesInsteadOfSyslinking_SocialClub;
-				//	break;
 				case "btn_cb_Set_EnablePreOrderBonus":
 					Settings.EnablePreOrderBonus = !Settings.EnablePreOrderBonus;
 					break;
@@ -1298,17 +1272,6 @@ namespace Project_127.MySettings
 		}
 
 
-
-		/// <summary>
-		/// Create Backup Rightclick
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
-		private void btn_CreateBackup_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
-		{
-			PopupCreateBackup.IsOpen = true;
-		}
-
 		/// <summary>
 		/// Use Backup Click
 		/// </summary>
@@ -1402,6 +1365,16 @@ namespace Project_127.MySettings
 		private void PopupCreateBackup_Closed(object sender, EventArgs e)
 		{
 
+		}
+
+		/// <summary>
+		/// Create Backup Rightclick
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void btn_CreateBackup_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+		{
+			PopupCreateBackup.IsOpen = true;
 		}
 
 
@@ -1695,10 +1668,7 @@ namespace Project_127.MySettings
 
 		}
 
-		private void btn_cb_Set_EnableAlternativeLaunch_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
-		{
-			PopupEnableAlternativeLaunch.IsOpen = true;
-		}
+
 
 		public static void TellRockstarUsersToDisableAutoUpdateIfNeeded()
 		{
@@ -1762,6 +1732,7 @@ namespace Project_127.MySettings
 				HelperClasses.Logger.Log("User does not want the AntiVirus Fix.");
 			}
 		}
+
 
 	} // End of Class
 } // End of Namespace 

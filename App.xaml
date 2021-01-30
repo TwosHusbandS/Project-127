@@ -88,7 +88,35 @@
             </Style.Triggers>
         </Style>
 
-
+        <Style TargetType="Button" x:Key="btn_LaunchWays">
+            <Setter Property="Background" Value="{x:Static local:MyColors.Traditional_ButtonBackground}"/>
+            <Setter Property="Foreground" Value="{x:Static local:MyColors.Traditional_ButtonForeground}"/>
+            <Setter Property="BorderBrush" Value="{x:Static local:MyColors.Traditional_ButtonBorderBrush}"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontFamily" Value="Tahoma"/>
+            <Setter Property="BorderThickness" Value="{x:Static local:MyColors.Traditional_ButtonBorderThickness}"/>
+            <Setter Property="Margin" Value="20,5"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                            CornerRadius="0"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            Padding="5"
+                            BorderBrush="{TemplateBinding BorderBrush}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="{x:Static local:MyColors.Traditional_ButtonMOBackground}"/>
+                    <Setter Property="Foreground" Value="{x:Static local:MyColors.Traditional_ButtonMOForeground}"/>
+                    <Setter Property="BorderBrush" Value="{x:Static local:MyColors.Traditional_ButtonMOBorderBrush}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
 
         <Style x:Key="btn_Main" TargetType="{x:Type Button}" BasedOn="{StaticResource btn}">
             <Setter Property="Margin" Value="20"/>
@@ -107,6 +135,98 @@
 
 
 
+        <Style x:Key="btn_LaunchWays_SCL" TargetType="{x:Type Button}" BasedOn="{StaticResource btn}">
+            <Setter Property="Margin" Value="20,10"/>
+            <Setter Property="Background" Value="{x:Static local:MyColors.MyColorTransparent}"/>
+            <Setter Property="Foreground" Value="{x:Static local:MyColors.MyColorSCL}"/>
+            <Setter Property="BorderBrush" Value="{x:Static local:MyColors.MyColorGray}"/>
+            <Setter Property="BorderThickness" Value="2"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="{x:Static local:MyColors.MyColorTransparent}"/>
+                    <Setter Property="Foreground" Value="{x:Static local:MyColors.MyColorSCL}"/>
+                    <Setter Property="BorderBrush" Value="{x:Static local:MyColors.MyColorSCL}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="btn_LaunchWays_SCL_Enabled" TargetType="{x:Type Button}" BasedOn="{StaticResource btn}">
+            <Setter Property="Margin" Value="20,10"/>
+            <Setter Property="Background" Value="{x:Static local:MyColors.MyColorTransparent}"/>
+            <Setter Property="Foreground" Value="{x:Static local:MyColors.MyColorSCL}"/>
+            <Setter Property="BorderBrush" Value="{x:Static local:MyColors.MyColorSCL}"/>
+            <Setter Property="BorderThickness" Value="2"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="{x:Static local:MyColors.MyColorTransparent}"/>
+                    <Setter Property="Foreground" Value="{x:Static local:MyColors.MyColorSCL}"/>
+                    <Setter Property="BorderBrush" Value="{x:Static local:MyColors.MyColorSCL}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+
+        <Style x:Key="btn_LaunchWays_DragonEmu" TargetType="{x:Type Button}" BasedOn="{StaticResource btn}">
+            <Setter Property="Margin" Value="20,10"/>
+            <Setter Property="Background" Value="{x:Static local:MyColors.MyColorTransparent}"/>
+            <Setter Property="Foreground" Value="{x:Static local:MyColors.MyColorEmu}"/>
+            <Setter Property="BorderBrush" Value="{x:Static local:MyColors.MyColorGray}"/>
+            <Setter Property="BorderThickness" Value="2"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="{x:Static local:MyColors.MyColorTransparent}"/>
+                    <Setter Property="Foreground" Value="{x:Static local:MyColors.MyColorEmu}"/>
+                    <Setter Property="BorderBrush" Value="{x:Static local:MyColors.MyColorEmu}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="btn_LaunchWays_DragonEmu_Enabled" TargetType="{x:Type Button}" BasedOn="{StaticResource btn}">
+            <Setter Property="Margin" Value="20,10"/>
+            <Setter Property="Background" Value="{x:Static local:MyColors.MyColorTransparent}"/>
+            <Setter Property="Foreground" Value="{x:Static local:MyColors.MyColorEmu}"/>
+            <Setter Property="BorderBrush" Value="{x:Static local:MyColors.MyColorEmu}"/>
+            <Setter Property="BorderThickness" Value="2"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="{x:Static local:MyColors.MyColorTransparent}"/>
+                    <Setter Property="Foreground" Value="{x:Static local:MyColors.MyColorEmu}"/>
+                    <Setter Property="BorderBrush" Value="{x:Static local:MyColors.MyColorEmu}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="btn_AuthWay" TargetType="{x:Type Button}" BasedOn="{StaticResource btn}">
+            <Setter Property="Margin" Value="20,10"/>
+            <Setter Property="Background" Value="{x:Static local:MyColors.MyColorTransparent}"/>
+            <Setter Property="Foreground" Value="{x:Static local:MyColors.MyColorGray}"/>
+            <Setter Property="BorderBrush" Value="{x:Static local:MyColors.MyColorGray}"/>
+            <Setter Property="BorderThickness" Value="2"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="{x:Static local:MyColors.MyColorTransparent}"/>
+                    <Setter Property="Foreground" Value="{x:Static local:MyColors.MyColorGray}"/>
+                    <Setter Property="BorderBrush" Value="{x:Static local:MyColors.MyColorWhite}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="btn_AuthWay_Enabled" TargetType="{x:Type Button}" BasedOn="{StaticResource btn}">
+            <Setter Property="Margin" Value="20,10"/>
+            <Setter Property="Background" Value="{x:Static local:MyColors.MyColorTransparent}"/>
+            <Setter Property="Foreground" Value="{x:Static local:MyColors.MyColorWhite}"/>
+            <Setter Property="BorderBrush" Value="{x:Static local:MyColors.MyColorWhite}"/>
+            <Setter Property="BorderThickness" Value="2"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="{x:Static local:MyColors.MyColorTransparent}"/>
+                    <Setter Property="Foreground" Value="{x:Static local:MyColors.MyColorWhite}"/>
+                    <Setter Property="BorderBrush" Value="{x:Static local:MyColors.MyColorWhite}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        
         <Style x:Key="btn_SmallIcon" TargetType="{x:Type Button}" BasedOn="{StaticResource btn_Main}">
             <Setter Property="Margin" Value="15"/>
             <Setter Property="Width" Value="40"/>
