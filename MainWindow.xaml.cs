@@ -39,18 +39,11 @@ Comments like "TODO", "TO DO", "CTRLF", "CTRL-F", and "CTRL F" are just ways of 
 Hybrid code can be found in AAA_HybridCode.
 
 Stuff to fix post 1.1:
-- Download / component manager is still freezing UI for a few seconds post-install
-- Other UI /UX for Launch and Auth Methods. Have them as enums in settings and as radio-buttons-functionality buttons
-	=> [DONE] States Instead Of Settings 
-	=> [DONE] Retancle logic of when we can change retailer and those settings
-	=> New UI
-		>> Connect options to backend, make sure to check which side is checking error
-		>> add rendering the correct colored one on the top, the other one at bottom, rightclick to enable editing
-		>> add new stuff to hide settings stuff
-
+- Download / component manager is still freezing UI for a few seconds post-install. Install Downgraded SC on SCL Componenets install. Check order on "InstallRequiredComponents"
 - ReadMe PowerUser instructions. + Fix existing Help Section
 - Push Trevor% File with everything i guess...
 
+[DONE] Other UI /UX for Launch and Auth Methods. Have them as enums in settings and as radio-buttons-functionality buttons
 [DONE] Potentially fixed remember me issue...
 [DONE] i am throwing the "pls disable auto popup" when retailer is rockstar and when legacy auth is disabled. I should also check that "launch through social club" is disabled
 [DONE] im error checking something twice, making UX a bit wonky. If you change retailer (and have SCL enabled) it will prompt you to download the new things. If you dont want to, it wont change retailer. Even tho it will also check before game launch and before downgrade

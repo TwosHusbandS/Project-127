@@ -57,49 +57,48 @@
 
                             </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="3*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
 
-                            <Rectangle Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Fill="Transparent"/>
-                            <Rectangle Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Fill="{x:Static local:MyColors.SE_AlternateRowBackground}"/>
-                            <Rectangle Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" Fill="Transparent"/>
-                            <Rectangle Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3" Fill="{x:Static local:MyColors.SE_AlternateRowBackground}"/>
-                            <Rectangle Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3" Fill="Transparent"/>
-                            <Rectangle Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="3" Fill="{x:Static local:MyColors.SE_AlternateRowBackground}"/>
-                            <Rectangle Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="3" Fill="Transparent"/>
-                            <Rectangle Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="3" Fill="{x:Static local:MyColors.SE_AlternateRowBackground}"/>
-                            <Rectangle Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="3" Fill="Transparent"/>
-                            <Rectangle Grid.Row="9" Grid.Column="0" Grid.ColumnSpan="3" Fill="{x:Static local:MyColors.SE_AlternateRowBackground}"/>
-                            <Rectangle Grid.Row="10" Grid.Column="0" Grid.ColumnSpan="3" Fill="Transparent"/>
-                            <Rectangle Grid.Row="11" Grid.Column="0" Grid.ColumnSpan="3" Fill="{x:Static local:MyColors.SE_AlternateRowBackground}"/>
-                            <Rectangle Grid.Row="12" Grid.Column="0" Grid.ColumnSpan="3" Fill="Transparent"/>
-                            <Rectangle Grid.Row="13" Grid.Column="0" Grid.ColumnSpan="3" Fill="{x:Static local:MyColors.SE_AlternateRowBackground}"/>
-                            <Rectangle Grid.Row="14" Grid.Column="0" Grid.ColumnSpan="3" Fill="Transparent"/>
+                            <Rectangle Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4" Fill="Transparent"/>
+                            <Rectangle Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="4" Fill="{x:Static local:MyColors.SE_AlternateRowBackground}"/>
+                            <Rectangle Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="4" Fill="Transparent"/>
+                            <Rectangle Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="4" Fill="{x:Static local:MyColors.SE_AlternateRowBackground}"/>
+                            <Rectangle Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="4" Fill="Transparent"/>
+                            <Rectangle Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="4" Fill="{x:Static local:MyColors.SE_AlternateRowBackground}"/>
+                            <Rectangle Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="4" Fill="Transparent"/>
+                            <Rectangle Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="4" Fill="{x:Static local:MyColors.SE_AlternateRowBackground}"/>
+                            <Rectangle Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="4" Fill="Transparent"/>
+                            <Rectangle Grid.Row="9" Grid.Column="0" Grid.ColumnSpan="4" Fill="{x:Static local:MyColors.SE_AlternateRowBackground}"/>
+                            <Rectangle Grid.Row="10" Grid.Column="0" Grid.ColumnSpan="4" Fill="Transparent"/>
+                            <Rectangle Grid.Row="11" Grid.Column="0" Grid.ColumnSpan="4" Fill="{x:Static local:MyColors.SE_AlternateRowBackground}"/>
+                            <Rectangle Grid.Row="12" Grid.Column="0" Grid.ColumnSpan="4" Fill="Transparent"/>
+                            <Rectangle Grid.Row="13" Grid.Column="0" Grid.ColumnSpan="4" Fill="{x:Static local:MyColors.SE_AlternateRowBackground}"/>
+
+                            <Button Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4" Style="{StaticResource btn_SE_Path}" x:Name="btn_Set_GTAVInstallationPath" Click="btn_Path_Click" MouseRightButtonDown="btn_Path_RightClick"/>
+
+                            <Button Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="4" Style="{StaticResource btn_SE_Path}" x:Name="btn_Set_ZIPExtractionPath" Click="btn_Path_Click" MouseRightButtonDown="btn_Path_RightClick"/>
+
+                            <Label Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" Style="{StaticResource lbl_Set_Info}" Content="Enable Logging for Project 1.27"/>
+                            <Button Grid.Row="2" Grid.Column="3" x:Name="btn_cb_Set_EnableLogging" Style="{StaticResource btn_cb}" Click="btn_cb_Click"  MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
+
+                            <Label Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3"  Style="{StaticResource lbl_Set_Info}" Content="Slow, but stable method for Downgrading / Upgrading"/>
+                            <Button Grid.Row="3" Grid.Column="3" x:Name="btn_cb_Set_CopyFilesInsteadOfHardlinking" Style="{StaticResource btn_cb}" Click="btn_cb_Click"  MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
+
+                            <Label Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3"  Style="{StaticResource lbl_Set_Info}" Content="Slow, but stable method for comparing Files"/>
+                            <Button Grid.Row="4" Grid.Column="3" x:Name="btn_cb_Set_SlowCompare" Style="{StaticResource btn_cb}" Click="btn_cb_Click"  MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
+
+                            <Label Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="3"  Style="{StaticResource lbl_Set_Info}" Content="Start P127: "/>
+                            <ComboBox Grid.Row="5" Grid.Column="3" Margin="10,5" Style="{StaticResource cobo}" x:Name="combox_Set_StartWays" SelectionChanged="combox_Set_StartWays_SelectionChanged"/>
+
+                            <Label Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="3"  Style="{StaticResource lbl_Set_Info}" Content="Exit Action: "/>
+                            <ComboBox Grid.Row="6" Grid.Column="3" Margin="10,5" Style="{StaticResource cobo}" x:Name="combox_Set_ExitWays" SelectionChanged="combox_Set_ExitWays_SelectionChanged"/>
 
 
-                            <Button Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource btn_SE_Path}" x:Name="btn_Set_GTAVInstallationPath" Click="btn_Path_Click" MouseRightButtonDown="btn_Path_RightClick"/>
-
-                            <Button Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource btn_SE_Path}" x:Name="btn_Set_ZIPExtractionPath" Click="btn_Path_Click" MouseRightButtonDown="btn_Path_RightClick"/>
-
-                            <Label Grid.Row="2" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Enable Logging for Project 1.27"/>
-                            <Button Grid.Row="2" Grid.Column="1" x:Name="btn_cb_Set_EnableLogging" Style="{StaticResource btn_cb}" Click="btn_cb_Click"  MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
-
-                            <Label Grid.Row="3" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Slow, but stable method for Downgrading / Upgrading"/>
-                            <Button Grid.Row="3" Grid.Column="1" x:Name="btn_cb_Set_CopyFilesInsteadOfHardlinking" Style="{StaticResource btn_cb}" Click="btn_cb_Click"  MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
-
-                            <Label Grid.Row="4" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Slow, but stable method for comparing Files"/>
-                            <Button Grid.Row="4" Grid.Column="1" x:Name="btn_cb_Set_SlowCompare" Style="{StaticResource btn_cb}" Click="btn_cb_Click"  MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
-
-                            <Label Grid.Row="5" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Start P127: "/>
-                            <ComboBox Grid.Row="5" Grid.Column="1" Margin="10,5" Style="{StaticResource cobo}" x:Name="combox_Set_StartWays" SelectionChanged="combox_Set_StartWays_SelectionChanged"/>
-
-                            <Label Grid.Row="6" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Exit Action: "/>
-                            <ComboBox Grid.Row="6" Grid.Column="1" Margin="10,5" Style="{StaticResource cobo}" x:Name="combox_Set_ExitWays" SelectionChanged="combox_Set_ExitWays_SelectionChanged"/>
-
-                            <Button Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource btn_SE_Path}" x:Name="btn_Import_Zip" Click="btn_Import_Zip_Click" Content="Click Me!"/>
-
-                            <Button Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource btn_SE_Path}" x:Name="btn_CreateBackup" Click="btn_CreateBackup_Click" MouseRightButtonDown="btn_CreateBackup_MouseRightButtonDown" Content="Create Backup Files for Upgrading"/>
+                            <Button Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource btn_SE_Path}" x:Name="btn_CreateBackup" Click="btn_CreateBackup_Click" MouseRightButtonDown="btn_CreateBackup_MouseRightButtonDown" Content="Create Backup Files for Upgrading"/>
                             <Popup x:Name="PopupCreateBackup"  PlacementTarget="{Binding ElementName=btn_CreateBackup}" Placement="MousePoint" Width="200" Height="140"  Margin="0,0,0,0" StaysOpen="False" Closed="PopupCreateBackup_Closed" Opened="PopupCreateBackup_Opened">
                                 <Border BorderBrush="{x:Static local:MyColors.MyColorWhite}" BorderThickness="2" Background="{x:Static local:MyColors.MyColorOffBlack}" MouseLeave="Border_MouseLeave">
                                     <Grid>
@@ -115,7 +114,7 @@
                                 </Border>
                             </Popup>
 
-                            <Button Grid.Row="9" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource btn_SE_Path}" x:Name="btn_UseBackup" Click="btn_UseBackup_Click" MouseRightButtonDown="btn_UseBackup_MouseRightButtonDown" Content="Use Backup Files for Upgrading"/>
+                            <Button Grid.Row="7" Grid.Column="2" Grid.ColumnSpan="2" Style="{StaticResource btn_SE_Path}" x:Name="btn_UseBackup" Click="btn_UseBackup_Click" MouseRightButtonDown="btn_UseBackup_MouseRightButtonDown" Content="Use Backup Files for Upgrading"/>
                             <Popup x:Name="PopupUseBackup"  PlacementTarget="{Binding ElementName=btn_UseBackup}" Placement="MousePoint" Width="200" Height="140"  Margin="0,0,0,0" StaysOpen="False" Closed="PopupUseBackup_Closed" Opened="PopupUseBackup_Opened">
                                 <Border BorderBrush="{x:Static local:MyColors.MyColorWhite}" BorderThickness="2" Background="{x:Static local:MyColors.MyColorOffBlack}" MouseLeave="Border_MouseLeave">
                                     <Grid>
@@ -131,15 +130,17 @@
                                 </Border>
                             </Popup>
 
-                            <Button Grid.Row="10" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource btn_SE_Path}" x:Name="btn_AntivirusFix" Click="btn_AntivirusFix_Click" Content="Exclude P127 Files from Windows Defender / AntiVirus"/>
+                            <Button Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="4" Style="{StaticResource btn_SE_Path}" x:Name="btn_RepairGTA" Click="btn_RepairGTA_Click" Content="Repair GTA V Installation"/>
 
-                            <Button Grid.Row="11" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource btn_SE_Path}" x:Name="btn_CheckForUpdate" Click="btn_CheckForUpdate_Click" MouseRightButtonDown="btn_CheckForUpdate_MouseRightButtonDown" Content="Check for Update"/>
+                            <Button Grid.Row="9" Grid.Column="0" Grid.ColumnSpan="4" Style="{StaticResource btn_SE_Path}" x:Name="btn_AntivirusFix" Click="btn_AntivirusFix_Click" Content="Exclude P127 Files from Windows Defender / AntiVirus"/>
 
-                            <Button Grid.Row="12" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource btn_SE_Path}" x:Name="btn_Reset" Click="btn_Reset_Click" Content="Reset Settings to Default"/>
+                            <Button Grid.Row="10" Grid.Column="0" Grid.ColumnSpan="4" Style="{StaticResource btn_SE_Path}" x:Name="btn_Import_Zip" Click="btn_Import_Zip_Click" Content="Click Me!"/>
+                            
+                            <Button Grid.Row="11" Grid.Column="0" Grid.ColumnSpan="4" Style="{StaticResource btn_SE_Path}" x:Name="btn_CheckForUpdate" Click="btn_CheckForUpdate_Click" MouseRightButtonDown="btn_CheckForUpdate_MouseRightButtonDown" Content="Check for Update"/>
 
-                            <Button Grid.Row="13" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource btn_SE_Path}" x:Name="btn_RepairGTA" Click="btn_RepairGTA_Click" Content="Repair GTA V Installation"/>
+                            <Button Grid.Row="12" Grid.Column="0" Grid.ColumnSpan="4" Style="{StaticResource btn_SE_Path}" x:Name="btn_Reset" Click="btn_Reset_Click" Content="Reset Settings to Default"/>
 
-                            <Button Grid.Row="14" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource btn_SE_Path}" x:Name="btn_Reset_Everything" Click="btn_Reset_Everything_Click" Content="Reset Everything / Uninstall"/>
+                            <Button Grid.Row="13" Grid.Column="0" Grid.ColumnSpan="4" Style="{StaticResource btn_SE_Path}" x:Name="btn_Reset_Everything" Click="btn_Reset_Everything_Click" Content="Reset Everything / Uninstall"/>
 
                         </Grid>
                     </StackPanel>
@@ -155,7 +156,7 @@
                                 <RowDefinition Height="40"/>
                                 <RowDefinition Height="140"/>
                                 <RowDefinition Height="60"/>
-                                <RowDefinition Height="300"/>
+                                <RowDefinition Height="280"/>
 
                             </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
@@ -163,9 +164,9 @@
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
 
-                            <Rectangle Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Fill="Transparent"/>
-                            <Rectangle Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Fill="{x:Static local:MyColors.SE_AlternateRowBackground}"/>
-                            <Rectangle Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" Fill="Transparent"/>
+                            <Rectangle Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Fill="{x:Static local:MyColors.SE_AlternateRowBackground}"/>
+                            <Rectangle Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Fill="Transparent"/>
+                            <Rectangle Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" Fill="{x:Static local:MyColors.SE_AlternateRowBackground}"/>
                             <Rectangle Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3" Grid.RowSpan="3" Fill="Transparent"/>
 
                             <Label Grid.Row="0" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="GTA V Retailer: "/>
@@ -187,11 +188,13 @@
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
-                                    <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Content="Launch - Method" Style="{StaticResource lbl_Set_Info}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                    <Button Grid.Row="1" Grid.Column="0" Margin="20,0,20,15" x:Name="btn_LaunchWays_SCL" Style="{StaticResource btn_LaunchWays_SCL}" Content="Launch through Social Club" Click="btn_LaunchWays_SCL_Click" MouseRightButtonDown="btn_LaunchWays_SCL_MouseRightButtonDown"/>
-                                    <Button Grid.Row="1" Grid.Column="1" Margin="20,0,20,15" x:Name="btn_LaunchWays_DragonEmu" Style="{StaticResource btn_LaunchWays_DragonEmu}" Content="Launch through Dr490n Launcher"/>
-                                    <Popup x:Name="PopupEnableAlternativeLaunch"  PlacementTarget="{Binding ElementName=btn_LaunchWays_DragonEMu}" Placement="MousePoint" Width="300" Height="60"  Margin="0,0,0,0" StaysOpen="False" Closed="PopupEnableAlternativeLaunch_Closed" Opened="PopupEnableAlternativeLaunch_Opened">
-                                        <Border BorderBrush="{x:Static local:MyColors.MyColorWhite}" BorderThickness="2" Background="{x:Static local:MyColors.MyColorOffBlack}" MouseLeave="Border_MouseLeave">
+                                    <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" x:Name="lbl_LauchWays" Content="Launch - Method" Style="{StaticResource lbl_Set_Info}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    <Button Grid.Row="1" Grid.Column="0" Margin="20,0,20,15" x:Name="btn_LaunchWays_SCL" ToolTip="Launch through original Socialclub. This needs the corresponding Launch-Through-SocialClub Component" Style="{StaticResource btn_LaunchWays_SCL}" Content="Launch through Social Club" Click="btn_LaunchWays_SCL_Click" MouseRightButtonDown="btn_LaunchWays_SCL_MouseRightButtonDown"/>
+                                    <Button Grid.Row="1" Grid.Column="1" Margin="20,0,20,15" x:Name="btn_LaunchWays_DragonEmu" ToolTip="Launch through @d490ns Launcher. Only needs 'Required Files'" Style="{StaticResource btn_LaunchWays_DragonEmu}" Content="Launch through Dr490n Launcher" Click="btn_LaunchWays_DragonEmu_Click"/>
+                                    <Rectangle x:Name="Rect_HideOptions_SCL_Launch" Grid.Row="1" Grid.Column="0" Margin="20,0,20,15" Fill="{x:Static local:MyColors.MyColorOffWhite85}" ToolTip="Not available on Epic."/>
+
+                                    <Popup x:Name="PopupEnableAlternativeLaunch"  PlacementTarget="{Binding ElementName=btn_LaunchWays_DragonEMu}" Placement="MousePoint" Width="300" Height="50"  Margin="0,0,0,0" StaysOpen="False" Closed="PopupEnableAlternativeLaunch_Closed" Opened="PopupEnableAlternativeLaunch_Opened">
+                                        <Border BorderBrush="{x:Static local:MyColors.MyColorSCL}" BorderThickness="2" Background="{x:Static local:MyColors.MyColorOffBlack}" MouseLeave="Border_MouseLeave">
                                             <Grid>
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition Width="8*"/>
@@ -205,7 +208,7 @@
                                 </Grid>
                             </Border>
 
-                            <Border Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" BorderThickness="2" Margin="20,10"  BorderBrush="{x:Static local:MyColors.MyColorSCL}" Background="{x:Static local:MyColors.MyColorOffBlack70}">
+                            <Border x:Name="brdr_SCLOptions" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" BorderThickness="2" Margin="20,10"  BorderBrush="{x:Static local:MyColors.MyColorSCL}" Background="{x:Static local:MyColors.MyColorOffBlack70}">
                                 <Grid>
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="*"/>
@@ -216,10 +219,11 @@
                                     </Grid.ColumnDefinitions>
                                     <Label Grid.Row="0" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Social Club Launch Game Version: "/>
                                     <ComboBox Grid.Row="0" Grid.Column="1" Margin="10,5" Style="{StaticResource cobo}" x:Name="combox_Set_SocialClubGameVersion" SelectionChanged="combox_Set_SocialClubGameVersion_SelectionChanged"/>
+                                    <Button x:Name="btn_HideSCLOptions" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" ToolTip="Hidden, because they are not effective on your LaunchMethod. Rightclick to edit anyways." MouseRightButtonDown="btn_HideSCLOptions_MouseRightButtonDown"  Style="{StaticResource btn_Hide}" Background="{x:Static local:MyColors.MyColorSCLHidden}" />
                                 </Grid>
                             </Border>
 
-                            <Border Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" BorderThickness="2" Margin="20,10" BorderBrush="{x:Static local:MyColors.MyColorEmu}" Background="{x:Static local:MyColors.MyColorOffBlack70}">
+                            <Border x:Name="brdr_DragonEmuOptions" Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" BorderThickness="2" Margin="20,10" BorderBrush="{x:Static local:MyColors.MyColorEmu}" Background="{x:Static local:MyColors.MyColorOffBlack70}">
                                 <Grid>
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="*"/>
@@ -234,9 +238,18 @@
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
 
-                                        <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Content="Auth - Method" Style="{StaticResource lbl_Set_Info}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                        <Button Grid.Row="1" Grid.Column="0" Margin="40,0,40,10" Style="{StaticResource btn_AuthWay}" x:Name="btn_AuthMethod_MTL" Content="MTL"/>
-                                    <Button Grid.Row="1" Grid.Column="1" Margin="40,0,40,10" Style="{StaticResource btn_AuthWay}" x:Name="btn_AuthMethod_LegacyAuth" Content="Legacy Auth"/>
+
+                                    <Rectangle Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Fill="Transparent"/>
+                                    <Rectangle Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Fill="Transparent"/>
+                                    <Rectangle x:Name="Rect_Bullshit_1" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Fill="{x:Static local:MyColors.SE_AlternateRowBackground}"/>
+                                    <Rectangle Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Fill="Transparent"/>
+                                    <Rectangle x:Name="Rect_Bullshit_2" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Fill="{x:Static local:MyColors.SE_AlternateRowBackground}"/>
+                                    <Rectangle Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" Fill="Transparent"/>
+
+
+                                    <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Content="Auth - Method" Style="{StaticResource lbl_Set_Info}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    <Button Grid.Row="1" Grid.Column="0" Margin="40,0,40,10" Style="{StaticResource btn_AuthWay}" x:Name="btn_AuthMethod_MTL" Content="MTL (through RGL)" ToolTip="Opens RockstarGamesLauncher and gets Ownership Verification that way." Click="btn_AuthWays_MTL_Click"/>
+                                    <Button Grid.Row="1" Grid.Column="1" Margin="40,0,40,10" Style="{StaticResource btn_AuthWay}" x:Name="btn_AuthMethod_LegacyAuth" Content="Legacy Auth" ToolTip="Grabs Ownership Verification by having you log in into your social club account inside P127."  Click="btn_AuthWays_Legacy_Click"/>
 
                                     <Label Grid.Row="2" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="GTA V In-Game Name: "/>
                                     <TextBox Grid.Row="2" Grid.Column="1" Style="{StaticResource tb}" x:Name="tb_Set_InGameName" LostFocus="tb_Set_InGameName_LostFocus"/>
@@ -249,11 +262,14 @@
                                     <Label Grid.Row="5" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Hide from Steam"/>
                                     <Button Grid.Row="5" Grid.Column="1" x:Name="btn_cb_Set_EnableDontLaunchThroughSteam"  Style="{StaticResource btn_cb}" Click="btn_cb_Click" MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
 
+                                    <Rectangle x:Name="Rect_HideOptions_HideFromSteam" Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" Fill="{x:Static local:MyColors.MyColorOffWhite85}" ToolTip="Non effective when Retailer is not Steam"/>
+
+                                    <Button x:Name="btn_HideEmuOptions" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="6" MouseRightButtonDown="btn_HideEmuOptions_MouseRightButtonDown" ToolTip="Hidden, because they are not effective on your LaunchMethod. Rightclick to edit anyways."  Style="{StaticResource btn_Hide}" Background="{x:Static local:MyColors.MyColorEmuHidden}" />
+
                                 </Grid>
                             </Border>
-                          
-                      
                         </Grid>
+
                     </StackPanel>
                 </ScrollViewer>
 

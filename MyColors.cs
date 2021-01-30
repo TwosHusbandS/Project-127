@@ -26,11 +26,13 @@ namespace Project_127
 		public static Brush MyColorOffBlack70 { get; private set; } = SetOpacity((Brush)new BrushConverter().ConvertFromString("#1a1a1a"), 70);
 		public static Brush MyColorOffBlack50 { get; private set; } = SetOpacity((Brush)new BrushConverter().ConvertFromString("#1a1a1a"), 50);
 		public static Brush MyColorOrange { get; private set; } = (Brush)new BrushConverter().ConvertFromString("#E35627");
-		public static Brush MyColorGray { get; private set; } = (Brush)new BrushConverter().ConvertFromString("#a39493");
+		public static Brush MyColorGray { get; private set; } = (Brush)new BrushConverter().ConvertFromString("#5a6373");
 		public static Brush MyColorGreen { get; private set; } = (Brush)new BrushConverter().ConvertFromString("#4cd213");
 		public static Brush MyColorEmu { get; private set; } = (Brush)new BrushConverter().ConvertFromString("#E35627");
 		public static Brush MyColorSCL { get; private set; } = (Brush)new BrushConverter().ConvertFromString("#3599e6");
 
+		public static Brush MyColorEmuHidden { get; private set; } = SetOpacity(MyColorEmu, 70);
+		public static Brush MyColorSCLHidden { get; private set; } = SetOpacity(MyColorSCL, 70);
 
 		/// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

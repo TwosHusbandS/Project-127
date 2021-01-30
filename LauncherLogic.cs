@@ -368,7 +368,7 @@ namespace Project_127
 					if (value == LaunchWays.SocialClubLaunch)
 					{
 						// dont allow changing to social club
-						new Popup(Popup.PopupWindowTypes.PopupOk, "LaunchWay was not changed.").ShowDialog();
+						//new Popup(Popup.PopupWindowTypes.PopupOk, "LaunchWay was not changed.").ShowDialog();
 						return;
 					}
 				}
@@ -386,7 +386,7 @@ namespace Project_127
 				}
 				else
 				{
-					new Popup(Popup.PopupWindowTypes.PopupOk, "LaunchWay was not changed.").ShowDialog();
+					//new Popup(Popup.PopupWindowTypes.PopupOk, "LaunchWay was not changed.").ShowDialog();
 				}
 
 				Settings.TellRockstarUsersToDisableAutoUpdateIfNeeded();
@@ -427,6 +427,7 @@ namespace Project_127
 				{
 					Settings.EnableLegacyAuth = false;
 				}
+				Settings.TellRockstarUsersToDisableAutoUpdateIfNeeded();
 			}
 		}
 

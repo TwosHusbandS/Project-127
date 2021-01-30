@@ -708,13 +708,13 @@ namespace Project_127.MySettings
 							}
 							if (!ComponentManager.CheckIfRequiredComponentsAreInstalled(true))
 							{
-								new Popup(Popup.PopupWindowTypes.PopupOk, "Retailer was changed,\nbut you will need to download the Componenets later.").ShowDialog();
+								//new Popup(Popup.PopupWindowTypes.PopupOk, "Retailer was changed,\nbut you will need to download the Componenets later.").ShowDialog();
 								return;
 							}
 						}
 						else
 						{
-							new Popup(Popup.PopupWindowTypes.PopupOk, "Retailer was not changed.").ShowDialog();
+							//new Popup(Popup.PopupWindowTypes.PopupOk, "Retailer was not changed.").ShowDialog();
 							return;
 						}
 

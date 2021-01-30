@@ -136,6 +136,7 @@
 
 
         <Style x:Key="btn_LaunchWays_SCL" TargetType="{x:Type Button}" BasedOn="{StaticResource btn}">
+            <Setter Property="FontWeight" Value="Bold"/>
             <Setter Property="Margin" Value="20,10"/>
             <Setter Property="Background" Value="{x:Static local:MyColors.MyColorTransparent}"/>
             <Setter Property="Foreground" Value="{x:Static local:MyColors.MyColorSCL}"/>
@@ -151,6 +152,7 @@
         </Style>
 
         <Style x:Key="btn_LaunchWays_SCL_Enabled" TargetType="{x:Type Button}" BasedOn="{StaticResource btn}">
+            <Setter Property="FontWeight" Value="Bold"/>
             <Setter Property="Margin" Value="20,10"/>
             <Setter Property="Background" Value="{x:Static local:MyColors.MyColorTransparent}"/>
             <Setter Property="Foreground" Value="{x:Static local:MyColors.MyColorSCL}"/>
@@ -165,8 +167,23 @@
             </Style.Triggers>
         </Style>
 
+        <Style x:Key="btn_Hide" TargetType="{x:Type Button}" BasedOn="{StaticResource btn}">
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="Background" Value="{x:Static local:MyColors.MyColorTransparent}"/>
+            <Setter Property="Foreground" Value="{x:Static local:MyColors.MyColorTransparent}"/>
+            <Setter Property="BorderBrush" Value="{x:Static local:MyColors.MyColorTransparent}"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="{x:Static local:MyColors.MyColorTransparent}"/>
+                    <Setter Property="Foreground" Value="{x:Static local:MyColors.MyColorTransparent}"/>
+                    <Setter Property="BorderBrush" Value="{x:Static local:MyColors.MyColorTransparent}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
 
         <Style x:Key="btn_LaunchWays_DragonEmu" TargetType="{x:Type Button}" BasedOn="{StaticResource btn}">
+            <Setter Property="FontWeight" Value="Bold"/>
             <Setter Property="Margin" Value="20,10"/>
             <Setter Property="Background" Value="{x:Static local:MyColors.MyColorTransparent}"/>
             <Setter Property="Foreground" Value="{x:Static local:MyColors.MyColorEmu}"/>
@@ -182,6 +199,7 @@
         </Style>
 
         <Style x:Key="btn_LaunchWays_DragonEmu_Enabled" TargetType="{x:Type Button}" BasedOn="{StaticResource btn}">
+            <Setter Property="FontWeight" Value="Bold"/>
             <Setter Property="Margin" Value="20,10"/>
             <Setter Property="Background" Value="{x:Static local:MyColors.MyColorTransparent}"/>
             <Setter Property="Foreground" Value="{x:Static local:MyColors.MyColorEmu}"/>
@@ -197,6 +215,7 @@
         </Style>
 
         <Style x:Key="btn_AuthWay" TargetType="{x:Type Button}" BasedOn="{StaticResource btn}">
+            <Setter Property="FontWeight" Value="Bold"/>
             <Setter Property="Margin" Value="20,10"/>
             <Setter Property="Background" Value="{x:Static local:MyColors.MyColorTransparent}"/>
             <Setter Property="Foreground" Value="{x:Static local:MyColors.MyColorGray}"/>
@@ -205,13 +224,14 @@
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
                     <Setter Property="Background" Value="{x:Static local:MyColors.MyColorTransparent}"/>
-                    <Setter Property="Foreground" Value="{x:Static local:MyColors.MyColorGray}"/>
-                    <Setter Property="BorderBrush" Value="{x:Static local:MyColors.MyColorWhite}"/>
+                    <Setter Property="Foreground" Value="{x:Static local:MyColors.MyColorWhite}"/>
+                    <Setter Property="BorderBrush" Value="{x:Static local:MyColors.MyColorGray}"/>
                 </Trigger>
             </Style.Triggers>
         </Style>
 
         <Style x:Key="btn_AuthWay_Enabled" TargetType="{x:Type Button}" BasedOn="{StaticResource btn}">
+            <Setter Property="FontWeight" Value="Bold"/>
             <Setter Property="Margin" Value="20,10"/>
             <Setter Property="Background" Value="{x:Static local:MyColors.MyColorTransparent}"/>
             <Setter Property="Foreground" Value="{x:Static local:MyColors.MyColorWhite}"/>

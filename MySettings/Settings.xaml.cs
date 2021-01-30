@@ -56,6 +56,7 @@ namespace Project_127.MySettings
 			SettingsState = LastSettingsState;
 
 			RefreshGUI();
+			CodeSnipped();
 
 			this.DataContext = this;
 		}
@@ -286,8 +287,19 @@ namespace Project_127.MySettings
 		/// <param name="e"></param>
 		private void combox_Set_Retail_SelectionChanged(object sender, SelectionChangedEventArgs e)
 		{
-			Retailer = (Retailers)System.Enum.Parse(typeof(Retailers), combox_Set_Retail.SelectedItem.ToString());
-			RefreshGUI();
+			Retailers NewRetailer = (Retailers)System.Enum.Parse(typeof(Retailers), combox_Set_Retail.SelectedItem.ToString());
+			if (NewRetailer == Retailers.Epic && LauncherLogic.LaunchWay == LauncherLogic.LaunchWays.SocialClubLaunch)
+			{
+				Retailer = NewRetailer;
+				RefreshGUI();
+				CodeSnipped();
+			}
+			else
+			{
+				Retailer = NewRetailer;
+				RefreshGUI();
+			}
+
 		}
 
 
@@ -299,6 +311,7 @@ namespace Project_127.MySettings
 		private void combox_Set_LanguageSelected_SelectionChanged(object sender, SelectionChangedEventArgs e)
 		{
 			LanguageSelected = (Languages)System.Enum.Parse(typeof(Languages), combox_Set_LanguageSelected.SelectedItem.ToString());
+			RefreshGUI();
 		}
 
 
@@ -713,18 +726,6 @@ namespace Project_127.MySettings
 			ButtonMouseOverMagic(btn_cb_Set_EnableAutoStartJumpScript);
 			ButtonMouseOverMagic(btn_cb_Set_SlowCompare);
 
-			if (LauncherLogic.LaunchWay == LauncherLogic.LaunchWays.SocialClubLaunch)
-			{
-				btn_LaunchWays_SCL.Style = Application.Current.FindResource("btn_LaunchWays_SCL_Enabled") as Style;
-				btn_LaunchWays_DragonEmu.Style = Application.Current.FindResource("btn_LaunchWays_DragonEmu") as Style;
-				brdr_LaunchWays.BorderBrush = MyColors.MyColorSCL;
-			}
-			else
-			{
-				btn_LaunchWays_SCL.Style = Application.Current.FindResource("btn_LaunchWays_SCL") as Style;
-				btn_LaunchWays_DragonEmu.Style = Application.Current.FindResource("btn_LaunchWays_DragonEmu_Enabled") as Style;
-				brdr_LaunchWays.BorderBrush = MyColors.MyColorEmu;
-			}
 
 			if (LauncherLogic.AuthWay == LauncherLogic.AuthWays.MTL)
 			{
@@ -797,8 +798,10 @@ namespace Project_127.MySettings
 					btn_SettingsGTA.Style = Application.Current.FindResource("btn_hamburgeritem_selected") as Style;
 					btn_SettingsExtra.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
 
-					lbl_SettingsHeader.Content = "GTA &amp; Launch Settings";
+					lbl_SettingsHeader.Content = "GTA & Launch Settings";
 					sv_Settings_GTA.ScrollToVerticalOffset(0);
+
+					CodeSnipped();
 				}
 				else if (value == SettingsStates.Extra)
 				{
@@ -962,6 +965,8 @@ namespace Project_127.MySettings
 				Rect_HideOption_OverlayMM.Visibility = Visibility.Visible;
 			}
 
+
+
 			if (Settings.EnableJumpscriptUseCustomScript)
 			{
 				Rect_HideOptions_JumpscriptKeys.Visibility = Visibility.Visible;
@@ -970,11 +975,130 @@ namespace Project_127.MySettings
 			{
 				Rect_HideOptions_JumpscriptKeys.Visibility = Visibility.Hidden;
 			}
+
+
+
+			if (Retailer == Retailers.Epic)
+			{
+				Rect_HideOptions_SCL_Launch.Visibility = Visibility.Visible;
+			}
+			else
+			{
+				Rect_HideOptions_SCL_Launch.Visibility = Visibility.Hidden;
+			}
+
+
+
+			if (btn_HideEmuOptions.Visibility == Visibility.Hidden)
+			{
+				if (Retailer != Retailers.Steam)
+				{
+					Rect_HideOptions_HideFromSteam.Visibility = Visibility.Visible;
+				}
+				else
+				{
+					Rect_HideOptions_HideFromSteam.Visibility = Visibility.Hidden;
+				}
+			}
+
+		}
+
+		private void CodeSnipped()
+		{
+
+			Grid_Settings_GTA.RowDefinitions.RemoveAt(5);
+			Grid_Settings_GTA.RowDefinitions.RemoveAt(4);
+			RowDefinition Row_SCL_Options = new RowDefinition();
+			Row_SCL_Options.Height = new GridLength(60);
+			RowDefinition Row_DragonEmu_Options = new RowDefinition();
+			Row_DragonEmu_Options.Height = new GridLength(280);
+
+			if (LauncherLogic.LaunchWay == LauncherLogic.LaunchWays.SocialClubLaunch)
+			{
+				btn_LaunchWays_SCL.Style = Application.Current.FindResource("btn_LaunchWays_SCL_Enabled") as Style;
+				btn_LaunchWays_DragonEmu.Style = Application.Current.FindResource("btn_LaunchWays_DragonEmu") as Style;
+				brdr_LaunchWays.BorderBrush = MyColors.MyColorSCL;
+				lbl_LauchWays.Foreground = MyColors.MyColorSCL;
+
+				Grid_Settings_GTA.RowDefinitions.Add(Row_SCL_Options);
+				Grid_Settings_GTA.RowDefinitions.Add(Row_DragonEmu_Options);
+
+				Grid.SetRow(brdr_SCLOptions, 4);
+				Grid.SetRow(brdr_DragonEmuOptions, 5);
+			}
+			else
+			{
+				btn_LaunchWays_SCL.Style = Application.Current.FindResource("btn_LaunchWays_SCL") as Style;
+				btn_LaunchWays_DragonEmu.Style = Application.Current.FindResource("btn_LaunchWays_DragonEmu_Enabled") as Style;
+				brdr_LaunchWays.BorderBrush = MyColors.MyColorEmu;
+				lbl_LauchWays.Foreground = MyColors.MyColorEmu;
+
+				Grid_Settings_GTA.RowDefinitions.Add(Row_DragonEmu_Options);
+				Grid_Settings_GTA.RowDefinitions.Add(Row_SCL_Options);
+
+				Grid.SetRow(brdr_DragonEmuOptions, 4);
+				Grid.SetRow(brdr_SCLOptions, 5);
+			}
+
+			if (LauncherLogic.LaunchWay == LauncherLogic.LaunchWays.SocialClubLaunch)
+			{
+				btn_HideSCLOptions.Visibility = Visibility.Hidden;
+				btn_HideEmuOptions.Visibility = Visibility.Visible;
+
+				Rect_Bullshit_1.Visibility = Visibility.Hidden;
+				Rect_Bullshit_2.Visibility = Visibility.Hidden;
+
+				Rect_HideOptions_HideFromSteam.Visibility = Visibility.Hidden;
+			}
+			else
+			{
+				btn_HideSCLOptions.Visibility = Visibility.Visible;
+				btn_HideEmuOptions.Visibility = Visibility.Hidden;
+
+				Rect_Bullshit_1.Visibility = Visibility.Visible;
+				Rect_Bullshit_2.Visibility = Visibility.Visible;
+
+				if (Retailer != Retailers.Steam)
+				{
+					Rect_HideOptions_HideFromSteam.Visibility = Visibility.Visible;
+				}
+				else
+				{
+					Rect_HideOptions_HideFromSteam.Visibility = Visibility.Hidden;
+				}
+			}
 		}
 
 		private void btn_LaunchWays_SCL_Click(object sender, RoutedEventArgs e)
 		{
+			if (LauncherLogic.LaunchWay != LauncherLogic.LaunchWays.SocialClubLaunch)
+			{
+				LauncherLogic.LaunchWay = LauncherLogic.LaunchWays.SocialClubLaunch;
+				RefreshGUI();
+				CodeSnipped();
+			}
+		}
 
+		private void btn_LaunchWays_DragonEmu_Click(object sender, RoutedEventArgs e)
+		{
+			if (LauncherLogic.LaunchWay != LauncherLogic.LaunchWays.DragonEmu)
+			{
+				LauncherLogic.LaunchWay = LauncherLogic.LaunchWays.DragonEmu;
+				RefreshGUI();
+				CodeSnipped();
+			}
+		}
+
+		private void btn_AuthWays_MTL_Click(object sender, RoutedEventArgs e)
+		{
+			LauncherLogic.AuthWay = LauncherLogic.AuthWays.MTL;
+			RefreshGUI();
+		}
+
+		private void btn_AuthWays_Legacy_Click(object sender, RoutedEventArgs e)
+		{
+			LauncherLogic.AuthWay = LauncherLogic.AuthWays.LegacyAuth;
+			RefreshGUI();
 		}
 
 		private void btn_LaunchWays_SCL_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
@@ -982,7 +1106,28 @@ namespace Project_127.MySettings
 			PopupEnableAlternativeLaunch.IsOpen = true;
 		}
 
+		private void btn_HideSCLOptions_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+		{
+			btn_HideSCLOptions.Visibility = Visibility.Hidden;
+		}
 
+		private void btn_HideEmuOptions_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+		{
+			btn_HideEmuOptions.Visibility = Visibility.Hidden;
+
+			Rect_Bullshit_1.Visibility = Visibility.Visible;
+			Rect_Bullshit_2.Visibility = Visibility.Visible;
+
+
+			if (Retailer != Retailers.Steam)
+			{
+				Rect_HideOptions_HideFromSteam.Visibility = Visibility.Visible;
+			}
+			else
+			{
+				Rect_HideOptions_HideFromSteam.Visibility = Visibility.Hidden;
+			}
+		}
 
 
 
@@ -1458,6 +1603,7 @@ namespace Project_127.MySettings
 			PopupUseBackup.IsOpen = false;
 			PopupJumpscriptAdditional.IsOpen = false;
 			PopupEnableAlternativeLaunch.IsOpen = false;
+			RefreshGUI();
 		}
 
 		/// <summary>
@@ -1672,7 +1818,7 @@ namespace Project_127.MySettings
 
 		public static void TellRockstarUsersToDisableAutoUpdateIfNeeded()
 		{
-			if (Settings.Retailer == Retailers.Rockstar && !Settings.EnableLegacyAuth && LauncherLogic.LaunchWay == LauncherLogic.LaunchWays.DragonEmu)
+			if (Settings.Retailer == Retailers.Rockstar && LauncherLogic.AuthWay == LauncherLogic.AuthWays.MTL && LauncherLogic.LaunchWay == LauncherLogic.LaunchWays.DragonEmu)
 			{
 				string msg = "You need to stop Rockstar Game Launcher\nfrom automatically Updating your GTA.\nOtherwise certain features might not work.\n\nTo do this:\nInside Rockstar Games Launcher,\nhead into Settings\n-> My Installed Games\n->Grand Theft Auto V\n-> uncheck the \"Enable automatic updates\" checkbox at the very top.";
 				new Popup(Popup.PopupWindowTypes.PopupOk, msg).ShowDialog();

@@ -141,7 +141,7 @@ namespace Project_127
 					{
 						HelperClasses.Logger.Log("ComponentMngr - Component: '" + myComponent + "' not installed, but needed, will ask user.", 1);
 
-						Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Component:\n'" + myComponent.GetNiceName() + "'\nmissing but needed.\nDo you want to install it?\n(Clicking no might result in Upgrading / Downgrading / Launching being disabled.)");
+						Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Component:\n'" + myComponent.GetNiceName() + "'\nmissing but needed.\nDo you want to install it now?");
 						yesno.ShowDialog();
 						if (yesno.DialogResult == true)
 						{
