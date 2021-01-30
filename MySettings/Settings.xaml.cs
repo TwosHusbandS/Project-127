@@ -972,7 +972,7 @@ namespace Project_127.MySettings
 			{
 				Rect_HideOptions_AllLaunchThroughSocialClubThings.Visibility = Visibility.Hidden;
 
-				if (Settings.EnableAlternativeLaunch)
+				if (LauncherLogic.LaunchWay == LauncherLogic.LaunchWays.SocialClubLaunch)
 				{
 					Rect_HideOptions_LaunchThroughSocialClubOptions.Visibility = Visibility.Hidden;
 					Rect_HideOptions_OrigEmu.Visibility = Visibility.Visible;
@@ -1702,7 +1702,7 @@ namespace Project_127.MySettings
 
 		public static void TellRockstarUsersToDisableAutoUpdateIfNeeded()
 		{
-			if (Settings.Retailer == Retailers.Rockstar && !Settings.EnableLegacyAuth && !Settings.EnableAlternativeLaunch)
+			if (Settings.Retailer == Retailers.Rockstar && !Settings.EnableLegacyAuth && LauncherLogic.LaunchWay == LauncherLogic.LaunchWays.DragonEmu)
 			{
 				string msg = "You need to stop Rockstar Game Launcher\nfrom automatically Updating your GTA.\nOtherwise certain features might not work.\n\nTo do this:\nInside Rockstar Games Launcher,\nhead into Settings\n-> My Installed Games\n->Grand Theft Auto V\n-> uncheck the \"Enable automatic updates\" checkbox at the very top.";
 				new Popup(Popup.PopupWindowTypes.PopupOk, msg).ShowDialog();

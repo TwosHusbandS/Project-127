@@ -63,7 +63,7 @@ namespace Project_127.SaveFileHandlerStuff
 
 			CopyCutPasteObject = null;
 
-			if (Settings.EnableAlternativeLaunch)
+			if (LauncherLogic.LaunchWay == LauncherLogic.LaunchWays.SocialClubLaunch)
 			{
 				MySaveFile.CurrGTASavesPath = MySaveFile.GTASavesPathSocialClub;
 				btn_GTA_Path_Change.Content = "P127 Emu SaveFilePath";

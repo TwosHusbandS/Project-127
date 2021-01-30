@@ -66,7 +66,7 @@ namespace Project_127
 			{
 				List<Components> tmp = new List<Components>();
 				tmp.Add(Components.Base);
-				if (MySettings.Settings.EnableAlternativeLaunch && MySettings.Settings.Retailer != MySettings.Settings.Retailers.Epic)
+				if (LauncherLogic.LaunchWay == LauncherLogic.LaunchWays.SocialClubLaunch && MySettings.Settings.Retailer != MySettings.Settings.Retailers.Epic)
 				{
 					tmp.Add(Components.SCLDowngradedSC);
 					if (MySettings.Settings.SocialClubLaunchGameVersion == "124")

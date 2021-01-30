@@ -297,7 +297,7 @@ namespace Project_127
 							{
 								Upgrade();
 
-								if (Settings.EnableAlternativeLaunch || Settings.Retailer == Settings.Retailers.Epic)
+								if (LauncherLogic.LaunchWay == LauncherLogic.LaunchWays.SocialClubLaunch || Settings.Retailer == Settings.Retailers.Epic)
 								{
 									ComponentManager.Components.Base.ReInstall();
 								}
@@ -338,6 +338,99 @@ namespace Project_127
 			}
 		}
 
+
+		/// <summary>
+		/// Enum for LaunchWays
+		/// </summary>
+		public enum LaunchWays
+		{
+			DragonEmu,
+			SocialClubLaunch
+		}
+
+		public static LaunchWays LaunchWay
+		{
+			get
+			{
+				if (Settings.EnableAlternativeLaunch)
+				{
+					return LaunchWays.SocialClubLaunch;
+				}
+				else
+				{
+					return LaunchWays.DragonEmu;
+				}
+			}
+			set
+			{
+				if (Settings.Retailer == Settings.Retailers.Epic)
+				{
+					if (value == LaunchWays.SocialClubLaunch)
+					{
+						// dont allow changing to social club
+						new Popup(Popup.PopupWindowTypes.PopupOk, "LaunchWay was not changed.").ShowDialog();
+						return;
+					}
+				}
+
+				if (ComponentManager.RecommendUpgradedGTA())
+				{
+					if (value == LaunchWays.SocialClubLaunch)
+					{
+						Settings.EnableAlternativeLaunch = true;
+					}
+					else
+					{
+						Settings.EnableAlternativeLaunch = false;
+					}
+				}
+				else
+				{
+					new Popup(Popup.PopupWindowTypes.PopupOk, "LaunchWay was not changed.").ShowDialog();
+				}
+
+				Settings.TellRockstarUsersToDisableAutoUpdateIfNeeded();
+			}
+		}
+
+
+
+		/// <summary>
+		/// Enum for AuthWays
+		/// </summary>
+		public enum AuthWays
+		{
+			MTL,
+			LegacyAuth
+		}
+
+		public static AuthWays AuthWay
+		{
+			get
+			{
+				if (Settings.EnableLegacyAuth)
+				{
+					return AuthWays.LegacyAuth;
+				}
+				else
+				{
+					return AuthWays.MTL;
+				}
+			}
+			set
+			{
+				if (value == AuthWays.LegacyAuth)
+				{
+					Settings.EnableLegacyAuth = true;
+				}
+				else
+				{
+					Settings.EnableLegacyAuth = false;
+				}
+			}
+		}
+
+
 		#endregion
 
 		#region Properties for often used Stuff
@@ -370,7 +463,7 @@ namespace Project_127
 		{
 			get
 			{
-				if (Settings.EnableAlternativeLaunch)
+				if (LauncherLogic.LaunchWay == LauncherLogic.LaunchWays.SocialClubLaunch)
 				{
 					if (Settings.Retailer == Settings.Retailers.Steam)
 					{
@@ -466,7 +559,7 @@ namespace Project_127
 
 		public static void AuthClick(bool StartGameImmediatelyAfter = false)
 		{
-			if (Settings.EnableAlternativeLaunch)
+			if (LauncherLogic.LaunchWay == LauncherLogic.LaunchWays.SocialClubLaunch)
 			{
 				Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "You do not need to auth,\nbased on your current settings.\n\nDo you still want to auth?");
 				yesno.ShowDialog();
@@ -744,7 +837,7 @@ namespace Project_127
 
 				HelperClasses.Logger.Log("Installation State Downgraded Detected.", 1);
 
-				if (!Settings.EnableAlternativeLaunch)
+				if (LauncherLogic.LaunchWay == LauncherLogic.LaunchWays.DragonEmu)
 				{
 					// If already Authed
 					if (AuthState == AuthStates.Auth)

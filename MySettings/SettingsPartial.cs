@@ -497,21 +497,7 @@ namespace Project_127.MySettings
 			}
 			set
 			{
-				if (ComponentManager.RecommendUpgradedGTA())
-				{
-					SetSetting("EnableAlternativeLaunch", value.ToString());
-					if (!ComponentManager.CheckIfRequiredComponentsAreInstalled(true))
-					{
-						SetSetting("EnableAlternativeLaunch", (!value).ToString());
-						return;
-					}
-				}
-				else
-				{
-					new Popup(Popup.PopupWindowTypes.PopupOk, "Setting was not changed.");
-					return;
-				}
-				Settings.TellRockstarUsersToDisableAutoUpdateIfNeeded();
+				SetSetting("EnableAlternativeLaunch", value.ToString());
 			}
 		}
 
@@ -711,14 +697,14 @@ namespace Project_127.MySettings
 			{
 				if (value != Retailer)
 				{
-					if (Settings.EnableAlternativeLaunch)
+					if (LauncherLogic.LaunchWay == LauncherLogic.LaunchWays.SocialClubLaunch)
 					{
 						if (ComponentManager.RecommendUpgradedGTA())
 						{
 							SetSetting("Retailer", value.ToString());
 							if (value == Retailers.Epic)
 							{
-								Settings.EnableAlternativeLaunch = false;
+								LauncherLogic.LaunchWay = LauncherLogic.LaunchWays.DragonEmu;
 							}
 							if (!ComponentManager.CheckIfRequiredComponentsAreInstalled(true))
 							{

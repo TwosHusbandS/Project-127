@@ -41,6 +41,19 @@ Hybrid code can be found in AAA_HybridCode.
 Stuff to fix post 1.1:
 - Download / component manager is still freezing UI for a few seconds post-install
 - Other UI /UX for Launch and Auth Methods. Have them as enums in settings and as radio-buttons-functionality buttons
+	=> [DONE] States Instead Of Settings 
+	=> [DONE] Retancle logic of when we can change retailer and those settings
+	=> New UI
+		>> Create new Style for buttons. Squared. With gray border and white text. White text and white border when moused over.
+		>> Make traditional buttons that style
+		>> move "import GTA V Settings", 2 down
+		>> place 3 row height grid starting on row index 3
+			- top half is label centered "LaunchMethod"
+			- bottom half is split. Left part is radio button, right part is radio button
+		>> under than sub,subpages always taking half a row at the top, half a row on the buttom margin
+			- Colored bordered, disabled fill in colored grey transparent color
+			- normal row structure
+
 - ReadMe PowerUser instructions. + Fix existing Help Section
 - Push Trevor% File with everything i guess...
 
@@ -485,7 +498,7 @@ namespace Project_127
 			{
 				MTLAuthTimer.Stop();
 			}
-			else if (Settings.EnableAlternativeLaunch)
+			else if (LauncherLogic.LaunchWay == LauncherLogic.LaunchWays.SocialClubLaunch)
 			{
 				return;
 			}

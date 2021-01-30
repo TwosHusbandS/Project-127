@@ -878,7 +878,7 @@ namespace Project_127
 		{
 			get
 			{
-				if (Settings.EnableAlternativeLaunch &&
+				if (LauncherLogic.LaunchWay == LauncherLogic.LaunchWays.SocialClubLaunch &&
 					Settings.Retailer == Settings.Retailers.Steam)
 				{
 					return stateVarsSteam;
