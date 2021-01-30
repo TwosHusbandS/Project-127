@@ -39,9 +39,10 @@ Comments like "TODO", "TO DO", "CTRLF", "CTRL-F", and "CTRL F" are just ways of 
 Hybrid code can be found in AAA_HybridCode.
 
 Stuff to fix post 1.1:
-- Download / component manager is still freezing UI for a few seconds post-install. Install Downgraded SC on SCL Componenets install. Check order on "InstallRequiredComponents"
+- Install Downgraded SC on SCL Componenets install. Check order on "InstallRequiredComponents"
+- Delete License_Jumpscript on installer of 1.2.2 (its Jumpscript_License) now.
+- UX on Initial stuff as well as resetting as well as moving GTA location or moving ZIP Location
 - ReadMe PowerUser instructions. + Fix existing Help Section
-- Push Trevor% File with everything i guess...
 
 [DONE] Other UI /UX for Launch and Auth Methods. Have them as enums in settings and as radio-buttons-functionality buttons
 [DONE] Potentially fixed remember me issue...

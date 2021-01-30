@@ -162,6 +162,8 @@ namespace Project_127.HelperClasses
 				DebugMessage.Add("LauncherLogic.UpgradeFilePath: '" + LauncherLogic.UpgradeFilePath + "'");
 				DebugMessage.Add("LauncherLogic.DowngradeFilePath: '" + LauncherLogic.DowngradeFilePath + "'");
 				DebugMessage.Add("LauncherLogic.SupportFilePath: '" + LauncherLogic.SupportFilePath + "'");
+				DebugMessage.Add("Chosen LaunchWay: '" + LauncherLogic.LaunchWay + "'");
+				DebugMessage.Add("Chosen AuthWay: '" + LauncherLogic.AuthWay + "'");
 				DebugMessage.Add("Detected AuthState: '" + LauncherLogic.AuthState + "'");
 				DebugMessage.Add("Detected GameState: '" + LauncherLogic.GameState + "'");
 				DebugMessage.Add("Detected InstallationState: '" + LauncherLogic.InstallationState + "'");

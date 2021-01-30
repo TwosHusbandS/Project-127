@@ -188,7 +188,7 @@
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
-                                    <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" x:Name="lbl_LauchWays" Content="Launch - Method" Style="{StaticResource lbl_Set_Info}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" x:Name="lbl_LaunchWays" Content="Launch - Method" Style="{StaticResource lbl_Set_Info}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                     <Button Grid.Row="1" Grid.Column="0" Margin="20,0,20,15" x:Name="btn_LaunchWays_SCL" ToolTip="Launch through original Socialclub. This needs the corresponding Launch-Through-SocialClub Component" Style="{StaticResource btn_LaunchWays_SCL}" Content="Launch through Social Club" Click="btn_LaunchWays_SCL_Click" MouseRightButtonDown="btn_LaunchWays_SCL_MouseRightButtonDown"/>
                                     <Button Grid.Row="1" Grid.Column="1" Margin="20,0,20,15" x:Name="btn_LaunchWays_DragonEmu" ToolTip="Launch through @d490ns Launcher. Only needs 'Required Files'" Style="{StaticResource btn_LaunchWays_DragonEmu}" Content="Launch through Dr490n Launcher" Click="btn_LaunchWays_DragonEmu_Click"/>
                                     <Rectangle x:Name="Rect_HideOptions_SCL_Launch" Grid.Row="1" Grid.Column="0" Margin="20,0,20,15" Fill="{x:Static local:MyColors.MyColorOffWhite85}" ToolTip="Not available on Epic."/>
@@ -247,7 +247,7 @@
                                     <Rectangle Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" Fill="Transparent"/>
 
 
-                                    <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Content="Auth - Method" Style="{StaticResource lbl_Set_Info}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" x:Name="lbl_AuthWays" Content="Auth - Method" Style="{StaticResource lbl_Set_Info}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                     <Button Grid.Row="1" Grid.Column="0" Margin="40,0,40,10" Style="{StaticResource btn_AuthWay}" x:Name="btn_AuthMethod_MTL" Content="MTL (through RGL)" ToolTip="Opens RockstarGamesLauncher and gets Ownership Verification that way." Click="btn_AuthWays_MTL_Click"/>
                                     <Button Grid.Row="1" Grid.Column="1" Margin="40,0,40,10" Style="{StaticResource btn_AuthWay}" x:Name="btn_AuthMethod_LegacyAuth" Content="Legacy Auth" ToolTip="Grabs Ownership Verification by having you log in into your social club account inside P127."  Click="btn_AuthWays_Legacy_Click"/>
 

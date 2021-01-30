@@ -731,14 +731,18 @@ namespace Project_127.MySettings
 			{
 				btn_AuthMethod_LegacyAuth.Style = Application.Current.FindResource("btn_AuthWay") as Style;
 				btn_AuthMethod_MTL.Style = Application.Current.FindResource("btn_AuthWay_Enabled") as Style;
+				lbl_AuthWays.Content = "Auth - Method: MTL";
 			}
 			else
 			{
 				btn_AuthMethod_LegacyAuth.Style = Application.Current.FindResource("btn_AuthWay_Enabled") as Style;
 				btn_AuthMethod_MTL.Style = Application.Current.FindResource("btn_AuthWay") as Style;
+				lbl_AuthWays.Content = "Auth - Method: Legacy Auth";
 			}
 
 			RefreshIfOptionsHide();
+
+
 		}
 
 
@@ -1018,30 +1022,15 @@ namespace Project_127.MySettings
 				btn_LaunchWays_SCL.Style = Application.Current.FindResource("btn_LaunchWays_SCL_Enabled") as Style;
 				btn_LaunchWays_DragonEmu.Style = Application.Current.FindResource("btn_LaunchWays_DragonEmu") as Style;
 				brdr_LaunchWays.BorderBrush = MyColors.MyColorSCL;
-				lbl_LauchWays.Foreground = MyColors.MyColorSCL;
+				lbl_LaunchWays.Foreground = MyColors.MyColorSCL;
+				lbl_LaunchWays.Content = "Launch - Method: SocialClubLaunch";
 
 				Grid_Settings_GTA.RowDefinitions.Add(Row_SCL_Options);
 				Grid_Settings_GTA.RowDefinitions.Add(Row_DragonEmu_Options);
 
 				Grid.SetRow(brdr_SCLOptions, 4);
 				Grid.SetRow(brdr_DragonEmuOptions, 5);
-			}
-			else
-			{
-				btn_LaunchWays_SCL.Style = Application.Current.FindResource("btn_LaunchWays_SCL") as Style;
-				btn_LaunchWays_DragonEmu.Style = Application.Current.FindResource("btn_LaunchWays_DragonEmu_Enabled") as Style;
-				brdr_LaunchWays.BorderBrush = MyColors.MyColorEmu;
-				lbl_LauchWays.Foreground = MyColors.MyColorEmu;
 
-				Grid_Settings_GTA.RowDefinitions.Add(Row_DragonEmu_Options);
-				Grid_Settings_GTA.RowDefinitions.Add(Row_SCL_Options);
-
-				Grid.SetRow(brdr_DragonEmuOptions, 4);
-				Grid.SetRow(brdr_SCLOptions, 5);
-			}
-
-			if (LauncherLogic.LaunchWay == LauncherLogic.LaunchWays.SocialClubLaunch)
-			{
 				btn_HideSCLOptions.Visibility = Visibility.Hidden;
 				btn_HideEmuOptions.Visibility = Visibility.Visible;
 
@@ -1052,6 +1041,18 @@ namespace Project_127.MySettings
 			}
 			else
 			{
+				btn_LaunchWays_SCL.Style = Application.Current.FindResource("btn_LaunchWays_SCL") as Style;
+				btn_LaunchWays_DragonEmu.Style = Application.Current.FindResource("btn_LaunchWays_DragonEmu_Enabled") as Style;
+				brdr_LaunchWays.BorderBrush = MyColors.MyColorEmu;
+				lbl_LaunchWays.Foreground = MyColors.MyColorEmu;
+				lbl_LaunchWays.Content = "Launch - Method: Dragon Launcher";
+
+				Grid_Settings_GTA.RowDefinitions.Add(Row_DragonEmu_Options);
+				Grid_Settings_GTA.RowDefinitions.Add(Row_SCL_Options);
+
+				Grid.SetRow(brdr_DragonEmuOptions, 4);
+				Grid.SetRow(brdr_SCLOptions, 5);
+
 				btn_HideSCLOptions.Visibility = Visibility.Visible;
 				btn_HideEmuOptions.Visibility = Visibility.Hidden;
 
@@ -1765,7 +1766,7 @@ namespace Project_127.MySettings
 				ROSCommunicationBackend.setFlag(ROSCommunicationBackend.Flags.indicateTheLessThanLegalProcurementOfMotorVehicles, true);
 				Overlay.GTAOverlay.indicateTheLessThanLegalProcurementOfMotorVehicles = true;
 				Settings.GTAWindowTitle = Overlay.GTAOverlay.targetWindowBorderlessEasterEgg;
-				new Popup(Popup.PopupWindowTypes.PopupOk, "'Stealy Wheely Automobiley V' activated.\nRestart P127 to disable.").ShowDialog();
+				new Popup(Popup.PopupWindowTypes.PopupOk, "'" + Overlay.GTAOverlay.targetWindowBorderlessEasterEgg + "' activated.\nRestart P127 to disable.").ShowDialog();
 			}
 			else
 			{

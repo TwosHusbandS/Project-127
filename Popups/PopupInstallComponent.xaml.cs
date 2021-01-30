@@ -19,36 +19,82 @@ namespace Project_127.Popups
 	/// </summary>
 	public partial class PopupInstallComponent : Window
 	{
+		public enum ComponentActions
+		{
+			Installing,
+			ReInstalling,
+			Updating
+		}
+
+
 		ComponentManager.Components MyComponent;
-		bool AssemblyReinstall;
+		ComponentActions MyComponentAction;
+
 		public bool rtrn;
 
-		public PopupInstallComponent(ComponentManager.Components pComponent, bool pAssemblyReInstall = false)
+		public PopupInstallComponent(ComponentManager.Components pComponent, ComponentActions pComponentAction)
 		{
 			InitializeComponent();
 
 			MyComponent = pComponent;
-			AssemblyReinstall = pAssemblyReInstall;
+			MyComponentAction = pComponentAction;
 
-			string msg = "";
+			lbl_Main.Content = MyComponentAction.ToString() + "\n'" + MyComponent.GetNiceName() + "'" + "\nPlease Stand By"; ;
 
-			if (pAssemblyReInstall)
-			{
-				msg += "Re-";
-			}
-
-			msg += "Installing:\n'" + MyComponent.GetNiceName() + "'\nPlease wait until this Window closes";
-
-			lbl_Main.Content = msg;
+			StartWork();
 		}
 
 		private void Window_Loaded(object sender, RoutedEventArgs e)
 		{
-			Task.Delay(100).GetAwaiter().GetResult();
+		//	Task.Delay(100).GetAwaiter().GetResult();
+		//	LetsGo();
+		}
 
-			rtrn = Globals.MyDM.getSubassembly(MyComponent.GetAssemblyName(), AssemblyReinstall).GetAwaiter().GetResult();
+		async void LetsGo()
+		{
+		//	lbl_Main.Content += "\nPlease Stand By";
+		//	await Task.Run(() => ActualWork());
+		//	this.Close();
+		}
 
+
+		/// <summary>
+		/// Starting the Task 
+		/// </summary>
+		[STAThread]
+		public async void StartWork()
+		{
+			await Task.Delay(250);
+
+			// Awaiting the Task of the Actual Work
+			await Task.Run(new Action(ActualWork));
+
+			// Close this
 			this.Close();
+		}
+
+		/// <summary>
+		/// Task of the actual work being done
+		/// </summary>
+		[STAThread]
+		public void ActualWork()
+		{
+			this.Dispatcher.Invoke(() =>
+			{
+				switch (MyComponentAction)
+				{
+					case ComponentActions.Installing:
+						rtrn = Globals.MyDM.getSubassembly(MyComponent.GetAssemblyName()).GetAwaiter().GetResult();
+						break;
+					case ComponentActions.ReInstalling:
+						rtrn = Globals.MyDM.getSubassembly(MyComponent.GetAssemblyName(), true).GetAwaiter().GetResult();
+						break;
+					case ComponentActions.Updating:
+						rtrn = Globals.MyDM.updateSubssembly(MyComponent.GetAssemblyName(), true).GetAwaiter().GetResult();
+						break;
+				}
+			});
+			
 		}
 
 		private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)

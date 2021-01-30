@@ -554,7 +554,7 @@ namespace Project_127
 				if (HelperClasses.FileHandling.URLExists(tmp.MyReturnString))
 				{
 					HelperClasses.Logger.Log("ComponentMngr - Link ('" + tmp.MyReturnString + "') exists.", 1);
-					
+
 					string localFilePath = Globals.ProjectInstallationPath.TrimEnd('\\') + @"\CustomFile.zip";
 					HelperClasses.FileHandling.deleteFile(localFilePath);
 					new PopupDownload(tmp.MyReturnString, localFilePath, "Downloading Custom Files").ShowDialog();
@@ -757,8 +757,10 @@ namespace Project_127
 						{
 							HelperClasses.Logger.Log("ComponentMngr - User wants update. Passed RecommendUpgradedGTA check.");
 							Globals.MyDM.updateSubssembly(Component.GetAssemblyName(), true).GetAwaiter().GetResult();
+							PopupInstallComponent PIC = new PopupInstallComponent(Component, PopupInstallComponent.ComponentActions.Updating);
+							PIC.ShowDialog();
 							ComponentManager.MyRefreshStatic();
-							return true;
+							return PIC.rtrn;
 						}
 						else
 						{
@@ -791,7 +793,7 @@ namespace Project_127
 		public static bool Install(this ComponentManager.Components Component)
 		{
 			HelperClasses.Logger.Log("ComponentMngr - Installing Component: '" + Component + "' (Subassemblyname: '" + Component.GetAssemblyName() + "')"); ;
-			PopupInstallComponent PIC = new PopupInstallComponent(Component);
+			PopupInstallComponent PIC = new PopupInstallComponent(Component, PopupInstallComponent.ComponentActions.Installing);
 			PIC.ShowDialog();
 			ComponentManager.MyRefreshStatic();
 			return PIC.rtrn;
@@ -805,7 +807,7 @@ namespace Project_127
 		public static bool ReInstall(this ComponentManager.Components Component)
 		{
 			HelperClasses.Logger.Log("ComponentMngr - Re-Installing Component: '" + Component + "' (Subassemblyname: '" + Component.GetAssemblyName() + "'). Currently installed: '" + Component.GetInstalledVersion() + "'"); ;
-			PopupInstallComponent PIC = new PopupInstallComponent(Component, true);
+			PopupInstallComponent PIC = new PopupInstallComponent(Component, PopupInstallComponent.ComponentActions.ReInstalling);
 			PIC.ShowDialog();
 			ComponentManager.MyRefreshStatic();
 			return PIC.rtrn;
