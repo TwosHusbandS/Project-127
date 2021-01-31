@@ -735,6 +735,12 @@ namespace Project_127.Overlay
 		private static DispatcherTimer dtast;
 		private static async void easterEgg()
 		{
+			// Very, very serious people
+			if (GTAOverlay.DisableRichard == true)
+			{
+				return;
+			}
+
 			// We are very serious people...
 			//if (new System.Random().NextDouble() > .8)
 			{

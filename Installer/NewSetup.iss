@@ -73,11 +73,11 @@ Source: "..\bin\x64\Release\UglyFiles\snapshot_blob.bin"; DestDir: "{app}\UglyFi
 Source: "..\bin\x64\Release\UglyFiles\v8_context_snapshot.bin"; DestDir: "{app}\UglyFiles"; Flags: ignoreversion
 Source: "..\bin\x64\Release\UglyFiles\WpfAnimatedGif.dll"; DestDir: "{app}\UglyFiles"; Flags: ignoreversion
 Source: "..\bin\x64\Release\LICENSE"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\bin\x64\Release\LICENSE_JUMPSCRIPT"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\bin\x64\Release\JUMPSCRIPT_LICENSE"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\bin\x64\Release\Project 127 Launcher.exe"; DestDir: "{app}"; Flags: ignoreversion
 
 [UninstallDelete]
-Type: filesandordirs; Name: "{app}"
+Type: files; Name: "{app}\LICENSE_JUMPSCRIPT"
 
 [Icons]
 Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"

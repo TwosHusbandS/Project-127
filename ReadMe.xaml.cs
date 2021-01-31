@@ -324,7 +324,7 @@ namespace Project_127
 
 			AddParagraph(rtb_Help, "If you cant see the MultiMonitor Overlay, RIGHT-click the \"Enable Multi Monitor Mode\" Checkbox to Reset its Position.");
 
-			AddParagraph(rtb_Help, "If launching through Social Club does not work, and you believe the Social Club Downgrade to be the cause of this, you can try the following: Head into P127 Settings, on the checkbox of \"Launch through Social Club\", rightclick and enable \"Force SC Installation Path\".");
+			AddParagraph(rtb_Help, "If launching through Social Club does not work, and you believe the Social Club Downgrade to be the cause of this, you can try the following: Head into P127 Settings, inside \"GTA & Launch Settings\", rightclick the \"Launch through Social Club\" Button and enable \"Force SC Installation Path\".");
 
 			AddHyperlinkText(rtb_Help, "http://ResetAll.com", "\"RESET ALL\"", "If something is still not working, you can always try hitting the ", "Button inside P127 Settings.This might take a few minutes, and Project 1.27 will quit automatically when its done.Re - Open it and everything should work again.You will need to verifying Files via Steam / Rockstar / Epic afterwards.");
 

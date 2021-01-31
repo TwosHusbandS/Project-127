@@ -36,6 +36,19 @@ namespace Project_127.Popups
 		{
 			InitializeComponent();
 
+			if (MainWindow.MW.IsVisible)
+			{
+				this.Owner = MainWindow.MW;
+				this.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+			}
+			else
+			{
+				this.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+				this.Height = 100;
+				this.Width = 175;
+				lbl_Main.FontSize = 14;
+			}
+
 			MyComponent = pComponent;
 			MyComponentAction = pComponentAction;
 

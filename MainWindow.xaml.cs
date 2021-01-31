@@ -39,11 +39,16 @@ Comments like "TODO", "TO DO", "CTRLF", "CTRL-F", and "CTRL F" are just ways of 
 Hybrid code can be found in AAA_HybridCode.
 
 Stuff to fix post 1.1:
-- Install Downgraded SC on SCL Componenets install. Check order on "InstallRequiredComponents"
-- Delete License_Jumpscript on installer of 1.2.2 (its Jumpscript_License) now.
+- Build installer, test if uninstall delete jumpscript works. Build Installer, remove that uninstall delete before pushing. BUILD WITHOUT EASTER EGG COMMENTED OUT
 - UX on Initial stuff as well as resetting as well as moving GTA location or moving ZIP Location
-- ReadMe PowerUser instructions. + Fix existing Help Section
+- Auto MTL Auth and close (instead of minimize) on new setting and mtl
+- Write Patchnotes
+- unit test one simulated game update & rockstar fucking us & custom backup stuff, rgl launcher being killed / closed during MTL auth
 
+[DONE] ReadMe PowerUser instructions and link to it in help + Update existing Help Section - Include Trevor% File
+[DONE] Popup general improvements
+[DONE] Installing Component UI Freeze Fix
+[DONE] Installing Component, automatically installing social club when installing SCL stuff
 [DONE] Other UI /UX for Launch and Auth Methods. Have them as enums in settings and as radio-buttons-functionality buttons
 [DONE] Potentially fixed remember me issue...
 [DONE] i am throwing the "pls disable auto popup" when retailer is rockstar and when legacy auth is disabled. I should also check that "launch through social club" is disabled

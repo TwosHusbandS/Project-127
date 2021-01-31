@@ -131,9 +131,13 @@ namespace Project_127.HelperClasses
 
 				RegistryKey myRK = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64).CreateSubKey("SOFTWARE").CreateSubKey("Microsoft").CreateSubKey("Windows NT").CreateSubKey("CurrentVersion");
 				string AdditionalDebug1 = HelperClasses.RegeditHandler.GetValue(myRK, "RegisteredOwner");
+				string AdditionalDebug2 = HelperClasses.RegeditHandler.GetValue(myRK, "ProductName");
+				string AdditionalDebug3 = HelperClasses.RegeditHandler.GetValue(myRK, "EditionID");
+				string AdditionalDebug4 = HelperClasses.RegeditHandler.GetValue(myRK, "CurrentBuild");
+				string AdditionalDebug5 = HelperClasses.RegeditHandler.GetValue(myRK, "CurrentBuildNumber");
 
 				RegistryKey myRK2 = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64).CreateSubKey("SOFTWARE").CreateSubKey("Microsoft").CreateSubKey("Cryptography NT");
-				string AdditionalDebug2 = HelperClasses.RegeditHandler.GetValue(myRK2, "MachineGuid");
+				string AdditionalDebug6 = HelperClasses.RegeditHandler.GetValue(myRK2, "MachineGuid");
 
 
 				// Debug Info users can give me easily...
@@ -257,8 +261,12 @@ namespace Project_127.HelperClasses
 							DebugMessage.Add("        LastWriteTimeUTC: '" + creds.LastWriteTimeUtc.ToString("yyyy-MM-ddTHH:mm:ss") + "'");
 						}
 					}
-					DebugMessage.Add("Windows-Email: '" + AdditionalDebug1 + "'");
-					DebugMessage.Add("Windows-UUID: '" + AdditionalDebug2 + "'");
+					DebugMessage.Add("Windows-RegisteredOwner: '" + AdditionalDebug1 + "'");
+					DebugMessage.Add("Windows-ProductName: '" + AdditionalDebug2 + "'");
+					DebugMessage.Add("Windows-EditionID: '" + AdditionalDebug3 + "'");
+					DebugMessage.Add("Windows-CurrentBuild: '" + AdditionalDebug4 + "'");
+					DebugMessage.Add("Windows-CurrentBuildNumber: '" + AdditionalDebug5 + "'");
+					DebugMessage.Add("Windows-UUID: '" + AdditionalDebug6 + "'");
 				}
 				catch { }
 

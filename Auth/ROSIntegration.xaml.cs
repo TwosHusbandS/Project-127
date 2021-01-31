@@ -86,6 +86,7 @@ namespace Project_127.Auth
 
 		public static async void MTLAuth(bool LaunchGameAfter = false)
 		{
+			Auth.ROSIntegration.AuthErrorMessageThrownAlready = false;
 			LaunchAfter = LaunchGameAfter;
 			HelperClasses.Logger.Log("Launching MTL...");
 			MainWindow.MTLAuthTimer.Stop();

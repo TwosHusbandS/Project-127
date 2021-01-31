@@ -228,7 +228,7 @@ namespace Project_127
 					{
 						HelperClasses.Logger.Log("SCL - User wants to, lets download.", 1);
 
-						if (!ComponentManager.Components.SCLDowngradedSC.ReInstall())
+						if (!ComponentManager.Components.DowngradedSC.ReInstall())
 						{
 							HelperClasses.Logger.Log("SCL - Install failed. Will abort.", 1);
 							return false;

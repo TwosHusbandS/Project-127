@@ -571,7 +571,6 @@ namespace Project_127
 			}
 
 
-			Auth.ROSIntegration.AuthErrorMessageThrownAlready = false;
 
 			if (!MySettings.Settings.EnableLegacyAuth)
 			{

@@ -41,7 +41,7 @@
   <zipversion>14</zipversion>
   <comment>Backwards Compability</comment>
   <comment2>dont THINK anything below here is actively used</comment2>
-  <tease>true</tease>
+  <tease>false</tease>
   <authuser>https://raw.githubusercontent.com/TwosHusbandS/Project-127/master/Installer/AuthUser.txt</authuser>
   <DLLinkG>https://github.com/TwosHusbandS/Project-127/releases/download/V_Final/file.g</DLLinkG>
   <DLLinkGHash>5c706e27f1f204050450839f24e12c8a</DLLinkGHash>

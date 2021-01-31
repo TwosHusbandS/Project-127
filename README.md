@@ -205,12 +205,12 @@ Discord - [@ths#0305][discord-url]
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 [discord-url]: https://discordapp.com/users/612259615291342861
 [twitter-url]: https://twitter.com/thSbizz
-[features-url]: https://github.com/TwosHusbandS/Project-127/blob/master/Installer/Changelogs/Features.md
-[help-url]: https://github.com/TwosHusbandS/Project-127/blob/master/Installer/Changelogs/Help.md
+[features-url]: https://github.com/TwosHusbandS/Project-127/blob/master/Installer/Info/Features.md
+[help-url]: https://github.com/TwosHusbandS/Project-127/blob/master/Installer/Info/Help.md
 [p127-url]: https://github.com/TwosHusbandS/Project-127/
 [twitter-shield]: https://img.shields.io/badge/Twitter-@thSbizz-1DA1F2?style=plastic&logo=Twitter
 [discord-shield]: https://img.shields.io/badge/Discord-@thS%230305-7289DA?style=plastic&logo=Discord
-[changelogs-url]: https://github.com/TwosHusbandS/Project-127/tree/master/Installer/Changelogs
+[changelogs-url]: https://github.com/TwosHusbandS/Project-127/tree/master/Installer/Info/Changelogs
 [installer-folder-url]: https://github.com/TwosHusbandS/Project-127/tree/master/Installer
 [installer-latest-url]: https://github.com/TwosHusbandS/Project-127/raw/master/Installer/Project_127_Installer_Latest.exe
 [license-shield]: https://img.shields.io/badge/License-MIT-4DC71F?style=plastic

@@ -14,7 +14,7 @@
 ## Launching Downgraded GTA Additional Information and Authentication
 
 * You have two Options of launching the game.
-  * dr490n emu (default / standard)
+  * Dr490n Launcher (default / standard)
     * For this you only need the "Required Files"
   * Launching through downgraded Socialclub (SCL).
     * Social Club is automatically Downgraded / Upgraded
@@ -27,7 +27,7 @@
 
 Paragraph below is **NON EFFECTIVE WHEN LAUNCHING THROUGH SOCIAL CLUB**
 
-When you are launching through the **dr490n Emu**, P127 needs to **verify** that you own GTA through Rockstars Server (for legal Reasons).
+When you are launching through the **Dr490n Launcher**, P127 needs to **verify** that you own GTA through Rockstars Server (for legal Reasons).
 
 It can do this in two ways:
 * So called **MTL Auth**. This opens Rockstar Laucher, you sign in in the Rockstar Launcher, P127 gets your Ownership Information via that.
@@ -63,7 +63,7 @@ It can do this in two ways:
 
 * If you cant see the MultiMonitor Overlay, RIGHT-click the \"Enable Multi Monitor Mode\" Checkbox to Reset its Position
 			
-* If launching through Social Club does not work, and you believe the Social Club Downgrade to be the cause of this, you can try the following: Head into P127 Settings, on the checkbox of "Launch through Social Club", rightclick and enable "Force SC Installation Path"
+* If launching through Social Club does not work, and you believe the Social Club Downgrade to be the cause of this, you can try the following: Head into P127 Settings, inside "GTA & Launch Settings", rightclick the "Launch through Social Club" Button and enable "Force SC Installation Path"
 
 * If something is still not working, you can always try hitting the "RESET ALL" Button inside P127 Settings. This might take a few minutes, and Project 1.27 will quit automatically when its done. Re - Open it and everything should work again. You will need to verifying Files via Steam / Rockstar / Epic afterwards.
 
@@ -73,7 +73,7 @@ It can do this in two ways:
 
 * Please post a detailed description of what you did and what is not working as expected, in the GTA V Speedrun Discord - project-1-27-chat Channel. Invite links [here](https://discord.gg/3qjGGBM), and [here](https://discord.gg/rRrTGUV), as well as [here](https://discord.com/invite/zQt8wZg)
 
-* I do not recommend uploading these 2 Files inside a public channel. They may contain things like your email adress, and Path / Folder - Names which can contain usernames.
+* I do not recommend uploading these 2 Files inside a public channel. They do contain things like your email adresses, and Path / Folder - Names which can contain usernames.
 
 * I hope everything works for you and you dont experience any crashes or anything like that.
 

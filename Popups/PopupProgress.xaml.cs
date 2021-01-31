@@ -81,10 +81,14 @@ namespace Project_127.Popups
 		/// <param name="pMyFileOperations"></param>
 		public PopupProgress(ProgressTypes pProgressType, string pParam1, List<HelperClasses.MyFileOperation> pMyFileOperations = null, string zipExtractionPath = "")
 		{
-			// HUGE FUCKING MESS. TAKE CARE. 
-			// DONT TOUCH MY SPAGHETTI
-
+			// Sorry you have to look at this spaghetti
 			// Basically, based on the pProgressType the other params have different meanings or are not used etc. Kinda messy...really sucks
+
+			if (MainWindow.MW.IsVisible)
+			{
+				this.Owner = MainWindow.MW;
+				this.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+			}
 
 			if (zipExtractionPath == "")
 			{

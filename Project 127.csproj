@@ -401,14 +401,15 @@
     </EmbeddedResource>
     <None Include="app.manifest" />
     <None Include="Installer\Changelog.md" />
-    <None Include="Installer\Changelogs\Advanced Notefile.md" />
-    <None Include="Installer\Changelogs\Help.md" />
-    <None Include="Installer\Changelogs\Features.md" />
-    <None Include="Installer\Changelogs\V_1_2_0_0_Changelog.md" />
-    <None Include="Installer\Changelogs\V_1_1_0_0_Changelog.md" />
-    <None Include="Installer\Changelogs\V_0_0_4_0_Changelog.md" />
-    <None Include="Installer\Changelogs\V_0_0_3_1_Changelog.md" />
-    <None Include="Installer\Changelogs\V_0_0_3_0_Changelog.md" />
+    <None Include="Installer\Info\Advanced Notefile.md" />
+    <None Include="Installer\Info\Changelogs\V_1_2_2_0_Changelog.md" />
+    <None Include="Installer\Info\Help.md" />
+    <None Include="Installer\Info\Features.md" />
+    <None Include="Installer\Info\Changelogs\V_1_2_0_0_Changelog.md" />
+    <None Include="Installer\Info\Changelogs\V_1_1_0_0_Changelog.md" />
+    <None Include="Installer\Info\Changelogs\V_0_0_4_0_Changelog.md" />
+    <None Include="Installer\Info\Changelogs\V_0_0_3_1_Changelog.md" />
+    <None Include="Installer\Info\Changelogs\V_0_0_3_0_Changelog.md" />
     <None Include="JUMPSCRIPT_LICENSE" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
@@ -520,6 +521,8 @@
     <Resource Include="Installer\DownloadManager.xml" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Installer\Info\EpsilonPercent Example NoteFile.txt" />
+    <None Include="Installer\Info\AdvancedUser.md" />
     <Content Include="Installer\NewSetup.iss" />
     <Content Include="MTLInterface.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

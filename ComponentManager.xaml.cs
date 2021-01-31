@@ -30,7 +30,7 @@ namespace Project_127
 			SCLSteam124,
 			SCLRockstar127,
 			SCLRockstar124,
-			SCLDowngradedSC,
+			DowngradedSC,
 			AdditionalSaveFiles
 		}
 
@@ -68,7 +68,6 @@ namespace Project_127
 				tmp.Add(Components.Base);
 				if (LauncherLogic.LaunchWay == LauncherLogic.LaunchWays.SocialClubLaunch && MySettings.Settings.Retailer != MySettings.Settings.Retailers.Epic)
 				{
-					tmp.Add(Components.SCLDowngradedSC);
 					if (MySettings.Settings.SocialClubLaunchGameVersion == "124")
 					{
 						if (MySettings.Settings.Retailer == MySettings.Settings.Retailers.Steam)
@@ -91,6 +90,7 @@ namespace Project_127
 							tmp.Add(Components.SCLRockstar127);
 						}
 					}
+					tmp.Add(Components.DowngradedSC);
 				}
 				return tmp;
 			}
@@ -133,8 +133,9 @@ namespace Project_127
 			bool rtrn = true;
 			HelperClasses.Logger.Log("ComponentMngr - Checking if all required Components are installed. AskUser: '" + AskUser + "'");
 
-			foreach (Components myComponent in RequiredComponentsBasedOnSettings)
+			for (int i = 0; i <= RequiredComponentsBasedOnSettings.Count -1; i++)
 			{
+				Components myComponent = RequiredComponentsBasedOnSettings[i];
 				if (!myComponent.IsInstalled())
 				{
 					if (AskUser)
@@ -271,15 +272,14 @@ namespace Project_127
 
 		private void btn_Install_Click(object sender, RoutedEventArgs e)
 		{
-			string RealTag = ((Button)sender).Tag.ToString().TrimStart("Files".ToCharArray());
-			Components MyComponent = (Components)System.Enum.Parse(typeof(Components), RealTag);
+			Components MyComponent = GetComponentFromButton((Button)sender);
 			if (MyComponent.IsInstalled())
 			{
 				Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Do you want to Re-Install the following Component:\n'" + MyComponent.GetNiceName() + "'");
 				yesno.ShowDialog();
 				if (yesno.DialogResult == true)
 				{
-					if (MyComponent == Components.SCLDowngradedSC)
+					if (MyComponent == Components.DowngradedSC)
 					{
 						LaunchAlternative.SocialClubReset();
 					}
@@ -365,8 +365,7 @@ namespace Project_127
 
 		private void btn_Uninstall_Click(object sender, RoutedEventArgs e)
 		{
-			string RealTag = ((Button)sender).Tag.ToString().TrimStart("Files".ToCharArray());
-			Components MyComponent = (Components)System.Enum.Parse(typeof(Components), RealTag);
+			Components MyComponent = GetComponentFromButton((Button)sender);
 
 			if (MyComponent == Components.Base)
 			{
@@ -385,7 +384,7 @@ namespace Project_127
 					}
 				}
 
-				if (MyComponent == Components.SCLDowngradedSC)
+				if (MyComponent == Components.DowngradedSC)
 				{
 					LaunchAlternative.SocialClubReset();
 				}
@@ -396,8 +395,7 @@ namespace Project_127
 
 		private void btn_Install_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
 		{
-			string RealTag = ((Button)sender).Tag.ToString().TrimStart("Files".ToCharArray());
-			Components MyComponent = (Components)System.Enum.Parse(typeof(Components), RealTag);
+			Components MyComponent = GetComponentFromButton((Button)sender);
 			if (MyComponent.IsInstalled())
 			{
 				MyComponent.Verify();
@@ -468,7 +466,7 @@ namespace Project_127
 			Components.SCLRockstar127.UpdateStatus(lbl_FilesSCLRockstar127_Status);
 			Components.SCLSteam124.UpdateStatus(lbl_FilesSCLSteam124_Status);
 			Components.SCLSteam127.UpdateStatus(lbl_FilesSCLSteam127_Status);
-			Components.SCLDowngradedSC.UpdateStatus(lbl_FilesSCLDowngradedSC_Status);
+			Components.DowngradedSC.UpdateStatus(lbl_FilesSCLDowngradedSC_Status);
 			Components.AdditionalSaveFiles.UpdateStatus(lbl_FilesAdditionalSF_Status);
 
 			btn_lbl_FilesMain_Name.ToolTip = Components.Base.GetToolTip();
@@ -476,7 +474,7 @@ namespace Project_127
 			lbl_FilesSCLRockstar127_Name.ToolTip = Components.SCLRockstar127.GetToolTip();
 			lbl_FilesSCLSteam124_Name.ToolTip = Components.SCLSteam124.GetToolTip();
 			lbl_FilesSCLSteam127_Name.ToolTip = Components.SCLSteam127.GetToolTip();
-			lbl_FilesSCLDowngradedSC_Name.ToolTip = Components.SCLDowngradedSC.GetToolTip();
+			lbl_FilesSCLDowngradedSC_Name.ToolTip = Components.DowngradedSC.GetToolTip();
 			lbl_FilesAdditionalSF_Name.ToolTip = Components.AdditionalSaveFiles.GetToolTip();
 
 
@@ -498,9 +496,7 @@ namespace Project_127
 		{
 			if (e.ClickCount >= 3)
 			{
-				string RealTag = ((Button)sender).Tag.ToString().TrimStart("Files".ToCharArray());
-				Components MyComponent = (Components)System.Enum.Parse(typeof(Components), RealTag);
-
+				Components MyComponent = GetComponentFromButton((Button)sender);
 				Popups.PopupTextbox tmp = new PopupTextbox("Enter forced Version for Component:\n'" + MyComponent + "'.\nClick cancel,\nif you dont know what youre doing.", MyComponent.GetInstalledVersion().ToString());
 				tmp.ShowDialog();
 				if (tmp.DialogResult == true)
@@ -519,6 +515,24 @@ namespace Project_127
 			}
 		}
 
+		private Components GetComponentFromButton(Button button)
+		{
+			Components Component = Components.Base;
+			try
+			{
+				string RealTag = (button.Tag.ToString().TrimStart("Files".ToCharArray()));
+				Component = (Components)System.Enum.Parse(typeof(Components), RealTag);
+			}
+			catch
+			{
+				new Popup(Popup.PopupWindowTypes.PopupOkError, "Error Code 6").ShowDialog();
+				HelperClasses.Logger.Log("[AAAAAA] - Getting the enum from the Tag of the UI Stuff from the ComponenetManager failed");
+				Globals.ProperExit();
+			}
+
+			return Component;
+		}
+
 		private void btn_Refresh_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
 		{
 			if (e.ClickCount >= 3)
@@ -529,6 +543,7 @@ namespace Project_127
 				{
 					LaunchAlternative.SocialClubReset();
 					HelperClasses.RegeditHandler.SetValue("DownloadManagerInstalledSubassemblies", "");
+					MyRefresh();
 					Globals.SetUpDownloadManager(true);
 				}
 				MyRefresh();
@@ -562,8 +577,7 @@ namespace Project_127
 					{
 						HelperClasses.Logger.Log("ComponentMngr - File post Download found ('" + localFilePath + "').", 1);
 
-						string RealTag = ((Button)sender).Tag.ToString().TrimStart("Files".ToCharArray());
-						Components MyComponent = (Components)System.Enum.Parse(typeof(Components), RealTag);
+						Components MyComponent = GetComponentFromButton((Button)sender);
 
 						HelperClasses.Logger.Log("ComponentMngr - Component: '" + MyComponent + "', ZIPPath where we extract for that one: '" + MyComponent.GetPathWhereZIPIsExtracted() + "'.", 1);
 
@@ -633,7 +647,7 @@ namespace Project_127
 				case ComponentManager.Components.SCLSteam127:
 					rtrn = "AM_127_STEAM";
 					break;
-				case ComponentManager.Components.SCLDowngradedSC:
+				case ComponentManager.Components.DowngradedSC:
 					rtrn = "SOCIALCLUB_1178";
 					break;
 				case ComponentManager.Components.AdditionalSaveFiles:
@@ -663,7 +677,7 @@ namespace Project_127
 				case ComponentManager.Components.SCLSteam127:
 					rtrn = "Files for Launching through Social Club for Steam 1.27";
 					break;
-				case ComponentManager.Components.SCLDowngradedSC:
+				case ComponentManager.Components.DowngradedSC:
 					rtrn = "Files for Launching through Social Club (Downgraded Social Club Files)";
 					break;
 				case ComponentManager.Components.AdditionalSaveFiles:
@@ -700,7 +714,7 @@ namespace Project_127
 			{
 				case ComponentManager.Components.Base:
 					return LauncherLogic.ZIPFilePath;
-				case ComponentManager.Components.SCLDowngradedSC:
+				case ComponentManager.Components.DowngradedSC:
 					return LaunchAlternative.SCL_SC_DOWNGRADED;
 				case ComponentManager.Components.SCLRockstar124:
 					return LauncherLogic.DowngradeAlternativeFilePathRockstar124;
@@ -723,7 +737,7 @@ namespace Project_127
 			{
 				case ComponentManager.Components.Base:
 					return LauncherLogic.IsDowngradedGTA(LauncherLogic.DowngradeEmuFilePath);
-				case ComponentManager.Components.SCLDowngradedSC:
+				case ComponentManager.Components.DowngradedSC:
 					return (LaunchAlternative.Get_SCL_InstallationState(LaunchAlternative.SCL_SC_DOWNGRADED) == LaunchAlternative.SCL_InstallationStates.Downgraded);
 				case ComponentManager.Components.SCLRockstar124:
 					return LauncherLogic.IsDowngradedGTA(LauncherLogic.DowngradeAlternativeFilePathRockstar124);
@@ -751,7 +765,7 @@ namespace Project_127
 				yesno.ShowDialog();
 				if (yesno.DialogResult == true)
 				{
-					if (ComponentManager.RequiredComponentsBasedOnSettings.Contains(Component) && Component != ComponentManager.Components.SCLDowngradedSC)
+					if (ComponentManager.RequiredComponentsBasedOnSettings.Contains(Component) && Component != ComponentManager.Components.DowngradedSC)
 					{
 						if (ComponentManager.RecommendUpgradedGTA())
 						{
@@ -795,6 +809,15 @@ namespace Project_127
 			HelperClasses.Logger.Log("ComponentMngr - Installing Component: '" + Component + "' (Subassemblyname: '" + Component.GetAssemblyName() + "')"); ;
 			PopupInstallComponent PIC = new PopupInstallComponent(Component, PopupInstallComponent.ComponentActions.Installing);
 			PIC.ShowDialog();
+			if (Component.ToString().StartsWith("SCL"))
+			{
+				if (!ComponentManager.Components.DowngradedSC.IsInstalled())
+				{
+					HelperClasses.Logger.Log("ComponentMngr - Installing Downgraded Social Club as well, since its not installed. Subassemblyname: '" + ComponentManager.Components.DowngradedSC.GetAssemblyName() + "')"); ;
+					PopupInstallComponent PIC2 = new PopupInstallComponent(ComponentManager.Components.DowngradedSC, PopupInstallComponent.ComponentActions.Installing);
+					PIC2.ShowDialog();
+				}
+			}
 			ComponentManager.MyRefreshStatic();
 			return PIC.rtrn;
 		}

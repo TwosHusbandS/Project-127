@@ -26,6 +26,12 @@ namespace Project_127.Popups
 		{
 			InitializeComponent();
 
+			if (MainWindow.MW.IsVisible)
+			{
+				this.Owner = MainWindow.MW;
+				this.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+			}
+
 			this.lbl_CurrMode.Content = MySettings.Settings.P127Mode;
 			this.tb_Main.Text = MySettings.Settings.P127Mode;
 
