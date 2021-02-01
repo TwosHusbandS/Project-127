@@ -46,6 +46,8 @@
   * You can RightClick Path-Buttons to open the Path in Windows Explorer.
 * General P127 Settings
   * Rightclick the "Create Backup" as well as "Use Backup" Buttons. Explanation is further down.
+  * Importing a zip you find floating around (named: "Project_127_Files_VX_Big.zip") could help. Especially if you read this in years from now (January 2021).
+    * Do so by either Downloading it, and leftclicking "Import ZIP", or rightclicking "Import ZIP" to paste a DIRECT download link to a zip File.
 * GTA & Launch Settings
   * Rightclick the "Enable Social Club Launch" Button, to force the Social Club Downgrade to take "C:\Program Files (x86)\Rockstar Games\SocialClub" as the social club installation folder, instead of taking it from registry.
   * Rightclick the hidden Submenu (of the other LaunchMethod) still edit those, even tho they are not in effect right now.

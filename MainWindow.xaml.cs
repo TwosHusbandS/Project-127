@@ -39,12 +39,22 @@ Comments like "TODO", "TO DO", "CTRLF", "CTRL-F", and "CTRL F" are just ways of 
 Hybrid code can be found in AAA_HybridCode.
 
 Stuff to fix post 1.1:
-- Build installer, test if uninstall delete jumpscript works. Build Installer, remove that uninstall delete before pushing. BUILD WITHOUT EASTER EGG COMMENTED OUT
+- Installer:
+	>> BUILD WITHOUT EASTER EGG COMMENTED OUT
+	>> Build Installer
+	>> Test if uninstall delete jumpscript license works.
+	>> remove that uninstall delete before pushing
+- unit test:
+	>> one simulated game update
+	>> rockstar fucking us
+	>> custom backup stuff
+	>> rgl launcher being killed / closed during MTL auth
 - UX on Initial stuff as well as resetting as well as moving GTA location or moving ZIP Location
 - Auto MTL Auth and close (instead of minimize) on new setting and mtl
 - Write Patchnotes
-- unit test one simulated game update & rockstar fucking us & custom backup stuff, rgl launcher being killed / closed during MTL auth
 
+[DONE] Fix Popup Starting Location with parent Window
+[DONE] New Import ZIP Magic
 [DONE] ReadMe PowerUser instructions and link to it in help + Update existing Help Section - Include Trevor% File
 [DONE] Popup general improvements
 [DONE] Installing Component UI Freeze Fix

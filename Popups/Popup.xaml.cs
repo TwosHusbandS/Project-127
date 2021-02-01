@@ -40,12 +40,6 @@ namespace Project_127.Popups
 		/// <param name="pFontSize"></param>
 		public Popup(Popup.PopupWindowTypes pPopupWindowType, string pMsg, int pFontSize = 18)
 		{
-			if (MainWindow.MW.IsVisible)
-			{
-				this.Owner = MainWindow.MW;
-				this.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-			}
-
 			// Initializing all WPF Elements
 			InitializeComponent();
 
@@ -210,5 +204,13 @@ namespace Project_127.Popups
 			DragMove(); // Pre-Defined Method
 		}
 
+		private void Window_SourceInitialized(object sender, EventArgs e)
+		{
+			if (MainWindow.MW.IsVisible)
+			{
+				this.Left = MainWindow.MW.Left + (MainWindow.MW.Width / 2) - (this.Width / 2);
+				this.Top = MainWindow.MW.Top + (MainWindow.MW.Height / 2) - (this.Height / 2);
+			}
+		}
 	} // End of Class
 } // End of Namespace

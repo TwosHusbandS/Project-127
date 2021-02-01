@@ -10,6 +10,7 @@
         WindowStyle="None" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" MouseLeftButtonDown="Window_MouseLeftButtonDown"
         Height="300"
         Width="550"
+        SourceInitialized="Window_SourceInitialized"
         SizeToContent="Manual"
         Icon="/Artwork/icon.png">
     <Border BorderBrush="{x:Static local:MyColors.PU_BorderBrush}" BorderThickness="2" >

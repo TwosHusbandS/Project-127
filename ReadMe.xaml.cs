@@ -332,7 +332,6 @@ namespace Project_127
 
 			AddHyperlinkText(rtb_Help, "http://SpeedrunReadMe.com", "\"Speedrun\"", "Please post a detailed description of what you did and what is not working as expected, in the GTA V Speedrun Discord - project - 1 - 27 - chat Channel. Invite links are in the ", " Section of this Page.");
 
-
 			AddParagraph(rtb_Help, "I do not recommend uploading these 2 Files inside a public channel. They may contain things like your email adress, and Path / Folder - Names which can contain usernames.");
 
 			AddParagraph(rtb_Help, "I hope everything works for you and you dont experience any crashes or anything like that.");
