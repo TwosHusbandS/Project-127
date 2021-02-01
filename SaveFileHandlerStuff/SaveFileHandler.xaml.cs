@@ -294,8 +294,14 @@ namespace Project_127.SaveFileHandlerStuff
 				// Get MySaveFile from the selected Item
 				MySaveFile tmp = (MySaveFile)dg_GTAFiles.SelectedItem;
 
-				// Get the Name for it
-				string newName = GetNewFileName(tmp.FileName, MySaveFile.CurrentBackupSavesPath);
+				string newName = tmp.FileName;
+
+				if (HelperClasses.FileHandling.doesFileExist(MySaveFile.CurrentBackupSavesPath.TrimEnd('\\') + @"\" + tmp.FileName))
+				{
+					// Get the Name for it
+					newName = GetNewFileName(tmp.FileName, MySaveFile.CurrentBackupSavesPath);
+				}
+
 				if (!string.IsNullOrWhiteSpace(newName))
 				{
 					// Only do if it the name is not "" or null

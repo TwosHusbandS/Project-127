@@ -164,14 +164,15 @@ namespace Project_127.Overlay
 		{
 			get
 			{
+				if (MySettings.Settings.OverlayMultiMonitorMode)
+				{
+					return Positions.TopLeft;
+				}
 				return _Position;
 			}
 			set
 			{
-				if (OverlayMode == OverlayModes.Borderless)
-				{
-					_Position = value;
-				}
+				_Position = value;
 			}
 		}
 
@@ -784,9 +785,9 @@ namespace Project_127.Overlay
 				mainText.Dispose();
 				titleBox.Dispose();
 				while (overlayObjects.Count > 0)
-                {
+				{
 					overlayObjects.First().Dispose();
-                }
+				}
 				_window.Dispose();
 				disposedValue = true;
 			}
