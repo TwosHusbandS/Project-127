@@ -619,6 +619,38 @@ namespace Project_127
 		/// </summary>
 		public static void Upgrade(bool IgnoreNewFiles = false)
 		{
+			if (!LauncherLogic.IsGTAVInstallationPathCorrect() && !LauncherLogic.GTAVInstallationIncorrectMessageThrownAlready)
+			{
+				HelperClasses.Logger.Log("GTA V Installation Path not found or incorrect. User will get Popup");
+
+				Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Error:\nGTA V Installation Path is not a valid Path.\nDo you want to force this Upgrade?");
+				yesno.ShowDialog();
+				if (yesno.DialogResult == true)
+				{
+					HelperClasses.Logger.Log("User wants to force this Upgrade. Will not throw the WrongGTAVPathError again on this P127 instance.");
+					LauncherLogic.GTAVInstallationIncorrectMessageThrownAlready = true;
+				}
+				else
+				{
+					HelperClasses.Logger.Log("User does not want to force this Upgrade. Will abondon.");
+					return;
+				}
+			}
+
+			if (LauncherLogic.InstallationState == LauncherLogic.InstallationStates.Downgraded)
+			{
+				HelperClasses.Logger.Log("Gamestate looks OK (Downgraded). Will Proceed to try to Upgrade.", 1);
+			}
+			else if (LauncherLogic.InstallationState == LauncherLogic.InstallationStates.Upgraded)
+			{
+				HelperClasses.Logger.Log("This program THINKS you are already Upgraded. Update procedure will be called anyways since it shouldnt break things.", 1);
+			}
+			else
+			{
+				HelperClasses.Logger.Log("Installation State Broken.", 1);
+				new Popup(Popup.PopupWindowTypes.PopupOkError, "Installation State is broken. I suggest trying to repair.\nWill try to Upgrade anyways.").ShowDialog();
+			}
+
 			HelperClasses.ProcessHandler.KillRockstarProcesses();
 
 			if (!ComponentManager.CheckIfRequiredComponentsAreInstalled(true))
@@ -693,6 +725,38 @@ namespace Project_127
 		/// </summary>
 		public static void Downgrade(bool IgnoreNewFiles = false)
 		{
+			if (!LauncherLogic.IsGTAVInstallationPathCorrect() && !LauncherLogic.GTAVInstallationIncorrectMessageThrownAlready)
+			{
+				HelperClasses.Logger.Log("GTA V Installation Path not found or incorrect. User will get Popup");
+
+				Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Error:\nGTA V Installation Path is not a valid Path.\nDo you want to force this Downgrade?");
+				yesno.ShowDialog();
+				if (yesno.DialogResult == true)
+				{
+					HelperClasses.Logger.Log("User wants to force this Downgrade. Will not throw the WrongGTAVPathError again on this P127 instance.");
+					LauncherLogic.GTAVInstallationIncorrectMessageThrownAlready = true;
+				}
+				else
+				{
+					HelperClasses.Logger.Log("User does not want to force this Downgrade. Will abondon.");
+					return;
+				}
+			}
+
+			if (LauncherLogic.InstallationState == LauncherLogic.InstallationStates.Upgraded)
+			{
+				HelperClasses.Logger.Log("Gamestate looks OK (Upgraded). Will Proceed to try to Downgrade.", 1);
+			}
+			else if (LauncherLogic.InstallationState == LauncherLogic.InstallationStates.Downgraded)
+			{
+				HelperClasses.Logger.Log("This program THINKS you are already Downgraded. Downgrade procedure will be called anyways since it shouldnt break things.", 1);
+			}
+			else
+			{
+				HelperClasses.Logger.Log("Installation State Broken.", 1);
+				new Popup(Popup.PopupWindowTypes.PopupOkError, "Installation State is broken. I suggest trying to repair.\nWill try to Downgrade anyways.").ShowDialog();
+			}
+
 			HelperClasses.ProcessHandler.KillRockstarProcesses();
 
 			IgnoreNewFilesWhileUpgradeDowngradeLogic = IgnoreNewFiles;
@@ -1227,6 +1291,8 @@ namespace Project_127
 		}
 
 
+
+		public static bool GTAVInstallationIncorrectMessageThrownAlready = false;
 
 		/// <summary>
 		/// Checks if Parameter Path is a correct GTA V Installation Path

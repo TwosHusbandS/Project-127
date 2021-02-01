@@ -1348,27 +1348,24 @@ namespace Project_127.MySettings
 
 		public static void RepairGTA_UserInteraction()
 		{
-			if (!LauncherLogic.IsGTAVInstallationPathCorrect())
+			if (!LauncherLogic.IsGTAVInstallationPathCorrect() && !LauncherLogic.GTAVInstallationIncorrectMessageThrownAlready)
 			{
-
 				HelperClasses.Logger.Log("GTA V Installation Path not found or incorrect. User will get Popup");
 
-				string msg = "Error: GTA V Installation Path incorrect.\nGTAV Installation Path: '" + LauncherLogic.GTAVFilePath + "'";
-
-				if (Globals.P127Branch != "master")
+				Popup yesno2 = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Error:\nGTA V Installation Path is not a valid Path.\nProceed?");
+				yesno2.ShowDialog();
+				if (yesno2.DialogResult == true)
 				{
-					Popup yesno2 = new Popup(Popup.PopupWindowTypes.PopupYesNo, msg + "\n. Force this Repair?");
-					yesno2.ShowDialog();
-					if (yesno2.DialogResult == false)
-					{
-						return;
-					}
+					HelperClasses.Logger.Log("User wants to force this Repair. Will not throw the WrongGTAVPathError again on this P127 instance.");
+					LauncherLogic.GTAVInstallationIncorrectMessageThrownAlready = true;
 				}
 				else
 				{
-					new Popup(Popup.PopupWindowTypes.PopupOkError, msg).ShowDialog();
+					HelperClasses.Logger.Log("User does not want to force this Repair. Will abondon.");
+					return;
 				}
 			}
+
 
 			if (HelperClasses.BuildVersionTable.IsUpgradedGTA(LauncherLogic.UpgradeFilePathBackup))
 			{

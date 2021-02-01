@@ -317,6 +317,7 @@ namespace Project_127.MySettings
 			set
 			{
 				SetSetting("GTAVInstallationPath", value);
+				LauncherLogic.GTAVInstallationIncorrectMessageThrownAlready = false;
 			}
 		}
 

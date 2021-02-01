@@ -433,7 +433,7 @@ namespace Project_127
 				"using the Windows Credential Manager.\n" +
 				"You are using the it on your own risk.\n\n" +
 				"If anything does not work as expected, \n" +
-				"contact me on Discord. @thS#0305\n\n" +
+				"contact us on Discord.\n\n" +
 				" - The Project 1.27 Team").ShowDialog();
 
 				Settings.AntiVirusFix();
