@@ -139,7 +139,7 @@ namespace Project_127
 				menuItem_Show_Click(null, null);
 			}
 		}
-		
+
 		/// <summary>
 		/// Tray Icon - Context Menu - Method (Show P127)
 		/// </summary>
@@ -147,10 +147,12 @@ namespace Project_127
 		/// <param name="e"></param>
 		public void menuItem_Show_Click(object Sender, EventArgs e)
 		{
-
-			this.WindowState = System.Windows.WindowState.Normal;
-			this.Show();
-			this.Activate();
+			if (!MainWindow.MW.IsVisible)
+			{
+				this.WindowState = System.Windows.WindowState.Normal;
+				this.Show();
+				this.Activate();
+			}
 		}
 
 		/// <summary>

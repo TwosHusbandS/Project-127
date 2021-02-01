@@ -57,7 +57,8 @@ namespace Project_127.Auth
 		private int sendCount = 0;
 		private static bool newInstance = false;
 
-		private static bool LaunchAfter;
+		private static bool AuthLaunchGameAfter;
+		private static bool MTLSilentMode;
 
 
 		public bool WebSiteIsAvailable(string Url)
@@ -84,10 +85,11 @@ namespace Project_127.Auth
 			return (Message.Length == 0);
 		}
 
-		public static async void MTLAuth(bool LaunchGameAfter = false)
+		public static async void MTLAuth(bool LaunchGameAfter = false, bool SilentMode = false)
 		{
 			Auth.ROSIntegration.AuthErrorMessageThrownAlready = false;
-			LaunchAfter = LaunchGameAfter;
+			AuthLaunchGameAfter = LaunchGameAfter;
+			MTLSilentMode = SilentMode;
 			HelperClasses.Logger.Log("Launching MTL...");
 			MainWindow.MTLAuthTimer.Stop();
 			var key = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64);
@@ -107,8 +109,18 @@ namespace Project_127.Auth
 				var launcherexe = System.IO.Path.Combine(installFolder, "LauncherPatcher.exe");
 				Process.Start("explorer.exe", launcherexe);
 			}
-			//Process.Start("explorer.exe", "mtl://");
-			await Task.Delay(15000);
+
+			int SecondsWeWait = 15;
+
+			for (int i = 0; i <= SecondsWeWait - 1; i++)
+			{
+				await Task.Delay(1000);
+				if (MTLSilentMode)
+				{
+					MinimizeMTL();
+				}
+			}
+
 			HelperClasses.Logger.Log("Waiting for session...");
 			//MainWindow.MTLAuthTimer.Interval = new TimeSpan(15000);
 			MainWindow.MW.AutoAuthMTLTimer();
@@ -127,6 +139,25 @@ namespace Project_127.Auth
 
 		public static bool AuthErrorMessageThrownAlready = false;
 
+		public static void MinimizeMTL()
+		{
+			Process[] ps = Process.GetProcessesByName("SocialClubHelper");
+			IntPtr mtlWindow = new IntPtr();
+			foreach (var p in ps)
+			{
+				if (p.MainWindowTitle.ToLower().Contains("Rockstar Games Launcher".ToLower()))
+				{
+					mtlWindow = p.MainWindowHandle;
+					break;
+				}
+			}
+			if (mtlWindow != IntPtr.Zero)
+			{
+				ShowWindowAsync(mtlWindow, 11);//Minimize
+			}
+		}
+
+
 		private static void onMTLAuthCompletion(object sender = null, EventArgs e = null)
 		{
 			if (LauncherLogic.AuthState == LauncherLogic.AuthStates.Auth)
@@ -137,29 +168,34 @@ namespace Project_127.Auth
 				{
 					HelperClasses.Logger.Log("Will ignore everything else, since Error Message / Success Message was thrown already");
 
-					Process[] ps = Process.GetProcessesByName("SocialClubHelper");
-					IntPtr mtlWindow = new IntPtr();
-					foreach (var p in ps)
+
+					if (MTLSilentMode)
 					{
-						if (p.MainWindowTitle.ToLower().Contains("Rockstar Games Launcher".ToLower()))
+						Process[] ps = Process.GetProcessesByName("SocialClubHelper");
+						foreach (var p in ps)
 						{
-							mtlWindow = p.MainWindowHandle;
-							break;
+							if (p.MainWindowTitle.ToLower().Contains("Rockstar Games Launcher".ToLower()))
+							{
+								p.CloseMainWindow();
+								break;
+							}
 						}
 					}
-					if (mtlWindow != IntPtr.Zero)
+					else
 					{
-						ShowWindowAsync(mtlWindow, 11);//Minimize
+						MinimizeMTL();
 					}
+
 
 
 					MainWindow.MW.menuItem_Show_Click(null, null);
-					if (LaunchAfter)
+					if (AuthLaunchGameAfter)
 					{
 						LauncherLogic.Launch();
 					}
 
 					AuthErrorMessageThrownAlready = true;
+					MTLSilentMode = false;
 				}
 
 				return;
@@ -185,7 +221,7 @@ namespace Project_127.Auth
 			}
 			else
 			{
-				LaunchAfter = pLaunchAfter;
+				AuthLaunchGameAfter = pLaunchAfter;
 
 				newInstance = true;
 				//CefSettings s = new CefSettings();
@@ -373,14 +409,14 @@ namespace Project_127.Auth
 					else
 					{
 						HelperClasses.Logger.Log("Login Failure");
-						new Popup(Popup.PopupWindowTypes.PopupOk,"Login Failure").ShowDialog();
+						new Popup(Popup.PopupWindowTypes.PopupOk, "Login Failure").ShowDialog();
 					}
 
 					this.Dispatcher.Invoke(() => this.Visibility = Visibility.Hidden);
 					MainWindow.MW.Dispatcher.Invoke((Action)delegate
 					{
 						Globals.PageState = Globals.PageStates.GTA;
-						if (LaunchAfter)
+						if (AuthLaunchGameAfter)
 						{
 							LauncherLogic.Launch();
 						}

@@ -48,7 +48,18 @@ namespace Project_127
 			}
 		}
 
-
+		/// <summary>
+		/// Middle Mouse on Hamburger Button
+		/// </summary> 
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void btn_Hamburger_MouseDown(object sender, MouseButtonEventArgs e)
+		{
+			if (e.ChangedButton == MouseButton.Middle && e.ButtonState == MouseButtonState.Pressed)
+			{
+				LauncherLogic.Launch();
+			}
+		}
 
 		/// <summary>
 		/// Method which gets called when the Auth Button is clicked

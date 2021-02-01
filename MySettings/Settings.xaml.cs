@@ -169,7 +169,7 @@ namespace Project_127.MySettings
 
 				while ((String.IsNullOrWhiteSpace(Settings.GTAVInstallationPath)))
 				{
-					HelperClasses.Logger.Log("If you see this, the user exited out exited out of the SetGTAVPathManually() on FirstLaunch or SettingsReset");
+					HelperClasses.Logger.Log("If you see this more than once, the user exited out exited out of the SetGTAVPathManually() on FirstLaunch or SettingsReset");
 					SetGTAVPathManually(false);
 				}
 			}
@@ -725,7 +725,7 @@ namespace Project_127.MySettings
 			ButtonMouseOverMagic(btn_cb_Set_EnableDontLaunchThroughSteam);
 			ButtonMouseOverMagic(btn_cb_Set_EnableAutoStartJumpScript);
 			ButtonMouseOverMagic(btn_cb_Set_SlowCompare);
-
+			ButtonMouseOverMagic(btn_cb_Set_AutoMTLAuthOnStartup);
 
 			if (LauncherLogic.AuthWay == LauncherLogic.AuthWays.MTL)
 			{
@@ -914,6 +914,9 @@ namespace Project_127.MySettings
 				case "btn_cb_Set_OnlyAutoStartProgramsWhenDowngraded":
 					SetCheckBoxBackground(myBtn, Settings.EnableOnlyAutoStartProgramsWhenDowngraded);
 					break;
+				case "btn_cb_Set_AutoMTLAuthOnStartup":
+					SetCheckBoxBackground(myBtn, Settings.AutoMTLAuthOnStartup);
+					break;
 				case "btn_cb_Set_EnableScripthookOnDowngraded":
 					SetCheckBoxBackground(myBtn, Settings.EnableScripthookOnDowngraded);
 					break;
@@ -992,6 +995,15 @@ namespace Project_127.MySettings
 			}
 
 
+			if (LauncherLogic.AuthWay == LauncherLogic.AuthWays.MTL)
+			{
+				Rect_HideOptions_AutoMTLOnStartup.Visibility = Visibility.Hidden;
+
+			}
+			else
+			{
+				Rect_HideOptions_AutoMTLOnStartup.Visibility = Visibility.Visible;
+			}
 
 			if (btn_HideEmuOptions.Visibility == Visibility.Hidden)
 			{
@@ -1013,9 +1025,9 @@ namespace Project_127.MySettings
 			Grid_Settings_GTA.RowDefinitions.RemoveAt(5);
 			Grid_Settings_GTA.RowDefinitions.RemoveAt(4);
 			RowDefinition Row_SCL_Options = new RowDefinition();
-			Row_SCL_Options.Height = new GridLength(60);
+			Row_SCL_Options.Height = new GridLength(60); 
 			RowDefinition Row_DragonEmu_Options = new RowDefinition();
-			Row_DragonEmu_Options.Height = new GridLength(280);
+			Row_DragonEmu_Options.Height = new GridLength(320);
 
 			if (LauncherLogic.LaunchWay == LauncherLogic.LaunchWays.SocialClubLaunch)
 			{
@@ -1036,8 +1048,10 @@ namespace Project_127.MySettings
 
 				Rect_Bullshit_1.Visibility = Visibility.Hidden;
 				Rect_Bullshit_2.Visibility = Visibility.Hidden;
+				Rect_Bullshit_3.Visibility = Visibility.Hidden;
 
 				Rect_HideOptions_HideFromSteam.Visibility = Visibility.Hidden;
+				Rect_HideOptions_AutoMTLOnStartup.Visibility = Visibility.Hidden;
 			}
 			else
 			{
@@ -1058,6 +1072,18 @@ namespace Project_127.MySettings
 
 				Rect_Bullshit_1.Visibility = Visibility.Visible;
 				Rect_Bullshit_2.Visibility = Visibility.Visible;
+				Rect_Bullshit_3.Visibility = Visibility.Visible;
+
+
+				if (LauncherLogic.AuthWay == LauncherLogic.AuthWays.MTL)
+				{
+					Rect_HideOptions_AutoMTLOnStartup.Visibility = Visibility.Hidden;
+
+				}
+				else
+				{
+					Rect_HideOptions_AutoMTLOnStartup.Visibility = Visibility.Visible;
+				}
 
 				if (Retailer != Retailers.Steam)
 				{
@@ -1118,7 +1144,19 @@ namespace Project_127.MySettings
 
 			Rect_Bullshit_1.Visibility = Visibility.Visible;
 			Rect_Bullshit_2.Visibility = Visibility.Visible;
+			Rect_Bullshit_3.Visibility = Visibility.Visible;
 
+
+
+			if (LauncherLogic.AuthWay == LauncherLogic.AuthWays.MTL)
+			{
+				Rect_HideOptions_AutoMTLOnStartup.Visibility = Visibility.Hidden;
+
+			}
+			else
+			{
+				Rect_HideOptions_AutoMTLOnStartup.Visibility = Visibility.Visible;
+			}
 
 			if (Retailer != Retailers.Steam)
 			{
@@ -1159,6 +1197,9 @@ namespace Project_127.MySettings
 					break;
 				case "btn_cb_Set_EnableJumpscriptUseCustomScript":
 					Settings.EnableJumpscriptUseCustomScript = !Settings.EnableJumpscriptUseCustomScript;
+					break;
+				case "btn_cb_Set_AutoMTLAuthOnStartup":
+					Settings.AutoMTLAuthOnStartup = !Settings.AutoMTLAuthOnStartup;
 					break;
 				case "btn_cb_Set_EnableAlternativeLaunchForceCProgramFiles":
 					Settings.EnableAlternativeLaunchForceCProgramFiles = !Settings.EnableAlternativeLaunchForceCProgramFiles;

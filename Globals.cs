@@ -312,6 +312,7 @@ namespace Project_127
 			{"EnableAlternativeLaunch", "False"},
 			{"EnableAlternativeLaunchForceCProgramFiles", "False"},
 			{"EnableCopyFilesInsteadOfHardlinking", "False"},
+			{"AutoMTLAuthOnStartup", "True"},
 			{"EnableSlowCompare", "False"},
 			{"EnableLegacyAuth", "False"},
 			{"GTAWindowTitle", "Grand Theft Auto V"},
@@ -647,6 +648,24 @@ namespace Project_127
 
 			// INIT the dynamic text handler for the overlay
 			initDynamicTextGetters();
+
+
+			MainWindow.MW.StartMTLDispatcherTimer();
+
+			HelperClasses.Logger.Log("Only CEF Init to go...");
+
+			Auth.ROSIntegration.CEFInitialize();
+
+			if (LauncherLogic.LaunchWay == LauncherLogic.LaunchWays.DragonEmu)
+			{
+				if (LauncherLogic.AuthWay == LauncherLogic.AuthWays.MTL)
+				{
+					if (Settings.AutoMTLAuthOnStartup)
+					{
+						ROSIntegration.MTLAuth(false, true);
+					}
+				}
+			}
 		}
 
 

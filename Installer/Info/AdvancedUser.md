@@ -6,6 +6,8 @@
 * If you see any new Texts about "Mode", you can rightclick those, go get into that menu.
   * Speaking about that. There are 2-3 Additional (tripple) rightclicks, not documented here. 
   * Even advanced Users do not know what these are, and they only have an effect if there is something server side.
+* Rightclick "Launch GTA V" Button will close it. 
+* Middle Mouse Button HamburgerMenu (very top left) will always Launch GTA
 * Default StartWay in Settings
 * Default ExitWay in Settings (works)
 * Rightclick Exit Button (top right)

@@ -49,9 +49,10 @@ Stuff to fix post 1.1:
 	>> rockstar fucking us
 	>> custom backup stuff
 	>> rgl launcher being killed / closed during MTL auth
-- Auto MTL Auth and close (instead of minimize) on new setting and mtl
 - Write Patchnotes
 
+[DONE] Middle Mouse Button on HamburgerButton will Launch GTA.
+[DONE] Auto MTL Auth and close (instead of minimize) on new setting and mtl
 [DONE] Slightly improved UI / UX On Downgrading/Upgrading and initial stuff. Moving GTA Path, as well as changing zip location
 [DONE] Fix Popup Starting Location with parent Window
 [DONE] New Import ZIP Magic
@@ -250,12 +251,6 @@ namespace Project_127
 
 			StartDispatcherTimer();
 
-			StartMTLDispatcherTimer();
-
-			HelperClasses.Logger.Log("Only CEF Init to go...");
-
-			Auth.ROSIntegration.CEFInitialize();
-
 			// Making this show on WindowLoaded
 			//HelperClasses.Logger.Log("Startup procedure (Constructor of MainWindow) completed.");
 			//HelperClasses.Logger.Log("--------------------------------------------------------");
@@ -269,6 +264,9 @@ namespace Project_127
 				// Same as other two thingies here lolerino
 				HelperClasses.WindowChangeListener.Start();
 			}
+
+			HelperClasses.Logger.Log("Constructor of MainWindow Done. Will finish init with OnLoaded of WindowLoaded Event");
+
 		}
 
 		#endregion
@@ -479,7 +477,7 @@ namespace Project_127
 		/// <summary>
 		/// Starting the Dispatcher Timer. 30 seconds. Used to control automatic MTL session retrieval
 		/// </summary>
-		private void StartMTLDispatcherTimer()
+		public void StartMTLDispatcherTimer()
 		{
 			// Starting the Dispatcher Timer for the automatic updates of the GTA V Button
 			MTLAuthTimer = new System.Windows.Threading.DispatcherTimer();
@@ -677,6 +675,8 @@ namespace Project_127
 		{
 			SetButtonMouseOverMagic((Button)sender);
 		}
+
+	
 
 
 

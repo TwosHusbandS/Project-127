@@ -154,8 +154,8 @@ namespace Project_127.MySettings
 			HelperClasses.Logger.Log("Settings.ZIPExtractionPath: '" + Settings.ZIPExtractionPath + "'");
 			HelperClasses.Logger.Log("Settings.GTAVInstallationPath: '" + Settings.GTAVInstallationPath + "'");
 			HelperClasses.Logger.Log("Setting: EnableCopyFilesInsteadOfHardlinking");
-			HelperClasses.Logger.Log("currentSettingsValue: '" + currentSetting + "'");
-			HelperClasses.Logger.Log("recommendSettingsValue: '" + recommendSetting + "'");
+			HelperClasses.Logger.Log("    currentSettingsValue: '" + currentSetting + "'");
+			HelperClasses.Logger.Log("    recommendSettingsValue: '" + recommendSetting + "'");
 
 			if (currentSetting == recommendSetting)
 			{
@@ -167,11 +167,11 @@ namespace Project_127.MySettings
 				Popup yesno;
 				if (recommendSetting == true)
 				{
-					yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "It is recommended to use Copying instead of Hardlinking for File Operations.\nDo you want to do that?");
+					yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "It is recommended to use the slow but stable way for Upgrading / Downgrading.\nDo you want to do that?");
 				}
 				else
 				{
-					yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "It is recommended to use Hardlinking instead of Copying for File Operations.\nDo you want to do that?");
+					yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "It is recommended to NOT use the slow but stable way for Upgrading / Downgrading,\nsince its faster.\n\nDo you want to do that?\n\nClick No if you changed this because something didnt work.");
 				}
 				yesno.ShowDialog();
 				if (yesno.DialogResult == true)
@@ -272,6 +272,22 @@ namespace Project_127.MySettings
 			set
 			{
 				SetSetting("FirstLaunch", value.ToString());
+			}
+		}
+
+
+		/// <summary>
+		/// Settings AutoMTLAuthOnStartup. Gets from the Dictionary.
+		/// </summary>
+		public static bool AutoMTLAuthOnStartup
+		{
+			get
+			{
+				return GetBoolFromString(GetSetting("AutoMTLAuthOnStartup"));
+			}
+			set
+			{
+				SetSetting("AutoMTLAuthOnStartup", value.ToString());
 			}
 		}
 
