@@ -50,6 +50,10 @@ Stuff to fix post 1.1:
 	>> custom backup stuff
 	>> rgl launcher being killed / closed during MTL auth
 
+- burhac issue (gta excited unexpectedly)
+- SCL issue
+- Auth issue (https://discord.com/channels/501661012844347392/748877687019536384/806585795946741780)
+
 */
 
 using System;

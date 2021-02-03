@@ -31,6 +31,7 @@
 * Finally fixed P127 Auth throwing multiple errors instead of one.
 * Social Club Downgrade Cache and Backups path are deleted on a Reinstall or verify of Downgraded Social Club Files.
 * Killing more (now all) Processes when Downgrading Social Club
+* CommandLineInterpretation.
 
 #### Internal Improvements
 * Better Logging

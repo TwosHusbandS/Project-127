@@ -104,7 +104,7 @@ namespace Project_127
 			get
 			{
 				string masterURL = "https://raw.githubusercontent.com/TwosHusbandS/Project-127/master/Installer/DownloadManager.xml";
-				string modeURL = "https://raw.githubusercontent.com/TwosHusbandS/Project-127/" +DMBranch + "/Installer/DownloadManager.xml";
+				string modeURL = "https://raw.githubusercontent.com/TwosHusbandS/Project-127/" + DMBranch + "/Installer/DownloadManager.xml";
 
 				string modeXML = HelperClasses.FileHandling.GetStringFromURL(modeURL, true);
 				if (!String.IsNullOrWhiteSpace(modeXML))
@@ -1640,7 +1640,7 @@ namespace Project_127
 					}
 					else if (args[i].ToLower() == "-authstateoverwrite")
 					{
-						if (args[i].ToLower() == "true")
+						if (args[i + 1].ToLower() == "true")
 						{
 							LauncherLogic.AuthStateOverWrite = true;
 						}
@@ -1651,7 +1651,7 @@ namespace Project_127
 					}
 					else if (args[i].ToLower() == "-useemudebugfile")
 					{
-						if (args[i].ToLower() == "true")
+						if (args[i + 1].ToLower() == "true")
 						{
 							LauncherLogic.UseEmuConfigFile = true;
 						}
@@ -1685,6 +1685,14 @@ namespace Project_127
 					ProcessHandler.StartProcess(FilePath, Globals.ProjectInstallationPath);
 
 					Globals.ProperExit();
+				}
+				else if (args[i].ToLower() == "-authstateoverwrite")
+				{
+					LauncherLogic.AuthStateOverWrite = true;
+				}
+				else if (args[i].ToLower() == "-useemudebugfile")
+				{
+					LauncherLogic.UseEmuConfigFile = true;
 				}
 
 
