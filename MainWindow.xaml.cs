@@ -51,8 +51,11 @@ Stuff to fix post 1.1:
 	>> rgl launcher being killed / closed during MTL auth
 
 - burhac issue (gta excited unexpectedly)
+- spam minimizing when MTL on startup is bad in case youre not logged in...
+
 - SCL issue
 - Auth issue (https://discord.com/channels/501661012844347392/748877687019536384/806585795946741780)
+
 
 */
 
