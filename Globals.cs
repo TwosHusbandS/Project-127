@@ -1640,24 +1640,38 @@ namespace Project_127
 					}
 					else if (args[i].ToLower() == "-authstateoverwrite")
 					{
-						if (args[i + 1].ToLower() == "true")
+						if (args[i + 1].ToLower().StartsWith("-"))
 						{
 							LauncherLogic.AuthStateOverWrite = true;
 						}
 						else
 						{
-							LauncherLogic.AuthStateOverWrite = false;
+							if (args[i + 1].ToLower() == "true")
+							{
+								LauncherLogic.AuthStateOverWrite = true;
+							}
+							else
+							{
+								LauncherLogic.AuthStateOverWrite = false;
+							}
 						}
 					}
 					else if (args[i].ToLower() == "-useemudebugfile")
 					{
-						if (args[i + 1].ToLower() == "true")
+						if (args[i + 1].ToLower().StartsWith("-"))
 						{
 							LauncherLogic.UseEmuConfigFile = true;
 						}
 						else
 						{
-							LauncherLogic.UseEmuConfigFile = false;
+							if (args[i + 1].ToLower() == "true")
+							{
+								LauncherLogic.UseEmuConfigFile = true;
+							}
+							else
+							{
+								LauncherLogic.UseEmuConfigFile = false;
+							}
 						}
 					}
 
