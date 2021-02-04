@@ -26,6 +26,8 @@ namespace Project_127.HelperClasses
 		/// </summary>
 		public static void KillRockstarProcesses()
 		{
+			SocialClubKillAllProcesses();
+
 			// TODO CTRLF add other ProcessNames
 			KillProcessesContains("gta");
 			KillProcessesContains("gtastub");
@@ -147,12 +149,12 @@ namespace Project_127.HelperClasses
 				// check if its actually a process from SC Install dir or GTA Install dir
 				try
 				{
-					if ((p.MainModule.FileName.ToLower().Contains(LaunchAlternative.SCL_SC_Installation.TrimEnd('\\').ToLower())) ||
-						(p.MainModule.FileName.ToLower().Contains(LauncherLogic.GTAVFilePath.TrimEnd('\\').ToLower())) ||
+					if 
+						((p.MainModule.FileName.ToLower().Contains(LauncherLogic.GTAVFilePath.TrimEnd('\\').ToLower())) ||
 						(p.MainModule.FileName.ToLower().Contains(tmpInstallDir.TrimEnd('\\').ToLower())) ||
 						(p.MainModule.FileName.ToLower().Contains(@"C:\Program Files\Rockstar Games".TrimEnd('\\').ToLower())))
 					{
-						ProcessHandler.Kill(p);
+						p.CloseMainWindow();
 					}
 				}
 				catch 
@@ -163,7 +165,7 @@ namespace Project_127.HelperClasses
 			}
 
 			// wait 25 seconds
-			Task.Delay(25).GetAwaiter().GetResult();
+			Task.Delay(50).GetAwaiter().GetResult();
 
 			// Just making sure shit is really closed
 			tmp = Process.GetProcesses();
@@ -177,8 +179,8 @@ namespace Project_127.HelperClasses
 				// check if its actually a process from SC Install dir or GTA Install dir
 				try
 				{
-					if ((p.MainModule.FileName.ToLower().Contains(LaunchAlternative.SCL_SC_Installation.TrimEnd('\\').ToLower())) ||
-						(p.MainModule.FileName.ToLower().Contains(LauncherLogic.GTAVFilePath.TrimEnd('\\').ToLower())) ||
+					if 
+						((p.MainModule.FileName.ToLower().Contains(LauncherLogic.GTAVFilePath.TrimEnd('\\').ToLower())) ||
 						(p.MainModule.FileName.ToLower().Contains(tmpInstallDir.TrimEnd('\\').ToLower())) ||
 						(p.MainModule.FileName.ToLower().Contains(@"C:\Program Files\Rockstar Games".TrimEnd('\\').ToLower())))
 					{
