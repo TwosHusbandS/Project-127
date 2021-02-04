@@ -389,6 +389,7 @@ namespace Project_127
 					//new Popup(Popup.PopupWindowTypes.PopupOk, "LaunchWay was not changed.").ShowDialog();
 				}
 
+				MainWindow.MW.SetButtonMouseOverMagic(MainWindow.MW.btn_Auth);
 				Settings.TellRockstarUsersToDisableAutoUpdateIfNeeded();
 			}
 		}

@@ -53,8 +53,6 @@ Stuff to fix post 1.1:
 - [MAY HAVE FIXED THIS?] burhac issue (gta excited unexpectedly)
 	>> fix by calling SCL process kill, then other process kill
 - spam minimizing when MTL on startup is bad in case youre not logged in...
-- auth grey when on SCL
-	-> Make debug thing on hamburger menu and reference that in readme, advanced user, help, etc
 - make force SCL C: for SC-Downgrade actual button instead on mouse over. (+ reflect in help, readme, advanced user, etc)
 
 - SCL issue
@@ -527,15 +525,25 @@ namespace Project_127
 					}
 					break;
 				case "btn_Auth":
-					string BaseArtworkPath = "";
+					string BaseArtworkPath = @"Artwork\lock";
+
+					if (LauncherLogic.LaunchWay == LauncherLogic.LaunchWays.SocialClubLaunch)
+					{
+						BaseArtworkPath += "_crossed";
+						btn_Auth.ToolTip = "Not needed on this Launch - Method";
+					}
+					else
+					{
+						btn_Auth.ToolTip = "Login Button. Lock closed = Logged in. Lock open = Not logged in";
+					}
 
 					if (LauncherLogic.AuthState == LauncherLogic.AuthStates.Auth)
 					{
-						BaseArtworkPath = @"Artwork\lock_closed";
+						BaseArtworkPath += "_closed";
 					}
 					else if (LauncherLogic.AuthState == LauncherLogic.AuthStates.NotAuth)
 					{
-						BaseArtworkPath = @"Artwork\lock_open";
+						BaseArtworkPath += "_open";
 					}
 
 					if (Globals.PageState == Globals.PageStates.Auth)

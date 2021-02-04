@@ -522,6 +522,10 @@
   <ItemGroup>
     <Resource Include="Installer\Info\EpsilonPercent Example NoteFile.txt" />
     <None Include="Installer\Info\AdvancedUser.md" />
+    <Resource Include="Artwork\lock_crossed_closed.png" />
+    <Resource Include="Artwork\lock_crossed_closed_mo.png" />
+    <Resource Include="Artwork\lock_crossed_open.png" />
+    <Resource Include="Artwork\lock_crossed_open_mo.png" />
     <Content Include="Installer\NewSetup.iss" />
     <Content Include="MTLInterface.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

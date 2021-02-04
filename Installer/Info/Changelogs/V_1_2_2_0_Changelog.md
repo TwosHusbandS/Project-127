@@ -18,6 +18,7 @@
 * Generally Improved a lot of Popup texts
 * Added MouseOver to a lot of stuff.
 * Better NoteOverlay Title support.
+* Auth Button is now crossed when not needed.
 
 #### BugFixes:
 * Overlay MultiMonitorMode not forcing the position correctly
