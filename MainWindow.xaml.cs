@@ -50,10 +50,9 @@ Stuff to fix post 1.1:
 	>> custom backup stuff
 	>> rgl launcher being killed / closed during MTL auth
 
+- spam minimizing when MTL on startup is bad in case youre not logged in...
 - [MAY HAVE FIXED THIS?] burhac issue (gta excited unexpectedly)
 	>> fix by calling SCL process kill, then other process kill
-- spam minimizing when MTL on startup is bad in case youre not logged in...
-- make force SCL C: for SC-Downgrade actual button instead on mouse over. (+ reflect in help, readme, advanced user, etc)
 
 - SCL issue
 - Auth / emu issue (https://discord.com/channels/501661012844347392/748877687019536384/806585795946741780)

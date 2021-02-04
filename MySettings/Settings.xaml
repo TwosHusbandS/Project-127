@@ -155,7 +155,7 @@
                                 <RowDefinition Height="40"/>
                                 <RowDefinition Height="40"/>
                                 <RowDefinition Height="140"/>
-                                <RowDefinition Height="60"/>
+                                <RowDefinition Height="100"/>
                                 <RowDefinition Height="320"/>
 
                             </Grid.RowDefinitions>
@@ -189,22 +189,9 @@
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
                                     <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" x:Name="lbl_LaunchWays" Content="Launch - Method" Style="{StaticResource lbl_Set_Info}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                    <Button Grid.Row="1" Grid.Column="0" Margin="20,0,20,15" x:Name="btn_LaunchWays_SCL" ToolTip="Launch through original Socialclub. This needs the corresponding Launch-Through-SocialClub Component" Style="{StaticResource btn_LaunchWays_SCL}" Content="Launch through Social Club" Click="btn_LaunchWays_SCL_Click" MouseRightButtonDown="btn_LaunchWays_SCL_MouseRightButtonDown"/>
+                                    <Button Grid.Row="1" Grid.Column="0" Margin="20,0,20,15" x:Name="btn_LaunchWays_SCL" ToolTip="Launch through original Socialclub. This needs the corresponding Launch-Through-SocialClub Component" Style="{StaticResource btn_LaunchWays_SCL}" Content="Launch through Social Club" Click="btn_LaunchWays_SCL_Click"/>
                                     <Button Grid.Row="1" Grid.Column="1" Margin="20,0,20,15" x:Name="btn_LaunchWays_DragonEmu" ToolTip="Launch through @d490ns Launcher. Only needs 'Required Files'" Style="{StaticResource btn_LaunchWays_DragonEmu}" Content="Launch through Dr490n Launcher" Click="btn_LaunchWays_DragonEmu_Click"/>
                                     <Rectangle x:Name="Rect_HideOptions_SCL_Launch" Grid.Row="1" Grid.Column="0" Margin="20,0,20,15" Fill="{x:Static local:MyColors.MyColorOffWhite85}" ToolTip="Not available on Epic."/>
-
-                                    <Popup x:Name="PopupEnableAlternativeLaunch"  PlacementTarget="{Binding ElementName=btn_LaunchWays_DragonEMu}" Placement="MousePoint" Width="300" Height="50"  Margin="0,0,0,0" StaysOpen="False" Closed="PopupEnableAlternativeLaunch_Closed" Opened="PopupEnableAlternativeLaunch_Opened">
-                                        <Border BorderBrush="{x:Static local:MyColors.MyColorSCL}" BorderThickness="2" Background="{x:Static local:MyColors.MyColorOffBlack}" MouseLeave="Border_MouseLeave">
-                                            <Grid>
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="8*"/>
-                                                    <ColumnDefinition Width="2*"/>
-                                                </Grid.ColumnDefinitions>
-                                                <Label Grid.Column="0" Content="Force SC Installation Path" Style="{StaticResource lbl_Set_Info}"/>
-                                                <Button Grid.Column="1" x:Name="btn_cb_Set_EnableAlternativeLaunchForceCProgramFiles" Style="{StaticResource btn_cb}" Click="btn_cb_Click"  MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
-                                            </Grid>
-                                        </Border>
-                                    </Popup>
                                 </Grid>
                             </Border>
 
@@ -212,14 +199,18 @@
                                 <Grid>
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="*"/>
+                                        <RowDefinition Height="*"/>
                                     </Grid.RowDefinitions>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
+                                    <Rectangle x:Name="Rect_Bullshit_4" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Fill="{x:Static local:MyColors.SE_AlternateRowBackground}"/>
                                     <Label Grid.Row="0" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Social Club Launch Game Version: "/>
                                     <ComboBox Grid.Row="0" Grid.Column="1" Margin="10,5" Style="{StaticResource cobo}" x:Name="combox_Set_SocialClubGameVersion" SelectionChanged="combox_Set_SocialClubGameVersion_SelectionChanged"/>
-                                    <Button x:Name="btn_HideSCLOptions" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" ToolTip="Hidden, because they are not effective on your LaunchMethod. Rightclick to edit anyways." MouseRightButtonDown="btn_HideSCLOptions_MouseRightButtonDown"  Style="{StaticResource btn_Hide}" Background="{x:Static local:MyColors.MyColorSCLHidden}" />
+                                    <Label Grid.Row="1" Grid.Column="0" Content="Force SocialClub Installation Path C" ToolTip="Uses C:\Program Files (x86)\Rockstar Games\Social Club regardless of Registry Values for Social Club Downgrading" Style="{StaticResource lbl_Set_Info}"/>
+                                    <Button Grid.Row="1" Grid.Column="1" x:Name="btn_cb_Set_EnableAlternativeLaunchForceCProgramFiles" Style="{StaticResource btn_cb}" Click="btn_cb_Click"  MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
+                                    <Button x:Name="btn_HideSCLOptions" Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="2" ToolTip="Hidden, because they are not effective on your LaunchMethod. Rightclick to edit anyways." MouseRightButtonDown="btn_HideSCLOptions_MouseRightButtonDown"  Style="{StaticResource btn_Hide}" Background="{x:Static local:MyColors.MyColorSCLHidden}" />
                                 </Grid>
                             </Border>
 

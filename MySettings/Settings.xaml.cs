@@ -1025,7 +1025,7 @@ namespace Project_127.MySettings
 			Grid_Settings_GTA.RowDefinitions.RemoveAt(5);
 			Grid_Settings_GTA.RowDefinitions.RemoveAt(4);
 			RowDefinition Row_SCL_Options = new RowDefinition();
-			Row_SCL_Options.Height = new GridLength(60); 
+			Row_SCL_Options.Height = new GridLength(100); 
 			RowDefinition Row_DragonEmu_Options = new RowDefinition();
 			Row_DragonEmu_Options.Height = new GridLength(320);
 
@@ -1049,6 +1049,7 @@ namespace Project_127.MySettings
 				Rect_Bullshit_1.Visibility = Visibility.Hidden;
 				Rect_Bullshit_2.Visibility = Visibility.Hidden;
 				Rect_Bullshit_3.Visibility = Visibility.Hidden;
+				Rect_Bullshit_4.Visibility = Visibility.Visible;
 
 				Rect_HideOptions_HideFromSteam.Visibility = Visibility.Hidden;
 				Rect_HideOptions_AutoMTLOnStartup.Visibility = Visibility.Hidden;
@@ -1073,6 +1074,7 @@ namespace Project_127.MySettings
 				Rect_Bullshit_1.Visibility = Visibility.Visible;
 				Rect_Bullshit_2.Visibility = Visibility.Visible;
 				Rect_Bullshit_3.Visibility = Visibility.Visible;
+				Rect_Bullshit_4.Visibility = Visibility.Hidden;
 
 
 				if (LauncherLogic.AuthWay == LauncherLogic.AuthWays.MTL)
@@ -1128,14 +1130,11 @@ namespace Project_127.MySettings
 			RefreshGUI();
 		}
 
-		private void btn_LaunchWays_SCL_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
-		{
-			PopupEnableAlternativeLaunch.IsOpen = true;
-		}
-
 		private void btn_HideSCLOptions_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
 		{
 			btn_HideSCLOptions.Visibility = Visibility.Hidden;
+
+			Rect_Bullshit_4.Visibility = Visibility.Visible;
 		}
 
 		private void btn_HideEmuOptions_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
@@ -1641,7 +1640,6 @@ namespace Project_127.MySettings
 			PopupCreateBackup.IsOpen = false;
 			PopupUseBackup.IsOpen = false;
 			PopupJumpscriptAdditional.IsOpen = false;
-			PopupEnableAlternativeLaunch.IsOpen = false;
 			RefreshGUI();
 		}
 
