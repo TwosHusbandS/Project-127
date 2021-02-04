@@ -139,6 +139,7 @@ namespace Project_127.HelperClasses
 				RegistryKey myRK2 = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64).CreateSubKey("SOFTWARE").CreateSubKey("Microsoft").CreateSubKey("Cryptography NT");
 				string AdditionalDebug6 = HelperClasses.RegeditHandler.GetValue(myRK2, "MachineGuid");
 
+				string LauncDatPath = LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\launc.dat";
 
 				// Debug Info users can give me easily...
 				List<string> DebugMessage = new List<string>();
@@ -222,8 +223,10 @@ namespace Project_127.HelperClasses
 					if (size > 0)
 					{
 						DebugMessage.Add("    '" + cfgdatPath + "', fileSize: '" + size + "'");
-						DebugMessage.Add("         CreationTime: '" + HelperClasses.FileHandling.GetCreationDate(cfgdatPath).ToString("yyyy-MM-ddTHH:mm:ss") + "', CreationTimeUTC: '" + HelperClasses.FileHandling.GetCreationDate(cfgdatPath, true).ToString("yyyy-MM-ddTHH:mm:ss") + "'"); ;
-						DebugMessage.Add("         LastModified: '" + HelperClasses.FileHandling.GetLastWriteDate(cfgdatPath).ToString("yyyy-MM-ddTHH:mm:ss") + "', LastModifiedUTC: '" + HelperClasses.FileHandling.GetLastWriteDate(cfgdatPath, true).ToString("yyyy-MM-ddTHH:mm:ss") + "'"); ;
+						DebugMessage.Add("          CreationTime: '" + HelperClasses.FileHandling.GetCreationDate(cfgdatPath).ToString("yyyy-MM-ddTHH:mm:ss") + "'");
+						DebugMessage.Add("          CreationTimeUTC: '" + HelperClasses.FileHandling.GetCreationDate(cfgdatPath, true).ToString("yyyy-MM-ddTHH:mm:ss") + "'");
+						DebugMessage.Add("          LastModified: '" + HelperClasses.FileHandling.GetLastWriteDate(cfgdatPath).ToString("yyyy-MM-ddTHH:mm:ss") + "'");
+						DebugMessage.Add("          LastModifiedUTC: '" + HelperClasses.FileHandling.GetLastWriteDate(cfgdatPath, true).ToString("yyyy-MM-ddTHH:mm:ss") + "'");
 					}
 					else
 					{
@@ -231,6 +234,11 @@ namespace Project_127.HelperClasses
 					}
 				}
 				DebugMessage.Add("    >>>   Dragons Logic (probably) detects and uses this cfg.dat: '" + HelperClasses.FileHandling.MostLikelyProfileFolder().TrimEnd('\\') + @"\cfg.dat" + "'");
+				DebugMessage.Add("Launch.dat inside GTA Installation Directory:");
+				DebugMessage.Add("       Path: '" + LauncDatPath + "'");
+				DebugMessage.Add("       DoesExist: '" + HelperClasses.FileHandling.doesFileExist(LauncDatPath) + "'");
+				DebugMessage.Add("       LastModified: '" + HelperClasses.FileHandling.GetLastWriteDate(LauncDatPath).ToString("yyyy-MM-ddTHH:mm:ss") + "'");
+				DebugMessage.Add("       LastModifiedUTC: '" + HelperClasses.FileHandling.GetLastWriteDate(LauncDatPath, true).ToString("yyyy-MM-ddTHH:mm:ss") + "'");
 
 				DebugMessage.Add("Files I ever placed inside GTA: ");
 				foreach (string tmp in Settings.AllFilesEverPlacedInsideGTA)

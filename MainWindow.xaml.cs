@@ -52,6 +52,8 @@ Stuff to fix post 1.1:
 
 - burhac issue (gta excited unexpectedly)
 - spam minimizing when MTL on startup is bad in case youre not logged in...
+- Add launc.dat on debug
+- auth grey when on SCL
 
 - SCL issue
 - Auth issue (https://discord.com/channels/501661012844347392/748877687019536384/806585795946741780)
