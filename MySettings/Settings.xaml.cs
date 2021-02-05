@@ -47,6 +47,7 @@ namespace Project_127.MySettings
 
 			// Needed for GUI Shit
 			combox_Set_Retail.ItemsSource = Enum.GetValues(typeof(Retailers)).Cast<Retailers>();
+			combox_Set_PostMTLAction.ItemsSource = Enum.GetValues(typeof(PostMTLActions)).Cast<PostMTLActions>();
 			combox_Set_LanguageSelected.ItemsSource = Enum.GetValues(typeof(Languages)).Cast<Languages>();
 			combox_Set_ExitWays.ItemsSource = Enum.GetValues(typeof(ExitWays)).Cast<ExitWays>();
 			combox_Set_StartWays.ItemsSource = Enum.GetValues(typeof(StartWays)).Cast<StartWays>();
@@ -702,6 +703,7 @@ namespace Project_127.MySettings
 			combox_Set_ExitWays.SelectedItem = Settings.ExitWay;
 			combox_Set_StartWays.SelectedItem = Settings.StartWay;
 			combox_Set_SocialClubGameVersion.SelectedItem = Settings.SocialClubLaunchGameVersion;
+			combox_Set_PostMTLAction.SelectedItem = Settings.PostMTLAction;
 
 			tb_Set_InGameName.Text = Settings.InGameName;
 			btn_Set_JumpScriptKey1.Content = Settings.JumpScriptKey1;
@@ -1027,7 +1029,7 @@ namespace Project_127.MySettings
 			RowDefinition Row_SCL_Options = new RowDefinition();
 			Row_SCL_Options.Height = new GridLength(100); 
 			RowDefinition Row_DragonEmu_Options = new RowDefinition();
-			Row_DragonEmu_Options.Height = new GridLength(320);
+			Row_DragonEmu_Options.Height = new GridLength(360);
 
 			if (LauncherLogic.LaunchWay == LauncherLogic.LaunchWays.SocialClubLaunch)
 			{
@@ -1539,6 +1541,10 @@ namespace Project_127.MySettings
 			Settings.SocialClubLaunchGameVersion = combox_Set_SocialClubGameVersion.SelectedItem.ToString();
 		}
 
+		private void combox_Set_PostMTLAction_SelectionChanged(object sender, SelectionChangedEventArgs e)
+		{
+			Settings.PostMTLAction = (PostMTLActions)System.Enum.Parse(typeof(PostMTLActions), combox_Set_PostMTLAction.SelectedItem.ToString());
+		}
 
 		/// <summary>
 		/// Empty
@@ -1954,6 +1960,7 @@ namespace Project_127.MySettings
 				HelperClasses.Logger.Log("Canceled by User.");
 			}
 		}
+
 
 	} // End of Class
 } // End of Namespace 

@@ -587,8 +587,8 @@
     </PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PostBuildEvent>copy "$(TargetDir)LICENSE" "$(ProjectDir)\bin\x64\Release\LICENSE"
-copy "$(TargetDir)JUMPSCRIPT_LICENSE" "$(ProjectDir)\bin\x64\Release\JUMPSCRIPT_LICENSE"
+    <PostBuildEvent>copy "$(ProjectDir)LICENSE" "$(ProjectDir)\bin\x64\Release\LICENSE"
+copy "$(ProjectDir)JUMPSCRIPT_LICENSE" "$(ProjectDir)\bin\x64\Release\JUMPSCRIPT_LICENSE"
 copy "$(ProjectDir)AAA_HybridCode\Jumpscript\P127_Jumpscript.exe" "$(TargetDir)P127_Jumpscript.exe"</PostBuildEvent>
   </PropertyGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

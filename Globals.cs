@@ -313,6 +313,7 @@ namespace Project_127
 			{"EnableAlternativeLaunchForceCProgramFiles", "False"},
 			{"EnableCopyFilesInsteadOfHardlinking", "False"},
 			{"AutoMTLAuthOnStartup", "True"},
+			{"PostMTLAction", "MinimizeRGL"},
 			{"EnableSlowCompare", "False"},
 			{"EnableLegacyAuth", "False"},
 			{"GTAWindowTitle", "Grand Theft Auto V"},

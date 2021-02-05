@@ -763,6 +763,32 @@ namespace Project_127.MySettings
 			}
 		}
 
+
+		public enum PostMTLActions
+		{
+			DoNothing,
+			MinimizeRGL,
+			CloseRGL
+		}
+
+		/// <summary>
+		/// Settings PostMTLAction. Gets and Sets from Dictionary.
+		/// </summary>
+		public static PostMTLActions PostMTLAction
+		{
+			get
+			{
+				return (PostMTLActions)System.Enum.Parse(typeof(PostMTLActions), GetSetting("PostMTLAction"));
+			}
+			set
+			{
+				if (value != PostMTLAction)
+				{
+					SetSetting("PostMTLAction", value.ToString());
+				}
+			}
+		}
+
 		/// <summary>
 		/// Settings ExitWay. Gets and Sets from Dictionary.
 		/// </summary>

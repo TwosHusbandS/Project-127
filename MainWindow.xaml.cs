@@ -40,7 +40,7 @@ Hybrid code can be found in AAA_HybridCode.
 
 Stuff to fix post 1.1:
 - Installer:
-	>> BUILD WITHOUT EASTER EGG COMMENTED OUT
+	>> BUILD WITHOUT EASTER EGG COMMENTED OUT (think about TTS Easter Egg.)
 	>> Build Installer
 	>> Test if uninstall delete jumpscript license works.
 	>> remove that uninstall delete before pushing

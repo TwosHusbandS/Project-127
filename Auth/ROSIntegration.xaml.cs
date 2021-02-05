@@ -157,6 +157,19 @@ namespace Project_127.Auth
 			}
 		}
 
+		public static void CloseMTL()
+		{
+			Process[] ps = Process.GetProcessesByName("SocialClubHelper");
+			foreach (var p in ps)
+			{
+				if (p.MainWindowTitle.ToLower().Contains("Rockstar Games Launcher".ToLower()))
+				{
+					p.CloseMainWindow();
+					break;
+				}
+			}
+		}
+
 
 		private static void onMTLAuthCompletion(object sender = null, EventArgs e = null)
 		{
@@ -171,19 +184,18 @@ namespace Project_127.Auth
 
 					if (MTLSilentMode)
 					{
-						Process[] ps = Process.GetProcessesByName("SocialClubHelper");
-						foreach (var p in ps)
-						{
-							if (p.MainWindowTitle.ToLower().Contains("Rockstar Games Launcher".ToLower()))
-							{
-								p.CloseMainWindow();
-								break;
-							}
-						}
+						CloseMTL();
 					}
 					else
 					{
-						MinimizeMTL();
+						if (Settings.PostMTLAction == Settings.PostMTLActions.CloseRGL)
+						{
+							CloseMTL();
+						}
+						else if (Settings.PostMTLAction == Settings.PostMTLActions.MinimizeRGL)
+						{
+							MinimizeMTL();
+						}
 					}
 
 
