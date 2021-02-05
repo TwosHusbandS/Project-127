@@ -3,6 +3,7 @@
 
 #### New Features:
 * Automatically and silently MTL Authing on Startup if wanted
+* Ability to chose what MTL does once its completed.
 * Better UI / UX for LaunchWays and Authways, and their respective custom Options
 
 #### Improved Features:

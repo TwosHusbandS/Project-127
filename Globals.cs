@@ -1417,6 +1417,7 @@ namespace Project_127
 						break;
 					case PageStates.Auth:
 						Auth.ROSIntegration.AuthErrorMessageThrownAlready = false;
+						Auth.ROSIntegration.MinimizedAlready = false;
 
 						if (Globals.LaunchAfterAuth)
 						{
