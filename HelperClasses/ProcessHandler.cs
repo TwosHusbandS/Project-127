@@ -26,7 +26,7 @@ namespace Project_127.HelperClasses
 		/// </summary>
 		public static void KillRockstarProcesses()
 		{
-			SocialClubKillAllProcesses();
+			SocialClubKillAllProcesses(0, true);
 
 			// TODO CTRLF add other ProcessNames
 			KillProcessesContains("gta");
@@ -131,7 +131,7 @@ namespace Project_127.HelperClasses
 		/// Killing all Social Club Related Processes
 		/// </summary>
 		/// <param name="msDelayAfter"></param>
-		public static void SocialClubKillAllProcesses(int msDelayAfter = 150)
+		public static void SocialClubKillAllProcesses(int msDelayAfter = 150, bool OnlyClose = false)
 		{
 			RegistryKey myRK = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64).CreateSubKey("SOFTWARE").CreateSubKey("WOW6432Node").CreateSubKey("Microsoft").CreateSubKey("Windows").CreateSubKey("CurrentVersion").CreateSubKey("Uninstall").CreateSubKey("Rockstar Games Launcher");
 			string tmpInstallDir = HelperClasses.RegeditHandler.GetValue(myRK, "InstallLocation");
@@ -162,6 +162,11 @@ namespace Project_127.HelperClasses
 				}
 
 				//}
+			}
+
+			if (OnlyClose)
+			{
+				return;
 			}
 
 			// wait 25 seconds

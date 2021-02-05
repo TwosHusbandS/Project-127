@@ -652,7 +652,7 @@ namespace Project_127
 				new Popup(Popup.PopupWindowTypes.PopupOkError, "Installation State is broken. I suggest trying to repair.\nWill try to Upgrade anyways.").ShowDialog();
 			}
 
-			HelperClasses.ProcessHandler.KillRockstarProcesses();
+			IgnoreNewFilesWhileUpgradeDowngradeLogic = IgnoreNewFiles;
 
 			if (!ComponentManager.CheckIfRequiredComponentsAreInstalled(true))
 			{
@@ -660,7 +660,6 @@ namespace Project_127
 				return;
 			}
 
-			IgnoreNewFilesWhileUpgradeDowngradeLogic = IgnoreNewFiles;
 
 			// Cancel any stuff when we have no files in upgrade files...simple right?
 			if (!(HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(UpgradeFilePath).Length >= 2 && HelperClasses.BuildVersionTable.IsUpgradedGTA(UpgradeFilePath)))
@@ -670,7 +669,6 @@ namespace Project_127
 				return;
 			}
 
-			HelperClasses.ProcessHandler.KillRockstarProcesses();
 
 			if (!(HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(DowngradeFilePath).Length >= 2 && HelperClasses.BuildVersionTable.IsDowngradedGTA(DowngradeFilePath)))
 			{
@@ -757,8 +755,6 @@ namespace Project_127
 				HelperClasses.Logger.Log("Installation State Broken.", 1);
 				new Popup(Popup.PopupWindowTypes.PopupOkError, "Installation State is broken. I suggest trying to repair.\nWill try to Downgrade anyways.").ShowDialog();
 			}
-
-			HelperClasses.ProcessHandler.KillRockstarProcesses();
 
 			IgnoreNewFilesWhileUpgradeDowngradeLogic = IgnoreNewFiles;
 

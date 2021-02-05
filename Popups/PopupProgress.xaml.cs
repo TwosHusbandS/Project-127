@@ -265,6 +265,9 @@ namespace Project_127.Popups
 			{
 				bool UpdatePopupThrownAlready = false;
 
+				HelperClasses.ProcessHandler.KillRockstarProcesses();
+
+
 				// Saving all the File Operations I want to do, executing this at the end of this Method
 				List<MyFileOperation> MyFileOperationsTmp = new List<MyFileOperation>();
 
@@ -292,7 +295,7 @@ namespace Project_127.Popups
 					{
 						long progress = ((i + 1) * 100 / FilesInDowngradeFiles.Length);
 						myPB.Value = progress;
-						myLBL.Content = "Gathering Information(" + (i + 1).ToString() + "/" + (FilesInDowngradeFiles.Length).ToString() + ")";
+						myLBL.Content = "Gathering Information (" + (i + 1).ToString() + "/" + (FilesInDowngradeFiles.Length).ToString() + ")";
 					});
 
 
@@ -391,6 +394,8 @@ namespace Project_127.Popups
 				List<MyFileOperation> MyFileOperationsTmp = new List<MyFileOperation>();
 				bool UpdatePopupThrownAlready = false;
 
+				HelperClasses.ProcessHandler.KillRockstarProcesses();
+
 				HelperClasses.Logger.Log("Initiating UPGRADE", 0);
 				HelperClasses.Logger.Log("GTAV Installation Path: " + LauncherLogic.GTAVFilePath, 1);
 				HelperClasses.Logger.Log("InstallationLocation: " + Globals.ProjectInstallationPath, 1);
@@ -429,7 +434,7 @@ namespace Project_127.Popups
 					{
 						long progress = ((i + 1) * 100 / FilesInDowngradeAndUpgradePathInDowngradedPathFormat.Count);
 						myPB.Value = progress;
-						myLBL.Content = "Gathering Information(" + (i + 1).ToString() + "/" + (FilesInDowngradeAndUpgradePathInDowngradedPathFormat.Count).ToString() + ")";
+						myLBL.Content = "Gathering Information (" + (i + 1).ToString() + "/" + (FilesInDowngradeAndUpgradePathInDowngradedPathFormat.Count).ToString() + ")";
 					});
 
 
