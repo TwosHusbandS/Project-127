@@ -840,6 +840,65 @@ namespace Project_127.MySettings
 			}
 		}
 
+
+		/// <summary>
+		/// Settings EnableOverWriteGTACommandLineArgs. Gets and Sets from the Dictionary.
+		/// </summary>
+		public static bool EnableOverWriteGTACommandLineArgs
+		{
+			get
+			{
+				return GetBoolFromString(GetSetting("EnableOverWriteGTACommandLineArgs"));
+			}
+			set
+			{
+				SetSetting("EnableOverWriteGTACommandLineArgs", value.ToString());
+				if (value == false)
+				{
+					OverWriteGTACommandLineArgs = "";
+				}
+			}
+		}
+
+		/// <summary>
+		/// Settings EnableCoreFix. Gets and Sets from the Dictionary.
+		/// </summary>
+		public static bool EnableCoreFix
+		{
+			get
+			{
+				return GetBoolFromString(GetSetting("EnableCoreFix"));
+			}
+			set
+			{
+				SetSetting("EnableCoreFix", value.ToString());
+			}
+		}
+
+		/// <summary>
+		/// Settings OverWriteGTACommandLineArgs. Gets and Sets from the Dictionary.
+		/// </summary>
+		public static string OverWriteGTACommandLineArgs
+		{
+			get
+			{
+				if (String.IsNullOrWhiteSpace(GetSetting("OverWriteGTACommandLineArgs")))
+				{
+					return LauncherLogic.GetStartCommandLineArgs();
+				}
+				else
+				{
+					return GetSetting("OverWriteGTACommandLineArgs");
+				}
+			}
+			set
+			{
+				SetSetting("OverWriteGTACommandLineArgs", value);
+			}
+		}
+
+
+
 		/// <summary>
 		/// Settings EnableAutoStartLiveSplit. Gets and Sets from the Dictionary.
 		/// </summary>

@@ -5,6 +5,7 @@
 * Automatically and silently MTL Authing on Startup if wanted
 * Ability to chose what MTL does once its completed.
 * Better UI / UX for LaunchWays and Authways, and their respective custom Options
+* Ability to give custom command line args for GTA.
 
 #### Improved Features:
 * SaveFileHandler now doesnt ask you to give a GTA SaveFile a new name when backing it up (unless File with that name already exists in Backups)

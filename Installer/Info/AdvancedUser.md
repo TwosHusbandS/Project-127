@@ -1,6 +1,6 @@
 ﻿### Information for Advanced Users:
 
-
+These Infos do NOT contain advanced-user-use-cases which are on a normal Leftclick on a normal Buttons. Read through the damn Settings.
 	
 #### General Client:
 * If you see any new Texts about "Mode", you can rightclick those, go get into that menu.

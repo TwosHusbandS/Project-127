@@ -248,11 +248,6 @@ namespace Project_127
 
 			HelperClasses.Logger.Log("Constructor of MainWindow Done. Will finish init with OnLoaded of WindowLoaded Event");
 
-			var synthesizer = new SpeechSynthesizer();
-			synthesizer.SetOutputToDefaultAudioDevice();
-			synthesizer.SpeakAsync(@"Gotta make-you, under stand, Never-gonna give you up,
-Never-gonna let you down, Never-gonna run around-and, dez-urt you. Never-gonna make you cry, Never-gonna say goodbye, never gonna tell a lie, and hurt you.");
-
 		}
 
 		#endregion

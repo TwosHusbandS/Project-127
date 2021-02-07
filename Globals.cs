@@ -331,6 +331,9 @@ namespace Project_127
 			{"EnablePreOrderBonus", "False"},
 			{"EnableDontLaunchThroughSteam", "False"},
 			{"EnableScripthookOnDowngraded", "False"},
+			{"EnableOverWriteGTACommandLineArgs", "False"},
+			{"EnableCoreFix", "True"},
+			{"OverWriteGTACommandLineArgs", ""},
    
 			// Extra Features
 			{"EnableOverlay", "False"},

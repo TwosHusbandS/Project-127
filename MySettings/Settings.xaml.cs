@@ -706,6 +706,8 @@ namespace Project_127.MySettings
 			combox_Set_PostMTLAction.SelectedItem = Settings.PostMTLAction;
 
 			tb_Set_InGameName.Text = Settings.InGameName;
+			tb_OverWriteGTACommandLineArgs.Text = Settings.OverWriteGTACommandLineArgs;
+
 			btn_Set_JumpScriptKey1.Content = Settings.JumpScriptKey1;
 			btn_Set_JumpScriptKey2.Content = Settings.JumpScriptKey2;
 
@@ -726,8 +728,11 @@ namespace Project_127.MySettings
 			ButtonMouseOverMagic(btn_cb_Set_OnlyAutoStartProgramsWhenDowngraded);
 			ButtonMouseOverMagic(btn_cb_Set_EnableDontLaunchThroughSteam);
 			ButtonMouseOverMagic(btn_cb_Set_EnableAutoStartJumpScript);
-			ButtonMouseOverMagic(btn_cb_Set_SlowCompare);
+			ButtonMouseOverMagic(btn_cb_Set_EnableOverWriteGTACommandLineArgs);
+			ButtonMouseOverMagic(btn_cb_Set_SlowCompare); 
 			ButtonMouseOverMagic(btn_cb_Set_AutoMTLAuthOnStartup);
+			ButtonMouseOverMagic(btn_cb_Set_EnableCoreFix);
+
 
 			if (LauncherLogic.AuthWay == LauncherLogic.AuthWays.MTL)
 			{
@@ -743,8 +748,6 @@ namespace Project_127.MySettings
 			}
 
 			RefreshIfOptionsHide();
-
-
 		}
 
 
@@ -892,6 +895,12 @@ namespace Project_127.MySettings
 						MainWindow.MW.SetControlBackground(btn_Refresh, "Artwork/refresh.png");
 					}
 					break;
+				case "btn_cb_Set_EnableOverWriteGTACommandLineArgs":
+					SetCheckBoxBackground(myBtn, Settings.EnableOverWriteGTACommandLineArgs);
+					break;
+				case "btn_cb_Set_EnableCoreFix":
+					SetCheckBoxBackground(myBtn, Settings.EnableCoreFix);
+					break;
 				case "btn_cb_Set_EnableAlternativeLaunchForceCProgramFiles":
 					SetCheckBoxBackground(myBtn, Settings.EnableAlternativeLaunchForceCProgramFiles);
 					break;
@@ -1019,13 +1028,25 @@ namespace Project_127.MySettings
 				}
 			}
 
+			if (Settings.EnableOverWriteGTACommandLineArgs)
+			{
+				Rect_HideOptions_CommandLineArg.Visibility = Visibility.Hidden;
+				Rect_HideOptions_AutoCoreFix.Visibility = Visibility.Visible;
+				Rect_HideOptions_Language.Visibility = Visibility.Visible;
+			}
+			else
+			{
+				Rect_HideOptions_CommandLineArg.Visibility = Visibility.Visible;
+				Rect_HideOptions_AutoCoreFix.Visibility = Visibility.Hidden;
+				Rect_HideOptions_Language.Visibility = Visibility.Hidden;
+			}
 		}
 
 		private void CodeSnipped()
 		{
 
+			Grid_Settings_GTA.RowDefinitions.RemoveAt(6);
 			Grid_Settings_GTA.RowDefinitions.RemoveAt(5);
-			Grid_Settings_GTA.RowDefinitions.RemoveAt(4);
 			RowDefinition Row_SCL_Options = new RowDefinition();
 			Row_SCL_Options.Height = new GridLength(100); 
 			RowDefinition Row_DragonEmu_Options = new RowDefinition();
@@ -1042,8 +1063,8 @@ namespace Project_127.MySettings
 				Grid_Settings_GTA.RowDefinitions.Add(Row_SCL_Options);
 				Grid_Settings_GTA.RowDefinitions.Add(Row_DragonEmu_Options);
 
-				Grid.SetRow(brdr_SCLOptions, 4);
-				Grid.SetRow(brdr_DragonEmuOptions, 5);
+				Grid.SetRow(brdr_SCLOptions, 5);
+				Grid.SetRow(brdr_DragonEmuOptions, 6);
 
 				btn_HideSCLOptions.Visibility = Visibility.Hidden;
 				btn_HideEmuOptions.Visibility = Visibility.Visible;
@@ -1067,8 +1088,8 @@ namespace Project_127.MySettings
 				Grid_Settings_GTA.RowDefinitions.Add(Row_DragonEmu_Options);
 				Grid_Settings_GTA.RowDefinitions.Add(Row_SCL_Options);
 
-				Grid.SetRow(brdr_DragonEmuOptions, 4);
-				Grid.SetRow(brdr_SCLOptions, 5);
+				Grid.SetRow(brdr_DragonEmuOptions, 5);
+				Grid.SetRow(brdr_SCLOptions, 6);
 
 				btn_HideSCLOptions.Visibility = Visibility.Visible;
 				btn_HideEmuOptions.Visibility = Visibility.Hidden;
@@ -1188,6 +1209,9 @@ namespace Project_127.MySettings
 				case "btn_cb_Set_SlowCompare":
 					Settings.EnableSlowCompare = !Settings.EnableSlowCompare;
 					break;
+				case "btn_cb_Set_EnableOverWriteGTACommandLineArgs":
+					Settings.EnableOverWriteGTACommandLineArgs = !Settings.EnableOverWriteGTACommandLineArgs;
+					break;
 				case "btn_cb_Set_EnableScripthookOnDowngraded":
 					Settings.EnableScripthookOnDowngraded = !Settings.EnableScripthookOnDowngraded;
 					RefreshIfOptionsHide();
@@ -1207,6 +1231,9 @@ namespace Project_127.MySettings
 					break;
 				case "btn_cb_Set_EnablePreOrderBonus":
 					Settings.EnablePreOrderBonus = !Settings.EnablePreOrderBonus;
+					break;
+				case "btn_cb_Set_EnableCoreFix":
+					Settings.EnableCoreFix = !Settings.EnableCoreFix;
 					break;
 				case "btn_cb_Set_AutoSetHighPriority":
 					Settings.EnableAutoSetHighPriority = !Settings.EnableAutoSetHighPriority;
@@ -1646,6 +1673,7 @@ namespace Project_127.MySettings
 			PopupCreateBackup.IsOpen = false;
 			PopupUseBackup.IsOpen = false;
 			PopupJumpscriptAdditional.IsOpen = false;
+			PopupGTACommandLineArgs.IsOpen = false;
 			RefreshGUI();
 		}
 
@@ -1955,6 +1983,27 @@ namespace Project_127.MySettings
 			}
 		}
 
+		private void btn_GTACommandLineArgs_Click(object sender, RoutedEventArgs e)
+		{
+			PopupGTACommandLineArgs.IsOpen = true;
+		}
 
+		private void PopupGTACommandLineArgs_Closed(object sender, EventArgs e)
+		{
+
+		}
+
+		private void PopupGTACommandLineArgs_Opened(object sender, EventArgs e)
+		{
+
+		}
+
+		private void tb_OverWriteGTACommandLineArgs_LostFocus(object sender, RoutedEventArgs e)
+		{
+			string txt = tb_OverWriteGTACommandLineArgs.Text;
+			if (String.IsNullOrWhiteSpace(txt)) { txt = LauncherLogic.GetStartCommandLineArgs(); }
+			Settings.OverWriteGTACommandLineArgs = txt;
+			tb_OverWriteGTACommandLineArgs.Text = txt;
+		}
 	} // End of Class
 } // End of Namespace 

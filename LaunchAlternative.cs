@@ -53,25 +53,10 @@ namespace Project_127
 				{
 					LauncherLogic.UpgradeSocialClubAfterGame = true;
 
-					HelperClasses.Logger.Log("SCL - Launch, Social Club Downgrade WAS successfull.");
+					HelperClasses.Logger.Log("SCL - Launch, Social Club Downgrade WAS successfull. Launching Game now.");
 
-					int AmountOfCores = Environment.ProcessorCount;
-					if (AmountOfCores < 4)
-					{
-						AmountOfCores = 4;
-					}
-					else if (AmountOfCores > 23)
-					{
-						AmountOfCores = 23;
-					}
 
-					UInt64 Possibilities = (UInt64)Math.Pow(2, AmountOfCores);
-					string MyHex = (Possibilities - 1).ToString("X");
-					string cmdLineArgs = @"/c cd /d " + "\"" + LauncherLogic.GTAVFilePath + "\"" + @" && start /affinity " + MyHex + " gtastub.exe -uilanguage " + Settings.ToMyLanguageString(Settings.LanguageSelected).ToLower() + " && exit";
-
-					HelperClasses.Logger.Log("SCL - Launch, Starting GTAStub with cmdlineargs now.");
-
-					Process tmp = GSF.Identity.UserAccountControl.CreateProcessAsStandardUser(@"cmd.exe", cmdLineArgs);
+					Process tmp = GSF.Identity.UserAccountControl.CreateProcessAsStandardUser(@"cmd.exe", LauncherLogic.GetFullCommandLineArgsForStarting());
 				}
 				else
 				{

@@ -16,9 +16,11 @@
 * You have two Options of launching the game.
   * Dr490n Launcher (default / standard)
     * For this you only need the "Required Files"
+	* For this you will need "Auth"
   * Launching through downgraded Socialclub (SCL).
-    * Social Club is automatically Downgraded / Upgraded
+    * For this you will NOT need "Auth"
 	* Removes the need for P127 to have your Auth information (through MTL or LegacyAuth). NO CAPTCHAS
+    * Social Club is automatically Downgraded / Upgraded
 	* Your normal GTA V Installation Settings / Savefiles etc.
     * Only available if you own GTA through Steam or Rockstar. Sorry Epic.
     * For this you need the Downgraded Social Club Files, and the SCL - GameFiles for the Game Version (1.24 or 1.27) and for your Retailer (Steam or Rockstar)
@@ -46,6 +48,8 @@ It can do this in two ways:
 * Re-Installing or manually deleting and Installing a Component, as well as re-doing an Upgrade / Downgrade is always worth a try.
 
 * Game Updates from Rockstar might break things. This usually shows itself as P127 saying: "Downgraded (1.52)", which makes no sense. Re-Installing the Components inside the ComponentManager you are using for Downgrading and Re-Applying a Downgrade should fix this. Steam / Epic is not affected by this. P127 should automatically detect and handle this.
+
+* If GTA (mainly Downgraded) does not launch, UNCHECK "Overwrite GTA CommandLineArgs" inside "Additional GTA Commandline Options" inside "GTA & Launch Settings".
 
 * If the current Authentication Method for the dr490n emu is not working, it is worth trying to switch the way P127 tries to authenticate your GTA ownership by enabling / disabling "Legacy Auth" inside General P127 Settings.
 

@@ -308,12 +308,14 @@ namespace Project_127
 
 			AddParagraph(rtb_Help, "Game Updates from Rockstar might break things.This usually shows itself as P127 saying: \"Downgraded(1.52)\", which makes no sense. Re - Installing the Components inside the ComponentManager you are using for Downgrading and Re - Applying a Downgrade should fix this. Steam / Epic is not affected by this.P127 should automatically detect and handle this.");
 
+			AddParagraph(rtb_Help, "If GTA(mainly Downgraded) does not launch, UNCHECK \"Overwrite GTA CommandLineArgs\" inside \"Additional GTA Commandline Options\" inside \"GTA & Launch Settings\".");
+
 			AddParagraph(rtb_Help, "If the current Authentication Method for the dr490n emu is not working, it is worth trying to switch the way P127 tries to authenticate your GTA ownership by enabling / disabling \"Legacy Auth\" inside General P127 Settings.");
 
 			AddParagraph(rtb_Help, "If the dr490n emu not work for you, enable \"Launch through Social Club\" inside General P127 Settings.");
 
 			AddParagraph(rtb_Help, "If the dr490n emu doesnt seem to take some options(InGameName, PreOrderBonus) into account, try launching P127 with the command line args: \"-useemudebugfile true\"");
-			
+
 			AddParagraph(rtb_Help, "On Legacy Auth: When the Auth / Login appears to load infinitely, re - start the auth - process by hitting the \"X\" inside the top right corner once, and then trying again.If that doesnt work, you can try to re-start Project 1.27, and wait a few  minutes.If its still not working, Rockstar just might not like your IP.In this case try using a Hotspot from your phone or a VPN or any other internet connection.");
 
 			AddParagraph(rtb_Help, "On Legacy Auth: When P127 crashes just when you are expected to login(on click of Auth Button, or on Game Launch when not logged in already), you might fail to connect to Rockstar Server. Make sure you are connected to the internet.");

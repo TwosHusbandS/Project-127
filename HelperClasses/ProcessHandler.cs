@@ -149,7 +149,7 @@ namespace Project_127.HelperClasses
 				// check if its actually a process from SC Install dir or GTA Install dir
 				try
 				{
-					if 
+					if
 						((p.MainModule.FileName.ToLower().Contains(LauncherLogic.GTAVFilePath.TrimEnd('\\').ToLower())) ||
 						(p.MainModule.FileName.ToLower().Contains(tmpInstallDir.TrimEnd('\\').ToLower())) ||
 						(p.MainModule.FileName.ToLower().Contains(@"C:\Program Files\Rockstar Games".TrimEnd('\\').ToLower())))
@@ -157,7 +157,7 @@ namespace Project_127.HelperClasses
 						p.CloseMainWindow();
 					}
 				}
-				catch 
+				catch
 				{
 				}
 
@@ -184,7 +184,7 @@ namespace Project_127.HelperClasses
 				// check if its actually a process from SC Install dir or GTA Install dir
 				try
 				{
-					if 
+					if
 						((p.MainModule.FileName.ToLower().Contains(LauncherLogic.GTAVFilePath.TrimEnd('\\').ToLower())) ||
 						(p.MainModule.FileName.ToLower().Contains(tmpInstallDir.TrimEnd('\\').ToLower())) ||
 						(p.MainModule.FileName.ToLower().Contains(@"C:\Program Files\Rockstar Games".TrimEnd('\\').ToLower())))
@@ -296,7 +296,7 @@ namespace Project_127.HelperClasses
 		/// <summary>
 		/// Starting Game as Non Retail
 		/// </summary>
-		public static void StartGameNonRetail(bool startViaSteam = false)
+		public static void StartGameNonRetail()
 		{
 			int AmountOfCores = Environment.ProcessorCount;
 
@@ -316,18 +316,7 @@ namespace Project_127.HelperClasses
 
 			//cmdLineArgs = @"/c cd / d "F:\SteamLibrary\steamapps\common\Grand Theft Auto V" && start /affinity FFFF playgtav.exe -uilanguage french && exit";
 
-			string cmdLineArgs = "";
-
-			if (startViaSteam)
-			{
-				cmdLineArgs = @"/c cd /d " + "\"" + Globals.SteamInstallPath + "\"" + @" && start /affinity " + MyHex + " steam.exe -applaunch 271590 -uilanguage " + Settings.ToMyLanguageString(Settings.LanguageSelected).ToLower() + " && exit";
-			}
-			else
-			{
-				cmdLineArgs = @"/c cd /d " + "\"" + LauncherLogic.GTAVFilePath + "\"" + @" && start /affinity " + MyHex + " playgtav.exe -uilanguage " + Settings.ToMyLanguageString(Settings.LanguageSelected).ToLower() + " && exit";
-			}
-
-			Process tmp = GSF.Identity.UserAccountControl.CreateProcessAsStandardUser(@"cmd.exe", cmdLineArgs);
+			Process tmp = GSF.Identity.UserAccountControl.CreateProcessAsStandardUser(@"cmd.exe", LauncherLogic.GetFullCommandLineArgsForStarting());
 
 		}
 

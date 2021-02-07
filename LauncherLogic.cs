@@ -848,6 +848,56 @@ namespace Project_127
 			HelperClasses.Logger.Log("Repair is done. Files in Upgrade Folder deleted.");
 		}
 
+		public static string GetFullCommandLineArgsForStarting()
+		{
+			string tmp = @"/c cd /d " + "\"" + LauncherLogic.GTAVFilePath + "\"" + @" && ";
+
+			if (Settings.EnableOverWriteGTACommandLineArgs)
+			{
+				tmp += GetStartCommandLineArgs();
+			}
+			else
+			{
+				tmp += Settings.OverWriteGTACommandLineArgs;
+			}
+
+			tmp += " && exit";
+
+			if (LaunchWay == LaunchWays.DragonEmu)
+			{
+				return tmp.Replace("gta_p127.exe", "playgtav.exe");
+			}
+			else
+			{
+				return tmp.Replace("gta_p127.exe", "gtastub.exe");
+			}
+		}
+
+		public static string GetStartCommandLineArgs()
+		{
+			string rtrn = "start ";
+
+			if (Settings.EnableCoreFix)
+			{
+				int AmountOfCores = Environment.ProcessorCount;
+				if (AmountOfCores < 4)
+				{
+					AmountOfCores = 4;
+				}
+				else if (AmountOfCores > 23)
+				{
+					AmountOfCores = 23;
+				}
+				UInt64 Possibilities = (UInt64)Math.Pow(2, AmountOfCores);
+				string MyHex = (Possibilities - 1).ToString("X");
+
+				rtrn += "/affinity " + MyHex + " ";
+			}
+
+			rtrn += "gta_p127.exe -uilanguage " + Settings.ToMyLanguageString(Settings.LanguageSelected).ToLower();
+
+			return rtrn;
+		}
 
 
 		/// <summary>
@@ -930,10 +980,9 @@ namespace Project_127
 						LaunchOptions[0] = "PreOrderBonus: \"" + Settings.EnablePreOrderBonus.ToString() + "\"";
 						LaunchOptions[1] = "InGameName: \"" + Settings.InGameName + "\"";
 						LaunchOptions[2] = "SavePath: \"" + Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\Rockstar Games\GTA V\Profiles\Project127\GTA V\0F74F4C4" + "\"";
-						LaunchOptions[3] = "EnableScripthookOnDowngraded: \"" + Settings.EnableScripthookOnDowngraded.ToString() + "\"";
-						
-	  
 						LaunchOptions[3] = "WindowTitleTomfoolery: \"" + Overlay.GTAOverlay.targetWindowBorderless + "\"";
+						LaunchOptions[4] = "EnableScripthookOnDowngraded: \"" + Settings.EnableScripthookOnDowngraded.ToString() + "\"";
+
 						HelperClasses.FileHandling.WriteStringToFileOverwrite(EmuCfgPath, LaunchOptions);
 					}
 
