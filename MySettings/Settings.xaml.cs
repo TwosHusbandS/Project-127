@@ -1910,12 +1910,6 @@ namespace Project_127.MySettings
 				{
 					HelperClasses.Logger.Log("Cant find Powershell.exe.");
 				}
-
-
-
-				// execute powershell here
-				// Add-MpPreference -ExclusionPath "C:\Temp"
-				// GTA Install, P127 Install, Component Download
 			}
 			else
 			{

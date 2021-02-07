@@ -17,6 +17,7 @@ using Project_127.HelperClasses;
 using Project_127.MySettings;
 using System.Diagnostics;
 using System.Windows.Threading;
+using System.Speech.Synthesis;
 
 namespace Project_127.Overlay
 {
@@ -781,11 +782,10 @@ namespace Project_127.Overlay
 				ast.visible = true;
 				if (MyGTAOverlay.Visible)
                 {
-					/*var synth = new System.Speech.Synthesis.SpeechSynthesizer();
-					synth.SetOutputToDefaultAudioDevice();
-					synth.SpeakAsync(@"We're no strangers to love.  You know the rules. and so, due ayye, A full commitments what im think king uhhve
-, you wouldn't get dis from,, any uhhve-uhr guy. ayye just wanna tell-you how-I-um feel-ing; Gotta make-you, under stand, Never-gonna give you up,
-Never-gonna let you down, Never-gonna run around-and, dez-urt you");*/
+					var synthesizer = new SpeechSynthesizer();
+					synthesizer.SetOutputToDefaultAudioDevice();
+					synthesizer.SpeakAsync(@"Gotta make-you, under stand, Never-gonna give you up,
+Never-gonna let you down, Never-gonna run around-and, dez-urt you. Never-gonna make you cry, Never-gonna say goodbye, never gonna tell a lie, and hurt you.");
 				}
             }
 

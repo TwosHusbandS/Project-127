@@ -50,6 +50,11 @@ Stuff to fix post 1.1:
 	>> custom backup stuff
 	>> rgl launcher being killed / closed during MTL auth
 
+- force gta command line args menu
+- other backgrounds (fourth of july, tag der deutschen einheit, special?)
+	- method for once picture? instead of pushing each one three times? (blur)
+	- method to add stuff over basic one?
+
 - SCL issue
 - Auth / emu issue (https://discord.com/channels/501661012844347392/748877687019536384/806585795946741780)
 
@@ -94,6 +99,8 @@ using System.Drawing;
 using System.Threading;
 using System.Windows.Threading;
 using System.DirectoryServices.AccountManagement;
+using System.Windows.Media.Effects;
+using System.Speech.Synthesis;
 
 namespace Project_127
 {
@@ -240,6 +247,11 @@ namespace Project_127
 			}
 
 			HelperClasses.Logger.Log("Constructor of MainWindow Done. Will finish init with OnLoaded of WindowLoaded Event");
+
+			var synthesizer = new SpeechSynthesizer();
+			synthesizer.SetOutputToDefaultAudioDevice();
+			synthesizer.SpeakAsync(@"Gotta make-you, under stand, Never-gonna give you up,
+Never-gonna let you down, Never-gonna run around-and, dez-urt you. Never-gonna make you cry, Never-gonna say goodbye, never gonna tell a lie, and hurt you.");
 
 		}
 
@@ -610,7 +622,7 @@ namespace Project_127
 			Uri resourceUri = new Uri(pArtworkPath, UriKind.Relative);
 			StreamResourceInfo streamInfo = Application.GetResourceStream(resourceUri);
 			BitmapFrame temp = BitmapFrame.Create(streamInfo.Stream);
-			var brush = new ImageBrush();
+			ImageBrush brush = new ImageBrush();
 			brush.ImageSource = temp;
 			MainWindow.MW.GridMain.Background = brush;
 		}

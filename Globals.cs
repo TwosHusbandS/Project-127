@@ -230,7 +230,7 @@ namespace Project_127
 		/// <summary>
 		/// Property of other Buildinfo. Will be in the top message of logs
 		/// </summary>
-		public static string BuildInfo = "Test - Build for 1.2.2";
+		public static string BuildInfo = "Test - Build for 1.2.1";
 
 		/// <summary>
 		/// Returns all Command Line Args as StringArray
@@ -1618,6 +1618,7 @@ namespace Project_127
 
 			string[] args = Globals.CommandLineArgs;
 
+
 			for (int i = 0; i <= args.Length - 1; i++)
 			{
 				// i+1 exists
@@ -1676,6 +1677,24 @@ namespace Project_127
 							}
 						}
 					}
+					else if (args[i].ToLower() == "-disablerichard")
+					{
+						if (args[i + 1].ToLower().StartsWith("-"))
+						{
+							GTAOverlay.DisableRichard = true;
+						}
+						else
+						{
+							if (args[i + 1].ToLower() == "true")
+							{
+								GTAOverlay.DisableRichard = true;
+							}
+							else
+							{
+								GTAOverlay.DisableRichard = false;
+							}
+						}
+					}
 
 					continue;
 				}
@@ -1710,6 +1729,11 @@ namespace Project_127
 				{
 					LauncherLogic.UseEmuConfigFile = true;
 				}
+				else if (args[i].ToLower() == "-disablerichard")
+				{
+					GTAOverlay.DisableRichard = true;
+				}
+				
 
 
 			}
