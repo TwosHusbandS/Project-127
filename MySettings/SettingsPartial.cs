@@ -853,7 +853,7 @@ namespace Project_127.MySettings
 			set
 			{
 				SetSetting("EnableOverWriteGTACommandLineArgs", value.ToString());
-				if (value == false)
+				if (value == true)
 				{
 					OverWriteGTACommandLineArgs = "";
 				}

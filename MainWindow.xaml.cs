@@ -41,6 +41,7 @@ Hybrid code can be found in AAA_HybridCode.
 Stuff to fix post 1.1:
 - Installer:
 	>> BUILD WITHOUT EASTER EGG COMMENTED OUT (think about TTS Easter Egg.)
+	>> NEW IMAGE LOCATIONS ETC
 	>> Build Installer
 	>> Test if uninstall delete jumpscript license works.
 	>> remove that uninstall delete before pushing
@@ -50,10 +51,15 @@ Stuff to fix post 1.1:
 	>> custom backup stuff
 	>> rgl launcher being killed / closed during MTL auth
 
-- force gta command line args menu
-- other backgrounds (fourth of july, tag der deutschen einheit, special?)
-	- method for once picture? instead of pushing each one three times? (blur)
-	- method to add stuff over basic one?
+- load images not from resources but from disk
+	-> actual loading the image
+	-> change from resource to content
+	-> post built event to copy files
+- Mess with rockstar Launcher to stop auto updating
+- Changing ReadMe to actually reference new UI / UX for Launch and Auth ways
+- other backgrounds (fourth of july, tag der deutschen einheit, special for?)
+	-> method for once picture? instead of pushing each one three times? (blur)
+	-> method to add stuff over basic one?
 
 - SCL issue
 - Auth / emu issue (https://discord.com/channels/501661012844347392/748877687019536384/806585795946741780)
@@ -654,7 +660,7 @@ namespace Project_127
 				Uri resourceUri = new Uri(pArtpath, UriKind.Relative);
 				StreamResourceInfo streamInfo = Application.GetResourceStream(resourceUri);
 				BitmapFrame temp = BitmapFrame.Create(streamInfo.Stream);
-				var brush = new ImageBrush();
+				ImageBrush brush = new ImageBrush();
 				brush.ImageSource = temp;
 				myCtrl.Background = brush;
 			}
