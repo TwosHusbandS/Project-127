@@ -101,6 +101,7 @@ using System.Windows.Threading;
 using System.DirectoryServices.AccountManagement;
 using System.Windows.Media.Effects;
 using System.Speech.Synthesis;
+using Microsoft.Xaml.Behaviors;
 
 namespace Project_127
 {
@@ -247,7 +248,6 @@ namespace Project_127
 			}
 
 			HelperClasses.Logger.Log("Constructor of MainWindow Done. Will finish init with OnLoaded of WindowLoaded Event");
-
 		}
 
 		#endregion
@@ -619,7 +619,26 @@ namespace Project_127
 			BitmapFrame temp = BitmapFrame.Create(streamInfo.Stream);
 			ImageBrush brush = new ImageBrush();
 			brush.ImageSource = temp;
-			MainWindow.MW.GridMain.Background = brush;
+			MainWindow.MW.GridBackground.Background = brush;
+
+			if (Globals.HamburgerMenuState == Globals.HamburgerMenuStates.Hidden)
+			{
+				Blur_All.Visibility = Visibility.Hidden;
+				Blur_Hamburger.Visibility = Visibility.Hidden;
+			}
+			else if (Globals.HamburgerMenuState == Globals.HamburgerMenuStates.Visible)
+			{
+				if (Globals.PageState == Globals.PageStates.GTA)
+				{
+					Blur_All.Visibility = Visibility.Hidden;
+					Blur_Hamburger.Visibility = Visibility.Visible;
+				}
+				else
+				{
+					Blur_All.Visibility = Visibility.Visible;
+					Blur_Hamburger.Visibility = Visibility.Hidden;
+				}
+			}
 		}
 
 
@@ -667,7 +686,7 @@ namespace Project_127
 			SetButtonMouseOverMagic((Button)sender);
 		}
 
-	
+
 
 
 

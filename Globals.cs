@@ -1561,21 +1561,23 @@ namespace Project_127
 					break;
 			}
 
-			if (HamburgerMenuState == HamburgerMenuStates.Hidden)
-			{
-				URL_Path += ".png";
-			}
-			else if (HamburgerMenuState == HamburgerMenuStates.Visible)
-			{
-				if (PageState == PageStates.GTA)
-				{
-					URL_Path += "_hb.png";
-				}
-				else
-				{
-					URL_Path += "_blur.png";
-				}
-			}
+			URL_Path += ".png";
+
+			//if (HamburgerMenuState == HamburgerMenuStates.Hidden)
+			//{
+			//	URL_Path += ".png";
+			//}
+			//else if (HamburgerMenuState == HamburgerMenuStates.Visible)
+			//{
+			//	if (PageState == PageStates.GTA)
+			//	{
+			//		URL_Path += "_hb.png";
+			//	}
+			//	else
+			//	{
+			//		URL_Path += "_blur.png";
+			//	}
+			//}
 
 			return URL_Path;
 		}

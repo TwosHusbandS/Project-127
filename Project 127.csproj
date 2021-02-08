@@ -112,6 +112,9 @@
     <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=5.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>packages\Microsoft.Bcl.AsyncInterfaces.5.0.0\lib\net461\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Xaml.Behaviors, Version=1.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Xaml.Behaviors.Wpf.1.1.31\lib\net45\Microsoft.Xaml.Behaviors.dll</HintPath>
+    </Reference>
     <Reference Include="PresentationFramework.Aero" />
     <Reference Include="SharpDX, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
       <HintPath>packages\SharpDX.4.2.0\lib\net45\SharpDX.dll</HintPath>
@@ -161,6 +164,7 @@
     <Reference Include="System.IO.Compression" />
     <Reference Include="System.IO.Compression.FileSystem" />
     <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Windows" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
@@ -190,6 +194,7 @@
       <DependentUpon>ComponentManager.xaml</DependentUpon>
     </Compile>
     <Compile Include="HelperClasses\ASPointerPath.cs" />
+    <Compile Include="HelperClasses\BlurBackgroundBehaviour.cs" />
     <Compile Include="HelperClasses\IPCPipes.cs" />
     <Compile Include="HelperClasses\MissionIdentifiers.cs" />
     <Compile Include="HelperClasses\WindowChangeListenerTwo.cs" />
@@ -459,17 +464,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Artwork\bg_420.png" />
-    <Resource Include="Artwork\bg_420_blur.png" />
-    <Resource Include="Artwork\bg_420_hb.png" />
     <Resource Include="Artwork\bg_main.png" />
-    <Resource Include="Artwork\bg_main_blur.png" />
-    <Resource Include="Artwork\bg_main_hb.png" />
     <Resource Include="Artwork\bg_spooky.png" />
-    <Resource Include="Artwork\bg_spooky_blur.png" />
-    <Resource Include="Artwork\bg_spooky_hb.png" />
     <Resource Include="Artwork\bg_xmas.png" />
-    <Resource Include="Artwork\bg_xmas_blur.png" />
-    <Resource Include="Artwork\bg_xmas_hb.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Artwork\loading.gif" />
