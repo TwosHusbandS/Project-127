@@ -26,6 +26,7 @@
                     <RowDefinition Height="45"/>
                     <RowDefinition Height="45"/>
                     <RowDefinition Height="45"/>
+                    <RowDefinition Height="45"/>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="4*"/>
@@ -42,7 +43,7 @@
                 <Rectangle Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="3" Fill="Transparent"/>
                 <Rectangle Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="3" Fill="{x:Static local:MyColors.SE_AlternateRowBackground}"/>
                 <Rectangle Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="3" Fill="Transparent"/>
-
+                <Rectangle Grid.Row="9" Grid.Column="0" Grid.ColumnSpan="3" Fill="{x:Static local:MyColors.SE_AlternateRowBackground}"/>
 
                 <!--<xctk:ColorCanvas Grid.Row="1" Grid.Column="1" Background="Transparent"></xctk:ColorCanvas>-->
 
@@ -85,6 +86,9 @@
                 <Label Grid.Row="8" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="  Overlay - TextSize"/>
                 <Slider Grid.Row="8" Grid.Column="1" Style="{StaticResource SliderStyle}" x:Name="sl_TextSize" ValueChanged="sl_TextSize_ValueChanged" Minimum="12" Maximum="50" TickFrequency="2" PreviewMouseLeftButtonUp="sl_TextSize_PreviewMouseLeftButtonUp"/>
                 <Label Style="{StaticResource lbl_Set_Info}" Grid.Row="8" Grid.Column="2" x:Name="lbl_TextSize" Margin="0"/>
+
+                <Label Grid.Row="9" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="  Overlay - Background"/>
+                <ComboBox Grid.Row="9" Grid.Column="1" Margin="10" Grid.ColumnSpan="2" Style="{StaticResource cobo}" x:Name="ov_bg_imgsel" SelectionChanged="ov_bg_imgsel_SelectionChanged"/>
 
                 <!--Background
         Foreground

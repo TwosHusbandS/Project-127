@@ -1305,7 +1305,36 @@ namespace Project_127.MySettings
 			}
 		}
 
+		public static List<string> OverlayBackgroundImages
+		{
+            get
+            {
+				var json = new System.Web.Script.Serialization.JavaScriptSerializer();
+				var obi = GetSetting("OverlayBackgroundImages");
+				if (obi == "")
+                {
+					return new List<string>();
+                }
+				return json.Deserialize<List<string>>(obi);
+            }
+            set
+            {
+				var json = new System.Web.Script.Serialization.JavaScriptSerializer();
+				SetSetting("OverlayBackgroundImages", json.Serialize(value));
+			}
+        }
 
+		public static string OverlaySelectedBackground
+		{
+            get
+            {
+				return GetSetting("OverlaySelectedBackground");
+            }
+            set
+            {
+				SetSetting("OverlaySelectedBackground", value);
+            }
+        }
 
 		/// <summary>
 		/// Settings EnableAutoStartNohboard. Gets and Sets from the Dictionary.

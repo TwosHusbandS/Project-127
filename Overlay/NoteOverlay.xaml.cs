@@ -220,6 +220,12 @@ namespace Project_127.Overlay
 				MyGTAOverlay.YMargin = Settings.OverlayMarginY;
 				MyGTAOverlay.width = Settings.OverlayWidth;
 				MyGTAOverlay.height = Settings.OverlayHeight;
+				if (Settings.OverlaySelectedBackground != "None")
+                {
+					MyGTAOverlay.UseBackground = true;
+					MyGTAOverlay.setBgImage(Settings.OverlaySelectedBackground);
+					MyGTAOverlay.UseImageFill = true;
+                }
 				LoadTexts();
 				HelperClasses.Logger.Log("GTA Overlay initiated", 1);
 				easterEgg();
@@ -750,17 +756,24 @@ namespace Project_127.Overlay
 			MyGTAOverlay.attach(ast);
 			await Task.Run(async () =>
 			{
+				Stopwatch sw = new Stopwatch();
+				sw.Start();
 				for (int i = 1; i<=50; i++)
                 {
 					var frameName = i.ToString("000") + ".jpg";
-					ast.addFrame(await ast.imageFromURI(new Uri(@"Overlay\richard\" + frameName, UriKind.Relative)));
-                }
+
+					Task.Run(async () => { ast.addFrame(await ast.imageFromURI(new Uri(@"Overlay\richard\" + frameName, UriKind.Relative))); });
+					
+				}
 				//var richard = System.Windows.Application.GetResourceStream(new Uri(@"Overlay\richard.gif", UriKind.Relative));
 				//await ast.loadGif(System.Drawing.Image.FromStream(richard.Stream));
 				ast.fillOverlay = true;
 				ast.visible = false;
 				ast.FPS = 10;
 				ast.opacity = .5F;
+				sw.Stop();
+				
+				MessageBox.Show(string.Format("Render took {0}ms ({1}ms per frame)", sw.ElapsedMilliseconds, sw.ElapsedMilliseconds/50.0));
 			});
 			dtast = new System.Windows.Threading.DispatcherTimer();
 			dtast.Tick += new EventHandler(easterEggLoop);
@@ -776,7 +789,7 @@ namespace Project_127.Overlay
 				percent = Globals.GTAPointerPathHandler.EvalPointerPath_fp32(Globals.stateVarsCurrent["percent"]);
 			}
             catch { }
-			if (percent == 100)
+			//if (percent == 100)
             {
 				ast.visible = true;
 				if (MyGTAOverlay.Visible)

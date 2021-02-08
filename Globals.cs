@@ -372,6 +372,9 @@ namespace Project_127
 			{"OL_MM_Left", "0" },
 			{"OL_MM_Top", "0" },
 
+			{"OverlayBackgroundImages", ""},
+			{"OverlaySelectedBackground", ""},
+
 			{"OverlayNotesMain","Note1.txt;Note2.txt;Note3.txt;Note4.txt"},
 			{"OverlayNotesPresetA",""},
 			{"OverlayNotesPresetB",""},
