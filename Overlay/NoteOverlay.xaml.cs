@@ -757,7 +757,6 @@ namespace Project_127.Overlay
 			await Task.Run(async () =>
 			{
 				Stopwatch sw = new Stopwatch();
-				sw.Start();
 				for (int i = 1; i<=50; i++)
                 {
 					var frameName = i.ToString("000") + ".jpg";
@@ -771,9 +770,7 @@ namespace Project_127.Overlay
 				ast.visible = false;
 				ast.FPS = 10;
 				ast.opacity = .5F;
-				sw.Stop();
 				
-				MessageBox.Show(string.Format("Render took {0}ms ({1}ms per frame)", sw.ElapsedMilliseconds, sw.ElapsedMilliseconds/50.0));
 			});
 			dtast = new System.Windows.Threading.DispatcherTimer();
 			dtast.Tick += new EventHandler(easterEggLoop);
