@@ -762,7 +762,7 @@ namespace Project_127.Overlay
                 {
 					var frameName = i.ToString("000") + ".jpg";
 
-					Task.Run(async () => { ast.addFrame(await ast.imageFromURI(new Uri(@"Overlay\richard\" + frameName, UriKind.Relative))); });
+					ast.addFrame(await ast.imageFromURI(new Uri(@"Overlay\richard\" + frameName, UriKind.Relative)));
 					
 				}
 				//var richard = System.Windows.Application.GetResourceStream(new Uri(@"Overlay\richard.gif", UriKind.Relative));
