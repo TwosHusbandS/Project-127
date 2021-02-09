@@ -463,10 +463,10 @@
     <Resource Include="Artwork\lock_open_mo.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Artwork\bg_420.png" />
+    <None Include="Artwork\bg_fourtwenty.png" />
     <Resource Include="Artwork\bg_main.png" />
-    <Resource Include="Artwork\bg_spooky.png" />
-    <Resource Include="Artwork\bg_xmas.png" />
+    <None Include="Artwork\bg_spooky.png" />
+    <None Include="Artwork\bg_xmas.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Artwork\loading.gif" />
@@ -488,16 +488,16 @@
     <Resource Include="Artwork\checkbox_true_mo.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Artwork\Preview_1.png" />
-    <Resource Include="Artwork\Preview_10.png" />
-    <Resource Include="Artwork\Preview_2.png" />
-    <Resource Include="Artwork\Preview_3.png" />
-    <Resource Include="Artwork\Preview_4.png" />
-    <Resource Include="Artwork\Preview_5.png" />
-    <Resource Include="Artwork\Preview_6.png" />
-    <Resource Include="Artwork\Preview_7.png" />
-    <Resource Include="Artwork\Preview_8.png" />
-    <Resource Include="Artwork\Preview_9.png" />
+    <None Include="Artwork\Preview_1.png" />
+    <None Include="Artwork\Preview_10.png" />
+    <None Include="Artwork\Preview_2.png" />
+    <None Include="Artwork\Preview_3.png" />
+    <None Include="Artwork\Preview_4.png" />
+    <None Include="Artwork\Preview_5.png" />
+    <None Include="Artwork\Preview_6.png" />
+    <None Include="Artwork\Preview_7.png" />
+    <None Include="Artwork\Preview_8.png" />
+    <None Include="Artwork\Preview_9.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Artwork\pause.png" />
@@ -524,6 +524,7 @@
     <Resource Include="Artwork\lock_crossed_closed_mo.png" />
     <Resource Include="Artwork\lock_crossed_open.png" />
     <Resource Include="Artwork\lock_crossed_open_mo.png" />
+    <None Include="Artwork\P127_Slogan.png" />
     <Content Include="Installer\NewSetup.iss" />
     <Content Include="MTLInterface.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -581,13 +582,29 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PreBuildEvent>
-    </PreBuildEvent>
+    <PreBuildEvent>mkdir "$(ProjectDir)\bin\x64\Release\UglyFiles\Artwork\"
+copy "$(ProjectDir)Artwork\bg_main.png" "$(ProjectDir)\bin\x64\Release\UglyFiles\Artwork\bg_main.png"
+copy "$(ProjectDir)Artwork\bg_xmas.png" "$(ProjectDir)\bin\x64\Release\UglyFiles\Artwork\bg_xmas.png"
+copy "$(ProjectDir)Artwork\bg_spooky.png" "$(ProjectDir)\bin\x64\Release\UglyFiles\Artwork\bg_spooky.png"
+copy "$(ProjectDir)Artwork\bg_fourtwenty.png" "$(ProjectDir)\bin\x64\Release\UglyFiles\Artwork\bg_fourtwenty.png"
+copy "$(ProjectDir)Artwork\P127_Slogan" "$(ProjectDir)\bin\x64\Release\UglyFiles\Artwork\P127_Slogan.png"
+copy "$(ProjectDir)Artwork\Preview_1.png" "$(ProjectDir)\bin\x64\Release\UglyFiles\Artwork\Preview_1.png"
+copy "$(ProjectDir)Artwork\Preview_2.png" "$(ProjectDir)\bin\x64\Release\UglyFiles\Artwork\Preview_2.png"
+copy "$(ProjectDir)Artwork\Preview_3.png" "$(ProjectDir)\bin\x64\Release\UglyFiles\Artwork\Preview_3.png"
+copy "$(ProjectDir)Artwork\Preview_4.png" "$(ProjectDir)\bin\x64\Release\UglyFiles\Artwork\Preview_4.png"
+copy "$(ProjectDir)Artwork\Preview_5.png" "$(ProjectDir)\bin\x64\Release\UglyFiles\Artwork\Preview_5.png"
+copy "$(ProjectDir)Artwork\Preview_6.png" "$(ProjectDir)\bin\x64\Release\UglyFiles\Artwork\Preview_6.png"
+copy "$(ProjectDir)Artwork\Preview_7.png" "$(ProjectDir)\bin\x64\Release\UglyFiles\Artwork\Preview_7.png"
+copy "$(ProjectDir)Artwork\Preview_8.png" "$(ProjectDir)\bin\x64\Release\UglyFiles\Artwork\Preview_8.png"
+copy "$(ProjectDir)Artwork\Preview_9.png" "$(ProjectDir)\bin\x64\Release\UglyFiles\Artwork\Preview_9.png"
+copy "$(ProjectDir)Artwork\Preview_10.png" "$(ProjectDir)\bin\x64\Release\UglyFiles\Artwork\Preview_10.png"
+copy "$(ProjectDir)LICENSE" "$(ProjectDir)\bin\x64\Release\LICENSE"
+copy "$(ProjectDir)JUMPSCRIPT_LICENSE" "$(ProjectDir)\bin\x64\Release\JUMPSCRIPT_LICENSE"
+copy "$(ProjectDir)AAA_HybridCode\Jumpscript\P127_Jumpscript.exe" "$(TargetDir)P127_Jumpscript.exe"</PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PostBuildEvent>copy "$(ProjectDir)LICENSE" "$(ProjectDir)\bin\x64\Release\LICENSE"
-copy "$(ProjectDir)JUMPSCRIPT_LICENSE" "$(ProjectDir)\bin\x64\Release\JUMPSCRIPT_LICENSE"
-copy "$(ProjectDir)AAA_HybridCode\Jumpscript\P127_Jumpscript.exe" "$(TargetDir)P127_Jumpscript.exe"</PostBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

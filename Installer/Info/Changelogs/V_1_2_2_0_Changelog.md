@@ -12,6 +12,7 @@
 * Ability to import ZIP from Url with rightclick
 * Rightclick a loaded NoteFile to open it with Notepad
 * PowerUser Instructions
+* Decreased P127 Executable Size from 11 MB to 2 MB.
 
 #### Improved UI / UX
 * Middle Mouse Button on HamburgerButton will Launch GTA.

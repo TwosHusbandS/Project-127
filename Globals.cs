@@ -1359,7 +1359,7 @@ namespace Project_127
 					NoteOverlay.DisposePreview();
 				}
 
-				MainWindow.MW.SetWindowBackground(Globals.GetBackGroundPath());
+				MainWindow.MW.SetWindowBackground(Globals.GetBackGroundPath(), true);
 
 				// Switch Value
 				switch (value)
@@ -1481,7 +1481,7 @@ namespace Project_127
 			set
 			{
 				_BackgroundImage = value;
-				MainWindow.MW.SetWindowBackground(GetBackGroundPath());
+				MainWindow.MW.SetWindowBackground(GetBackGroundPath(), true);
 			}
 		}
 
@@ -1511,7 +1511,7 @@ namespace Project_127
 			set
 			{
 				_HamburgerMenuState = value;
-				MainWindow.MW.SetWindowBackground(Globals.GetBackGroundPath());
+				MainWindow.MW.SetWindowBackground(Globals.GetBackGroundPath(), true);
 
 
 				if (value == HamburgerMenuStates.Visible)
@@ -1543,7 +1543,8 @@ namespace Project_127
 		/// <returns></returns>
 		public static string GetBackGroundPath()
 		{
-			string URL_Path = @"Artwork\bg_";
+			//string URL_Path = @"Artwork\bg_";
+			string URL_Path = "";
 
 			switch (BackgroundImage)
 			{
@@ -1551,7 +1552,7 @@ namespace Project_127
 					URL_Path += "main";
 					break;
 				case BackgroundImages.FourTwenty:
-					URL_Path += "420";
+					URL_Path += "fourtwenty";
 					break;
 				case BackgroundImages.XMas:
 					URL_Path += "xmas";
@@ -1561,7 +1562,8 @@ namespace Project_127
 					break;
 			}
 
-			URL_Path += ".png";
+			// CTRL F
+			//URL_Path += ".png";
 
 			//if (HamburgerMenuState == HamburgerMenuStates.Hidden)
 			//{

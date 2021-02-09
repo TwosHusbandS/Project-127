@@ -56,7 +56,6 @@ Stuff to fix post 1.1:
 	-> change from resource to content
 	-> post built event to copy files
 - Mess with rockstar Launcher to stop auto updating
-- Changing ReadMe to actually reference new UI / UX for Launch and Auth ways
 - other backgrounds (fourth of july, tag der deutschen einheit, special for?)
 - investigate setting process priority causing elevated gta5.exe
 
@@ -617,14 +616,49 @@ namespace Project_127
 		/// Set the Background to our WPF Window
 		/// </summary>
 		/// <param name="pArtworkPath"></param>
-		public void SetWindowBackground(string pArtworkPath)
+		public void SetWindowBackground(string pArtworkPath, bool FromFile = false)
 		{
-			Uri resourceUri = new Uri(pArtworkPath, UriKind.Relative);
-			StreamResourceInfo streamInfo = Application.GetResourceStream(resourceUri);
-			BitmapFrame temp = BitmapFrame.Create(streamInfo.Stream);
-			ImageBrush brush = new ImageBrush();
-			brush.ImageSource = temp;
-			MainWindow.MW.GridBackground.Background = brush;
+			try
+			{
+				if (FromFile)
+				{
+					var bitmap = new BitmapImage();
+
+					string FilePath = Globals.ProjectInstallationPathBinary.TrimEnd('\\') + @"\Artwork\bg_" + pArtworkPath + ".png";
+
+					using (var stream = new FileStream(FilePath, FileMode.Open))
+					{
+						bitmap.BeginInit();
+						bitmap.CacheOption = BitmapCacheOption.OnLoad;
+						bitmap.StreamSource = stream;
+						bitmap.EndInit();
+						bitmap.Freeze(); // optional
+					}
+					ImageBrush brush2 = new ImageBrush();
+					brush2.ImageSource = bitmap;
+					MainWindow.MW.GridBackground.Background = brush2;
+				}
+				else
+				{
+					Uri resourceUri = new Uri(pArtworkPath, UriKind.Relative);
+					StreamResourceInfo streamInfo = Application.GetResourceStream(resourceUri);
+					BitmapFrame temp = BitmapFrame.Create(streamInfo.Stream);
+					ImageBrush brush = new ImageBrush();
+					brush.ImageSource = temp;
+					MainWindow.MW.GridBackground.Background = brush;
+				}
+			}
+			catch
+			{
+				string URL_Path = @"Artwork\bg_main.png";
+				Uri resourceUri = new Uri(URL_Path, UriKind.Relative);
+				StreamResourceInfo streamInfo = Application.GetResourceStream(resourceUri);
+				BitmapFrame temp = BitmapFrame.Create(streamInfo.Stream);
+				ImageBrush brush = new ImageBrush();
+				brush.ImageSource = temp;
+				MainWindow.MW.GridBackground.Background = brush;
+			}
+
 
 			if (Globals.HamburgerMenuState == Globals.HamburgerMenuStates.Hidden)
 			{
@@ -652,16 +686,36 @@ namespace Project_127
 		/// </summary>
 		/// <param name="myCtrl"></param>
 		/// <param name="pArtpath"></param>
-		public void SetControlBackground(Control myCtrl, string pArtpath)
+		public void SetControlBackground(Control myCtrl, string pArtpath, bool FromFile = false)
 		{
 			try
 			{
-				Uri resourceUri = new Uri(pArtpath, UriKind.Relative);
-				StreamResourceInfo streamInfo = Application.GetResourceStream(resourceUri);
-				BitmapFrame temp = BitmapFrame.Create(streamInfo.Stream);
-				ImageBrush brush = new ImageBrush();
-				brush.ImageSource = temp;
-				myCtrl.Background = brush;
+				Uri resourceUri;
+				if (FromFile)
+				{
+					var bitmap = new BitmapImage();
+
+					using (var stream = new FileStream(pArtpath, FileMode.Open))
+					{
+						bitmap.BeginInit();
+						bitmap.CacheOption = BitmapCacheOption.OnLoad;
+						bitmap.StreamSource = stream;
+						bitmap.EndInit();
+						bitmap.Freeze(); // optional
+					}
+					ImageBrush brush2 = new ImageBrush();
+					brush2.ImageSource = bitmap;
+					myCtrl.Background = brush2;
+				}
+				else
+				{
+					resourceUri = new Uri(pArtpath, UriKind.Relative);
+					StreamResourceInfo streamInfo = Application.GetResourceStream(resourceUri);
+					BitmapFrame temp = BitmapFrame.Create(streamInfo.Stream);
+					ImageBrush brush = new ImageBrush();
+					brush.ImageSource = temp;
+					myCtrl.Background = brush;
+				}
 			}
 			catch
 			{
