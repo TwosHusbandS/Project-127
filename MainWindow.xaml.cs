@@ -51,13 +51,8 @@ Stuff to fix post 1.1:
 	>> custom backup stuff
 	>> rgl launcher being killed / closed during MTL auth
 
-- load images not from resources but from disk
-	-> actual loading the image
-	-> change from resource to content
-	-> post built event to copy files
 - Mess with rockstar Launcher to stop auto updating
 - other backgrounds (fourth of july, tag der deutschen einheit, special for?)
-- investigate setting process priority causing elevated gta5.exe
 
 - SCL issue
 - Auth / emu issue (https://discord.com/channels/501661012844347392/748877687019536384/806585795946741780)
