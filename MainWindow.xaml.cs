@@ -58,8 +58,7 @@ Stuff to fix post 1.1:
 - Mess with rockstar Launcher to stop auto updating
 - Changing ReadMe to actually reference new UI / UX for Launch and Auth ways
 - other backgrounds (fourth of july, tag der deutschen einheit, special for?)
-	-> method for once picture? instead of pushing each one three times? (blur)
-	-> method to add stuff over basic one?
+- investigate setting process priority causing elevated gta5.exe
 
 - SCL issue
 - Auth / emu issue (https://discord.com/channels/501661012844347392/748877687019536384/806585795946741780)
