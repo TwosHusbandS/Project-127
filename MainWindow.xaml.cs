@@ -51,8 +51,14 @@ Stuff to fix post 1.1:
 	>> custom backup stuff
 	>> rgl launcher being killed / closed during MTL auth
 
-- Mess with rockstar Launcher to stop auto updating
-- other backgrounds (fourth of july, tag der deutschen einheit, special for?)
+- backgrounds
+	>> [DONE] add new backgrounds (cat, fourth of july, alemania, valentine)
+	>> Specials background
+	>> try-catch back ground changer stuff i guess
+	>> Installer stuff.
+	>> change commandlines interpretation and change advanced user readme
+- automatically detect if we need copy files instead of hardlinking after failed downgrade / upgrade (unsure)
+- start steam as admin
 
 - SCL issue
 - Auth / emu issue (https://discord.com/channels/501661012844347392/748877687019536384/806585795946741780)
@@ -599,6 +605,22 @@ namespace Project_127
 					(Now.Month == 1 && Now.Day <= 6))
 			{
 				Globals.BackgroundImage = Globals.BackgroundImages.XMas;
+			}
+			else if (Now.Month == 2 && Now.Day == 14)
+			{
+				Globals.BackgroundImage = Globals.BackgroundImages.Valentine;
+			}
+			else if (Now.Month == 3 && Now.Day == 18)
+			{
+				Globals.BackgroundImage = Globals.BackgroundImages.Cat;
+			}
+			else if (Now.Month == 7 && Now.Day == 4)
+			{
+				Globals.BackgroundImage = Globals.BackgroundImages.Murica;
+			}
+			else if (Now.Month == 10 && Now.Day == 3)
+			{
+				Globals.BackgroundImage = Globals.BackgroundImages.Germania;
 			}
 			else
 			{

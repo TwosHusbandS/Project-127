@@ -1461,7 +1461,11 @@ namespace Project_127
 			Main,
 			FourTwenty,
 			XMas,
-			Spooky
+			Spooky,
+			Valentine,
+			Germania,
+			Murica,
+			Cat
 		}
 
 		/// <summary>
@@ -1543,45 +1547,7 @@ namespace Project_127
 		/// <returns></returns>
 		public static string GetBackGroundPath()
 		{
-			//string URL_Path = @"Artwork\bg_";
-			string URL_Path = "";
-
-			switch (BackgroundImage)
-			{
-				case BackgroundImages.Main:
-					URL_Path += "main";
-					break;
-				case BackgroundImages.FourTwenty:
-					URL_Path += "fourtwenty";
-					break;
-				case BackgroundImages.XMas:
-					URL_Path += "xmas";
-					break;
-				case BackgroundImages.Spooky:
-					URL_Path += "spooky";
-					break;
-			}
-
-			// CTRL F
-			//URL_Path += ".png";
-
-			//if (HamburgerMenuState == HamburgerMenuStates.Hidden)
-			//{
-			//	URL_Path += ".png";
-			//}
-			//else if (HamburgerMenuState == HamburgerMenuStates.Visible)
-			//{
-			//	if (PageState == PageStates.GTA)
-			//	{
-			//		URL_Path += "_hb.png";
-			//	}
-			//	else
-			//	{
-			//		URL_Path += "_blur.png";
-			//	}
-			//}
-
-			return URL_Path;
+			return BackgroundImage.ToString().ToLower();
 		}
 
 		#endregion
