@@ -42,23 +42,27 @@ Stuff to fix post 1.1:
 - Installer:
 	>> BUILD WITHOUT EASTER EGG COMMENTED OUT (think about TTS Easter Egg.)
 	>> NEW IMAGE LOCATIONS ETC
-	>> Build Installer
 	>> Test if uninstall delete jumpscript license works.
+	>> Build Installer
 	>> remove that uninstall delete before pushing
 - unit test:
+	>> Launch Game stuff. (Steam, nonsteam, SCL, apply core fix, overwrite command line args, etc.)
 	>> one simulated game update
 	>> rockstar fucking us
 	>> custom backup stuff
-	>> rgl launcher being killed / closed during MTL auth
+	>> switch GTA V Location
+	>> switch ZIP Location
+	>> Reset
+	>> Repair
 
+- build import zips for all 5 components, make them take version txt, if it exists, dont ask for version via textbox popup
 - backgrounds
 	>> [DONE] add new backgrounds (cat, fourth of july, alemania, valentine)
 	>> [DONE] try-catch back ground changer stuff i guess
 	>> [DONE] change commandlines interpretation and change advanced user readme
 	>> Specials background
 	>> Installer stuff.
-- automatically detect if we need copy files instead of hardlinking after failed downgrade / upgrade (unsure)
-- start steam as admin (while keeping command line args, might be tricky) 
+- link youtube video via github XML, change link in credits.
 
 - SCL issue
 - Auth / emu issue (https://discord.com/channels/501661012844347392/748877687019536384/806585795946741780)
@@ -276,9 +280,10 @@ namespace Project_127
 
 			StartUpStopwatch.Stop();
 
+			LauncherLogic.HandleUnsureInstallationState();
+
 			HelperClasses.Logger.Log("Startup procedure (Constructor of MainWindow) completed. It took " + StartUpStopwatch.ElapsedMilliseconds + " ms.");
 			HelperClasses.Logger.Log("------------------------------------------------------------------------------------");
-
 		}
 
 

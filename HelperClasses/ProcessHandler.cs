@@ -26,7 +26,7 @@ namespace Project_127.HelperClasses
 		/// </summary>
 		public static void KillRockstarProcesses()
 		{
-			SocialClubKillAllProcesses(0, true);
+			SocialClubKillAllProcesses(0);
 
 			// TODO CTRLF add other ProcessNames
 			KillProcessesContains("gta");
@@ -149,12 +149,22 @@ namespace Project_127.HelperClasses
 				// check if its actually a process from SC Install dir or GTA Install dir
 				try
 				{
-					if
-						((p.MainModule.FileName.ToLower().Contains(LauncherLogic.GTAVFilePath.TrimEnd('\\').ToLower())) ||
-						(p.MainModule.FileName.ToLower().Contains(tmpInstallDir.TrimEnd('\\').ToLower())) ||
-						(p.MainModule.FileName.ToLower().Contains(@"C:\Program Files\Rockstar Games".TrimEnd('\\').ToLower())))
+					if (string.IsNullOrWhiteSpace(tmpInstallDir))
 					{
-						p.CloseMainWindow();
+						if ((p.MainModule.FileName.ToLower().Contains(LauncherLogic.GTAVFilePath.TrimEnd('\\').ToLower())) ||
+						(p.MainModule.FileName.ToLower().Contains(@"C:\Program Files\Rockstar Games".ToLower())))
+						{
+							p.CloseMainWindow();
+						}
+					}
+					else
+					{
+						if ((p.MainModule.FileName.ToLower().Contains(LauncherLogic.GTAVFilePath.TrimEnd('\\').ToLower())) ||
+						(p.MainModule.FileName.ToLower().Contains(tmpInstallDir.TrimEnd('\\').ToLower())) ||
+						(p.MainModule.FileName.ToLower().Contains(@"C:\Program Files\Rockstar Games".ToLower())))
+						{
+							p.CloseMainWindow();
+						}
 					}
 				}
 				catch
@@ -184,15 +194,25 @@ namespace Project_127.HelperClasses
 				// check if its actually a process from SC Install dir or GTA Install dir
 				try
 				{
-					if
-						((p.MainModule.FileName.ToLower().Contains(LauncherLogic.GTAVFilePath.TrimEnd('\\').ToLower())) ||
+					if (string.IsNullOrWhiteSpace(tmpInstallDir))
+					{
+						if ((p.MainModule.FileName.ToLower().Contains(LauncherLogic.GTAVFilePath.TrimEnd('\\').ToLower())) ||
+						(p.MainModule.FileName.ToLower().Contains(@"C:\Program Files\Rockstar Games".TrimEnd('\\').ToLower())))
+						{
+							ProcessHandler.Kill(p);
+						}
+					}
+					else
+					{
+						if ((p.MainModule.FileName.ToLower().Contains(LauncherLogic.GTAVFilePath.TrimEnd('\\').ToLower())) ||
 						(p.MainModule.FileName.ToLower().Contains(tmpInstallDir.TrimEnd('\\').ToLower())) ||
 						(p.MainModule.FileName.ToLower().Contains(@"C:\Program Files\Rockstar Games".TrimEnd('\\').ToLower())))
-					{
-						ProcessHandler.Kill(p);
+						{
+							ProcessHandler.Kill(p);
+						}
 					}
 				}
-				catch
+				catch 
 				{
 				}
 
@@ -296,28 +316,9 @@ namespace Project_127.HelperClasses
 		/// <summary>
 		/// Starting Game as Non Retail
 		/// </summary>
-		public static void StartGameNonRetail()
+		public static void StartDowngradedGame()
 		{
-			int AmountOfCores = Environment.ProcessorCount;
-
-			if (AmountOfCores < 4)
-			{
-				AmountOfCores = 4;
-			}
-			else if (AmountOfCores > 23)
-			{
-				AmountOfCores = 23;
-			}
-
-			UInt64 Possibilities = (UInt64)Math.Pow(2, AmountOfCores);
-
-			string MyHex = (Possibilities - 1).ToString("X");
-
-
-			//cmdLineArgs = @"/c cd / d "F:\SteamLibrary\steamapps\common\Grand Theft Auto V" && start /affinity FFFF playgtav.exe -uilanguage french && exit";
-
 			Process tmp = GSF.Identity.UserAccountControl.CreateProcessAsStandardUser(@"cmd.exe", LauncherLogic.GetFullCommandLineArgsForStarting());
-
 		}
 
 	} // End of Class

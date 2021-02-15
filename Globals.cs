@@ -415,7 +415,7 @@ namespace Project_127
 			// Checks if we are doing first Launch.
 			if (Settings.FirstLaunch)
 			{
-				string msg = "Legal Disclaimer:\nWe (and Project 1.27) are not responsible for anything that happens to:\nYour Windows, your hardware, your PC,\nyour GTA, your Social Club account etc.\nBy clicking 'OK' you agree to those terms.\n\n- The Project 1.27 Team";
+				string msg = "Legal Disclaimer:\nWe (and Project 1.27) are not responsible for anything that happens to:\nYour Windows, your hardware, your PC,\nyour GTA, your Social Club account etc. The \"Remember Me\" function (for legacy auth) is storing your credentials\nusing the Windows Credential Manager.\n\nBy clicking 'OK' you agree to those terms.\n\n- The Project 1.27 Team";
 
 				new Popup(Popup.PopupWindowTypes.PopupOk, msg).ShowDialog();
 
@@ -427,21 +427,10 @@ namespace Project_127
 				// Calling this to get the Path automatically
 				Settings.InitImportantSettings();
 
+				Settings.AntiVirusFix();
+
 				// Set FirstLaunch to false
 				Settings.FirstLaunch = false;
-
-				new Popup(Popup.PopupWindowTypes.PopupOk,
-				"Project 1.27 is finally in fully released.\n" +
-				"The published Product should work as expected.\n\n" +
-				"No gurantees that this will not break your GTAV in any way, shape or form.\n\n" +
-				"The 'Remember' Me function, is storing credentials\n" +
-				"using the Windows Credential Manager.\n" +
-				"You are using the it on your own risk.\n\n" +
-				"If anything does not work as expected, \n" +
-				"contact us on Discord.\n\n" +
-				" - The Project 1.27 Team").ShowDialog();
-
-				Settings.AntiVirusFix();
 
 				HelperClasses.Logger.Log("FirstLaunch Procedure Ended");
 			}

@@ -56,7 +56,7 @@ namespace Project_127
 					HelperClasses.Logger.Log("SCL - Launch, Social Club Downgrade WAS successfull. Launching Game now.");
 
 
-					Process tmp = GSF.Identity.UserAccountControl.CreateProcessAsStandardUser(@"cmd.exe", LauncherLogic.GetFullCommandLineArgsForStarting());
+					ProcessHandler.StartDowngradedGame();
 				}
 				else
 				{

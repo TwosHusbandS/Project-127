@@ -693,6 +693,8 @@ namespace Project_127
 			IgnoreNewFilesWhileUpgradeDowngradeLogic = false;
 
 			HelperClasses.Logger.Log("Done Upgrading");
+
+			HandleUnsureInstallationState();
 		}
 
 
@@ -786,6 +788,8 @@ namespace Project_127
 			IgnoreNewFilesWhileUpgradeDowngradeLogic = false;
 
 			HelperClasses.Logger.Log("Done Downgrading");
+
+			HandleUnsureInstallationState();
 		}
 
 
@@ -850,7 +854,20 @@ namespace Project_127
 
 		public static string GetFullCommandLineArgsForStarting()
 		{
-			string tmp = @"/c cd /d " + "\"" + LauncherLogic.GTAVFilePath + "\"" + @" && ";
+			bool viaSteam = (Settings.Retailer == Settings.Retailers.Steam && !Settings.EnableDontLaunchThroughSteam);
+
+			string tmp = "";
+
+
+			if (viaSteam)
+			{
+				tmp += @"/c cd /d " + "\"" + Globals.SteamInstallPath.TrimEnd('\\') + @"\" + "\"" + @" && ";
+			}
+			else
+			{
+				tmp += @"/c cd /d " + "\"" + LauncherLogic.GTAVFilePath + "\"" + @" && ";
+			}
+
 
 			if (Settings.EnableOverWriteGTACommandLineArgs)
 			{
@@ -863,14 +880,26 @@ namespace Project_127
 
 			tmp += " && exit";
 
-			if (LaunchWay == LaunchWays.DragonEmu)
+			if (viaSteam)
 			{
-				return tmp.Replace("gta_p127.exe", "playgtav.exe");
+				tmp = tmp.Replace("gta_p127.exe", "steam.exe -applaunch 271590");
 			}
 			else
 			{
-				return tmp.Replace("gta_p127.exe", "gtastub.exe");
+				if (LaunchWay == LaunchWays.DragonEmu)
+				{
+					tmp = tmp.Replace("gta_p127.exe", "playgtav.exe");
+				}
+				else
+				{
+					tmp = tmp.Replace("gta_p127.exe", "gtastub.exe");
+				}
 			}
+
+			HelperClasses.Logger.Log("Command Args the alg came up with: #" + tmp + "#");
+			Globals.DebugPopup(tmp);
+
+			return tmp;
 		}
 
 		public static string GetStartCommandLineArgs()
@@ -934,8 +963,8 @@ namespace Project_127
 				// If Rockstar
 				else
 				{
-					// Launch through Non Retail re
-					HelperClasses.ProcessHandler.StartGameNonRetail();
+					// Launch through Non Retail
+					HelperClasses.ProcessHandler.StartDowngradedGame();
 				}
 			}
 			else if (LauncherLogic.InstallationState == InstallationStates.Downgraded)
@@ -986,20 +1015,8 @@ namespace Project_127
 						HelperClasses.FileHandling.WriteStringToFileOverwrite(EmuCfgPath, LaunchOptions);
 					}
 
-					// If Steam
-					if (Settings.Retailer == Settings.Retailers.Steam && !Settings.EnableDontLaunchThroughSteam)
-					{
-						HelperClasses.Logger.Log("Trying to start Game normally through Steam.", 1);
-						// Launch through steam
-						HelperClasses.ProcessHandler.StartProcess(Globals.SteamInstallPath.TrimEnd('\\') + @"\steam.exe", pCommandLineArguments: "-applaunch 271590 -uilanguage " + Settings.ToMyLanguageString(Settings.LanguageSelected).ToLower());
+					HelperClasses.ProcessHandler.StartDowngradedGame();
 
-					}
-					else
-					{
-						HelperClasses.Logger.Log("Trying to start Game normally non retail.", 1);
-						// Launch through Non Retail re
-						HelperClasses.ProcessHandler.StartGameNonRetail();
-					}
 				}
 				else
 				{
@@ -1025,6 +1042,28 @@ namespace Project_127
 			HelperClasses.Logger.Log("Game should be launched");
 
 			PostLaunchEvents();
+		}
+
+
+
+
+
+		public static void HandleUnsureInstallationState()
+		{
+			if (InstallationState == InstallationStates.Unsure)
+			{
+				string msg = "Installation State is Unsure.";
+				msg += "\n\n";
+				msg += "Potential Fixes:\n";
+				msg += "- Repairing / Verifying your GTA V Installation via Steam / Rockstar / Epic\n";
+				msg += "- Settings -> General P127 Settings -> Repair GTA V Installation\n";
+				msg += "- Settings -> General P127 Settings -> Re-Installing all Componenets inside the Componenet Manager\n";
+				msg += "- Settings -> General P127 Settings -> Reset Everything\n";
+				msg += "- Settings -> General P127 Settings -> Enable \"Slow but stable Method for Upgrading / Downgrading\n";
+				msg += "(specifically applies if your GTA is on an external HDD)";
+
+				new Popup(Popup.PopupWindowTypes.PopupOk, msg).ShowDialog();
+			}
 		}
 
 

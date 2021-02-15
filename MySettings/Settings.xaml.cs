@@ -273,6 +273,30 @@ namespace Project_127.MySettings
 			}
 			HelperClasses.Logger.Log("Picked path '" + GTAVInstallationPathUserChoice + "' is valid and will be set as Settings.GTAVInstallationPath.");
 			Settings.GTAVInstallationPath = GTAVInstallationPathUserChoice;
+
+			// Setting ZIP Extract Path now
+			HelperClasses.Logger.Log("GTA V Path manually set, asking user if he wants to move ZIP Folder. Old ZIP Folder is: '" + Settings.ZIPExtractionPath + "'.");
+
+			Popup yesnoconfirm = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Project 1.27 needs a Folder where it installs all of its Components and saves Files for Upgrading and Downgrading.\nIt is recommend to do this on the same Drive / Partition as your GTAV Installation Path\nBest Case (and default Location) is your GTAV Path.\nDo you want to move from your Path\n(" + Settings.ZIPExtractionPath + ")\nto the new GTA V Installation Location?\n\nI recommend Yes.?");
+			yesnoconfirm.ShowDialog();
+
+			// If User wants default Settings
+			if (yesnoconfirm.DialogResult == true)
+			{
+				HelperClasses.Logger.Log("User wants default ZIP Folder. Changing it to '" + GTAVInstallationPathUserChoice + "'.");
+
+				if (!ChangeZIPExtractionPath(GTAVInstallationPathUserChoice))
+				{
+					HelperClasses.Logger.Log("Changing ZIP Path did not work. Probably non existing Path or same Path as before (from Settings.SetGTAVPathManually())");
+					new Popup(Popup.PopupWindowTypes.PopupOkError, "Changing ZIP Path did not work. Probably non existing Path or same Path as before\nIf you read this message to anyone, tell them youre in Settings.SetGTAVPathManually()");
+				}
+			}
+			else
+			{
+				HelperClasses.Logger.Log("User does NOT want default ZIP Folder. Will not change it.");
+			}
+
+
 			if (CheckIfDefaultForCopyHardlinkNeedsChanging)
 			{
 				SetDefaultEnableCopyingHardlinking();
