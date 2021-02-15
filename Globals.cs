@@ -1359,7 +1359,7 @@ namespace Project_127
 					NoteOverlay.DisposePreview();
 				}
 
-				MainWindow.MW.SetWindowBackground(Globals.GetBackGroundPath(), true);
+				MainWindow.MW.SetWindowBackgroundBlur();
 
 				// Switch Value
 				switch (value)
@@ -1458,20 +1458,22 @@ namespace Project_127
 		/// </summary>
 		public enum BackgroundImages
 		{
-			Main,
+			Default,
 			FourTwenty,
-			XMas,
+			Winter,
 			Spooky,
 			Valentine,
 			Germania,
 			Murica,
 			Cat
+
+			// If you touch this, please also change Installer/Info/AdvancedUser.md under #CommandLineOptions accordingly.
 		}
 
 		/// <summary>
 		/// Internal Value for BackgroundImage
 		/// </summary>
-		private static BackgroundImages _BackgroundImage = BackgroundImages.Main;
+		private static BackgroundImages _BackgroundImage = BackgroundImages.Default;
 
 		/// <summary>
 		/// Value we use for BackgroundImage. Setter is Gucci :*
@@ -1485,7 +1487,7 @@ namespace Project_127
 			set
 			{
 				_BackgroundImage = value;
-				MainWindow.MW.SetWindowBackground(GetBackGroundPath(), true);
+				MainWindow.MW.SetWindowBackgroundImage();
 			}
 		}
 
@@ -1515,8 +1517,7 @@ namespace Project_127
 			set
 			{
 				_HamburgerMenuState = value;
-				MainWindow.MW.SetWindowBackground(Globals.GetBackGroundPath(), true);
-
+				MainWindow.MW.SetWindowBackgroundBlur();
 
 				if (value == HamburgerMenuStates.Visible)
 				{
@@ -1537,18 +1538,6 @@ namespace Project_127
 
 
 
-
-
-
-
-		/// <summary>
-		/// Gets Path to correct Background URI, based on the 3 States above
-		/// </summary>
-		/// <returns></returns>
-		public static string GetBackGroundPath()
-		{
-			return BackgroundImage.ToString().ToLower();
-		}
 
 		#endregion
 
@@ -1603,10 +1592,10 @@ namespace Project_127
 					// Checks with "2 - part" command line like: "-name test"
 					if (args[i].ToLower() == "-background")
 					{
-						Globals.BackgroundImages Tmp = Globals.BackgroundImages.Main;
+						Globals.BackgroundImages Tmp = Globals.BackgroundImages.Default;
 						try
 						{
-							Tmp = (Globals.BackgroundImages)System.Enum.Parse(typeof(Globals.BackgroundImages), args[i + 1]);
+							Tmp = (Globals.BackgroundImages)System.Enum.Parse(typeof(Globals.BackgroundImages), args[i + 1], true);
 							Globals.BackgroundImage = Tmp;
 						}
 						catch (Exception e)

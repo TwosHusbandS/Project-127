@@ -464,9 +464,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Artwork\bg_fourtwenty.png" />
-    <Resource Include="Artwork\bg_main.png" />
+    <Resource Include="Artwork\bg_default.png" />
     <None Include="Artwork\bg_spooky.png" />
-    <None Include="Artwork\bg_xmas.png" />
+    <None Include="Artwork\bg_winter.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Artwork\loading.gif" />
@@ -587,8 +587,8 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>mkdir "$(ProjectDir)\bin\x64\Release\UglyFiles\Artwork\"
-copy "$(ProjectDir)Artwork\bg_main.png" "$(ProjectDir)\bin\x64\Release\UglyFiles\Artwork\bg_main.png"
-copy "$(ProjectDir)Artwork\bg_xmas.png" "$(ProjectDir)\bin\x64\Release\UglyFiles\Artwork\bg_xmas.png"
+copy "$(ProjectDir)Artwork\bg_default.png" "$(ProjectDir)\bin\x64\Release\UglyFiles\Artwork\bg_default.png"
+copy "$(ProjectDir)Artwork\bg_winter.png" "$(ProjectDir)\bin\x64\Release\UglyFiles\Artwork\bg_winter.png"
 copy "$(ProjectDir)Artwork\bg_spooky.png" "$(ProjectDir)\bin\x64\Release\UglyFiles\Artwork\bg_spooky.png"
 copy "$(ProjectDir)Artwork\bg_fourtwenty.png" "$(ProjectDir)\bin\x64\Release\UglyFiles\Artwork\bg_fourtwenty.png"
 copy "$(ProjectDir)Artwork\bg_valentine.png" "$(ProjectDir)\bin\x64\Release\UglyFiles\Artwork\bg_valentine.png"

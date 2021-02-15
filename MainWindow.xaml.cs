@@ -53,12 +53,12 @@ Stuff to fix post 1.1:
 
 - backgrounds
 	>> [DONE] add new backgrounds (cat, fourth of july, alemania, valentine)
+	>> [DONE] try-catch back ground changer stuff i guess
+	>> [DONE] change commandlines interpretation and change advanced user readme
 	>> Specials background
-	>> try-catch back ground changer stuff i guess
 	>> Installer stuff.
-	>> change commandlines interpretation and change advanced user readme
 - automatically detect if we need copy files instead of hardlinking after failed downgrade / upgrade (unsure)
-- start steam as admin
+- start steam as admin (while keeping command line args, might be tricky) 
 
 - SCL issue
 - Auth / emu issue (https://discord.com/channels/501661012844347392/748877687019536384/806585795946741780)
@@ -597,14 +597,14 @@ namespace Project_127
 				Globals.BackgroundImage = Globals.BackgroundImages.FourTwenty;
 			}
 			else if ((Now.Month == 10 && Now.Day >= 29) ||
-					(Now.Month == 11 && Now.Day == 1))
+					(Now.Month == 11 && Now.Day == 3))
 			{
 				Globals.BackgroundImage = Globals.BackgroundImages.Spooky;
 			}
 			else if ((Now.Month == 12 && Now.Day >= 6) ||
-					(Now.Month == 1 && Now.Day <= 6))
+					(Now.Month == 1 && Now.Day <= 9))
 			{
-				Globals.BackgroundImage = Globals.BackgroundImages.XMas;
+				Globals.BackgroundImage = Globals.BackgroundImages.Winter;
 			}
 			else if (Now.Month == 2 && Now.Day == 14)
 			{
@@ -624,7 +624,7 @@ namespace Project_127
 			}
 			else
 			{
-				Globals.BackgroundImage = Globals.BackgroundImages.Main;
+				Globals.BackgroundImage = Globals.BackgroundImages.Default;
 			}
 		}
 
@@ -632,42 +632,31 @@ namespace Project_127
 		/// <summary>
 		/// Set the Background to our WPF Window
 		/// </summary>
-		/// <param name="pArtworkPath"></param>
-		public void SetWindowBackground(string pArtworkPath, bool FromFile = false)
+		public void SetWindowBackgroundImage()
 		{
 			try
 			{
-				if (FromFile)
-				{
-					var bitmap = new BitmapImage();
+				var bitmap = new BitmapImage();
 
-					string FilePath = Globals.ProjectInstallationPathBinary.TrimEnd('\\') + @"\Artwork\bg_" + pArtworkPath + ".png";
+				string FilePath = Globals.ProjectInstallationPathBinary.TrimEnd('\\') + @"\Artwork\bg_" + Globals.BackgroundImage.ToString().ToLower() + ".png";
 
-					using (var stream = new FileStream(FilePath, FileMode.Open))
-					{
-						bitmap.BeginInit();
-						bitmap.CacheOption = BitmapCacheOption.OnLoad;
-						bitmap.StreamSource = stream;
-						bitmap.EndInit();
-						bitmap.Freeze(); // optional
-					}
-					ImageBrush brush2 = new ImageBrush();
-					brush2.ImageSource = bitmap;
-					MainWindow.MW.GridBackground.Background = brush2;
-				}
-				else
+				using (var stream = new FileStream(FilePath, FileMode.Open))
 				{
-					Uri resourceUri = new Uri(pArtworkPath, UriKind.Relative);
-					StreamResourceInfo streamInfo = Application.GetResourceStream(resourceUri);
-					BitmapFrame temp = BitmapFrame.Create(streamInfo.Stream);
-					ImageBrush brush = new ImageBrush();
-					brush.ImageSource = temp;
-					MainWindow.MW.GridBackground.Background = brush;
+					bitmap.BeginInit();
+					bitmap.CacheOption = BitmapCacheOption.OnLoad;
+					bitmap.StreamSource = stream;
+					bitmap.EndInit();
+					bitmap.Freeze(); // optional
 				}
+				ImageBrush brush2 = new ImageBrush();
+				brush2.ImageSource = bitmap;
+				MainWindow.MW.GridBackground.Background = brush2;
 			}
-			catch
+			catch (Exception e)
 			{
-				string URL_Path = @"Artwork\bg_main.png";
+				new Popup(Popup.PopupWindowTypes.PopupOkError, "Error Settings Background Image.\n" + e.ToString()).ShowDialog();
+
+				string URL_Path = @"Artwork\bg_default.png";
 				Uri resourceUri = new Uri(URL_Path, UriKind.Relative);
 				StreamResourceInfo streamInfo = Application.GetResourceStream(resourceUri);
 				BitmapFrame temp = BitmapFrame.Create(streamInfo.Stream);
@@ -676,7 +665,12 @@ namespace Project_127
 				MainWindow.MW.GridBackground.Background = brush;
 			}
 
+			SetWindowBackgroundBlur();
+		}
 
+
+		public void SetWindowBackgroundBlur()
+		{
 			if (Globals.HamburgerMenuState == Globals.HamburgerMenuStates.Hidden)
 			{
 				Blur_All.Visibility = Visibility.Hidden;
