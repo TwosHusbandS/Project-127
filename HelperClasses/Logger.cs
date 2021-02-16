@@ -136,7 +136,7 @@ namespace Project_127.HelperClasses
 				string AdditionalDebug4 = HelperClasses.RegeditHandler.GetValue(myRK, "CurrentBuild");
 				string AdditionalDebug5 = HelperClasses.RegeditHandler.GetValue(myRK, "CurrentBuildNumber");
 
-				RegistryKey myRK2 = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64).CreateSubKey("SOFTWARE").CreateSubKey("Microsoft").CreateSubKey("Cryptography NT");
+				RegistryKey myRK2 = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64).CreateSubKey("SOFTWARE").CreateSubKey("Microsoft").CreateSubKey("Cryptography");
 				string AdditionalDebug6 = HelperClasses.RegeditHandler.GetValue(myRK2, "MachineGuid");
 
 				string LauncDatPath = LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\launc.dat";

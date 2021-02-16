@@ -280,6 +280,8 @@ namespace Project_127
 
 			AddParagraph(rtb_About, "Project 1.27 Version: '" + Globals.ProjectVersion + "'\n" + "BuildInfo: '" + Globals.BuildInfo + "'\n" + "ZIP Version: '" + Globals.ZipVersion + "'");
 
+			AddHyperlinkText(rtb_About, AnthersDemoVideoLink, "P127 Demo & Help Video", "", "");
+
 			AddParagraph(rtb_About, "You are running Project 1.27, a tool for the GTA V Speedrunning Community. This was created for the patch 1.27 downgrade problem, which started in August of 2020. This tool has a number of features, including Downgrading, Upgrading and launching the game.");
 
 			AddParagraph(rtb_About, "This whole Project would not have been possible without the hard work of @dr490n, @Special For, @thS who worked on this for months in their free time, going above and beyond what was required.");
@@ -306,6 +308,8 @@ namespace Project_127
 			AddParagraph(rtb_Help, "");
 
 			rtb_Help.Document.Blocks.Remove(rtb_Help.Document.Blocks.FirstBlock);
+
+			AddHyperlinkText(rtb_Help, AnthersDemoVideoLink, "P127 Demo & Help Video", "", "");
 
 			AddHyperlinkText(rtb_Help, "http://BigZip.com", "here", "When Project 1.27 crashes when Downloading or Importing Files, try to download the ZIP manually from ", ", then go to Settings -> Import ZIP Manually and select the file you just downloaded. If that doesnt work, rightclick the ZIP Extraction Path in Settings, copy your downloaded zip file there, right click -> extract here.");
 
