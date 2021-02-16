@@ -2,21 +2,17 @@
  
 Main Documentation / Dev Diary here:
 
-Actual code (partially closed source) which authentificates, handles entitlement and launches the game (and Overlay Backend) is done by @dr490n
-@Special For, who also did a lot of RE'ing, testing, brainstorming, information gathering and 2nd level support
-@JakeMiester did some project management, acted as the communication party between the team and the speedrun mods, "invented" trello
-@zCri did a research, RE and coding in the initial information gathering stage
-Artwork, Design of GUI, GUI Behaviourehaviour, Colorchoices etc. by "@Hossel"
-Project 1.27 Client by "@thS"
+Actual code (partially closed source) which authentificates, handles entitlement and launches the game (as well as Overlay Backend and DownloadManager backend) is done by @dr490n
+@Special For, who also did a lot of RE'ing, testing, brainstorming, information gathering and 2nd level support, being available to bounce ideas off of.
+Main / Actual Project 1.27 Client by "@thS"
 A number of other members of the team, including but not limited to @MoMo, @Diamondo25, @S.M.G, @gogsi, @Antibones, @Unemployed, @Aperture, @luky, @CrynesSs, @Daniel Kinau contributed to this project one way or another, and my thanks go out to them.
-Version: 1.1.9.1
+Version: 1.2.1.0
 
 Build Instructions:
 	Press CTRLF + F5, pray that nuget does its magic.
 	If this doesnt work, required DLLs and files can be gotten by running the latest installer
 
 Deploy Instructions:
-	
 	Change Version Number a few Lines Above.
 	Change Version Number in both of the last lines in AssemblyInfo.cs
 	ALSO CHANGE VERSION NUMBER IN ASSEMBLYINFO.CS FROM P127 LAUNCHER
@@ -28,9 +24,9 @@ Deploy Instructions:
 	Build installer via Innosetup (script we use for that is in \Installer\)
 		Change Version in Version
 		Change Version in OutputName
-		Change BuildPath to your local Path of the repo...(make sure it builds in the \Installer Folder
 	Delete Project_127_Installer_Latest.exe. Copy Paste the Installer we just compiled and name the copy of it Project_127_Installer_Latest.exe
 	Change Version number and Installer Path in "\Installer\Update.xml"
+	Save Innosetup Script...
 	Push Commit to github branch.
 	Merge branch into master
 
@@ -61,6 +57,7 @@ Stuff to fix post 1.1:
 	>> [DONE] change commandlines interpretation and change advanced user readme
 	>> Specials background
 	>> Installer stuff.
+
 */
 
 using System;
