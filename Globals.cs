@@ -1030,7 +1030,7 @@ namespace Project_127
 				HelperClasses.Logger.Log("Did not get most up to date Project 1.27 Version from Github. Github offline or your PC offline. Probably. Lets hope so.");
 			}
 
-			ReadMe.DragonsLinkMethod(XML_Autoupdate_Temp);
+			ReadMe.DynamicLinksMethod(XML_Autoupdate_Temp);
 		}
 
 

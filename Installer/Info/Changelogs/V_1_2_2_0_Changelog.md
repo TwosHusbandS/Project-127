@@ -31,6 +31,7 @@
 * Overlay MultiMonitorMode not forcing the position correctly
 * Popups always starting in the center of screen instead of center of parent window.
 * Downloading Components no longer freezes the UI.
+* Fixed Edge Case where GTA was started Elevated. (Thanks Illuminati)
 * Automatically installing Downgrading SC when not installed without asking (if SCL Stuff is being installed already)
 * Potentially fixed the Remember Me issue on Legacy Auth where it wouldnt re-enter Credentials
 * Improved Efficency of SaveFileHandler

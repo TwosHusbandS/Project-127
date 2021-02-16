@@ -28,8 +28,9 @@ namespace Project_127
 		public static ReadMeStates LastReadMeState = ReadMeStates.About;
 
 		public static string DragonsLink = "https://github.com/jaredtb";
+		public static string AnthersDemoVideoLink = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
 
-		public static async void DragonsLinkMethod(string XML = "")
+		public static void DynamicLinksMethod(string XML = "")
 		{
 			if (XML == "")
 			{
@@ -41,6 +42,12 @@ namespace Project_127
 			if (HelperClasses.FileHandling.URLExists(dragonsReadMe))
 			{
 				ReadMe.DragonsLink = dragonsReadMe;
+			}
+
+			string AntherTMP = HelperClasses.FileHandling.GetXMLTagContent(XML, "demovideo");
+			if (HelperClasses.FileHandling.URLExists(AntherTMP))
+			{
+				ReadMe.AnthersDemoVideoLink = AntherTMP;
 			}
 		}
 
@@ -253,7 +260,7 @@ namespace Project_127
 
 			AddParagraph(rtb_Credits, "Shoutout to @AntherXx for making the incredible P127 Demo + Help Video, as well as going through the trouble of tracking down and renaming SaveFiles for every single Mission in Classic% and to @Hossel for providing the SaveFiles for the main Categories");
 
-			AddHyperlinkText(rtb_Credits, "https://www.youtube.com/watch?v=dQw4w9WgXcQ", "P127 Demo & Help Video", "Shoutout to @AntherXx for making the incredible ", ", as well as going through the trouble of tracking down and renaming SaveFiles for every single Mission in Classic% and to @Hossel for providing the SaveFiles for the main Categories.");
+			AddHyperlinkText(rtb_Credits, AnthersDemoVideoLink, "P127 Demo & Help Video", "Shoutout to @AntherXx for making the incredible ", ", as well as going through the trouble of tracking down and renaming SaveFiles for every single Mission in Classic% and to @Hossel for providing the SaveFiles for the main Categories.");
 
 			AddHyperlinkText(rtb_Credits, "https://github.com/DaWolf85/GTAVAutoPatcher/", "open-sourcing his Tool", "Shoutout to @DaWolf85 for ", " the Community used to Upgrade / Downgrade previously. It helped us a ton.");
 

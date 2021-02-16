@@ -64,10 +64,6 @@ Stuff to fix post 1.1:
 	>> Installer stuff.
 - link youtube video via github XML, change link in credits.
 
-- SCL issue
-- Auth / emu issue (https://discord.com/channels/501661012844347392/748877687019536384/806585795946741780)
-
-
 */
 
 using System;

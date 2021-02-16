@@ -32,10 +32,12 @@
     1.0.2060.0;1.51:
     1.0.2060.1;1.52:
     1.0.2189.0;1.52:
+    1.0.2215.0;1.53:
   </buildversiontable>
   <announcement></announcement>
   <specialbuildname></specialbuildname>
   <dragonsreadme>https://github.com/jaredtb</dragonsreadme>
+  <demovideo>https://www.youtube.com/watch?v=dQw4w9WgXcQ</demovideo>
   <zip>https://gtav.anushk.net/Project_127_Files_V14_Big.zip</zip>
   <bigzipmd5>690108ce3e0b5289630de1a074d56553</bigzipmd5>
   <zipversion>14</zipversion>
