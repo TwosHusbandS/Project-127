@@ -58,6 +58,14 @@ Stuff to fix post 1.1:
 	>> Specials background
 	>> Installer stuff.
 
+- Quit GTA freezing UI on exit GTA
+- Mouse Over Import SafeFileHandler
+- P127 Crashes when Disabling Overlay
+- Backup UI
+	>> Show Version on applying dropdown and main button
+	>> offer to back up files we are yanking
+	>> Better % bar
+
 */
 
 using System;
