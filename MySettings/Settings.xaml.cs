@@ -1774,8 +1774,9 @@ namespace Project_127.MySettings
 			}
 
 			string tmp = combox_UseBackup.SelectedItem.ToString();
-			string Name = tmp.Substring(0,tmp.Length - 5).TrimEnd('(');
+			string Name = tmp.Substring(0, tmp.LastIndexOf('('));
 			string Path = LauncherLogic.ZIPFilePath.TrimEnd('\\') + @"\Project_127_Files\UpgradeFiles_Backup_" + Name;
+
 			if (!(HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(Path).Length >= 2))
 			{
 				string prevName = btn_UseBackupName.Content.ToString();
