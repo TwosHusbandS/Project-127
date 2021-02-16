@@ -42,9 +42,8 @@ Stuff to fix post 1.1:
 - Installer:
 	>> BUILD WITHOUT EASTER EGG COMMENTED OUT (think about TTS Easter Egg.)
 	>> NEW IMAGE LOCATIONS ETC
-	>> Test if uninstall delete jumpscript license works.
 	>> Build Installer
-	>> remove that uninstall delete before pushing
+	>> Uninstall Old license via LastLaunchedVersion
 - unit test:
 	>> Launch Game stuff. (Steam, nonsteam, SCL, apply core fix, overwrite command line args, etc.)
 	>> one simulated game update
@@ -62,8 +61,6 @@ Stuff to fix post 1.1:
 	>> [DONE] change commandlines interpretation and change advanced user readme
 	>> Specials background
 	>> Installer stuff.
-- link youtube video via github XML, change link in credits.
-
 */
 
 using System;

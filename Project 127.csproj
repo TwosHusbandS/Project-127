@@ -595,7 +595,7 @@ copy "$(ProjectDir)Artwork\bg_valentine.png" "$(ProjectDir)\bin\x64\Release\Ugly
 copy "$(ProjectDir)Artwork\bg_murica.png" "$(ProjectDir)\bin\x64\Release\UglyFiles\Artwork\bg_murica.png"
 copy "$(ProjectDir)Artwork\bg_germania.png" "$(ProjectDir)\bin\x64\Release\UglyFiles\Artwork\bg_germania.png"
 copy "$(ProjectDir)Artwork\bg_cat.png" "$(ProjectDir)\bin\x64\Release\UglyFiles\Artwork\bg_cat.png"
-copy "$(ProjectDir)Artwork\P127_Slogan" "$(ProjectDir)\bin\x64\Release\UglyFiles\Artwork\P127_Slogan.png"
+copy "$(ProjectDir)Artwork\P127_Slogan.png" "$(ProjectDir)\bin\x64\Release\UglyFiles\Artwork\P127_Slogan.png"
 copy "$(ProjectDir)Artwork\Preview_1.png" "$(ProjectDir)\bin\x64\Release\UglyFiles\Artwork\Preview_1.png"
 copy "$(ProjectDir)Artwork\Preview_2.png" "$(ProjectDir)\bin\x64\Release\UglyFiles\Artwork\Preview_2.png"
 copy "$(ProjectDir)Artwork\Preview_3.png" "$(ProjectDir)\bin\x64\Release\UglyFiles\Artwork\Preview_3.png"

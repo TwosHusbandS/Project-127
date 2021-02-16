@@ -72,12 +72,29 @@ Source: "..\bin\x64\Release\UglyFiles\SharpDX.DXGI.dll"; DestDir: "{app}\UglyFil
 Source: "..\bin\x64\Release\UglyFiles\snapshot_blob.bin"; DestDir: "{app}\UglyFiles"; Flags: ignoreversion
 Source: "..\bin\x64\Release\UglyFiles\v8_context_snapshot.bin"; DestDir: "{app}\UglyFiles"; Flags: ignoreversion
 Source: "..\bin\x64\Release\UglyFiles\WpfAnimatedGif.dll"; DestDir: "{app}\UglyFiles"; Flags: ignoreversion
+Source: "..\bin\x64\Release\UglyFiles\Artwork\bg_default.png"; DestDir: "{app}\UglyFiles\Artwork"; Flags: ignoreversion
+Source: "..\bin\x64\Release\UglyFiles\Artwork\bg_winter.png"; DestDir: "{app}\UglyFiles\Artwork"; Flags: ignoreversion
+Source: "..\bin\x64\Release\UglyFiles\Artwork\bg_spooky.png"; DestDir: "{app}\UglyFiles\Artwork"; Flags: ignoreversion
+Source: "..\bin\x64\Release\UglyFiles\Artwork\bg_fourtwenty.png"; DestDir: "{app}\UglyFiles\Artwork"; Flags: ignoreversion
+Source: "..\bin\x64\Release\UglyFiles\Artwork\bg_valentine.png"; DestDir: "{app}\UglyFiles\Artwork"; Flags: ignoreversion
+Source: "..\bin\x64\Release\UglyFiles\Artwork\bg_murica.png"; DestDir: "{app}\UglyFiles\Artwork"; Flags: ignoreversion
+Source: "..\bin\x64\Release\UglyFiles\Artwork\bg_germania.png"; DestDir: "{app}\UglyFiles\Artwork"; Flags: ignoreversion
+Source: "..\bin\x64\Release\UglyFiles\Artwork\bg_cat.png"; DestDir: "{app}\UglyFiles\Artwork"; Flags: ignoreversion
+Source: "..\bin\x64\Release\UglyFiles\Artwork\P127_Slogan.png"; DestDir: "{app}\UglyFiles\Artwork"; Flags: ignoreversion
+Source: "..\bin\x64\Release\UglyFiles\Artwork\Preview_1.png"; DestDir: "{app}\UglyFiles\Artwork"; Flags: ignoreversion
+Source: "..\bin\x64\Release\UglyFiles\Artwork\Preview_2.png"; DestDir: "{app}\UglyFiles\Artwork"; Flags: ignoreversion
+Source: "..\bin\x64\Release\UglyFiles\Artwork\Preview_3.png"; DestDir: "{app}\UglyFiles\Artwork"; Flags: ignoreversion
+Source: "..\bin\x64\Release\UglyFiles\Artwork\Preview_4.png"; DestDir: "{app}\UglyFiles\Artwork"; Flags: ignoreversion
+Source: "..\bin\x64\Release\UglyFiles\Artwork\Preview_5.png"; DestDir: "{app}\UglyFiles\Artwork"; Flags: ignoreversion
+Source: "..\bin\x64\Release\UglyFiles\Artwork\Preview_6.png"; DestDir: "{app}\UglyFiles\Artwork"; Flags: ignoreversion
+Source: "..\bin\x64\Release\UglyFiles\Artwork\Preview_7.png"; DestDir: "{app}\UglyFiles\Artwork"; Flags: ignoreversion
+Source: "..\bin\x64\Release\UglyFiles\Artwork\Preview_8.png"; DestDir: "{app}\UglyFiles\Artwork"; Flags: ignoreversion
+Source: "..\bin\x64\Release\UglyFiles\Artwork\Preview_9.png"; DestDir: "{app}\UglyFiles\Artwork"; Flags: ignoreversion
+Source: "..\bin\x64\Release\UglyFiles\Artwork\Preview_10.png"; DestDir: "{app}\UglyFiles\Artwork"; Flags: ignoreversion
 Source: "..\bin\x64\Release\LICENSE"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\bin\x64\Release\JUMPSCRIPT_LICENSE"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\bin\x64\Release\Project 127 Launcher.exe"; DestDir: "{app}"; Flags: ignoreversion
 
-[UninstallDelete]
-Type: files; Name: "{app}\LICENSE_JUMPSCRIPT"
 
 [Icons]
 Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
