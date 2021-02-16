@@ -50,6 +50,8 @@ Stuff to fix post 1.1:
 	>> Reset
 	>> Repair
 
+
+- P127 Crashes when Disabling Overlay, DISABLE EASTER EGG
 - build import zips for all 5 components, make them take version txt, if it exists, dont ask for version via textbox popup
 - backgrounds
 	>> [DONE] add new backgrounds (cat, fourth of july, alemania, valentine)
@@ -59,12 +61,7 @@ Stuff to fix post 1.1:
 	>> Installer stuff.
 
 - Quit GTA freezing UI on exit GTA
-- Mouse Over Import SafeFileHandler
-- P127 Crashes when Disabling Overlay
-- Backup UI
-	>> Show Version on applying dropdown and main button
-	>> offer to back up files we are yanking
-	>> Better % bar
+- offer to back up CURRENT FILES when APPLYING BACKUP
 
 */
 

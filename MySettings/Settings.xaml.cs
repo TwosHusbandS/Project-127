@@ -771,6 +771,14 @@ namespace Project_127.MySettings
 				lbl_AuthWays.Content = "Auth - Method: Legacy Auth";
 			}
 
+
+
+			Version myUpgradeVersion = HelperClasses.FileHandling.GetVersionFromFile(LauncherLogic.UpgradeFilePath.TrimEnd('\\') + @"\gta5.exe");
+			Version myBackupVersion = HelperClasses.FileHandling.GetVersionFromFile(LauncherLogic.UpgradeFilePathBackup.TrimEnd('\\') + @"\gta5.exe");
+			btn_CreateBackup.Content = "Create BackupFiles for Upgrading" + BuildVersionTable.GetNiceGameVersionString(myUpgradeVersion);
+			btn_UseBackup.Content = "Use BackupFiles for Upgrading" + BuildVersionTable.GetNiceGameVersionString(myBackupVersion);
+
+
 			RefreshIfOptionsHide();
 		}
 
@@ -1626,6 +1634,9 @@ namespace Project_127.MySettings
 		private void PopupCreateBackup_Opened(object sender, EventArgs e)
 		{
 			tb_Set_BackupName.Text = "BackupName";
+
+			Version myUpgradeVersion = HelperClasses.FileHandling.GetVersionFromFile(LauncherLogic.UpgradeFilePath.TrimEnd('\\') + @"\gta5.exe");
+			lbl_CreateBackupInPopup.Content = "Create Backup" + BuildVersionTable.GetNiceGameVersionString(myUpgradeVersion);
 		}
 
 
@@ -1727,7 +1738,10 @@ namespace Project_127.MySettings
 				if (MyFolder.Contains(LauncherLogic.ZIPFilePath.TrimEnd('\\') + @"\Project_127_Files\UpgradeFiles_Backup_"))
 				{
 					string NiceName = MyFolder.Substring(MyFolder.LastIndexOf('_') + 1);
-					combox_UseBackup.Items.Add(NiceName);
+
+					Version myGameVersion = HelperClasses.FileHandling.GetVersionFromFile(MyFolder.TrimEnd('\\') + @"\gta5.exe");
+
+					combox_UseBackup.Items.Add(NiceName + BuildVersionTable.GetNiceGameVersionString(myGameVersion));
 				}
 			}
 
@@ -1759,8 +1773,10 @@ namespace Project_127.MySettings
 				return;
 			}
 
-			string newName = LauncherLogic.ZIPFilePath.TrimEnd('\\') + @"\Project_127_Files\UpgradeFiles_Backup_" + combox_UseBackup.SelectedItem.ToString();
-			if (!(HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(newName).Length >= 2))
+			string tmp = combox_UseBackup.SelectedItem.ToString();
+			string Name = tmp.Substring(0,tmp.Length - 5).TrimEnd('(');
+			string Path = LauncherLogic.ZIPFilePath.TrimEnd('\\') + @"\Project_127_Files\UpgradeFiles_Backup_" + Name;
+			if (!(HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(Path).Length >= 2))
 			{
 				string prevName = btn_UseBackupName.Content.ToString();
 				btn_UseBackupName.Content = "No Files in that Folder";
@@ -1769,7 +1785,7 @@ namespace Project_127.MySettings
 				return;
 			}
 
-			LauncherLogic.UseBackup(combox_UseBackup.SelectedItem.ToString());
+			LauncherLogic.UseBackup(Path);
 		}
 
 		/// <summary>

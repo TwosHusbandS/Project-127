@@ -107,7 +107,7 @@
                                             <RowDefinition/>
                                             <RowDefinition/>
                                         </Grid.RowDefinitions>
-                                        <Label Grid.Row="0" Style="{StaticResource lbl_Set_Info}" Content="Create Backup"/>
+                                        <Label x:Name="lbl_CreateBackupInPopup" Grid.Row="0" Style="{StaticResource lbl_Set_Info}" Content="Create Backup"/>
                                         <TextBox Grid.Row="1" Style="{StaticResource tb}" x:Name="tb_Set_BackupName" KeyDown="tb_Set_BackupName_KeyDown"/>
                                         <Button Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource btn_SE_Path}" x:Name="btn_CreateBackupName" Click="btn_CreateBackupName_Click"  Content="Create Upgrade Backups"/>
                                     </Grid>
@@ -123,7 +123,7 @@
                                             <RowDefinition/>
                                             <RowDefinition/>
                                         </Grid.RowDefinitions>
-                                        <Label Grid.Row="0" Style="{StaticResource lbl_Set_Info}" Content="Apply Backup"/>
+                                        <Label x:Name="lbl_UseBackupInPopup" Grid.Row="0" Style="{StaticResource lbl_Set_Info}" Content="Apply Backup"/>
                                         <ComboBox Grid.Row="1" Margin="10" Style="{StaticResource cobo}" x:Name="combox_UseBackup" SelectionChanged="combox_UseBackup_SelectionChanged"/>
                                         <Button Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource btn_SE_Path}" x:Name="btn_UseBackupName" Click="btn_UseBackupName_Click"  Content="Use Backup"/>
                                     </Grid>
