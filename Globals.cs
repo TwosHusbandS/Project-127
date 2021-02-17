@@ -230,7 +230,7 @@ namespace Project_127
 		/// <summary>
 		/// Property of other Buildinfo. Will be in the top message of logs
 		/// </summary>
-		public static string BuildInfo = "Test - Build for 1.2.1";
+		public static string BuildInfo = "1.2.2.0 RC - 1";
 
 		/// <summary>
 		/// Returns all Command Line Args as StringArray
@@ -599,7 +599,9 @@ namespace Project_127
 				if (Settings.LastLaunchedVersion < new Version("1.2.2.0"))
 				{
 					HelperClasses.FileHandling.deleteFile(Globals.ProjectInstallationPath.TrimEnd('\\') + @"\LICENSE_JUMPSCRIPT");
+					HelperClasses.FileHandling.deleteFile(Globals.ProjectInstallationPath.TrimEnd('\\') + @"\LICENSE");
 					HelperClasses.FileHandling.deleteFile(Globals.ProjectInstallationPathBinary.TrimEnd('\\') + @"\LICENSE_JUMPSCRIPT");
+					HelperClasses.FileHandling.deleteFile(Globals.ProjectInstallationPathBinary.TrimEnd('\\') + @"\LICENSE");
 				}
 
 				Settings.LastLaunchedVersion = Globals.ProjectVersion;

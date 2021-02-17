@@ -290,7 +290,7 @@ namespace Project_127
 			HelperClasses.Logger.Log("SCL - Initiating a Social Club Downgrade after " + msDelay + " ms of Delay", 0);
 
 			// KILL ALL PROCESSES
-			HelperClasses.ProcessHandler.SocialClubKillAllProcesses();
+			HelperClasses.ProcessHandler.SocialClubKillAllProcesses().GetAwaiter().GetResult();
 
 			if (!SCL_MakeSureDowngradedCacheIsCorrect())
 			{
@@ -394,7 +394,7 @@ namespace Project_127
 			HelperClasses.Logger.Log("SCL - Initiating a Social Club Upgrade after " + msDelay + " ms of Delay", 0);
 
 			// KILL ALL PROCESSES
-			HelperClasses.ProcessHandler.SocialClubKillAllProcesses();
+			HelperClasses.ProcessHandler.SocialClubKillAllProcesses().GetAwaiter().GetResult();
 
 			List<MyFileOperation> tmp = new List<MyFileOperation>();
 

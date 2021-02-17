@@ -37,11 +37,10 @@ Hybrid code can be found in AAA_HybridCode.
 Stuff to fix post 1.1:
 - Installer:
 	>> BUILD WITH EASTER EGG COMMENTED OUT DUE TO IT CRASHING ON MY MACHINE
-	>> NEW IMAGE LOCATIONS ETC
 	>> Build Installer
-	>> Uninstall Old license via LastLaunchedVersion
 - unit test:
 	>> Launch Game stuff. (Steam, nonsteam, SCL, apply core fix, overwrite command line args, etc.)
+	>> Start command line args everything unit test
 	>> one simulated game update
 	>> rockstar fucking us
 	>> custom backup stuff
@@ -50,26 +49,24 @@ Stuff to fix post 1.1:
 	>> Reset
 	>> Repair
 	>> Import ZIP in Componenet Manager
-	>> Start command line args everything unit test
 
-- EASTER EGG DISABLED DUE TO IT CRASHING MY P127 (EVEN WITHOUT DEBUGGER)
+Post ReleaseCanidate:
+- Figure out how to compile so we dont need the 2 additional exe file addition thingies. If we delete the start-as-admin doesnt work anymore??
 
-- rightclick gta freezes UI...
-
-Initial Installation + Setup:
-	Show installation in timelapse
-	Mention / Write that your GTA should be unmodified & Upgraded
-	Show all initial setup clicks (select gta path etc.)
-Main Explanation:
-	Explain Upgrading / Downgrading briefly. (It automatically detects Game Updates and will offer to back your current "UpgradeFiles" folder up)
-	Explain LaunchWays & Authways UI. (Auth is only needed when using Dragon Launcher, explain lock icon)
-Show for 5 Seconds:
-	SaveFileHandler (tell you can rightclick)
-	NoteOverlay (show all sub-pages for a second i guess)
-	ComponentManager (in theory never needed, it will always prompt you to automatically download if neeeded)
-	Information (maybe click each page for 1-2 seconds, reference Help Section...)
-	Settings (show each settings page for 1-2 seconds and scroll down)
-
+Stuff for Video:
+	Initial Installation + Setup:
+		Show installation in timelapse
+		Mention / Write that your GTA should be unmodified & Upgraded
+		Show all initial setup clicks (select gta path etc.)
+	Main Explanation:
+		Explain Upgrading / Downgrading briefly. (It automatically detects Game Updates and will offer to back your current "UpgradeFiles" folder up)
+		Explain LaunchWays & Authways UI. (Auth is only needed when using Dragon Launcher, explain lock icon)
+	Show for 5 Seconds:
+		SaveFileHandler (tell you can rightclick)
+		NoteOverlay (show all sub-pages for a second i guess)
+		ComponentManager (in theory never needed, it will always prompt you to automatically download if neeeded)
+		Information (maybe click each page for 1-2 seconds, reference Help Section...)
+		Settings (show each settings page for 1-2 seconds and scroll down)
 
 */
 

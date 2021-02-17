@@ -26,12 +26,21 @@ namespace Project_127.HelperClasses
 		/// </summary>
 		public static async void KillRockstarProcessesAsync()
 		{
-			KillRockstarProcesses();
+			await SocialClubKillAllProcesses(0, true);
+
+			// TODO CTRLF add other ProcessNames
+			KillProcessesContains("gta");
+			KillProcessesContains("gtastub");
+			KillProcessesContains("rockstar");
+			KillProcessesContains("play127");
+			KillProcessesContains("gtaddl");
+
+			MainWindow.MW.UpdateGUIDispatcherTimer();
 		}
 
 		public static void KillRockstarProcesses()
 		{
-			SocialClubKillAllProcesses(0, true);
+			SocialClubKillAllProcesses(0, true).GetAwaiter().GetResult();
 
 			// TODO CTRLF add other ProcessNames
 			KillProcessesContains("gta");
@@ -128,7 +137,7 @@ namespace Project_127.HelperClasses
 		/// Killing all Social Club Related Processes
 		/// </summary>
 		/// <param name="msDelayAfter"></param>
-		public static void SocialClubKillAllProcesses(int msDelayAfter = 150, bool OnlyClose = false, bool SkipAllWait = false)
+		public async static Task SocialClubKillAllProcesses(int msDelayAfter = 150, bool OnlyClose = false, bool SkipAllWait = false)
 		{
 			RegistryKey myRK = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64).CreateSubKey("SOFTWARE").CreateSubKey("WOW6432Node").CreateSubKey("Microsoft").CreateSubKey("Windows").CreateSubKey("CurrentVersion").CreateSubKey("Uninstall").CreateSubKey("Rockstar Games Launcher");
 			string tmpInstallDir = HelperClasses.RegeditHandler.GetValue(myRK, "InstallLocation");
@@ -179,7 +188,7 @@ namespace Project_127.HelperClasses
 			if (!SkipAllWait)
 			{
 				// wait 25 seconds
-				Task.Delay(50).GetAwaiter().GetResult();
+				await Task.Delay(50);
 			}
 
 			// Just making sure shit is really closed
@@ -222,7 +231,7 @@ namespace Project_127.HelperClasses
 			if (!SkipAllWait)
 			{
 				// Waiting 150 ms after killing for process to really let go off file
-				Task.Delay(msDelayAfter).GetAwaiter().GetResult();
+				await Task.Delay(msDelayAfter);
 			}
 		}
 

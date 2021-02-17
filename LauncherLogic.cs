@@ -896,8 +896,7 @@ namespace Project_127
 				}
 			}
 
-			HelperClasses.Logger.Log("Command Args the alg came up with: #" + tmp + "#");
-			Globals.DebugPopup(tmp);
+			HelperClasses.Logger.Log("Command Args the alg came up with: #" + tmp + "#, launching Game");
 
 			return tmp;
 		}
