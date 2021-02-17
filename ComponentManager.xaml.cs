@@ -133,7 +133,7 @@ namespace Project_127
 			bool rtrn = true;
 			HelperClasses.Logger.Log("ComponentMngr - Checking if all required Components are installed. AskUser: '" + AskUser + "'");
 
-			for (int i = 0; i <= RequiredComponentsBasedOnSettings.Count -1; i++)
+			for (int i = 0; i <= RequiredComponentsBasedOnSettings.Count - 1; i++)
 			{
 				Components myComponent = RequiredComponentsBasedOnSettings[i];
 				if (!myComponent.IsInstalled())
@@ -559,6 +559,85 @@ namespace Project_127
 		}
 
 
+		private void ImportZIPForComponenet(Components MyComponent, string LocalZIPFilePath)
+		{
+			HelperClasses.Logger.Log("ComponentMngr - Component: '" + MyComponent + "', Importing local ZIP");
+
+			string tmpLocation = MyComponent.GetPathWhereZIPIsExtracted();
+			HelperClasses.Logger.Log("ComponentMngr - Component: '" + MyComponent + "', ZIPPath where we extract for that one: '" + tmpLocation + "'.", 1);
+
+			new PopupProgress(PopupProgress.ProgressTypes.ZIPFile, LocalZIPFilePath, null, tmpLocation).ShowDialog();
+
+			HelperClasses.Logger.Log("ComponentMngr - Guess the ZIP Extraction worked since we got here...", 1);
+
+			if (MyComponent == Components.Base)
+			{
+				tmpLocation += tmpLocation.TrimEnd('\\') + @"\Project_127_Files\";
+			}
+			tmpLocation += "Version.txt";
+
+			HelperClasses.Logger.Log("ComponentMngr - tmpLocation = '" + tmpLocation + "'", 1);
+
+
+			// READ COMPONENT FROM, decide if we ask for version or not
+			bool doWeNeedVersion = false;
+
+			Version FI = MyComponent.GetInstalledVersion();
+			if (HelperClasses.FileHandling.doesFileExist(tmpLocation))
+			{
+				string content = HelperClasses.FileHandling.ReadContentOfFile(tmpLocation);
+
+				if (MyComponent == Components.Base)
+				{
+					int _ZipVersion = 0;
+					Int32.TryParse(content, out _ZipVersion);
+					if (_ZipVersion <= 0)
+					{
+						FI = new Version(1, _ZipVersion, 0, 0);
+						doWeNeedVersion = true;
+					}
+					else
+					{
+						try
+						{
+							FI = new Version(content);
+							doWeNeedVersion = true;
+						}
+						catch { }
+					}
+				}
+				else
+				{
+					try
+					{
+						FI = new Version(content);
+						doWeNeedVersion = true;
+					}
+					catch { }
+				}
+			}
+
+			if (doWeNeedVersion)
+			{
+				if (FI == new Version("0.0.0.0"))
+				{
+					FI = new Version("1.0.0.0");
+				}
+
+				PopupTextbox tmp2 = new PopupTextbox("Enter the Version you want to force.", FI.ToString());
+				tmp2.ShowDialog();
+
+				try
+				{
+					FI = new Version(tmp2.MyReturnString);
+				}
+				catch { }
+			}
+
+			HelperClasses.Logger.Log("ComponentMngr - ForceSetting the Component ('" + MyComponent + "'), to Version: '" + FI.ToString() + "'.", 1);
+			MyComponent.ForceSetInstalled(FI);
+		}
+
 		private void btn_Uninstall_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
 		{
 			if (e.ClickCount >= 3)
@@ -576,33 +655,8 @@ namespace Project_127
 					if (HelperClasses.FileHandling.doesFileExist(localFilePath))
 					{
 						HelperClasses.Logger.Log("ComponentMngr - File post Download found ('" + localFilePath + "').", 1);
-
-						Components MyComponent = GetComponentFromButton((Button)sender);
-
-						HelperClasses.Logger.Log("ComponentMngr - Component: '" + MyComponent + "', ZIPPath where we extract for that one: '" + MyComponent.GetPathWhereZIPIsExtracted() + "'.", 1);
-
-						new PopupProgress(PopupProgress.ProgressTypes.ZIPFile, "Extracting File", null, MyComponent.GetPathWhereZIPIsExtracted()).ShowDialog();
-
-						HelperClasses.Logger.Log("ComponentMngr - Guess the ZIP Extraction worked since we got here...", 1);
-
-						Version FI = MyComponent.GetInstalledVersion();
-						if (FI == new Version("0.0.0.0"))
-						{
-							FI = new Version("1.0.0.0");
-						}
-
-						PopupTextbox tmp2 = new PopupTextbox("Enter the Version you want to force.", FI.ToString());
-						tmp2.ShowDialog();
-
-						try
-						{
-							FI = new Version(tmp2.MyReturnString);
-						}
-						catch { }
-
-						HelperClasses.Logger.Log("ComponentMngr - ForceSetting the Component ('" + MyComponent + "'), to Version: '" + FI.ToString() + "'.", 1);
-
-						MyComponent.ForceSetInstalled(FI);
+						ImportZIPForComponenet(GetComponentFromButton((Button)sender), localFilePath);
+						HelperClasses.FileHandling.deleteFile(localFilePath);
 					}
 					else
 					{
@@ -621,6 +675,19 @@ namespace Project_127
 		private void btn_DragMove(object sender, MouseButtonEventArgs e)
 		{
 			MainWindow.MW.DragMove();
+		}
+
+		private void btn_lbl_Status_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+		{
+			if (e.ClickCount >= 3)
+			{
+				string rtrn = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.File, "Select the ZIP File you want to import", @"C:\", false, "ZIP Files|*.zip*");
+
+				if (HelperClasses.FileHandling.doesFileExist(rtrn))
+				{
+					ImportZIPForComponenet(GetComponentFromButton((Button)sender), rtrn);
+				}
+			}
 		}
 	}
 
@@ -865,7 +932,7 @@ namespace Project_127
 		/// </summary>
 		/// <param name="Component"></param>
 		/// <param name="myLbl"></param>
-		public static void UpdateStatus(this ComponentManager.Components Component, Label myLbl)
+		public static void UpdateStatus(this ComponentManager.Components Component, Button myLbl)
 		{
 			if (Component.IsInstalled())
 			{

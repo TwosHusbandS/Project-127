@@ -25,6 +25,7 @@
 * Auth Button is now crossed when not needed.
 * Added a bunch of random backgrounds
 * Asking if User wants to switch Component Installation Location to Default Locaton when hes changing GTA V Path Installation
+* Offering to back up current UpgradeFiles files when applying a backup
 
 #### BugFixes:
 * Changed when and how im killing rockstar processes. (Thanks Hoxi).

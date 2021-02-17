@@ -49,19 +49,15 @@ Stuff to fix post 1.1:
 	>> switch ZIP Location
 	>> Reset
 	>> Repair
+	>> Import ZIP in Componenet Manager
+	>> Start command line args everything unit test
 
 - EASTER EGG DISABLED DUE TO IT CRASHING MY P127 (EVEN WITHOUT DEBUGGER)
 
 - build import zips for all 5 components, make them take version txt, if it exists, dont ask for version via textbox popup
-- backgrounds
-	>> [DONE] add new backgrounds (cat, fourth of july, alemania, valentine)
-	>> [DONE] try-catch back ground changer stuff i guess
-	>> [DONE] change commandlines interpretation and change advanced user readme
-	>> Specials background
-	>> Installer stuff.
-
-- offer to back dup CURRENT FILES when APPLYING BACKUP
-
+- Write Delete License startup 1.2 last launched
+- Add new Import ZIP Component Manager advanced user readme
+- rightclick gta freezes UI...
 
 Initial Installation + Setup:
 	Show installation in timelapse
