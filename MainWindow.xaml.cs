@@ -54,7 +54,6 @@ Stuff to fix post 1.1:
 
 - EASTER EGG DISABLED DUE TO IT CRASHING MY P127 (EVEN WITHOUT DEBUGGER)
 
-- build import zips for all 5 components, make them take version txt, if it exists, dont ask for version via textbox popup
 - Write Delete License startup 1.2 last launched
 - Add new Import ZIP Component Manager advanced user readme
 - rightclick gta freezes UI...

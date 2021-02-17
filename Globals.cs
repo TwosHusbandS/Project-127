@@ -596,6 +596,12 @@ namespace Project_127
 					Settings.AntiVirusFix();
 				}
 
+				if (Settings.LastLaunchedVersion < new Version("1.2.2.0"))
+				{
+					HelperClasses.FileHandling.deleteFile(Globals.ProjectInstallationPath.TrimEnd('\\') + @"\LICENSE_JUMPSCRIPT");
+					HelperClasses.FileHandling.deleteFile(Globals.ProjectInstallationPathBinary.TrimEnd('\\') + @"\LICENSE_JUMPSCRIPT");
+				}
+
 				Settings.LastLaunchedVersion = Globals.ProjectVersion;
 			}
 
@@ -1684,7 +1690,7 @@ namespace Project_127
 				{
 					GTAOverlay.DisableRichard = true;
 				}
-				
+
 
 
 			}
