@@ -19,36 +19,105 @@ namespace Project_127.Popups
 	/// </summary>
 	public partial class PopupInstallComponent : Window
 	{
+
+		private void Window_SourceInitialized(object sender, EventArgs e)
+		{
+			if (MainWindow.MW.IsVisible)
+			{
+				this.Left = MainWindow.MW.Left + (MainWindow.MW.Width / 2) - (this.Width / 2);
+				this.Top = MainWindow.MW.Top + (MainWindow.MW.Height / 2) - (this.Height / 2);
+			}
+		}
+
+		public enum ComponentActions
+		{
+			Installing,
+			ReInstalling,
+			Updating
+		}
+
+
 		ComponentManager.Components MyComponent;
-		bool AssemblyReinstall;
+		ComponentActions MyComponentAction;
+
 		public bool rtrn;
 
-		public PopupInstallComponent(ComponentManager.Components pComponent, bool pAssemblyReInstall = false)
+		public PopupInstallComponent(ComponentManager.Components pComponent, ComponentActions pComponentAction)
 		{
 			InitializeComponent();
 
-			MyComponent = pComponent;
-			AssemblyReinstall = pAssemblyReInstall;
-
-			string msg = "";
-
-			if (pAssemblyReInstall)
+			if (MainWindow.MW.IsVisible)
 			{
-				msg += "Re-";
+				this.Owner = MainWindow.MW;
+				this.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+			}
+			else
+			{
+				this.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+				this.Height = 100;
+				this.Width = 175;
+				lbl_Main.FontSize = 14;
 			}
 
-			msg += "Installing:\n'" + MyComponent.GetNiceName() + "'\nPlease wait until this Window closes";
+			MyComponent = pComponent;
+			MyComponentAction = pComponentAction;
 
-			lbl_Main.Content = msg;
+			lbl_Main.Content = MyComponentAction.ToString() + "\n'" + MyComponent.GetNiceName() + "'" + "\nPlease Stand By"; ;
+
+			StartWork();
 		}
 
 		private void Window_Loaded(object sender, RoutedEventArgs e)
 		{
-			Task.Delay(100).GetAwaiter().GetResult();
+		//	Task.Delay(100).GetAwaiter().GetResult();
+		//	LetsGo();
+		}
 
-			rtrn = Globals.MyDM.getSubassembly(MyComponent.GetAssemblyName(), AssemblyReinstall).GetAwaiter().GetResult();
+		async void LetsGo()
+		{
+		//	lbl_Main.Content += "\nPlease Stand By";
+		//	await Task.Run(() => ActualWork());
+		//	this.Close();
+		}
 
+
+		/// <summary>
+		/// Starting the Task 
+		/// </summary>
+		[STAThread]
+		public async void StartWork()
+		{
+			await Task.Delay(250);
+
+			// Awaiting the Task of the Actual Work
+			await Task.Run(new Action(ActualWork));
+
+			// Close this
 			this.Close();
+		}
+
+		/// <summary>
+		/// Task of the actual work being done
+		/// </summary>
+		[STAThread]
+		public void ActualWork()
+		{
+			this.Dispatcher.Invoke(() =>
+			{
+				switch (MyComponentAction)
+				{
+					case ComponentActions.Installing:
+						rtrn = Globals.MyDM.getSubassembly(MyComponent.GetAssemblyName()).GetAwaiter().GetResult();
+						break;
+					case ComponentActions.ReInstalling:
+						rtrn = Globals.MyDM.getSubassembly(MyComponent.GetAssemblyName(), true).GetAwaiter().GetResult();
+						break;
+					case ComponentActions.Updating:
+						rtrn = Globals.MyDM.updateSubssembly(MyComponent.GetAssemblyName(), true).GetAwaiter().GetResult();
+						break;
+				}
+			});
+			
 		}
 
 		private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)

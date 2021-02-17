@@ -213,7 +213,7 @@ namespace Project_127.SaveFileHandlerStuff
 			// If this is a GTA SaveFileKind
 			if (this.SaveFileKind == SaveFileKinds.GTAV)
 			{
-				foreach (string MySaveFile in HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(BackupSavesPath))
+				foreach (string MySaveFile in HelperClasses.FileHandling.GetFilesFromFolder(BackupSavesPath))
 				{
 					if (HelperClasses.FileHandling.GetHashFromFile(MySaveFile) == HelperClasses.FileHandling.GetHashFromFile(pFilePath))
 					{

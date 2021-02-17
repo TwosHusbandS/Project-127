@@ -2,21 +2,17 @@
  
 Main Documentation / Dev Diary here:
 
-Actual code (partially closed source) which authentificates, handles entitlement and launches the game (and Overlay Backend) is done by @dr490n
-@Special For, who also did a lot of RE'ing, testing, brainstorming, information gathering and 2nd level support
-@JakeMiester did some project management, acted as the communication party between the team and the speedrun mods, "invented" trello
-@zCri did a research, RE and coding in the initial information gathering stage
-Artwork, Design of GUI, GUI Behaviourehaviour, Colorchoices etc. by "@Hossel"
-Project 1.27 Client by "@thS"
+Actual code (partially closed source) which authentificates, handles entitlement and launches the game (as well as Overlay Backend and DownloadManager backend) is done by @dr490n
+@Special For, who also did a lot of RE'ing, testing, brainstorming, information gathering and 2nd level support, being available to bounce ideas off of.
+Main / Actual Project 1.27 Client by "@thS"
 A number of other members of the team, including but not limited to @MoMo, @Diamondo25, @S.M.G, @gogsi, @Antibones, @Unemployed, @Aperture, @luky, @CrynesSs, @Daniel Kinau contributed to this project one way or another, and my thanks go out to them.
-Version: 1.1.9.1
+Version: 1.2.1.0
 
 Build Instructions:
 	Press CTRLF + F5, pray that nuget does its magic.
 	If this doesnt work, required DLLs and files can be gotten by running the latest installer
 
 Deploy Instructions:
-	
 	Change Version Number a few Lines Above.
 	Change Version Number in both of the last lines in AssemblyInfo.cs
 	ALSO CHANGE VERSION NUMBER IN ASSEMBLYINFO.CS FROM P127 LAUNCHER
@@ -28,66 +24,51 @@ Deploy Instructions:
 	Build installer via Innosetup (script we use for that is in \Installer\)
 		Change Version in Version
 		Change Version in OutputName
-		Change BuildPath to your local Path of the repo...(make sure it builds in the \Installer Folder
 	Delete Project_127_Installer_Latest.exe. Copy Paste the Installer we just compiled and name the copy of it Project_127_Installer_Latest.exe
 	Change Version number and Installer Path in "\Installer\Update.xml"
+	Save Innosetup Script...
 	Push Commit to github branch.
 	Merge branch into master
 
 Comments like "TODO", "TO DO", "CTRLF", "CTRL-F", and "CTRL F" are just ways of finding a specific line quickly via searching
 
 Hybrid code can be found in AAA_HybridCode.
-	
 
-ON RELEASE OF 1.2
-- Release WITHOUT try catch around window listener
-- THINK ABOUT PROCESS KILLER FOR SOCIAL CLUB LOGIC
-- CHECK CHANGELOG / README / HELP / FEATURES FOR "PLACEHOLDER"
-- RELEASE ALL NEW FILES WITH IT (V14, new SCL Binaries)
+Stuff to fix post 1.1:
+- Installer:
+	>> BUILD WITH EASTER EGG COMMENTED OUT DUE TO IT CRASHING ON MY MACHINE
+	>> Build Installer
+- unit test:
+	>> Launch Game stuff. (Steam, nonsteam, SCL, apply core fix, overwrite command line args, etc.)
+	>> Start command line args everything unit test
+	>> one simulated game update
+	>> rockstar fucking us
+	>> custom backup stuff
+	>> switch GTA V Location
+	>> switch ZIP Location
+	>> Reset
+	>> Repair
+	>> Import ZIP in Componenet Manager
 
-TO DO BEFORE INTERNAL TESTING
-- Release Internal Testing
+Post ReleaseCanidate:
+- Figure out how to compile so we dont need the 2 additional exe file addition thingies. If we delete the start-as-admin doesnt work anymore??
 
-Post 1.1.9.1:
-- [DONE] It will Auth on Auth Button even if Auth is not needed due to SCL
-- [DONE] Process Priority may be set even if disabled
-- [DONE] Fix "internal" popup.
-- [DONE] Fixed "empty" logging at start.
-- [DONE] Link to section of Help (on launch / auth section, when im referring to them in other markdowns)
-- [DONE] Link to overlay_additional in changelog 1.2
-- [DONE] Add new jump script options to changelog
-- [DONE] Bold a few things in the help # about game launching
-- [DONE] Dipose / Hide Taskbar Icon on default Close (ProperExit)
-- [DONE] Settings general has a row too many i think
-- [DONE] UI Text / Rows overlapping in Settings.xaml
-- [DONE] 500 to 7500 sleep on SC Upgrade after game exit.
-- [DONE] add cfg.dat and gtastub to generating debugfile
-- [DONE] Actually checking if components are really installed (on disk)...
-- [DONE] Social Club Switcheroo to take registry into account i guess...test with reloe?
-- [DONE] Social Club Switcheroo Option to overwrite
-- [DONE] Info that rockstar needs to have auto updates disabled
+Stuff for Video:
+	Initial Installation + Setup:
+		Show installation in timelapse
+		Mention / Write that your GTA should be unmodified & Upgraded
+		Show all initial setup clicks (select gta path etc.)
+	Main Explanation:
+		Explain Upgrading / Downgrading briefly. (It automatically detects Game Updates and will offer to back your current "UpgradeFiles" folder up)
+		Explain LaunchWays & Authways UI. (Auth is only needed when using Dragon Launcher, explain lock icon)
+	Show for 5 Seconds:
+		SaveFileHandler (tell you can rightclick)
+		NoteOverlay (show all sub-pages for a second i guess)
+		ComponentManager (in theory never needed, it will always prompt you to automatically download if neeeded)
+		Information (maybe click each page for 1-2 seconds, reference Help Section...)
+		Settings (show each settings page for 1-2 seconds and scroll down)
 
-- Think about going from "AllFilesPlacedIntoGTA" to just "DowngradeFiles" so i can delete them safely on upgrade...
-- Copy and paste help.md into information -> help
-- Jumpscript not being killed
-- Enabling & Quicky disabling Overlay crashed P127
-- Repair GTA Installation might crash P127 if "Project_127_Files" does not exist...
-
-- MTL Failing on first Attempt
-- RGL Crashes / Blackscreens
-- Livesplit /  OBS Require Admin again
-- WPF window is being spam-activated / shown. Theory that its caused by MTL Auth. (Look at Reloe 2, log) [theory correct, "onMTLAuthCompletion" is spamm-called.]
-- Download Manager crashing on Update + ReInstall
-- Overlay Multi Monitor DPI Scaling.
-		>> Properties in GTAOverlay.cs (_YMargin and width)
-		>> When looking at it, take a look at these things dragon sent:
-		https://stackoverflow.com/questions/1918877/how-can-i-get-the-dpi-in-wpf
-		https://docs.microsoft.com/en-us/dotnet/api/system.windows.media.visualtreehelper.getdpi?redirectedfrom=MSDN&view=net-5.0#System_Windows_Media_VisualTreeHelper_GetDpi_System_Windows_Media_Visual_
-		PresentationSource source = PresentationSource.FromVisual(this);
-		source.CompositionTarget.TransformToDevice.M11 <= X scaling factor
-		source.CompositionTarget.TransformToDevice.M22 <= Y scaling factor
-
- */
+*/
 
 using System;
 using System.Collections.Generic;
@@ -126,6 +107,10 @@ using CefSharp;
 using System.Drawing;
 using System.Threading;
 using System.Windows.Threading;
+using System.DirectoryServices.AccountManagement;
+using System.Windows.Media.Effects;
+using System.Speech.Synthesis;
+using Microsoft.Xaml.Behaviors;
 
 namespace Project_127
 {
@@ -225,7 +210,7 @@ namespace Project_127
 			// Start the Init Process of Logger, Settings, Globals, Regedit here, since we need the Logger in the next Line if it fails...
 			Globals.Init();
 
-			if (Globals.Branch == "internal")
+			if (Globals.P127Branch == "internal")
 			{
 				string msg = "We are in internal mode. We need testing on:\n\n" +
 					"- NoteOverlay" + "\n" +
@@ -243,9 +228,9 @@ namespace Project_127
 			SetButtonMouseOverMagic(btn_Auth);
 			SetButtonMouseOverMagic(btn_Hamburger);
 			Globals.HamburgerMenuState = Globals.HamburgerMenuStates.Hidden;
-			if (Settings.Mode.ToLower() != "default")
+			if (Settings.P127Mode.ToLower() != "default")
 			{
-				MainWindow.MW.btn_lbl_Mode.Content = "Curr Mode: '" + MySettings.Settings.Mode.ToLower() + "'";
+				MainWindow.MW.btn_lbl_Mode.Content = "Curr P127 Mode: '" + MySettings.Settings.P127Mode.ToLower() + "'";
 				MainWindow.MW.btn_lbl_Mode.Visibility = Visibility.Visible;
 			}
 			else
@@ -256,12 +241,6 @@ namespace Project_127
 			MainWindow.MW.btn_lbl_Mode.ToolTip = MainWindow.MW.btn_lbl_Mode.Content;
 
 			StartDispatcherTimer();
-
-			StartMTLDispatcherTimer();
-
-			HelperClasses.Logger.Log("Only CEF Init to go...");
-
-			Auth.ROSIntegration.CEFInitialize();
 
 			// Making this show on WindowLoaded
 			//HelperClasses.Logger.Log("Startup procedure (Constructor of MainWindow) completed.");
@@ -276,6 +255,8 @@ namespace Project_127
 				// Same as other two thingies here lolerino
 				HelperClasses.WindowChangeListener.Start();
 			}
+
+			HelperClasses.Logger.Log("Constructor of MainWindow Done. Will finish init with OnLoaded of WindowLoaded Event");
 		}
 
 		#endregion
@@ -299,10 +280,10 @@ namespace Project_127
 
 			StartUpStopwatch.Stop();
 
+			LauncherLogic.HandleUnsureInstallationState();
+
 			HelperClasses.Logger.Log("Startup procedure (Constructor of MainWindow) completed. It took " + StartUpStopwatch.ElapsedMilliseconds + " ms.");
 			HelperClasses.Logger.Log("------------------------------------------------------------------------------------");
-
-
 		}
 
 
@@ -487,7 +468,7 @@ namespace Project_127
 		/// <summary>
 		/// Starting the Dispatcher Timer. 30 seconds. Used to control automatic MTL session retrieval
 		/// </summary>
-		private void StartMTLDispatcherTimer()
+		public void StartMTLDispatcherTimer()
 		{
 			// Starting the Dispatcher Timer for the automatic updates of the GTA V Button
 			MTLAuthTimer = new System.Windows.Threading.DispatcherTimer();
@@ -509,7 +490,7 @@ namespace Project_127
 			{
 				MTLAuthTimer.Stop();
 			}
-			else if (Settings.EnableAlternativeLaunch)
+			else if (LauncherLogic.LaunchWay == LauncherLogic.LaunchWays.SocialClubLaunch)
 			{
 				return;
 			}
@@ -556,15 +537,25 @@ namespace Project_127
 					}
 					break;
 				case "btn_Auth":
-					string BaseArtworkPath = "";
+					string BaseArtworkPath = @"Artwork\lock";
+
+					if (LauncherLogic.LaunchWay == LauncherLogic.LaunchWays.SocialClubLaunch)
+					{
+						BaseArtworkPath += "_crossed";
+						btn_Auth.ToolTip = "Not needed on this Launch - Method";
+					}
+					else
+					{
+						btn_Auth.ToolTip = "Login Button. Lock closed = Logged in. Lock open = Not logged in";
+					}
 
 					if (LauncherLogic.AuthState == LauncherLogic.AuthStates.Auth)
 					{
-						BaseArtworkPath = @"Artwork\lock_closed";
+						BaseArtworkPath += "_closed";
 					}
 					else if (LauncherLogic.AuthState == LauncherLogic.AuthStates.NotAuth)
 					{
-						BaseArtworkPath = @"Artwork\lock_open";
+						BaseArtworkPath += "_open";
 					}
 
 					if (Globals.PageState == Globals.PageStates.Auth)
@@ -611,18 +602,34 @@ namespace Project_127
 				Globals.BackgroundImage = Globals.BackgroundImages.FourTwenty;
 			}
 			else if ((Now.Month == 10 && Now.Day >= 29) ||
-					(Now.Month == 11 && Now.Day == 1))
+					(Now.Month == 11 && Now.Day == 3))
 			{
 				Globals.BackgroundImage = Globals.BackgroundImages.Spooky;
 			}
 			else if ((Now.Month == 12 && Now.Day >= 6) ||
-					(Now.Month == 1 && Now.Day <= 6))
+					(Now.Month == 1 && Now.Day <= 9))
 			{
-				Globals.BackgroundImage = Globals.BackgroundImages.XMas;
+				Globals.BackgroundImage = Globals.BackgroundImages.Winter;
+			}
+			else if (Now.Month == 2 && Now.Day == 14)
+			{
+				Globals.BackgroundImage = Globals.BackgroundImages.Valentine;
+			}
+			else if (Now.Month == 3 && Now.Day == 18)
+			{
+				Globals.BackgroundImage = Globals.BackgroundImages.Cat;
+			}
+			else if (Now.Month == 7 && Now.Day == 4)
+			{
+				Globals.BackgroundImage = Globals.BackgroundImages.Murica;
+			}
+			else if (Now.Month == 10 && Now.Day == 3)
+			{
+				Globals.BackgroundImage = Globals.BackgroundImages.Germania;
 			}
 			else
 			{
-				Globals.BackgroundImage = Globals.BackgroundImages.Main;
+				Globals.BackgroundImage = Globals.BackgroundImages.Default;
 			}
 		}
 
@@ -630,15 +637,63 @@ namespace Project_127
 		/// <summary>
 		/// Set the Background to our WPF Window
 		/// </summary>
-		/// <param name="pArtworkPath"></param>
-		public void SetWindowBackground(string pArtworkPath)
+		public void SetWindowBackgroundImage()
 		{
-			Uri resourceUri = new Uri(pArtworkPath, UriKind.Relative);
-			StreamResourceInfo streamInfo = Application.GetResourceStream(resourceUri);
-			BitmapFrame temp = BitmapFrame.Create(streamInfo.Stream);
-			var brush = new ImageBrush();
-			brush.ImageSource = temp;
-			MainWindow.MW.GridMain.Background = brush;
+			try
+			{
+				var bitmap = new BitmapImage();
+
+				string FilePath = Globals.ProjectInstallationPathBinary.TrimEnd('\\') + @"\Artwork\bg_" + Globals.BackgroundImage.ToString().ToLower() + ".png";
+
+				using (var stream = new FileStream(FilePath, FileMode.Open))
+				{
+					bitmap.BeginInit();
+					bitmap.CacheOption = BitmapCacheOption.OnLoad;
+					bitmap.StreamSource = stream;
+					bitmap.EndInit();
+					bitmap.Freeze(); // optional
+				}
+				ImageBrush brush2 = new ImageBrush();
+				brush2.ImageSource = bitmap;
+				MainWindow.MW.GridBackground.Background = brush2;
+			}
+			catch (Exception e)
+			{
+				new Popup(Popup.PopupWindowTypes.PopupOkError, "Error Settings Background Image.\n" + e.ToString()).ShowDialog();
+
+				string URL_Path = @"Artwork\bg_default.png";
+				Uri resourceUri = new Uri(URL_Path, UriKind.Relative);
+				StreamResourceInfo streamInfo = Application.GetResourceStream(resourceUri);
+				BitmapFrame temp = BitmapFrame.Create(streamInfo.Stream);
+				ImageBrush brush = new ImageBrush();
+				brush.ImageSource = temp;
+				MainWindow.MW.GridBackground.Background = brush;
+			}
+
+			SetWindowBackgroundBlur();
+		}
+
+
+		public void SetWindowBackgroundBlur()
+		{
+			if (Globals.HamburgerMenuState == Globals.HamburgerMenuStates.Hidden)
+			{
+				Blur_All.Visibility = Visibility.Hidden;
+				Blur_Hamburger.Visibility = Visibility.Hidden;
+			}
+			else if (Globals.HamburgerMenuState == Globals.HamburgerMenuStates.Visible)
+			{
+				if (Globals.PageState == Globals.PageStates.GTA)
+				{
+					Blur_All.Visibility = Visibility.Hidden;
+					Blur_Hamburger.Visibility = Visibility.Visible;
+				}
+				else
+				{
+					Blur_All.Visibility = Visibility.Visible;
+					Blur_Hamburger.Visibility = Visibility.Hidden;
+				}
+			}
 		}
 
 
@@ -647,16 +702,36 @@ namespace Project_127
 		/// </summary>
 		/// <param name="myCtrl"></param>
 		/// <param name="pArtpath"></param>
-		public void SetControlBackground(Control myCtrl, string pArtpath)
+		public void SetControlBackground(Control myCtrl, string pArtpath, bool FromFile = false)
 		{
 			try
 			{
-				Uri resourceUri = new Uri(pArtpath, UriKind.Relative);
-				StreamResourceInfo streamInfo = Application.GetResourceStream(resourceUri);
-				BitmapFrame temp = BitmapFrame.Create(streamInfo.Stream);
-				var brush = new ImageBrush();
-				brush.ImageSource = temp;
-				myCtrl.Background = brush;
+				Uri resourceUri;
+				if (FromFile)
+				{
+					var bitmap = new BitmapImage();
+
+					using (var stream = new FileStream(pArtpath, FileMode.Open))
+					{
+						bitmap.BeginInit();
+						bitmap.CacheOption = BitmapCacheOption.OnLoad;
+						bitmap.StreamSource = stream;
+						bitmap.EndInit();
+						bitmap.Freeze(); // optional
+					}
+					ImageBrush brush2 = new ImageBrush();
+					brush2.ImageSource = bitmap;
+					myCtrl.Background = brush2;
+				}
+				else
+				{
+					resourceUri = new Uri(pArtpath, UriKind.Relative);
+					StreamResourceInfo streamInfo = Application.GetResourceStream(resourceUri);
+					BitmapFrame temp = BitmapFrame.Create(streamInfo.Stream);
+					ImageBrush brush = new ImageBrush();
+					brush.ImageSource = temp;
+					myCtrl.Background = brush;
+				}
 			}
 			catch
 			{
@@ -685,6 +760,8 @@ namespace Project_127
 		{
 			SetButtonMouseOverMagic((Button)sender);
 		}
+
+
 
 
 

@@ -28,8 +28,9 @@ namespace Project_127
 		public static ReadMeStates LastReadMeState = ReadMeStates.About;
 
 		public static string DragonsLink = "https://github.com/jaredtb";
+		public static string AnthersDemoVideoLink = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
 
-		public static async void DragonsLinkMethod(string XML = "")
+		public static void DynamicLinksMethod(string XML = "")
 		{
 			if (XML == "")
 			{
@@ -41,6 +42,12 @@ namespace Project_127
 			if (HelperClasses.FileHandling.URLExists(dragonsReadMe))
 			{
 				ReadMe.DragonsLink = dragonsReadMe;
+			}
+
+			string AntherTMP = HelperClasses.FileHandling.GetXMLTagContent(XML, "demovideo");
+			if (HelperClasses.FileHandling.URLExists(AntherTMP))
+			{
+				ReadMe.AnthersDemoVideoLink = AntherTMP;
 			}
 		}
 
@@ -251,11 +258,13 @@ namespace Project_127
 
 			AddParagraph(rtb_Credits, "Shoutout to @Diamondo25 for finding a way to launch GTA without going through LaunchGTAV.exe or PlayGTAV.exe, which eased the development process to launch through Social Club");
 
-			AddParagraph(rtb_Credits, "Shoutout to @AntherXx for going through the trouble of tracking down and renaming SaveFiles for every single Mission in Classic% and to @Hossel for providing the SaveFiles for the main Categories");
+			AddParagraph(rtb_Credits, "Shoutout to @AntherXx for making the incredible P127 Demo + Help Video, as well as going through the trouble of tracking down and renaming SaveFiles for every single Mission in Classic% and to @Hossel for providing the SaveFiles for the main Categories");
+
+			AddHyperlinkText(rtb_Credits, AnthersDemoVideoLink, "P127 Demo & Help Video", "Shoutout to @AntherXx for making the incredible ", ", as well as going through the trouble of tracking down and renaming SaveFiles for every single Mission in Classic% and to @Hossel for providing the SaveFiles for the main Categories.");
 
 			AddHyperlinkText(rtb_Credits, "https://github.com/DaWolf85/GTAVAutoPatcher/", "open-sourcing his Tool", "Shoutout to @DaWolf85 for ", " the Community used to Upgrade / Downgrade previously. It helped us a ton.");
 
-			AddParagraph(rtb_Credits, "Shoutout to @burhac, @Crapideot, @GearsOfW, @rollschuh2282 , @Ollie, @Alfie, @AntherXx for being awesome members of the GTA Speedrunning community, always being nice and respectful, and providing Help / Testing. You guys are much appreciated.");
+			AddParagraph(rtb_Credits, "Shoutout to @burhac, @Crapideot, @Hoxi, @rollschuh2282, @GearsOfW, @Ollie, @Alfie, @AntherXx for being awesome members of the GTA Speedrunning community, always being nice and respectful, and providing Help / Testing. You guys are much appreciated.");
 
 			AddParagraph(rtb_Credits, "");
 		}
@@ -271,20 +280,21 @@ namespace Project_127
 
 			AddParagraph(rtb_About, "Project 1.27 Version: '" + Globals.ProjectVersion + "'\n" + "BuildInfo: '" + Globals.BuildInfo + "'\n" + "ZIP Version: '" + Globals.ZipVersion + "'");
 
+			AddHyperlinkText(rtb_About, AnthersDemoVideoLink, "P127 Demo & Help Video", "", "");
+
 			AddParagraph(rtb_About, "You are running Project 1.27, a tool for the GTA V Speedrunning Community. This was created for the patch 1.27 downgrade problem, which started in August of 2020. This tool has a number of features, including Downgrading, Upgrading and launching the game.");
 
-			AddParagraph(rtb_About, "This whole Project would not have been possible without the hard work of @dr490n, @Special For, @thS who worked on this for month in their free time, going above and beyond what was required.");
+			AddParagraph(rtb_About, "This whole Project would not have been possible without the hard work of @dr490n, @Special For, @thS who worked on this for months in their free time, going above and beyond what was required.");
 
 			AddHyperlinkText(rtb_About, "https://www.mind.org.uk/donate", "Charity", "If you want to support us, we encourage you to donate to a ", " of your chosing.");
 
-
 			AddHyperlinkText(rtb_About, DragonsLink, "here", "@d490n, who did all of the game-launch related work which made P127 possible, uploaded his work, sourcecode and documented his findings on his Github ", ".");
 
-
+			AddHyperlinkText(rtb_About, "https://github.com/TwosHusbandS/Project-127/blob/master/Installer/Changelogs/Help.md", "here", "A more lengthy and detailed version of this can be found on github ", "");
 
 			AddParagraph(rtb_About, "If you are having trouble with Project 1.27 or are running into any issues, please read the \"Help-Section\" and visit the GTA V Speedrun Discord and post it in the \"Project-1-27-Chat\" Channel.");
 
-			AddParagraph(rtb_About, "For anything regarding this client, feel free to contact me on Discord:\n@thS#0305");
+			AddHyperlinkText(rtb_About, "https://discordapp.com/users/612259615291342861", "Discord (@thS#0305)", "For anything regarding this client, feel free to contact me on ", "");
 
 			AddParagraph(rtb_About, "");
 
@@ -299,35 +309,52 @@ namespace Project_127
 
 			rtb_Help.Document.Blocks.Remove(rtb_Help.Document.Blocks.FirstBlock);
 
+			AddHyperlinkText(rtb_Help, AnthersDemoVideoLink, "P127 Demo & Help Video", "", "");
+
 			AddHyperlinkText(rtb_Help, "http://BigZip.com", "here", "When Project 1.27 crashes when Downloading or Importing Files, try to download the ZIP manually from ", ", then go to Settings -> Import ZIP Manually and select the file you just downloaded. If that doesnt work, rightclick the ZIP Extraction Path in Settings, copy your downloaded zip file there, right click -> extract here.");
 
 			AddParagraph(rtb_Help, "When Launching GTA V does not launch the Version it says it is (Text in Top Left Corner), make sure the Path to GTA V is set correctly in the settings of Project 1.27.");
 
-			AddParagraph(rtb_Help, "When the Auth / Login appears to load infinitely, please try to re-start Project 1.27, and wait a few  minutes. If its still not working, Rockstar just might not like your IP. In this case try using a Hotspot from your phone or a VPN or any other internet connection.");
+			AddHyperlinkText(rtb_Help, "http://RepairGTA.com", "\"Repair GTA\"", "When Upgrading / Downgrading does not work as expected in general, clicking ", " inside P127 Generel Settings and re-install the components.");
 
-			AddParagraph(rtb_Help, "When P127 crashes just when you are expected to login (on click of Auth Button, or on Game Launch when not logged in already), you might fail to connect to Rockstar Server. Make sure you are connected to the internet.");
+			AddParagraph(rtb_Help, "Re - Installing or manually deleting and Installing a Component, as well as re - doing an Upgrade / Downgrade is always worth a try.");
 
-			AddParagraph(rtb_Help, "When Upgrading / Downgrading does not work as expected in general, verify Game Files via Steam / Rockstar / Epic (Or re-download GTAV), clicking \"Repair GTA\" inside P127 Generel Settings and re-download the components.");
+			AddParagraph(rtb_Help, "Game Updates from Rockstar might break things.This usually shows itself as P127 saying: \"Downgraded(1.52)\", which makes no sense. Re - Installing the Components inside the ComponentManager you are using for Downgrading and Re - Applying a Downgrade should fix this. Steam / Epic is not affected by this.P127 should automatically detect and handle this.");
 
-			AddParagraph(rtb_Help, "Game Updates from Rockstar might break things. Re-Installing the Components inside the ComponentManager you are using for Downgrading and Re-Applying a Downgrade should fix this. Steam / Epic is not affected by this");
+			AddParagraph(rtb_Help, "If GTA (mainly Downgraded) does not launch AT ALL, UNCHECK \"Overwrite GTA CommandLineArgs\" inside \"Additional GTA Commandline Options\" inside \"GTA & Launch Settings\".");
 
-			AddParagraph(rtb_Help, "If the current Authentication Method is not working, you can always go back to the Legacy-Auth inside Settings.");
+			AddParagraph(rtb_Help, "If one Lauch - Method(for downgraded GTA) is not working for you, it is worth trying to switch the way P127 Launches the downgraded Game, by doing so inside \"GTA & Launch Settings\".");
 
-			AddParagraph(rtb_Help, "If the normal P127 Downgrade with Custom Auth does not work for you, feel free to try out \"Launching Through SocialClub\"");
+			AddParagraph(rtb_Help, "If the current Authentication Method for the dr490n emu is not working, it is worth trying to switch the way P127 tries to authenticate your GTA ownership by doing so inside the Orange Border inside \"GTA & Launch Settings\".");
 
-			AddParagraph(rtb_Help, "If something isnt right, Verifying (Rightclick on Install Button), Re-Installing or manually deleting and Installing a Component is always worth a try");
+			AddParagraph(rtb_Help, "If the Dr490n Launcher doesnt seem to take some options(InGameName, PreOrderBonus) into account, try launching P127 with the command line args: \"-useemudebugfile true\"");
+			
+			AddParagraph(rtb_Help, "On Legacy Auth: When the Auth / Login appears to load infinitely, re - start the auth - process by hitting the \"X\" inside the top right corner once, and then trying again.If that doesnt work, you can try to re-start Project 1.27, and wait a few  minutes.If its still not working, Rockstar just might not like your IP.In this case try using a Hotspot from your phone or a VPN or any other internet connection.");
 
-			AddParagraph(rtb_Help, "If you cant see the MultiMonitor Overlay, RIGHT-click the \"Enable Multi Monitor Mode\" Checkbox to Reset its Position");
+			AddParagraph(rtb_Help, "On Legacy Auth: When P127 crashes just when you are expected to login(on click of Auth Button, or on Game Launch when not logged in already), you might fail to connect to Rockstar Server. Make sure you are connected to the internet.");
 
-			AddHyperlinkText(rtb_Help, "http://ResetAll.com", "\"Reset All\"", "If something is still not working, you can always try verifying Files via Steam / Rockstar / Epic and hitting the ", " Button below.This might take a few minutes, and Project 1.27 will quit automatically when its done. Re - Open it and everything should work again.");
+			AddParagraph(rtb_Help, "On MTL Auth, if Rockstar Games Launcher opens and immediately tries to update your Game, you need to disable that option.Inside Rockstar Games Launcher, head into Settings -> My Installed Games->Grand Theft Auto V->and uncheck the \"Enable automatic updates\" box at the very top.");
 
-			AddParagraph(rtb_Help, "If you still cant get it to work or you wish to contact me, please RIGHT-click the Auth icon (the one with the lock icon in the top left corner) and send me the AAA - Logfile.log and the AAA - Debugfile.txt from the folder which will open (Project 1.27 Installation Directory) and include a detailed Report of what you did and whats not working.");
+			AddParagraph(rtb_Help, "You can reset the information which Components are installed and in which Version by tripple right - clicking the \"Refresh\" Button inside the ComponenetManager.");
 
-			AddParagraph(rtb_Help, "I hope everything works for you and you dont experience any crashes or anything like that. In case you do, i sincerly apoligze for the inconvenience. Visit the GTA V Speedrun Discord and post it in the \"Project-1-27-Chat\" Channel.");
+			AddParagraph(rtb_Help, "If you cant see the MultiMonitor Overlay, RIGHT-click the \"Enable Multi Monitor Mode\" Checkbox to Reset its Position.");
+
+			AddParagraph(rtb_Help, "If launching through Social Club does not work, and you believe the Social Club Downgrade to be the cause of this, you can try the following: Head into P127 Settings, inside  \"GTA & Launch Settings\", enable \"Force SocialClub Installation Path C:\"");
+
+			AddParagraph(rtb_Help, "For external HDDs and NAS / SAN / Network Storage I recommend having \"Slow but stable Method for Upgrading / Downgrading\" checked.");
+
+			AddHyperlinkText(rtb_Help, "http://ResetAll.com", "\"RESET ALL\"", "If something is still not working, you can always try hitting the ", "Button inside P127 Settings.This might take a few minutes, and Project 1.27 will quit automatically when its done.Re - Open it and everything should work again.You will need to verifying Files via Steam / Rockstar / Epic afterwards.");
+
+			AddHyperlinkText(rtb_Help, "http://RightClickAuthIcon.com", "RIGHT-click the Auth icon", "If you still cant get it to work or you wish to get Help, please ", " (the one with the lock icon in the top left corner) and send me the AAA - Logfile.log and the AAA - Debugfile.txt from the folder which will open (Project 1.27 Installation Directory) and include a detailed Report of what you did and whats not working. Note: These Files may contain Filepaths which may contain your Name.");
+
+			AddHyperlinkText(rtb_Help, "http://SpeedrunReadMe.com", "\"Speedrun\"", "Please post a detailed description of what you did and what is not working as expected, in the GTA V Speedrun Discord - project - 1 - 27 - chat Channel. Invite links are in the ", " Section of this Page.");
+
+			AddParagraph(rtb_Help, "I do not recommend uploading these 2 Files inside a public channel. They may contain things like your email adress, and Path / Folder - Names which can contain usernames.");
+
+			AddParagraph(rtb_Help, "I hope everything works for you and you dont experience any crashes or anything like that.");
 
 			AddParagraph(rtb_Help, "I hope whoever reads this has a great day : )");
 
-			AddParagraph(rtb_Help, "");
 		}
 
 		/// <summary>
@@ -464,9 +491,21 @@ namespace Project_127
 			{
 				TryBigZip();
 			}
+			else if (e.Uri.ToString().ToLower().Contains("repairgta"))
+			{
+				MySettings.Settings.RepairGTA_UserInteraction();
+			}
 			else if (e.Uri.ToString().ToLower().Contains("resetall"))
 			{
 				MySettings.Settings.ResetEverything();
+			}
+			else if (e.Uri.ToString().ToLower().Contains("rightclickauthicon"))
+			{
+				HelperClasses.Logger.GenerateDebug();
+			}
+			else if (e.Uri.ToString().ToLower().Contains("speedrunreadme"))
+			{
+				ReadMeState = ReadMeStates.SpeedRun;
 			}
 			else
 			{

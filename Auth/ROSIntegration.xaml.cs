@@ -57,7 +57,8 @@ namespace Project_127.Auth
 		private int sendCount = 0;
 		private static bool newInstance = false;
 
-		private static bool LaunchAfter;
+		private static bool AuthLaunchGameAfter;
+		private static bool MTLSilentMode;
 
 
 		public bool WebSiteIsAvailable(string Url)
@@ -84,30 +85,47 @@ namespace Project_127.Auth
 			return (Message.Length == 0);
 		}
 
-		public static async void MTLAuth(bool LaunchGameAfter = false)
-        {
-			LaunchAfter = LaunchGameAfter;
+		public static async void MTLAuth(bool LaunchGameAfter = false, bool SilentMode = false)
+		{
+			Auth.ROSIntegration.AuthErrorMessageThrownAlready = false;
+			Auth.ROSIntegration.MinimizedAlready = false;
+
+			AuthLaunchGameAfter = LaunchGameAfter;
+			MTLSilentMode = SilentMode;
 			HelperClasses.Logger.Log("Launching MTL...");
 			MainWindow.MTLAuthTimer.Stop();
 			var key = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64);
 			key = key.OpenSubKey(@"SOFTWARE\WOW6432Node\Rockstar Games\Launcher");
 			if (key == null)
-            {
+			{
 				new Popup(Popup.PopupWindowTypes.PopupOkError, "Unable to find MTL registry key").ShowDialog();
 				return;
 			}
 			var installFolder = RegeditHandler.GetValue(key, "InstallFolder");
 			if (installFolder == "")
-            {
+			{
 				Process.Start("explorer.exe", "mtl://");
 			}
 			else
-            {
+			{
 				var launcherexe = System.IO.Path.Combine(installFolder, "LauncherPatcher.exe");
 				Process.Start("explorer.exe", launcherexe);
 			}
-			//Process.Start("explorer.exe", "mtl://");
-			await Task.Delay(15000);
+
+			int SecondsWeWait = 15;
+
+			for (int i = 0; i <= SecondsWeWait - 1; i++)
+			{
+				await Task.Delay(1000);
+				if (MTLSilentMode & !MinimizedAlready)
+				{
+					if (MinimizeMTL())
+					{
+						MinimizedAlready = true;
+					}
+				}
+			}
+
 			HelperClasses.Logger.Log("Waiting for session...");
 			//MainWindow.MTLAuthTimer.Interval = new TimeSpan(15000);
 			MainWindow.MW.AutoAuthMTLTimer();
@@ -115,7 +133,7 @@ namespace Project_127.Auth
 			//Timer when auth: minimize MTL, foreground p127
 			MTLwait = new System.Windows.Threading.DispatcherTimer();
 			MTLwait.Tick += new EventHandler(onMTLAuthCompletion);
-			MTLwait.Interval = new TimeSpan(2000);
+			MTLwait.Interval = TimeSpan.FromMilliseconds(2000);
 			MTLwait.Start();
 		}
 
@@ -124,34 +142,107 @@ namespace Project_127.Auth
 		[DllImport("user32.dll")]
 		private static extern bool ShowWindowAsync(IntPtr hWnd, int nCmdShow);
 
+		public static bool AuthErrorMessageThrownAlready = false;
+
+		public static bool MinimizedAlready = false;
+
+
+		[DllImport("user32")]
+		private static extern int IsIconic(IntPtr hWnd);
+
+
+		public static bool IsMinimized(IntPtr hWnd)
+		{
+			if (IsIconic(hWnd) == 0)
+				return false;
+			else
+				return true;
+		}
+
+
+
+		public static bool MinimizeMTL()
+		{
+			Process[] ps = Process.GetProcessesByName("SocialClubHelper");
+			IntPtr mtlWindow = new IntPtr();
+			foreach (var p in ps)
+			{
+				if (p.MainWindowTitle.ToLower().Contains("Rockstar Games Launcher".ToLower()))
+				{
+					mtlWindow = p.MainWindowHandle;
+					break;
+				}
+			}
+			if (mtlWindow != IntPtr.Zero)
+			{
+				ShowWindowAsync(mtlWindow, 11);//Minimize
+			}
+
+			if (IsMinimized(mtlWindow))
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+
+		public static void CloseMTL()
+		{
+			Process[] ps = Process.GetProcessesByName("SocialClubHelper");
+			foreach (var p in ps)
+			{
+				if (p.MainWindowTitle.ToLower().Contains("Rockstar Games Launcher".ToLower()))
+				{
+					p.CloseMainWindow();
+					break;
+				}
+			}
+		}
+
+
 		private static void onMTLAuthCompletion(object sender = null, EventArgs e = null)
-        {
+		{
 			if (LauncherLogic.AuthState == LauncherLogic.AuthStates.Auth)
-            {
+			{
 				HelperClasses.Logger.Log("Got session");
 				MTLwait.Stop();
-				Process[] ps = Process.GetProcessesByName("SocialClubHelper");
-				IntPtr mtlWindow = new IntPtr();
-				foreach (var p in ps)
-                {
-					if (p.MainWindowTitle.ToLower().Contains("Rockstar Games Launcher".ToLower()))
-                    {
-						mtlWindow = p.MainWindowHandle;
-						break;
-                    }
-                }
-				if (mtlWindow != IntPtr.Zero)
-                {
-					ShowWindowAsync(mtlWindow, 11);//Minimize
-                }
-				MainWindow.MW.menuItem_Show_Click(null, null);
-				if (LaunchAfter)
+				if (!AuthErrorMessageThrownAlready)
 				{
-					LauncherLogic.Launch();
-				}
-				return;
-            }
+					HelperClasses.Logger.Log("Will ignore everything else, since Error Message / Success Message was thrown already");
 
+
+					if (MTLSilentMode)
+					{
+						CloseMTL();
+					}
+					else
+					{
+						if (Settings.PostMTLAction == Settings.PostMTLActions.CloseRGL)
+						{
+							CloseMTL();
+						}
+						else if (Settings.PostMTLAction == Settings.PostMTLActions.MinimizeRGL)
+						{
+							MinimizeMTL();
+						}
+					}
+
+
+
+					MainWindow.MW.menuItem_Show_Click(null, null);
+					if (AuthLaunchGameAfter)
+					{
+						LauncherLogic.Launch();
+					}
+
+					AuthErrorMessageThrownAlready = true;
+					MTLSilentMode = false;
+				}
+
+				return;
+			}
 		}
 
 		public ROSIntegration(bool pLaunchAfter = false)
@@ -173,7 +264,7 @@ namespace Project_127.Auth
 			}
 			else
 			{
-				LaunchAfter = pLaunchAfter;
+				AuthLaunchGameAfter = pLaunchAfter;
 
 				newInstance = true;
 				//CefSettings s = new CefSettings();
@@ -257,6 +348,7 @@ namespace Project_127.Auth
 					var pass = System.Net.WebUtility.UrlEncode(passField);
 					var email = System.Net.WebUtility.UrlEncode(emField);
 					var csender = String.Format(credSenderJS, email, pass);
+					Task.Delay(100).GetAwaiter().GetResult();
 					frame.ExecuteJavaScriptAsync(csender);
 				}
 				else
@@ -360,14 +452,14 @@ namespace Project_127.Auth
 					else
 					{
 						HelperClasses.Logger.Log("Login Failure");
-						System.Windows.Forms.MessageBox.Show("Login Failure");
+						new Popup(Popup.PopupWindowTypes.PopupOk, "Login Failure").ShowDialog();
 					}
 
 					this.Dispatcher.Invoke(() => this.Visibility = Visibility.Hidden);
 					MainWindow.MW.Dispatcher.Invoke((Action)delegate
 					{
 						Globals.PageState = Globals.PageStates.GTA;
-						if (LaunchAfter)
+						if (AuthLaunchGameAfter)
 						{
 							LauncherLogic.Launch();
 						}

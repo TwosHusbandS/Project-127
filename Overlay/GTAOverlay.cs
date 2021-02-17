@@ -17,13 +17,11 @@ namespace Project_127.Overlay
 	/// </summary>
 	public class GTAOverlay : IDisposable
 	{
-		// If set to false, this starts and keeps KeyboardListenerEvent running 100% of the time.
-		// Automatically set to true if we compile debug
-
+		public static bool DisableRichard = true; // FeelsBadMan. 
 		public static bool DebugMode = false;
 		public const string targetWindowDebug = "TeamSpeak 3";
 		public const string targetWindowBorderlessDefault = "Grand Theft Auto V";
-		public const string targetWindowBorderlessEasterEgg = "Stealy Whealy Automobiley";
+		public const string targetWindowBorderlessEasterEgg = "Stealy Wheely Automobiley 5";
 		public const string targetWindowMultiMonitor = "P127 - GameOverlay";
 
 		public static bool indicateTheLessThanLegalProcurementOfMotorVehicles = false;
@@ -138,7 +136,15 @@ namespace Project_127.Overlay
 		{
 			get
 			{
-				return mainText.chapterTitle;
+				string tmp = mainText.chapterTitle;
+				if (tmp == "base")
+				{
+					return "";
+				}
+				else
+				{
+					return tmp;
+				}
 			}
 		}
 
@@ -154,14 +160,15 @@ namespace Project_127.Overlay
 		{
 			get
 			{
+				if (MySettings.Settings.OverlayMultiMonitorMode)
+				{
+					return Positions.TopLeft;
+				}
 				return _Position;
 			}
 			set
 			{
-				if (OverlayMode == OverlayModes.Borderless)
-				{
-					_Position = value;
-				}
+				_Position = value;
 			}
 		}
 
@@ -343,15 +350,9 @@ namespace Project_127.Overlay
 		}
 
 		/// <summary>
-		/// Returns bool inidcating whether the overlay is initialized
+		/// Returns bool inidcating whether the overlay is initialized and ready
 		/// </summary>
-		public bool Initialized
-		{
-			get
-			{
-				return _window.IsInitialized;
-			}
-		}
+		public bool Initialized { get; private set; }
 
 		/// <summary>
 		/// Generates the game overlay
@@ -439,6 +440,7 @@ namespace Project_127.Overlay
 
 		private void _window_DrawGraphics(object sender, DrawGraphicsEventArgs e)
 		{
+			Initialized = true;
 			//var wb = new WindowBounds();
 			//WindowHelper.GetWindowBounds(WindowHelper.FindWindow(targetWindow), out wb);
 			var pos = coordFromPos(Position, GetWindowRectangle(WindowHelper.FindWindow(targetWindow)), _window.Width, _window.Height);
@@ -554,11 +556,6 @@ namespace Project_127.Overlay
 		{
 			HelperClasses.Logger.Log("Overlay text updated");
 			this.text = text;
-			//<<<<<<< working
-			//			this.text = text;
-			//=======
-			//			mainText.text = text;
-			//>>>>>>> dev_ths_new
 		}
 
 		/// <summary>
@@ -784,9 +781,9 @@ namespace Project_127.Overlay
 				mainText.Dispose();
 				titleBox.Dispose();
 				while (overlayObjects.Count > 0)
-                {
+				{
 					overlayObjects.First().Dispose();
-                }
+				}
 				_window.Dispose();
 				disposedValue = true;
 			}

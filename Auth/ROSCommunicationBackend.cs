@@ -358,22 +358,26 @@ namespace Project_127.Auth
 			{
 				HelperClasses.Logger.Log("Initial token generation failed;");
 				session.destroy();
-				MessageBox.Show(res.text); // Show Error
+				if (!Auth.ROSIntegration.AuthErrorMessageThrownAlready)
+				{
+					new Popups.Popup(Popups.Popup.PopupWindowTypes.PopupOkError, res.text).ShowDialog(); // Show Error
+					Auth.ROSIntegration.AuthErrorMessageThrownAlready = true;
+				}
 			}
 
 			return false;
 		}
 
 		public static async Task<bool> LoginMTL()
-        {
+		{
 #if DEBUG
 			HelperClasses.Logger.Log("Checking for MTL Session");
 #endif
 			var s = MTLInterface.GetMTLSession();
 			if (s == null || !s.isValid())
-            {
+			{
 				return false;
-            }
+			}
 			session = s;
 			HelperClasses.Logger.Log("Session retrieved");
 			var res = await GenLaunchToken();
@@ -386,14 +390,18 @@ namespace Project_127.Auth
 			{
 				HelperClasses.Logger.Log("Initial token generation failed;");
 				session.destroy();
-				MessageBox.Show(res.text); // Show Error
+				if (!Auth.ROSIntegration.AuthErrorMessageThrownAlready)
+				{
+					new Popups.Popup(Popups.Popup.PopupWindowTypes.PopupOkError, res.text).ShowDialog(); // Show Error
+					Auth.ROSIntegration.AuthErrorMessageThrownAlready = true;
+				}
 			}
 			return false;
 
 		}
 
 		private static async Task<tokenGenResponse> GenTitleAccessToken(byte[] challenge)
-        {
+		{
 			tokenGenResponse tgr = new tokenGenResponse();
 
 			if (session == null || !session.isValid())
@@ -467,7 +475,7 @@ namespace Project_127.Auth
 		}
 
 		private static List<byte> GenLaunchBase(byte[] challenge, string acctoken)
-        {
+		{
 
 			//req2.Headers.TryAddWithoutValidation("locale", "en-US");
 			//req2.Headers.TryAddWithoutValidation("machineHash", btoa(mh));
@@ -482,6 +490,7 @@ namespace Project_127.Auth
 				}), session.sessionKey);
 			//addLaunchExtension("saveDirOverride", Encoding.UTF8.GetBytes());
 			setFlag(Flags.preorder, Settings.EnablePreOrderBonus);
+			setFlag(Flags.supressASILoading, !Settings.EnableScripthookOnDowngraded);
 			LKey.Add(laflags);
 
 			byte[] reqHeaders = HeaderBuild(
@@ -507,7 +516,7 @@ namespace Project_127.Auth
 		/// </summary>
 		/// <returns>Launch token base (or null on failed auth)</returns>
 		public static byte[] GenLaunchBase()
-        {
+		{
 			var RNG = new RNGCryptoServiceProvider();
 			var challenge = new byte[8];
 			RNG.GetBytes(challenge);
@@ -521,7 +530,7 @@ namespace Project_127.Auth
 			var acctoken = titleAccessTokenResponse.text;
 
 			return GenLaunchBase(challenge, acctoken).ToArray();
-        }
+		}
 
 		/// <summary>
 		/// Generates a token for the GTA Launcher
@@ -536,9 +545,9 @@ namespace Project_127.Auth
 
 			var titleAccessTokenResponse = await GenTitleAccessToken(challenge);
 			if (titleAccessTokenResponse.error)
-            {
+			{
 				return titleAccessTokenResponse;
-            }
+			}
 
 			var acctoken = titleAccessTokenResponse.text;
 
@@ -588,6 +597,8 @@ namespace Project_127.Auth
 			{
 				outdir += "\\";
 			}
+
+			HelperClasses.FileHandling.deleteFile(outdir + "launc.dat");
 
 			using (var b = new BinaryWriter(File.Open(outdir + "launc.dat", FileMode.Create)))
 			{
@@ -648,7 +659,7 @@ namespace Project_127.Auth
 			}
 			return tgr;
 
-			
+
 			//return tgr;
 		}
 
@@ -770,12 +781,11 @@ namespace Project_127.Auth
                 {
                     addLaunchExtension("ingameNick", "1337haxx0r");
                 }
-#else
+#endif
 				if (Settings.InGameName != "HiMomImOnYoutube")
 				{
 					addLaunchExtension("ingameNick", Settings.InGameName);
 				}
-#endif
 				try
 				{
 					if (nick == "gta5downgrade")
@@ -882,7 +892,7 @@ namespace Project_127.Auth
 		public enum Flags
 		{
 			preorder,
-			RES1,
+			supressASILoading,
 			indicateTheLessThanLegalProcurementOfMotorVehicles,
 			RES3,
 			RES4,

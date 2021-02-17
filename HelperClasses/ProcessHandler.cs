@@ -12,6 +12,7 @@ using Project_127.HelperClasses;
 using Project_127.Overlay;
 using Project_127.Popups;
 using Project_127.MySettings;
+using Microsoft.Win32;
 
 namespace Project_127.HelperClasses
 {
@@ -23,10 +24,27 @@ namespace Project_127.HelperClasses
 		/// <summary>
 		/// Kills all Rockstar / GTA / Social Club related processes
 		/// </summary>
-		public static void KillRockstarProcesses()
+		public static async void KillRockstarProcessesAsync()
 		{
+			await SocialClubKillAllProcesses(0, true);
+
 			// TODO CTRLF add other ProcessNames
 			KillProcessesContains("gta");
+			KillProcessesContains("gtastub");
+			KillProcessesContains("rockstar");
+			KillProcessesContains("play127");
+			KillProcessesContains("gtaddl");
+
+			MainWindow.MW.UpdateGUIDispatcherTimer();
+		}
+
+		public static void KillRockstarProcesses()
+		{
+			SocialClubKillAllProcesses(0, true).GetAwaiter().GetResult();
+
+			// TODO CTRLF add other ProcessNames
+			KillProcessesContains("gta");
+			KillProcessesContains("gtastub");
 			KillProcessesContains("rockstar");
 			KillProcessesContains("play127");
 			KillProcessesContains("gtaddl");
@@ -41,14 +59,6 @@ namespace Project_127.HelperClasses
 			KillProcessesContains("steam");
 		}
 
-		/// <summary>
-		/// Kills all Steam and Rockstar / GTA / Social Club related processes
-		/// </summary>
-		public static void KillRelevantProcesses()
-		{
-			KillRockstarProcesses();
-			KillSteamProcesses();
-		}
 
 		/// <summary>
 		/// Checks if One Process is running
@@ -127,50 +137,102 @@ namespace Project_127.HelperClasses
 		/// Killing all Social Club Related Processes
 		/// </summary>
 		/// <param name="msDelayAfter"></param>
-		public static void SocialClubKillAllProcesses(int msDelayAfter = 250)
+		public async static Task SocialClubKillAllProcesses(int msDelayAfter = 150, bool OnlyClose = false, bool SkipAllWait = false)
 		{
+			RegistryKey myRK = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64).CreateSubKey("SOFTWARE").CreateSubKey("WOW6432Node").CreateSubKey("Microsoft").CreateSubKey("Windows").CreateSubKey("CurrentVersion").CreateSubKey("Uninstall").CreateSubKey("Rockstar Games Launcher");
+			string tmpInstallDir = HelperClasses.RegeditHandler.GetValue(myRK, "InstallLocation");
+
 			HelperClasses.Logger.Log("Killing all Social Club Processes", 1);
 
 			Process[] tmp = Process.GetProcesses();
 			foreach (Process p in tmp)
 			{
-				// Checking if its gtavlauncher or one of the social club executables
-				if ((p.ProcessName.ToLower() == LauncherLogic.SCL_EXE_ADDON_DOWNGRADED.TrimStart('\\').TrimEnd(".exe").ToLower()) ||
-					(p.ProcessName.ToLower() == LauncherLogic.SCL_EXE_ADDON_UPGRADED.TrimStart('\\').TrimEnd(".exe").ToLower()) ||
-					(p.ProcessName.ToLower() == "gtavlauncher"))
+				//// Checking if its gtavlauncher or one of the social club executables
+				//if ((p.ProcessName.ToLower() == LaunchAlternative.SCL_EXE_ADDON_DOWNGRADED.TrimStart('\\').TrimEnd(".exe").ToLower()) ||
+				//	(p.ProcessName.ToLower() == LaunchAlternative.SCL_EXE_ADDON_UPGRADED.TrimStart('\\').TrimEnd(".exe").ToLower()) ||
+				//	(p.ProcessName.ToLower() == "gtavlauncher"))
+				//{
+				// check if its actually a process from SC Install dir or GTA Install dir
+				try
 				{
-					// check if its actually a process from SC Install dir or GTA Install dir
-					if ((!p.HasExited && p.MainModule.FileName.Contains(LauncherLogic.SCL_SC_Installation)) ||
-						(!p.HasExited && p.MainModule.FileName.Contains(LauncherLogic.GTAVFilePath)))
+					if (string.IsNullOrWhiteSpace(tmpInstallDir))
 					{
-						ProcessHandler.Kill(p);
+						if ((p.MainModule.FileName.ToLower().Contains(LauncherLogic.GTAVFilePath.TrimEnd('\\').ToLower())) ||
+						(p.MainModule.FileName.ToLower().Contains(@"C:\Program Files\Rockstar Games".ToLower())))
+						{
+							p.CloseMainWindow();
+						}
+					}
+					else
+					{
+						if ((p.MainModule.FileName.ToLower().Contains(LauncherLogic.GTAVFilePath.TrimEnd('\\').ToLower())) ||
+						(p.MainModule.FileName.ToLower().Contains(tmpInstallDir.TrimEnd('\\').ToLower())) ||
+						(p.MainModule.FileName.ToLower().Contains(@"C:\Program Files\Rockstar Games".ToLower())))
+						{
+							p.CloseMainWindow();
+						}
 					}
 				}
+				catch
+				{
+				}
+
+				//}
 			}
 
-			// wait 25 seconds
-			Task.Delay(25).GetAwaiter().GetResult();
+			if (OnlyClose)
+			{
+				return;
+			}
+
+			if (!SkipAllWait)
+			{
+				// wait 25 seconds
+				await Task.Delay(50);
+			}
 
 			// Just making sure shit is really closed
 			tmp = Process.GetProcesses();
 			foreach (Process p in tmp)
 			{
-				// Checking if its gtavlauncher or one of the social club executables
-				if ((p.ProcessName.ToLower() == LauncherLogic.SCL_EXE_ADDON_DOWNGRADED.TrimStart('\\').TrimEnd(".exe").ToLower()) ||
-					(p.ProcessName.ToLower() == LauncherLogic.SCL_EXE_ADDON_UPGRADED.TrimStart('\\').TrimEnd(".exe").ToLower()) ||
-					(p.ProcessName.ToLower() == "gtavlauncher"))
+				//// Checking if its gtavlauncher or one of the social club executables
+				//if ((p.ProcessName.ToLower() == LaunchAlternative.SCL_EXE_ADDON_DOWNGRADED.TrimStart('\\').TrimEnd(".exe").ToLower()) ||
+				//	(p.ProcessName.ToLower() == LaunchAlternative.SCL_EXE_ADDON_UPGRADED.TrimStart('\\').TrimEnd(".exe").ToLower()) ||
+				//	(p.ProcessName.ToLower() == "gtavlauncher"))
+				//{
+				// check if its actually a process from SC Install dir or GTA Install dir
+				try
 				{
-					// check if its actually a process from SC Install dir or GTA Install dir
-					if ((!p.HasExited && p.MainModule.FileName.Contains(LauncherLogic.SCL_SC_Installation)) ||
-						(!p.HasExited && p.MainModule.FileName.Contains(LauncherLogic.GTAVFilePath)))
+					if (string.IsNullOrWhiteSpace(tmpInstallDir))
 					{
-						ProcessHandler.Kill(p);
+						if ((p.MainModule.FileName.ToLower().Contains(LauncherLogic.GTAVFilePath.TrimEnd('\\').ToLower())) ||
+						(p.MainModule.FileName.ToLower().Contains(@"C:\Program Files\Rockstar Games".TrimEnd('\\').ToLower())))
+						{
+							ProcessHandler.Kill(p);
+						}
+					}
+					else
+					{
+						if ((p.MainModule.FileName.ToLower().Contains(LauncherLogic.GTAVFilePath.TrimEnd('\\').ToLower())) ||
+						(p.MainModule.FileName.ToLower().Contains(tmpInstallDir.TrimEnd('\\').ToLower())) ||
+						(p.MainModule.FileName.ToLower().Contains(@"C:\Program Files\Rockstar Games".TrimEnd('\\').ToLower())))
+						{
+							ProcessHandler.Kill(p);
+						}
 					}
 				}
+				catch
+				{
+				}
+
+				//}
 			}
 
-			// Waiting 250 ms after killing for process to really let go off file
-			Task.Delay(msDelayAfter).GetAwaiter().GetResult();
+			if (!SkipAllWait)
+			{
+				// Waiting 150 ms after killing for process to really let go off file
+				await Task.Delay(msDelayAfter);
+			}
 		}
 
 
@@ -266,39 +328,9 @@ namespace Project_127.HelperClasses
 		/// <summary>
 		/// Starting Game as Non Retail
 		/// </summary>
-		public static void StartGameNonRetail(bool startViaSteam = false)
+		public static void StartDowngradedGame()
 		{
-			int AmountOfCores = Environment.ProcessorCount;
-
-			if (AmountOfCores < 4)
-			{
-				AmountOfCores = 4;
-			}
-			else if (AmountOfCores > 23)
-			{
-				AmountOfCores = 23;
-			}
-
-			UInt64 Possibilities = (UInt64)Math.Pow(2, AmountOfCores);
-
-			string MyHex = (Possibilities - 1).ToString("X");
-
-
-			//cmdLineArgs = @"/c cd / d "F:\SteamLibrary\steamapps\common\Grand Theft Auto V" && start /affinity FFFF playgtav.exe -uilanguage french && exit";
-
-			string cmdLineArgs = "";
-
-			if (startViaSteam)
-			{
-				cmdLineArgs = @"/c cd /d " + "\"" + Globals.SteamInstallPath + "\"" + @" && start /affinity " + MyHex + " steam.exe -applaunch 271590 -uilanguage " + Settings.ToMyLanguageString(Settings.LanguageSelected).ToLower() + " && exit";
-			}
-			else
-			{
-				cmdLineArgs = @"/c cd /d " + "\"" + LauncherLogic.GTAVFilePath + "\"" + @" && start /affinity " + MyHex + " playgtav.exe -uilanguage " + Settings.ToMyLanguageString(Settings.LanguageSelected).ToLower() + " && exit";
-			}
-
-			Process tmp = GSF.Identity.UserAccountControl.CreateProcessAsStandardUser(@"cmd.exe", cmdLineArgs);
-
+			Process tmp = GSF.Identity.UserAccountControl.CreateProcessAsStandardUser(@"cmd.exe", LauncherLogic.GetFullCommandLineArgsForStarting());
 		}
 
 	} // End of Class

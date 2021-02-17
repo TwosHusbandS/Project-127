@@ -11,6 +11,7 @@
         Height="Auto"
         Width="Auto"
         SizeToContent="WidthAndHeight"
+        SourceInitialized="Window_SourceInitialized"
         Icon="/Artwork/icon.png">
     <Border BorderBrush="{x:Static local:MyColors.PU_BorderBrush}" BorderThickness="2" >
         <Grid x:Name="myGrid" Margin="10,5">

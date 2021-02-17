@@ -1,0 +1,85 @@
+﻿InGame
+
+$:In the beggining$,$@usj=[NF]$
+Word of advice, starting the game might be a good option
+
+$:Prologue$,$@scriptPretty=Prologue$
+Do Prologue, beat train /s
+
+$:Franklin & Lamar$,$@script=armenian1$
+Take the red car (lol)
+Example of Variables below:
+Missions: $missions 
+Strangers and Freaks: $sandf 
+Stunt Jumps: $usj 
+Bridges: $bridges 
+Random Events: $randevs 
+Hobbies: $hobbies 
+Cutscene: $cutscene 
+Script: $scriptPretty ($script$)
+%: $percent 
+Golf Hole: $golfhole 
+
+$:After F&L$,$@missions:2$
+[Fill in the blank]
+
+$:Repossesion$,$@script=armenian2$
+[Fill in the blank]
+
+$:Complications$,$@script:armenian3$
+[Fill in the blank]
+
+$:Post Complications$,$@missions=4$
+buy grenades (2 so far)
+epsilon evaluation
+savewarp
+take bullet and drive to raton canyon
+
+$:Seeking the Truth$,$@script=epsilon1$
+donate 500$
+c4 death
+savewarp
+sleep once
+take michaels car to warehouse
+
+
+$:Post warehouse$,$@script=epsilon2$
+donate 5k
+drive to https://i.imgur.com/BNjcC9a.png https://i.imgur.com/9pkxpnP.png and die with c4
+drive to grapeseed
+
+$:Assuming the Truth$,$@script=epsilon3$
+savewarp
+get in michaels car
+get dinka double t
+get pegassi
+get enus super diamond
+get tornado
+get surano
+drive to https://i.imgur.com/hAKXddA.png https://i.imgur.com/aceg88Y.jpeg and die with c4
+drive to grapeseed and do the alien mission
+
+$:Chasing The Truth$,$@script=epsilon4$
+donate 10k
+savewarp
+sleep twice
+drive to mission with michaels car
+
+$:Bearing the Truth$,$@script=epsilon5$
+savewarp
+sleep 4times
+equip robes
+die 20times
+drive to mission
+
+$:Delivering the Truth$,$@script=epsilon6$
+die
+drive to mission
+
+$:Exercising the Truth$,$@script=epsilon7$
+run
+savewarp
+prob sleep to spawn mission
+
+$:Unknowing the Truth$,$@script=epsilon8$
+gg
