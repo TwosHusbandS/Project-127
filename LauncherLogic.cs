@@ -1151,8 +1151,50 @@ namespace Project_127
 			else
 			{
 				InstallationStates OldInstallationState = InstallationState;
-
 				List<MyFileOperation> MyFileOperations = new List<MyFileOperation>();
+
+
+				Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Do you want to back up your current \"Upgrade-Files\"\nbefore applying the backup and overwriting it?");
+				yesno.ShowDialog();
+				if (yesno.DialogResult == true)
+				{
+					bool exitWhileLoop = false;
+					string input = "";
+
+					while (!exitWhileLoop)
+					{
+						// Asking for Name 
+						PopupTextbox newNamePU = new PopupTextbox("Enter the Name of the Backup:", "MyNewBackupName");
+						newNamePU.ShowDialog();
+						input = newNamePU.MyReturnString;
+						if (newNamePU.DialogResult == true && !string.IsNullOrWhiteSpace(input))
+						{
+							// Getting the Name chosen
+							string newPath = LauncherLogic.UpgradeFilePath.TrimEnd('\\') + @"_Backup_" + input;
+							if (HelperClasses.FileHandling.doesPathExist(newPath))
+							{
+								Popup yesno2 = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Backup with that name ('" + input + "') already exists.\nDo you want to delete it?");
+								yesno2.ShowDialog();
+								if (yesno2.DialogResult == true)
+								{
+									HelperClasses.FileHandling.DeleteFolder(newPath);
+									MyFileOperations.Add(new MyFileOperation(MyFileOperation.FileOperations.Delete, newPath, "", "Deleting Path: '" + (newPath) + "'", 2, MyFileOperation.FileOrFolder.Folder));
+									MyFileOperations.Add(new MyFileOperation(MyFileOperation.FileOperations.Move, LauncherLogic.UpgradeFilePath, newPath, "Moving Path: '" + LauncherLogic.UpgradeFilePath + "', to: '" + (newPath) + "'", 2, MyFileOperation.FileOrFolder.Folder));
+								}
+							}
+							else
+							{
+								MyFileOperations.Add(new MyFileOperation(MyFileOperation.FileOperations.Move, LauncherLogic.UpgradeFilePath, newPath, "Moving Path: '" + LauncherLogic.UpgradeFilePath + "', to: '" + (newPath) + "'", 2, MyFileOperation.FileOrFolder.Folder));
+							}
+						}
+						else
+						{
+							exitWhileLoop = true;
+							break;
+						}
+					}
+				}
+
 
 				MyFileOperations.Add(new MyFileOperation(MyFileOperation.FileOperations.Delete, OrigPath, "", "Deleting Path: '" + (OrigPath) + "'", 2, MyFileOperation.FileOrFolder.Folder));
 				MyFileOperations.Add(new MyFileOperation(MyFileOperation.FileOperations.Create, OrigPath, "", "Creating Path: '" + (OrigPath) + "'", 2, MyFileOperation.FileOrFolder.Folder));
@@ -1180,7 +1222,6 @@ namespace Project_127
 					Downgrade(true);
 				}
 			}
-
 		}
 
 		#endregion
