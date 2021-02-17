@@ -284,13 +284,13 @@ namespace Project_127
 		/// <summary>
 		/// Static BTN GTA RightClick MouseRightDown
 		/// </summary>
-		public static async void btn_GTA_MouseRightButtonDown_Static()
+		public static void btn_GTA_MouseRightButtonDown_Static()
 		{
 			Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Do you want to close GTAV?");
 			yesno.ShowDialog();
 			if (yesno.DialogResult == true)
 			{
-				HelperClasses.ProcessHandler.KillRelevantProcesses();
+				HelperClasses.ProcessHandler.KillRockstarProcessesAsync();
 			}
 			//FocusManager.SetFocusedElement(this, null);
 			MainWindow.MW.UpdateGUIDispatcherTimer();

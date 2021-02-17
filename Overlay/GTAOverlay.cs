@@ -17,7 +17,7 @@ namespace Project_127.Overlay
 	/// </summary>
 	public class GTAOverlay : IDisposable
 	{
-		public static bool DisableRichard = false; // So I can debug. FeelsBadMan. // Should be false for release. CTRLF.
+		public static bool DisableRichard = true; // So I can debug. FeelsBadMan. 
 		public static bool DebugMode = false;
 		public const string targetWindowDebug = "TeamSpeak 3";
 		public const string targetWindowBorderlessDefault = "Grand Theft Auto V";

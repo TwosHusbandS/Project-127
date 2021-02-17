@@ -24,9 +24,14 @@ namespace Project_127.HelperClasses
 		/// <summary>
 		/// Kills all Rockstar / GTA / Social Club related processes
 		/// </summary>
+		public static async void KillRockstarProcessesAsync()
+		{
+			KillRockstarProcesses();
+		}
+
 		public static void KillRockstarProcesses()
 		{
-			SocialClubKillAllProcesses(0);
+			SocialClubKillAllProcesses(0, true);
 
 			// TODO CTRLF add other ProcessNames
 			KillProcessesContains("gta");
@@ -45,14 +50,6 @@ namespace Project_127.HelperClasses
 			KillProcessesContains("steam");
 		}
 
-		/// <summary>
-		/// Kills all Steam and Rockstar / GTA / Social Club related processes
-		/// </summary>
-		public static void KillRelevantProcesses()
-		{
-			KillRockstarProcesses();
-			// KillSteamProcesses();
-		}
 
 		/// <summary>
 		/// Checks if One Process is running
@@ -131,7 +128,7 @@ namespace Project_127.HelperClasses
 		/// Killing all Social Club Related Processes
 		/// </summary>
 		/// <param name="msDelayAfter"></param>
-		public static void SocialClubKillAllProcesses(int msDelayAfter = 150, bool OnlyClose = false)
+		public static void SocialClubKillAllProcesses(int msDelayAfter = 150, bool OnlyClose = false, bool SkipAllWait = false)
 		{
 			RegistryKey myRK = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64).CreateSubKey("SOFTWARE").CreateSubKey("WOW6432Node").CreateSubKey("Microsoft").CreateSubKey("Windows").CreateSubKey("CurrentVersion").CreateSubKey("Uninstall").CreateSubKey("Rockstar Games Launcher");
 			string tmpInstallDir = HelperClasses.RegeditHandler.GetValue(myRK, "InstallLocation");
@@ -179,8 +176,11 @@ namespace Project_127.HelperClasses
 				return;
 			}
 
-			// wait 25 seconds
-			Task.Delay(50).GetAwaiter().GetResult();
+			if (!SkipAllWait)
+			{
+				// wait 25 seconds
+				Task.Delay(50).GetAwaiter().GetResult();
+			}
 
 			// Just making sure shit is really closed
 			tmp = Process.GetProcesses();
@@ -212,15 +212,18 @@ namespace Project_127.HelperClasses
 						}
 					}
 				}
-				catch 
+				catch
 				{
 				}
 
 				//}
 			}
 
-			// Waiting 150 ms after killing for process to really let go off file
-			Task.Delay(msDelayAfter).GetAwaiter().GetResult();
+			if (!SkipAllWait)
+			{
+				// Waiting 150 ms after killing for process to really let go off file
+				Task.Delay(msDelayAfter).GetAwaiter().GetResult();
+			}
 		}
 
 

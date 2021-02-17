@@ -36,7 +36,7 @@ Hybrid code can be found in AAA_HybridCode.
 
 Stuff to fix post 1.1:
 - Installer:
-	>> BUILD WITHOUT EASTER EGG COMMENTED OUT (think about TTS Easter Egg.)
+	>> BUILD WITH EASTER EGG COMMENTED OUT DUE TO IT CRASHING ON MY MACHINE
 	>> NEW IMAGE LOCATIONS ETC
 	>> Build Installer
 	>> Uninstall Old license via LastLaunchedVersion
@@ -50,8 +50,8 @@ Stuff to fix post 1.1:
 	>> Reset
 	>> Repair
 
+- EASTER EGG DISABLED DUE TO IT CRASHING MY P127 (EVEN WITHOUT DEBUGGER)
 
-- P127 Crashes when Disabling Overlay, DISABLE EASTER EGG
 - build import zips for all 5 components, make them take version txt, if it exists, dont ask for version via textbox popup
 - backgrounds
 	>> [DONE] add new backgrounds (cat, fourth of july, alemania, valentine)
@@ -60,8 +60,23 @@ Stuff to fix post 1.1:
 	>> Specials background
 	>> Installer stuff.
 
-- Quit GTA freezing UI on exit GTA
-- offer to back up CURRENT FILES when APPLYING BACKUP
+- offer to back dup CURRENT FILES when APPLYING BACKUP
+
+
+Initial Installation + Setup:
+	Show installation in timelapse
+	Mention / Write that your GTA should be unmodified & Upgraded
+	Show all initial setup clicks (select gta path etc.)
+Main Explanation:
+	Explain Upgrading / Downgrading briefly. (It automatically detects Game Updates and will offer to back your current "UpgradeFiles" folder up)
+	Explain LaunchWays & Authways UI. (Auth is only needed when using Dragon Launcher, explain lock icon)
+Show for 5 Seconds:
+	SaveFileHandler (tell you can rightclick)
+	NoteOverlay (show all sub-pages for a second i guess)
+	ComponentManager (in theory never needed, it will always prompt you to automatically download if neeeded)
+	Information (maybe click each page for 1-2 seconds, reference Help Section...)
+	Settings (show each settings page for 1-2 seconds and scroll down)
+
 
 */
 
