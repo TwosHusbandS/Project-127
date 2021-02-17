@@ -41,6 +41,7 @@ These Infos do NOT contain advanced-user-use-cases which are on a normal Leftcli
 * Tripple rightclick the Refresh Button to reset the Information of what Components are installed in which Version. You will have to re-download Components. Easiest way to do that tho.
 * Rightclick the (Re-Install) Button to verify local files.
 * Rightclick Uninstall Button to enter a DDL to a ZIP which will get extracted at the appropiate folder. Note: "RequiredFiles" ZIP will need to follow normal P127_ZIP naming / folder convention.
+* Tripple Rightclick the Installed / Uninstalled Text to select a local ZIP which will get extracted at the appropiate folder. Note: "RequiredFiles" ZIP will need to follow normal P127_ZIP naming / folder convention.
 
 #### Settings:
 * Settings in general
