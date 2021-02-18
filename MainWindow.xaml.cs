@@ -50,9 +50,6 @@ Stuff to fix post 1.1:
 	>> Repair
 	>> Import ZIP in Componenet Manager
 
-Post ReleaseCanidate:
-- Figure out how to compile so we dont need the 2 additional exe file addition thingies. If we delete the start-as-admin doesnt work anymore??
-
 Stuff for Video:
 	Initial Installation + Setup:
 		Show installation in timelapse
@@ -196,7 +193,6 @@ namespace Project_127
 				AlreadyRunning();
 			}
 
-
 			// Starting our own Mutex since its not already running
 			myMutex = new Mutex(false, "P127_Mutex");
 			myMutex.WaitOne();
@@ -210,24 +206,24 @@ namespace Project_127
 			// Start the Init Process of Logger, Settings, Globals, Regedit here, since we need the Logger in the next Line if it fails...
 			Globals.Init();
 
+
 			if (Globals.P127Branch == "internal")
 			{
 				string msg = "We are in internal mode. We need testing on:\n\n" +
-					"- NoteOverlay" + "\n" +
-					"- Jumpscript" + "\n" +
-					"- DISABLED Legacy Auth" + "\n" +
-					"- ENABLED Launch through Social Club" + "\n" +
+					"- Nothing" + "\n" +
+					"- Everything" + "\n" +
 					"\nI do expect everything to work, so no extensive Testing needed." + "\n" +
 					"\nThanks. Appreciated. Have a great day : )";
 
-				new Popup(Popup.PopupWindowTypes.PopupOk, msg).ShowDialog();
+				//new Popup(Popup.PopupWindowTypes.PopupOk, msg).ShowDialog();
 			}
 
 			// GUI SHIT
 			SetButtonMouseOverMagic(btn_Exit);
 			SetButtonMouseOverMagic(btn_Auth);
 			SetButtonMouseOverMagic(btn_Hamburger);
-			Globals.HamburgerMenuState = Globals.HamburgerMenuStates.Hidden;
+			Globals.PageState = Globals.PageStates.GTA;
+			Globals.HamburgerMenuState = Globals.HamburgerMenuStates.Visible;
 			if (Settings.P127Mode.ToLower() != "default")
 			{
 				MainWindow.MW.btn_lbl_Mode.Content = "Curr P127 Mode: '" + MySettings.Settings.P127Mode.ToLower() + "'";
@@ -278,9 +274,9 @@ namespace Project_127
 
 			NoteOverlay.OverlaySettingsChanged();
 
-			StartUpStopwatch.Stop();
-
 			LauncherLogic.HandleUnsureInstallationState();
+
+			StartUpStopwatch.Stop();
 
 			HelperClasses.Logger.Log("Startup procedure (Constructor of MainWindow) completed. It took " + StartUpStopwatch.ElapsedMilliseconds + " ms.");
 			HelperClasses.Logger.Log("------------------------------------------------------------------------------------");
@@ -381,8 +377,8 @@ namespace Project_127
 				{
 					string[] args = Environment.GetCommandLineArgs();
 					string arg = string.Join(" ", args.Skip(1).ToArray());
-					HelperClasses.ProcessHandler.StartProcess(Assembly.GetEntryAssembly().CodeBase, Environment.CurrentDirectory, arg, true, true, false);
-					Application.Current.Shutdown();
+					HelperClasses.ProcessHandler.StartProcess(Assembly.GetEntryAssembly().Location, Environment.CurrentDirectory, arg, true, true, false);
+					Environment.Exit(0);
 				}
 				catch (Exception)
 				{
