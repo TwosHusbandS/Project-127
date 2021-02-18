@@ -959,11 +959,13 @@ namespace Project_127
 		/// <summary>
 		/// Method which does the UpdateCheck on Startup
 		/// </summary>
-		public static void CheckForUpdate()
+		public static void CheckForUpdate(string XML_Autoupdate_Temp = "")
 		{
-			string XML_Autoupdate_Temp = XML_AutoUpdate;
+			if (XML_Autoupdate_Temp == "")
+			{
+				XML_Autoupdate_Temp = XML_AutoUpdate;
+			}
 
-			HelperClasses.BuildVersionTable.ReadFromGithub();
 
 			// Check online File for Version.
 			string MyVersionOnlineString = HelperClasses.FileHandling.GetXMLTagContent(XML_Autoupdate_Temp, "version");
@@ -1038,6 +1040,7 @@ namespace Project_127
 				HelperClasses.Logger.Log("Did not get most up to date Project 1.27 Version from Github. Github offline or your PC offline. Probably. Lets hope so.");
 			}
 
+			HelperClasses.BuildVersionTable.ReadFromGithub(XML_Autoupdate_Temp);
 			ReadMe.DynamicLinksMethod(XML_Autoupdate_Temp);
 		}
 

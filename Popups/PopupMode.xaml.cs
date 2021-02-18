@@ -62,8 +62,8 @@ namespace Project_127.Popups
 			string mode2 = tb_Main_DM.Text.ToLower();
 			string URL1 = "https://raw.githubusercontent.com/TwosHusbandS/Project-127/" + mode1 + "/Installer/Update.xml";
 			string URL2 = "https://raw.githubusercontent.com/TwosHusbandS/Project-127/" + mode2 + "/Installer/DownloadManager.xml";
-			if ((String.IsNullOrWhiteSpace(HelperClasses.FileHandling.GetStringFromURL(URL1, true)) && mode1 != "default") ||
-				(String.IsNullOrWhiteSpace(HelperClasses.FileHandling.GetStringFromURL(URL2, true)) && mode2 != "default"))
+			if ((mode1 != "default" && String.IsNullOrWhiteSpace(HelperClasses.FileHandling.GetStringFromURL(URL1, true))) ||
+				(mode2 != "default" && String.IsNullOrWhiteSpace(HelperClasses.FileHandling.GetStringFromURL(URL2, true))))
 			{
 				Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Cant find that version online. Do you still want to set this Mode?");
 				yesno.ShowDialog();
@@ -74,6 +74,8 @@ namespace Project_127.Popups
 			}
 			MySettings.Settings.P127Mode = mode1;
 			MySettings.Settings.DMMode = mode2;
+
+			Globals.CheckForUpdate();
 			ComponentManager.MyRefreshStatic();
 			this.Close();
 		}
