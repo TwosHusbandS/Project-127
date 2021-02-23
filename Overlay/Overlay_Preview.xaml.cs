@@ -397,7 +397,8 @@ namespace Project_127.Overlay
 		/// </summary>
 		public void SetPreviewBackground()
 		{
-			MainWindow.MW.SetControlBackground(Preview_BG, @"Artwork\Preview_" + PreviewIndex.ToString() + ".png");
+			string FilePath = Globals.ProjectInstallationPathBinary.TrimEnd('\\') + @"\Artwork\Preview_" + PreviewIndex.ToString() + ".png";
+			MainWindow.MW.SetControlBackground(Preview_BG, FilePath, true);
 			lbl_Header.Content = "Overview - Preview(" + PreviewIndex  + " / " + PreviewIndexMax + ")";
 		}
 

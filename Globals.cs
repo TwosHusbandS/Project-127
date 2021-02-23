@@ -230,7 +230,7 @@ namespace Project_127
 		/// <summary>
 		/// Property of other Buildinfo. Will be in the top message of logs
 		/// </summary>
-		public static string BuildInfo = "Test - Build for 1.2.2";
+		public static string BuildInfo = "1.2.2.0 - Built 1";
 
 		/// <summary>
 		/// Returns all Command Line Args as StringArray
@@ -313,6 +313,7 @@ namespace Project_127
 			{"EnableAlternativeLaunchForceCProgramFiles", "False"},
 			{"EnableCopyFilesInsteadOfHardlinking", "False"},
 			{"AutoMTLAuthOnStartup", "True"},
+			{"PostMTLAction", "MinimizeRGL"},
 			{"EnableSlowCompare", "False"},
 			{"EnableLegacyAuth", "False"},
 			{"GTAWindowTitle", "Grand Theft Auto V"},
@@ -330,6 +331,9 @@ namespace Project_127
 			{"EnablePreOrderBonus", "False"},
 			{"EnableDontLaunchThroughSteam", "False"},
 			{"EnableScripthookOnDowngraded", "False"},
+			{"EnableOverWriteGTACommandLineArgs", "False"},
+			{"EnableCoreFix", "True"},
+			{"OverWriteGTACommandLineArgs", ""},
    
 			// Extra Features
 			{"EnableOverlay", "False"},
@@ -411,10 +415,13 @@ namespace Project_127
 			// then reads the Regedit Values in the Settings Dictionary
 			Settings.Init();
 
+			// Rolling Log stuff
+			HelperClasses.Logger.RollingLog();
+
 			// Checks if we are doing first Launch.
 			if (Settings.FirstLaunch)
 			{
-				string msg = "Legal Disclaimer:\nWe (and Project 1.27) are not responsible for anything that happens to:\nYour Windows, your hardware, your PC,\nyour GTA, your Social Club account etc.\nBy clicking 'OK' you agree to those terms.\n\n- The Project 1.27 Team";
+				string msg = "Legal Disclaimer:\nWe (and Project 1.27) are not responsible for anything that happens to:\nYour Windows, your hardware, your PC,\nyour GTA, your Social Club account etc. The \"Remember Me\" function (for legacy auth) is storing your credentials\nusing the Windows Credential Manager.\n\nBy clicking 'OK' you agree to those terms.\n\n- The Project 1.27 Team";
 
 				new Popup(Popup.PopupWindowTypes.PopupOk, msg).ShowDialog();
 
@@ -426,21 +433,10 @@ namespace Project_127
 				// Calling this to get the Path automatically
 				Settings.InitImportantSettings();
 
+				Settings.AntiVirusFix();
+
 				// Set FirstLaunch to false
 				Settings.FirstLaunch = false;
-
-				new Popup(Popup.PopupWindowTypes.PopupOk,
-				"Project 1.27 is finally in fully released.\n" +
-				"The published Product should work as expected.\n\n" +
-				"No gurantees that this will not break your GTAV in any way, shape or form.\n\n" +
-				"The 'Remember' Me function, is storing credentials\n" +
-				"using the Windows Credential Manager.\n" +
-				"You are using the it on your own risk.\n\n" +
-				"If anything does not work as expected, \n" +
-				"contact us on Discord.\n\n" +
-				" - The Project 1.27 Team").ShowDialog();
-
-				Settings.AntiVirusFix();
 
 				HelperClasses.Logger.Log("FirstLaunch Procedure Ended");
 			}
@@ -606,15 +602,19 @@ namespace Project_127
 					Settings.AntiVirusFix();
 				}
 
+				if (Settings.LastLaunchedVersion < new Version("1.2.2.0"))
+				{
+					HelperClasses.FileHandling.deleteFile(Globals.ProjectInstallationPath.TrimEnd('\\') + @"\LICENSE_JUMPSCRIPT");
+					HelperClasses.FileHandling.deleteFile(Globals.ProjectInstallationPath.TrimEnd('\\') + @"\LICENSE");
+					HelperClasses.FileHandling.deleteFile(Globals.ProjectInstallationPathBinary.TrimEnd('\\') + @"\LICENSE_JUMPSCRIPT");
+					HelperClasses.FileHandling.deleteFile(Globals.ProjectInstallationPathBinary.TrimEnd('\\') + @"\LICENSE");
+				}
+
 				Settings.LastLaunchedVersion = Globals.ProjectVersion;
 			}
 
 			// Deleting all Installer and ZIP Files from own Project Installation Path
 			DeleteOldFiles();
-
-			// reading Social club install dir from registry
-			LaunchAlternative.SetUpSocialClubRegistryThing();
-			LaunchAlternative.SocialClubUpgrade();
 
 			// Throw annoucements
 			HandleAnnouncements();
@@ -622,8 +622,16 @@ namespace Project_127
 			// Auto Updater
 			CheckForUpdate();
 
+			// Loading Info for Version stuff.
+			HelperClasses.BuildVersionTable.ReadFromGithub();
+
+		
 			// SetUpDownloadManager
 			SetUpDownloadManager();
+
+			// reading Social club install dir from registry
+			LaunchAlternative.SetUpSocialClubRegistryThing();
+			LaunchAlternative.SocialClubUpgrade();
 
 			// OUTDATED
 			// Downloads the "big 3" gamefiles from github release
@@ -633,11 +641,7 @@ namespace Project_127
 			// Check whats the latest Version of the ZIP File in GITHUB
 			// CheckForZipUpdate();
 
-			// Loading Info for Version stuff.
-			HelperClasses.BuildVersionTable.ReadFromGithub();
 
-			// Rolling Log stuff
-			HelperClasses.Logger.RollingLog();
 
 			// Called on Window Loaded from MainWindow, since this shows Overlay_MM WPF Window
 			// this makes its parent window show super early, which is ugly.
@@ -961,11 +965,13 @@ namespace Project_127
 		/// <summary>
 		/// Method which does the UpdateCheck on Startup
 		/// </summary>
-		public static void CheckForUpdate()
+		public static void CheckForUpdate(string XML_Autoupdate_Temp = "")
 		{
-			string XML_Autoupdate_Temp = XML_AutoUpdate;
+			if (XML_Autoupdate_Temp == "")
+			{
+				XML_Autoupdate_Temp = XML_AutoUpdate;
+			}
 
-			HelperClasses.BuildVersionTable.ReadFromGithub();
 
 			// Check online File for Version.
 			string MyVersionOnlineString = HelperClasses.FileHandling.GetXMLTagContent(XML_Autoupdate_Temp, "version");
@@ -1040,7 +1046,8 @@ namespace Project_127
 				HelperClasses.Logger.Log("Did not get most up to date Project 1.27 Version from Github. Github offline or your PC offline. Probably. Lets hope so.");
 			}
 
-			ReadMe.DragonsLinkMethod(XML_Autoupdate_Temp);
+			HelperClasses.BuildVersionTable.ReadFromGithub(XML_Autoupdate_Temp);
+			ReadMe.DynamicLinksMethod(XML_Autoupdate_Temp);
 		}
 
 
@@ -1358,7 +1365,7 @@ namespace Project_127
 					NoteOverlay.DisposePreview();
 				}
 
-				MainWindow.MW.SetWindowBackground(Globals.GetBackGroundPath());
+				MainWindow.MW.SetWindowBackgroundBlur();
 
 				// Switch Value
 				switch (value)
@@ -1419,6 +1426,7 @@ namespace Project_127
 						break;
 					case PageStates.Auth:
 						Auth.ROSIntegration.AuthErrorMessageThrownAlready = false;
+						Auth.ROSIntegration.MinimizedAlready = false;
 
 						if (Globals.LaunchAfterAuth)
 						{
@@ -1456,16 +1464,23 @@ namespace Project_127
 		/// </summary>
 		public enum BackgroundImages
 		{
-			Main,
+			Default,
 			FourTwenty,
-			XMas,
-			Spooky
+			Winter,
+			Spooky,
+			Valentine,
+			Germania,
+			Turkey,
+			Murica,
+			Cat
+
+			// If you touch this, please also change Installer/Info/AdvancedUser.md under #CommandLineOptions accordingly.
 		}
 
 		/// <summary>
 		/// Internal Value for BackgroundImage
 		/// </summary>
-		private static BackgroundImages _BackgroundImage = BackgroundImages.Main;
+		private static BackgroundImages _BackgroundImage = BackgroundImages.Default;
 
 		/// <summary>
 		/// Value we use for BackgroundImage. Setter is Gucci :*
@@ -1479,7 +1494,7 @@ namespace Project_127
 			set
 			{
 				_BackgroundImage = value;
-				MainWindow.MW.SetWindowBackground(GetBackGroundPath());
+				MainWindow.MW.SetWindowBackgroundImage();
 			}
 		}
 
@@ -1509,8 +1524,7 @@ namespace Project_127
 			set
 			{
 				_HamburgerMenuState = value;
-				MainWindow.MW.SetWindowBackground(Globals.GetBackGroundPath());
-
+				MainWindow.MW.SetWindowBackgroundBlur();
 
 				if (value == HamburgerMenuStates.Visible)
 				{
@@ -1531,52 +1545,6 @@ namespace Project_127
 
 
 
-
-
-
-
-		/// <summary>
-		/// Gets Path to correct Background URI, based on the 3 States above
-		/// </summary>
-		/// <returns></returns>
-		public static string GetBackGroundPath()
-		{
-			string URL_Path = @"Artwork\bg_";
-
-			switch (BackgroundImage)
-			{
-				case BackgroundImages.Main:
-					URL_Path += "main";
-					break;
-				case BackgroundImages.FourTwenty:
-					URL_Path += "420";
-					break;
-				case BackgroundImages.XMas:
-					URL_Path += "xmas";
-					break;
-				case BackgroundImages.Spooky:
-					URL_Path += "spooky";
-					break;
-			}
-
-			if (HamburgerMenuState == HamburgerMenuStates.Hidden)
-			{
-				URL_Path += ".png";
-			}
-			else if (HamburgerMenuState == HamburgerMenuStates.Visible)
-			{
-				if (PageState == PageStates.GTA)
-				{
-					URL_Path += "_hb.png";
-				}
-				else
-				{
-					URL_Path += "_blur.png";
-				}
-			}
-
-			return URL_Path;
-		}
 
 		#endregion
 
@@ -1619,6 +1587,7 @@ namespace Project_127
 
 			string[] args = Globals.CommandLineArgs;
 
+
 			for (int i = 0; i <= args.Length - 1; i++)
 			{
 				// i+1 exists
@@ -1630,10 +1599,10 @@ namespace Project_127
 					// Checks with "2 - part" command line like: "-name test"
 					if (args[i].ToLower() == "-background")
 					{
-						Globals.BackgroundImages Tmp = Globals.BackgroundImages.Main;
+						Globals.BackgroundImages Tmp = Globals.BackgroundImages.Default;
 						try
 						{
-							Tmp = (Globals.BackgroundImages)System.Enum.Parse(typeof(Globals.BackgroundImages), args[i + 1]);
+							Tmp = (Globals.BackgroundImages)System.Enum.Parse(typeof(Globals.BackgroundImages), args[i + 1], true);
 							Globals.BackgroundImage = Tmp;
 						}
 						catch (Exception e)
@@ -1643,24 +1612,56 @@ namespace Project_127
 					}
 					else if (args[i].ToLower() == "-authstateoverwrite")
 					{
-						if (args[i + 1].ToLower() == "true")
+						if (args[i + 1].ToLower().StartsWith("-"))
 						{
 							LauncherLogic.AuthStateOverWrite = true;
 						}
 						else
 						{
-							LauncherLogic.AuthStateOverWrite = false;
+							if (args[i + 1].ToLower() == "true")
+							{
+								LauncherLogic.AuthStateOverWrite = true;
+							}
+							else
+							{
+								LauncherLogic.AuthStateOverWrite = false;
+							}
 						}
 					}
 					else if (args[i].ToLower() == "-useemudebugfile")
 					{
-						if (args[i + 1].ToLower() == "true")
+						if (args[i + 1].ToLower().StartsWith("-"))
 						{
 							LauncherLogic.UseEmuConfigFile = true;
 						}
 						else
 						{
-							LauncherLogic.UseEmuConfigFile = false;
+							if (args[i + 1].ToLower() == "true")
+							{
+								LauncherLogic.UseEmuConfigFile = true;
+							}
+							else
+							{
+								LauncherLogic.UseEmuConfigFile = false;
+							}
+						}
+					}
+					else if (args[i].ToLower() == "-disablerichard")
+					{
+						if (args[i + 1].ToLower().StartsWith("-"))
+						{
+							GTAOverlay.DisableRichard = true;
+						}
+						else
+						{
+							if (args[i + 1].ToLower() == "true")
+							{
+								GTAOverlay.DisableRichard = true;
+							}
+							else
+							{
+								GTAOverlay.DisableRichard = false;
+							}
 						}
 					}
 
@@ -1697,6 +1698,11 @@ namespace Project_127
 				{
 					LauncherLogic.UseEmuConfigFile = true;
 				}
+				else if (args[i].ToLower() == "-disablerichard")
+				{
+					GTAOverlay.DisableRichard = true;
+				}
+
 
 
 			}

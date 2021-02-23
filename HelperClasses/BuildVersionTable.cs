@@ -57,11 +57,17 @@ namespace Project_127.HelperClasses
 		/// <summary>
 		/// Reading in the Information from Github Update.xml. Needs to be called so this calss is able to do stuff.
 		/// </summary>
-		public static void ReadFromGithub()
+		public static void ReadFromGithub(string xml = "")
 		{
+			if (xml == "")
+			{
+				xml = Globals.XML_AutoUpdate;
+			}
+
+
 			MyBuildVersionTable.Clear();
 
-			string uglyVersions = FileHandling.GetXMLTagContent(Globals.XML_AutoUpdate, "buildversiontable");
+			string uglyVersions = FileHandling.GetXMLTagContent(xml, "buildversiontable");
 
 			foreach (string OnePair in GetStringListFromString(uglyVersions, ':'))
 			{
@@ -101,8 +107,9 @@ namespace Project_127.HelperClasses
 				new BuildVersionTable("1.0.1868.0", "1.50");
 				new BuildVersionTable("1.0.2060.0", "1.51");
 				new BuildVersionTable("1.0.2060.1", "1.52");
+				new BuildVersionTable("1.0.2189.0", "1.52");
+				new BuildVersionTable("1.0.2215.0", "1.52");
 			}
-
 		}
 
 

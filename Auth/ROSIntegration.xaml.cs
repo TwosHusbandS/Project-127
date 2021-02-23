@@ -88,6 +88,8 @@ namespace Project_127.Auth
 		public static async void MTLAuth(bool LaunchGameAfter = false, bool SilentMode = false)
 		{
 			Auth.ROSIntegration.AuthErrorMessageThrownAlready = false;
+			Auth.ROSIntegration.MinimizedAlready = false;
+
 			AuthLaunchGameAfter = LaunchGameAfter;
 			MTLSilentMode = SilentMode;
 			HelperClasses.Logger.Log("Launching MTL...");
@@ -115,9 +117,12 @@ namespace Project_127.Auth
 			for (int i = 0; i <= SecondsWeWait - 1; i++)
 			{
 				await Task.Delay(1000);
-				if (MTLSilentMode)
+				if (MTLSilentMode & !MinimizedAlready)
 				{
-					MinimizeMTL();
+					if (MinimizeMTL())
+					{
+						MinimizedAlready = true;
+					}
 				}
 			}
 
@@ -139,7 +144,24 @@ namespace Project_127.Auth
 
 		public static bool AuthErrorMessageThrownAlready = false;
 
-		public static void MinimizeMTL()
+		public static bool MinimizedAlready = false;
+
+
+		[DllImport("user32")]
+		private static extern int IsIconic(IntPtr hWnd);
+
+
+		public static bool IsMinimized(IntPtr hWnd)
+		{
+			if (IsIconic(hWnd) == 0)
+				return false;
+			else
+				return true;
+		}
+
+
+
+		public static bool MinimizeMTL()
 		{
 			Process[] ps = Process.GetProcessesByName("SocialClubHelper");
 			IntPtr mtlWindow = new IntPtr();
@@ -154,6 +176,28 @@ namespace Project_127.Auth
 			if (mtlWindow != IntPtr.Zero)
 			{
 				ShowWindowAsync(mtlWindow, 11);//Minimize
+			}
+
+			if (IsMinimized(mtlWindow))
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+
+		public static void CloseMTL()
+		{
+			Process[] ps = Process.GetProcessesByName("SocialClubHelper");
+			foreach (var p in ps)
+			{
+				if (p.MainWindowTitle.ToLower().Contains("Rockstar Games Launcher".ToLower()))
+				{
+					p.CloseMainWindow();
+					break;
+				}
 			}
 		}
 
@@ -171,19 +215,18 @@ namespace Project_127.Auth
 
 					if (MTLSilentMode)
 					{
-						Process[] ps = Process.GetProcessesByName("SocialClubHelper");
-						foreach (var p in ps)
-						{
-							if (p.MainWindowTitle.ToLower().Contains("Rockstar Games Launcher".ToLower()))
-							{
-								p.CloseMainWindow();
-								break;
-							}
-						}
+						CloseMTL();
 					}
 					else
 					{
-						MinimizeMTL();
+						if (Settings.PostMTLAction == Settings.PostMTLActions.CloseRGL)
+						{
+							CloseMTL();
+						}
+						else if (Settings.PostMTLAction == Settings.PostMTLActions.MinimizeRGL)
+						{
+							MinimizeMTL();
+						}
 					}
 
 

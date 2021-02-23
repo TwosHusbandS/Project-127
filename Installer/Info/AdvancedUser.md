@@ -1,6 +1,6 @@
 ﻿### Information for Advanced Users:
 
-
+These Infos do NOT contain advanced-user-use-cases which are on a normal Leftclick on a normal Buttons. Read through the damn Settings.
 	
 #### General Client:
 * If you see any new Texts about "Mode", you can rightclick those, go get into that menu.
@@ -19,7 +19,7 @@
 * "-reset" -> Resets P127 completely.
 * "-uninstall" -> Fully uninstall P127 (including downloaded files and settings)
 * "-useemudebugfile" -> To be used when stuff like PreOrderBonus and InGameName is not working on Dragon Launcher.
-* "-background CustomBackgroundName" -> Available Custom Backups: "Main", "FourTwenty", "XMas", "Spooky"
+* "-background CustomBackgroundName" -> Available Custom Backups: "Default", "FourTwenty", "Winter", "Spooky", "Valentine", "Murica", "Germania", "Turkey", "Cat"
 * There are more, but these are staying internal. If you really want them and need them, you probably know where to look...
 
 #### SaveFileHandler:
@@ -41,6 +41,7 @@
 * Tripple rightclick the Refresh Button to reset the Information of what Components are installed in which Version. You will have to re-download Components. Easiest way to do that tho.
 * Rightclick the (Re-Install) Button to verify local files.
 * Rightclick Uninstall Button to enter a DDL to a ZIP which will get extracted at the appropiate folder. Note: "RequiredFiles" ZIP will need to follow normal P127_ZIP naming / folder convention.
+* Tripple Rightclick the Installed / Uninstalled Text to select a local ZIP which will get extracted at the appropiate folder. Note: "RequiredFiles" ZIP will need to follow normal P127_ZIP naming / folder convention.
 
 #### Settings:
 * Settings in general
@@ -51,7 +52,6 @@
   * Importing a zip you find floating around (named: "Project_127_Files_VX_Big.zip") could help. Especially if you read this in years from now (January 2021).
     * Do so by either Downloading it, and leftclicking "Import ZIP", or rightclicking "Import ZIP" to paste a DIRECT download link to a zip File.
 * GTA & Launch Settings
-  * Rightclick the "Enable Social Club Launch" Button, to force the Social Club Downgrade to take "C:\Program Files (x86)\Rockstar Games\SocialClub" as the social club installation folder, instead of taking it from registry.
   * Rightclick the hidden Submenu (of the other LaunchMethod) still edit those, even tho they are not in effect right now.
   * Rightclick "GTA & Launch Settings" to change your GTA 5 Window title to "Stealy Wheely Automobiley 5". This may break custom Jumpscripts and Stream setups.
 * Extra Features

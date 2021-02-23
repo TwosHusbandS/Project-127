@@ -47,6 +47,7 @@ namespace Project_127.MySettings
 
 			// Needed for GUI Shit
 			combox_Set_Retail.ItemsSource = Enum.GetValues(typeof(Retailers)).Cast<Retailers>();
+			combox_Set_PostMTLAction.ItemsSource = Enum.GetValues(typeof(PostMTLActions)).Cast<PostMTLActions>();
 			combox_Set_LanguageSelected.ItemsSource = Enum.GetValues(typeof(Languages)).Cast<Languages>();
 			combox_Set_ExitWays.ItemsSource = Enum.GetValues(typeof(ExitWays)).Cast<ExitWays>();
 			combox_Set_StartWays.ItemsSource = Enum.GetValues(typeof(StartWays)).Cast<StartWays>();
@@ -272,6 +273,39 @@ namespace Project_127.MySettings
 			}
 			HelperClasses.Logger.Log("Picked path '" + GTAVInstallationPathUserChoice + "' is valid and will be set as Settings.GTAVInstallationPath.");
 			Settings.GTAVInstallationPath = GTAVInstallationPathUserChoice;
+
+	
+			if (Settings.ZIPExtractionPath.TrimEnd('\\').ToLower() != GTAVInstallationPathUserChoice.TrimEnd('\\').ToLower())
+			{
+				// Setting ZIP Extract Path now
+				HelperClasses.Logger.Log("GTA V Path manually set, asking user if he wants to move ZIP Folder. Old ZIP Folder is: '" + Settings.ZIPExtractionPath + "'.");
+
+				Popup yesnoconfirm = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Project 1.27 needs a Folder where it installs all of its Components and saves Files for Upgrading and Downgrading.\nIt is recommend to do this on the same Drive / Partition as your GTAV Installation Path\nBest Case (and default Location) is your GTAV Path.\nDo you want to move from your Path\n(" + Settings.ZIPExtractionPath + ")\nto the new GTA V Installation Location?\n\nI recommend Yes.?");
+				yesnoconfirm.ShowDialog();
+
+				// If User wants default Settings
+				if (yesnoconfirm.DialogResult == true)
+				{
+					HelperClasses.Logger.Log("User wants default ZIP Folder. Changing it to '" + GTAVInstallationPathUserChoice + "'.");
+
+					if (!ChangeZIPExtractionPath(GTAVInstallationPathUserChoice))
+					{
+						HelperClasses.Logger.Log("Changing ZIP Path did not work. Probably non existing Path or same Path as before (from Settings.SetGTAVPathManually())");
+						new Popup(Popup.PopupWindowTypes.PopupOkError, "Changing ZIP Path did not work. Probably non existing Path or same Path as before\nIf you read this message to anyone, tell them youre in Settings.SetGTAVPathManually()");
+					}
+				}
+				else
+				{
+					HelperClasses.Logger.Log("User does NOT want default ZIP Folder. Will not change it.");
+				}
+			}
+			else
+			{
+				HelperClasses.Logger.Log("GTA V Path manually set, not asking user if he wants to move ZIP Folder, since its at the correct Location already.");
+			}
+
+
+
 			if (CheckIfDefaultForCopyHardlinkNeedsChanging)
 			{
 				SetDefaultEnableCopyingHardlinking();
@@ -702,8 +736,11 @@ namespace Project_127.MySettings
 			combox_Set_ExitWays.SelectedItem = Settings.ExitWay;
 			combox_Set_StartWays.SelectedItem = Settings.StartWay;
 			combox_Set_SocialClubGameVersion.SelectedItem = Settings.SocialClubLaunchGameVersion;
+			combox_Set_PostMTLAction.SelectedItem = Settings.PostMTLAction;
 
 			tb_Set_InGameName.Text = Settings.InGameName;
+			tb_OverWriteGTACommandLineArgs.Text = Settings.OverWriteGTACommandLineArgs;
+
 			btn_Set_JumpScriptKey1.Content = Settings.JumpScriptKey1;
 			btn_Set_JumpScriptKey2.Content = Settings.JumpScriptKey2;
 
@@ -724,8 +761,11 @@ namespace Project_127.MySettings
 			ButtonMouseOverMagic(btn_cb_Set_OnlyAutoStartProgramsWhenDowngraded);
 			ButtonMouseOverMagic(btn_cb_Set_EnableDontLaunchThroughSteam);
 			ButtonMouseOverMagic(btn_cb_Set_EnableAutoStartJumpScript);
-			ButtonMouseOverMagic(btn_cb_Set_SlowCompare);
+			ButtonMouseOverMagic(btn_cb_Set_EnableOverWriteGTACommandLineArgs);
+			ButtonMouseOverMagic(btn_cb_Set_SlowCompare); 
 			ButtonMouseOverMagic(btn_cb_Set_AutoMTLAuthOnStartup);
+			ButtonMouseOverMagic(btn_cb_Set_EnableCoreFix);
+
 
 			if (LauncherLogic.AuthWay == LauncherLogic.AuthWays.MTL)
 			{
@@ -740,9 +780,15 @@ namespace Project_127.MySettings
 				lbl_AuthWays.Content = "Auth - Method: Legacy Auth";
 			}
 
+
+
+			Version myUpgradeVersion = HelperClasses.FileHandling.GetVersionFromFile(LauncherLogic.UpgradeFilePath.TrimEnd('\\') + @"\gta5.exe");
+			Version myBackupVersion = HelperClasses.FileHandling.GetVersionFromFile(LauncherLogic.UpgradeFilePathBackup.TrimEnd('\\') + @"\gta5.exe");
+			btn_CreateBackup.Content = "Create BackupFiles for Upgrading" + BuildVersionTable.GetNiceGameVersionString(myUpgradeVersion);
+			btn_UseBackup.Content = "Use BackupFiles for Upgrading" + BuildVersionTable.GetNiceGameVersionString(myBackupVersion);
+
+
 			RefreshIfOptionsHide();
-
-
 		}
 
 
@@ -890,6 +936,12 @@ namespace Project_127.MySettings
 						MainWindow.MW.SetControlBackground(btn_Refresh, "Artwork/refresh.png");
 					}
 					break;
+				case "btn_cb_Set_EnableOverWriteGTACommandLineArgs":
+					SetCheckBoxBackground(myBtn, Settings.EnableOverWriteGTACommandLineArgs);
+					break;
+				case "btn_cb_Set_EnableCoreFix":
+					SetCheckBoxBackground(myBtn, Settings.EnableCoreFix);
+					break;
 				case "btn_cb_Set_EnableAlternativeLaunchForceCProgramFiles":
 					SetCheckBoxBackground(myBtn, Settings.EnableAlternativeLaunchForceCProgramFiles);
 					break;
@@ -1017,17 +1069,29 @@ namespace Project_127.MySettings
 				}
 			}
 
+			if (Settings.EnableOverWriteGTACommandLineArgs)
+			{
+				Rect_HideOptions_CommandLineArg.Visibility = Visibility.Hidden;
+				Rect_HideOptions_AutoCoreFix.Visibility = Visibility.Visible;
+				Rect_HideOptions_Language.Visibility = Visibility.Visible;
+			}
+			else
+			{
+				Rect_HideOptions_CommandLineArg.Visibility = Visibility.Visible;
+				Rect_HideOptions_AutoCoreFix.Visibility = Visibility.Hidden;
+				Rect_HideOptions_Language.Visibility = Visibility.Hidden;
+			}
 		}
 
 		private void CodeSnipped()
 		{
 
+			Grid_Settings_GTA.RowDefinitions.RemoveAt(6);
 			Grid_Settings_GTA.RowDefinitions.RemoveAt(5);
-			Grid_Settings_GTA.RowDefinitions.RemoveAt(4);
 			RowDefinition Row_SCL_Options = new RowDefinition();
-			Row_SCL_Options.Height = new GridLength(60); 
+			Row_SCL_Options.Height = new GridLength(100); 
 			RowDefinition Row_DragonEmu_Options = new RowDefinition();
-			Row_DragonEmu_Options.Height = new GridLength(320);
+			Row_DragonEmu_Options.Height = new GridLength(360);
 
 			if (LauncherLogic.LaunchWay == LauncherLogic.LaunchWays.SocialClubLaunch)
 			{
@@ -1040,8 +1104,8 @@ namespace Project_127.MySettings
 				Grid_Settings_GTA.RowDefinitions.Add(Row_SCL_Options);
 				Grid_Settings_GTA.RowDefinitions.Add(Row_DragonEmu_Options);
 
-				Grid.SetRow(brdr_SCLOptions, 4);
-				Grid.SetRow(brdr_DragonEmuOptions, 5);
+				Grid.SetRow(brdr_SCLOptions, 5);
+				Grid.SetRow(brdr_DragonEmuOptions, 6);
 
 				btn_HideSCLOptions.Visibility = Visibility.Hidden;
 				btn_HideEmuOptions.Visibility = Visibility.Visible;
@@ -1049,6 +1113,7 @@ namespace Project_127.MySettings
 				Rect_Bullshit_1.Visibility = Visibility.Hidden;
 				Rect_Bullshit_2.Visibility = Visibility.Hidden;
 				Rect_Bullshit_3.Visibility = Visibility.Hidden;
+				Rect_Bullshit_4.Visibility = Visibility.Visible;
 
 				Rect_HideOptions_HideFromSteam.Visibility = Visibility.Hidden;
 				Rect_HideOptions_AutoMTLOnStartup.Visibility = Visibility.Hidden;
@@ -1064,8 +1129,8 @@ namespace Project_127.MySettings
 				Grid_Settings_GTA.RowDefinitions.Add(Row_DragonEmu_Options);
 				Grid_Settings_GTA.RowDefinitions.Add(Row_SCL_Options);
 
-				Grid.SetRow(brdr_DragonEmuOptions, 4);
-				Grid.SetRow(brdr_SCLOptions, 5);
+				Grid.SetRow(brdr_DragonEmuOptions, 5);
+				Grid.SetRow(brdr_SCLOptions, 6);
 
 				btn_HideSCLOptions.Visibility = Visibility.Visible;
 				btn_HideEmuOptions.Visibility = Visibility.Hidden;
@@ -1073,6 +1138,7 @@ namespace Project_127.MySettings
 				Rect_Bullshit_1.Visibility = Visibility.Visible;
 				Rect_Bullshit_2.Visibility = Visibility.Visible;
 				Rect_Bullshit_3.Visibility = Visibility.Visible;
+				Rect_Bullshit_4.Visibility = Visibility.Hidden;
 
 
 				if (LauncherLogic.AuthWay == LauncherLogic.AuthWays.MTL)
@@ -1128,14 +1194,11 @@ namespace Project_127.MySettings
 			RefreshGUI();
 		}
 
-		private void btn_LaunchWays_SCL_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
-		{
-			PopupEnableAlternativeLaunch.IsOpen = true;
-		}
-
 		private void btn_HideSCLOptions_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
 		{
 			btn_HideSCLOptions.Visibility = Visibility.Hidden;
+
+			Rect_Bullshit_4.Visibility = Visibility.Visible;
 		}
 
 		private void btn_HideEmuOptions_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
@@ -1187,6 +1250,9 @@ namespace Project_127.MySettings
 				case "btn_cb_Set_SlowCompare":
 					Settings.EnableSlowCompare = !Settings.EnableSlowCompare;
 					break;
+				case "btn_cb_Set_EnableOverWriteGTACommandLineArgs":
+					Settings.EnableOverWriteGTACommandLineArgs = !Settings.EnableOverWriteGTACommandLineArgs;
+					break;
 				case "btn_cb_Set_EnableScripthookOnDowngraded":
 					Settings.EnableScripthookOnDowngraded = !Settings.EnableScripthookOnDowngraded;
 					RefreshIfOptionsHide();
@@ -1206,6 +1272,9 @@ namespace Project_127.MySettings
 					break;
 				case "btn_cb_Set_EnablePreOrderBonus":
 					Settings.EnablePreOrderBonus = !Settings.EnablePreOrderBonus;
+					break;
+				case "btn_cb_Set_EnableCoreFix":
+					Settings.EnableCoreFix = !Settings.EnableCoreFix;
 					break;
 				case "btn_cb_Set_AutoSetHighPriority":
 					Settings.EnableAutoSetHighPriority = !Settings.EnableAutoSetHighPriority;
@@ -1540,6 +1609,10 @@ namespace Project_127.MySettings
 			Settings.SocialClubLaunchGameVersion = combox_Set_SocialClubGameVersion.SelectedItem.ToString();
 		}
 
+		private void combox_Set_PostMTLAction_SelectionChanged(object sender, SelectionChangedEventArgs e)
+		{
+			Settings.PostMTLAction = (PostMTLActions)System.Enum.Parse(typeof(PostMTLActions), combox_Set_PostMTLAction.SelectedItem.ToString());
+		}
 
 		/// <summary>
 		/// Empty
@@ -1570,6 +1643,9 @@ namespace Project_127.MySettings
 		private void PopupCreateBackup_Opened(object sender, EventArgs e)
 		{
 			tb_Set_BackupName.Text = "BackupName";
+
+			Version myUpgradeVersion = HelperClasses.FileHandling.GetVersionFromFile(LauncherLogic.UpgradeFilePath.TrimEnd('\\') + @"\gta5.exe");
+			lbl_CreateBackupInPopup.Content = "Create Backup" + BuildVersionTable.GetNiceGameVersionString(myUpgradeVersion);
 		}
 
 
@@ -1641,7 +1717,7 @@ namespace Project_127.MySettings
 			PopupCreateBackup.IsOpen = false;
 			PopupUseBackup.IsOpen = false;
 			PopupJumpscriptAdditional.IsOpen = false;
-			PopupEnableAlternativeLaunch.IsOpen = false;
+			PopupGTACommandLineArgs.IsOpen = false;
 			RefreshGUI();
 		}
 
@@ -1671,7 +1747,10 @@ namespace Project_127.MySettings
 				if (MyFolder.Contains(LauncherLogic.ZIPFilePath.TrimEnd('\\') + @"\Project_127_Files\UpgradeFiles_Backup_"))
 				{
 					string NiceName = MyFolder.Substring(MyFolder.LastIndexOf('_') + 1);
-					combox_UseBackup.Items.Add(NiceName);
+
+					Version myGameVersion = HelperClasses.FileHandling.GetVersionFromFile(MyFolder.TrimEnd('\\') + @"\gta5.exe");
+
+					combox_UseBackup.Items.Add(NiceName + BuildVersionTable.GetNiceGameVersionString(myGameVersion));
 				}
 			}
 
@@ -1703,8 +1782,11 @@ namespace Project_127.MySettings
 				return;
 			}
 
-			string newName = LauncherLogic.ZIPFilePath.TrimEnd('\\') + @"\Project_127_Files\UpgradeFiles_Backup_" + combox_UseBackup.SelectedItem.ToString();
-			if (!(HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(newName).Length >= 2))
+			string tmp = combox_UseBackup.SelectedItem.ToString();
+			string Name = tmp.Substring(0, tmp.LastIndexOf('('));
+			string Path = LauncherLogic.ZIPFilePath.TrimEnd('\\') + @"\Project_127_Files\UpgradeFiles_Backup_" + Name;
+
+			if (!(HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(Path).Length >= 2))
 			{
 				string prevName = btn_UseBackupName.Content.ToString();
 				btn_UseBackupName.Content = "No Files in that Folder";
@@ -1713,7 +1795,7 @@ namespace Project_127.MySettings
 				return;
 			}
 
-			LauncherLogic.UseBackup(combox_UseBackup.SelectedItem.ToString());
+			LauncherLogic.UseBackup(Path);
 		}
 
 		/// <summary>
@@ -1853,14 +1935,15 @@ namespace Project_127.MySettings
 
 		}
 
-
+		static bool RockstarDisableAutoUpdateThrownAlready = false;
 
 		public static void TellRockstarUsersToDisableAutoUpdateIfNeeded()
 		{
-			if (Settings.Retailer == Retailers.Rockstar && LauncherLogic.AuthWay == LauncherLogic.AuthWays.MTL && LauncherLogic.LaunchWay == LauncherLogic.LaunchWays.DragonEmu)
+			if (Settings.Retailer == Retailers.Rockstar && LauncherLogic.AuthWay == LauncherLogic.AuthWays.MTL && LauncherLogic.LaunchWay == LauncherLogic.LaunchWays.DragonEmu && !RockstarDisableAutoUpdateThrownAlready)
 			{
 				string msg = "You need to stop Rockstar Game Launcher\nfrom automatically Updating your GTA.\nOtherwise certain features might not work.\n\nTo do this:\nInside Rockstar Games Launcher,\nhead into Settings\n-> My Installed Games\n->Grand Theft Auto V\n-> uncheck the \"Enable automatic updates\" checkbox at the very top.";
 				new Popup(Popup.PopupWindowTypes.PopupOk, msg).ShowDialog();
+				RockstarDisableAutoUpdateThrownAlready = true;
 			}
 
 		}
@@ -1905,12 +1988,6 @@ namespace Project_127.MySettings
 				{
 					HelperClasses.Logger.Log("Cant find Powershell.exe.");
 				}
-
-
-
-				// execute powershell here
-				// Add-MpPreference -ExclusionPath "C:\Temp"
-				// GTA Install, P127 Install, Component Download
 			}
 			else
 			{
@@ -1956,5 +2033,27 @@ namespace Project_127.MySettings
 			}
 		}
 
+		private void btn_GTACommandLineArgs_Click(object sender, RoutedEventArgs e)
+		{
+			PopupGTACommandLineArgs.IsOpen = true;
+		}
+
+		private void PopupGTACommandLineArgs_Closed(object sender, EventArgs e)
+		{
+
+		}
+
+		private void PopupGTACommandLineArgs_Opened(object sender, EventArgs e)
+		{
+
+		}
+
+		private void tb_OverWriteGTACommandLineArgs_LostFocus(object sender, RoutedEventArgs e)
+		{
+			string txt = tb_OverWriteGTACommandLineArgs.Text;
+			if (String.IsNullOrWhiteSpace(txt)) { txt = LauncherLogic.GetStartCommandLineArgs(); }
+			Settings.OverWriteGTACommandLineArgs = txt;
+			tb_OverWriteGTACommandLineArgs.Text = txt;
+		}
 	} // End of Class
 } // End of Namespace 

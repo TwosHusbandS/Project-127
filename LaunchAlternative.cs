@@ -53,25 +53,10 @@ namespace Project_127
 				{
 					LauncherLogic.UpgradeSocialClubAfterGame = true;
 
-					HelperClasses.Logger.Log("SCL - Launch, Social Club Downgrade WAS successfull.");
+					HelperClasses.Logger.Log("SCL - Launch, Social Club Downgrade WAS successfull. Launching Game now.");
 
-					int AmountOfCores = Environment.ProcessorCount;
-					if (AmountOfCores < 4)
-					{
-						AmountOfCores = 4;
-					}
-					else if (AmountOfCores > 23)
-					{
-						AmountOfCores = 23;
-					}
 
-					UInt64 Possibilities = (UInt64)Math.Pow(2, AmountOfCores);
-					string MyHex = (Possibilities - 1).ToString("X");
-					string cmdLineArgs = @"/c cd /d " + "\"" + LauncherLogic.GTAVFilePath + "\"" + @" && start /affinity " + MyHex + " gtastub.exe -uilanguage " + Settings.ToMyLanguageString(Settings.LanguageSelected).ToLower() + " && exit";
-
-					HelperClasses.Logger.Log("SCL - Launch, Starting GTAStub with cmdlineargs now.");
-
-					Process tmp = GSF.Identity.UserAccountControl.CreateProcessAsStandardUser(@"cmd.exe", cmdLineArgs);
+					ProcessHandler.StartDowngradedGame();
 				}
 				else
 				{
@@ -305,7 +290,7 @@ namespace Project_127
 			HelperClasses.Logger.Log("SCL - Initiating a Social Club Downgrade after " + msDelay + " ms of Delay", 0);
 
 			// KILL ALL PROCESSES
-			HelperClasses.ProcessHandler.SocialClubKillAllProcesses();
+			HelperClasses.ProcessHandler.SocialClubKillAllProcesses().GetAwaiter().GetResult();
 
 			if (!SCL_MakeSureDowngradedCacheIsCorrect())
 			{
@@ -409,7 +394,7 @@ namespace Project_127
 			HelperClasses.Logger.Log("SCL - Initiating a Social Club Upgrade after " + msDelay + " ms of Delay", 0);
 
 			// KILL ALL PROCESSES
-			HelperClasses.ProcessHandler.SocialClubKillAllProcesses();
+			HelperClasses.ProcessHandler.SocialClubKillAllProcesses().GetAwaiter().GetResult();
 
 			List<MyFileOperation> tmp = new List<MyFileOperation>();
 

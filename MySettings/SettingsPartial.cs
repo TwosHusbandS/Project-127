@@ -763,6 +763,32 @@ namespace Project_127.MySettings
 			}
 		}
 
+
+		public enum PostMTLActions
+		{
+			DoNothing,
+			MinimizeRGL,
+			CloseRGL
+		}
+
+		/// <summary>
+		/// Settings PostMTLAction. Gets and Sets from Dictionary.
+		/// </summary>
+		public static PostMTLActions PostMTLAction
+		{
+			get
+			{
+				return (PostMTLActions)System.Enum.Parse(typeof(PostMTLActions), GetSetting("PostMTLAction"));
+			}
+			set
+			{
+				if (value != PostMTLAction)
+				{
+					SetSetting("PostMTLAction", value.ToString());
+				}
+			}
+		}
+
 		/// <summary>
 		/// Settings ExitWay. Gets and Sets from Dictionary.
 		/// </summary>
@@ -813,6 +839,65 @@ namespace Project_127.MySettings
 				SetSetting("EnableScripthookOnDowngraded", value.ToString());
 			}
 		}
+
+
+		/// <summary>
+		/// Settings EnableOverWriteGTACommandLineArgs. Gets and Sets from the Dictionary.
+		/// </summary>
+		public static bool EnableOverWriteGTACommandLineArgs
+		{
+			get
+			{
+				return GetBoolFromString(GetSetting("EnableOverWriteGTACommandLineArgs"));
+			}
+			set
+			{
+				SetSetting("EnableOverWriteGTACommandLineArgs", value.ToString());
+				if (value == true)
+				{
+					OverWriteGTACommandLineArgs = "";
+				}
+			}
+		}
+
+		/// <summary>
+		/// Settings EnableCoreFix. Gets and Sets from the Dictionary.
+		/// </summary>
+		public static bool EnableCoreFix
+		{
+			get
+			{
+				return GetBoolFromString(GetSetting("EnableCoreFix"));
+			}
+			set
+			{
+				SetSetting("EnableCoreFix", value.ToString());
+			}
+		}
+
+		/// <summary>
+		/// Settings OverWriteGTACommandLineArgs. Gets and Sets from the Dictionary.
+		/// </summary>
+		public static string OverWriteGTACommandLineArgs
+		{
+			get
+			{
+				if (String.IsNullOrWhiteSpace(GetSetting("OverWriteGTACommandLineArgs")))
+				{
+					return LauncherLogic.GetStartCommandLineArgs();
+				}
+				else
+				{
+					return GetSetting("OverWriteGTACommandLineArgs");
+				}
+			}
+			set
+			{
+				SetSetting("OverWriteGTACommandLineArgs", value);
+			}
+		}
+
+
 
 		/// <summary>
 		/// Settings EnableAutoStartLiveSplit. Gets and Sets from the Dictionary.

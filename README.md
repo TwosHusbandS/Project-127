@@ -47,11 +47,11 @@ Shamelessly stolen from: https://github.com/othneildrew/Best-README-Template
   <p align="center">
     Custom Client / Launcher for Speedrunning GTA.
     <br />
-    <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ">View Demo</a>
+    <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ&t=PLACEHOLDER">View Demo</a>
 	.
     <a href="#contact">Contact me</a>
 	.
-	<a href="Installer/Changelogs/V_1_2_0_0_Changelog.md">Changelog</a>
+	<a href="Installer/Changelogs/V_1_2_2_0_Changelog.md">Changelog</a>
   </p>
 </p>
 
@@ -91,7 +91,7 @@ Over time it grew with Features and Launch - Capabilities
 
 Note:
 
-Project 1.27 now has the stability, user experience and core features we envisioned at the start of this project. While @dr490n and me (@thS / TwosHusbandS) both have ideas for potentially improvements and we may get around to working on them at some point, Project 1.27 is not under active development as of this very second (January of 2021). Big bugfixes etc. will still happen if needed, but we are making no promises either way. We want to thank everyone who has been a part of this incredible journey.
+Project 1.27 now has the stability, user experience and core features we envisioned at the start of this project. While @dr490n and me (@thS / TwosHusbandS) both have ideas for potentially improvements and we may get around to working on them at some point, Project 1.27 is not under active development as of this very second (February 23rd, 2021). Big bugfixes etc. will still happen if needed, but we are making no promises either way. We want to thank everyone who has been a part of this incredible journey.
 
 ### Help, How to get started, Support & Contact
 
@@ -217,7 +217,7 @@ Discord - [@ths#0305][discord-url]
 [license-url]: https://github.com/TwosHusbandS/Project-127/blob/master/LICENSE
 [maintained-shield]: https://img.shields.io/badge/Maintained-No-FFDB3A?style=plastic
 [maintained-url]: #about-the-project
-[version-shield]: https://img.shields.io/badge/Version-1.1_Installer-4DC71F?style=plastic
+[version-shield]: https://img.shields.io/badge/Version-1.2.2_Installer-4DC71F?style=plastic
 [help-shield]: https://img.shields.io/badge/Help-Here-F48041?style=plastic
 [features-shield]: https://img.shields.io/badge/Features-Click_Me-802BCF?style=plastic
 

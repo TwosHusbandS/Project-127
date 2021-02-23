@@ -17,11 +17,7 @@ namespace Project_127.Overlay
 	/// </summary>
 	public class GTAOverlay : IDisposable
 	{
-		// If set to false, this starts and keeps KeyboardListenerEvent running 100% of the time.
-		// Automatically set to true if we compile debug
-
-
-		public static bool DisableRichard = true; // So I can debug. FeelsBadMan. // Should be false for release. CTRLF.
+		public static bool DisableRichard = true; // FeelsBadMan. 
 		public static bool DebugMode = false;
 		public const string targetWindowDebug = "TeamSpeak 3";
 		public const string targetWindowBorderlessDefault = "Grand Theft Auto V";

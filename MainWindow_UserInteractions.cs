@@ -290,7 +290,7 @@ namespace Project_127
 			yesno.ShowDialog();
 			if (yesno.DialogResult == true)
 			{
-				HelperClasses.ProcessHandler.KillRelevantProcesses();
+				HelperClasses.ProcessHandler.KillRockstarProcessesAsync();
 			}
 			//FocusManager.SetFocusedElement(this, null);
 			MainWindow.MW.UpdateGUIDispatcherTimer();
