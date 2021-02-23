@@ -103,7 +103,7 @@ namespace Project_127.Auth
             var exeioffset = BitConverter.ToUInt32(scmem, offset);
             var blob_offset = offset + 4 + exeioffset;
             var blob = new ArraySegment<byte>(scmem, (int)blob_offset, 16384);
-            var posixtime = BitConverter.ToInt32(blob.Skip(0x32C0).Take(4).ToArray(), 0);
+            var posixtime = BitConverter.ToInt32(blob.Skip(0x3170).Take(4).ToArray(), 0);
             var RockstarID = BitConverter.ToUInt64(blob.Skip(0xEE8).Take(8).ToArray(), 0);
             var sessKey = blob.Skip(0x10D8).Take(16).ToArray();
             var ticket = Encoding.UTF8.GetString(blob.Skip(0xAF0).TakeWhile(a => a != 0).ToArray());
