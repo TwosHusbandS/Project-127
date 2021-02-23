@@ -34,13 +34,7 @@ Comments like "TODO", "TO DO", "CTRLF", "CTRL-F", and "CTRL F" are just ways of 
 
 Hybrid code can be found in AAA_HybridCode.
 
-Stuff to fix post 1.1:
-- Installer:
-	>> Build Installer
-- unit test:
-	>> Write Release Post
-	>> Write Permanent Posts
-	>> Write Video stuff for Anther
+
 */
 
 using System;
