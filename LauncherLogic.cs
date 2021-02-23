@@ -207,7 +207,7 @@ namespace Project_127
 			Unsure
 		}
 
-		public static bool RockstarFuckedUsErrorThrownAlread = false;
+		public static bool RockstarFuckedUsErrorThrownAlready = false;
 
 		/// <summary>
 		/// Property of what InstallationState we are in. I want to access this from here
@@ -279,57 +279,6 @@ namespace Project_127
 							{
 								rtrn = InstallationStates.Upgraded;
 							}
-						}
-					}
-				}
-
-
-				// DETECTING IF ROCKSTAR FUCKED US
-				if (rtrn == InstallationStates.Downgraded)
-				{
-					if (BuildVersionTable.GetGameVersionOfBuild(Globals.GTABuild) > new Version(1, 30))
-					{
-						if (!ThrewUpdateDetectedMessageAlready)
-						{
-							Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "It appears like Rockstar (or Steam and Epic although unlikely) messed up Project 1.27 Files.\nDo you want to correct them?");
-							yesno.ShowDialog();
-							if (yesno.DialogResult == true)
-							{
-								Upgrade();
-
-								if (LauncherLogic.LaunchWay == LauncherLogic.LaunchWays.SocialClubLaunch || Settings.Retailer == Settings.Retailers.Epic)
-								{
-									ComponentManager.Components.Base.ReInstall();
-								}
-								else
-								{
-									if (Settings.Retailer == Settings.Retailers.Rockstar)
-									{
-										if (Settings.SocialClubLaunchGameVersion == "124")
-										{
-											ComponentManager.Components.SCLRockstar124.ReInstall();
-
-										}
-										else
-										{
-											ComponentManager.Components.SCLRockstar127.ReInstall();
-										}
-									}
-									else if (Settings.Retailer == Settings.Retailers.Steam)
-									{
-										if (Settings.SocialClubLaunchGameVersion == "124")
-										{
-											ComponentManager.Components.SCLSteam124.ReInstall();
-
-										}
-										else
-										{
-											ComponentManager.Components.SCLSteam127.ReInstall();
-										}
-									}
-								}
-							}
-							ThrewUpdateDetectedMessageAlready = true;
 						}
 					}
 				}
@@ -436,12 +385,6 @@ namespace Project_127
 		#endregion
 
 		#region Properties for often used Stuff
-
-		/// <summary>
-		/// Using this to keep track if we have shown the user one detected Upgrade Message per P127 Launch
-		/// </summary>
-		public static bool ThrewUpdateDetectedMessageAlready = false;
-
 
 		/// <summary>
 		/// Path of where the ZIP File is extracted
@@ -618,7 +561,7 @@ namespace Project_127
 		/// <summary>
 		/// Method for Upgrading the Game back to latest Version
 		/// </summary>
-		public static void Upgrade(bool IgnoreNewFiles = false)
+		public static void Upgrade(bool IgnoreNewFiles = false, bool IgnoreUninstalledComponenets = false)
 		{
 			if (!LauncherLogic.IsGTAVInstallationPathCorrect() && !LauncherLogic.GTAVInstallationIncorrectMessageThrownAlready)
 			{
@@ -654,10 +597,20 @@ namespace Project_127
 
 			IgnoreNewFilesWhileUpgradeDowngradeLogic = IgnoreNewFiles;
 
-			if (!ComponentManager.CheckIfRequiredComponentsAreInstalled(true))
+			if (!IgnoreUninstalledComponenets)
 			{
-				new Popups.Popup(Popups.Popup.PopupWindowTypes.PopupOkError, "Error:\nCant do that because of because of missing Components").ShowDialog();
-				return;
+				if (!ComponentManager.CheckIfRequiredComponentsAreInstalled(true))
+				{
+					new Popups.Popup(Popups.Popup.PopupWindowTypes.PopupOkError, "Error:\nCant do that because of because of missing Components").ShowDialog();
+					return;
+				}
+
+
+				if (!(HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(DowngradeFilePath).Length >= 2 && HelperClasses.BuildVersionTable.IsDowngradedGTA(DowngradeFilePath)))
+				{
+					new Popup(Popup.PopupWindowTypes.PopupOk, "Found no DowngradeFiles. Please make sure the required components are installed.").ShowDialog();
+					return;
+				}
 			}
 
 
@@ -668,14 +621,6 @@ namespace Project_127
 				new Popup(Popup.PopupWindowTypes.PopupOk, "Found no Files to Upgrade with. I suggest verifying Files through steam\nor clicking \"Use Backup Files\" in Settings.\nWill abort Upgrade.").ShowDialog();
 				return;
 			}
-
-
-			if (!(HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(DowngradeFilePath).Length >= 2 && HelperClasses.BuildVersionTable.IsDowngradedGTA(DowngradeFilePath)))
-			{
-				new Popup(Popup.PopupWindowTypes.PopupOk, "Found no DowngradeFiles. Please make sure the required components are installed.").ShowDialog();
-				return;
-			}
-
 
 			PopupProgress tmp = new PopupProgress(PopupProgress.ProgressTypes.Upgrade, "");
 			tmp.ShowDialog();
@@ -695,6 +640,7 @@ namespace Project_127
 			HelperClasses.Logger.Log("Done Upgrading");
 
 			HandleUnsureInstallationState();
+			HandleRockstarFuckingUs();
 		}
 
 
@@ -790,6 +736,7 @@ namespace Project_127
 			HelperClasses.Logger.Log("Done Downgrading");
 
 			HandleUnsureInstallationState();
+			HandleRockstarFuckingUs();
 		}
 
 
@@ -865,17 +812,17 @@ namespace Project_127
 			}
 			else
 			{
-				tmp += @"/c cd /d " + "\"" + LauncherLogic.GTAVFilePath + "\"" + @" && ";
+				tmp += @"/c cd /d " + "\"" + LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\" + "\"" + @" && ";
 			}
 
 
 			if (Settings.EnableOverWriteGTACommandLineArgs)
 			{
-				tmp += GetStartCommandLineArgs();
+				tmp += Settings.OverWriteGTACommandLineArgs;
 			}
 			else
 			{
-				tmp += Settings.OverWriteGTACommandLineArgs;
+				tmp += GetStartCommandLineArgs();
 			}
 
 			tmp += " && exit";
@@ -1066,6 +1013,59 @@ namespace Project_127
 		}
 
 
+		public static void HandleRockstarFuckingUs()
+		{
+			// DETECTING IF ROCKSTAR FUCKED US
+			if (InstallationState == InstallationStates.Downgraded)
+			{
+				if (BuildVersionTable.GetGameVersionOfBuild(Globals.GTABuild) > new Version(1, 30))
+				{
+					if (!RockstarFuckedUsErrorThrownAlready)
+					{
+						RockstarFuckedUsErrorThrownAlready = true;
+						Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "It appears like Rockstar (or Steam and Epic although unlikely) messed up Project 1.27 Files.\nDo you want to correct them?");
+						yesno.ShowDialog();
+						if (yesno.DialogResult == true)
+						{
+							Upgrade(false,true);
+
+							if (LauncherLogic.LaunchWay == LauncherLogic.LaunchWays.DragonEmu || Settings.Retailer == Settings.Retailers.Epic)
+							{
+								ComponentManager.Components.Base.ReInstall();
+							}
+							else
+							{
+								if (Settings.Retailer == Settings.Retailers.Rockstar)
+								{
+									if (Settings.SocialClubLaunchGameVersion == "124")
+									{
+										ComponentManager.Components.SCLRockstar124.ReInstall();
+
+									}
+									else
+									{
+										ComponentManager.Components.SCLRockstar127.ReInstall();
+									}
+								}
+								else if (Settings.Retailer == Settings.Retailers.Steam)
+								{
+									if (Settings.SocialClubLaunchGameVersion == "124")
+									{
+										ComponentManager.Components.SCLSteam124.ReInstall();
+
+									}
+									else
+									{
+										ComponentManager.Components.SCLSteam127.ReInstall();
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+
 		#endregion
 
 		#region Backup (UpgradeFiles) stuff
@@ -1179,11 +1179,15 @@ namespace Project_127
 									HelperClasses.FileHandling.DeleteFolder(newPath);
 									MyFileOperations.Add(new MyFileOperation(MyFileOperation.FileOperations.Delete, newPath, "", "Deleting Path: '" + (newPath) + "'", 2, MyFileOperation.FileOrFolder.Folder));
 									MyFileOperations.Add(new MyFileOperation(MyFileOperation.FileOperations.Move, LauncherLogic.UpgradeFilePath, newPath, "Moving Path: '" + LauncherLogic.UpgradeFilePath + "', to: '" + (newPath) + "'", 2, MyFileOperation.FileOrFolder.Folder));
+									exitWhileLoop = true;
+									break;
 								}
 							}
 							else
 							{
 								MyFileOperations.Add(new MyFileOperation(MyFileOperation.FileOperations.Move, LauncherLogic.UpgradeFilePath, newPath, "Moving Path: '" + LauncherLogic.UpgradeFilePath + "', to: '" + (newPath) + "'", 2, MyFileOperation.FileOrFolder.Folder));
+								exitWhileLoop = true;
+								break;
 							}
 						}
 						else

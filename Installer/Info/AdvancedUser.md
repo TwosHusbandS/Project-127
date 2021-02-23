@@ -19,7 +19,7 @@ These Infos do NOT contain advanced-user-use-cases which are on a normal Leftcli
 * "-reset" -> Resets P127 completely.
 * "-uninstall" -> Fully uninstall P127 (including downloaded files and settings)
 * "-useemudebugfile" -> To be used when stuff like PreOrderBonus and InGameName is not working on Dragon Launcher.
-* "-background CustomBackgroundName" -> Available Custom Backups: "Default", "FourTwenty", "Winter", "Spooky", "Valentine", "Murica", "Germania", "Cat"
+* "-background CustomBackgroundName" -> Available Custom Backups: "Default", "FourTwenty", "Winter", "Spooky", "Valentine", "Murica", "Germania", "Turkey", "Cat"
 * There are more, but these are staying internal. If you really want them and need them, you probably know where to look...
 
 #### SaveFileHandler:

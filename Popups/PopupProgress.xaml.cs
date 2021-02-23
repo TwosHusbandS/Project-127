@@ -265,9 +265,6 @@ namespace Project_127.Popups
 			{
 				bool UpdatePopupThrownAlready = false;
 
-				HelperClasses.ProcessHandler.KillRockstarProcesses();
-
-
 				// Saving all the File Operations I want to do, executing this at the end of this Method
 				List<MyFileOperation> MyFileOperationsTmp = new List<MyFileOperation>();
 
@@ -384,6 +381,8 @@ namespace Project_127.Popups
 					MyFileOperationsTmp.Add(new MyFileOperation(MyFileOperation.FileOperations.Hardlink, FilesInDowngradeFiles[i], CorrespondingFilePathInGTALocation[i], "Will create HardLink in '" + CorrespondingFilePathInGTALocation[i] + "' to the file in '" + FilesInDowngradeFiles[i] + "'", 1));
 				}
 
+				HelperClasses.ProcessHandler.KillRockstarProcesses();
+
 				RtrnMyFileOperations = MyFileOperationsTmp;
 			}
 
@@ -393,8 +392,6 @@ namespace Project_127.Popups
 				// Saving all the File Operations I want to do, executing this at the end of this Method
 				List<MyFileOperation> MyFileOperationsTmp = new List<MyFileOperation>();
 				bool UpdatePopupThrownAlready = false;
-
-				HelperClasses.ProcessHandler.KillRockstarProcesses();
 
 				HelperClasses.Logger.Log("Initiating UPGRADE", 0);
 				HelperClasses.Logger.Log("GTAV Installation Path: " + LauncherLogic.GTAVFilePath, 1);
@@ -527,6 +524,8 @@ namespace Project_127.Popups
 					}
 
 				}
+
+				HelperClasses.ProcessHandler.KillRockstarProcesses();
 
 				RtrnMyFileOperations = MyFileOperationsTmp;
 			}

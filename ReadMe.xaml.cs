@@ -27,8 +27,9 @@ namespace Project_127
 		/// </summary>
 		public static ReadMeStates LastReadMeState = ReadMeStates.About;
 
+		public static bool HideVideo = false;
 		public static string DragonsLink = "https://github.com/jaredtb";
-		public static string AnthersDemoVideoLink = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
+		public static string AnthersDemoVideoLink = "https://www.youtube.com/watch?v=dQw4w9WgXcQ&t=PLACEHOLDER";
 
 		public static void DynamicLinksMethod(string XML = "")
 		{
@@ -48,6 +49,12 @@ namespace Project_127
 			if (HelperClasses.FileHandling.URLExists(AntherTMP))
 			{
 				ReadMe.AnthersDemoVideoLink = AntherTMP;
+			}
+
+			string tmpBool = HelperClasses.FileHandling.GetXMLTagContent(XML, "hidevideo");
+			if (tmpBool == "True")
+			{
+				HideVideo = true;
 			}
 		}
 
@@ -260,7 +267,10 @@ namespace Project_127
 
 			AddParagraph(rtb_Credits, "Shoutout to @AntherXx for making the incredible P127 Demo + Help Video, as well as going through the trouble of tracking down and renaming SaveFiles for every single Mission in Classic% and to @Hossel for providing the SaveFiles for the main Categories");
 
-			AddHyperlinkText(rtb_Credits, AnthersDemoVideoLink, "P127 Demo & Help Video", "Shoutout to @AntherXx for making the incredible ", ", as well as going through the trouble of tracking down and renaming SaveFiles for every single Mission in Classic% and to @Hossel for providing the SaveFiles for the main Categories.");
+			if (!HideVideo)
+			{
+				AddHyperlinkText(rtb_Credits, AnthersDemoVideoLink, "P127 Demo & Help Video", "Shoutout to @AntherXx for making the incredible ", ", as well as going through the trouble of tracking down and renaming SaveFiles for every single Mission in Classic% and to @Hossel for providing the SaveFiles for the main Categories.");
+			}
 
 			AddHyperlinkText(rtb_Credits, "https://github.com/DaWolf85/GTAVAutoPatcher/", "open-sourcing his Tool", "Shoutout to @DaWolf85 for ", " the Community used to Upgrade / Downgrade previously. It helped us a ton.");
 
@@ -280,7 +290,10 @@ namespace Project_127
 
 			AddParagraph(rtb_About, "Project 1.27 Version: '" + Globals.ProjectVersion + "'\n" + "BuildInfo: '" + Globals.BuildInfo + "'\n" + "ZIP Version: '" + Globals.ZipVersion + "'");
 
-			AddHyperlinkText(rtb_About, AnthersDemoVideoLink, "P127 Demo & Help Video", "", "");
+			if (!HideVideo)
+			{
+				AddHyperlinkText(rtb_About, AnthersDemoVideoLink, "P127 Demo & Help Video", "", "");
+			}
 
 			AddParagraph(rtb_About, "You are running Project 1.27, a tool for the GTA V Speedrunning Community. This was created for the patch 1.27 downgrade problem, which started in August of 2020. This tool has a number of features, including Downgrading, Upgrading and launching the game.");
 
@@ -309,7 +322,10 @@ namespace Project_127
 
 			rtb_Help.Document.Blocks.Remove(rtb_Help.Document.Blocks.FirstBlock);
 
-			AddHyperlinkText(rtb_Help, AnthersDemoVideoLink, "P127 Demo & Help Video", "", "");
+			if (!HideVideo)
+			{
+				AddHyperlinkText(rtb_Help, AnthersDemoVideoLink, "P127 Demo & Help Video", "", "");
+			}
 
 			AddHyperlinkText(rtb_Help, "http://BigZip.com", "here", "When Project 1.27 crashes when Downloading or Importing Files, try to download the ZIP manually from ", ", then go to Settings -> Import ZIP Manually and select the file you just downloaded. If that doesnt work, rightclick the ZIP Extraction Path in Settings, copy your downloaded zip file there, right click -> extract here.");
 
@@ -328,7 +344,7 @@ namespace Project_127
 			AddParagraph(rtb_Help, "If the current Authentication Method for the dr490n emu is not working, it is worth trying to switch the way P127 tries to authenticate your GTA ownership by doing so inside the Orange Border inside \"GTA & Launch Settings\".");
 
 			AddParagraph(rtb_Help, "If the Dr490n Launcher doesnt seem to take some options(InGameName, PreOrderBonus) into account, try launching P127 with the command line args: \"-useemudebugfile true\"");
-			
+
 			AddParagraph(rtb_Help, "On Legacy Auth: When the Auth / Login appears to load infinitely, re - start the auth - process by hitting the \"X\" inside the top right corner once, and then trying again.If that doesnt work, you can try to re-start Project 1.27, and wait a few  minutes.If its still not working, Rockstar just might not like your IP.In this case try using a Hotspot from your phone or a VPN or any other internet connection.");
 
 			AddParagraph(rtb_Help, "On Legacy Auth: When P127 crashes just when you are expected to login(on click of Auth Button, or on Game Launch when not logged in already), you might fail to connect to Rockstar Server. Make sure you are connected to the internet.");

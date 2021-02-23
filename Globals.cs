@@ -230,7 +230,7 @@ namespace Project_127
 		/// <summary>
 		/// Property of other Buildinfo. Will be in the top message of logs
 		/// </summary>
-		public static string BuildInfo = "1.2.2.0 RC - 1";
+		public static string BuildInfo = "1.2.2.0 - Built 1";
 
 		/// <summary>
 		/// Returns all Command Line Args as StringArray
@@ -411,6 +411,9 @@ namespace Project_127
 			// Writes Settings Dictionary [copy of default settings at this point] in the registry if the value doesnt already exist
 			// then reads the Regedit Values in the Settings Dictionary
 			Settings.Init();
+
+			// Rolling Log stuff
+			HelperClasses.Logger.RollingLog();
 
 			// Checks if we are doing first Launch.
 			if (Settings.FirstLaunch)
@@ -610,18 +613,22 @@ namespace Project_127
 			// Deleting all Installer and ZIP Files from own Project Installation Path
 			DeleteOldFiles();
 
-			// reading Social club install dir from registry
-			LaunchAlternative.SetUpSocialClubRegistryThing();
-			LaunchAlternative.SocialClubUpgrade();
-
 			// Throw annoucements
 			HandleAnnouncements();
 
 			// Auto Updater
 			CheckForUpdate();
 
+			// Loading Info for Version stuff.
+			HelperClasses.BuildVersionTable.ReadFromGithub();
+
+		
 			// SetUpDownloadManager
 			SetUpDownloadManager();
+
+			// reading Social club install dir from registry
+			LaunchAlternative.SetUpSocialClubRegistryThing();
+			LaunchAlternative.SocialClubUpgrade();
 
 			// OUTDATED
 			// Downloads the "big 3" gamefiles from github release
@@ -631,11 +638,7 @@ namespace Project_127
 			// Check whats the latest Version of the ZIP File in GITHUB
 			// CheckForZipUpdate();
 
-			// Loading Info for Version stuff.
-			HelperClasses.BuildVersionTable.ReadFromGithub();
 
-			// Rolling Log stuff
-			HelperClasses.Logger.RollingLog();
 
 			// Called on Window Loaded from MainWindow, since this shows Overlay_MM WPF Window
 			// this makes its parent window show super early, which is ugly.
@@ -1464,6 +1467,7 @@ namespace Project_127
 			Spooky,
 			Valentine,
 			Germania,
+			Turkey,
 			Murica,
 			Cat
 
