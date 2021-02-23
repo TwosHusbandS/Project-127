@@ -47,11 +47,11 @@ Shamelessly stolen from: https://github.com/othneildrew/Best-README-Template
   <p align="center">
     Custom Client / Launcher for Speedrunning GTA.
     <br />
-    <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ">View Demo</a>
+    <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ&t=PLACEHOLDER">View Demo</a>
 	.
     <a href="#contact">Contact me</a>
 	.
-	<a href="Installer/Changelogs/V_1_2_0_0_Changelog.md">Changelog</a>
+	<a href="Installer/Changelogs/V_1_2_2_0_Changelog.md">Changelog</a>
   </p>
 </p>
 
@@ -217,7 +217,7 @@ Discord - [@ths#0305][discord-url]
 [license-url]: https://github.com/TwosHusbandS/Project-127/blob/master/LICENSE
 [maintained-shield]: https://img.shields.io/badge/Maintained-No-FFDB3A?style=plastic
 [maintained-url]: #about-the-project
-[version-shield]: https://img.shields.io/badge/Version-1.1_Installer-4DC71F?style=plastic
+[version-shield]: https://img.shields.io/badge/Version-1.2.2_Installer-4DC71F?style=plastic
 [help-shield]: https://img.shields.io/badge/Help-Here-F48041?style=plastic
 [features-shield]: https://img.shields.io/badge/Features-Click_Me-802BCF?style=plastic
 

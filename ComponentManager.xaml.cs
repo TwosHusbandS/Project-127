@@ -449,6 +449,8 @@ namespace Project_127
 
 		public static void StartupCheck()
 		{
+			LauncherLogic.HandleUnsureInstallationState();
+			LauncherLogic.HandleRockstarFuckingUs();
 			CheckForUpdates();
 			CheckIfRequiredComponentsAreInstalled(true);
 		}
@@ -572,16 +574,13 @@ namespace Project_127
 
 			if (MyComponent == Components.Base)
 			{
-				tmpLocation += tmpLocation.TrimEnd('\\') + @"\Project_127_Files\";
+				tmpLocation = tmpLocation.TrimEnd('\\') + @"\Project_127_Files\";
 			}
-			tmpLocation += "Version.txt";
+			tmpLocation = tmpLocation.TrimEnd('\\') + @"\Version.txt";
 
 			HelperClasses.Logger.Log("ComponentMngr - tmpLocation = '" + tmpLocation + "'", 1);
 
-
-			// READ COMPONENT FROM, decide if we ask for version or not
-			bool doWeNeedVersion = false;
-
+			bool doWeNeedVersion = true;
 			Version FI = MyComponent.GetInstalledVersion();
 			if (HelperClasses.FileHandling.doesFileExist(tmpLocation))
 			{
@@ -591,17 +590,18 @@ namespace Project_127
 				{
 					int _ZipVersion = 0;
 					Int32.TryParse(content, out _ZipVersion);
-					if (_ZipVersion <= 0)
+
+					if (_ZipVersion > 0)
 					{
 						FI = new Version(1, _ZipVersion, 0, 0);
-						doWeNeedVersion = true;
+						doWeNeedVersion = false;
 					}
 					else
 					{
 						try
 						{
 							FI = new Version(content);
-							doWeNeedVersion = true;
+							doWeNeedVersion = false;
 						}
 						catch { }
 					}
@@ -611,11 +611,12 @@ namespace Project_127
 					try
 					{
 						FI = new Version(content);
-						doWeNeedVersion = true;
+						doWeNeedVersion = false;
 					}
 					catch { }
 				}
 			}
+			HelperClasses.FileHandling.deleteFile(tmpLocation);
 
 			if (doWeNeedVersion)
 			{

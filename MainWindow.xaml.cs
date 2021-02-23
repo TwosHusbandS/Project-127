@@ -6,7 +6,7 @@ Actual code (partially closed source) which authentificates, handles entitlement
 @Special For, who also did a lot of RE'ing, testing, brainstorming, information gathering and 2nd level support, being available to bounce ideas off of.
 Main / Actual Project 1.27 Client by "@thS"
 A number of other members of the team, including but not limited to @MoMo, @Diamondo25, @S.M.G, @gogsi, @Antibones, @Unemployed, @Aperture, @luky, @CrynesSs, @Daniel Kinau contributed to this project one way or another, and my thanks go out to them.
-Version: 1.2.1.0
+Version: 1.2.2.0
 
 Build Instructions:
 	Press CTRLF + F5, pray that nuget does its magic.
@@ -36,35 +36,11 @@ Hybrid code can be found in AAA_HybridCode.
 
 Stuff to fix post 1.1:
 - Installer:
-	>> BUILD WITH EASTER EGG COMMENTED OUT DUE TO IT CRASHING ON MY MACHINE
 	>> Build Installer
 - unit test:
-	>> Launch Game stuff. (Steam, nonsteam, SCL, apply core fix, overwrite command line args, etc.)
-	>> Start command line args everything unit test
-	>> one simulated game update
-	>> rockstar fucking us
-	>> custom backup stuff
-	>> switch GTA V Location
-	>> switch ZIP Location
-	>> Reset
-	>> Repair
-	>> Import ZIP in Componenet Manager
-
-Stuff for Video:
-	Initial Installation + Setup:
-		Show installation in timelapse
-		Mention / Write that your GTA should be unmodified & Upgraded
-		Show all initial setup clicks (select gta path etc.)
-	Main Explanation:
-		Explain Upgrading / Downgrading briefly. (It automatically detects Game Updates and will offer to back your current "UpgradeFiles" folder up)
-		Explain LaunchWays & Authways UI. (Auth is only needed when using Dragon Launcher, explain lock icon)
-	Show for 5 Seconds:
-		SaveFileHandler (tell you can rightclick)
-		NoteOverlay (show all sub-pages for a second i guess)
-		ComponentManager (in theory never needed, it will always prompt you to automatically download if neeeded)
-		Information (maybe click each page for 1-2 seconds, reference Help Section...)
-		Settings (show each settings page for 1-2 seconds and scroll down)
-
+	>> Write Release Post
+	>> Write Permanent Posts
+	>> Write Video stuff for Anther
 */
 
 using System;
@@ -206,7 +182,6 @@ namespace Project_127
 			// Start the Init Process of Logger, Settings, Globals, Regedit here, since we need the Logger in the next Line if it fails...
 			Globals.Init();
 
-
 			if (Globals.P127Branch == "internal")
 			{
 				string msg = "We are in internal mode. We need testing on:\n\n" +
@@ -273,8 +248,6 @@ namespace Project_127
 			InitNotifyIcon();
 
 			NoteOverlay.OverlaySettingsChanged();
-
-			LauncherLogic.HandleUnsureInstallationState();
 
 			StartUpStopwatch.Stop();
 
@@ -597,8 +570,12 @@ namespace Project_127
 			{
 				Globals.BackgroundImage = Globals.BackgroundImages.FourTwenty;
 			}
-			else if ((Now.Month == 10 && Now.Day >= 29) ||
-					(Now.Month == 11 && Now.Day == 3))
+			else if (Now.Month == 10 && Now.Day == 29)
+			{
+				Globals.BackgroundImage = Globals.BackgroundImages.Turkey;
+			}
+			else if ((Now.Month == 10 && Now.Day >= 30) ||
+					(Now.Month == 11 && Now.Day == 6))
 			{
 				Globals.BackgroundImage = Globals.BackgroundImages.Spooky;
 			}

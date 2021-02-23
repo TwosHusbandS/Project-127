@@ -527,6 +527,7 @@
     <None Include="Artwork\bg_germania.png" />
     <None Include="Artwork\bg_murica.png" />
     <None Include="Artwork\bg_valentine.png" />
+    <None Include="Artwork\bg_turkey.png" />
     <Content Include="Installer\NewSetup.iss" />
     <Content Include="MTLInterface.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -592,6 +593,7 @@ copy "$(ProjectDir)Artwork\bg_fourtwenty.png" "$(ProjectDir)\bin\x64\Release\Ugl
 copy "$(ProjectDir)Artwork\bg_valentine.png" "$(ProjectDir)\bin\x64\Release\UglyFiles\Artwork\bg_valentine.png"
 copy "$(ProjectDir)Artwork\bg_murica.png" "$(ProjectDir)\bin\x64\Release\UglyFiles\Artwork\bg_murica.png"
 copy "$(ProjectDir)Artwork\bg_germania.png" "$(ProjectDir)\bin\x64\Release\UglyFiles\Artwork\bg_germania.png"
+copy "$(ProjectDir)Artwork\bg_turkey.png" "$(ProjectDir)\bin\x64\Release\UglyFiles\Artwork\bg_turkey.png"
 copy "$(ProjectDir)Artwork\bg_cat.png" "$(ProjectDir)\bin\x64\Release\UglyFiles\Artwork\bg_cat.png"
 copy "$(ProjectDir)Artwork\P127_Slogan.png" "$(ProjectDir)\bin\x64\Release\UglyFiles\Artwork\P127_Slogan.png"
 copy "$(ProjectDir)Artwork\Preview_1.png" "$(ProjectDir)\bin\x64\Release\UglyFiles\Artwork\Preview_1.png"
