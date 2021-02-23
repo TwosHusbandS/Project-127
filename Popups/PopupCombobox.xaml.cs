@@ -30,6 +30,17 @@ namespace Project_127.Popups
 		/// </summary>
 		public string MyReturnString;
 
+
+		private void Window_SourceInitialized(object sender, EventArgs e)
+		{
+			if (MainWindow.MW.IsVisible)
+			{
+				this.Left = MainWindow.MW.Left + (MainWindow.MW.Width / 2) - (this.Width / 2);
+				this.Top = MainWindow.MW.Top + (MainWindow.MW.Height / 2) - (this.Height / 2);
+			}
+		}
+
+
 		/// <summary>
 		/// Constructor of Popup Combobox
 		/// </summary>

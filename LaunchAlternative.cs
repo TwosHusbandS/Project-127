@@ -53,25 +53,10 @@ namespace Project_127
 				{
 					LauncherLogic.UpgradeSocialClubAfterGame = true;
 
-					HelperClasses.Logger.Log("SCL - Launch, Social Club Downgrade WAS successfull.");
+					HelperClasses.Logger.Log("SCL - Launch, Social Club Downgrade WAS successfull. Launching Game now.");
 
-					int AmountOfCores = Environment.ProcessorCount;
-					if (AmountOfCores < 4)
-					{
-						AmountOfCores = 4;
-					}
-					else if (AmountOfCores > 23)
-					{
-						AmountOfCores = 23;
-					}
 
-					UInt64 Possibilities = (UInt64)Math.Pow(2, AmountOfCores);
-					string MyHex = (Possibilities - 1).ToString("X");
-					string cmdLineArgs = @"/c cd /d " + "\"" + LauncherLogic.GTAVFilePath + "\"" + @" && start /affinity " + MyHex + " gtastub.exe -uilanguage " + Settings.ToMyLanguageString(Settings.LanguageSelected).ToLower() + " && exit";
-
-					HelperClasses.Logger.Log("SCL - Launch, Starting GTAStub with cmdlineargs now.");
-
-					Process tmp = GSF.Identity.UserAccountControl.CreateProcessAsStandardUser(@"cmd.exe", cmdLineArgs);
+					ProcessHandler.StartDowngradedGame();
 				}
 				else
 				{
@@ -228,7 +213,7 @@ namespace Project_127
 					{
 						HelperClasses.Logger.Log("SCL - User wants to, lets download.", 1);
 
-						if (!ComponentManager.Components.SCLDowngradedSC.ReInstall())
+						if (!ComponentManager.Components.DowngradedSC.ReInstall())
 						{
 							HelperClasses.Logger.Log("SCL - Install failed. Will abort.", 1);
 							return false;
@@ -305,7 +290,7 @@ namespace Project_127
 			HelperClasses.Logger.Log("SCL - Initiating a Social Club Downgrade after " + msDelay + " ms of Delay", 0);
 
 			// KILL ALL PROCESSES
-			HelperClasses.ProcessHandler.SocialClubKillAllProcesses();
+			HelperClasses.ProcessHandler.SocialClubKillAllProcesses().GetAwaiter().GetResult();
 
 			if (!SCL_MakeSureDowngradedCacheIsCorrect())
 			{
@@ -380,6 +365,16 @@ namespace Project_127
 
 
 
+		public static void SocialClubReset(int msDelay = 0)
+		{
+			HelperClasses.Logger.Log("SCL - RESETTING SC FOLDERS. DELETING EVERYTHING CUSTOM", 1);
+			SocialClubUpgrade(msDelay);
+			HelperClasses.FileHandling.DeleteFolder(SCL_SC_DOWNGRADED);
+			HelperClasses.FileHandling.DeleteFolder(SCL_SC_DOWNGRADED_CACHE);
+			HelperClasses.FileHandling.DeleteFolder(SCL_SC_TEMP_BACKUP);
+		}
+
+
 		/// <summary>
 		/// Upgrades Social Club if needed. RETURNS TRUE IF INSTALLATION OF SC IS USABLE (Upgraded OR Downgraded)
 		/// </summary>
@@ -399,7 +394,7 @@ namespace Project_127
 			HelperClasses.Logger.Log("SCL - Initiating a Social Club Upgrade after " + msDelay + " ms of Delay", 0);
 
 			// KILL ALL PROCESSES
-			HelperClasses.ProcessHandler.SocialClubKillAllProcesses();
+			HelperClasses.ProcessHandler.SocialClubKillAllProcesses().GetAwaiter().GetResult();
 
 			List<MyFileOperation> tmp = new List<MyFileOperation>();
 

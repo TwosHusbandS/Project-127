@@ -2,21 +2,17 @@
  
 Main Documentation / Dev Diary here:
 
-Actual code (partially closed source) which authentificates, handles entitlement and launches the game (and Overlay Backend) is done by @dr490n
-@Special For, who also did a lot of RE'ing, testing, brainstorming, information gathering and 2nd level support
-@JakeMiester did some project management, acted as the communication party between the team and the speedrun mods, "invented" trello
-@zCri did a research, RE and coding in the initial information gathering stage
-Artwork, Design of GUI, GUI Behaviourehaviour, Colorchoices etc. by "@Hossel"
-Project 1.27 Client by "@thS"
+Actual code (partially closed source) which authentificates, handles entitlement and launches the game (as well as Overlay Backend and DownloadManager backend) is done by @dr490n
+@Special For, who also did a lot of RE'ing, testing, brainstorming, information gathering and 2nd level support, being available to bounce ideas off of.
+Main / Actual Project 1.27 Client by "@thS"
 A number of other members of the team, including but not limited to @MoMo, @Diamondo25, @S.M.G, @gogsi, @Antibones, @Unemployed, @Aperture, @luky, @CrynesSs, @Daniel Kinau contributed to this project one way or another, and my thanks go out to them.
-Version: 1.1.9.1
+Version: 1.2.2.0
 
 Build Instructions:
 	Press CTRLF + F5, pray that nuget does its magic.
 	If this doesnt work, required DLLs and files can be gotten by running the latest installer
 
 Deploy Instructions:
-	
 	Change Version Number a few Lines Above.
 	Change Version Number in both of the last lines in AssemblyInfo.cs
 	ALSO CHANGE VERSION NUMBER IN ASSEMBLYINFO.CS FROM P127 LAUNCHER
@@ -28,9 +24,9 @@ Deploy Instructions:
 	Build installer via Innosetup (script we use for that is in \Installer\)
 		Change Version in Version
 		Change Version in OutputName
-		Change BuildPath to your local Path of the repo...(make sure it builds in the \Installer Folder
 	Delete Project_127_Installer_Latest.exe. Copy Paste the Installer we just compiled and name the copy of it Project_127_Installer_Latest.exe
 	Change Version number and Installer Path in "\Installer\Update.xml"
+	Save Innosetup Script...
 	Push Commit to github branch.
 	Merge branch into master
 
@@ -38,12 +34,13 @@ Comments like "TODO", "TO DO", "CTRLF", "CTRL-F", and "CTRL F" are just ways of 
 
 Hybrid code can be found in AAA_HybridCode.
 
-ON RELEASE OF 1.2
-- AUTOUPDATE STUFF (P127 INSTALLER AS WELL AS ZIP)
-- RELEASE ALL NEW FILES WITH IT (V14, new SCL Binaries)
-- RIGHT_CLICK_README
-
-
+Stuff to fix post 1.1:
+- Installer:
+	>> Build Installer
+- unit test:
+	>> Write Release Post
+	>> Write Permanent Posts
+	>> Write Video stuff for Anther
 */
 
 using System;
@@ -83,6 +80,10 @@ using CefSharp;
 using System.Drawing;
 using System.Threading;
 using System.Windows.Threading;
+using System.DirectoryServices.AccountManagement;
+using System.Windows.Media.Effects;
+using System.Speech.Synthesis;
+using Microsoft.Xaml.Behaviors;
 
 namespace Project_127
 {
@@ -168,7 +169,6 @@ namespace Project_127
 				AlreadyRunning();
 			}
 
-
 			// Starting our own Mutex since its not already running
 			myMutex = new Mutex(false, "P127_Mutex");
 			myMutex.WaitOne();
@@ -185,21 +185,20 @@ namespace Project_127
 			if (Globals.P127Branch == "internal")
 			{
 				string msg = "We are in internal mode. We need testing on:\n\n" +
-					"- NoteOverlay" + "\n" +
-					"- Jumpscript" + "\n" +
-					"- DISABLED Legacy Auth" + "\n" +
-					"- ENABLED Launch through Social Club" + "\n" +
+					"- Nothing" + "\n" +
+					"- Everything" + "\n" +
 					"\nI do expect everything to work, so no extensive Testing needed." + "\n" +
 					"\nThanks. Appreciated. Have a great day : )";
 
-				new Popup(Popup.PopupWindowTypes.PopupOk, msg).ShowDialog();
+				//new Popup(Popup.PopupWindowTypes.PopupOk, msg).ShowDialog();
 			}
 
 			// GUI SHIT
 			SetButtonMouseOverMagic(btn_Exit);
 			SetButtonMouseOverMagic(btn_Auth);
 			SetButtonMouseOverMagic(btn_Hamburger);
-			Globals.HamburgerMenuState = Globals.HamburgerMenuStates.Hidden;
+			Globals.PageState = Globals.PageStates.GTA;
+			Globals.HamburgerMenuState = Globals.HamburgerMenuStates.Visible;
 			if (Settings.P127Mode.ToLower() != "default")
 			{
 				MainWindow.MW.btn_lbl_Mode.Content = "Curr P127 Mode: '" + MySettings.Settings.P127Mode.ToLower() + "'";
@@ -213,12 +212,6 @@ namespace Project_127
 			MainWindow.MW.btn_lbl_Mode.ToolTip = MainWindow.MW.btn_lbl_Mode.Content;
 
 			StartDispatcherTimer();
-
-			StartMTLDispatcherTimer();
-
-			HelperClasses.Logger.Log("Only CEF Init to go...");
-
-			Auth.ROSIntegration.CEFInitialize();
 
 			// Making this show on WindowLoaded
 			//HelperClasses.Logger.Log("Startup procedure (Constructor of MainWindow) completed.");
@@ -234,6 +227,7 @@ namespace Project_127
 				HelperClasses.WindowChangeListener.Start();
 			}
 
+			HelperClasses.Logger.Log("Constructor of MainWindow Done. Will finish init with OnLoaded of WindowLoaded Event");
 		}
 
 		#endregion
@@ -259,7 +253,6 @@ namespace Project_127
 
 			HelperClasses.Logger.Log("Startup procedure (Constructor of MainWindow) completed. It took " + StartUpStopwatch.ElapsedMilliseconds + " ms.");
 			HelperClasses.Logger.Log("------------------------------------------------------------------------------------");
-
 		}
 
 
@@ -357,8 +350,8 @@ namespace Project_127
 				{
 					string[] args = Environment.GetCommandLineArgs();
 					string arg = string.Join(" ", args.Skip(1).ToArray());
-					HelperClasses.ProcessHandler.StartProcess(Assembly.GetEntryAssembly().CodeBase, Environment.CurrentDirectory, arg, true, true, false);
-					Application.Current.Shutdown();
+					HelperClasses.ProcessHandler.StartProcess(Assembly.GetEntryAssembly().Location, Environment.CurrentDirectory, arg, true, true, false);
+					Environment.Exit(0);
 				}
 				catch (Exception)
 				{
@@ -444,7 +437,7 @@ namespace Project_127
 		/// <summary>
 		/// Starting the Dispatcher Timer. 30 seconds. Used to control automatic MTL session retrieval
 		/// </summary>
-		private void StartMTLDispatcherTimer()
+		public void StartMTLDispatcherTimer()
 		{
 			// Starting the Dispatcher Timer for the automatic updates of the GTA V Button
 			MTLAuthTimer = new System.Windows.Threading.DispatcherTimer();
@@ -466,7 +459,7 @@ namespace Project_127
 			{
 				MTLAuthTimer.Stop();
 			}
-			else if (Settings.EnableAlternativeLaunch)
+			else if (LauncherLogic.LaunchWay == LauncherLogic.LaunchWays.SocialClubLaunch)
 			{
 				return;
 			}
@@ -513,15 +506,25 @@ namespace Project_127
 					}
 					break;
 				case "btn_Auth":
-					string BaseArtworkPath = "";
+					string BaseArtworkPath = @"Artwork\lock";
+
+					if (LauncherLogic.LaunchWay == LauncherLogic.LaunchWays.SocialClubLaunch)
+					{
+						BaseArtworkPath += "_crossed";
+						btn_Auth.ToolTip = "Not needed on this Launch - Method";
+					}
+					else
+					{
+						btn_Auth.ToolTip = "Login Button. Lock closed = Logged in. Lock open = Not logged in";
+					}
 
 					if (LauncherLogic.AuthState == LauncherLogic.AuthStates.Auth)
 					{
-						BaseArtworkPath = @"Artwork\lock_closed";
+						BaseArtworkPath += "_closed";
 					}
 					else if (LauncherLogic.AuthState == LauncherLogic.AuthStates.NotAuth)
 					{
-						BaseArtworkPath = @"Artwork\lock_open";
+						BaseArtworkPath += "_open";
 					}
 
 					if (Globals.PageState == Globals.PageStates.Auth)
@@ -567,19 +570,39 @@ namespace Project_127
 			{
 				Globals.BackgroundImage = Globals.BackgroundImages.FourTwenty;
 			}
-			else if ((Now.Month == 10 && Now.Day >= 29) ||
-					(Now.Month == 11 && Now.Day == 1))
+			else if (Now.Month == 10 && Now.Day == 29)
+			{
+				Globals.BackgroundImage = Globals.BackgroundImages.Turkey;
+			}
+			else if ((Now.Month == 10 && Now.Day >= 30) ||
+					(Now.Month == 11 && Now.Day == 6))
 			{
 				Globals.BackgroundImage = Globals.BackgroundImages.Spooky;
 			}
 			else if ((Now.Month == 12 && Now.Day >= 6) ||
-					(Now.Month == 1 && Now.Day <= 6))
+					(Now.Month == 1 && Now.Day <= 9))
 			{
-				Globals.BackgroundImage = Globals.BackgroundImages.XMas;
+				Globals.BackgroundImage = Globals.BackgroundImages.Winter;
+			}
+			else if (Now.Month == 2 && Now.Day == 14)
+			{
+				Globals.BackgroundImage = Globals.BackgroundImages.Valentine;
+			}
+			else if (Now.Month == 3 && Now.Day == 18)
+			{
+				Globals.BackgroundImage = Globals.BackgroundImages.Cat;
+			}
+			else if (Now.Month == 7 && Now.Day == 4)
+			{
+				Globals.BackgroundImage = Globals.BackgroundImages.Murica;
+			}
+			else if (Now.Month == 10 && Now.Day == 3)
+			{
+				Globals.BackgroundImage = Globals.BackgroundImages.Germania;
 			}
 			else
 			{
-				Globals.BackgroundImage = Globals.BackgroundImages.Main;
+				Globals.BackgroundImage = Globals.BackgroundImages.Default;
 			}
 		}
 
@@ -587,15 +610,63 @@ namespace Project_127
 		/// <summary>
 		/// Set the Background to our WPF Window
 		/// </summary>
-		/// <param name="pArtworkPath"></param>
-		public void SetWindowBackground(string pArtworkPath)
+		public void SetWindowBackgroundImage()
 		{
-			Uri resourceUri = new Uri(pArtworkPath, UriKind.Relative);
-			StreamResourceInfo streamInfo = Application.GetResourceStream(resourceUri);
-			BitmapFrame temp = BitmapFrame.Create(streamInfo.Stream);
-			var brush = new ImageBrush();
-			brush.ImageSource = temp;
-			MainWindow.MW.GridMain.Background = brush;
+			try
+			{
+				var bitmap = new BitmapImage();
+
+				string FilePath = Globals.ProjectInstallationPathBinary.TrimEnd('\\') + @"\Artwork\bg_" + Globals.BackgroundImage.ToString().ToLower() + ".png";
+
+				using (var stream = new FileStream(FilePath, FileMode.Open))
+				{
+					bitmap.BeginInit();
+					bitmap.CacheOption = BitmapCacheOption.OnLoad;
+					bitmap.StreamSource = stream;
+					bitmap.EndInit();
+					bitmap.Freeze(); // optional
+				}
+				ImageBrush brush2 = new ImageBrush();
+				brush2.ImageSource = bitmap;
+				MainWindow.MW.GridBackground.Background = brush2;
+			}
+			catch (Exception e)
+			{
+				new Popup(Popup.PopupWindowTypes.PopupOkError, "Error Settings Background Image.\n" + e.ToString()).ShowDialog();
+
+				string URL_Path = @"Artwork\bg_default.png";
+				Uri resourceUri = new Uri(URL_Path, UriKind.Relative);
+				StreamResourceInfo streamInfo = Application.GetResourceStream(resourceUri);
+				BitmapFrame temp = BitmapFrame.Create(streamInfo.Stream);
+				ImageBrush brush = new ImageBrush();
+				brush.ImageSource = temp;
+				MainWindow.MW.GridBackground.Background = brush;
+			}
+
+			SetWindowBackgroundBlur();
+		}
+
+
+		public void SetWindowBackgroundBlur()
+		{
+			if (Globals.HamburgerMenuState == Globals.HamburgerMenuStates.Hidden)
+			{
+				Blur_All.Visibility = Visibility.Hidden;
+				Blur_Hamburger.Visibility = Visibility.Hidden;
+			}
+			else if (Globals.HamburgerMenuState == Globals.HamburgerMenuStates.Visible)
+			{
+				if (Globals.PageState == Globals.PageStates.GTA)
+				{
+					Blur_All.Visibility = Visibility.Hidden;
+					Blur_Hamburger.Visibility = Visibility.Visible;
+				}
+				else
+				{
+					Blur_All.Visibility = Visibility.Visible;
+					Blur_Hamburger.Visibility = Visibility.Hidden;
+				}
+			}
 		}
 
 
@@ -604,16 +675,36 @@ namespace Project_127
 		/// </summary>
 		/// <param name="myCtrl"></param>
 		/// <param name="pArtpath"></param>
-		public void SetControlBackground(Control myCtrl, string pArtpath)
+		public void SetControlBackground(Control myCtrl, string pArtpath, bool FromFile = false)
 		{
 			try
 			{
-				Uri resourceUri = new Uri(pArtpath, UriKind.Relative);
-				StreamResourceInfo streamInfo = Application.GetResourceStream(resourceUri);
-				BitmapFrame temp = BitmapFrame.Create(streamInfo.Stream);
-				var brush = new ImageBrush();
-				brush.ImageSource = temp;
-				myCtrl.Background = brush;
+				Uri resourceUri;
+				if (FromFile)
+				{
+					var bitmap = new BitmapImage();
+
+					using (var stream = new FileStream(pArtpath, FileMode.Open))
+					{
+						bitmap.BeginInit();
+						bitmap.CacheOption = BitmapCacheOption.OnLoad;
+						bitmap.StreamSource = stream;
+						bitmap.EndInit();
+						bitmap.Freeze(); // optional
+					}
+					ImageBrush brush2 = new ImageBrush();
+					brush2.ImageSource = bitmap;
+					myCtrl.Background = brush2;
+				}
+				else
+				{
+					resourceUri = new Uri(pArtpath, UriKind.Relative);
+					StreamResourceInfo streamInfo = Application.GetResourceStream(resourceUri);
+					BitmapFrame temp = BitmapFrame.Create(streamInfo.Stream);
+					ImageBrush brush = new ImageBrush();
+					brush.ImageSource = temp;
+					myCtrl.Background = brush;
+				}
 			}
 			catch
 			{
@@ -642,6 +733,8 @@ namespace Project_127
 		{
 			SetButtonMouseOverMagic((Button)sender);
 		}
+
+
 
 
 

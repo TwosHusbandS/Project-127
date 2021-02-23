@@ -17,6 +17,7 @@ namespace Project_127
 		/// <summary>
 		/// Actual Main colors we use:
 		/// </summary>
+		public static Brush MyColorTransparent { get; private set; } = SetOpacity((Brush)new BrushConverter().ConvertFromString("#000000"), 0);
 		public static Brush MyColorWhite { get; private set; } = (Brush)new BrushConverter().ConvertFromString("#FFFFFF");
 		public static Brush MyColorOffWhite { get; private set; } = (Brush)new BrushConverter().ConvertFromString("#c1ced1");
 		public static Brush MyColorOffWhite85 { get; private set; } = SetOpacity((Brush)new BrushConverter().ConvertFromString("#c1ced1"), 85);
@@ -25,7 +26,16 @@ namespace Project_127
 		public static Brush MyColorOffBlack70 { get; private set; } = SetOpacity((Brush)new BrushConverter().ConvertFromString("#1a1a1a"), 70);
 		public static Brush MyColorOffBlack50 { get; private set; } = SetOpacity((Brush)new BrushConverter().ConvertFromString("#1a1a1a"), 50);
 		public static Brush MyColorOrange { get; private set; } = (Brush)new BrushConverter().ConvertFromString("#E35627");
+		public static Brush MyColorGray { get; private set; } = (Brush)new BrushConverter().ConvertFromString("#5a6373");
 		public static Brush MyColorGreen { get; private set; } = (Brush)new BrushConverter().ConvertFromString("#4cd213");
+		public static Brush MyColorEmu { get; private set; } = (Brush)new BrushConverter().ConvertFromString("#E35627");
+		public static Brush MyColorSCL { get; private set; } = (Brush)new BrushConverter().ConvertFromString("#3599e6");
+
+		public static Brush MyColorEmuHidden { get; private set; } = MyColorOffWhite85;
+		public static Brush MyColorSCLHidden { get; private set; } = MyColorOffWhite85;
+
+		//public static Brush MyColorEmuHidden { get; private set; } = SetOpacity(MyColorEmu, 70);
+		//public static Brush MyColorSCLHidden { get; private set; } = SetOpacity(MyColorSCL, 70);
 
 		/// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -63,6 +73,16 @@ namespace Project_127
 		public static Brush SM_ButtonMOForeground { get; private set; } = MyColorOffBlack;
 		public static Brush SM_ButtonMOBorderBrush { get; private set; } = Brushes.Transparent;
 		public static System.Windows.Thickness SM_ButtonBorderThickness { get; private set; } = new System.Windows.Thickness(2);
+
+
+
+		public static Brush Traditional_ButtonBackground { get; private set; } = MyColorTransparent;
+		public static Brush Traditional_ButtonForeground { get; private set; } = MyColorWhite;
+		public static Brush Traditional_ButtonBorderBrush { get; private set; } = MyColorGray;
+		public static Brush Traditional_ButtonMOBackground { get; private set; } = MyColorTransparent;
+		public static Brush Traditional_ButtonMOForeground { get; private set; } = MyColorWhite;
+		public static Brush Traditional_ButtonMOBorderBrush { get; private set; } = MyColorWhite;
+		public static System.Windows.Thickness Traditional_ButtonBorderThickness { get; private set; } = new System.Windows.Thickness(2);
 
 
 		public static Brush App_ScrollViewerForeground { get; private set; } = MyColorOffWhite;

@@ -154,8 +154,8 @@ namespace Project_127.MySettings
 			HelperClasses.Logger.Log("Settings.ZIPExtractionPath: '" + Settings.ZIPExtractionPath + "'");
 			HelperClasses.Logger.Log("Settings.GTAVInstallationPath: '" + Settings.GTAVInstallationPath + "'");
 			HelperClasses.Logger.Log("Setting: EnableCopyFilesInsteadOfHardlinking");
-			HelperClasses.Logger.Log("currentSettingsValue: '" + currentSetting + "'");
-			HelperClasses.Logger.Log("recommendSettingsValue: '" + recommendSetting + "'");
+			HelperClasses.Logger.Log("    currentSettingsValue: '" + currentSetting + "'");
+			HelperClasses.Logger.Log("    recommendSettingsValue: '" + recommendSetting + "'");
 
 			if (currentSetting == recommendSetting)
 			{
@@ -167,11 +167,11 @@ namespace Project_127.MySettings
 				Popup yesno;
 				if (recommendSetting == true)
 				{
-					yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "It is recommended to use Copying instead of Hardlinking for File Operations.\nDo you want to do that?");
+					yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "It is recommended to use the slow but stable way for Upgrading / Downgrading.\nDo you want to do that?");
 				}
 				else
 				{
-					yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "It is recommended to use Hardlinking instead of Copying for File Operations.\nDo you want to do that?");
+					yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "It is recommended to NOT use the slow but stable way for Upgrading / Downgrading,\nsince its faster.\n\nDo you want to do that?\n\nClick No if you changed this because something didnt work.");
 				}
 				yesno.ShowDialog();
 				if (yesno.DialogResult == true)
@@ -275,6 +275,22 @@ namespace Project_127.MySettings
 			}
 		}
 
+
+		/// <summary>
+		/// Settings AutoMTLAuthOnStartup. Gets from the Dictionary.
+		/// </summary>
+		public static bool AutoMTLAuthOnStartup
+		{
+			get
+			{
+				return GetBoolFromString(GetSetting("AutoMTLAuthOnStartup"));
+			}
+			set
+			{
+				SetSetting("AutoMTLAuthOnStartup", value.ToString());
+			}
+		}
+
 		/// <summary>
 		/// Settings InstallationPath. Gets and Sets from Dictionary.
 		/// </summary>
@@ -317,6 +333,7 @@ namespace Project_127.MySettings
 			set
 			{
 				SetSetting("GTAVInstallationPath", value);
+				LauncherLogic.GTAVInstallationIncorrectMessageThrownAlready = false;
 			}
 		}
 
@@ -497,21 +514,7 @@ namespace Project_127.MySettings
 			}
 			set
 			{
-				if (ComponentManager.RecommendUpgradedGTA())
-				{
-					SetSetting("EnableAlternativeLaunch", value.ToString());
-					if (!ComponentManager.CheckIfRequiredComponentsAreInstalled(true))
-					{
-						SetSetting("EnableAlternativeLaunch", (!value).ToString());
-						return;
-					}
-				}
-				else
-				{
-					new Popup(Popup.PopupWindowTypes.PopupOk, "Setting was not changed.");
-					return;
-				}
-				Settings.TellRockstarUsersToDisableAutoUpdateIfNeeded();
+				SetSetting("EnableAlternativeLaunch", value.ToString());
 			}
 		}
 
@@ -711,25 +714,24 @@ namespace Project_127.MySettings
 			{
 				if (value != Retailer)
 				{
-					if (Settings.EnableAlternativeLaunch)
+					if (LauncherLogic.LaunchWay == LauncherLogic.LaunchWays.SocialClubLaunch)
 					{
-						Retailers OldRetailer = Retailer;
 						if (ComponentManager.RecommendUpgradedGTA())
 						{
 							SetSetting("Retailer", value.ToString());
 							if (value == Retailers.Epic)
 							{
-								Settings.EnableAlternativeLaunch = false;
+								LauncherLogic.LaunchWay = LauncherLogic.LaunchWays.DragonEmu;
 							}
 							if (!ComponentManager.CheckIfRequiredComponentsAreInstalled(true))
 							{
-								SetSetting("Retailer", OldRetailer.ToString());
+								//new Popup(Popup.PopupWindowTypes.PopupOk, "Retailer was changed,\nbut you will need to download the Componenets later.").ShowDialog();
 								return;
 							}
 						}
 						else
 						{
-							new Popup(Popup.PopupWindowTypes.PopupOk, "Retailer was not changed.");
+							//new Popup(Popup.PopupWindowTypes.PopupOk, "Retailer was not changed.").ShowDialog();
 							return;
 						}
 
@@ -757,6 +759,32 @@ namespace Project_127.MySettings
 				if (value != StartWay)
 				{
 					SetSetting("StartWay", value.ToString());
+				}
+			}
+		}
+
+
+		public enum PostMTLActions
+		{
+			DoNothing,
+			MinimizeRGL,
+			CloseRGL
+		}
+
+		/// <summary>
+		/// Settings PostMTLAction. Gets and Sets from Dictionary.
+		/// </summary>
+		public static PostMTLActions PostMTLAction
+		{
+			get
+			{
+				return (PostMTLActions)System.Enum.Parse(typeof(PostMTLActions), GetSetting("PostMTLAction"));
+			}
+			set
+			{
+				if (value != PostMTLAction)
+				{
+					SetSetting("PostMTLAction", value.ToString());
 				}
 			}
 		}
@@ -811,6 +839,65 @@ namespace Project_127.MySettings
 				SetSetting("EnableScripthookOnDowngraded", value.ToString());
 			}
 		}
+
+
+		/// <summary>
+		/// Settings EnableOverWriteGTACommandLineArgs. Gets and Sets from the Dictionary.
+		/// </summary>
+		public static bool EnableOverWriteGTACommandLineArgs
+		{
+			get
+			{
+				return GetBoolFromString(GetSetting("EnableOverWriteGTACommandLineArgs"));
+			}
+			set
+			{
+				SetSetting("EnableOverWriteGTACommandLineArgs", value.ToString());
+				if (value == true)
+				{
+					OverWriteGTACommandLineArgs = "";
+				}
+			}
+		}
+
+		/// <summary>
+		/// Settings EnableCoreFix. Gets and Sets from the Dictionary.
+		/// </summary>
+		public static bool EnableCoreFix
+		{
+			get
+			{
+				return GetBoolFromString(GetSetting("EnableCoreFix"));
+			}
+			set
+			{
+				SetSetting("EnableCoreFix", value.ToString());
+			}
+		}
+
+		/// <summary>
+		/// Settings OverWriteGTACommandLineArgs. Gets and Sets from the Dictionary.
+		/// </summary>
+		public static string OverWriteGTACommandLineArgs
+		{
+			get
+			{
+				if (String.IsNullOrWhiteSpace(GetSetting("OverWriteGTACommandLineArgs")))
+				{
+					return LauncherLogic.GetStartCommandLineArgs();
+				}
+				else
+				{
+					return GetSetting("OverWriteGTACommandLineArgs");
+				}
+			}
+			set
+			{
+				SetSetting("OverWriteGTACommandLineArgs", value);
+			}
+		}
+
+
 
 		/// <summary>
 		/// Settings EnableAutoStartLiveSplit. Gets and Sets from the Dictionary.

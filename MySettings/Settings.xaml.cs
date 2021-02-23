@@ -47,6 +47,7 @@ namespace Project_127.MySettings
 
 			// Needed for GUI Shit
 			combox_Set_Retail.ItemsSource = Enum.GetValues(typeof(Retailers)).Cast<Retailers>();
+			combox_Set_PostMTLAction.ItemsSource = Enum.GetValues(typeof(PostMTLActions)).Cast<PostMTLActions>();
 			combox_Set_LanguageSelected.ItemsSource = Enum.GetValues(typeof(Languages)).Cast<Languages>();
 			combox_Set_ExitWays.ItemsSource = Enum.GetValues(typeof(ExitWays)).Cast<ExitWays>();
 			combox_Set_StartWays.ItemsSource = Enum.GetValues(typeof(StartWays)).Cast<StartWays>();
@@ -56,6 +57,7 @@ namespace Project_127.MySettings
 			SettingsState = LastSettingsState;
 
 			RefreshGUI();
+			CodeSnipped();
 
 			this.DataContext = this;
 		}
@@ -168,7 +170,7 @@ namespace Project_127.MySettings
 
 				while ((String.IsNullOrWhiteSpace(Settings.GTAVInstallationPath)))
 				{
-					HelperClasses.Logger.Log("If you see this, the user exited out exited out of the SetGTAVPathManually() on FirstLaunch or SettingsReset");
+					HelperClasses.Logger.Log("If you see this more than once, the user exited out exited out of the SetGTAVPathManually() on FirstLaunch or SettingsReset");
 					SetGTAVPathManually(false);
 				}
 			}
@@ -271,6 +273,39 @@ namespace Project_127.MySettings
 			}
 			HelperClasses.Logger.Log("Picked path '" + GTAVInstallationPathUserChoice + "' is valid and will be set as Settings.GTAVInstallationPath.");
 			Settings.GTAVInstallationPath = GTAVInstallationPathUserChoice;
+
+	
+			if (Settings.ZIPExtractionPath.TrimEnd('\\').ToLower() != GTAVInstallationPathUserChoice.TrimEnd('\\').ToLower())
+			{
+				// Setting ZIP Extract Path now
+				HelperClasses.Logger.Log("GTA V Path manually set, asking user if he wants to move ZIP Folder. Old ZIP Folder is: '" + Settings.ZIPExtractionPath + "'.");
+
+				Popup yesnoconfirm = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Project 1.27 needs a Folder where it installs all of its Components and saves Files for Upgrading and Downgrading.\nIt is recommend to do this on the same Drive / Partition as your GTAV Installation Path\nBest Case (and default Location) is your GTAV Path.\nDo you want to move from your Path\n(" + Settings.ZIPExtractionPath + ")\nto the new GTA V Installation Location?\n\nI recommend Yes.?");
+				yesnoconfirm.ShowDialog();
+
+				// If User wants default Settings
+				if (yesnoconfirm.DialogResult == true)
+				{
+					HelperClasses.Logger.Log("User wants default ZIP Folder. Changing it to '" + GTAVInstallationPathUserChoice + "'.");
+
+					if (!ChangeZIPExtractionPath(GTAVInstallationPathUserChoice))
+					{
+						HelperClasses.Logger.Log("Changing ZIP Path did not work. Probably non existing Path or same Path as before (from Settings.SetGTAVPathManually())");
+						new Popup(Popup.PopupWindowTypes.PopupOkError, "Changing ZIP Path did not work. Probably non existing Path or same Path as before\nIf you read this message to anyone, tell them youre in Settings.SetGTAVPathManually()");
+					}
+				}
+				else
+				{
+					HelperClasses.Logger.Log("User does NOT want default ZIP Folder. Will not change it.");
+				}
+			}
+			else
+			{
+				HelperClasses.Logger.Log("GTA V Path manually set, not asking user if he wants to move ZIP Folder, since its at the correct Location already.");
+			}
+
+
+
 			if (CheckIfDefaultForCopyHardlinkNeedsChanging)
 			{
 				SetDefaultEnableCopyingHardlinking();
@@ -286,8 +321,19 @@ namespace Project_127.MySettings
 		/// <param name="e"></param>
 		private void combox_Set_Retail_SelectionChanged(object sender, SelectionChangedEventArgs e)
 		{
-			Retailer = (Retailers)System.Enum.Parse(typeof(Retailers), combox_Set_Retail.SelectedItem.ToString());
-			RefreshGUI();
+			Retailers NewRetailer = (Retailers)System.Enum.Parse(typeof(Retailers), combox_Set_Retail.SelectedItem.ToString());
+			if (NewRetailer == Retailers.Epic && LauncherLogic.LaunchWay == LauncherLogic.LaunchWays.SocialClubLaunch)
+			{
+				Retailer = NewRetailer;
+				RefreshGUI();
+				CodeSnipped();
+			}
+			else
+			{
+				Retailer = NewRetailer;
+				RefreshGUI();
+			}
+
 		}
 
 
@@ -299,6 +345,7 @@ namespace Project_127.MySettings
 		private void combox_Set_LanguageSelected_SelectionChanged(object sender, SelectionChangedEventArgs e)
 		{
 			LanguageSelected = (Languages)System.Enum.Parse(typeof(Languages), combox_Set_LanguageSelected.SelectedItem.ToString());
+			RefreshGUI();
 		}
 
 
@@ -670,11 +717,17 @@ namespace Project_127.MySettings
 				Settings.LoadSettings();
 			}
 			btn_Set_GTAVInstallationPath.Content = "GTA V Installation Path: " + Settings.GTAVInstallationPath;
+			btn_Set_GTAVInstallationPath.ToolTip = Settings.GTAVInstallationPath;
 			btn_Set_ZIPExtractionPath.Content = "Components Installation Path: " + Settings.ZIPExtractionPath;
+			btn_Set_ZIPExtractionPath.ToolTip = Settings.ZIPExtractionPath;
 			btn_Set_PathFPSLimiter.Content = "FPS Limiter Path: " + Settings.PathFPSLimiter;
+			btn_Set_PathFPSLimiter.ToolTip = Settings.PathFPSLimiter;
 			btn_Set_PathLiveSplit.Content = "LiveSplit Path: " + Settings.PathLiveSplit;
+			btn_Set_PathLiveSplit.ToolTip = Settings.PathLiveSplit;
 			btn_Set_PathStreamProgram.Content = "Stream Program Path: " + Settings.PathStreamProgram;
+			btn_Set_PathStreamProgram.ToolTip = Settings.PathStreamProgram;
 			btn_Set_PathNohboard.Content = "Nohboard Path: " + Settings.PathNohboard;
+			btn_Set_PathNohboard.ToolTip = Settings.PathNohboard;
 
 			btn_Import_Zip.Content = "Import ZIP Manually (Current Version: " + Globals.ZipVersion + ")";
 
@@ -683,18 +736,19 @@ namespace Project_127.MySettings
 			combox_Set_ExitWays.SelectedItem = Settings.ExitWay;
 			combox_Set_StartWays.SelectedItem = Settings.StartWay;
 			combox_Set_SocialClubGameVersion.SelectedItem = Settings.SocialClubLaunchGameVersion;
+			combox_Set_PostMTLAction.SelectedItem = Settings.PostMTLAction;
 
 			tb_Set_InGameName.Text = Settings.InGameName;
+			tb_OverWriteGTACommandLineArgs.Text = Settings.OverWriteGTACommandLineArgs;
+
 			btn_Set_JumpScriptKey1.Content = Settings.JumpScriptKey1;
 			btn_Set_JumpScriptKey2.Content = Settings.JumpScriptKey2;
 
 			ButtonMouseOverMagic(btn_Refresh);
 			ButtonMouseOverMagic(btn_cb_Set_EnableLogging);
 			ButtonMouseOverMagic(btn_cb_Set_CopyFilesInsteadOfHardlinking);
-			ButtonMouseOverMagic(btn_cb_Set_EnableAlternativeLaunch);
 			ButtonMouseOverMagic(btn_cb_Set_EnableAlternativeLaunchForceCProgramFiles);
 			ButtonMouseOverMagic(btn_cb_Set_EnableJumpscriptUseCustomScript);
-			//ButtonMouseOverMagic(btn_cb_Set_CopyFilesInsteadOfSyslinking_SocialClub);
 			ButtonMouseOverMagic(btn_cb_Set_EnablePreOrderBonus);
 			ButtonMouseOverMagic(btn_cb_Set_EnableAutoStartFPSLimiter);
 			ButtonMouseOverMagic(btn_cb_Set_EnableScripthookOnDowngraded);
@@ -707,8 +761,32 @@ namespace Project_127.MySettings
 			ButtonMouseOverMagic(btn_cb_Set_OnlyAutoStartProgramsWhenDowngraded);
 			ButtonMouseOverMagic(btn_cb_Set_EnableDontLaunchThroughSteam);
 			ButtonMouseOverMagic(btn_cb_Set_EnableAutoStartJumpScript);
-			ButtonMouseOverMagic(btn_cb_Set_SlowCompare);
-			ButtonMouseOverMagic(btn_cb_Set_LegacyAuth);
+			ButtonMouseOverMagic(btn_cb_Set_EnableOverWriteGTACommandLineArgs);
+			ButtonMouseOverMagic(btn_cb_Set_SlowCompare); 
+			ButtonMouseOverMagic(btn_cb_Set_AutoMTLAuthOnStartup);
+			ButtonMouseOverMagic(btn_cb_Set_EnableCoreFix);
+
+
+			if (LauncherLogic.AuthWay == LauncherLogic.AuthWays.MTL)
+			{
+				btn_AuthMethod_LegacyAuth.Style = Application.Current.FindResource("btn_AuthWay") as Style;
+				btn_AuthMethod_MTL.Style = Application.Current.FindResource("btn_AuthWay_Enabled") as Style;
+				lbl_AuthWays.Content = "Auth - Method: MTL";
+			}
+			else
+			{
+				btn_AuthMethod_LegacyAuth.Style = Application.Current.FindResource("btn_AuthWay_Enabled") as Style;
+				btn_AuthMethod_MTL.Style = Application.Current.FindResource("btn_AuthWay") as Style;
+				lbl_AuthWays.Content = "Auth - Method: Legacy Auth";
+			}
+
+
+
+			Version myUpgradeVersion = HelperClasses.FileHandling.GetVersionFromFile(LauncherLogic.UpgradeFilePath.TrimEnd('\\') + @"\gta5.exe");
+			Version myBackupVersion = HelperClasses.FileHandling.GetVersionFromFile(LauncherLogic.UpgradeFilePathBackup.TrimEnd('\\') + @"\gta5.exe");
+			btn_CreateBackup.Content = "Create BackupFiles for Upgrading" + BuildVersionTable.GetNiceGameVersionString(myUpgradeVersion);
+			btn_UseBackup.Content = "Use BackupFiles for Upgrading" + BuildVersionTable.GetNiceGameVersionString(myBackupVersion);
+
 
 			RefreshIfOptionsHide();
 		}
@@ -770,8 +848,10 @@ namespace Project_127.MySettings
 					btn_SettingsGTA.Style = Application.Current.FindResource("btn_hamburgeritem_selected") as Style;
 					btn_SettingsExtra.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
 
-					lbl_SettingsHeader.Content = "GTA Settings";
+					lbl_SettingsHeader.Content = "GTA & Launch Settings";
 					sv_Settings_GTA.ScrollToVerticalOffset(0);
+
+					CodeSnipped();
 				}
 				else if (value == SettingsStates.Extra)
 				{
@@ -856,11 +936,17 @@ namespace Project_127.MySettings
 						MainWindow.MW.SetControlBackground(btn_Refresh, "Artwork/refresh.png");
 					}
 					break;
+				case "btn_cb_Set_EnableOverWriteGTACommandLineArgs":
+					SetCheckBoxBackground(myBtn, Settings.EnableOverWriteGTACommandLineArgs);
+					break;
+				case "btn_cb_Set_EnableCoreFix":
+					SetCheckBoxBackground(myBtn, Settings.EnableCoreFix);
+					break;
+				case "btn_cb_Set_EnableAlternativeLaunchForceCProgramFiles":
+					SetCheckBoxBackground(myBtn, Settings.EnableAlternativeLaunchForceCProgramFiles);
+					break;
 				case "btn_cb_Set_EnableLogging":
 					SetCheckBoxBackground(myBtn, Settings.EnableLogging);
-					break;
-				case "btn_cb_Set_LegacyAuth":
-					SetCheckBoxBackground(myBtn, Settings.EnableLegacyAuth);
 					break;
 				case "btn_cb_Set_SlowCompare":
 					SetCheckBoxBackground(myBtn, Settings.EnableSlowCompare);
@@ -868,16 +954,9 @@ namespace Project_127.MySettings
 				case "btn_cb_Set_CopyFilesInsteadOfHardlinking":
 					SetCheckBoxBackground(myBtn, Settings.EnableCopyFilesInsteadOfHardlinking);
 					break;
-				case "btn_cb_Set_EnableAlternativeLaunch":
-					SetCheckBoxBackground(myBtn, Settings.EnableAlternativeLaunch);
-					break;
 				case "btn_cb_Set_EnableJumpscriptUseCustomScript":
 					SetCheckBoxBackground(myBtn, Settings.EnableJumpscriptUseCustomScript);
 					break;
-				//case "btn_cb_Set_CopyFilesInsteadOfSyslinking_SocialClub":
-				//	SetCheckBoxBackground(myBtn, Settings.EnableCopyFilesInsteadOfSyslinking_SocialClub);
-				//	break;
-
 				case "btn_cb_Set_EnablePreOrderBonus":
 					SetCheckBoxBackground(myBtn, Settings.EnablePreOrderBonus);
 					break;
@@ -887,14 +966,14 @@ namespace Project_127.MySettings
 				case "btn_cb_Set_OnlyAutoStartProgramsWhenDowngraded":
 					SetCheckBoxBackground(myBtn, Settings.EnableOnlyAutoStartProgramsWhenDowngraded);
 					break;
+				case "btn_cb_Set_AutoMTLAuthOnStartup":
+					SetCheckBoxBackground(myBtn, Settings.AutoMTLAuthOnStartup);
+					break;
 				case "btn_cb_Set_EnableScripthookOnDowngraded":
 					SetCheckBoxBackground(myBtn, Settings.EnableScripthookOnDowngraded);
 					break;
 				case "btn_cb_Set_EnableAutoStartLiveSplit":
 					SetCheckBoxBackground(myBtn, Settings.EnableAutoStartLiveSplit);
-					break;
-				case "btn_cb_Set_EnableAlternativeLaunchForceCProgramFiles":
-					SetCheckBoxBackground(myBtn, Settings.EnableAlternativeLaunchForceCProgramFiles);
 					break;
 				case "btn_cb_Set_EnableAutoStartFPSLimiter":
 					SetCheckBoxBackground(myBtn, Settings.EnableAutoStartFPSLimiter);
@@ -936,8 +1015,6 @@ namespace Project_127.MySettings
 		/// </summary>
 		private void RefreshIfOptionsHide()
 		{
-			Rect_HideOptions_Tease.Visibility = Visibility.Hidden;
-
 			if (Settings.EnableOverlay)
 			{
 				Rect_HideOption_OverlayMM.Visibility = Visibility.Hidden;
@@ -947,36 +1024,7 @@ namespace Project_127.MySettings
 				Rect_HideOption_OverlayMM.Visibility = Visibility.Visible;
 			}
 
-			if (Settings.Retailer != Retailers.Steam)
-			{
-				Rect_HideOption_HideFromSteam.Visibility = Visibility.Visible;
-			}
-			else
-			{
-				Rect_HideOption_HideFromSteam.Visibility = Visibility.Hidden;
-			}
 
-			if (Settings.Retailer == Retailers.Epic)
-			{
-				Rect_HideOptions_AllLaunchThroughSocialClubThings.Visibility = Visibility.Visible;
-				Rect_HideOptions_LaunchThroughSocialClubOptions.Visibility = Visibility.Hidden;
-				Rect_HideOptions_OrigEmu.Visibility = Visibility.Hidden;
-			}
-			else
-			{
-				Rect_HideOptions_AllLaunchThroughSocialClubThings.Visibility = Visibility.Hidden;
-
-				if (Settings.EnableAlternativeLaunch)
-				{
-					Rect_HideOptions_LaunchThroughSocialClubOptions.Visibility = Visibility.Hidden;
-					Rect_HideOptions_OrigEmu.Visibility = Visibility.Visible;
-				}
-				else
-				{
-					Rect_HideOptions_LaunchThroughSocialClubOptions.Visibility = Visibility.Visible;
-					Rect_HideOptions_OrigEmu.Visibility = Visibility.Hidden;
-				}
-			}
 
 			if (Settings.EnableJumpscriptUseCustomScript)
 			{
@@ -987,13 +1035,202 @@ namespace Project_127.MySettings
 				Rect_HideOptions_JumpscriptKeys.Visibility = Visibility.Hidden;
 			}
 
-			// Remove this...
 
-			// Rect_HideOptions_Tease.Visibility = Visibility.Visible;
-			// Rect_HideOptions.Visibility = Visibility.Hidden;
-			// Rect_HideOptions2.Visibility = Visibility.Hidden;
-			// Rect_HideOptions3.Visibility = Visibility.Hidden;
+
+			if (Retailer == Retailers.Epic)
+			{
+				Rect_HideOptions_SCL_Launch.Visibility = Visibility.Visible;
+			}
+			else
+			{
+				Rect_HideOptions_SCL_Launch.Visibility = Visibility.Hidden;
+			}
+
+
+			if (LauncherLogic.AuthWay == LauncherLogic.AuthWays.MTL)
+			{
+				Rect_HideOptions_AutoMTLOnStartup.Visibility = Visibility.Hidden;
+
+			}
+			else
+			{
+				Rect_HideOptions_AutoMTLOnStartup.Visibility = Visibility.Visible;
+			}
+
+			if (btn_HideEmuOptions.Visibility == Visibility.Hidden)
+			{
+				if (Retailer != Retailers.Steam)
+				{
+					Rect_HideOptions_HideFromSteam.Visibility = Visibility.Visible;
+				}
+				else
+				{
+					Rect_HideOptions_HideFromSteam.Visibility = Visibility.Hidden;
+				}
+			}
+
+			if (Settings.EnableOverWriteGTACommandLineArgs)
+			{
+				Rect_HideOptions_CommandLineArg.Visibility = Visibility.Hidden;
+				Rect_HideOptions_AutoCoreFix.Visibility = Visibility.Visible;
+				Rect_HideOptions_Language.Visibility = Visibility.Visible;
+			}
+			else
+			{
+				Rect_HideOptions_CommandLineArg.Visibility = Visibility.Visible;
+				Rect_HideOptions_AutoCoreFix.Visibility = Visibility.Hidden;
+				Rect_HideOptions_Language.Visibility = Visibility.Hidden;
+			}
 		}
+
+		private void CodeSnipped()
+		{
+
+			Grid_Settings_GTA.RowDefinitions.RemoveAt(6);
+			Grid_Settings_GTA.RowDefinitions.RemoveAt(5);
+			RowDefinition Row_SCL_Options = new RowDefinition();
+			Row_SCL_Options.Height = new GridLength(100); 
+			RowDefinition Row_DragonEmu_Options = new RowDefinition();
+			Row_DragonEmu_Options.Height = new GridLength(360);
+
+			if (LauncherLogic.LaunchWay == LauncherLogic.LaunchWays.SocialClubLaunch)
+			{
+				btn_LaunchWays_SCL.Style = Application.Current.FindResource("btn_LaunchWays_SCL_Enabled") as Style;
+				btn_LaunchWays_DragonEmu.Style = Application.Current.FindResource("btn_LaunchWays_DragonEmu") as Style;
+				brdr_LaunchWays.BorderBrush = MyColors.MyColorSCL;
+				lbl_LaunchWays.Foreground = MyColors.MyColorSCL;
+				lbl_LaunchWays.Content = "Launch - Method: SocialClubLaunch";
+
+				Grid_Settings_GTA.RowDefinitions.Add(Row_SCL_Options);
+				Grid_Settings_GTA.RowDefinitions.Add(Row_DragonEmu_Options);
+
+				Grid.SetRow(brdr_SCLOptions, 5);
+				Grid.SetRow(brdr_DragonEmuOptions, 6);
+
+				btn_HideSCLOptions.Visibility = Visibility.Hidden;
+				btn_HideEmuOptions.Visibility = Visibility.Visible;
+
+				Rect_Bullshit_1.Visibility = Visibility.Hidden;
+				Rect_Bullshit_2.Visibility = Visibility.Hidden;
+				Rect_Bullshit_3.Visibility = Visibility.Hidden;
+				Rect_Bullshit_4.Visibility = Visibility.Visible;
+
+				Rect_HideOptions_HideFromSteam.Visibility = Visibility.Hidden;
+				Rect_HideOptions_AutoMTLOnStartup.Visibility = Visibility.Hidden;
+			}
+			else
+			{
+				btn_LaunchWays_SCL.Style = Application.Current.FindResource("btn_LaunchWays_SCL") as Style;
+				btn_LaunchWays_DragonEmu.Style = Application.Current.FindResource("btn_LaunchWays_DragonEmu_Enabled") as Style;
+				brdr_LaunchWays.BorderBrush = MyColors.MyColorEmu;
+				lbl_LaunchWays.Foreground = MyColors.MyColorEmu;
+				lbl_LaunchWays.Content = "Launch - Method: Dragon Launcher";
+
+				Grid_Settings_GTA.RowDefinitions.Add(Row_DragonEmu_Options);
+				Grid_Settings_GTA.RowDefinitions.Add(Row_SCL_Options);
+
+				Grid.SetRow(brdr_DragonEmuOptions, 5);
+				Grid.SetRow(brdr_SCLOptions, 6);
+
+				btn_HideSCLOptions.Visibility = Visibility.Visible;
+				btn_HideEmuOptions.Visibility = Visibility.Hidden;
+
+				Rect_Bullshit_1.Visibility = Visibility.Visible;
+				Rect_Bullshit_2.Visibility = Visibility.Visible;
+				Rect_Bullshit_3.Visibility = Visibility.Visible;
+				Rect_Bullshit_4.Visibility = Visibility.Hidden;
+
+
+				if (LauncherLogic.AuthWay == LauncherLogic.AuthWays.MTL)
+				{
+					Rect_HideOptions_AutoMTLOnStartup.Visibility = Visibility.Hidden;
+
+				}
+				else
+				{
+					Rect_HideOptions_AutoMTLOnStartup.Visibility = Visibility.Visible;
+				}
+
+				if (Retailer != Retailers.Steam)
+				{
+					Rect_HideOptions_HideFromSteam.Visibility = Visibility.Visible;
+				}
+				else
+				{
+					Rect_HideOptions_HideFromSteam.Visibility = Visibility.Hidden;
+				}
+			}
+		}
+
+		private void btn_LaunchWays_SCL_Click(object sender, RoutedEventArgs e)
+		{
+			if (LauncherLogic.LaunchWay != LauncherLogic.LaunchWays.SocialClubLaunch)
+			{
+				LauncherLogic.LaunchWay = LauncherLogic.LaunchWays.SocialClubLaunch;
+				RefreshGUI();
+				CodeSnipped();
+			}
+		}
+
+		private void btn_LaunchWays_DragonEmu_Click(object sender, RoutedEventArgs e)
+		{
+			if (LauncherLogic.LaunchWay != LauncherLogic.LaunchWays.DragonEmu)
+			{
+				LauncherLogic.LaunchWay = LauncherLogic.LaunchWays.DragonEmu;
+				RefreshGUI();
+				CodeSnipped();
+			}
+		}
+
+		private void btn_AuthWays_MTL_Click(object sender, RoutedEventArgs e)
+		{
+			LauncherLogic.AuthWay = LauncherLogic.AuthWays.MTL;
+			RefreshGUI();
+		}
+
+		private void btn_AuthWays_Legacy_Click(object sender, RoutedEventArgs e)
+		{
+			LauncherLogic.AuthWay = LauncherLogic.AuthWays.LegacyAuth;
+			RefreshGUI();
+		}
+
+		private void btn_HideSCLOptions_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+		{
+			btn_HideSCLOptions.Visibility = Visibility.Hidden;
+
+			Rect_Bullshit_4.Visibility = Visibility.Visible;
+		}
+
+		private void btn_HideEmuOptions_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+		{
+			btn_HideEmuOptions.Visibility = Visibility.Hidden;
+
+			Rect_Bullshit_1.Visibility = Visibility.Visible;
+			Rect_Bullshit_2.Visibility = Visibility.Visible;
+			Rect_Bullshit_3.Visibility = Visibility.Visible;
+
+
+
+			if (LauncherLogic.AuthWay == LauncherLogic.AuthWays.MTL)
+			{
+				Rect_HideOptions_AutoMTLOnStartup.Visibility = Visibility.Hidden;
+
+			}
+			else
+			{
+				Rect_HideOptions_AutoMTLOnStartup.Visibility = Visibility.Visible;
+			}
+
+			if (Retailer != Retailers.Steam)
+			{
+				Rect_HideOptions_HideFromSteam.Visibility = Visibility.Visible;
+			}
+			else
+			{
+				Rect_HideOptions_HideFromSteam.Visibility = Visibility.Hidden;
+			}
+		}
+
 
 
 		/// <summary>
@@ -1010,15 +1247,11 @@ namespace Project_127.MySettings
 				case "btn_cb_Set_EnableLogging":
 					Settings.EnableLogging = !Settings.EnableLogging;
 					break;
-				case "btn_cb_Set_LegacyAuth":
-					Settings.EnableLegacyAuth = !Settings.EnableLegacyAuth;
-					break;
 				case "btn_cb_Set_SlowCompare":
 					Settings.EnableSlowCompare = !Settings.EnableSlowCompare;
 					break;
-				case "btn_cb_Set_EnableAlternativeLaunch":
-					Settings.EnableAlternativeLaunch = !Settings.EnableAlternativeLaunch;
-					RefreshIfOptionsHide();
+				case "btn_cb_Set_EnableOverWriteGTACommandLineArgs":
+					Settings.EnableOverWriteGTACommandLineArgs = !Settings.EnableOverWriteGTACommandLineArgs;
 					break;
 				case "btn_cb_Set_EnableScripthookOnDowngraded":
 					Settings.EnableScripthookOnDowngraded = !Settings.EnableScripthookOnDowngraded;
@@ -1031,14 +1264,17 @@ namespace Project_127.MySettings
 				case "btn_cb_Set_EnableJumpscriptUseCustomScript":
 					Settings.EnableJumpscriptUseCustomScript = !Settings.EnableJumpscriptUseCustomScript;
 					break;
+				case "btn_cb_Set_AutoMTLAuthOnStartup":
+					Settings.AutoMTLAuthOnStartup = !Settings.AutoMTLAuthOnStartup;
+					break;
 				case "btn_cb_Set_EnableAlternativeLaunchForceCProgramFiles":
 					Settings.EnableAlternativeLaunchForceCProgramFiles = !Settings.EnableAlternativeLaunchForceCProgramFiles;
 					break;
-				//case "btn_cb_Set_CopyFilesInsteadOfSyslinking_SocialClub":
-				//	Settings.EnableCopyFilesInsteadOfSyslinking_SocialClub = !Settings.EnableCopyFilesInsteadOfSyslinking_SocialClub;
-				//	break;
 				case "btn_cb_Set_EnablePreOrderBonus":
 					Settings.EnablePreOrderBonus = !Settings.EnablePreOrderBonus;
+					break;
+				case "btn_cb_Set_EnableCoreFix":
+					Settings.EnableCoreFix = !Settings.EnableCoreFix;
 					break;
 				case "btn_cb_Set_AutoSetHighPriority":
 					Settings.EnableAutoSetHighPriority = !Settings.EnableAutoSetHighPriority;
@@ -1149,6 +1385,7 @@ namespace Project_127.MySettings
 
 				HelperClasses.Logger.Log("Making an Upgrade.");
 				LauncherLogic.Upgrade();
+				LaunchAlternative.SocialClubReset();
 				HelperClasses.Logger.Log("Done making an Upgrade.", 1);
 
 				HelperClasses.Logger.Log("Lets make a full Repair.");
@@ -1167,7 +1404,7 @@ namespace Project_127.MySettings
 				yesno2.ShowDialog();
 				if (yesno2.DialogResult == true)
 				{
-					HelperClasses.Logger.Log("User wants no uninstall...Gonna close this now I guess...cya");
+					HelperClasses.Logger.Log("User wants to uninstall...Gonna close this now I guess...cya");
 					HelperClasses.Logger.Log("=");
 					HelperClasses.Logger.Log("=");
 					HelperClasses.Logger.Log("=");
@@ -1187,7 +1424,7 @@ namespace Project_127.MySettings
 				}
 				else
 				{
-					HelperClasses.Logger.Log("User wants no uninstall...Gonna close this now I guess...cya");
+					HelperClasses.Logger.Log("User wants NO uninstall...Gonna close this now I guess...cya");
 					HelperClasses.Logger.Log("=");
 					HelperClasses.Logger.Log("=");
 					HelperClasses.Logger.Log("=");
@@ -1221,27 +1458,24 @@ namespace Project_127.MySettings
 
 		public static void RepairGTA_UserInteraction()
 		{
-			if (!LauncherLogic.IsGTAVInstallationPathCorrect())
+			if (!LauncherLogic.IsGTAVInstallationPathCorrect() && !LauncherLogic.GTAVInstallationIncorrectMessageThrownAlready)
 			{
-
 				HelperClasses.Logger.Log("GTA V Installation Path not found or incorrect. User will get Popup");
 
-				string msg = "Error: GTA V Installation Path incorrect.\nGTAV Installation Path: '" + LauncherLogic.GTAVFilePath + "'";
-
-				if (Globals.P127Branch != "master")
+				Popup yesno2 = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Error:\nGTA V Installation Path is not a valid Path.\nProceed?");
+				yesno2.ShowDialog();
+				if (yesno2.DialogResult == true)
 				{
-					Popup yesno2 = new Popup(Popup.PopupWindowTypes.PopupYesNo, msg + "\n. Force this Repair?");
-					yesno2.ShowDialog();
-					if (yesno2.DialogResult == false)
-					{
-						return;
-					}
+					HelperClasses.Logger.Log("User wants to force this Repair. Will not throw the WrongGTAVPathError again on this P127 instance.");
+					LauncherLogic.GTAVInstallationIncorrectMessageThrownAlready = true;
 				}
 				else
 				{
-					new Popup(Popup.PopupWindowTypes.PopupOkError, msg).ShowDialog();
+					HelperClasses.Logger.Log("User does not want to force this Repair. Will abondon.");
+					return;
 				}
 			}
+
 
 			if (HelperClasses.BuildVersionTable.IsUpgradedGTA(LauncherLogic.UpgradeFilePathBackup))
 			{
@@ -1290,17 +1524,6 @@ namespace Project_127.MySettings
 			LauncherLogic.CreateBackup();
 		}
 
-
-
-		/// <summary>
-		/// Create Backup Rightclick
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
-		private void btn_CreateBackup_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
-		{
-			PopupCreateBackup.IsOpen = true;
-		}
 
 		/// <summary>
 		/// Use Backup Click
@@ -1386,6 +1609,10 @@ namespace Project_127.MySettings
 			Settings.SocialClubLaunchGameVersion = combox_Set_SocialClubGameVersion.SelectedItem.ToString();
 		}
 
+		private void combox_Set_PostMTLAction_SelectionChanged(object sender, SelectionChangedEventArgs e)
+		{
+			Settings.PostMTLAction = (PostMTLActions)System.Enum.Parse(typeof(PostMTLActions), combox_Set_PostMTLAction.SelectedItem.ToString());
+		}
 
 		/// <summary>
 		/// Empty
@@ -1397,6 +1624,16 @@ namespace Project_127.MySettings
 
 		}
 
+		/// <summary>
+		/// Create Backup Rightclick
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void btn_CreateBackup_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+		{
+			PopupCreateBackup.IsOpen = true;
+		}
+
 
 		/// <summary>
 		/// Method gets called when Popup of CreateBackup is opened
@@ -1406,6 +1643,9 @@ namespace Project_127.MySettings
 		private void PopupCreateBackup_Opened(object sender, EventArgs e)
 		{
 			tb_Set_BackupName.Text = "BackupName";
+
+			Version myUpgradeVersion = HelperClasses.FileHandling.GetVersionFromFile(LauncherLogic.UpgradeFilePath.TrimEnd('\\') + @"\gta5.exe");
+			lbl_CreateBackupInPopup.Content = "Create Backup" + BuildVersionTable.GetNiceGameVersionString(myUpgradeVersion);
 		}
 
 
@@ -1477,7 +1717,8 @@ namespace Project_127.MySettings
 			PopupCreateBackup.IsOpen = false;
 			PopupUseBackup.IsOpen = false;
 			PopupJumpscriptAdditional.IsOpen = false;
-			PopupEnableAlternativeLaunch.IsOpen = false;
+			PopupGTACommandLineArgs.IsOpen = false;
+			RefreshGUI();
 		}
 
 		/// <summary>
@@ -1506,7 +1747,10 @@ namespace Project_127.MySettings
 				if (MyFolder.Contains(LauncherLogic.ZIPFilePath.TrimEnd('\\') + @"\Project_127_Files\UpgradeFiles_Backup_"))
 				{
 					string NiceName = MyFolder.Substring(MyFolder.LastIndexOf('_') + 1);
-					combox_UseBackup.Items.Add(NiceName);
+
+					Version myGameVersion = HelperClasses.FileHandling.GetVersionFromFile(MyFolder.TrimEnd('\\') + @"\gta5.exe");
+
+					combox_UseBackup.Items.Add(NiceName + BuildVersionTable.GetNiceGameVersionString(myGameVersion));
 				}
 			}
 
@@ -1538,8 +1782,11 @@ namespace Project_127.MySettings
 				return;
 			}
 
-			string newName = LauncherLogic.ZIPFilePath.TrimEnd('\\') + @"\Project_127_Files\UpgradeFiles_Backup_" + combox_UseBackup.SelectedItem.ToString();
-			if (!(HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(newName).Length >= 2))
+			string tmp = combox_UseBackup.SelectedItem.ToString();
+			string Name = tmp.Substring(0, tmp.LastIndexOf('('));
+			string Path = LauncherLogic.ZIPFilePath.TrimEnd('\\') + @"\Project_127_Files\UpgradeFiles_Backup_" + Name;
+
+			if (!(HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(Path).Length >= 2))
 			{
 				string prevName = btn_UseBackupName.Content.ToString();
 				btn_UseBackupName.Content = "No Files in that Folder";
@@ -1548,7 +1795,7 @@ namespace Project_127.MySettings
 				return;
 			}
 
-			LauncherLogic.UseBackup(combox_UseBackup.SelectedItem.ToString());
+			LauncherLogic.UseBackup(Path);
 		}
 
 		/// <summary>
@@ -1639,7 +1886,7 @@ namespace Project_127.MySettings
 				ROSCommunicationBackend.setFlag(ROSCommunicationBackend.Flags.indicateTheLessThanLegalProcurementOfMotorVehicles, true);
 				Overlay.GTAOverlay.indicateTheLessThanLegalProcurementOfMotorVehicles = true;
 				Settings.GTAWindowTitle = Overlay.GTAOverlay.targetWindowBorderlessEasterEgg;
-				new Popup(Popup.PopupWindowTypes.PopupOk, "'Stealy Wheely Automobiley V' activated.\nRestart P127 to disable.").ShowDialog();
+				new Popup(Popup.PopupWindowTypes.PopupOk, "'" + Overlay.GTAOverlay.targetWindowBorderlessEasterEgg + "' activated.\nRestart P127 to disable.").ShowDialog();
 			}
 			else
 			{
@@ -1688,17 +1935,15 @@ namespace Project_127.MySettings
 
 		}
 
-		private void btn_cb_Set_EnableAlternativeLaunch_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
-		{
-			PopupEnableAlternativeLaunch.IsOpen = true;
-		}
+		static bool RockstarDisableAutoUpdateThrownAlready = false;
 
 		public static void TellRockstarUsersToDisableAutoUpdateIfNeeded()
 		{
-			if (Settings.EnableAlternativeLaunch && Settings.Retailer == Retailers.Rockstar)
+			if (Settings.Retailer == Retailers.Rockstar && LauncherLogic.AuthWay == LauncherLogic.AuthWays.MTL && LauncherLogic.LaunchWay == LauncherLogic.LaunchWays.DragonEmu && !RockstarDisableAutoUpdateThrownAlready)
 			{
 				string msg = "You need to stop Rockstar Game Launcher\nfrom automatically Updating your GTA.\nOtherwise certain features might not work.\n\nTo do this:\nInside Rockstar Games Launcher,\nhead into Settings\n-> My Installed Games\n->Grand Theft Auto V\n-> uncheck the \"Enable automatic updates\" checkbox at the very top.";
 				new Popup(Popup.PopupWindowTypes.PopupOk, msg).ShowDialog();
+				RockstarDisableAutoUpdateThrownAlready = true;
 			}
 
 		}
@@ -1743,12 +1988,6 @@ namespace Project_127.MySettings
 				{
 					HelperClasses.Logger.Log("Cant find Powershell.exe.");
 				}
-
-
-
-				// execute powershell here
-				// Add-MpPreference -ExclusionPath "C:\Temp"
-				// GTA Install, P127 Install, Component Download
 			}
 			else
 			{
@@ -1756,5 +1995,65 @@ namespace Project_127.MySettings
 			}
 		}
 
+		private void btn_Import_Zip_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+		{
+			HelperClasses.Logger.Log("Importing ZIP from a DDL.");
+			PopupTextbox tb = new PopupTextbox("DirectDownLoadLink of Zip:", "https://someurl.com/somefile.zip");
+			tb.ShowDialog();
+			if (tb.DialogResult == true)
+			{
+				HelperClasses.Logger.Log("User wants it. Input is: '" + tb.MyReturnString + "'.");
+				if (HelperClasses.FileHandling.URLExists(tb.MyReturnString))
+				{
+					HelperClasses.Logger.Log("CAN find that File online. Downloading");
+					string Path = Globals.ProjectInstallationPath.TrimEnd('\\') + @"\dl.zip";
+					HelperClasses.FileHandling.deleteFile(Path);
+					PopupDownload pop = new PopupDownload(tb.MyReturnString, Path, "Downloading Zip File");
+					pop.ShowDialog();
+					if (HelperClasses.FileHandling.GetSizeOfFile(Path) > 100000)
+					{
+						HelperClasses.Logger.Log("Download Complete, importing now");
+						LauncherLogic.ImportZip(Path, true);
+					}
+					else
+					{
+						new Popup(Popup.PopupWindowTypes.PopupOkError, "Download Failed.").ShowDialog();
+						HelperClasses.Logger.Log("Download Complete, importing now");
+					}
+				}
+				else
+				{
+					HelperClasses.Logger.Log("Cant find that File online.");
+					new Popup(Popup.PopupWindowTypes.PopupOkError, "Cant find that File online.").ShowDialog();
+				}
+			}
+			else
+			{
+				HelperClasses.Logger.Log("Canceled by User.");
+			}
+		}
+
+		private void btn_GTACommandLineArgs_Click(object sender, RoutedEventArgs e)
+		{
+			PopupGTACommandLineArgs.IsOpen = true;
+		}
+
+		private void PopupGTACommandLineArgs_Closed(object sender, EventArgs e)
+		{
+
+		}
+
+		private void PopupGTACommandLineArgs_Opened(object sender, EventArgs e)
+		{
+
+		}
+
+		private void tb_OverWriteGTACommandLineArgs_LostFocus(object sender, RoutedEventArgs e)
+		{
+			string txt = tb_OverWriteGTACommandLineArgs.Text;
+			if (String.IsNullOrWhiteSpace(txt)) { txt = LauncherLogic.GetStartCommandLineArgs(); }
+			Settings.OverWriteGTACommandLineArgs = txt;
+			tb_OverWriteGTACommandLineArgs.Text = txt;
+		}
 	} // End of Class
 } // End of Namespace 

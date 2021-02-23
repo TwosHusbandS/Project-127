@@ -13,6 +13,7 @@ using Project_127.Popups;
 using Project_127.MySettings;
 using System.Threading;
 using CredentialManagement;
+using Microsoft.Win32;
 
 namespace Project_127.HelperClasses
 {
@@ -44,6 +45,8 @@ namespace Project_127.HelperClasses
 			HelperClasses.Logger.Log("-", true, 0);
 			HelperClasses.Logger.Log("-", true, 0);
 			HelperClasses.Logger.Log(" === Project - 127 Started (Version: '" + Globals.ProjectVersion + "' BuildInfo: '" + Globals.BuildInfo + "' Built at: '" + MyCreationDate + "' Central European Time) ===", true, 0);
+			HelperClasses.Logger.Log("    Time Now: '" + DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss") + "'", true, 0);
+			HelperClasses.Logger.Log("    Time Now UTC: '" + DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss") + "'", true, 0);
 			HelperClasses.Logger.Log("Logging initiated. Time to the left is local time and NOT UTC. See Debug for more Info", true, 0);
 		}
 
@@ -123,17 +126,32 @@ namespace Project_127.HelperClasses
 				tmpsw.Start();
 
 
+				//Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion
+				//RegisteredOwner
+
+				RegistryKey myRK = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64).CreateSubKey("SOFTWARE").CreateSubKey("Microsoft").CreateSubKey("Windows NT").CreateSubKey("CurrentVersion");
+				string AdditionalDebug1 = HelperClasses.RegeditHandler.GetValue(myRK, "RegisteredOwner");
+				string AdditionalDebug2 = HelperClasses.RegeditHandler.GetValue(myRK, "ProductName");
+				string AdditionalDebug3 = HelperClasses.RegeditHandler.GetValue(myRK, "EditionID");
+				string AdditionalDebug4 = HelperClasses.RegeditHandler.GetValue(myRK, "CurrentBuild");
+				string AdditionalDebug5 = HelperClasses.RegeditHandler.GetValue(myRK, "CurrentBuildNumber");
+
+				RegistryKey myRK2 = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64).CreateSubKey("SOFTWARE").CreateSubKey("Microsoft").CreateSubKey("Cryptography");
+				string AdditionalDebug6 = HelperClasses.RegeditHandler.GetValue(myRK2, "MachineGuid");
+
+				string LauncDatPath = LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\launc.dat";
+
 				// Debug Info users can give me easily...
 				List<string> DebugMessage = new List<string>();
 
 				DebugMessage.Add("Project 1.27 Version: '" + Globals.ProjectVersion + "'");
 				DebugMessage.Add("BuildInfo: '" + Globals.BuildInfo + "'");
-				DebugMessage.Add("BuildCreated: '" + HelperClasses.FileHandling.GetCreationDate(Process.GetCurrentProcess().MainModule.FileName).ToString("yyyy-MM-ddTHH:mm:ss") + "'");
-				DebugMessage.Add("BuildCreatedUTC: '" + HelperClasses.FileHandling.GetCreationDate(Process.GetCurrentProcess().MainModule.FileName, true).ToString("yyyy-MM-ddTHH:mm:ss") + "'");
-				DebugMessage.Add("BuildLastModified: '" + HelperClasses.FileHandling.GetCreationDate(Process.GetCurrentProcess().MainModule.FileName).ToString("yyyy-MM-ddTHH:mm:ss") + "'");
-				DebugMessage.Add("BuildLastModifiedUTC: '" + HelperClasses.FileHandling.GetCreationDate(Process.GetCurrentProcess().MainModule.FileName, true).ToString("yyyy-MM-ddTHH:mm:ss") + "'");
-				DebugMessage.Add("Time Now: '" + DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss") + "'");
-				DebugMessage.Add("Time Now UTC: '" + DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss") + "'");
+				DebugMessage.Add("    BuildCreated: '" + HelperClasses.FileHandling.GetCreationDate(Process.GetCurrentProcess().MainModule.FileName).ToString("yyyy-MM-ddTHH:mm:ss") + "'");
+				DebugMessage.Add("    BuildCreatedUTC: '" + HelperClasses.FileHandling.GetCreationDate(Process.GetCurrentProcess().MainModule.FileName, true).ToString("yyyy-MM-ddTHH:mm:ss") + "'");
+				DebugMessage.Add("    BuildLastModified: '" + HelperClasses.FileHandling.GetCreationDate(Process.GetCurrentProcess().MainModule.FileName).ToString("yyyy-MM-ddTHH:mm:ss") + "'");
+				DebugMessage.Add("    BuildLastModifiedUTC: '" + HelperClasses.FileHandling.GetCreationDate(Process.GetCurrentProcess().MainModule.FileName, true).ToString("yyyy-MM-ddTHH:mm:ss") + "'");
+				DebugMessage.Add("    Time Now: '" + DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss") + "'");
+				DebugMessage.Add("    Time Now UTC: '" + DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss") + "'");
 				DebugMessage.Add("ZIP Version: '" + Globals.ZipVersion + "'");
 				DebugMessage.Add("Globals.P127Branch: '" + Globals.P127Branch + "'");
 				DebugMessage.Add("Globals.DMBranch: '" + Globals.DMBranch + "'");
@@ -149,6 +167,8 @@ namespace Project_127.HelperClasses
 				DebugMessage.Add("LauncherLogic.UpgradeFilePath: '" + LauncherLogic.UpgradeFilePath + "'");
 				DebugMessage.Add("LauncherLogic.DowngradeFilePath: '" + LauncherLogic.DowngradeFilePath + "'");
 				DebugMessage.Add("LauncherLogic.SupportFilePath: '" + LauncherLogic.SupportFilePath + "'");
+				DebugMessage.Add("Chosen LaunchWay: '" + LauncherLogic.LaunchWay + "'");
+				DebugMessage.Add("Chosen AuthWay: '" + LauncherLogic.AuthWay + "'");
 				DebugMessage.Add("Detected AuthState: '" + LauncherLogic.AuthState + "'");
 				DebugMessage.Add("Detected GameState: '" + LauncherLogic.GameState + "'");
 				DebugMessage.Add("Detected InstallationState: '" + LauncherLogic.InstallationState + "'");
@@ -203,8 +223,10 @@ namespace Project_127.HelperClasses
 					if (size > 0)
 					{
 						DebugMessage.Add("    '" + cfgdatPath + "', fileSize: '" + size + "'");
-						DebugMessage.Add("         CreationTime: '" + HelperClasses.FileHandling.GetCreationDate(cfgdatPath).ToString("yyyy-MM-ddTHH:mm:ss") + "', CreationTimeUTC: '" + HelperClasses.FileHandling.GetCreationDate(cfgdatPath, true).ToString("yyyy-MM-ddTHH:mm:ss") + "'"); ;
-						DebugMessage.Add("         LastModified: '" + HelperClasses.FileHandling.GetLastWriteDate(cfgdatPath).ToString("yyyy-MM-ddTHH:mm:ss") + "', LastModifiedUTC: '" + HelperClasses.FileHandling.GetLastWriteDate(cfgdatPath, true).ToString("yyyy-MM-ddTHH:mm:ss") + "'"); ;
+						DebugMessage.Add("          CreationTime: '" + HelperClasses.FileHandling.GetCreationDate(cfgdatPath).ToString("yyyy-MM-ddTHH:mm:ss") + "'");
+						DebugMessage.Add("          CreationTimeUTC: '" + HelperClasses.FileHandling.GetCreationDate(cfgdatPath, true).ToString("yyyy-MM-ddTHH:mm:ss") + "'");
+						DebugMessage.Add("          LastModified: '" + HelperClasses.FileHandling.GetLastWriteDate(cfgdatPath).ToString("yyyy-MM-ddTHH:mm:ss") + "'");
+						DebugMessage.Add("          LastModifiedUTC: '" + HelperClasses.FileHandling.GetLastWriteDate(cfgdatPath, true).ToString("yyyy-MM-ddTHH:mm:ss") + "'");
 					}
 					else
 					{
@@ -212,6 +234,11 @@ namespace Project_127.HelperClasses
 					}
 				}
 				DebugMessage.Add("    >>>   Dragons Logic (probably) detects and uses this cfg.dat: '" + HelperClasses.FileHandling.MostLikelyProfileFolder().TrimEnd('\\') + @"\cfg.dat" + "'");
+				DebugMessage.Add("Launch.dat inside GTA Installation Directory:");
+				DebugMessage.Add("       Path: '" + LauncDatPath + "'");
+				DebugMessage.Add("       DoesExist: '" + HelperClasses.FileHandling.doesFileExist(LauncDatPath) + "'");
+				DebugMessage.Add("       LastModified: '" + HelperClasses.FileHandling.GetLastWriteDate(LauncDatPath).ToString("yyyy-MM-ddTHH:mm:ss") + "'");
+				DebugMessage.Add("       LastModifiedUTC: '" + HelperClasses.FileHandling.GetLastWriteDate(LauncDatPath, true).ToString("yyyy-MM-ddTHH:mm:ss") + "'");
 
 				DebugMessage.Add("Files I ever placed inside GTA: ");
 				foreach (string tmp in Settings.AllFilesEverPlacedInsideGTA)
@@ -242,6 +269,12 @@ namespace Project_127.HelperClasses
 							DebugMessage.Add("        LastWriteTimeUTC: '" + creds.LastWriteTimeUtc.ToString("yyyy-MM-ddTHH:mm:ss") + "'");
 						}
 					}
+					DebugMessage.Add("Windows-RegisteredOwner: '" + AdditionalDebug1 + "'");
+					DebugMessage.Add("Windows-ProductName: '" + AdditionalDebug2 + "'");
+					DebugMessage.Add("Windows-EditionID: '" + AdditionalDebug3 + "'");
+					DebugMessage.Add("Windows-CurrentBuild: '" + AdditionalDebug4 + "'");
+					DebugMessage.Add("Windows-CurrentBuildNumber: '" + AdditionalDebug5 + "'");
+					DebugMessage.Add("Windows-UUID: '" + AdditionalDebug6 + "'");
 				}
 				catch { }
 

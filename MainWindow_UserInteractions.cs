@@ -48,7 +48,18 @@ namespace Project_127
 			}
 		}
 
-
+		/// <summary>
+		/// Middle Mouse on Hamburger Button
+		/// </summary> 
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void btn_Hamburger_MouseDown(object sender, MouseButtonEventArgs e)
+		{
+			if (e.ChangedButton == MouseButton.Middle && e.ButtonState == MouseButtonState.Pressed)
+			{
+				LauncherLogic.Launch();
+			}
+		}
 
 		/// <summary>
 		/// Method which gets called when the Auth Button is clicked
@@ -141,54 +152,8 @@ namespace Project_127
 
 			// Actual Upgrade Button Code
 			HelperClasses.Logger.Log("Clicked the Upgrade Button");
-			if (LauncherLogic.IsGTAVInstallationPathCorrect() && Globals.ZipVersion != 0)
-			{
-				if (LauncherLogic.InstallationState == LauncherLogic.InstallationStates.Downgraded)
-				{
-					HelperClasses.Logger.Log("Gamestate looks OK (Downgraded). Will Proceed to try to Upgrade.", 1);
-				}
-				else if (LauncherLogic.InstallationState == LauncherLogic.InstallationStates.Upgraded)
-				{
-					HelperClasses.Logger.Log("This program THINKS you are already Upgraded. Update procedure will be called anyways since it shouldnt break things.", 1);
-				}
-				else
-				{
-					HelperClasses.Logger.Log("Installation State Broken.", 1);
-					new Popup(Popup.PopupWindowTypes.PopupOkError, "Installation State is broken. I suggest trying to repair.\nWill try to Upgrade anyways.").ShowDialog();
-				}
-
-				if (!LauncherLogic.IsGTAVInstallationPathCorrect(false))
-				{
-					Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "GTA Installation Path detected to be wrong.\nForce this Upgrade?");
-					yesno.ShowDialog();
-					if (yesno.DialogResult != true)
-					{
-						HelperClasses.Logger.Log("Will abort Upgrade, since GTA V Installation Path is wrong, and user does not want to force the Upgrade");
-						return;
-					}
-				}
-				LauncherLogic.Upgrade();
-			}
-			else
-			{
-				HelperClasses.Logger.Log("GTA V Installation Path not found or incorrect. User will get Popup");
-
-				string msg = "Error: GTA V Installation Path incorrect or ZIP Version == 0.\nGTAV Installation Path: '" + LauncherLogic.GTAVFilePath + "'\nInstallationState (probably): '" + LauncherLogic.InstallationState.ToString() + "'\nZip Version: " + Globals.ZipVersion + ".";
-
-				if (Globals.P127Branch != "master")
-				{
-					Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, msg + "\n. Force this Upgrade?");
-					yesno.ShowDialog();
-					if (yesno.DialogResult == true)
-					{
-						LauncherLogic.Upgrade();
-					}
-				}
-				else
-				{
-					new Popup(Popup.PopupWindowTypes.PopupOkError, msg).ShowDialog();
-				}
-			}
+		
+			LauncherLogic.Upgrade();
 
 			// Call Update GUI Method
 			UpdateGUIDispatcherTimer();
@@ -226,54 +191,9 @@ namespace Project_127
 
 			// Actual Upgrade Button Code
 			HelperClasses.Logger.Log("Clicked the Downgrade Button");
-			if (LauncherLogic.IsGTAVInstallationPathCorrect() && Globals.ZipVersion != 0)
-			{
-				if (LauncherLogic.InstallationState == LauncherLogic.InstallationStates.Upgraded)
-				{
-					HelperClasses.Logger.Log("Gamestate looks OK (Upgraded). Will Proceed to try to Downgrade.", 1);
-				}
-				else if (LauncherLogic.InstallationState == LauncherLogic.InstallationStates.Downgraded)
-				{
-					HelperClasses.Logger.Log("This program THINKS you are already Downgraded. Downgrade procedure will be called anyways since it shouldnt break things.", 1);
-				}
-				else
-				{
-					HelperClasses.Logger.Log("Installation State Broken. Downgrade procedure will be called anyways since it shouldnt break things.", 1);
-					new Popup(Popup.PopupWindowTypes.PopupOk, "Installation State is broken. I suggest trying to repair.\nWill try to Downgrade anyways").ShowDialog();
-				}
+		
+			LauncherLogic.Downgrade();
 
-				if (!LauncherLogic.IsGTAVInstallationPathCorrect(false))
-				{
-					Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "GTA Installation Path detected to be wrong.\nForce this Downgrade?");
-					yesno.ShowDialog();
-					if (yesno.DialogResult != true)
-					{
-						HelperClasses.Logger.Log("Will abort Downgrade, since GTA V Installation Path is wrong, and user does not want to force the Downgrade");
-						return;
-					}
-				}
-				LauncherLogic.Downgrade();
-			}
-			else
-			{
-				HelperClasses.Logger.Log("GTA V Installation Path not found or incorrect. User will get Popup");
-
-				string msg = "Error: GTA V Installation Path incorrect or ZIP Version == 0.\nGTAV Installation Path: '" + LauncherLogic.GTAVFilePath + "'\nInstallationState (probably): '" + LauncherLogic.InstallationState.ToString() + "'\nZip Version: " + Globals.ZipVersion + ".";
-
-				if (Globals.P127Branch != "master")
-				{
-					Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, msg + "\n. Force this Downgrade?");
-					yesno.ShowDialog();
-					if (yesno.DialogResult == true)
-					{
-						LauncherLogic.Downgrade();
-					}
-				}
-				else
-				{
-					new Popup(Popup.PopupWindowTypes.PopupOkError, msg).ShowDialog();
-				}
-			}
 			UpdateGUIDispatcherTimer();
 		}
 
@@ -370,7 +290,7 @@ namespace Project_127
 			yesno.ShowDialog();
 			if (yesno.DialogResult == true)
 			{
-				HelperClasses.ProcessHandler.KillRelevantProcesses();
+				HelperClasses.ProcessHandler.KillRockstarProcessesAsync();
 			}
 			//FocusManager.SetFocusedElement(this, null);
 			MainWindow.MW.UpdateGUIDispatcherTimer();

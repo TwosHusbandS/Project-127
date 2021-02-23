@@ -10,6 +10,7 @@
         WindowStyle="None" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" MouseLeftButtonDown="Window_MouseLeftButtonDown"
         Height="Auto"
         Width="Auto"
+        SourceInitialized="Window_SourceInitialized"
         SizeToContent="WidthAndHeight"
         Loaded="Window_Loaded"
         Icon="/Artwork/icon.png">

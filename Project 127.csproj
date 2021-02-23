@@ -112,6 +112,9 @@
     <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=5.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>packages\Microsoft.Bcl.AsyncInterfaces.5.0.0\lib\net461\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Xaml.Behaviors, Version=1.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Xaml.Behaviors.Wpf.1.1.31\lib\net45\Microsoft.Xaml.Behaviors.dll</HintPath>
+    </Reference>
     <Reference Include="PresentationFramework.Aero" />
     <Reference Include="SharpDX, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
       <HintPath>packages\SharpDX.4.2.0\lib\net45\SharpDX.dll</HintPath>
@@ -131,6 +134,7 @@
     </Reference>
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Data" />
+    <Reference Include="System.DirectoryServices.AccountManagement" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Management" />
     <Reference Include="System.Memory, Version=4.0.1.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
@@ -143,6 +147,7 @@
     <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>packages\System.Runtime.CompilerServices.Unsafe.5.0.0\lib\net45\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
     </Reference>
+    <Reference Include="System.Speech" />
     <Reference Include="System.Text.Encodings.Web, Version=5.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>packages\System.Text.Encodings.Web.5.0.0\lib\net461\System.Text.Encodings.Web.dll</HintPath>
     </Reference>
@@ -159,6 +164,7 @@
     <Reference Include="System.IO.Compression" />
     <Reference Include="System.IO.Compression.FileSystem" />
     <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Windows" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
@@ -188,6 +194,7 @@
       <DependentUpon>ComponentManager.xaml</DependentUpon>
     </Compile>
     <Compile Include="HelperClasses\ASPointerPath.cs" />
+    <Compile Include="HelperClasses\BlurBackgroundBehaviour.cs" />
     <Compile Include="HelperClasses\IPCPipes.cs" />
     <Compile Include="HelperClasses\MissionIdentifiers.cs" />
     <Compile Include="HelperClasses\WindowChangeListenerTwo.cs" />
@@ -399,26 +406,22 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <None Include="app.manifest" />
-    <None Include="Installer\Changelog.md" />
-    <None Include="Installer\Changelogs\Advanced Notefile.md" />
-    <None Include="Installer\Changelogs\Help.md" />
-    <None Include="Installer\Changelogs\Features.md" />
-    <None Include="Installer\Changelogs\V_1_2_0_0_Changelog.md" />
-    <None Include="Installer\Changelogs\V_1_1_0_0_Changelog.md" />
-    <None Include="Installer\Changelogs\V_0_0_4_0_Changelog.md" />
-    <None Include="Installer\Changelogs\V_0_0_3_1_Changelog.md" />
-    <None Include="Installer\Changelogs\V_0_0_3_0_Changelog.md" />
-    <None Include="LICENSE_JUMPSCRIPT">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    <None Include="Installer\Info\AdvancedNotefile.md" />
+    <None Include="Installer\Info\Changelogs\V_1_2_2_0_Changelog.md" />
+    <None Include="Installer\Info\Help.md" />
+    <None Include="Installer\Info\Features.md" />
+    <None Include="Installer\Info\Changelogs\V_1_2_0_0_Changelog.md" />
+    <None Include="Installer\Info\Changelogs\V_1_1_0_0_Changelog.md" />
+    <None Include="Installer\Info\Changelogs\V_0_0_4_0_Changelog.md" />
+    <None Include="Installer\Info\Changelogs\V_0_0_3_1_Changelog.md" />
+    <None Include="Installer\Info\Changelogs\V_0_0_3_0_Changelog.md" />
+    <None Include="JUMPSCRIPT_LICENSE" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-    <None Include="LICENSE">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    <None Include="LICENSE" />
     <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>
@@ -458,18 +461,10 @@
     <Resource Include="Artwork\lock_open_mo.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Artwork\bg_420.png" />
-    <Resource Include="Artwork\bg_420_blur.png" />
-    <Resource Include="Artwork\bg_420_hb.png" />
-    <Resource Include="Artwork\bg_main.png" />
-    <Resource Include="Artwork\bg_main_blur.png" />
-    <Resource Include="Artwork\bg_main_hb.png" />
-    <Resource Include="Artwork\bg_spooky.png" />
-    <Resource Include="Artwork\bg_spooky_blur.png" />
-    <Resource Include="Artwork\bg_spooky_hb.png" />
-    <Resource Include="Artwork\bg_xmas.png" />
-    <Resource Include="Artwork\bg_xmas_blur.png" />
-    <Resource Include="Artwork\bg_xmas_hb.png" />
+    <None Include="Artwork\bg_fourtwenty.png" />
+    <Resource Include="Artwork\bg_default.png" />
+    <None Include="Artwork\bg_spooky.png" />
+    <None Include="Artwork\bg_winter.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Artwork\loading.gif" />
@@ -491,16 +486,16 @@
     <Resource Include="Artwork\checkbox_true_mo.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Artwork\Preview_1.png" />
-    <Resource Include="Artwork\Preview_10.png" />
-    <Resource Include="Artwork\Preview_2.png" />
-    <Resource Include="Artwork\Preview_3.png" />
-    <Resource Include="Artwork\Preview_4.png" />
-    <Resource Include="Artwork\Preview_5.png" />
-    <Resource Include="Artwork\Preview_6.png" />
-    <Resource Include="Artwork\Preview_7.png" />
-    <Resource Include="Artwork\Preview_8.png" />
-    <Resource Include="Artwork\Preview_9.png" />
+    <None Include="Artwork\Preview_1.png" />
+    <None Include="Artwork\Preview_10.png" />
+    <None Include="Artwork\Preview_2.png" />
+    <None Include="Artwork\Preview_3.png" />
+    <None Include="Artwork\Preview_4.png" />
+    <None Include="Artwork\Preview_5.png" />
+    <None Include="Artwork\Preview_6.png" />
+    <None Include="Artwork\Preview_7.png" />
+    <None Include="Artwork\Preview_8.png" />
+    <None Include="Artwork\Preview_9.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Artwork\pause.png" />
@@ -521,6 +516,19 @@
     <Resource Include="Installer\DownloadManager.xml" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Installer\Info\EpsilonPercent Example NoteFile.txt" />
+    <None Include="Installer\Info\AdvancedUser.md" />
+    <Resource Include="Artwork\lock_crossed_closed.png" />
+    <Resource Include="Artwork\lock_crossed_closed_mo.png" />
+    <Resource Include="Artwork\lock_crossed_open.png" />
+    <Resource Include="Artwork\lock_crossed_open_mo.png" />
+    <None Include="Artwork\P127_Slogan.png" />
+    <None Include="Artwork\bg_cat.png" />
+    <None Include="Artwork\bg_germania.png" />
+    <None Include="Artwork\bg_murica.png" />
+    <None Include="Artwork\bg_valentine.png" />
+    <None Include="Artwork\bg_turkey.png" />
+    <Content Include="Installer\NewSetup.iss" />
     <Content Include="MTLInterface.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -577,13 +585,34 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PreBuildEvent>
-    </PreBuildEvent>
+    <PreBuildEvent>mkdir "$(ProjectDir)\bin\x64\Release\UglyFiles\Artwork\"
+copy "$(ProjectDir)Artwork\bg_default.png" "$(ProjectDir)\bin\x64\Release\UglyFiles\Artwork\bg_default.png"
+copy "$(ProjectDir)Artwork\bg_winter.png" "$(ProjectDir)\bin\x64\Release\UglyFiles\Artwork\bg_winter.png"
+copy "$(ProjectDir)Artwork\bg_spooky.png" "$(ProjectDir)\bin\x64\Release\UglyFiles\Artwork\bg_spooky.png"
+copy "$(ProjectDir)Artwork\bg_fourtwenty.png" "$(ProjectDir)\bin\x64\Release\UglyFiles\Artwork\bg_fourtwenty.png"
+copy "$(ProjectDir)Artwork\bg_valentine.png" "$(ProjectDir)\bin\x64\Release\UglyFiles\Artwork\bg_valentine.png"
+copy "$(ProjectDir)Artwork\bg_murica.png" "$(ProjectDir)\bin\x64\Release\UglyFiles\Artwork\bg_murica.png"
+copy "$(ProjectDir)Artwork\bg_germania.png" "$(ProjectDir)\bin\x64\Release\UglyFiles\Artwork\bg_germania.png"
+copy "$(ProjectDir)Artwork\bg_turkey.png" "$(ProjectDir)\bin\x64\Release\UglyFiles\Artwork\bg_turkey.png"
+copy "$(ProjectDir)Artwork\bg_cat.png" "$(ProjectDir)\bin\x64\Release\UglyFiles\Artwork\bg_cat.png"
+copy "$(ProjectDir)Artwork\P127_Slogan.png" "$(ProjectDir)\bin\x64\Release\UglyFiles\Artwork\P127_Slogan.png"
+copy "$(ProjectDir)Artwork\Preview_1.png" "$(ProjectDir)\bin\x64\Release\UglyFiles\Artwork\Preview_1.png"
+copy "$(ProjectDir)Artwork\Preview_2.png" "$(ProjectDir)\bin\x64\Release\UglyFiles\Artwork\Preview_2.png"
+copy "$(ProjectDir)Artwork\Preview_3.png" "$(ProjectDir)\bin\x64\Release\UglyFiles\Artwork\Preview_3.png"
+copy "$(ProjectDir)Artwork\Preview_4.png" "$(ProjectDir)\bin\x64\Release\UglyFiles\Artwork\Preview_4.png"
+copy "$(ProjectDir)Artwork\Preview_5.png" "$(ProjectDir)\bin\x64\Release\UglyFiles\Artwork\Preview_5.png"
+copy "$(ProjectDir)Artwork\Preview_6.png" "$(ProjectDir)\bin\x64\Release\UglyFiles\Artwork\Preview_6.png"
+copy "$(ProjectDir)Artwork\Preview_7.png" "$(ProjectDir)\bin\x64\Release\UglyFiles\Artwork\Preview_7.png"
+copy "$(ProjectDir)Artwork\Preview_8.png" "$(ProjectDir)\bin\x64\Release\UglyFiles\Artwork\Preview_8.png"
+copy "$(ProjectDir)Artwork\Preview_9.png" "$(ProjectDir)\bin\x64\Release\UglyFiles\Artwork\Preview_9.png"
+copy "$(ProjectDir)Artwork\Preview_10.png" "$(ProjectDir)\bin\x64\Release\UglyFiles\Artwork\Preview_10.png"
+copy "$(ProjectDir)LICENSE" "$(ProjectDir)\bin\x64\Release\LICENSE"
+copy "$(ProjectDir)JUMPSCRIPT_LICENSE" "$(ProjectDir)\bin\x64\Release\JUMPSCRIPT_LICENSE"
+copy "$(ProjectDir)AAA_HybridCode\Jumpscript\P127_Jumpscript.exe" "$(TargetDir)P127_Jumpscript.exe"</PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PostBuildEvent>copy "$(TargetDir)LICENSE" "$(ProjectDir)\bin\x64\Release\LICENSE"
-copy "$(TargetDir)LICENSE_JUMPSCRIPT" "$(ProjectDir)\bin\x64\Release\LICENSE_JUMPSCRIPT"
-copy "$(ProjectDir)AAA_HybridCode\Jumpscript\P127_Jumpscript.exe" "$(TargetDir)P127_Jumpscript.exe"</PostBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

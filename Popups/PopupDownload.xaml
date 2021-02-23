@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:Project_127"
         mc:Ignorable="d"
         Title="Popup Download" 
+        SourceInitialized="Window_SourceInitialized"
         Background="{x:Static local:MyColors.PU_Background}"
         WindowStyle="None" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" MouseLeftButtonDown="Window_MouseLeftButtonDown"
         Height="200"

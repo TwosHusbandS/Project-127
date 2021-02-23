@@ -10,8 +10,8 @@
         WindowStyle="None" ResizeMode="CanMinimize" WindowStartupLocation="CenterScreen" MouseLeftButtonDown="Window_MouseLeftButtonDown"
         Height="160"
         Width="420"
+        SourceInitialized="Window_SourceInitialized"
         Icon="/Artwork/icon.png">
-
     <Border BorderBrush="{x:Static local:MyColors.PU_BorderBrush}" BorderThickness="2">
         <Grid>
             <Grid.RowDefinitions>

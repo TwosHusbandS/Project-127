@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <item>
-  <version>1.2.0.0</version>
-  <url>https://github.com/TwosHusbandS/Project-127/raw/master/Installer/Project_127_Installer_V_1_2_0_0.exe</url>
+  <version>1.2.2.0</version>
+  <url>https://github.com/TwosHusbandS/Project-127/raw/master/Installer/Project_127_Installer_V_1_2_2_0.exe</url>
   <buildversiontable>
     1.0.323.0;1.24:
     1.0.350.0;1.25:
@@ -37,12 +37,14 @@
   <announcement></announcement>
   <specialbuildname></specialbuildname>
   <dragonsreadme>https://github.com/jaredtb</dragonsreadme>
+  <demovideo>https://www.youtube.com/watch?v=dQw4w9WgXcQ&t=PLACEHOLDER</demovideo>
   <zip>https://gtav.anushk.net/Project_127_Files_V14_Big.zip</zip>
   <bigzipmd5>690108ce3e0b5289630de1a074d56553</bigzipmd5>
   <zipversion>14</zipversion>
+  <hidevideo>True</hidevideo>
   <comment>Backwards Compability</comment>
   <comment2>dont THINK anything below here is actively used</comment2>
-  <tease>true</tease>
+  <tease>false</tease>
   <authuser>https://raw.githubusercontent.com/TwosHusbandS/Project-127/master/Installer/AuthUser.txt</authuser>
   <DLLinkG>https://github.com/TwosHusbandS/Project-127/releases/download/V_Final/file.g</DLLinkG>
   <DLLinkGHash>5c706e27f1f204050450839f24e12c8a</DLLinkGHash>

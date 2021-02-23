@@ -26,6 +26,18 @@ namespace Project_127.Popups
 	/// </summary>
 	public partial class PopupProgress : Window
 	{
+
+
+		private void Window_SourceInitialized(object sender, EventArgs e)
+		{
+			if (MainWindow.MW.IsVisible)
+			{
+				this.Left = MainWindow.MW.Left + (MainWindow.MW.Width / 2) - (this.Width / 2);
+				this.Top = MainWindow.MW.Top + (MainWindow.MW.Height / 2) - (this.Height / 2);
+			}
+		}
+
+
 		/// <summary>
 		/// Enum of ProgressTypes
 		/// </summary>
@@ -79,12 +91,16 @@ namespace Project_127.Popups
 		/// <param name="pProgressType"></param>
 		/// <param name="pParam1"></param>
 		/// <param name="pMyFileOperations"></param>
-		public PopupProgress(ProgressTypes pProgressType, string pParam1, List<HelperClasses.MyFileOperation> pMyFileOperations = null, string zipExtractionPath = "")
+		public PopupProgress(ProgressTypes pProgressType, string pParam1, List<HelperClasses.MyFileOperation> pMyFileOperations = null, string zipExtractionPath = "", bool betterPercentage = false)
 		{
-			// HUGE FUCKING MESS. TAKE CARE. 
-			// DONT TOUCH MY SPAGHETTI
-
+			// Sorry you have to look at this spaghetti
 			// Basically, based on the pProgressType the other params have different meanings or are not used etc. Kinda messy...really sucks
+
+			if (MainWindow.MW.IsVisible)
+			{
+				this.Owner = MainWindow.MW;
+				this.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+			}
 
 			if (zipExtractionPath == "")
 			{
@@ -276,7 +292,7 @@ namespace Project_127.Popups
 					{
 						long progress = ((i + 1) * 100 / FilesInDowngradeFiles.Length);
 						myPB.Value = progress;
-						myLBL.Content = "Gathering Information(" + (i + 1).ToString() + "/" + (FilesInDowngradeFiles.Length).ToString() + ")";
+						myLBL.Content = "Gathering Information (" + (i + 1).ToString() + "/" + (FilesInDowngradeFiles.Length).ToString() + ")";
 					});
 
 
@@ -336,7 +352,7 @@ namespace Project_127.Popups
 													{
 														HelperClasses.Logger.Log("User does want it. Initiating CreateBackup()");
 
-														HelperClasses.ProcessHandler.KillRelevantProcesses();
+														HelperClasses.ProcessHandler.KillRockstarProcesses();
 
 														LauncherLogic.CreateBackup();
 													}
@@ -364,6 +380,8 @@ namespace Project_127.Popups
 					Settings.AllFilesEverPlacedInsideGTAMyAdd(tmpFileWePlace);
 					MyFileOperationsTmp.Add(new MyFileOperation(MyFileOperation.FileOperations.Hardlink, FilesInDowngradeFiles[i], CorrespondingFilePathInGTALocation[i], "Will create HardLink in '" + CorrespondingFilePathInGTALocation[i] + "' to the file in '" + FilesInDowngradeFiles[i] + "'", 1));
 				}
+
+				HelperClasses.ProcessHandler.KillRockstarProcesses();
 
 				RtrnMyFileOperations = MyFileOperationsTmp;
 			}
@@ -413,7 +431,7 @@ namespace Project_127.Popups
 					{
 						long progress = ((i + 1) * 100 / FilesInDowngradeAndUpgradePathInDowngradedPathFormat.Count);
 						myPB.Value = progress;
-						myLBL.Content = "Gathering Information(" + (i + 1).ToString() + "/" + (FilesInDowngradeAndUpgradePathInDowngradedPathFormat.Count).ToString() + ")";
+						myLBL.Content = "Gathering Information (" + (i + 1).ToString() + "/" + (FilesInDowngradeAndUpgradePathInDowngradedPathFormat.Count).ToString() + ")";
 					});
 
 
@@ -471,7 +489,7 @@ namespace Project_127.Popups
 													{
 														HelperClasses.Logger.Log("User does want it. Initiating CreateBackup()");
 
-														HelperClasses.ProcessHandler.KillRelevantProcesses();
+														HelperClasses.ProcessHandler.KillRockstarProcesses();
 
 														LauncherLogic.CreateBackup();
 													}
@@ -506,6 +524,8 @@ namespace Project_127.Popups
 					}
 
 				}
+
+				HelperClasses.ProcessHandler.KillRockstarProcesses();
 
 				RtrnMyFileOperations = MyFileOperationsTmp;
 			}

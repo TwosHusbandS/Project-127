@@ -17,6 +17,7 @@ using Project_127.HelperClasses;
 using Project_127.MySettings;
 using System.Diagnostics;
 using System.Windows.Threading;
+using System.Speech.Synthesis;
 
 namespace Project_127.Overlay
 {
@@ -558,7 +559,7 @@ namespace Project_127.Overlay
 					NotesLoadedIndex = pNotesLoadedNewIndex;
 					MyGTAOverlay.setText(NotesLoaded[pNotesLoadedNewIndex]);
 					MyGTAOverlay.title.text = NotesLoadedTitle[pNotesLoadedNewIndex];
-					double tmp = (Overlay.NoteOverlayPages.NoteOverlay_Look.OverlayTextSize + 4) * 1.5 + 20;
+					double tmp = (Overlay.NoteOverlayPages.NoteOverlay_Look.OverlayTextSize + 10) * 2 + 20;
 					MyGTAOverlay.SetInitialScrollPosition((int)tmp);
 				}
 			}
@@ -570,24 +571,24 @@ namespace Project_127.Overlay
 			MyGTAOverlay.nextChapter();
 			if (MyGTAOverlay.chapterTitle != "")
 			{
-				MyGTAOverlay.title.text = "Project 1.27 - Overlay - " + MyGTAOverlay.chapterTitle;
+				MyGTAOverlay.title.text = NotesLoadedTitle[NotesLoadedIndex] + "\n" + MyGTAOverlay.chapterTitle + "\n";
 			}
 			else
 			{
-				MyGTAOverlay.title.text = NotesLoadedTitle[NotesLoadedIndex];
+				MyGTAOverlay.title.text = NotesLoadedTitle[NotesLoadedIndex] + "\n";
 			}
 		}
-
+		
 		public static void OverlayNoteChapterPrev()
 		{
 			MyGTAOverlay.prevChapter();
 			if (MyGTAOverlay.chapterTitle != "")
 			{
-				MyGTAOverlay.title.text = "Project 1.27 - Overlay - " + MyGTAOverlay.chapterTitle;
+				MyGTAOverlay.title.text = NotesLoadedTitle[NotesLoadedIndex] + "\n" + MyGTAOverlay.chapterTitle + "\n";
 			}
 			else
 			{
-				MyGTAOverlay.title.text = NotesLoadedTitle[NotesLoadedIndex];
+				MyGTAOverlay.title.text = NotesLoadedTitle[NotesLoadedIndex] + "\n";
 			}
 		}
 
@@ -731,12 +732,16 @@ namespace Project_127.Overlay
 			Overlay_MultipleMonitor.ResetPosition();
 		}
 
-		bool waitingForSecondRightClick = false;
-
 		private static OverlayAnimationObject ast;
 		private static DispatcherTimer dtast;
 		private static async void easterEgg()
 		{
+			// Very, very serious people
+			if (GTAOverlay.DisableRichard == true)
+			{
+				return;
+			}
+
 			// We are very serious people...
 			//if (new System.Random().NextDouble() > .8)
 			{
@@ -777,11 +782,10 @@ namespace Project_127.Overlay
 				ast.visible = true;
 				if (MyGTAOverlay.Visible)
                 {
-					/*var synth = new System.Speech.Synthesis.SpeechSynthesizer();
-					synth.SetOutputToDefaultAudioDevice();
-					synth.SpeakAsync(@"We're no strangers to love.  You know the rules. and so, due ayye, A full commitments what im think king uhhve
-, you wouldn't get dis from,, any uhhve-uhr guy. ayye just wanna tell-you how-I-um feel-ing; Gotta make-you, under stand, Never-gonna give you up,
-Never-gonna let you down, Never-gonna run around-and, dez-urt you");*/
+					var synthesizer = new SpeechSynthesizer();
+					synthesizer.SetOutputToDefaultAudioDevice();
+					synthesizer.SpeakAsync(@"Gotta make-you, under stand, Never-gonna give you up,
+Never-gonna let you down, Never-gonna run around-and, dez-urt you. Never-gonna make you cry, Never-gonna say goodbye, never gonna tell a lie, and hurt you.");
 				}
             }
 

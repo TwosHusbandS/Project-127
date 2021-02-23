@@ -19,6 +19,18 @@ namespace Project_127.Popups
 	/// </summary>
 	public partial class PopupTextbox : Window
 	{
+
+
+		private void Window_SourceInitialized(object sender, EventArgs e)
+		{
+			if (MainWindow.MW.IsVisible)
+			{
+				this.Left = MainWindow.MW.Left + (MainWindow.MW.Width / 2) - (this.Width / 2);
+				this.Top = MainWindow.MW.Top + (MainWindow.MW.Height / 2) - (this.Height / 2);
+			}
+		}
+
+
 		/// <summary>
 		/// Property of String we use to "return" things
 		/// </summary>

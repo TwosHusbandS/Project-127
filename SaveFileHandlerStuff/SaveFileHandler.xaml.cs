@@ -63,7 +63,7 @@ namespace Project_127.SaveFileHandlerStuff
 
 			CopyCutPasteObject = null;
 
-			if (Settings.EnableAlternativeLaunch)
+			if (LauncherLogic.LaunchWay == LauncherLogic.LaunchWays.SocialClubLaunch)
 			{
 				MySaveFile.CurrGTASavesPath = MySaveFile.GTASavesPathSocialClub;
 				btn_GTA_Path_Change.Content = "P127 Emu SaveFilePath";
@@ -294,8 +294,14 @@ namespace Project_127.SaveFileHandlerStuff
 				// Get MySaveFile from the selected Item
 				MySaveFile tmp = (MySaveFile)dg_GTAFiles.SelectedItem;
 
-				// Get the Name for it
-				string newName = GetNewFileName(tmp.FileName, MySaveFile.CurrentBackupSavesPath);
+				string newName = tmp.FileName;
+
+				if (HelperClasses.FileHandling.doesFileExist(MySaveFile.CurrentBackupSavesPath.TrimEnd('\\') + @"\" + tmp.FileName))
+				{
+					// Get the Name for it
+					newName = GetNewFileName(tmp.FileName, MySaveFile.CurrentBackupSavesPath);
+				}
+
 				if (!string.IsNullOrWhiteSpace(newName))
 				{
 					// Only do if it the name is not "" or null
