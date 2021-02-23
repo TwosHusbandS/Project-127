@@ -91,7 +91,7 @@ Over time it grew with Features and Launch - Capabilities
 
 Note:
 
-Project 1.27 now has the stability, user experience and core features we envisioned at the start of this project. While @dr490n and me (@thS / TwosHusbandS) both have ideas for potentially improvements and we may get around to working on them at some point, Project 1.27 is not under active development as of this very second (January of 2021). Big bugfixes etc. will still happen if needed, but we are making no promises either way. We want to thank everyone who has been a part of this incredible journey.
+Project 1.27 now has the stability, user experience and core features we envisioned at the start of this project. While @dr490n and me (@thS / TwosHusbandS) both have ideas for potentially improvements and we may get around to working on them at some point, Project 1.27 is not under active development as of this very second (February 23rd, 2021). Big bugfixes etc. will still happen if needed, but we are making no promises either way. We want to thank everyone who has been a part of this incredible journey.
 
 ### Help, How to get started, Support & Contact
 
