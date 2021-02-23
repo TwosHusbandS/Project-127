@@ -230,7 +230,8 @@ namespace Project_127
 		/// <summary>
 		/// Property of other Buildinfo. Will be in the top message of logs
 		/// </summary>
-		public static string BuildInfo = "1.2.2.0 - Built 1";
+		public static string BuildInfo = "1.2.2.0 - Custom Built No Cef";
+		// CTRLF CEFDISABLE
 
 		/// <summary>
 		/// Returns all Command Line Args as StringArray
@@ -658,7 +659,16 @@ namespace Project_127
 
 			HelperClasses.Logger.Log("Only CEF Init to go...");
 
-			Auth.ROSIntegration.CEFInitialize();
+			// CTRLF CEFDISABLE
+			
+			// Original Line commented out
+			//Auth.ROSIntegration.CEFInitialize();
+
+			// New Lines
+			LauncherLogic.AuthWay = LauncherLogic.AuthWays.MTL;
+			
+			// Also new Rectangles in UI of Settings (Over Legacy Auth Button) and in NoteOverlay_Look
+
 
 			if (LauncherLogic.LaunchWay == LauncherLogic.LaunchWays.DragonEmu)
 			{

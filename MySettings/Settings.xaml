@@ -278,6 +278,7 @@
                                     <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" x:Name="lbl_AuthWays" Content="Auth - Method" Style="{StaticResource lbl_Set_Info}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                     <Button Grid.Row="1" Grid.Column="0" Margin="40,0,40,10" Style="{StaticResource btn_AuthWay}" x:Name="btn_AuthMethod_MTL" Content="MTL (through RGL)" ToolTip="Opens RockstarGamesLauncher and gets Ownership Verification that way." Click="btn_AuthWays_MTL_Click"/>
                                     <Button Grid.Row="1" Grid.Column="1" Margin="40,0,40,10" Style="{StaticResource btn_AuthWay}" x:Name="btn_AuthMethod_LegacyAuth" Content="Legacy Auth" ToolTip="Grabs Ownership Verification by having you log in into your social club account inside P127."  Click="btn_AuthWays_Legacy_Click"/>
+                                    <Rectangle Grid.Row="1" Grid.Column="1" Margin="40,0,40,10" Fill="{x:Static local:MyColors.MyColorOffWhite85}" ToolTip="DISABLED ON THIS BUILT."/>
 
                                     <Label Grid.Row="2" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Silent MTL - Auth on P127 Startup"/>
                                     <Button Grid.Row="2" Grid.Column="1" x:Name="btn_cb_Set_AutoMTLAuthOnStartup" Style="{StaticResource btn_cb}" Click="btn_cb_Click" MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>

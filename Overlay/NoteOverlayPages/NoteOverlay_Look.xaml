@@ -52,6 +52,8 @@
                 <Label Grid.Row="1" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="  Overlay - TextColor"/>
                 <converters:MyColorPicker x:Name="MyColorPicker_Foreground" Margin="10" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" ColorChanged="MyColorPicker_Foreground_ColorChanged" Closed="MyColorPicker_Foreground_Closed"/>
 
+                <Rectangle Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" Grid.RowSpan="2" Margin="10" Fill="{x:Static local:MyColors.MyColorOffWhite85}" ToolTip="DISABLED ON THIS BUILT."/>
+
                 <Label Grid.Row="2" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="  Overlay - Location"/>
                 <ComboBox Grid.Row="2" Grid.Column="1" Margin="10" Grid.ColumnSpan="2" Style="{StaticResource cobo}" x:Name="ComboBox_OverlayLocation" SelectionChanged="ComboBox_OverlayLocation_SelectionChanged"/>
 
