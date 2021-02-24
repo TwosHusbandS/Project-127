@@ -35,6 +35,13 @@ Comments like "TODO", "TO DO", "CTRLF", "CTRL-F", and "CTRL F" are just ways of 
 Hybrid code can be found in AAA_HybridCode.
 
 
+Post 1.2.2.0 Issues:
+	- P127 not starting for me. I assume its to do with the mutex and the alreadyRunning stuff.
+	- MTL broke (ty rockstar)
+	- SCL SC - Killprocesses on SC - Downgrade freezes everything...
+	- Uninstaller doesnt delete everything. Ill just full yeet.
+	- CEF Init crashing for people
+
 */
 
 using System;
@@ -150,6 +157,7 @@ namespace Project_127
 
 			// Some shit due to do with the multi monitor preview
 			this.Width = 900;
+
 
 			// Checking if Mutex is already running
 			Mutex m = new Mutex(false, "P127_Mutex");
