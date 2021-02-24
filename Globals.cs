@@ -450,6 +450,7 @@ namespace Project_127
 			// Writing ProjectInstallationPath to Registry.
 			Settings.InstallationPath = Globals.ProjectInstallationPath;
 
+
 			// Last Launched Version Cleanup
 			if (Settings.LastLaunchedVersion < Globals.ProjectVersion)
 			{
@@ -610,6 +611,7 @@ namespace Project_127
 				Settings.LastLaunchedVersion = Globals.ProjectVersion;
 			}
 
+
 			// Deleting all Installer and ZIP Files from own Project Installation Path
 			DeleteOldFiles();
 
@@ -681,7 +683,7 @@ namespace Project_127
 		{
 			pipeServer.registerEndpoint("messageBox", (a) =>
 			{
-				Globals.DebugPopup(Encoding.UTF8.GetString(a));
+				System.Windows.Forms.MessageBox.Show(Encoding.UTF8.GetString(a));
 				return a;
 			});
 

@@ -36,7 +36,7 @@ Hybrid code can be found in AAA_HybridCode.
 
 
 Post 1.2.2.0 Issues:
-	- P127 not starting for me. I assume its to do with the mutex and the alreadyRunning stuff.
+	- [FIXED ON MY MACHINE, was caused by Downgraded SC which makes P127 Upgrade SC on startup, which kills processes, which freezes...]P127 not starting for me. I assume its to do with the mutex and the alreadyRunning stuff.
 	- MTL broke (ty rockstar)
 	- SCL SC - Killprocesses on SC - Downgrade freezes everything...
 	- Uninstaller doesnt delete everything. Ill just full yeet.
@@ -158,7 +158,6 @@ namespace Project_127
 			// Some shit due to do with the multi monitor preview
 			this.Width = 900;
 
-
 			// Checking if Mutex is already running
 			Mutex m = new Mutex(false, "P127_Mutex");
 			if (m.WaitOne(100))
@@ -173,7 +172,9 @@ namespace Project_127
 
 			// Starting our own Mutex since its not already running
 			myMutex = new Mutex(false, "P127_Mutex");
+
 			myMutex.WaitOne();
+
 
 			// Some Background Change based on Date
 			ChangeBackgroundBasedOnSeason();
@@ -181,8 +182,11 @@ namespace Project_127
 			// Intepreting all Command Line shit
 			Globals.CommandLineArgumentIntepretation();
 
+
 			// Start the Init Process of Logger, Settings, Globals, Regedit here, since we need the Logger in the next Line if it fails...
 			Globals.Init();
+
+
 
 			if (Globals.P127Branch == "internal")
 			{
