@@ -45,7 +45,7 @@ Source: "..\bin\x64\Release\Project 127 Launcher.exe"; DestDir: "{app}"; Flags: 
 Source: "..\bin\x64\Release\JUMPSCRIPT_LICENSE"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\bin\x64\Release\LICENSE"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\bin\x64\Release\UglyFiles\Antlr3.Runtime.dll"; DestDir: "{app}\UglyFiles"; Flags: ignoreversion
-Source: "..\bin\x64\Release\UglyFiles\cef.pak"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\bin\x64\Release\UglyFiles\cef.pak"; DestDir: "{app}\UglyFiles"; Flags: ignoreversion
 Source: "..\bin\x64\Release\UglyFiles\cef_100_percent.pak"; DestDir: "{app}\UglyFiles"; Flags: ignoreversion
 Source: "..\bin\x64\Release\UglyFiles\cef_200_percent.pak"; DestDir: "{app}\UglyFiles"; Flags: ignoreversion
 Source: "..\bin\x64\Release\UglyFiles\cef_extensions.pak"; DestDir: "{app}\UglyFiles"; Flags: ignoreversion
@@ -106,6 +106,10 @@ Source: "..\bin\x64\Release\UglyFiles\Artwork\Preview_8.png"; DestDir: "{app}\Ug
 Source: "..\bin\x64\Release\UglyFiles\Artwork\Preview_9.png"; DestDir: "{app}\UglyFiles\Artwork"; Flags: ignoreversion
 Source: "..\bin\x64\Release\UglyFiles\swiftshader\libEGL.dll"; DestDir: "{app}\UglyFiles\swiftshader"; Flags: ignoreversion
 Source: "..\bin\x64\Release\UglyFiles\swiftshader\libGLESv2.dll"; DestDir: "{app}\UglyFiles\swiftshader"; Flags: ignoreversion
+
+
+[UninstallDelete]
+Type: filesandordirs; Name: "{app}"
 
 
 [Icons]
