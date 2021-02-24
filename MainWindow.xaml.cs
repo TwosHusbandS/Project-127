@@ -34,14 +34,6 @@ Comments like "TODO", "TO DO", "CTRLF", "CTRL-F", and "CTRL F" are just ways of 
 
 Hybrid code can be found in AAA_HybridCode.
 
-
-Post 1.2.2.0 Issues:
-	- [FIXED ON MY MACHINE, was caused by Downgraded SC which makes P127 Upgrade SC on startup, which kills processes, which freezes...]P127 not starting for me. I assume its to do with the mutex and the alreadyRunning stuff.
-	- [FIXED] MTL broke (ty rockstar)
-	- [FIXED] Uninstaller doesnt delete everything. Ill just full yeet.
-	- [FIXED] CEF Init crashing for people
-	- SCL SC - Killprocesses on SC - Downgrade freezes everything...
-
 */
 
 using System;
