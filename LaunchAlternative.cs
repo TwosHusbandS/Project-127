@@ -285,7 +285,9 @@ namespace Project_127
 				return true;
 			}
 
+
 			Task.Delay(msDelay).GetAwaiter().GetResult();
+
 
 			HelperClasses.Logger.Log("SCL - Initiating a Social Club Downgrade after " + msDelay + " ms of Delay", 0);
 

@@ -801,7 +801,7 @@ namespace Project_127
 
 		public static string GetFullCommandLineArgsForStarting()
 		{
-			bool viaSteam = (Settings.Retailer == Settings.Retailers.Steam && !Settings.EnableDontLaunchThroughSteam);
+			bool viaSteam = (Settings.Retailer == Settings.Retailers.Steam && !Settings.EnableDontLaunchThroughSteam && LaunchWay == LaunchWays.DragonEmu);
 
 			string tmp = "";
 

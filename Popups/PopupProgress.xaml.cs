@@ -444,7 +444,7 @@ namespace Project_127.Popups
 					if (LauncherLogic.IgnoreNewFilesWhileUpgradeDowngradeLogic)
 					{
 						// Move to $UpgradeFiles
-						MyFileOperationsTmp.Add(new MyFileOperation(MyFileOperation.FileOperations.Delete, CorrespondingFilePathInGTALocation[i], "", "Deleting '" + CorrespondingFilePathInGTALocation + "' from $GTAInstallationDirectory, since this is a simple Downgrade after using a Backup", 1));
+						MyFileOperationsTmp.Add(new MyFileOperation(MyFileOperation.FileOperations.Delete, CorrespondingFilePathInGTALocation[i], "", "Deleting '" + CorrespondingFilePathInGTALocation[i] + "' from $GTAInstallationDirectory, since this is a simple Downgrade after using a Backup", 1));
 					}
 					// Normal Downgrade Logic
 					else
