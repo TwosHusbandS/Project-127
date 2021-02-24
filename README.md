@@ -51,7 +51,7 @@ Shamelessly stolen from: https://github.com/othneildrew/Best-README-Template
 	.
     <a href="#contact">Contact me</a>
 	.
-	<a href="Installer/Changelogs/V_1_2_2_1_Changelog.md">Changelog</a>
+	<a href="Installer/Info/Changelogs/V_1_2_2_1_Changelog.md">Changelog</a>
   </p>
 </p>
 
