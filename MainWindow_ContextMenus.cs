@@ -168,7 +168,6 @@ namespace Project_127
 			}
 			catch
 			{
-				//Globals.DebugPopup(ex.ToString());
 			}
 		}
 

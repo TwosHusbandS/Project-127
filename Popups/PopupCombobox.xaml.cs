@@ -39,7 +39,7 @@ namespace Project_127.Popups
 				this.Top = MainWindow.MW.Top + (MainWindow.MW.Height / 2) - (this.Height / 2);
 			}
 		}
-
+			
 
 		/// <summary>
 		/// Constructor of Popup Combobox

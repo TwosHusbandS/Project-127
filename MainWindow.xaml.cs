@@ -178,8 +178,6 @@ namespace Project_127
 			// Start the Init Process of Logger, Settings, Globals, Regedit here, since we need the Logger in the next Line if it fails...
 			Globals.Init();
 
-
-
 			if (Globals.P127Branch == "internal")
 			{
 				string msg = "We are in internal mode. We need testing on:\n\n" +
