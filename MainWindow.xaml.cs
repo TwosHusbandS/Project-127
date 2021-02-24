@@ -34,7 +34,6 @@ Comments like "TODO", "TO DO", "CTRLF", "CTRL-F", and "CTRL F" are just ways of 
 
 Hybrid code can be found in AAA_HybridCode.
 
-
 */
 
 using System;
@@ -165,13 +164,16 @@ namespace Project_127
 
 			// Starting our own Mutex since its not already running
 			myMutex = new Mutex(false, "P127_Mutex");
+
 			myMutex.WaitOne();
+
 
 			// Some Background Change based on Date
 			ChangeBackgroundBasedOnSeason();
 
 			// Intepreting all Command Line shit
 			Globals.CommandLineArgumentIntepretation();
+
 
 			// Start the Init Process of Logger, Settings, Globals, Regedit here, since we need the Logger in the next Line if it fails...
 			Globals.Init();
