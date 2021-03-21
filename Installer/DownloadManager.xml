@@ -210,7 +210,7 @@
     </subassembly>
     
 
-    <subassembly name="EMU_BASE_SUBASSEMBLY" type="common" version ="1.14.0.0">
+    <subassembly name="EMU_BASE_SUBASSEMBLY" type="common" version ="1.14.0.1">
         <file name="PlayGTAV.exe">
             <hash>5F4F8AE07CC5EED5204583B99E9889C0</hash>
             <mirror>http://gtav.anushk.net/downloadManager/subassemblies/emuv14/PlayGTAV.exe</mirror>
@@ -228,8 +228,8 @@
             <mirror>http://gtav.anushk.net/downloadManager/subassemblies/emuv14/ROSCrypto.dll</mirror>
         </file>
         <file name="socialclub.dll">
-            <hash>05F43A58A7B5A279F3F0106416A93440</hash>
-            <mirror>http://gtav.anushk.net/downloadManager/subassemblies/emuv14/socialclub.dll</mirror>
+            <hash>469B7041520DDA518DCBB88C5A9C2A1C</hash>
+            <mirror>http://gtav.anushk.net/downloadManager/subassemblies/emuv14.1_beta/socialclub.dll</mirror>
         </file>
         <file name="GFSDK_ShadowLib.win64.dll">
             <hash>D043C98ED424F6770EA800E77EFCF561</hash>
