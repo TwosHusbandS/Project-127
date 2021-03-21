@@ -143,7 +143,6 @@ namespace Project_127.HelperClasses
 			string tmpInstallDir = HelperClasses.RegeditHandler.GetValue(myRK, "InstallLocation");
 
 			HelperClasses.Logger.Log("Killing all Social Club Processes", 1);
-
 			Process[] tmp = Process.GetProcesses();
 			foreach (Process p in tmp)
 			{
@@ -180,16 +179,21 @@ namespace Project_127.HelperClasses
 				//}
 			}
 
+
 			if (OnlyClose)
 			{
 				return;
 			}
 
+
+
 			if (!SkipAllWait)
 			{
 				// wait 25 seconds
-				await Task.Delay(50);
+				Task.Delay(50).GetAwaiter().GetResult();
 			}
+
+
 
 			// Just making sure shit is really closed
 			tmp = Process.GetProcesses();
@@ -231,7 +235,7 @@ namespace Project_127.HelperClasses
 			if (!SkipAllWait)
 			{
 				// Waiting 150 ms after killing for process to really let go off file
-				await Task.Delay(msDelayAfter);
+				Task.Delay(msDelayAfter).GetAwaiter().GetResult();
 			}
 		}
 

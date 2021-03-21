@@ -1795,7 +1795,7 @@ namespace Project_127.MySettings
 				return;
 			}
 
-			LauncherLogic.UseBackup(Path);
+			LauncherLogic.UseBackup(Name);
 		}
 
 		/// <summary>
