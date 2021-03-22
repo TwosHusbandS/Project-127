@@ -360,7 +360,10 @@ namespace Project_127.Auth
 				session.destroy();
 				if (!Auth.ROSIntegration.AuthErrorMessageThrownAlready)
 				{
-					new Popups.Popup(Popups.Popup.PopupWindowTypes.PopupOkError, res.text).ShowDialog(); // Show Error
+					MainWindow.MW.Dispatcher.Invoke(() =>
+					{
+						new Popups.Popup(Popups.Popup.PopupWindowTypes.PopupOkError, res.text).ShowDialog(); // Show Error
+					});
 					Auth.ROSIntegration.AuthErrorMessageThrownAlready = true;
 				}
 			}
@@ -392,7 +395,10 @@ namespace Project_127.Auth
 				session.destroy();
 				if (!Auth.ROSIntegration.AuthErrorMessageThrownAlready)
 				{
-					new Popups.Popup(Popups.Popup.PopupWindowTypes.PopupOkError, res.text).ShowDialog(); // Show Error
+					MainWindow.MW.Dispatcher.Invoke(() =>
+					{
+						new Popups.Popup(Popups.Popup.PopupWindowTypes.PopupOkError, res.text).ShowDialog(); // Show Error
+					});
 					Auth.ROSIntegration.AuthErrorMessageThrownAlready = true;
 				}
 			}
