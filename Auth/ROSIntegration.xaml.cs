@@ -88,6 +88,7 @@ namespace Project_127.Auth
 		public static async void MTLAuth(bool LaunchGameAfter = false, bool SilentMode = false)
 		{
 			Auth.ROSIntegration.AuthErrorMessageThrownAlready = false;
+			Auth.ROSIntegration.FinishedMTL = false;
 			Auth.ROSIntegration.MinimizedAlready = false;
 
 			AuthLaunchGameAfter = LaunchGameAfter;
@@ -143,6 +144,7 @@ namespace Project_127.Auth
 		private static extern bool ShowWindowAsync(IntPtr hWnd, int nCmdShow);
 
 		public static bool AuthErrorMessageThrownAlready = false;
+		public static bool FinishedMTL = false;
 
 		public static bool MinimizedAlready = false;
 
@@ -208,11 +210,8 @@ namespace Project_127.Auth
 			{
 				HelperClasses.Logger.Log("Got session");
 				MTLwait.Stop();
-				if (!AuthErrorMessageThrownAlready)
+				if (!FinishedMTL)
 				{
-					HelperClasses.Logger.Log("Will ignore everything else, since Error Message / Success Message was thrown already");
-
-
 					if (MTLSilentMode)
 					{
 						CloseMTL();
@@ -237,7 +236,8 @@ namespace Project_127.Auth
 						LauncherLogic.Launch();
 					}
 
-					AuthErrorMessageThrownAlready = true;
+					Auth.ROSIntegration.FinishedMTL = true;
+
 					MTLSilentMode = false;
 				}
 
@@ -452,7 +452,10 @@ namespace Project_127.Auth
 					else
 					{
 						HelperClasses.Logger.Log("Login Failure");
-						new Popup(Popup.PopupWindowTypes.PopupOk, "Login Failure").ShowDialog();
+						MainWindow.MW.Dispatcher.Invoke((Action)delegate
+						{
+							new Popup(Popup.PopupWindowTypes.PopupOk, "Login Failure").ShowDialog();
+						});
 					}
 
 					this.Dispatcher.Invoke(() => this.Visibility = Visibility.Hidden);
