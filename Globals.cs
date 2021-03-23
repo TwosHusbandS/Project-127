@@ -303,7 +303,7 @@ namespace Project_127
 			{"LastLaunchedVersion", Globals.ProjectVersion.ToString() },
 			{"InstallationPath", Process.GetCurrentProcess().MainModule.FileName.Substring(0, Process.GetCurrentProcess().MainModule.FileName.LastIndexOf('\\')) },
 			{"EnableRememberMe", "False" },
-			{"AllFilesEverPlacedInsideGTA", "bink2w64.dll;GFSDK_ShadowLib.win64.dll;GTA5.exe;launc.dll;orig_socialclub.dll;PlayGTAV.exe;ROSCrypto.dll;socialclub.dll;x64a.rpf;update\update.rpf;scemu.cfg;launc.dat;version.txt" },
+			{"AllFilesEverPlacedInsideGTA", @"bink2w64.dll;GFSDK_ShadowLib.win64.dll;GTA5.exe;launc.dll;orig_socialclub.dll;PlayGTAV.exe;ROSCrypto.dll;socialclub.dll;x64a.rpf;update\update.rpf;scemu.cfg;launc.dat;version.txt" },
 
 			// Project 1.27 Settings
 			{"GTAVInstallationPath", ""},
