@@ -996,7 +996,7 @@ namespace Project_127
 					string DLFilename = DLPath.Substring(DLPath.LastIndexOf('/') + 1);
 					string LocalFileName = Globals.ProjectInstallationPath.TrimEnd('\\') + @"\" + DLFilename;
 
-					if (HelperClasses.FileHandling.URLExists(DLPath, 750))
+					if (HelperClasses.FileHandling.URLExists(DLPath, 2500))
 					{
 						HelperClasses.Logger.Log("Update URL Reachabe");
 
