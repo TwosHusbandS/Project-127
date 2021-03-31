@@ -303,7 +303,7 @@ namespace Project_127
 			{"LastLaunchedVersion", Globals.ProjectVersion.ToString() },
 			{"InstallationPath", Process.GetCurrentProcess().MainModule.FileName.Substring(0, Process.GetCurrentProcess().MainModule.FileName.LastIndexOf('\\')) },
 			{"EnableRememberMe", "False" },
-			{"AllFilesEverPlacedInsideGTA", "" },
+			{"AllFilesEverPlacedInsideGTA", @"bink2w64.dll;GFSDK_ShadowLib.win64.dll;GTA5.exe;launc.dll;orig_socialclub.dll;PlayGTAV.exe;ROSCrypto.dll;socialclub.dll;x64a.rpf;update\update.rpf;scemu.cfg;launc.dat;version.txt" },
 
 			// Project 1.27 Settings
 			{"GTAVInstallationPath", ""},
@@ -996,7 +996,7 @@ namespace Project_127
 					string DLFilename = DLPath.Substring(DLPath.LastIndexOf('/') + 1);
 					string LocalFileName = Globals.ProjectInstallationPath.TrimEnd('\\') + @"\" + DLFilename;
 
-					if (HelperClasses.FileHandling.URLExists(DLPath, 750))
+					if (HelperClasses.FileHandling.URLExists(DLPath, 2500))
 					{
 						HelperClasses.Logger.Log("Update URL Reachabe");
 
