@@ -436,9 +436,9 @@ namespace Project_127.Auth
 					{
 						//System.Windows.Forms.MessageBox.Show("Login Success");
 						HelperClasses.Logger.Log("Login success");
-						//MainWindow.MW.Dispatcher.Invoke(()=>
-						//	MainWindow.MW.SetButtonMouseOverMagic(MainWindow.MW.btn_Auth, MainWindow.MW.btn_Auth.IsMouseOver)
-						//	);
+						MainWindow.MW.Dispatcher.Invoke(()=>
+							MainWindow.MW.SetButtonMouseOverMagic(MainWindow.MW.btn_Auth)
+						);
 
 						if (Settings.EnableRememberMe)
 						{
