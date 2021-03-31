@@ -45,7 +45,7 @@ namespace Project_127.Auth
         protected override IResourceRequestHandler GetResourceRequestHandler(IWebBrowser chromiumWebBrowser, IBrowser browser, IFrame frame, IRequest request, bool isNavigation, bool isDownload, string requestInitiator, ref bool disableDefaultHandling)
         {
             //HelperClasses.Logger.Log("In GetResourceRequestHandler : " + request.Url);
-
+            return null;
             //gamedownloads\.rockstargames\.com\/mtl\/ext\/mtl\/.+\/js\/build\/launcher\.[\da-f]+\.js
             //Only intercept specific Url
             var pattern = @"gamedownloads\.rockstargames\.com\/mtl\/ext\/mtl\/.+\/js\/build\/launcher\.[\da-f]+\.js";
