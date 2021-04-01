@@ -230,7 +230,7 @@ namespace Project_127
 		/// <summary>
 		/// Property of other Buildinfo. Will be in the top message of logs
 		/// </summary>
-		public static string BuildInfo = "1.2.2.2 - Build 1";
+		public static string BuildInfo = "1.2.2.3 - Build 1";
 
 		/// <summary>
 		/// Returns all Command Line Args as StringArray
@@ -375,6 +375,9 @@ namespace Project_127
 			{"OverlayTextSize", "24" },
 			{"OL_MM_Left", "0" },
 			{"OL_MM_Top", "0" },
+
+			{"OverlayBackgroundImages", ""},
+			{"OverlaySelectedBackground", ""},
 
 			{"OverlayNotesMain","Note1.txt;Note2.txt;Note3.txt;Note4.txt"},
 			{"OverlayNotesPresetA",""},

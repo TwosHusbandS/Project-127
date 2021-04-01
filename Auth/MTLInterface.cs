@@ -103,7 +103,8 @@ namespace Project_127.Auth
             var exeioffset = BitConverter.ToUInt32(scmem, offset);
             var blob_offset = offset + 4 + exeioffset;
             var blob = new ArraySegment<byte>(scmem, (int)blob_offset, 16384);
-            var posixtime = BitConverter.ToInt32(blob.Skip(0x3170).Take(4).ToArray(), 0);
+            //var posixtime = BitConverter.ToInt32(blob.Skip(0x3170).Take(4).ToArray(), 0); //Broklen
+            var posixtime = (int)ROSCommunicationBackend.GetPosixTime() + 24 * 3600;
             var RockstarID = BitConverter.ToUInt64(blob.Skip(0xEE8).Take(8).ToArray(), 0);
             var sessKey = blob.Skip(0x10D8).Take(16).ToArray();
             var ticket = Encoding.UTF8.GetString(blob.Skip(0xAF0).TakeWhile(a => a != 0).ToArray());
@@ -111,7 +112,7 @@ namespace Project_127.Auth
             var rockstarNick = Encoding.UTF8.GetString(blob.Skip(0xE9F).TakeWhile(a => a != 0).ToArray());
             var countryCode = Encoding.UTF8.GetString(blob.Skip(0xE0C).TakeWhile(a => a != 0).ToArray());
 
-            if (posixtime == 0 || rockstarNick == "")
+            if (/*posixtime == 0 ||*/ rockstarNick == "")
             {
                 return null;
             }
