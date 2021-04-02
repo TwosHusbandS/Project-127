@@ -237,9 +237,9 @@ namespace Project_127.Overlay.NoteOverlayPages
 			RefreshIfHideOrNot();
 
 			if (Settings.OverlaySelectedBackground == "")
-            {
+			{
 				Settings.OverlaySelectedBackground = "None";
-            }
+			}
 
 			regen_ov_bg_imgsel_selections();
 
@@ -378,20 +378,19 @@ namespace Project_127.Overlay.NoteOverlayPages
 			Settings.OverlayBackground = OverlayBackground;
 		}
 
-        private void ov_bg_imgsel_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
+		private void ov_bg_imgsel_SelectionChanged(object sender, SelectionChangedEventArgs e)
+		{
 			if (((ComboBox)sender).SelectedItem == null)
-            {
+			{
 				return;
-            }
+			}
 			if (((ComboBox)sender).SelectedItem.ToString() == "New...")
-            {
+			{
 				var fd = new System.Windows.Forms.OpenFileDialog();
 				fd.Filter = "Image Files(*.BMP;*.JPG;*.GIF;*.PNG)|*.BMP;*.JPG;*.GIF;*.PNG|All files (*.*)|*.*";
 				fd.FilterIndex = 0;
-				if (fd.ShowDialog() == System.Windows.Forms.DialogResult.OK) 
-                {
-					MessageBox.Show(String.Format("You selected: {0}", fd.FileName));
+				if (fd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+				{
 					var obi = Settings.OverlayBackgroundImages;
 					obi.Add(fd.FileName);
 
@@ -401,17 +400,17 @@ namespace Project_127.Overlay.NoteOverlayPages
 
 					regen_ov_bg_imgsel_selections();
 				}
-                else
-                {
+				else
+				{
 					Settings.OverlaySelectedBackground = "None";
 					ov_bg_imgsel.SelectedIndex = 0;
-                }
+				}
 			}
 			else
-            {
+			{
 				Settings.OverlaySelectedBackground = ((ComboBox)sender).SelectedItem.ToString();
 				if (Settings.OverlaySelectedBackground != "None" && !System.IO.File.Exists(Settings.OverlaySelectedBackground))
-                {
+				{
 					var obi = Settings.OverlayBackgroundImages;
 					obi.Remove(Settings.OverlaySelectedBackground);
 					Settings.OverlayBackgroundImages = obi;
@@ -419,18 +418,26 @@ namespace Project_127.Overlay.NoteOverlayPages
 					regen_ov_bg_imgsel_selections();
 				}
 				if (Settings.OverlaySelectedBackground != "None")
-                {
-					NoteOverlay.MyGTAOverlay.setBgImage(Settings.OverlaySelectedBackground);
-					NoteOverlay.MyGTAOverlay.UseBackground = true;
-					NoteOverlay.MyGTAOverlay.UseImageFill = true;
-				} 
+				{
+					try
+					{
+						NoteOverlay.MyGTAOverlay.setBgImage(Settings.OverlaySelectedBackground);
+						NoteOverlay.MyGTAOverlay.UseBackground = true;
+						NoteOverlay.MyGTAOverlay.UseImageFill = true;
+					}
+					catch { }
+				}
 				else
-                {
-					NoteOverlay.MyGTAOverlay.UseBackground = false;
-                }
-				
+				{
+					try
+					{
+						NoteOverlay.MyGTAOverlay.UseBackground = false;
+					}
+					catch { }
+				}
+
 			}
-        }
+		}
 		private void regen_ov_bg_imgsel_selections()
 		{
 			ov_bg_imgsel.Items.Clear();
@@ -449,7 +456,7 @@ namespace Project_127.Overlay.NoteOverlayPages
 	}
 
 
-    public class PrintableFontFamilyConverter : IValueConverter
+	public class PrintableFontFamilyConverter : IValueConverter
 	{
 		public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
 		{

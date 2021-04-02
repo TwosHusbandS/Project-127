@@ -9,10 +9,10 @@
   * Addition of a chapter system with optional autoswitching
     * Improves note organization
 	* Allows for pertinent notes to be displayed based on a specified states
-  * More Information [here](Advanced%20Notefile.md)
+  * More Information [here](https://github.com/TwosHusbandS/Project-127/blob/master/Installer/Info/AdvancedNotefile.md)
 * Easter eggs
 * SCL Launch
-  * Launching through downgraded social club. For more Information see the "Launching Downgraded GTA" Section [here](Help.md#launching-downgraded-gta-additional-information-and-authentication)
+  * Launching through downgraded social club. For more Information see the "Launching Downgraded GTA" Section [here](https://github.com/TwosHusbandS/Project-127/blob/master/Installer/Info/Help.md#launching-downgraded-gta-additional-information-and-authentication)
     * Social Club is automatically Downgraded / Upgraded
 	* Removes the need for P127 to have your Auth information (through MTL or LegacyAuth)
 	* Your normal GTA V Installation Settings / Savefiles etc.
@@ -22,7 +22,7 @@
 * Option to enable / disable the loading of ScriptHook on Downgraded GTA
 
 #### Improved Features:
-* MTL Auth for Emu improvements. Should be working for everyone. For more Information see the "Launching Downgraded GTA" Section [here](Help.md#launching-downgraded-gta-additional-information-and-authentication)
+* MTL Auth for Emu improvements. Should be working for everyone. For more Information see the "Launching Downgraded GTA" Section [here](https://github.com/TwosHusbandS/Project-127/blob/master/Installer/Info/Help.md#launching-downgraded-gta-additional-information-and-authentication)
 * Improved Logic of ComponenetManager
   * What you are allowed to uninstall under circumstances
   * When and how it will be recommended to install Components
