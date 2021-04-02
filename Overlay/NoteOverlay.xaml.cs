@@ -226,7 +226,7 @@ namespace Project_127.Overlay
 					MyGTAOverlay.UseBackground = true;
 					MyGTAOverlay.setBgImage(Settings.OverlaySelectedBackground);
 					MyGTAOverlay.UseImageFill = true;
-                }
+				}
 				LoadTexts();
 				HelperClasses.Logger.Log("GTA Overlay initiated", 1);
 				easterEgg();
