@@ -249,7 +249,7 @@ namespace Project_127.MySettings
 		/// </summary>
 		/// <param name="pString"></param>
 		/// <returns></returns>
-		private static bool GetBoolFromString(string pString)
+		public static bool GetBoolFromString(string pString)
 		{
 			bool tmpBool;
 			bool.TryParse(pString, out tmpBool);

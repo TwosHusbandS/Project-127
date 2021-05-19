@@ -78,6 +78,20 @@ namespace Project_127.HelperClasses.Keyboard
 								NoteOverlay.OverlayNoteChapterNext();
 							}
 						}
+						else if (Settings.GetBoolFromString(Settings.GetSetting("SpecialPatcherEnabledSetting")))
+						{
+							if (pKey == Settings.GetKeyFromString(Settings.GetSetting("SpecialPatcherToggleKey"))) //For now
+                            {
+								if (SpecialPatchHandler.patchesEnabled())
+                                {
+									SpecialPatchHandler.disableAll();
+                                }
+                                else
+                                {
+									SpecialPatchHandler.enableAll();
+                                }
+                            }
+                        }
 					}
 				}
 				catch (Exception e)

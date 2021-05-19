@@ -197,6 +197,7 @@
     <Compile Include="HelperClasses\BlurBackgroundBehaviour.cs" />
     <Compile Include="HelperClasses\IPCPipes.cs" />
     <Compile Include="HelperClasses\MissionIdentifiers.cs" />
+    <Compile Include="HelperClasses\SpecialPatchHandler.cs" />
     <Compile Include="HelperClasses\WindowChangeListenerTwo.cs" />
     <Compile Include="MyColors.cs" />
     <Compile Include="HelperClasses\BuildVersionTable.cs" />

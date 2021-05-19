@@ -383,6 +383,8 @@ namespace Project_127
 			{"OverlayNotesPresetD",""},
 			{"OverlayNotesPresetE",""},
 			{"OverlayNotesPresetF",""},
+			{"SpecialPatcherEnabledSetting","False"},
+			{"SpecialPatcherToggleKey","F14"},
 		};
 
 		/// <summary>
@@ -650,7 +652,14 @@ namespace Project_127
 
 			initIPC();
 
-			Settings.GTAWindowTitle = GTAOverlay.targetWindowBorderlessDefault;
+			//INIT Special Patcher if enabled
+			if (Settings.GetBoolFromString(Settings.GetSetting("SpecialPatcherEnabledSetting")))
+			{
+				initGamePatches();
+			}
+
+
+				Settings.GTAWindowTitle = GTAOverlay.targetWindowBorderlessDefault;
 
 			// INIT the dynamic text handler for the overlay
 			initDynamicTextGetters();
@@ -704,11 +713,44 @@ namespace Project_127
 				return new byte[] { Convert.ToByte(true) };
 			});
 
+			if (Settings.GetBoolFromString(Settings.GetSetting("SpecialPatcherEnabledSetting")))
+            {
+				pipeServer.registerEndpoint("getActivePatches", () =>
+				{
+					return SpecialPatchHandler.patchBlob;
+					
+				});
+
+			}
+			
+
 			pipeServer.run();
 
 			//var pc = new IPCPipeClient("Project127Launcher");
 			//pc.call("test", Encoding.UTF8.GetBytes("Hi"));
 		}
+
+		/// <summary>
+		/// Sets up the game patcher
+		/// </summary>
+		private static void initGamePatches()
+        {
+			System.IO.StreamReader file = new System.IO.StreamReader(@"patches.txt");
+			string line, name;
+			UInt32 RVA;
+			byte[] patchdata;
+			while ((line = file.ReadLine()) != null)
+			{
+				var patch = line.Split(';');
+				name = patch[0];
+				RVA = Convert.ToUInt32(patch[1],16);
+				patchdata = Enumerable.Range(0, patch[2].Length)
+					 .Where(x => x % 2 == 0)
+					 .Select(x => Convert.ToByte(patch[2].Substring(x, 2), 16))
+					 .ToArray();
+			SpecialPatchHandler.addPatch(name, RVA, patchdata);
+			}
+        }
 
 		/// <summary>
 		/// Handles pointer path interpretation similarly to AutoSplit
