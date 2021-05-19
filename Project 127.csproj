@@ -410,6 +410,8 @@
     <None Include="Installer\Info\AdvancedNotefile.md" />
     <None Include="Installer\Info\Changelogs\V_1_2_2_1_Changelog.md" />
     <None Include="Installer\Info\Changelogs\V_1_2_2_0_Changelog.md" />
+    <None Include="Installer\Info\Changelogs\V_1_2_2_2_Changelog.md" />
+    <None Include="Installer\Info\Changelogs\V_1_2_2_3_Changelog.md" />
     <None Include="Installer\Info\Help.md" />
     <None Include="Installer\Info\Features.md" />
     <None Include="Installer\Info\Changelogs\V_1_2_0_0_Changelog.md" />

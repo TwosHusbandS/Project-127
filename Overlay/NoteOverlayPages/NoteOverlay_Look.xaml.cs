@@ -233,7 +233,16 @@ namespace Project_127.Overlay.NoteOverlayPages
 			MyColorPicker_Background.SelectedColor = Settings.OverlayBackground;
 			MyColorPicker_Foreground.SelectedColor = Settings.OverlayForeground;
 
+
 			RefreshIfHideOrNot();
+
+			if (Settings.OverlaySelectedBackground == "")
+			{
+				Settings.OverlaySelectedBackground = "None";
+			}
+
+			regen_ov_bg_imgsel_selections();
+
 		}
 
 		private void ComboBox_Fonts_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -367,6 +376,82 @@ namespace Project_127.Overlay.NoteOverlayPages
 		private void MyColorPicker_Background_Closed()
 		{
 			Settings.OverlayBackground = OverlayBackground;
+		}
+
+		private void ov_bg_imgsel_SelectionChanged(object sender, SelectionChangedEventArgs e)
+		{
+			if (((ComboBox)sender).SelectedItem == null)
+			{
+				return;
+			}
+			if (((ComboBox)sender).SelectedItem.ToString() == "New...")
+			{
+				var fd = new System.Windows.Forms.OpenFileDialog();
+				fd.Filter = "Image Files(*.BMP;*.JPG;*.GIF;*.PNG)|*.BMP;*.JPG;*.GIF;*.PNG|All files (*.*)|*.*";
+				fd.FilterIndex = 0;
+				if (fd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+				{
+					var obi = Settings.OverlayBackgroundImages;
+					obi.Add(fd.FileName);
+
+					Settings.OverlayBackgroundImages = obi;
+
+					Settings.OverlaySelectedBackground = fd.FileName;
+
+					regen_ov_bg_imgsel_selections();
+				}
+				else
+				{
+					Settings.OverlaySelectedBackground = "None";
+					ov_bg_imgsel.SelectedIndex = 0;
+				}
+			}
+			else
+			{
+				Settings.OverlaySelectedBackground = ((ComboBox)sender).SelectedItem.ToString();
+				if (Settings.OverlaySelectedBackground != "None" && !System.IO.File.Exists(Settings.OverlaySelectedBackground))
+				{
+					var obi = Settings.OverlayBackgroundImages;
+					obi.Remove(Settings.OverlaySelectedBackground);
+					Settings.OverlayBackgroundImages = obi;
+					Settings.OverlaySelectedBackground = "None";
+					regen_ov_bg_imgsel_selections();
+				}
+				if (Settings.OverlaySelectedBackground != "None")
+				{
+					try
+					{
+						NoteOverlay.MyGTAOverlay.setBgImage(Settings.OverlaySelectedBackground);
+						NoteOverlay.MyGTAOverlay.UseBackground = true;
+						NoteOverlay.MyGTAOverlay.UseImageFill = true;
+					}
+					catch { }
+				}
+				else
+				{
+					try
+					{
+						NoteOverlay.MyGTAOverlay.UseBackground = false;
+					}
+					catch { }
+				}
+
+			}
+		}
+		private void regen_ov_bg_imgsel_selections()
+		{
+			ov_bg_imgsel.Items.Clear();
+
+			ov_bg_imgsel.Items.Add("None");
+
+			foreach (var i in Settings.OverlayBackgroundImages)
+			{
+				ov_bg_imgsel.Items.Add(i);
+			}
+
+			ov_bg_imgsel.Items.Add("New...");
+
+			ov_bg_imgsel.SelectedIndex = Settings.OverlayBackgroundImages.IndexOf(Settings.OverlaySelectedBackground) + 1;
 		}
 	}
 
