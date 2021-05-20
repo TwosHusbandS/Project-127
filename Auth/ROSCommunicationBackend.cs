@@ -697,11 +697,19 @@ namespace Project_127.Auth
 
 		private static async void sessionValidityCheck()
         {
-			if ((await GenLaunchToken()).error)
-			{
-				nextSessionValidityCheck = 0;
+            try
+            {
+				if ((await GenLaunchToken()).error)
+				{
+					nextSessionValidityCheck = 0;
+					session.destroy();
+				}
+			}
+            catch
+            {
 				session.destroy();
 			}
+			
 		}
 
 		/// <summary>
