@@ -301,7 +301,7 @@ namespace Project_127
 
 			AddHyperlinkText(rtb_About, "https://www.mind.org.uk/donate", "Charity", "If you want to support us, we encourage you to donate to a ", " of your chosing.");
 
-			AddHyperlinkText(rtb_About, DragonsLink, "here", "@d490n, who did all of the game-launch related work which made P127 possible, uploaded his work, sourcecode and documented his findings on his Github ", ".");
+			AddHyperlinkText(rtb_About, DragonsLink, "here", "@dr490n, who did all of the game-launch related work which made P127 possible, uploaded his work, sourcecode and documented his findings on his Github ", ".");
 
 			AddHyperlinkText(rtb_About, "https://github.com/TwosHusbandS/Project-127/blob/master/Readme.md", "here", "A more lengthy and detailed version of this can be found on github ", "");
 
