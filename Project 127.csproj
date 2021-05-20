@@ -256,6 +256,9 @@
     <Compile Include="Popups\PopupMode.xaml.cs">
       <DependentUpon>PopupMode.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Popups\PopupSpecialPatcher.xaml.cs">
+      <DependentUpon>PopupSpecialPatcher.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Popups\PopupTextbox.xaml.cs">
       <DependentUpon>PopupTextbox.xaml</DependentUpon>
     </Compile>
@@ -364,6 +367,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Popups\PopupDownload.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Popups\PopupSpecialPatcher.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

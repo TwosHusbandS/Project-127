@@ -1668,6 +1668,8 @@ namespace Project_127.MySettings
 			}
             set
             {
+
+				ROSCommunicationBackend.setFlag(ROSCommunicationBackend.Flags.useSpecialPatcher, value);
 				SetSetting("SpecialPatcherEnabledSetting", value.ToString());
 			}
         }

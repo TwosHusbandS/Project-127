@@ -716,15 +716,13 @@ namespace Project_127
 				return new byte[] { Convert.ToByte(true) };
 			});
 
-			if (Settings.SpecialPatcherEnabled)
-            {
-				pipeServer.registerEndpoint("getActivePatches", () =>
-				{
-					return SpecialPatchHandler.patchBlob;
-					
-				});
+			
+			pipeServer.registerEndpoint("getActivePatches", () =>
+			{
+				return Settings.SpecialPatcherEnabled ? SpecialPatchHandler.patchBlob : BitConverter.GetBytes(0);
+			});
 
-			}
+			
 			
 
 			pipeServer.run();
@@ -754,8 +752,8 @@ namespace Project_127
 						 .Select(x => Convert.ToByte(patch[2].Substring(x, 2), 16))
 						 .ToArray();
 					SpecialPatchHandler.addPatch(name, RVA, patchdata);
+					ROSCommunicationBackend.setFlag(ROSCommunicationBackend.Flags.useSpecialPatcher, true);
 				}
-				ROSCommunicationBackend.setFlag(ROSCommunicationBackend.Flags.useSpecialPatcher, true);
 			}
             catch
             {
