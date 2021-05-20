@@ -697,11 +697,18 @@ namespace Project_127.Auth
 
 		private static async void sessionValidityCheck()
         {
-			if ((await GenLaunchToken()).error)
-			{
-				nextSessionValidityCheck = 0;
-				session.destroy();
+            try
+            {
+				if ((await GenLaunchToken()).error)
+				{
+					nextSessionValidityCheck = 0;
+					session.destroy();
+				}
 			}
+            catch
+            {
+				session.destroy();
+            }
 		}
 
 		/// <summary>
@@ -919,7 +926,7 @@ namespace Project_127.Auth
 			preorder,
 			supressASILoading,
 			indicateTheLessThanLegalProcurementOfMotorVehicles,
-			RES3,
+			useSpecialPatcher,
 			RES4,
 			RES5,
 			RES6,

@@ -1660,6 +1660,30 @@ namespace Project_127.MySettings
 			}
 		}
 
+		public static bool SpecialPatcherEnabled
+        {
+            get
+            {
+				return GetBoolFromString(GetSetting("SpecialPatcherEnabledSetting"));
+			}
+            set
+            {
+				SetSetting("SpecialPatcherEnabledSetting", value.ToString());
+			}
+        }
+
+		public static string SpecialPatcherKey
+        {
+            get
+            {
+				return GetSetting("SpecialPatcherToggleKey");
+			}
+            set
+            {
+				SetSetting("SpecialPatcherToggleKey", value);
+			}
+		}
+
 
 		/// <summary>
 		/// Gets StringList from a single String

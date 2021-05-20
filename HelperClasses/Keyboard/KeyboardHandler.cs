@@ -78,21 +78,14 @@ namespace Project_127.HelperClasses.Keyboard
 								NoteOverlay.OverlayNoteChapterNext();
 							}
 						}
-						else if (Settings.GetBoolFromString(Settings.GetSetting("SpecialPatcherEnabledSetting")))
-						{
-							if (pKey == Settings.GetKeyFromString(Settings.GetSetting("SpecialPatcherToggleKey"))) //For now
-                            {
-								if (SpecialPatchHandler.patchesEnabled())
-                                {
-									SpecialPatchHandler.disableAll();
-                                }
-                                else
-                                {
-									SpecialPatchHandler.enableAll();
-                                }
-                            }
-                        }
 					}
+					if (Settings.SpecialPatcherEnabled)
+					{
+						if (pKey.ToString() == Settings.SpecialPatcherKey) //For now
+                        {
+							SpecialPatchHandler.patcherEnabled = !SpecialPatchHandler.patcherEnabled;
+                        }
+                    }
 				}
 				catch (Exception e)
 				{

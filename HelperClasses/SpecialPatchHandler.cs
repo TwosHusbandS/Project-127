@@ -10,6 +10,15 @@ namespace Project_127.HelperClasses
     {
         private static bool patchesUpdated = true;
         private static byte[] _patchBlob = null;
+
+        /// <summary>
+        /// Bool determining whether or not the patcher runs/whether patches are applied
+        /// </summary>
+        public static bool patcherEnabled { get; set; } = false;
+
+        /// <summary>
+        /// The blob for EMU
+        /// </summary>
         public static byte[] patchBlob
         {
             get
@@ -19,13 +28,22 @@ namespace Project_127.HelperClasses
                     generatePatchBlob();
                     patchesUpdated = false;
                 }
-                return _patchBlob;
+                if (patcherEnabled)
+                {
+                    return _patchBlob;
+                }
+                else
+                {
+                    return BitConverter.GetBytes(0);
+                }
+                
             }
         }
-        private static byte sequence_number = 0;
+        private static byte last_sequence = 0;
         private static Dictionary<string, patch> activePatches = new Dictionary<string, patch>();
         private static Dictionary<string, patch> patches = new Dictionary<string, patch>();
-        public static void generatePatchBlob()
+
+        private static void generatePatchBlob()
         {
             List<patch> patches = new List<patch>();
             patches.AddRange(activePatches.Values);
@@ -35,27 +53,36 @@ namespace Project_127.HelperClasses
             foreach (var i in patches)
             {
                 patchBlobTemp.AddRange(BitConverter.GetBytes(i.RVA));
-                patchBlobTemp.Add(sequence_number++);
-                UInt16 datasize = (UInt16)i.data.Length;
+                patchBlobTemp.Add(i.sequence);
+                UInt16 datasize = (UInt16)i.content.Length;
                 patchBlobTemp.AddRange(BitConverter.GetBytes(datasize));
-                patchBlobTemp.AddRange(i.data);
+                patchBlobTemp.AddRange(i.content);
             }
             _patchBlob = patchBlobTemp.ToArray();
         }
         private struct patch
         {
             public UInt32 RVA;
-            public byte[] data;
+            public byte[] content;
+            public byte sequence;
         }
 
-        public static bool addPatch(string name, UInt32 RVA, byte[] data)
+        /// <summary>
+        /// Adds a patch
+        /// </summary>
+        /// <param name="name">Name of the new patch</param>
+        /// <param name="RVA">RVA of the patch</param>
+        /// <param name="content">Content of the patch</param>
+        /// <returns>Bool indicating creation success</returns>
+        public static bool addPatch(string name, UInt32 RVA, byte[] content)
         {
             try
             {
                 patches.Add(name, new patch
                 {
                     RVA = RVA,
-                    data = data
+                    content = content,
+                    sequence = ++last_sequence
                 });
                 return true;
             }
@@ -65,6 +92,21 @@ namespace Project_127.HelperClasses
             }
         }
 
+        /// <summary>
+        /// Removes/Deletes a patch
+        /// </summary>
+        /// <param name="name">Name of the patch to remove</param>
+        /// <returns>Bool indicating removal success</returns>
+        public static bool removePatch(string name)
+        {
+            return patches.Remove(name);
+        }
+
+        /// <summary>
+        /// Enables a certain patch
+        /// </summary>
+        /// <param name="name">Name of patch to enable</param>
+        /// <returns>Bool indicating success</returns>
         public static bool enablePatch(string name)
         {
             patchesUpdated = true;
@@ -76,6 +118,11 @@ namespace Project_127.HelperClasses
             return false;
         }
 
+        /// <summary>
+        /// Disables a certain patch
+        /// </summary>
+        /// <param name="name">Name of patch to disable</param>
+        /// <returns>Bool indicating success</returns>
         public static bool disablePatch(string name)
         {
             patchesUpdated = true;
@@ -87,24 +134,81 @@ namespace Project_127.HelperClasses
             return false;
         }
 
+        /// <summary>
+        /// Checks if a certain patch exists and is enabled
+        /// </summary>
+        /// <param name="name">Patch Name</param>
+        /// <returns>Bool indicating whether patch exists and is enabled</returns>
         public static bool isPatchEnabled(string name)
         {
             return activePatches.ContainsKey(name);
         }
 
+        /// <summary>
+        /// Disables/Deactivates all patches
+        /// </summary>
         public static void disableAll()
         {
+            patchesUpdated = true;
             activePatches.Clear();
         }
 
+        /// <summary>
+        /// Enables/Activates all patches
+        /// </summary>
         public static void enableAll()
         {
+            patchesUpdated = true;
             activePatches = patches.ToDictionary(e => e.Key, e => e.Value);
         }
 
+        /// <summary>
+        /// Checks if any patches are enabled
+        /// </summary>
+        /// <returns>Bool indicating if any patches are enabled</returns>
         public static bool patchesEnabled()
         {
             return activePatches.Count > 0;
+        }
+
+        /// <summary>
+        /// Returns a list of available patches
+        /// </summary>
+        /// <returns>List of patch names</returns>
+        public static List<string> getPatches()
+        {
+            return new List<string>(patches.Keys);
+        }
+
+        /// <summary>
+        /// Returns a tuple of patch info
+        /// </summary>
+        /// <param name="name">Name of the patch</param>
+        /// <returns>Tuple of patch info (RVA, Content)</returns>
+        public static Tuple<UInt64, Byte[]> getPatchInfo(string name)
+        {
+            if (patches.ContainsKey(name))
+            {
+                return new Tuple<UInt64, Byte[]>(patches[name].RVA, patches[name].content);
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Returns status of all patches
+        /// </summary>
+        /// <returns>List of patch statuses (name, active)(</returns>
+        public static List<Tuple<string,bool>> getPatchStatus()
+        {
+            var output = new List<Tuple<string, bool>>();
+            foreach (var i in patches.Keys)
+            {
+                output.Add(new Tuple<string, bool>(i, activePatches.ContainsKey(i)));
+            }
+            return output;
         }
     }
 }
