@@ -339,7 +339,7 @@ namespace Project_127
 
 			AddParagraph(rtb_Help, "If GTA (mainly Downgraded) does not launch AT ALL, UNCHECK \"Overwrite GTA CommandLineArgs\" inside \"Additional GTA Commandline Options\" inside \"GTA & Launch Settings\".");
 
-			AddParagraph(rtb_Help, "If one Lauch - Method(for downgraded GTA) is not working for you, it is worth trying to switch the way P127 Launches the downgraded Game, by doing so inside \"GTA & Launch Settings\".");
+			AddParagraph(rtb_Help, "If one Launch - Method(for downgraded GTA) is not working for you, it is worth trying to switch the way P127 Launches the downgraded Game, by doing so inside \"GTA & Launch Settings\".");
 
 			AddParagraph(rtb_Help, "If the current Authentication Method for the dr490n emu is not working, it is worth trying to switch the way P127 tries to authenticate your GTA ownership by doing so inside the Orange Border inside \"GTA & Launch Settings\".");
 
