@@ -388,6 +388,7 @@ namespace Project_127
 			{"OverlayNotesPresetF",""},
 			{"SpecialPatcherEnabledSetting","False"},
 			{"SpecialPatcherToggleKey","F14"},
+			{"SpecialPatcherPatches", "{}"},
 		};
 
 		/// <summary>
@@ -655,11 +656,6 @@ namespace Project_127
 
 			initIPC();
 
-			//INIT Special Patcher if enabled
-			if (Settings.SpecialPatcherEnabled)
-			{
-				initGamePatches();
-			}
 
 
 				Settings.GTAWindowTitle = GTAOverlay.targetWindowBorderlessDefault;
@@ -731,38 +727,6 @@ namespace Project_127
 			//pc.call("test", Encoding.UTF8.GetBytes("Hi"));
 		}
 
-		/// <summary>
-		/// Sets up the special game patcher
-		/// </summary>
-		private static void initGamePatches()
-        {
-            try
-            {
-				System.IO.StreamReader file = new System.IO.StreamReader(@"patches.txt");
-				string line, name;
-				UInt32 RVA;
-				byte[] patchdata;
-				while ((line = file.ReadLine()) != null)
-				{
-					var patch = line.Split(';');
-					name = patch[0];
-					RVA = Convert.ToUInt32(patch[1], 16);
-					patchdata = Enumerable.Range(0, patch[2].Length)
-						 .Where(x => x % 2 == 0)
-						 .Select(x => Convert.ToByte(patch[2].Substring(x, 2), 16))
-						 .ToArray();
-					SpecialPatchHandler.addPatch(name, RVA, patchdata);
-					ROSCommunicationBackend.setFlag(ROSCommunicationBackend.Flags.useSpecialPatcher, true);
-				}
-			}
-            catch
-            {
-				new Popup(Popup.PopupWindowTypes.PopupOkError, "Unable to open patches file!").ShowDialog();
-				return;
-            }
-			
-			
-        }
 
 		/// <summary>
 		/// Handles pointer path interpretation similarly to AutoSplit

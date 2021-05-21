@@ -497,6 +497,7 @@ namespace Project_127.Auth
 			//addLaunchExtension("saveDirOverride", Encoding.UTF8.GetBytes());
 			setFlag(Flags.preorder, Settings.EnablePreOrderBonus);
 			setFlag(Flags.supressASILoading, !Settings.EnableScripthookOnDowngraded);
+			setFlag(Flags.useSpecialPatcher, Settings.SpecialPatcherEnabled);
 			LKey.Add(laflags);
 
 			byte[] reqHeaders = HeaderBuild(

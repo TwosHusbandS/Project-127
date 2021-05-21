@@ -85,6 +85,13 @@ namespace Project_127.HelperClasses.Keyboard
                         {
 							SpecialPatchHandler.patcherEnabled = !SpecialPatchHandler.patcherEnabled;
                         }
+						else if (HelperClasses.SpecialPatchHandler.patch.PatchKeys.ContainsKey(pKey))
+						{
+							foreach(var p in HelperClasses.SpecialPatchHandler.patch.PatchKeys[pKey])
+                            {
+								p.Enabled = !p.Enabled;
+							}
+                        }
                     }
 				}
 				catch (Exception e)

@@ -767,6 +767,7 @@ namespace Project_127.MySettings
 			ButtonMouseOverMagic(btn_cb_Set_AutoMTLAuthOnStartup);
 			ButtonMouseOverMagic(btn_cb_Set_EnableCoreFix);
 			ButtonMouseOverMagic(btn_cb_EnableSpecialPatcher);
+			ButtonMouseOverMagic(btn_cb_EnablePPTester);
 
 
 			if (LauncherLogic.AuthWay == LauncherLogic.AuthWays.MTL)
@@ -1020,6 +1021,9 @@ namespace Project_127.MySettings
 					break;
 				case "btn_cb_EnableSpecialPatcher":
 					SetCheckBoxBackground(myBtn, Settings.SpecialPatcherEnabled);
+					break;
+				case "btn_cb_EnablePPTester":
+					SetCheckBoxBackground(myBtn, false);
 					break;
 
 			}
@@ -1335,6 +1339,8 @@ namespace Project_127.MySettings
 					break;
 				case "btn_cb_EnableSpecialPatcher":
 					Settings.SpecialPatcherEnabled = !Settings.SpecialPatcherEnabled;
+					break;
+				case "btn_cb_EnablePPTester":
 					break;
 			}
 			RefreshGUI();

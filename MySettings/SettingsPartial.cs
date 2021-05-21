@@ -1686,6 +1686,18 @@ namespace Project_127.MySettings
 			}
 		}
 
+		public static string SpecialPatcherPatches
+        {
+            get
+            {
+				return GetSetting("SpecialPatcherPatches");
+            }
+            set
+            {
+				SetSetting("SpecialPatcherPatches", value);
+            }
+        }
+
 
 		/// <summary>
 		/// Gets StringList from a single String

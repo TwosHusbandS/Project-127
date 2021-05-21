@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace Project_127.HelperClasses
@@ -40,12 +43,12 @@ namespace Project_127.HelperClasses
             }
         }
         private static byte last_sequence = 0;
-        private static Dictionary<string, patch> activePatches = new Dictionary<string, patch>();
-        private static Dictionary<string, patch> patches = new Dictionary<string, patch>();
+        private static Dictionary<string, cachedPatch> activePatches = new Dictionary<string, cachedPatch>();
+        private static Dictionary<string, cachedPatch> cachedPatches = new Dictionary<string, cachedPatch>();
 
         private static void generatePatchBlob()
         {
-            List<patch> patches = new List<patch>();
+            List<cachedPatch> patches = new List<cachedPatch>();
             patches.AddRange(activePatches.Values);
             patches = patches.OrderBy(x => x.RVA).ToList();
             List<byte> patchBlobTemp = new List<byte>();
@@ -60,7 +63,7 @@ namespace Project_127.HelperClasses
             }
             _patchBlob = patchBlobTemp.ToArray();
         }
-        private struct patch
+        private struct cachedPatch
         {
             public UInt32 RVA;
             public byte[] content;
@@ -68,17 +71,17 @@ namespace Project_127.HelperClasses
         }
 
         /// <summary>
-        /// Adds a patch
+        /// Adds a patch to the cache
         /// </summary>
         /// <param name="name">Name of the new patch</param>
         /// <param name="RVA">RVA of the patch</param>
         /// <param name="content">Content of the patch</param>
         /// <returns>Bool indicating creation success</returns>
-        public static bool addPatch(string name, UInt32 RVA, byte[] content)
+        internal static bool cachePatch(string name, UInt32 RVA, byte[] content)
         {
             try
             {
-                patches.Add(name, new patch
+                cachedPatches.Add(name, new cachedPatch
                 {
                     RVA = RVA,
                     content = content,
@@ -93,37 +96,51 @@ namespace Project_127.HelperClasses
         }
 
         /// <summary>
-        /// Removes/Deletes a patch
+        /// Adds a patch to the cache
         /// </summary>
-        /// <param name="name">Name of the patch to remove</param>
-        /// <returns>Bool indicating removal success</returns>
-        public static bool removePatch(string name)
+        /// <param name="p">Patch to add</param>
+        /// <returns>Bool indicating creation success</returns>
+        public static bool cachePatch(patch p)
         {
-            return patches.Remove(name);
+            return cachePatch(p.Name, p.RVA, p.Content);
         }
 
         /// <summary>
-        /// Enables a certain patch
+        /// Removes a patch from cache
+        /// </summary>
+        /// <param name="name">Name of the patch to remove</param>
+        /// <returns>Bool indicating removal success</returns>
+        internal static bool removeCachedPatch(string name)
+        {
+            if (isPatchEnabled(name))
+            {
+                disableCachedPatch(name);
+            }
+            return cachedPatches.Remove(name);
+        }
+
+        /// <summary>
+        /// Enables a certain cached patch
         /// </summary>
         /// <param name="name">Name of patch to enable</param>
         /// <returns>Bool indicating success</returns>
-        public static bool enablePatch(string name)
+        public static bool enableCachedPatch(string name)
         {
             patchesUpdated = true;
-            if (patches.ContainsKey(name))
+            if (cachedPatches.ContainsKey(name))
             {
-                activePatches.Add(name, patches[name]);
+                activePatches.Add(name, cachedPatches[name]);
                 return true;
             }
             return false;
         }
 
         /// <summary>
-        /// Disables a certain patch
+        /// Disables a certain cached patch
         /// </summary>
         /// <param name="name">Name of patch to disable</param>
         /// <returns>Bool indicating success</returns>
-        public static bool disablePatch(string name)
+        public static bool disableCachedPatch(string name)
         {
             patchesUpdated = true;
             if (activePatches.ContainsKey(name))
@@ -135,13 +152,18 @@ namespace Project_127.HelperClasses
         }
 
         /// <summary>
-        /// Checks if a certain patch exists and is enabled
+        /// Checks if a certain patch exists in cache and is enabled
         /// </summary>
         /// <param name="name">Patch Name</param>
         /// <returns>Bool indicating whether patch exists and is enabled</returns>
         public static bool isPatchEnabled(string name)
         {
             return activePatches.ContainsKey(name);
+        }
+
+        internal static bool isPatchCached(string name)
+        {
+            return cachedPatches.ContainsKey(name);
         }
 
         /// <summary>
@@ -154,12 +176,12 @@ namespace Project_127.HelperClasses
         }
 
         /// <summary>
-        /// Enables/Activates all patches
+        /// Enables/Activates all cached patches
         /// </summary>
-        public static void enableAll()
+        public static void enableAllCached()
         {
             patchesUpdated = true;
-            activePatches = patches.ToDictionary(e => e.Key, e => e.Value);
+            activePatches = cachedPatches.ToDictionary(e => e.Key, e => e.Value);
         }
 
         /// <summary>
@@ -172,24 +194,24 @@ namespace Project_127.HelperClasses
         }
 
         /// <summary>
-        /// Returns a list of available patches
+        /// Returns a list of cached patches
         /// </summary>
         /// <returns>List of patch names</returns>
-        public static List<string> getPatches()
+        public static List<string> getCachedPatches()
         {
-            return new List<string>(patches.Keys);
+            return new List<string>(cachedPatches.Keys);
         }
 
         /// <summary>
-        /// Returns a tuple of patch info
+        /// Returns a tuple of patch info for a cached patch
         /// </summary>
         /// <param name="name">Name of the patch</param>
         /// <returns>Tuple of patch info (RVA, Content)</returns>
         public static Tuple<UInt64, Byte[]> getPatchInfo(string name)
         {
-            if (patches.ContainsKey(name))
+            if (cachedPatches.ContainsKey(name))
             {
-                return new Tuple<UInt64, Byte[]>(patches[name].RVA, patches[name].content);
+                return new Tuple<UInt64, Byte[]>(cachedPatches[name].RVA, cachedPatches[name].content);
             }
             else
             {
@@ -197,18 +219,297 @@ namespace Project_127.HelperClasses
             }
         }
 
+
         /// <summary>
-        /// Returns status of all patches
+        /// Returns status of all cached patches
         /// </summary>
         /// <returns>List of patch statuses (name, active)(</returns>
-        public static List<Tuple<string,bool>> getPatchStatus()
+        public static List<Tuple<string,bool>> getCachedPatchStatus()
         {
             var output = new List<Tuple<string, bool>>();
-            foreach (var i in patches.Keys)
+            foreach (var i in cachedPatches.Keys)
             {
                 output.Add(new Tuple<string, bool>(i, activePatches.ContainsKey(i)));
             }
             return output;
         }
+
+        public class patch
+        {
+            /// <summary>
+            /// Contructs and empty patch object
+            /// </summary>
+            public patch() { }
+
+            /// <summary>
+            /// Constructs a patch object
+            /// </summary>
+            /// <param name="Name">Patch Name</param>
+            /// <param name="RVA">Patch RVA</param>
+            /// <param name="KeyBind">Patch KeyBind</param>
+            /// <param name="DefaultEnabled">Patch Default Enable Status</param>
+            /// <param name="Content">Patch Content</param>
+            public patch(string Name, UInt32 RVA, System.Windows.Forms.Keys KeyBind, bool DefaultEnabled, byte[] Content)
+            {
+                this.Name = Name;
+                this.RVA = RVA;
+                this.KeyBind = KeyBind;
+                this.DefaultEnabled = DefaultEnabled;
+                this.Content = Content;
+            }
+
+            /// <summary>
+            /// JSON CONSTRUCTOR
+            /// </summary>
+            [JsonConstructor]
+            public patch(System.Windows.Forms.Keys KeyBind, bool DefaultEnabled, string Name, UInt32 RVA, Byte[] Content, bool Enabled)
+            {
+                this.Name = Name;
+                this.RVA = RVA;
+                this.KeyBind = KeyBind;
+                this.DefaultEnabled = DefaultEnabled;
+                this.Content = Content;
+                this.Enabled = Enabled;
+            }
+
+            /// <summary>
+            /// Patch KeyBind
+            /// </summary>
+            public System.Windows.Forms.Keys KeyBind { get; protected set; } = System.Windows.Forms.Keys.None;
+
+            /// <summary>
+            /// Bool indicating whether patch is default enabled
+            /// </summary>
+            public bool DefaultEnabled { get; protected set; } = false;
+
+            /// <summary>
+            /// Patch Name
+            /// </summary>
+            public string Name { get; protected set; } = "";
+
+            /// <summary>
+            /// Patch RVA
+            /// </summary>
+            public UInt32 RVA { get; protected set; }
+
+            /// <summary>
+            /// Patch RVA as hex string
+            /// </summary>
+            [JsonIgnore]
+            public string hexRVA
+            {
+                get
+                {
+                    return RVA.ToString("X").ToLower();
+                }
+            }
+
+            /// <summary>
+            /// Patch Content
+            /// </summary>
+            public byte[] Content { get; protected set; }
+
+            /// <summary>
+            /// Patch content as hex string
+            /// </summary>
+            [JsonIgnore]
+            public string hexContent { 
+                get
+                {
+                    if (Content != null) 
+                    {
+                        return BitConverter.ToString(Content).Replace("-","").ToLower();
+                    }
+                    else
+                    {
+                        return "";
+                    }
+                }
+                    
+            }
+
+            public bool Enabled
+            {
+                get
+                {
+                    return isPatchEnabled(Name);
+                }
+                set
+                {
+                    if (value)
+                    {
+                        if (!isPatchCached(Name))
+                        {
+                            cachePatch(this);
+                        }
+                        enableCachedPatch(Name);
+                    }
+                    else
+                    {
+                        disableCachedPatch(Name);
+                    }
+                }
+            }
+
+            private static Dictionary<string,patch> patches
+            {
+                get
+                {
+                    try
+                    {
+                        return JsonSerializer.Deserialize<Dictionary<string, patch>>(MySettings.Settings.SpecialPatcherPatches);
+                    }
+                    catch
+                    {
+                        return new Dictionary<string, patch>();
+                    }
+                }
+                set
+                {
+                    MySettings.Settings.SpecialPatcherPatches = JsonSerializer.Serialize(value);
+                }
+            }
+
+
+            /// <summary>
+            /// Gets patch by name
+            /// </summary>
+            /// <param name="name">Patch Name</param>
+            /// <returns>Patch by that name (null if not found)</returns>
+            public static patch GetPatch(string name)
+            {
+                patch p = null;
+                patches.TryGetValue(name, out p);
+                return p;
+            }
+
+            /// <summary>
+            /// Gets all patches
+            /// </summary>
+            /// <returns>List of all patches</returns>
+            public static List<patch> GetPatches()
+            {
+                return patches.Values.ToList();
+            }
+
+            private static System.Collections.ObjectModel.ObservableCollection<patch> patchesObservable = null;
+
+            /// <summary>
+            /// Observablecollection of all patches
+            /// </summary>
+            public static System.Collections.ObjectModel.ObservableCollection<patch> PatchesObservable
+            {
+                get
+                {
+                    if (patchesObservable == null)
+                    {
+                        patchesObservable = new System.Collections.ObjectModel.ObservableCollection<patch>(GetPatches());
+                    }
+                    return patchesObservable;
+                }
+            }
+
+            /// <summary>
+            /// Function to check if a patch by a specified name exits
+            /// </summary>
+            /// <param name="name">Name to check</param>
+            /// <returns>Bool indicating if the patch exists (true = name exists)</returns>
+            public static bool nameExists(string name)
+            {
+                return patches.ContainsKey(name);
+            }
+
+            /// <summary>
+            /// Function to update patch on changes
+            /// </summary>
+            public void update()
+            {
+                if(nameExists(Name)){
+                    if (isPatchCached(Name))
+                    {
+                        removeCachedPatch(Name);
+                    }
+                    if (DefaultEnabled)
+                    {
+                        cachePatch(this);
+                        enableCachedPatch(this.Name);
+                    }
+                    var item = patchesObservable.FirstOrDefault(i => i.Name == Name);
+                    var idx = patchesObservable.IndexOf(item);
+                    patchesObservable[idx] = this;
+
+                }
+                else
+                {
+                    if (patchesObservable != null)
+                    {
+                        patchesObservable.Add(this);
+                    }
+                    
+                }
+                var p = patches;
+                p[this.Name] = this;
+                patches = p;
+                patchKeys = null;
+                //new Popups.Popup(Popups.Popup.PopupWindowTypes.PopupOk, JsonSerializer.Serialize<patch>(this)).ShowDialog();
+            }
+
+            private static Dictionary<System.Windows.Forms.Keys, List<patch>> patchKeys = null;
+
+            /// <summary>
+            /// Dictionary of patch keybinds
+            /// </summary>
+            public static Dictionary<System.Windows.Forms.Keys, List<patch>> PatchKeys
+            {
+                get
+                {
+                    if (patchKeys == null)
+                    {
+                        patchKeys = new Dictionary<System.Windows.Forms.Keys, List<patch>>();
+                        foreach (var p in patches.Values)
+                        {
+                            if (p.KeyBind != System.Windows.Forms.Keys.None)
+                            {
+                                if (!patchKeys.ContainsKey(p.KeyBind))
+                                {
+                                    patchKeys[p.KeyBind] = new List<patch>();
+                                    
+                                }
+                                patchKeys[p.KeyBind].Add(p);
+                            }
+                        }
+                    }
+                    return patchKeys;
+                }
+                
+            }
+
+            /// <summary>
+            /// Function to delete a patch
+            /// </summary>
+            /// <param name="name">Name of patch to delete</param>
+            /// <returns>Bool indicating deletion success</returns>
+            public static bool deletePatch(string name)
+            {
+                if (!nameExists(name))
+                {
+                    return false;
+                }
+                if (isPatchCached(name))
+                {
+                    removeCachedPatch(name);
+                }
+                //new Popups.Popup(Popups.Popup.PopupWindowTypes.PopupOk, "Not Implemented!").ShowDialog();
+                var item = patchesObservable.FirstOrDefault(i => i.Name == name);
+                patchesObservable.Remove(item);
+                var p = patches;
+                p.Remove(name);
+                patches = p;
+                return true;
+            }
+            
+
+        }
     }
+    
 }
