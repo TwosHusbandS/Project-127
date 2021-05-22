@@ -1660,6 +1660,9 @@ namespace Project_127.MySettings
 			}
 		}
 
+		/// <summary>
+		/// Bool indicating wether the special patcher is enabled
+		/// </summary>
 		public static bool SpecialPatcherEnabled
         {
             get
@@ -1674,6 +1677,39 @@ namespace Project_127.MySettings
 			}
         }
 
+		/// <summary>
+		/// Bool indicating wether the pointer-path tester is enabled
+		/// </summary>
+		public static bool PointerPathTesterEnabled
+        {
+            get
+            {
+				return GetBoolFromString(GetSetting("PointerPathTesterEnabled"));
+			}
+            set
+            {
+				SetSetting("PointerPathTesterEnabled", value.ToString());
+			}
+        }
+
+		/// <summary>
+		/// Pointer path text
+		/// </summary>
+		public static string PointerPathTesterString
+        {
+			get
+			{
+				return GetSetting("PointerPathTesterString");
+			}
+			set
+			{
+				SetSetting("PointerPathTesterString", value);
+			}
+		}
+
+		/// <summary>
+		/// Key to enable/disable special patcher
+		/// </summary>
 		public static string SpecialPatcherKey
         {
             get
@@ -1686,6 +1722,9 @@ namespace Project_127.MySettings
 			}
 		}
 
+		/// <summary>
+		/// Json storage for special patcher patches
+		/// </summary>
 		public static string SpecialPatcherPatches
         {
             get

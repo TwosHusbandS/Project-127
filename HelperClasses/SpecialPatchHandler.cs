@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
-using System.Text.Json;
-using System.Text.Json.Serialization;
+//using System.Text.Json;
+//using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using System.Web.Script.Serialization;
 
 namespace Project_127.HelperClasses
 {
@@ -236,6 +237,8 @@ namespace Project_127.HelperClasses
 
         public class patch
         {
+
+            private static JavaScriptSerializer json = new JavaScriptSerializer();
             /// <summary>
             /// Contructs and empty patch object
             /// </summary>
@@ -261,21 +264,31 @@ namespace Project_127.HelperClasses
             /// <summary>
             /// JSON CONSTRUCTOR
             /// </summary>
-            [JsonConstructor]
-            public patch(System.Windows.Forms.Keys KeyBind, bool DefaultEnabled, string Name, UInt32 RVA, Byte[] Content, bool Enabled)
+            private patch(jsonSerialPatch p)
             {
-                this.Name = Name;
-                this.RVA = RVA;
-                this.KeyBind = KeyBind;
-                this.DefaultEnabled = DefaultEnabled;
-                this.Content = Content;
-                this.Enabled = Enabled;
+                this.Name = p.Name;
+                this.RVA = p.RVA;
+                this.KeyBind = (System.Windows.Forms.Keys)p.KeyBind;
+                this.DefaultEnabled = p.DefaultEnabled;
+                this.Content = p.Content;
+                this.Enabled = p.Enabled;
             }
 
             /// <summary>
             /// Patch KeyBind
             /// </summary>
             public System.Windows.Forms.Keys KeyBind { get; protected set; } = System.Windows.Forms.Keys.None;
+
+            /// <summary>
+            /// Patch KeyBind as string
+            /// </summary>
+            public string stringKeyBind
+            {
+                get
+                {
+                    return KeyBind.ToString();
+                }
+            }
 
             /// <summary>
             /// Bool indicating whether patch is default enabled
@@ -295,7 +308,6 @@ namespace Project_127.HelperClasses
             /// <summary>
             /// Patch RVA as hex string
             /// </summary>
-            [JsonIgnore]
             public string hexRVA
             {
                 get
@@ -312,7 +324,6 @@ namespace Project_127.HelperClasses
             /// <summary>
             /// Patch content as hex string
             /// </summary>
-            [JsonIgnore]
             public string hexContent { 
                 get
                 {
@@ -355,19 +366,40 @@ namespace Project_127.HelperClasses
             {
                 get
                 {
+                    var output = new Dictionary<string, patch>();
                     try
                     {
-                        return JsonSerializer.Deserialize<Dictionary<string, patch>>(MySettings.Settings.SpecialPatcherPatches);
+                        var jsonpatches = json.Deserialize<List<jsonSerialPatch>>(MySettings.Settings.SpecialPatcherPatches);
+                        foreach (var p in jsonpatches)
+                        {
+                            output.Add(p.Name, new patch(p));
+                        }
                     }
-                    catch
-                    {
-                        return new Dictionary<string, patch>();
-                    }
+                    catch { }
+                    return output;
                 }
                 set
                 {
-                    MySettings.Settings.SpecialPatcherPatches = JsonSerializer.Serialize(value);
+                    var jsonpatches = new List<jsonSerialPatch>();
+                    foreach (var p in value.Values)
+                    {
+                        jsonpatches.Add(p.toJsonSerialPatch());
+                    }
+                    MySettings.Settings.SpecialPatcherPatches = json.Serialize(jsonpatches);
                 }
+            }
+
+            private jsonSerialPatch toJsonSerialPatch()
+            {
+                return new jsonSerialPatch
+                {
+                    Content = Content,
+                    DefaultEnabled = DefaultEnabled,
+                    Enabled = Enabled,
+                    KeyBind = (int)KeyBind,
+                    Name = Name,
+                    RVA = RVA
+                };
             }
 
 
@@ -507,8 +539,16 @@ namespace Project_127.HelperClasses
                 patches = p;
                 return true;
             }
-            
 
+            public struct jsonSerialPatch
+            {
+                public string Name;
+                public UInt32 RVA;
+                public int KeyBind;
+                public bool DefaultEnabled;
+                public byte[] Content;
+                public bool Enabled;
+            }
         }
     }
     

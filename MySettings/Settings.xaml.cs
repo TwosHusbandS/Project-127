@@ -1023,7 +1023,7 @@ namespace Project_127.MySettings
 					SetCheckBoxBackground(myBtn, Settings.SpecialPatcherEnabled);
 					break;
 				case "btn_cb_EnablePPTester":
-					SetCheckBoxBackground(myBtn, false);
+					SetCheckBoxBackground(myBtn, Settings.PointerPathTesterEnabled);
 					break;
 
 			}
@@ -1341,6 +1341,7 @@ namespace Project_127.MySettings
 					Settings.SpecialPatcherEnabled = !Settings.SpecialPatcherEnabled;
 					break;
 				case "btn_cb_EnablePPTester":
+					Settings.PointerPathTesterEnabled = !Settings.PointerPathTesterEnabled;
 					break;
 			}
 			RefreshGUI();
@@ -2119,6 +2120,17 @@ namespace Project_127.MySettings
         private void btn_open_patch_dialog_Click(object sender, RoutedEventArgs e)
         {
 			new PopupSpecialPatcher().ShowDialog();
+        }
+
+        private void PopupPPTesterSetup_Opened(object sender, EventArgs e)
+        {
+			tb_pptestervars.Text = Settings.PointerPathTesterString;
+        }
+
+        private void PopupPPTesterSetup_Closed(object sender, EventArgs e)
+        {
+			Settings.PointerPathTesterString = tb_pptestervars.Text;
+			Globals.preparsedPPs = ASPointerPath.pointerPathParse(Settings.PointerPathTesterString);
         }
     } // End of Class
 } // End of Namespace 

@@ -122,7 +122,7 @@
                                     </Style>
                                 </DataGridTextColumn.CellStyle>
                             </DataGridTextColumn>
-                            <DataGridTextColumn Header="KeyBind" Binding="{Binding KeyBind, Mode=OneWay}" ElementStyle="{StaticResource dg_texboxstyle}" Width="*" FontSize="20">
+                            <DataGridTextColumn Header="KeyBind" Binding="{Binding stringKeyBind, Mode=OneWay}" ElementStyle="{StaticResource dg_texboxstyle}" Width="*" FontSize="20">
                                 <DataGridTextColumn.CellStyle>
                                     <Style TargetType="DataGridCell">
                                         <Setter Property="ToolTip" Value="Patch Keybind" />

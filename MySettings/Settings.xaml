@@ -462,7 +462,7 @@
                             <Label Grid.Row="0" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Enable PointerPath Tester" ToolTip="Shows pointerpath contents in overlay. To View Output, add a $ppTester flag into a notefile."/>
                             <Button Grid.Row="0" Grid.Column="1" x:Name="btn_cb_EnablePPTester"  Style="{StaticResource btn_cb}" Click="btn_cb_Click"  MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
                             <Button Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource btn_SE_Path}" x:Name="btn_open_pptest_dialog" Click="btn_open_pptest_dialog_Click" Content="Setup Pointer Path Test Flag"/>
-                            <Popup x:Name="PopupPPTesterSetup" PlacementTarget="{Binding ElementName=btn_open_pptest_dialog}" Placement="MousePoint" Width="500" Height="300" Margin="0,0,0,0" StaysOpen="False">
+                            <Popup x:Name="PopupPPTesterSetup" PlacementTarget="{Binding ElementName=btn_open_pptest_dialog}" Placement="MousePoint" Width="500" Height="300" Margin="0,0,0,0" StaysOpen="False" Opened="PopupPPTesterSetup_Opened" Closed="PopupPPTesterSetup_Closed">
                                 <Popup.Resources>
                                     <Style TargetType="TextBox" x:Key="tb_nomax">
                                         <Setter Property="Margin" Value="10,10,10,10"/>
@@ -482,7 +482,7 @@
                                             <ColumnDefinition/>
                                         </Grid.ColumnDefinitions>
                                         <Label Grid.Row="0" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Variables: "/>
-                                        <TextBox Style="{StaticResource tb_nomax}" Grid.Row="1" Grid.Column="0" Margin="20,20,20,20" 
+                                        <TextBox x:Name="tb_pptestervars" Style="{StaticResource tb_nomax}" Grid.Row="1" Grid.Column="0" Margin="20,20,20,20" 
                                           TextWrapping="NoWrap"
                                           AcceptsReturn="True"
                                           VerticalScrollBarVisibility="Auto"
