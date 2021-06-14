@@ -303,7 +303,7 @@ namespace Project_127
 
 			AddHyperlinkText(rtb_About, "https://www.mind.org.uk/donate", "Charity", "If you want to support us, we encourage you to donate to a ", " of your chosing.");
 
-			AddHyperlinkText(rtb_About, DragonsLink, "here", "@d490n, who did all of the game-launch related work which made P127 possible, uploaded his work, sourcecode and documented his findings on his Github ", ".");
+			AddHyperlinkText(rtb_About, DragonsLink, "here", "@dr490n, who did all of the game-launch related work which made P127 possible, uploaded his work, sourcecode and documented his findings on his Github ", ".");
 
 			AddHyperlinkText(rtb_About, "https://github.com/TwosHusbandS/Project-127/blob/master/README.md", "here", "A more lengthy and detailed version of this can be found on github ", "");
 
@@ -341,7 +341,7 @@ namespace Project_127
 
 			AddParagraph(rtb_Help, "If GTA (mainly Downgraded) does not launch AT ALL, UNCHECK \"Overwrite GTA CommandLineArgs\" inside \"Additional GTA Commandline Options\" inside \"GTA & Launch Settings\".");
 
-			AddParagraph(rtb_Help, "If one Lauch - Method(for downgraded GTA) is not working for you, it is worth trying to switch the way P127 Launches the downgraded Game, by doing so inside \"GTA & Launch Settings\".");
+			AddParagraph(rtb_Help, "If one Launch - Method(for downgraded GTA) is not working for you, it is worth trying to switch the way P127 Launches the downgraded Game, by doing so inside \"GTA & Launch Settings\".");
 
 			AddParagraph(rtb_Help, "If the current Authentication Method for the dr490n emu is not working, it is worth trying to switch the way P127 tries to authenticate your GTA ownership by doing so inside the Orange Border inside \"GTA & Launch Settings\".");
 
@@ -366,6 +366,8 @@ namespace Project_127
 			AddHyperlinkText(rtb_Help, "http://RightClickAuthIcon.com", "RIGHT-click the Auth icon", "If you still cant get it to work or you wish to get Help, please ", " (the one with the lock icon in the top left corner) and send me the AAA - Logfile.log and the AAA - Debugfile.txt from the folder which will open (Project 1.27 Installation Directory) and include a detailed Report of what you did and whats not working. Note: These Files may contain Filepaths which may contain your Name.");
 
 			AddHyperlinkText(rtb_Help, "http://SpeedrunReadMe.com", "\"Speedrun\"", "Please post a detailed description of what you did and what is not working as expected, in the GTA V Speedrun Discord - project - 1 - 27 - chat Channel. Invite links are in the ", " Section of this Page.");
+
+			AddHyperlinkText(rtb_Help, "https://github.com/TwosHusbandS/Project-127/blob/master/Installer/Info/Help.md", "here", "A more lengthy and detailed version of this can be found on github ", "");
 
 			AddParagraph(rtb_Help, "I do not recommend uploading these 2 Files inside a public channel. They may contain things like your email adress, and Path / Folder - Names which can contain usernames.");
 

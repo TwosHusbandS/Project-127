@@ -35,7 +35,7 @@ namespace Project_127.Auth
 
 	public class ROSCommunicationBackend
 	{
-
+		private const int CHECK_INTERVAL = 1800;
 		private static byte[] OESFDR = { 0x45, 0xE6, 0xA5, 0x0D, 0xAA, 0xE4, 0x56, 0x2A, 0x5E, 0xAC, 0x05 };
 		private static sessionContainer session = null;
 
@@ -669,6 +669,8 @@ namespace Project_127.Auth
 			//return tgr;
 		}
 
+		private static int nextSessionValidityCheck = 0;
+
 		/// <summary>
 		/// Returns wheter a session is valid (not expired & logged in)
 		/// </summary>
@@ -677,12 +679,37 @@ namespace Project_127.Auth
 		{
 			get
 			{
-				if (session == null)
+				if (session == null || !session.isValid())
 				{
 					return false;
 				}
-				return session.isValid();
+                else
+                {
+					if (GetPosixTime() > nextSessionValidityCheck)
+                    {
+						nextSessionValidityCheck = (int)GetPosixTime() + CHECK_INTERVAL;
+						sessionValidityCheck();
+					}
+					return true;
+				}
 			}
+		}
+
+		private static async void sessionValidityCheck()
+        {
+            try
+            {
+				if ((await GenLaunchToken()).error)
+				{
+					nextSessionValidityCheck = 0;
+					session.destroy();
+				}
+			}
+            catch
+            {
+				session.destroy();
+			}
+			
 		}
 
 		/// <summary>
@@ -815,7 +842,7 @@ namespace Project_127.Auth
 
 			public bool isValid()
 			{
-				return (expiration > GetPosixTime());
+				return expiration > GetPosixTime();
 			}
 			public void destroy()
 			{
@@ -887,7 +914,7 @@ namespace Project_127.Auth
 			}
 		}
 
-		private static Int64 GetPosixTime()
+		public static Int64 GetPosixTime()
 		{
 			return (Int64)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
 		}
