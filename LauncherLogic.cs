@@ -945,7 +945,16 @@ namespace Project_127
 					if (!AuthStateOverWrite)
 					{
 						HelperClasses.Logger.Log("Letting Dragon work his magic");
-						await ROSCommunicationBackend.GenLaunchToken();
+						try
+						{
+							await ROSCommunicationBackend.GenLaunchToken();
+						}
+						catch (Exception ex)
+						{
+							HelperClasses.Logger.Log("Unable to connect to the server. Probably best to restart P127.");
+							new Popups.Popup(Popups.Popup.PopupWindowTypes.PopupOkError, "Unable to connect to the server. Probably best to restart P127.").ShowDialog();
+							return;
+						}
 					}
 
 					HelperClasses.FileHandling.deleteFile(EmuCfgPath);
