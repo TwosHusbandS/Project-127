@@ -67,7 +67,7 @@ Shamelessly stolen from: https://github.com/othneildrew/Best-README-Template
         <li><a href="#main-features">Main Features</a></li>
         <li><a href="#Help">Help and how to get Started</a></li>
         <li><a href="#built-with">Built With</a></li>
-        <li><a href="#nstallation">Installation</a></li>
+        <li><a href="#installation">Installation</a></li>
         <li><a href="#user-instructions">User Instructions</a></li>
         <li><a href="#advanced-user-instructions">Advanced User Instructions</a></li>
       </ul>
@@ -110,6 +110,7 @@ Pretty much built with straight C# visualized with WPF
 * The logging into your Social Club account is achieved by:
   * JavaScript
   * [Chrome Embedded Framework](https://github.com/cefsharp/CefSharp)
+  * [InnoSetup](https://jrsoftware.org/isinfo.php)
 
 
 ### Installation

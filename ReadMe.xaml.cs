@@ -303,7 +303,7 @@ namespace Project_127
 
 			AddHyperlinkText(rtb_About, DragonsLink, "here", "@d490n, who did all of the game-launch related work which made P127 possible, uploaded his work, sourcecode and documented his findings on his Github ", ".");
 
-			AddHyperlinkText(rtb_About, "https://github.com/TwosHusbandS/Project-127/blob/master/Installer/Changelogs/Help.md", "here", "A more lengthy and detailed version of this can be found on github ", "");
+			AddHyperlinkText(rtb_About, "https://github.com/TwosHusbandS/Project-127/blob/master/README.md", "here", "A more lengthy and detailed version of this can be found on github ", "");
 
 			AddParagraph(rtb_About, "If you are having trouble with Project 1.27 or are running into any issues, please read the \"Help-Section\" and visit the GTA V Speedrun Discord and post it in the \"Project-1-27-Chat\" Channel.");
 
@@ -369,7 +369,11 @@ namespace Project_127
 
 			AddParagraph(rtb_Help, "I hope everything works for you and you dont experience any crashes or anything like that.");
 
+			AddHyperlinkText(rtb_Help, "https://github.com/TwosHusbandS/Project-127/blob/master/Installer/Info/Help.md#help--common-issues", "here", "A more lengthy and detailed version of this help-page can be found on github ", "");
+
 			AddParagraph(rtb_Help, "I hope whoever reads this has a great day : )");
+
+			AddParagraph(rtb_Help, "");
 
 		}
 
