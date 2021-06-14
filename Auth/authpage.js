@@ -147,7 +147,7 @@ head.appendChild(style);
 style.type = 'text/css';
 style.appendChild(document.createTextNode(css));
 
-function setEmail(email) {
+/*function setEmail(email) {
     email = decodeURIComponent(email);
     var e = document.querySelector('[data-ui-name="emailInput"]');
     if (!e) {
@@ -189,6 +189,33 @@ function setPass(pass) {
             value: pass
         }
     });
+}*/
+function reactTriggerInput(element, input){
+    var nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, "value").set;
+    nativeInputValueSetter.call(element, input);
+
+    var ev2 = new Event('input', { bubbles: true});
+    element.dispatchEvent(ev2);
+}
+
+function setEmail(email){
+    email = decodeURIComponent(email);
+    var elem = document.querySelector('[data-ui-name="emailInput"]');
+    if (!elem) {
+        setTimeout(setEmail, 500, email);
+        return;
+    }
+    reactTriggerInput(elem, email);
+}
+
+function setPass(pass){
+    pass = decodeURIComponent(pass);
+    var elem = document.querySelector('[data-ui-name="passwordInput"]');
+    if (!elem) {
+        setTimeout(setPass, 500, pass);
+        return;
+    }
+    reactTriggerInput(elem, pass);
 }
 
 function rememberMeState(active) {
