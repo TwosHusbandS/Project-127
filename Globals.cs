@@ -230,7 +230,7 @@ namespace Project_127
 		/// <summary>
 		/// Property of other Buildinfo. Will be in the top message of logs
 		/// </summary>
-		public static string BuildInfo = "1.2.3.0 - Build 1";
+		public static string BuildInfo = "1.2.3.0 - RC 1";
 
 
 		/// <summary>
@@ -387,8 +387,10 @@ namespace Project_127
 			{"OverlayNotesPresetD",""},
 			{"OverlayNotesPresetE",""},
 			{"OverlayNotesPresetF",""},
+
 			{"SpecialPatcherEnabledSetting","False"},
-			{"SpecialPatcherToggleKey","F14"},
+			// {"SpecialPatcherToggleKey","F14"}, // gonna use the same way of storing Keys like all other Keybinds. New Regidit value is called SpecialPatcherKey, ToggleKey is NOT used anymore
+			{"SpecialPatcherKey","112"},
 			{"SpecialPatcherPatches", "{}"},
 			{"PointerPathTesterEnabled", "False" },
 			{"PointerPathTesterString", "" },

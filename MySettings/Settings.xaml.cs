@@ -274,7 +274,7 @@ namespace Project_127.MySettings
 			HelperClasses.Logger.Log("Picked path '" + GTAVInstallationPathUserChoice + "' is valid and will be set as Settings.GTAVInstallationPath.");
 			Settings.GTAVInstallationPath = GTAVInstallationPathUserChoice;
 
-	
+
 			if (Settings.ZIPExtractionPath.TrimEnd('\\').ToLower() != GTAVInstallationPathUserChoice.TrimEnd('\\').ToLower())
 			{
 				// Setting ZIP Extract Path now
@@ -763,7 +763,7 @@ namespace Project_127.MySettings
 			ButtonMouseOverMagic(btn_cb_Set_EnableDontLaunchThroughSteam);
 			ButtonMouseOverMagic(btn_cb_Set_EnableAutoStartJumpScript);
 			ButtonMouseOverMagic(btn_cb_Set_EnableOverWriteGTACommandLineArgs);
-			ButtonMouseOverMagic(btn_cb_Set_SlowCompare); 
+			ButtonMouseOverMagic(btn_cb_Set_SlowCompare);
 			ButtonMouseOverMagic(btn_cb_Set_AutoMTLAuthOnStartup);
 			ButtonMouseOverMagic(btn_cb_Set_EnableCoreFix);
 			ButtonMouseOverMagic(btn_cb_EnableSpecialPatcher);
@@ -803,7 +803,7 @@ namespace Project_127.MySettings
 			General,
 			GTA,
 			Extra,
-			Secret
+			Patcher
 		}
 
 		/// <summary>
@@ -829,7 +829,7 @@ namespace Project_127.MySettings
 				// Saving it in LastReadMeState
 				Settings.LastSettingsState = value;
 				switch (value)
-                {
+				{
 					case SettingsStates.General:
 						sv_Settings_General.Visibility = Visibility.Visible;
 						sv_Settings_GTA.Visibility = Visibility.Hidden;
@@ -874,7 +874,7 @@ namespace Project_127.MySettings
 						sv_Settings_Extra.ScrollToVerticalOffset(0);
 						break;
 
-					case SettingsStates.Secret:
+					case SettingsStates.Patcher:
 						sv_Settings_General.Visibility = Visibility.Hidden;
 						sv_Settings_GTA.Visibility = Visibility.Hidden;
 						sv_Settings_Extra.Visibility = Visibility.Hidden;
@@ -884,7 +884,7 @@ namespace Project_127.MySettings
 						btn_SettingsGeneral.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
 						btn_SettingsGTA.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
 						btn_SettingsExtra.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
-						lbl_SettingsHeader.Content = "Secret Settings";
+						lbl_SettingsHeader.Content = "Patcher Settings";
 						sv_Settings_Extra.ScrollToVerticalOffset(0);
 
 						break;
@@ -1119,7 +1119,7 @@ namespace Project_127.MySettings
 			Grid_Settings_GTA.RowDefinitions.RemoveAt(6);
 			Grid_Settings_GTA.RowDefinitions.RemoveAt(5);
 			RowDefinition Row_SCL_Options = new RowDefinition();
-			Row_SCL_Options.Height = new GridLength(100); 
+			Row_SCL_Options.Height = new GridLength(100);
 			RowDefinition Row_DragonEmu_Options = new RowDefinition();
 			Row_DragonEmu_Options.Height = new GridLength(360);
 
@@ -1632,9 +1632,9 @@ namespace Project_127.MySettings
 					btn_SettingsGTA_MouseRightButtonDown(null, null);
 				}
 				else if (SettingsState == SettingsStates.Extra)
-                {
-					SettingsState = SettingsStates.Secret;
-                }
+				{
+					SettingsState = SettingsStates.Patcher;
+				}
 			}
 		}
 
@@ -2096,41 +2096,49 @@ namespace Project_127.MySettings
 			tb_OverWriteGTACommandLineArgs.Text = txt;
 		}
 
-        private async void btn_Set_Special_Patcher_Key_Click(object sender, RoutedEventArgs e)
-        {
+		private async void btn_Set_Special_Patcher_Key_Click(object sender, RoutedEventArgs e)
+		{
 			((Button)sender).Content = "[Press new Key]";
 			System.Windows.Forms.Keys MyNewKey = await KeyboardHandler.GetNextKeyPress();
 			if (MyNewKey != System.Windows.Forms.Keys.None && MyNewKey != System.Windows.Forms.Keys.Escape)
 			{
-				Settings.SpecialPatcherKey = MyNewKey.ToString();
+				Settings.SpecialPatcherKey = MyNewKey;
 			}
 			((Button)sender).Content = Settings.SpecialPatcherKey;
 		}
 
-        private void btn_open_pptest_dialog_Click(object sender, RoutedEventArgs e)
-        {
+		private void btn_open_pptest_dialog_Click(object sender, RoutedEventArgs e)
+		{
 			PopupPPTesterSetup.IsOpen = true;
 		}
 
-        private void btn_Set_AuthOverride_Click(object sender, RoutedEventArgs e)
-        {
-			LauncherLogic.AuthStateOverWrite = true;
-        }
-
-        private void btn_open_patch_dialog_Click(object sender, RoutedEventArgs e)
-        {
+		private void btn_open_patch_dialog_Click(object sender, RoutedEventArgs e)
+		{
 			new PopupSpecialPatcher().ShowDialog();
-        }
+		}
 
-        private void PopupPPTesterSetup_Opened(object sender, EventArgs e)
-        {
+		private void PopupPPTesterSetup_Opened(object sender, EventArgs e)
+		{
 			tb_pptestervars.Text = Settings.PointerPathTesterString;
-        }
+		}
 
-        private void PopupPPTesterSetup_Closed(object sender, EventArgs e)
-        {
+		private void PopupPPTesterSetup_Closed(object sender, EventArgs e)
+		{
 			Settings.PointerPathTesterString = tb_pptestervars.Text;
 			Globals.preparsedPPs = ASPointerPath.pointerPathParse(Settings.PointerPathTesterString);
-        }
-    } // End of Class
+		}
+
+		private void btn_SettingsExtra_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+		{
+			if (e.ClickCount >= 3)
+			{
+				SettingsState = SettingsStates.Patcher;
+			}
+		}
+
+		private void btn_OpenPatcher_Click(object sender, RoutedEventArgs e)
+		{
+			SettingsState = SettingsStates.Patcher;
+		}
+	} // End of Class
 } // End of Namespace 

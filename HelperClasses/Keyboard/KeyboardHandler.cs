@@ -81,7 +81,7 @@ namespace Project_127.HelperClasses.Keyboard
 					}
 					if (Settings.SpecialPatcherEnabled)
 					{
-						if (pKey.ToString() == Settings.SpecialPatcherKey) //For now
+						if (pKey == Settings.SpecialPatcherKey) //For now
                         {
 							SpecialPatchHandler.patcherEnabled = !SpecialPatchHandler.patcherEnabled;
                         }

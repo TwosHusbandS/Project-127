@@ -1674,6 +1674,7 @@ namespace Project_127.MySettings
 
 				ROSCommunicationBackend.setFlag(ROSCommunicationBackend.Flags.useSpecialPatcher, value);
 				SetSetting("SpecialPatcherEnabledSetting", value.ToString());
+				NoteOverlay.OverlaySettingsChanged();
 			}
         }
 
@@ -1707,18 +1708,34 @@ namespace Project_127.MySettings
 			}
 		}
 
+		///// <summary>
+		///// Key to enable/disable special patcher
+		///// </summary>
+		//public static string SpecialPatcherKey
+  //      {
+  //          get
+  //          {
+		//		return GetSetting("SpecialPatcherToggleKey");
+		//	}
+  //          set
+  //          {
+		//		SetSetting("SpecialPatcherToggleKey", value);
+		//	}
+		//}
+
+
 		/// <summary>
-		/// Key to enable/disable special patcher
+		/// Settings SpecialPatcherKey. Gets and Sets from the Dictionary.
 		/// </summary>
-		public static string SpecialPatcherKey
-        {
-            get
-            {
-				return GetSetting("SpecialPatcherToggleKey");
+		public static Keys SpecialPatcherKey
+		{
+			get
+			{
+				return GetKeyFromString(GetSetting("SpecialPatcherKey"));
 			}
-            set
-            {
-				SetSetting("SpecialPatcherToggleKey", value);
+			set
+			{
+				SetSetting("SpecialPatcherKey", ((int)value).ToString());
 			}
 		}
 
