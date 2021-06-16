@@ -1,0 +1,109 @@
+﻿<Window x:Class="Project_127.Popups.PopupPatchEditor"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Project_127"
+        mc:Ignorable="d"
+    Title="Popup" 
+        Background="{x:Static local:MyColors.PU_Background}"
+        WindowStyle="None" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" MouseLeftButtonDown="Window_MouseLeftButtonDown"
+        Height="320"
+        Width="550"
+        SourceInitialized="Window_SourceInitialized"
+        SizeToContent="Manual"
+        Icon="/Artwork/icon.png">
+    <Window.Resources>
+        <Style TargetType="TextBox" x:Key="tb_nomax">
+            <Setter Property="Margin" Value="10,10,10,10"/>
+            <Setter Property="Background" Value="{x:Static local:MyColors.MyColorOffWhite}"/>
+            <Setter Property="Foreground" Value="{x:Static local:MyColors.MyColorOffBlack}"/>
+            <Setter Property="MinHeight" Value="25"/>
+            <Setter Property="BorderThickness" Value="0"/>
+        </Style>
+
+        <Style TargetType="TextBox" x:Key="tb_small" BasedOn="{StaticResource tb_nomax}">
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+        </Style>
+
+        <Style TargetType="Button" x:Key="btn_minikeybind" BasedOn="{StaticResource btn_SE_Path}">
+            <Setter Property="Width" Value="80"/>
+            <Setter Property="MinWidth" Value="80"/>
+            <Setter Property="MaxWidth" Value="80"/>
+        </Style>
+        
+        <ImageBrush x:Key="cb_checked" ImageSource="/Artwork/checkbox_true.png" Stretch="Fill"/>
+        <ImageBrush x:Key="cb_unchecked" ImageSource="/Artwork/checkbox_false.png" Stretch="Fill"/>
+        <ImageBrush x:Key="cb_checked_mo" ImageSource="/Artwork/checkbox_true_mo.png" Stretch="Fill"/>
+        <ImageBrush x:Key="cb_unchecked_mo" ImageSource="/Artwork/checkbox_false_mo.png" Stretch="Fill"/>
+        <Style TargetType="Button" x:Key="btn_cb_mini" BasedOn="{StaticResource btn_cb}">
+            <Setter Property="Height" Value="20"/>
+            <Setter Property="Width" Value="20"/>
+            <Style.Triggers>
+                <MultiTrigger>
+                    <MultiTrigger.Conditions>
+                        <Condition Property="IsMouseOver" Value="False"/>
+                        <Condition Property="Tag" Value="True"/>
+                    </MultiTrigger.Conditions>
+                    <Setter Property="Background" Value="{StaticResource cb_checked}"/>
+                </MultiTrigger>
+                <MultiTrigger>
+                    <MultiTrigger.Conditions>
+                        <Condition Property="IsMouseOver" Value="False"/>
+                        <Condition Property="Tag" Value="False"/>
+                    </MultiTrigger.Conditions>
+                    <Setter Property="Background" Value="{StaticResource cb_unchecked}"/>
+                </MultiTrigger>
+                <MultiTrigger>
+                    <MultiTrigger.Conditions>
+                        <Condition Property="IsMouseOver" Value="True"/>
+                        <Condition Property="Tag" Value="True"/>
+                    </MultiTrigger.Conditions>
+                    <Setter Property="Background" Value="{StaticResource cb_checked_mo}"/>
+                </MultiTrigger>
+                <MultiTrigger>
+                    <MultiTrigger.Conditions>
+                        <Condition Property="IsMouseOver" Value="True"/>
+                        <Condition Property="Tag" Value="False"/>
+                    </MultiTrigger.Conditions>
+                    <Setter Property="Background" Value="{StaticResource cb_unchecked_mo}"/>
+                </MultiTrigger>
+            </Style.Triggers>
+            <Style.Resources>
+                
+            </Style.Resources>
+        </Style>
+    </Window.Resources>
+    <Border BorderBrush="{x:Static local:MyColors.PU_BorderBrush}" BorderThickness="2" >
+        <Grid Margin="10,10">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="38"/>
+                <RowDefinition Height="38"/>
+                <RowDefinition Height="38"/>
+                <RowDefinition Height="38"/>
+                <RowDefinition Height="38"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="60"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Label Style="{StaticResource lbl_Set_Info}" Content="Patch Name:" Grid.Row="0" Grid.Column="0"/>
+            <TextBox Style="{StaticResource tb_small}" Text="{Binding patchName}" Grid.Row="0" Grid.Column="2" VerticalAlignment="Center" MaxLength="16" HorizontalContentAlignment="Center" HorizontalAlignment="Right" Width="80"/>
+            <Label Style="{StaticResource lbl_Set_Info}" Content="Enabled By Default:" Grid.Row="1" Grid.Column="0"/>
+            <Button x:Name="cb_enable_def" Style="{StaticResource btn_cb_mini}" Tag="{Binding DefEnabled}" Grid.Row="1" Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,10,0" Click="cb_btn_click"/>
+            <Label Style="{StaticResource lbl_Set_Info}" Content="RVA:" Grid.Row="2" Grid.Column="0"/>
+            <TextBox Style="{StaticResource tb_small}" Text="{Binding RVA_string}" Grid.Row="2" Grid.Column="2" VerticalAlignment="Center" MaxLength="8" HorizontalContentAlignment="Center" HorizontalAlignment="Right" Width="80" PreviewTextInput="HexTextPreview" CharacterCasing="Lower"/>
+            <Label Style="{StaticResource lbl_Set_Info}" Content="Keybind:" Grid.Row="3" Grid.Column="0"/>
+            <Button x:Name="btn_toggle_keybind" Style="{StaticResource btn_minikeybind}" Content="{Binding KeyBinding, Mode=OneWay}"  Grid.Row="3" Grid.Column="2" HorizontalAlignment="Right" Click="btn_toggle_keybind_Click"/>
+            <Label Style="{StaticResource lbl_Set_Info}" Content="Patch:" Grid.Row="4" Grid.Column="0"/>
+            <TextBox Style="{StaticResource tb_nomax}" Text="{Binding Content_string}"  Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="3" Margin="30,0,10,5" TextWrapping="Wrap" AcceptsReturn="False" VerticalScrollBarVisibility="Auto" MaxLength="128" PreviewTextInput="HexTextPreview" CharacterCasing="Lower"/>
+            <Button x:Name="btn_Apply" Grid.Row="6" Grid.Column="0" Style="{StaticResource PU_btn}" Content="Apply" Click="btn_Apply_Click"/>
+            <Button x:Name="btn_Exit" Grid.Row="6" Grid.Column="2" Style="{StaticResource PU_btn}" Content="Close" Click="btn_Exit_Click"/>
+
+        </Grid>
+
+    </Border>
+</Window>

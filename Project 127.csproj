@@ -197,6 +197,7 @@
     <Compile Include="HelperClasses\BlurBackgroundBehaviour.cs" />
     <Compile Include="HelperClasses\IPCPipes.cs" />
     <Compile Include="HelperClasses\MissionIdentifiers.cs" />
+    <Compile Include="HelperClasses\SpecialPatchHandler.cs" />
     <Compile Include="HelperClasses\WindowChangeListenerTwo.cs" />
     <Compile Include="MyColors.cs" />
     <Compile Include="HelperClasses\BuildVersionTable.cs" />
@@ -254,6 +255,12 @@
     </Compile>
     <Compile Include="Popups\PopupMode.xaml.cs">
       <DependentUpon>PopupMode.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Popups\PopupPatchEditor.xaml.cs">
+      <DependentUpon>PopupPatchEditor.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Popups\PopupSpecialPatcher.xaml.cs">
+      <DependentUpon>PopupSpecialPatcher.xaml</DependentUpon>
     </Compile>
     <Compile Include="Popups\PopupTextbox.xaml.cs">
       <DependentUpon>PopupTextbox.xaml</DependentUpon>
@@ -341,6 +348,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Popups\PopupPatchEditor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Popups\PopupProgress.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -363,6 +374,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Popups\PopupDownload.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Popups\PopupSpecialPatcher.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

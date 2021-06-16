@@ -743,6 +743,7 @@ namespace Project_127.MySettings
 
 			btn_Set_JumpScriptKey1.Content = Settings.JumpScriptKey1;
 			btn_Set_JumpScriptKey2.Content = Settings.JumpScriptKey2;
+			btn_Set_Special_Patcher_Key.Content = Settings.SpecialPatcherKey;
 
 			ButtonMouseOverMagic(btn_Refresh);
 			ButtonMouseOverMagic(btn_cb_Set_EnableLogging);
@@ -765,6 +766,8 @@ namespace Project_127.MySettings
 			ButtonMouseOverMagic(btn_cb_Set_SlowCompare); 
 			ButtonMouseOverMagic(btn_cb_Set_AutoMTLAuthOnStartup);
 			ButtonMouseOverMagic(btn_cb_Set_EnableCoreFix);
+			ButtonMouseOverMagic(btn_cb_EnableSpecialPatcher);
+			ButtonMouseOverMagic(btn_cb_EnablePPTester);
 
 
 			if (LauncherLogic.AuthWay == LauncherLogic.AuthWays.MTL)
@@ -799,7 +802,8 @@ namespace Project_127.MySettings
 		{
 			General,
 			GTA,
-			Extra
+			Extra,
+			Secret
 		}
 
 		/// <summary>
@@ -824,47 +828,66 @@ namespace Project_127.MySettings
 
 				// Saving it in LastReadMeState
 				Settings.LastSettingsState = value;
+				switch (value)
+                {
+					case SettingsStates.General:
+						sv_Settings_General.Visibility = Visibility.Visible;
+						sv_Settings_GTA.Visibility = Visibility.Hidden;
+						sv_Settings_Extra.Visibility = Visibility.Hidden;
+						sv_Settings_Secret.Visibility = Visibility.Hidden;
 
-				if (value == SettingsStates.General)
-				{
-					sv_Settings_General.Visibility = Visibility.Visible;
-					sv_Settings_GTA.Visibility = Visibility.Hidden;
-					sv_Settings_Extra.Visibility = Visibility.Hidden;
+						btn_SettingsGeneral.Style = Application.Current.FindResource("btn_hamburgeritem_selected") as Style;
+						btn_SettingsGTA.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
+						btn_SettingsExtra.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
 
-					btn_SettingsGeneral.Style = Application.Current.FindResource("btn_hamburgeritem_selected") as Style;
-					btn_SettingsGTA.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
-					btn_SettingsExtra.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
+						lbl_SettingsHeader.Content = "General P127 Settings";
+						sv_Settings_General.ScrollToVerticalOffset(0);
+						break;
 
-					lbl_SettingsHeader.Content = "General P127 Settings";
-					sv_Settings_General.ScrollToVerticalOffset(0);
-				}
-				else if (value == SettingsStates.GTA)
-				{
-					sv_Settings_General.Visibility = Visibility.Hidden;
-					sv_Settings_GTA.Visibility = Visibility.Visible;
-					sv_Settings_Extra.Visibility = Visibility.Hidden;
+					case SettingsStates.GTA:
+						sv_Settings_General.Visibility = Visibility.Hidden;
+						sv_Settings_GTA.Visibility = Visibility.Visible;
+						sv_Settings_Extra.Visibility = Visibility.Hidden;
+						sv_Settings_Secret.Visibility = Visibility.Hidden;
 
-					btn_SettingsGeneral.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
-					btn_SettingsGTA.Style = Application.Current.FindResource("btn_hamburgeritem_selected") as Style;
-					btn_SettingsExtra.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
+						btn_SettingsGeneral.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
+						btn_SettingsGTA.Style = Application.Current.FindResource("btn_hamburgeritem_selected") as Style;
+						btn_SettingsExtra.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
 
-					lbl_SettingsHeader.Content = "GTA & Launch Settings";
-					sv_Settings_GTA.ScrollToVerticalOffset(0);
+						lbl_SettingsHeader.Content = "GTA & Launch Settings";
+						sv_Settings_GTA.ScrollToVerticalOffset(0);
 
-					CodeSnipped();
-				}
-				else if (value == SettingsStates.Extra)
-				{
-					sv_Settings_General.Visibility = Visibility.Hidden;
-					sv_Settings_GTA.Visibility = Visibility.Hidden;
-					sv_Settings_Extra.Visibility = Visibility.Visible;
+						CodeSnipped();
+						break;
 
-					btn_SettingsGeneral.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
-					btn_SettingsGTA.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
-					btn_SettingsExtra.Style = Application.Current.FindResource("btn_hamburgeritem_selected") as Style;
+					case SettingsStates.Extra:
+						sv_Settings_General.Visibility = Visibility.Hidden;
+						sv_Settings_GTA.Visibility = Visibility.Hidden;
+						sv_Settings_Extra.Visibility = Visibility.Visible;
+						sv_Settings_Secret.Visibility = Visibility.Hidden;
 
-					lbl_SettingsHeader.Content = "Settings of Extra Features";
-					sv_Settings_Extra.ScrollToVerticalOffset(0);
+						btn_SettingsGeneral.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
+						btn_SettingsGTA.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
+						btn_SettingsExtra.Style = Application.Current.FindResource("btn_hamburgeritem_selected") as Style;
+
+						lbl_SettingsHeader.Content = "Settings of Extra Features";
+						sv_Settings_Extra.ScrollToVerticalOffset(0);
+						break;
+
+					case SettingsStates.Secret:
+						sv_Settings_General.Visibility = Visibility.Hidden;
+						sv_Settings_GTA.Visibility = Visibility.Hidden;
+						sv_Settings_Extra.Visibility = Visibility.Hidden;
+						sv_Settings_Secret.Visibility = Visibility.Visible;
+
+
+						btn_SettingsGeneral.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
+						btn_SettingsGTA.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
+						btn_SettingsExtra.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
+						lbl_SettingsHeader.Content = "Secret Settings";
+						sv_Settings_Extra.ScrollToVerticalOffset(0);
+
+						break;
 				}
 			}
 		}
@@ -996,6 +1019,13 @@ namespace Project_127.MySettings
 				case "btn_cb_Set_EnableAutoStartJumpScript":
 					SetCheckBoxBackground(myBtn, Settings.EnableAutoStartJumpScript);
 					break;
+				case "btn_cb_EnableSpecialPatcher":
+					SetCheckBoxBackground(myBtn, Settings.SpecialPatcherEnabled);
+					break;
+				case "btn_cb_EnablePPTester":
+					SetCheckBoxBackground(myBtn, Settings.PointerPathTesterEnabled);
+					break;
+
 			}
 		}
 
@@ -1307,6 +1337,12 @@ namespace Project_127.MySettings
 				case "btn_cb_Set_EnableAutoStartJumpScript":
 					Settings.EnableAutoStartJumpScript = !Settings.EnableAutoStartJumpScript;
 					break;
+				case "btn_cb_EnableSpecialPatcher":
+					Settings.SpecialPatcherEnabled = !Settings.SpecialPatcherEnabled;
+					break;
+				case "btn_cb_EnablePPTester":
+					Settings.PointerPathTesterEnabled = !Settings.PointerPathTesterEnabled;
+					break;
 			}
 			RefreshGUI();
 		}
@@ -1595,6 +1631,10 @@ namespace Project_127.MySettings
 				{
 					btn_SettingsGTA_MouseRightButtonDown(null, null);
 				}
+				else if (SettingsState == SettingsStates.Extra)
+                {
+					SettingsState = SettingsStates.Secret;
+                }
 			}
 		}
 
@@ -2055,5 +2095,42 @@ namespace Project_127.MySettings
 			Settings.OverWriteGTACommandLineArgs = txt;
 			tb_OverWriteGTACommandLineArgs.Text = txt;
 		}
-	} // End of Class
+
+        private async void btn_Set_Special_Patcher_Key_Click(object sender, RoutedEventArgs e)
+        {
+			((Button)sender).Content = "[Press new Key]";
+			System.Windows.Forms.Keys MyNewKey = await KeyboardHandler.GetNextKeyPress();
+			if (MyNewKey != System.Windows.Forms.Keys.None && MyNewKey != System.Windows.Forms.Keys.Escape)
+			{
+				Settings.SpecialPatcherKey = MyNewKey.ToString();
+			}
+			((Button)sender).Content = Settings.SpecialPatcherKey;
+		}
+
+        private void btn_open_pptest_dialog_Click(object sender, RoutedEventArgs e)
+        {
+			PopupPPTesterSetup.IsOpen = true;
+		}
+
+        private void btn_Set_AuthOverride_Click(object sender, RoutedEventArgs e)
+        {
+			LauncherLogic.AuthStateOverWrite = true;
+        }
+
+        private void btn_open_patch_dialog_Click(object sender, RoutedEventArgs e)
+        {
+			new PopupSpecialPatcher().ShowDialog();
+        }
+
+        private void PopupPPTesterSetup_Opened(object sender, EventArgs e)
+        {
+			tb_pptestervars.Text = Settings.PointerPathTesterString;
+        }
+
+        private void PopupPPTesterSetup_Closed(object sender, EventArgs e)
+        {
+			Settings.PointerPathTesterString = tb_pptestervars.Text;
+			Globals.preparsedPPs = ASPointerPath.pointerPathParse(Settings.PointerPathTesterString);
+        }
+    } // End of Class
 } // End of Namespace 

@@ -249,7 +249,7 @@ namespace Project_127.MySettings
 		/// </summary>
 		/// <param name="pString"></param>
 		/// <returns></returns>
-		private static bool GetBoolFromString(string pString)
+		public static bool GetBoolFromString(string pString)
 		{
 			bool tmpBool;
 			bool.TryParse(pString, out tmpBool);
@@ -1659,6 +1659,83 @@ namespace Project_127.MySettings
 				}
 			}
 		}
+
+		/// <summary>
+		/// Bool indicating wether the special patcher is enabled
+		/// </summary>
+		public static bool SpecialPatcherEnabled
+        {
+            get
+            {
+				return GetBoolFromString(GetSetting("SpecialPatcherEnabledSetting"));
+			}
+            set
+            {
+
+				ROSCommunicationBackend.setFlag(ROSCommunicationBackend.Flags.useSpecialPatcher, value);
+				SetSetting("SpecialPatcherEnabledSetting", value.ToString());
+			}
+        }
+
+		/// <summary>
+		/// Bool indicating wether the pointer-path tester is enabled
+		/// </summary>
+		public static bool PointerPathTesterEnabled
+        {
+            get
+            {
+				return GetBoolFromString(GetSetting("PointerPathTesterEnabled"));
+			}
+            set
+            {
+				SetSetting("PointerPathTesterEnabled", value.ToString());
+			}
+        }
+
+		/// <summary>
+		/// Pointer path text
+		/// </summary>
+		public static string PointerPathTesterString
+        {
+			get
+			{
+				return GetSetting("PointerPathTesterString");
+			}
+			set
+			{
+				SetSetting("PointerPathTesterString", value);
+			}
+		}
+
+		/// <summary>
+		/// Key to enable/disable special patcher
+		/// </summary>
+		public static string SpecialPatcherKey
+        {
+            get
+            {
+				return GetSetting("SpecialPatcherToggleKey");
+			}
+            set
+            {
+				SetSetting("SpecialPatcherToggleKey", value);
+			}
+		}
+
+		/// <summary>
+		/// Json storage for special patcher patches
+		/// </summary>
+		public static string SpecialPatcherPatches
+        {
+            get
+            {
+				return GetSetting("SpecialPatcherPatches");
+            }
+            set
+            {
+				SetSetting("SpecialPatcherPatches", value);
+            }
+        }
 
 
 		/// <summary>

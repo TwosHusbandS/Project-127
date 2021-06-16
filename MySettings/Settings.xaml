@@ -435,6 +435,78 @@
                     </StackPanel>
                 </ScrollViewer>
 
+                <ScrollViewer Grid.Row="1" x:Name="sv_Settings_Secret">
+                    <StackPanel x:Name="sp_Settings_Secret">
+                        <Grid x:Name="Grid_Settings_Secret">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="40"/>
+                                <RowDefinition Height="40"/>
+                                <RowDefinition Height="40"/>
+                                <RowDefinition Height="40"/>
+                                <RowDefinition Height="40"/>
+                                <RowDefinition Height="40"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="3*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <Rectangle Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Fill="Transparent"/>
+                            <Rectangle Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Fill="{x:Static local:MyColors.SE_AlternateRowBackground}"/>
+                            <Rectangle Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" Fill="Transparent"/>
+                            <Rectangle Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3" Fill="{x:Static local:MyColors.SE_AlternateRowBackground}"/>
+                            <Rectangle Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3" Fill="Transparent"/>
+                            <Rectangle Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="3" Fill="{x:Static local:MyColors.SE_AlternateRowBackground}"/>
+
+
+                            <Label Grid.Row="0" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Enable PointerPath Tester" ToolTip="Shows pointerpath contents in overlay. To View Output, add a $ppTester flag into a notefile."/>
+                            <Button Grid.Row="0" Grid.Column="1" x:Name="btn_cb_EnablePPTester"  Style="{StaticResource btn_cb}" Click="btn_cb_Click"  MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
+                            <Button Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource btn_SE_Path}" x:Name="btn_open_pptest_dialog" Click="btn_open_pptest_dialog_Click" Content="Setup Pointer Path Test Flag"/>
+                            <Popup x:Name="PopupPPTesterSetup" PlacementTarget="{Binding ElementName=btn_open_pptest_dialog}" Placement="MousePoint" Width="500" Height="300" Margin="0,0,0,0" StaysOpen="False" Opened="PopupPPTesterSetup_Opened" Closed="PopupPPTesterSetup_Closed">
+                                <Popup.Resources>
+                                    <Style TargetType="TextBox" x:Key="tb_nomax">
+                                        <Setter Property="Margin" Value="10,10,10,10"/>
+                                        <Setter Property="Background" Value="{x:Static local:MyColors.MyColorOffWhite}"/>
+                                        <Setter Property="Foreground" Value="{x:Static local:MyColors.MyColorOffBlack}"/>
+                                        <Setter Property="MinHeight" Value="25"/>
+                                        <Setter Property="BorderThickness" Value="0"/>
+                                    </Style>
+                                </Popup.Resources>
+                                <Border BorderBrush="{x:Static local:MyColors.MyColorWhite}" BorderThickness="2" Background="{x:Static local:MyColors.MyColorOffBlack}" MouseLeave="Border_MouseLeave">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="40"/>
+                                            <RowDefinition Height="250"/>
+                                        </Grid.RowDefinitions>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition/>
+                                        </Grid.ColumnDefinitions>
+                                        <Label Grid.Row="0" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Variables: "/>
+                                        <TextBox x:Name="tb_pptestervars" Style="{StaticResource tb_nomax}" Grid.Row="1" Grid.Column="0" Margin="20,20,20,20" 
+                                          TextWrapping="NoWrap"
+                                          AcceptsReturn="True"
+                                          VerticalScrollBarVisibility="Auto"
+                                        >
+                                        </TextBox>
+
+                                    </Grid>
+                                </Border>
+                            </Popup>
+
+                            <Label Grid.Row="2" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Enable Special Patcher"/>
+                            <Button Grid.Row="2" Grid.Column="1" x:Name="btn_cb_EnableSpecialPatcher"  Style="{StaticResource btn_cb}" Click="btn_cb_Click"  MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
+                            <Button Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource btn_SE_Path}" x:Name="btn_open_patch_dialog" Click="btn_open_patch_dialog_Click" Content="Setup Patches"/>
+                            <Label Grid.Row="4" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="        Special Patcher Primary Toggle Key"/>
+                            <Button Grid.Row="4" Grid.Column="1" x:Name="btn_Set_Special_Patcher_Key"  Style="{StaticResource btn_SE_Path}" Click="btn_Set_Special_Patcher_Key_Click"/>
+                            <Label Grid.Row="5" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Override Auth"/>
+                            <Button Grid.Row="5" Grid.Column="1" x:Name="btn_Set_AuthOverride"  Style="{StaticResource btn_SE_Path}" Content="Override" Click="btn_Set_AuthOverride_Click"/>
+
+
+
+                        </Grid>
+                    </StackPanel>
+                </ScrollViewer>
+
 
             </Grid>
         </Border>
