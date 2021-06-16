@@ -230,7 +230,7 @@ namespace Project_127
 		/// <summary>
 		/// Property of other Buildinfo. Will be in the top message of logs
 		/// </summary>
-		public static string BuildInfo = "1.2.3.0 - Build 1";
+		public static string BuildInfo = "1.2.3.0 - RC 1";
 
 
 		/// <summary>
@@ -387,6 +387,13 @@ namespace Project_127
 			{"OverlayNotesPresetD",""},
 			{"OverlayNotesPresetE",""},
 			{"OverlayNotesPresetF",""},
+
+			{"SpecialPatcherEnabledSetting","False"},
+			// {"SpecialPatcherToggleKey","F14"}, // gonna use the same way of storing Keys like all other Keybinds. New Regidit value is called SpecialPatcherKey, ToggleKey is NOT used anymore
+			{"SpecialPatcherKey","112"},
+			{"SpecialPatcherPatches", "{}"},
+			{"PointerPathTesterEnabled", "False" },
+			{"PointerPathTesterString", "" },
 		};
 
 		/// <summary>
@@ -654,7 +661,14 @@ namespace Project_127
 
 			initIPC();
 
-			Settings.GTAWindowTitle = GTAOverlay.targetWindowBorderlessDefault;
+			//INIT Special Patcher
+			initGamePatches();
+
+			//Init pointer-path tester
+			preparsedPPs = ASPointerPath.pointerPathParse(Settings.PointerPathTesterString);
+
+
+				Settings.GTAWindowTitle = GTAOverlay.targetWindowBorderlessDefault;
 
 			// INIT the dynamic text handler for the overlay
 			initDynamicTextGetters();
@@ -708,11 +722,36 @@ namespace Project_127
 				return new byte[] { Convert.ToByte(true) };
 			});
 
+			
+			pipeServer.registerEndpoint("getActivePatches", () =>
+			{
+				return Settings.SpecialPatcherEnabled ? SpecialPatchHandler.patchBlob : BitConverter.GetBytes(0);
+			});
+
+			
+			
+
 			pipeServer.run();
 
 			//var pc = new IPCPipeClient("Project127Launcher");
 			//pc.call("test", Encoding.UTF8.GetBytes("Hi"));
 		}
+
+		/// <summary>
+		/// Sets up the special game patcher
+		/// </summary>
+		private static void initGamePatches()
+        {
+            foreach (var p in HelperClasses.SpecialPatchHandler.patch.GetPatches())
+            {
+				if (p.DefaultEnabled)
+                {
+					p.Enabled = true;
+                }
+            }
+			
+			
+        }
 
 		/// <summary>
 		/// Handles pointer path interpretation similarly to AutoSplit
@@ -858,9 +897,54 @@ namespace Project_127
 					 ).ToString()
 				 )
 			);
+			DynamicText.registerVarGetter("spEnabled", () => SpecialPatchHandler.patcherEnabled.ToString());
+
+			
+
+			DynamicText.registerVarGetter("ppTester", () =>
+			{
+				if (!Settings.PointerPathTesterEnabled)
+				{
+					return "";
+				}
+				try
+                {
+					string output = "";
+					foreach(var pp in preparsedPPs)
+                    {
+						output += pp.Name + ":";
+
+						try
+						{
+							var ret = pp.evaluate();
+							if (ret.Item1 != typeof(Byte[]))
+                            {
+								output += ret.Item2.ToString() + '\n';
+							}
+                            else
+                            {
+								output += BitConverter.ToString((Byte[])ret.Item2).Replace("-", "").ToLower();
+                            }
+						}
+                        catch
+                        {
+							output += "[ERR]\n";
+                        }
+                    }
+					return output;
+                }
+                catch
+                {
+					return "Eval Error!";
+                }
+				
+			});
 		}
 
-
+		/// <summary>
+		/// Pre-parsed pointer paths
+		/// </summary>
+		public static List<ASPointerPath.pointerPath> preparsedPPs;
 
 		/// <summary>
 		/// Dictionary with all pointer paths for 1.27 vars (steam)

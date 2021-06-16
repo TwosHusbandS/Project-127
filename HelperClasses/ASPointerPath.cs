@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Project_127.HelperClasses
@@ -136,6 +137,7 @@ namespace Project_127.HelperClasses
                 foreach (ProcessModule module in modules)
                 {
                     baseTable.Add(System.IO.Path.GetFileNameWithoutExtension(module.ModuleName), module.BaseAddress);
+                    baseTable.Add(module.ModuleName, module.BaseAddress);
                 }
             }
             IntPtr modBase;
@@ -232,6 +234,217 @@ namespace Project_127.HelperClasses
         public float EvalPointerPath_fp32(string modulename, IList<int> path)
         {
             return BitConverter.ToSingle(EvalPointerPath(modulename, sizeof(float), path), 0);
+        }
+
+        public static List<pointerPath> pointerPathParse(string file)
+        {
+            var pathRGX = new Regex(@"([a-zA-Z]+[0-9]*)\s+([A-Za-z_][A-Za-z0-9_]*)\s*:\s*(?:""([^""]+)""\s*,\s*)?((?:(?:(?:0x[a-zA-Z0-9]+)|(?:0b[01]+)|(?:[0-9]+))\s*,\s*)*(?:(?:0x[a-zA-Z0-9]+)|(?:0b[01]+)|(?:[0-9]+))\s*);\s*");
+            var mlcRGX = new Regex(@"/\*.*?\*/");
+            var numRGX = new Regex(@"(?:(?:0x[a-zA-Z0-9]+)|(?:0b[01]+)|(?:[0-9]+))");
+            var lines = file.Split('\n');
+            var commentProcessedLines = new List<string>();
+            foreach(var line in lines)
+            {
+                commentProcessedLines.Add(line.Split(new string[] { "//" }, StringSplitOptions.None)[0]);
+            }
+            var fileNoComments = string.Join("\n", commentProcessedLines.ToArray());
+            fileNoComments = mlcRGX.Replace(fileNoComments, "");
+            var pointerPaths = pathRGX.Matches(fileNoComments);
+            var output = new List<pointerPath>();
+            foreach (Match pp in pointerPaths)
+            {
+                var ppo = new pointerPath();
+                ppo.Type = pp.Groups[1].ToString();
+                ppo.Name = pp.Groups[2].ToString();
+                ppo.BaseModule = Regex.Unescape(pp.Groups[3].ToString());
+                string offsetlist = pp.Groups[4].ToString();
+                var offsetsstring = numRGX.Matches(offsetlist);
+                var offsets = new List<int>();
+                foreach (Match num in offsetsstring)
+                {
+                    if (num.Value.Substring(0,2) == "0x")
+                    {
+                        offsets.Add(Convert.ToInt32(num.Value.Substring(2), 16));
+                    }
+                    else if (num.Value.Substring(0, 2) == "0b")
+                    {
+                        offsets.Add(Convert.ToInt32(num.Value.Substring(2), 2));
+                    }
+                    else
+                    {
+                        offsets.Add(Convert.ToInt32(num.Value.Substring(2)));
+                    }
+                }
+                ppo.offsets = offsets;
+                output.Add(ppo);
+            }
+            return output;
+        }
+
+        public class pointerPath
+        {
+            public pointerPath() { }
+
+            public string Name { get; set; }
+
+            public string Type
+            {
+                get
+                {
+                    return subtype+(subtypemax != null? subtypemax.ToString() : "");
+                }
+                set
+                {
+                    var typeRGX = new Regex("([a-z]+)([0-9]*)");
+                    var match = typeRGX.Match(value);
+                    subtype = match.Groups[1].ToString();
+                    if (match.Groups[2].ToString() != "")
+                    {
+                        subtypemax = Convert.ToInt32(match.Groups[2].ToString());
+                    }
+                    else
+                    {
+                        subtypemax = null;
+                    }
+                }
+            }
+            public Type resultantType {
+                get
+                {
+                    return stringToTypeMapping(subtype);
+                }
+            }
+
+            private static Type stringToTypeMapping(string typename)
+            {
+                switch (typename)
+                {
+                    case "sbyte":
+                        return typeof(sbyte);
+                    case "byte":
+                        return typeof(byte);
+                    case "short":
+                        return typeof(short);
+                    case "ushort":
+                        return typeof(ushort);
+                    case "int":
+                        return typeof(int);
+                    case "uint":
+                        return typeof(uint);
+                    case "long":
+                        return typeof(long);
+                    case "ulong":
+                        return typeof(ulong);
+                    case "float":
+                        return typeof(float);
+                    case "double":
+                        return typeof(double);
+                    case "bool":
+                        return typeof(bool);
+                    case "string":
+                        return typeof(string);
+                    case "bytearray":
+                        return typeof(Byte[]);
+                    default:
+                        return typeof(void);
+                }
+            }
+
+            private static object autoConverterMapping(byte[] raw, string type)
+            {
+                switch (type)
+                {
+                    case "sbyte":
+                        return (sbyte)raw[0];
+                    case "byte":
+                        return raw[0];
+                    case "short":
+                        return BitConverter.ToInt16(raw, 0);
+                    case "ushort":
+                        return BitConverter.ToUInt16(raw, 0);
+                    case "int":
+                        return BitConverter.ToInt32(raw, 0);
+                    case "uint":
+                        return BitConverter.ToUInt32(raw, 0);
+                    case "long":
+                        return BitConverter.ToInt64(raw, 0);
+                    case "ulong":
+                        return BitConverter.ToUInt64(raw, 0);
+                    case "float":
+                        return BitConverter.ToSingle(raw, 0);
+                    case "double":
+                        return BitConverter.ToDouble(raw, 0);
+                    case "bool":
+                        return BitConverter.ToBoolean(raw, 0);
+                    case "string":
+                        return Encoding.UTF8.GetString(raw.TakeWhile(a => a != '\0').ToArray());
+                    default:
+                        return raw;
+                }
+            }
+
+            private string subtype;
+            private int? subtypemax;
+
+            private string baseModule = null;
+
+            public string BaseModule
+            {
+                get
+                {
+                    return baseModule;
+                }
+                set
+                {
+                    if (value != "")
+                    {
+                        baseModule = value;
+                    }
+                    else
+                    {
+                        baseModule = null;
+                    }
+                }
+            }
+
+            public List<int> offsets { get; set; }
+
+            public Tuple<Type,object> evaluate(ASPointerPath PathEvaluator = null)
+            {
+                if (PathEvaluator == null)
+                {
+                    try
+                    {
+                        PathEvaluator = Globals.GTAPointerPathHandler;
+                    }
+                    catch
+                    {
+                        return null;
+                    }
+                }
+                var typeTarget = resultantType;
+                byte[] resultRaw;
+                int typeSize;
+                if (typeTarget != typeof(string) && typeTarget != typeof(Byte[]))
+                {
+                    typeSize = Marshal.SizeOf(typeTarget);
+                }
+                else
+                {
+                    typeSize = subtypemax ?? 255;
+                }
+                
+                if (BaseModule == null)
+                {
+                    resultRaw = PathEvaluator.EvalPointerPath(typeSize, offsets);
+                }
+                else
+                {
+                    resultRaw = PathEvaluator.EvalPointerPath(BaseModule, typeSize, offsets);
+                }
+
+                return new Tuple<Type, object>(typeTarget, autoConverterMapping(resultRaw, subtype));
+            }
         }
 
     }
