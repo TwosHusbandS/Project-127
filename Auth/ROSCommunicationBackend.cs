@@ -709,7 +709,8 @@ namespace Project_127.Auth
             catch
             {
 				session.destroy();
-            }
+			}
+
 		}
 
 		/// <summary>

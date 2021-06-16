@@ -230,7 +230,8 @@ namespace Project_127
 		/// <summary>
 		/// Property of other Buildinfo. Will be in the top message of logs
 		/// </summary>
-		public static string BuildInfo = "1.2.2.3 - Build 2";
+		public static string BuildInfo = "1.2.3.0 - Build 1";
+
 
 		/// <summary>
 		/// Returns all Command Line Args as StringArray
@@ -632,7 +633,7 @@ namespace Project_127
 			// Loading Info for Version stuff.
 			HelperClasses.BuildVersionTable.ReadFromGithub();
 
-		
+
 			// SetUpDownloadManager
 			SetUpDownloadManager();
 
@@ -1060,30 +1061,46 @@ namespace Project_127
 			// Check online File for Version.
 			string MyVersionOnlineString = HelperClasses.FileHandling.GetXMLTagContent(XML_Autoupdate_Temp, "version");
 
-			// If this is empty,  github returned ""
-			if (!(String.IsNullOrEmpty(MyVersionOnlineString)))
+			// Just so we have one big code snippet we can exit at any point we want.
+			while (true)
 			{
-				// Building a Version out of the String
-				Version MyVersionOnline = new Version(MyVersionOnlineString);
-
-				// Logging some stuff
-				HelperClasses.Logger.Log("Checking for Project 1.27 Update during start up procedure");
-				HelperClasses.Logger.Log("MyVersionOnline = '" + MyVersionOnline.ToString() + "', Globals.ProjectVersion = '" + Globals.ProjectVersion + "'", 1);
-
-				// If Online Version is "bigger" than our own local Version
-				if (MyVersionOnline > Globals.ProjectVersion)
+				// If this is empty,  github returned ""
+				if (!(String.IsNullOrEmpty(MyVersionOnlineString)))
 				{
-					// Update Found.
-					HelperClasses.Logger.Log("Update found (Version Check returning true).", 1);
-					HelperClasses.Logger.Log("Checking if URL is reachable.", 1);
+					// Building a Version out of the String
+					Version MyVersionOnline = new Version(MyVersionOnlineString);
 
-					string DLPath = HelperClasses.FileHandling.GetXMLTagContent(XML_Autoupdate_Temp, "url");
-					string DLFilename = DLPath.Substring(DLPath.LastIndexOf('/') + 1);
-					string LocalFileName = Globals.ProjectInstallationPath.TrimEnd('\\') + @"\" + DLFilename;
+					// Logging some stuff
+					HelperClasses.Logger.Log("Checking for Project 1.27 Update during start up procedure");
+					HelperClasses.Logger.Log("MyVersionOnline = '" + MyVersionOnline.ToString() + "', Globals.ProjectVersion = '" + Globals.ProjectVersion + "'", 1);
 
-					if (HelperClasses.FileHandling.URLExists(DLPath, 2500))
+					// If Online Version is "bigger" than our own local Version
+					if (MyVersionOnline > Globals.ProjectVersion)
 					{
-						HelperClasses.Logger.Log("Update URL Reachabe");
+						// Update Found.
+						HelperClasses.Logger.Log("Update found (Version Check returning true).", 1);
+						HelperClasses.Logger.Log("Checking if URL is reachable.", 1);
+
+						string DLPath = HelperClasses.FileHandling.GetXMLTagContent(XML_Autoupdate_Temp, "url");
+						string DLFilename = DLPath.Substring(DLPath.LastIndexOf('/') + 1);
+						string LocalFileName = Globals.ProjectInstallationPath.TrimEnd('\\') + @"\" + DLFilename;
+
+						if (!HelperClasses.FileHandling.URLExists(DLPath, 2500))
+						{
+							HelperClasses.Logger.Log("Cant reach URL, will throw choice");
+							Popup yesno2 = new Popup(Popup.PopupWindowTypes.PopupYesNo, "There is an Update, but P127 cant seem to reach it. Do you want to try to get the Update anyways?");
+							yesno2.ShowDialog();
+							if (yesno2.DialogResult == true)
+							{
+								HelperClasses.Logger.Log("Cant reach URL, Choice thrown, will try to get Update anyways.");
+							}
+							else
+							{
+								// Do last Lines of this function anyway. Cant hurt.
+								HelperClasses.Logger.Log("Cant reach URL, Choice thrown, will NOT try to update.");
+								break;
+							}
+						}
 
 						Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Version: '" + MyVersionOnline.ToString() + "' found on the Server.\nVersion: '" + Globals.ProjectVersion.ToString() + "' found installed.\nDo you want to upgrade?");
 						yesno.ShowDialog();
@@ -1115,19 +1132,16 @@ namespace Project_127
 					}
 					else
 					{
-						HelperClasses.Logger.Log("Cant reach URL, will abondon Update");
+						// No update found
+						HelperClasses.Logger.Log("No Update Found");
 					}
 				}
 				else
 				{
-					// No update found
-					HelperClasses.Logger.Log("No Update Found");
+					// String return is fucked
+					HelperClasses.Logger.Log("Did not get most up to date Project 1.27 Version from Github. Github offline or your PC offline. Probably. Lets hope so.");
 				}
-			}
-			else
-			{
-				// String return is fucked
-				HelperClasses.Logger.Log("Did not get most up to date Project 1.27 Version from Github. Github offline or your PC offline. Probably. Lets hope so.");
+				break;
 			}
 
 			HelperClasses.BuildVersionTable.ReadFromGithub(XML_Autoupdate_Temp);
