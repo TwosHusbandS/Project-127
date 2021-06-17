@@ -83,7 +83,7 @@ namespace Project_127.HelperClasses.Keyboard
 					{
 						if (pKey == Settings.SpecialPatcherKey) //For now
                         {
-							SpecialPatchHandler.patcherEnabled = !SpecialPatchHandler.patcherEnabled;
+							SpecialPatchHandler.patcherToggle();
                         }
 						else if (HelperClasses.SpecialPatchHandler.patch.PatchKeys.ContainsKey(pKey))
 						{

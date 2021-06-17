@@ -18,7 +18,27 @@ namespace Project_127.HelperClasses
         /// <summary>
         /// Bool determining whether or not the patcher runs/whether patches are applied
         /// </summary>
-        public static bool patcherEnabled { get; set; } = false;
+        public static bool PatcherEnabled
+        {
+            get
+            {
+                return MySettings.Settings.SpecialPatcherEnabled && patcherEnabled;
+            }
+            set
+            {
+                patcherEnabled = value;
+            }
+        }
+
+        /// <summary>
+        /// Toggles the patcher
+        /// </summary>
+        public static void patcherToggle()
+        {
+            patcherEnabled = !patcherEnabled;
+        }
+
+        private static bool patcherEnabled = true;
 
         /// <summary>
         /// The blob for EMU
@@ -32,7 +52,7 @@ namespace Project_127.HelperClasses
                     generatePatchBlob();
                     patchesUpdated = false;
                 }
-                if (patcherEnabled)
+                if (PatcherEnabled)
                 {
                     return _patchBlob;
                 }

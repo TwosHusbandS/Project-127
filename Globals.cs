@@ -897,7 +897,7 @@ namespace Project_127
 					 ).ToString()
 				 )
 			);
-			DynamicText.registerVarGetter("spEnabled", () => SpecialPatchHandler.patcherEnabled.ToString());
+			DynamicText.registerVarGetter("spEnabled", () => SpecialPatchHandler.PatcherEnabled.ToString());
 
 			
 
