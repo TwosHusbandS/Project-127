@@ -128,9 +128,13 @@ namespace Project_127.HelperClasses
         public static bool enableCachedPatch(string name)
         {
             patchesUpdated = true;
-            if (cachedPatches.ContainsKey(name))
+            if (cachedPatches.ContainsKey(name) && !activePatches.ContainsKey(name))
             {
                 activePatches.Add(name, cachedPatches[name]);
+                return true;
+            }
+            else if (activePatches.ContainsKey(name))
+            {
                 return true;
             }
             return false;
@@ -264,14 +268,17 @@ namespace Project_127.HelperClasses
             /// <summary>
             /// JSON CONSTRUCTOR
             /// </summary>
-            private patch(jsonSerialPatch p)
+            private patch(jsonSerialPatch p, bool use_enabled = true)
             {
                 this.Name = p.Name;
                 this.RVA = p.RVA;
                 this.KeyBind = (System.Windows.Forms.Keys)p.KeyBind;
                 this.DefaultEnabled = p.DefaultEnabled;
                 this.Content = p.Content;
-                this.Enabled = p.Enabled;
+                if (use_enabled)
+                {
+                    this.Enabled = p.Enabled;
+                }
             }
 
             /// <summary>
@@ -372,7 +379,15 @@ namespace Project_127.HelperClasses
                         var jsonpatches = json.Deserialize<List<jsonSerialPatch>>(MySettings.Settings.SpecialPatcherPatches);
                         foreach (var p in jsonpatches)
                         {
-                            output.Add(p.Name, new patch(p));
+                            if (!isPatchCached(p.Name))
+                            {
+                                output.Add(p.Name, new patch(p));
+                            }
+                            else
+                            {
+                                output.Add(p.Name, new patch(p, false));
+                            }
+                            
                         }
                     }
                     catch { }
