@@ -575,6 +575,35 @@ namespace Project_127.HelperClasses
                 return true;
             }
 
+            /// <summary>
+            /// Clears cached patches.
+            /// </summary>
+            public static void clearCache()
+            {
+                var cachedps = cachedPatches.Keys.ToArray();
+                foreach(var p in cachedps)
+                {
+                    removeCachedPatch(p);
+                }
+            }
+
+            /// <summary>
+            /// Forces observable collection reload
+            /// </summary>
+            public static void reloadObservable()
+            {
+                if (patchesObservable == null)
+                {
+                    return;
+                }
+                patchesObservable.Clear();
+                foreach (var patch in GetPatches())
+                {
+                    patchesObservable.Add(patch);
+                }
+
+            }
+
             public struct jsonSerialPatch
             {
                 public string Name;

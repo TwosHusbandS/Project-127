@@ -1,0 +1,354 @@
+﻿[
+  {
+    "Name": "llpatch01",
+    "RVA": 12673016,
+    "KeyBind": 0,
+    "DefaultEnabled": true,
+    "Content": [ 233, 79, 250, 165, 0 ],
+    "Enabled": false
+  },
+  {
+    "Name": "llpatch02",
+    "RVA": 23550540,
+    "KeyBind": 0,
+    "DefaultEnabled": true,
+    "Content": [ 233, 141, 11, 0, 0 ],
+    "Enabled": false
+  },
+  {
+    "Name": "llpatch03",
+    "RVA": 23550545,
+    "KeyBind": 0,
+    "DefaultEnabled": true,
+    "Content": [ 76, 59, 5, 247, 102, 254, 255 ],
+    "Enabled": false
+  },
+  {
+    "Name": "llpatch04",
+    "RVA": 23550552,
+    "KeyBind": 0,
+    "DefaultEnabled": true,
+    "Content": [ 233, 163, 21, 0, 0 ],
+    "Enabled": false
+  },
+  {
+    "Name": "llpatch05",
+    "RVA": 23553502,
+    "KeyBind": 0,
+    "DefaultEnabled": true,
+    "Content": [ 76, 137, 5, 106, 91, 254, 255 ],
+    "Enabled": false
+  },
+  {
+    "Name": "llpatch06",
+    "RVA": 23553509,
+    "KeyBind": 0,
+    "DefaultEnabled": true,
+    "Content": [ 233, 214, 14, 0, 0 ],
+    "Enabled": false
+  },
+  {
+    "Name": "llpatch07",
+    "RVA": 23557312,
+    "KeyBind": 0,
+    "DefaultEnabled": true,
+    "Content": [ 199, 5, 130, 229, 255, 255, 144, 144, 144, 144 ],
+    "Enabled": false
+  },
+  {
+    "Name": "llpatch08",
+    "RVA": 23557322,
+    "KeyBind": 0,
+    "DefaultEnabled": true,
+    "Content": [ 233, 97, 37, 254, 255 ],
+    "Enabled": false
+  },
+  {
+    "Name": "llpatch09",
+    "RVA": 23435824,
+    "KeyBind": 0,
+    "DefaultEnabled": true,
+    "Content": [ 198, 5, 25, 192, 1, 0, 144 ],
+    "Enabled": false
+  },
+  {
+    "Name": "llpatch10",
+    "RVA": 23435831,
+    "KeyBind": 0,
+    "DefaultEnabled": true,
+    "Content": [ 233, 21, 192, 1, 0 ],
+    "Enabled": false
+  },
+  {
+    "Name": "llpatch11",
+    "RVA": 23556096,
+    "KeyBind": 0,
+    "DefaultEnabled": true,
+    "Content": [ 15, 133, 143, 186, 10, 2 ],
+    "Enabled": false
+  },
+  {
+    "Name": "llpatch12",
+    "RVA": 23556102,
+    "KeyBind": 0,
+    "DefaultEnabled": true,
+    "Content": [ 233, 208, 47, 254, 255 ],
+    "Enabled": false
+  },
+  {
+    "Name": "llpatch13",
+    "RVA": 23437275,
+    "KeyBind": 0,
+    "DefaultEnabled": true,
+    "Content": [ 72, 137, 13, 252, 197, 1, 0 ],
+    "Enabled": false
+  },
+  {
+    "Name": "llpatch14",
+    "RVA": 23437282,
+    "KeyBind": 0,
+    "DefaultEnabled": true,
+    "Content": [ 73, 139, 136, 240, 78, 100, 1 ],
+    "Enabled": false
+  },
+  {
+    "Name": "llpatch15",
+    "RVA": 23437289,
+    "KeyBind": 0,
+    "DefaultEnabled": true,
+    "Content": [ 233, 128, 3, 0, 0 ],
+    "Enabled": false
+  },
+  {
+    "Name": "llpatch16",
+    "RVA": 23438190,
+    "KeyBind": 0,
+    "DefaultEnabled": true,
+    "Content": [ 72, 131, 249, 0 ],
+    "Enabled": false
+  },
+  {
+    "Name": "llpatch17",
+    "RVA": 23438194,
+    "KeyBind": 0,
+    "DefaultEnabled": true,
+    "Content": [ 15, 132, 4, 26, 0, 0 ],
+    "Enabled": false
+  },
+  {
+    "Name": "llpatch18",
+    "RVA": 23438200,
+    "KeyBind": 0,
+    "DefaultEnabled": true,
+    "Content": [ 233, 255, 5, 0, 0 ],
+    "Enabled": false
+  },
+  {
+    "Name": "llpatch19",
+    "RVA": 23444860,
+    "KeyBind": 0,
+    "DefaultEnabled": true,
+    "Content": [ 72, 139, 13, 91, 168, 1, 0 ],
+    "Enabled": false
+  },
+  {
+    "Name": "llpatch20",
+    "RVA": 23444867,
+    "KeyBind": 0,
+    "DefaultEnabled": true,
+    "Content": [ 233, 13, 109, 12, 2 ],
+    "Enabled": false
+  },
+  {
+    "Name": "llpatch21",
+    "RVA": 23439740,
+    "KeyBind": 0,
+    "DefaultEnabled": true,
+    "Content": [ 72, 129, 57, 84, 65, 88, 73 ],
+    "Enabled": false
+  },
+  {
+    "Name": "llpatch22",
+    "RVA": 23439747,
+    "KeyBind": 0,
+    "DefaultEnabled": true,
+    "Content": [ 116, 5 ],
+    "Enabled": false
+  },
+  {
+    "Name": "llpatch23",
+    "RVA": 23439749,
+    "KeyBind": 0,
+    "DefaultEnabled": true,
+    "Content": [ 233, 230, 251, 255, 255 ],
+    "Enabled": false
+  },
+  {
+    "Name": "llpatch24",
+    "RVA": 23439754,
+    "KeyBind": 0,
+    "DefaultEnabled": true,
+    "Content": [ 233, 140, 194, 1, 0 ],
+    "Enabled": false
+  },
+  {
+    "Name": "llpatch25",
+    "RVA": 23438704,
+    "KeyBind": 0,
+    "DefaultEnabled": true,
+    "Content": [ 72, 139, 13, 103, 192, 1, 0 ],
+    "Enabled": false
+  },
+  {
+    "Name": "llpatch26",
+    "RVA": 23438711,
+    "KeyBind": 0,
+    "DefaultEnabled": true,
+    "Content": [ 15, 133, 24, 133, 12, 2 ],
+    "Enabled": false
+  },
+  {
+    "Name": "llpatch27",
+    "RVA": 23438717,
+    "KeyBind": 0,
+    "DefaultEnabled": true,
+    "Content": [ 195 ],
+    "Enabled": false
+  },
+  {
+    "Name": "llpatch28",
+    "RVA": 23555099,
+    "KeyBind": 0,
+    "DefaultEnabled": true,
+    "Content": [ 199, 5, 107, 242, 177, 0, 84, 97, 120, 112 ],
+    "Enabled": false
+  },
+  {
+    "Name": "llpatch29",
+    "RVA": 23555109,
+    "KeyBind": 0,
+    "DefaultEnabled": true,
+    "Content": [ 233, 147, 70, 254, 255 ],
+    "Enabled": false
+  },
+  {
+    "Name": "llpatch30",
+    "RVA": 23442109,
+    "KeyBind": 0,
+    "DefaultEnabled": true,
+    "Content": [ 72, 139, 13, 68, 188, 58, 1 ],
+    "Enabled": false
+  },
+  {
+    "Name": "llpatch31",
+    "RVA": 23442116,
+    "KeyBind": 0,
+    "DefaultEnabled": true,
+    "Content": [ 72, 139, 9 ],
+    "Enabled": false
+  },
+  {
+    "Name": "llpatch32",
+    "RVA": 23442119,
+    "KeyBind": 0,
+    "DefaultEnabled": true,
+    "Content": [ 233, 52, 174, 1, 0 ],
+    "Enabled": false
+  },
+  {
+    "Name": "llpatch33",
+    "RVA": 23552256,
+    "KeyBind": 0,
+    "DefaultEnabled": true,
+    "Content": [ 72, 137, 29, 248, 8, 0, 0 ],
+    "Enabled": false
+  },
+  {
+    "Name": "llpatch34",
+    "RVA": 23552263,
+    "KeyBind": 0,
+    "DefaultEnabled": true,
+    "Content": [ 233, 131, 16, 0, 0 ],
+    "Enabled": false
+  },
+  {
+    "Name": "llpatch35",
+    "RVA": 23556495,
+    "KeyBind": 0,
+    "DefaultEnabled": true,
+    "Content": [ 72, 187, 116, 97, 120, 105, 115, 101, 114, 118 ],
+    "Enabled": false
+  },
+  {
+    "Name": "llpatch36",
+    "RVA": 23556505,
+    "KeyBind": 0,
+    "DefaultEnabled": true,
+    "Content": [ 233, 78, 1, 0, 0 ],
+    "Enabled": false
+  },
+  {
+    "Name": "llpatch37",
+    "RVA": 23556844,
+    "KeyBind": 0,
+    "DefaultEnabled": true,
+    "Content": [ 72, 57, 203 ],
+    "Enabled": false
+  },
+  {
+    "Name": "llpatch38",
+    "RVA": 23556847,
+    "KeyBind": 0,
+    "DefaultEnabled": true,
+    "Content": [ 72, 139, 29, 9, 247, 255, 255 ],
+    "Enabled": false
+  },
+  {
+    "Name": "llpatch39",
+    "RVA": 23556854,
+    "KeyBind": 0,
+    "DefaultEnabled": true,
+    "Content": [ 233, 17, 77, 254, 255 ],
+    "Enabled": false
+  },
+  {
+    "Name": "llpatch40",
+    "RVA": 23445516,
+    "KeyBind": 0,
+    "DefaultEnabled": true,
+    "Content": [ 15, 132, 57, 205, 1, 0 ],
+    "Enabled": false
+  },
+  {
+    "Name": "llpatch41",
+    "RVA": 23445522,
+    "KeyBind": 0,
+    "DefaultEnabled": true,
+    "Content": [ 72, 139, 13, 197, 165, 1, 0 ],
+    "Enabled": false
+  },
+  {
+    "Name": "llpatch42",
+    "RVA": 23445529,
+    "KeyBind": 0,
+    "DefaultEnabled": true,
+    "Content": [ 233, 119, 106, 12, 2 ],
+    "Enabled": false
+  },
+  {
+    "Name": "llpatch43",
+    "RVA": 23563595,
+    "KeyBind": 0,
+    "DefaultEnabled": true,
+    "Content": [ 65, 129, 184, 144, 252, 103, 1, 116, 97, 120, 105 ],
+    "Enabled": false
+  },
+  {
+    "Name": "llpatch44",
+    "RVA": 23563606,
+    "KeyBind": 0,
+    "DefaultEnabled": true,
+    "Content": [ 233, 21, 24, 254, 255 ],
+    "Enabled": false
+  }
+]

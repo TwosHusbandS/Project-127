@@ -448,6 +448,7 @@
                                 <RowDefinition Height="40"/>
                                 <RowDefinition Height="40"/>
                                 <RowDefinition Height="40"/>
+                                <RowDefinition Height="40"/>
                             </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="3*"/>
@@ -459,6 +460,7 @@
                             <Rectangle Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" Fill="Transparent"/>
                             <Rectangle Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3" Fill="{x:Static local:MyColors.SE_AlternateRowBackground}"/>
                             <Rectangle Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3" Fill="Transparent"/>
+                            <Rectangle Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="3" Fill="{x:Static local:MyColors.SE_AlternateRowBackground}"/>
 
                             <Label Grid.Row="0" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Enable PointerPath Tester" ToolTip="Shows pointerpath contents in overlay. To View Output, add a $ppTester flag into a notefile."/>
                             <Button Grid.Row="0" Grid.Column="1" x:Name="btn_cb_EnablePPTester"  Style="{StaticResource btn_cb}" Click="btn_cb_Click"  MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
@@ -496,10 +498,11 @@
 
                             <Label Grid.Row="2" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Enable Special Patcher"/>
                             <Button Grid.Row="2" Grid.Column="1" x:Name="btn_cb_EnableSpecialPatcher"  Style="{StaticResource btn_cb}" Click="btn_cb_Click"  MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
-                            <Button Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource btn_SE_Path}" x:Name="btn_open_patch_dialog" Click="btn_open_patch_dialog_Click" Content="Setup Patches"/>
-                            <Label Grid.Row="4" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="        Special Patcher Primary Toggle Key"/>
-                            <Button Grid.Row="4" Grid.Column="1" x:Name="btn_Set_Special_Patcher_Key"  Style="{StaticResource btn_SE_Path}" Click="btn_Set_Special_Patcher_Key_Click"/>
-
+                            <Label Grid.Row="3" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="        Special Patcher Primary Toggle Key"/>
+                            <Button Grid.Row="3" Grid.Column="1" x:Name="btn_Set_Special_Patcher_Key"  Style="{StaticResource btn_SE_Path}" Click="btn_Set_Special_Patcher_Key_Click"/>
+                            <Button Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource btn_SE_Path}" x:Name="btn_open_patch_dialog" Click="btn_open_patch_dialog_Click" Content="Setup Patches"/>
+                            <Button Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" x:Name="btn_Set_Special_Patcher_Add_llfix" Content="Load @Special For's taxi long-load patch" Style="{StaticResource btn_SE_Path}" Click="btn_Set_Special_Patcher_Add_llfix_Click"/>
+                            
 
 
                         </Grid>

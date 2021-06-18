@@ -421,6 +421,7 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <None Include="app.manifest" />
+    <Resource Include="HelperClasses\llpatch.json" />
     <None Include="Installer\Info\AdvancedNotefile.md" />
     <None Include="Installer\Info\Changelogs\V_1_2_2_1_Changelog.md" />
     <None Include="Installer\Info\Changelogs\V_1_2_2_0_Changelog.md" />

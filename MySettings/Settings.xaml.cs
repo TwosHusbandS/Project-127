@@ -2140,5 +2140,32 @@ namespace Project_127.MySettings
 		{
 			SettingsState = SettingsStates.Patcher;
 		}
-	} // End of Class
+
+        private void btn_Set_Special_Patcher_Add_llfix_Click(object sender, RoutedEventArgs e)
+        {
+			string llpatch_json;
+			Uri llpatch_json_uri = new Uri(@"HelperClasses\llpatch.json", UriKind.Relative);
+			var llpatch_stream = System.Windows.Application.GetResourceStream(llpatch_json_uri);
+			using (var reader = new System.IO.StreamReader(llpatch_stream.Stream))
+			{
+				llpatch_json = reader.ReadToEnd();
+			}
+			var do_continute = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Warning: Enabling the long load patch will invalidate your run and\n delete all of you existing patches. Would you like to continue?").ShowDialog() ?? false;
+			if (do_continute)
+            {
+				SpecialPatchHandler.disableAll();
+				SpecialPatchHandler.patch.clearCache();
+				SpecialPatcherPatches = llpatch_json;
+				SpecialPatchHandler.patch.reloadObservable();
+				foreach (var p in SpecialPatchHandler.patch.GetPatches())
+				{
+					if (p.DefaultEnabled)
+					{
+						p.Enabled = true;
+					}
+				}
+			}
+			
+		}
+    } // End of Class
 } // End of Namespace 
