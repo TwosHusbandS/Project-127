@@ -459,7 +459,6 @@
                             <Rectangle Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" Fill="Transparent"/>
                             <Rectangle Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3" Fill="{x:Static local:MyColors.SE_AlternateRowBackground}"/>
                             <Rectangle Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3" Fill="Transparent"/>
-                            <Rectangle Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="3" Fill="{x:Static local:MyColors.SE_AlternateRowBackground}"/>
 
                             <Label Grid.Row="0" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Enable PointerPath Tester" ToolTip="Shows pointerpath contents in overlay. To View Output, add a $ppTester flag into a notefile."/>
                             <Button Grid.Row="0" Grid.Column="1" x:Name="btn_cb_EnablePPTester"  Style="{StaticResource btn_cb}" Click="btn_cb_Click"  MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
