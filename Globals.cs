@@ -749,8 +749,7 @@ namespace Project_127
 					p.Enabled = true;
                 }
             }
-			
-			
+			HelperClasses.SpecialPatchHandler.checkCopyScripthook();
         }
 
 		/// <summary>

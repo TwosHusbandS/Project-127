@@ -614,6 +614,35 @@ namespace Project_127.HelperClasses
                 public bool Enabled;
             }
         }
+
+        /// <summary>
+        /// Check for existance of scripthook & copy it if necessary
+        /// </summary>
+        public static void checkCopyScripthook()
+        {
+            if (!MySettings.Settings.SpecialPatcherEnabled)
+            {
+                return;
+            }
+            var targetPath = System.IO.Path.Combine(
+                 MySettings.Settings.GTAVInstallationPath,
+                "P127_ASMPATCHER_SCRIPTHOOK.dll"
+            );
+            if (!System.IO.File.Exists(targetPath))
+            {
+                try
+                {
+                    System.IO.File.Copy("P127_ASMPATCHER_SCRIPTHOOK.dll", targetPath);
+                }
+                catch
+                {
+                    new Popups.Popup(
+                        Popups.Popup.PopupWindowTypes.PopupOkError,
+                        "Failed to copy scripthook. ASM patcher will not load"
+                        ).ShowDialog();
+                }
+            }
+        }
     }
     
 }
