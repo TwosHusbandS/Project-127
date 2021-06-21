@@ -427,6 +427,7 @@
     <None Include="Installer\Info\Changelogs\V_1_2_2_0_Changelog.md" />
     <None Include="Installer\Info\Changelogs\V_1_2_2_2_Changelog.md" />
     <None Include="Installer\Info\Changelogs\V_1_2_2_3_Changelog.md" />
+    <None Include="Installer\Info\Changelogs\V_1_2_3_0_Changelog.md" />
     <None Include="Installer\Info\Help.md" />
     <None Include="Installer\Info\Features.md" />
     <None Include="Installer\Info\Changelogs\V_1_2_0_0_Changelog.md" />
