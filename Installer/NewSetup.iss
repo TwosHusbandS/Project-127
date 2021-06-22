@@ -67,7 +67,7 @@ Source: "..\bin\x64\Release\UglyFiles\libEGL.dll"; DestDir: "{app}\UglyFiles"; F
 Source: "..\bin\x64\Release\UglyFiles\libGLESv2.dll"; DestDir: "{app}\UglyFiles"; Flags: ignoreversion
 Source: "..\bin\x64\Release\UglyFiles\Microsoft.Bcl.AsyncInterfaces.dll"; DestDir: "{app}\UglyFiles"; Flags: ignoreversion
 Source: "..\bin\x64\Release\UglyFiles\Microsoft.Xaml.Behaviors.dll"; DestDir: "{app}\UglyFiles"; Flags: ignoreversion
-Source: "..\bin\x64\Release\UglyFiles\MTLInterface.dll"; DestDir: "{app}\UglyFiles"; Flags: ignoreversion
+Source: "..\bin\x64\Release\UglyFiles\P127_ASMPATCHER_SCRIPTHOOK.dll"; DestDir: "{app}\UglyFiles"; Flags: ignoreversion
 Source: "..\bin\x64\Release\UglyFiles\P127_Jumpscript.exe"; DestDir: "{app}\UglyFiles"; Flags: ignoreversion
 Source: "..\bin\x64\Release\UglyFiles\Project 1.27.exe"; DestDir: "{app}\UglyFiles"; Flags: ignoreversion
 Source: "..\bin\x64\Release\UglyFiles\SharpDX.Direct2D1.dll"; DestDir: "{app}\UglyFiles"; Flags: ignoreversion
