@@ -274,7 +274,7 @@ namespace Project_127.MySettings
 			HelperClasses.Logger.Log("Picked path '" + GTAVInstallationPathUserChoice + "' is valid and will be set as Settings.GTAVInstallationPath.");
 			Settings.GTAVInstallationPath = GTAVInstallationPathUserChoice;
 
-	
+
 			if (Settings.ZIPExtractionPath.TrimEnd('\\').ToLower() != GTAVInstallationPathUserChoice.TrimEnd('\\').ToLower())
 			{
 				// Setting ZIP Extract Path now
@@ -743,6 +743,7 @@ namespace Project_127.MySettings
 
 			btn_Set_JumpScriptKey1.Content = Settings.JumpScriptKey1;
 			btn_Set_JumpScriptKey2.Content = Settings.JumpScriptKey2;
+			btn_Set_Special_Patcher_Key.Content = Settings.SpecialPatcherKey;
 
 			ButtonMouseOverMagic(btn_Refresh);
 			ButtonMouseOverMagic(btn_cb_Set_EnableLogging);
@@ -762,9 +763,11 @@ namespace Project_127.MySettings
 			ButtonMouseOverMagic(btn_cb_Set_EnableDontLaunchThroughSteam);
 			ButtonMouseOverMagic(btn_cb_Set_EnableAutoStartJumpScript);
 			ButtonMouseOverMagic(btn_cb_Set_EnableOverWriteGTACommandLineArgs);
-			ButtonMouseOverMagic(btn_cb_Set_SlowCompare); 
+			ButtonMouseOverMagic(btn_cb_Set_SlowCompare);
 			ButtonMouseOverMagic(btn_cb_Set_AutoMTLAuthOnStartup);
 			ButtonMouseOverMagic(btn_cb_Set_EnableCoreFix);
+			ButtonMouseOverMagic(btn_cb_EnableSpecialPatcher);
+			ButtonMouseOverMagic(btn_cb_EnablePPTester);
 
 
 			if (LauncherLogic.AuthWay == LauncherLogic.AuthWays.MTL)
@@ -799,7 +802,8 @@ namespace Project_127.MySettings
 		{
 			General,
 			GTA,
-			Extra
+			Extra,
+			Patcher
 		}
 
 		/// <summary>
@@ -824,47 +828,66 @@ namespace Project_127.MySettings
 
 				// Saving it in LastReadMeState
 				Settings.LastSettingsState = value;
-
-				if (value == SettingsStates.General)
+				switch (value)
 				{
-					sv_Settings_General.Visibility = Visibility.Visible;
-					sv_Settings_GTA.Visibility = Visibility.Hidden;
-					sv_Settings_Extra.Visibility = Visibility.Hidden;
+					case SettingsStates.General:
+						sv_Settings_General.Visibility = Visibility.Visible;
+						sv_Settings_GTA.Visibility = Visibility.Hidden;
+						sv_Settings_Extra.Visibility = Visibility.Hidden;
+						sv_Settings_Secret.Visibility = Visibility.Hidden;
 
-					btn_SettingsGeneral.Style = Application.Current.FindResource("btn_hamburgeritem_selected") as Style;
-					btn_SettingsGTA.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
-					btn_SettingsExtra.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
+						btn_SettingsGeneral.Style = Application.Current.FindResource("btn_hamburgeritem_selected") as Style;
+						btn_SettingsGTA.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
+						btn_SettingsExtra.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
 
-					lbl_SettingsHeader.Content = "General P127 Settings";
-					sv_Settings_General.ScrollToVerticalOffset(0);
-				}
-				else if (value == SettingsStates.GTA)
-				{
-					sv_Settings_General.Visibility = Visibility.Hidden;
-					sv_Settings_GTA.Visibility = Visibility.Visible;
-					sv_Settings_Extra.Visibility = Visibility.Hidden;
+						lbl_SettingsHeader.Content = "General P127 Settings";
+						sv_Settings_General.ScrollToVerticalOffset(0);
+						break;
 
-					btn_SettingsGeneral.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
-					btn_SettingsGTA.Style = Application.Current.FindResource("btn_hamburgeritem_selected") as Style;
-					btn_SettingsExtra.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
+					case SettingsStates.GTA:
+						sv_Settings_General.Visibility = Visibility.Hidden;
+						sv_Settings_GTA.Visibility = Visibility.Visible;
+						sv_Settings_Extra.Visibility = Visibility.Hidden;
+						sv_Settings_Secret.Visibility = Visibility.Hidden;
 
-					lbl_SettingsHeader.Content = "GTA & Launch Settings";
-					sv_Settings_GTA.ScrollToVerticalOffset(0);
+						btn_SettingsGeneral.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
+						btn_SettingsGTA.Style = Application.Current.FindResource("btn_hamburgeritem_selected") as Style;
+						btn_SettingsExtra.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
 
-					CodeSnipped();
-				}
-				else if (value == SettingsStates.Extra)
-				{
-					sv_Settings_General.Visibility = Visibility.Hidden;
-					sv_Settings_GTA.Visibility = Visibility.Hidden;
-					sv_Settings_Extra.Visibility = Visibility.Visible;
+						lbl_SettingsHeader.Content = "GTA & Launch Settings";
+						sv_Settings_GTA.ScrollToVerticalOffset(0);
 
-					btn_SettingsGeneral.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
-					btn_SettingsGTA.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
-					btn_SettingsExtra.Style = Application.Current.FindResource("btn_hamburgeritem_selected") as Style;
+						CodeSnipped();
+						break;
 
-					lbl_SettingsHeader.Content = "Settings of Extra Features";
-					sv_Settings_Extra.ScrollToVerticalOffset(0);
+					case SettingsStates.Extra:
+						sv_Settings_General.Visibility = Visibility.Hidden;
+						sv_Settings_GTA.Visibility = Visibility.Hidden;
+						sv_Settings_Extra.Visibility = Visibility.Visible;
+						sv_Settings_Secret.Visibility = Visibility.Hidden;
+
+						btn_SettingsGeneral.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
+						btn_SettingsGTA.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
+						btn_SettingsExtra.Style = Application.Current.FindResource("btn_hamburgeritem_selected") as Style;
+
+						lbl_SettingsHeader.Content = "Settings of Extra Features";
+						sv_Settings_Extra.ScrollToVerticalOffset(0);
+						break;
+
+					case SettingsStates.Patcher:
+						sv_Settings_General.Visibility = Visibility.Hidden;
+						sv_Settings_GTA.Visibility = Visibility.Hidden;
+						sv_Settings_Extra.Visibility = Visibility.Hidden;
+						sv_Settings_Secret.Visibility = Visibility.Visible;
+
+
+						btn_SettingsGeneral.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
+						btn_SettingsGTA.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
+						btn_SettingsExtra.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
+						lbl_SettingsHeader.Content = "Patcher Settings";
+						sv_Settings_Extra.ScrollToVerticalOffset(0);
+
+						break;
 				}
 			}
 		}
@@ -996,6 +1019,13 @@ namespace Project_127.MySettings
 				case "btn_cb_Set_EnableAutoStartJumpScript":
 					SetCheckBoxBackground(myBtn, Settings.EnableAutoStartJumpScript);
 					break;
+				case "btn_cb_EnableSpecialPatcher":
+					SetCheckBoxBackground(myBtn, Settings.SpecialPatcherEnabled);
+					break;
+				case "btn_cb_EnablePPTester":
+					SetCheckBoxBackground(myBtn, Settings.PointerPathTesterEnabled);
+					break;
+
 			}
 		}
 
@@ -1089,7 +1119,7 @@ namespace Project_127.MySettings
 			Grid_Settings_GTA.RowDefinitions.RemoveAt(6);
 			Grid_Settings_GTA.RowDefinitions.RemoveAt(5);
 			RowDefinition Row_SCL_Options = new RowDefinition();
-			Row_SCL_Options.Height = new GridLength(100); 
+			Row_SCL_Options.Height = new GridLength(100);
 			RowDefinition Row_DragonEmu_Options = new RowDefinition();
 			Row_DragonEmu_Options.Height = new GridLength(360);
 
@@ -1306,6 +1336,12 @@ namespace Project_127.MySettings
 					break;
 				case "btn_cb_Set_EnableAutoStartJumpScript":
 					Settings.EnableAutoStartJumpScript = !Settings.EnableAutoStartJumpScript;
+					break;
+				case "btn_cb_EnableSpecialPatcher":
+					Settings.SpecialPatcherEnabled = !Settings.SpecialPatcherEnabled;
+					break;
+				case "btn_cb_EnablePPTester":
+					Settings.PointerPathTesterEnabled = !Settings.PointerPathTesterEnabled;
 					break;
 			}
 			RefreshGUI();
@@ -1594,6 +1630,10 @@ namespace Project_127.MySettings
 				else if (SettingsState == SettingsStates.GTA)
 				{
 					btn_SettingsGTA_MouseRightButtonDown(null, null);
+				}
+				else if (SettingsState == SettingsStates.Extra)
+				{
+					SettingsState = SettingsStates.Patcher;
 				}
 			}
 		}
@@ -2055,5 +2095,77 @@ namespace Project_127.MySettings
 			Settings.OverWriteGTACommandLineArgs = txt;
 			tb_OverWriteGTACommandLineArgs.Text = txt;
 		}
-	} // End of Class
+
+		private async void btn_Set_Special_Patcher_Key_Click(object sender, RoutedEventArgs e)
+		{
+			((Button)sender).Content = "[Press new Key]";
+			System.Windows.Forms.Keys MyNewKey = await KeyboardHandler.GetNextKeyPress();
+			if (MyNewKey != System.Windows.Forms.Keys.None && MyNewKey != System.Windows.Forms.Keys.Escape)
+			{
+				Settings.SpecialPatcherKey = MyNewKey;
+			}
+			((Button)sender).Content = Settings.SpecialPatcherKey;
+		}
+
+		private void btn_open_pptest_dialog_Click(object sender, RoutedEventArgs e)
+		{
+			PopupPPTesterSetup.IsOpen = true;
+		}
+
+		private void btn_open_patch_dialog_Click(object sender, RoutedEventArgs e)
+		{
+			new PopupSpecialPatcher().ShowDialog();
+		}
+
+		private void PopupPPTesterSetup_Opened(object sender, EventArgs e)
+		{
+			tb_pptestervars.Text = Settings.PointerPathTesterString;
+		}
+
+		private void PopupPPTesterSetup_Closed(object sender, EventArgs e)
+		{
+			Settings.PointerPathTesterString = tb_pptestervars.Text;
+			Globals.preparsedPPs = ASPointerPath.pointerPathParse(Settings.PointerPathTesterString);
+		}
+
+		private void btn_SettingsExtra_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+		{
+			if (e.ClickCount >= 3)
+			{
+				SettingsState = SettingsStates.Patcher;
+			}
+		}
+
+		private void btn_OpenPatcher_Click(object sender, RoutedEventArgs e)
+		{
+			SettingsState = SettingsStates.Patcher;
+		}
+
+        private void btn_Set_Special_Patcher_Add_llfix_Click(object sender, RoutedEventArgs e)
+        {
+			string llpatch_json;
+			Uri llpatch_json_uri = new Uri(@"HelperClasses\llpatch.json", UriKind.Relative);
+			var llpatch_stream = System.Windows.Application.GetResourceStream(llpatch_json_uri);
+			using (var reader = new System.IO.StreamReader(llpatch_stream.Stream))
+			{
+				llpatch_json = reader.ReadToEnd();
+			}
+			var do_continute = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Warning: Enabling the long load patch will invalidate your run and\n delete all of you existing patches. Would you like to continue?").ShowDialog() ?? false;
+			if (do_continute)
+            {
+				SpecialPatchHandler.disableAll();
+				SpecialPatchHandler.patch.clearCache();
+				SpecialPatcherPatches = llpatch_json;
+				SpecialPatchHandler.patch.reloadObservable();
+				foreach (var p in SpecialPatchHandler.patch.GetPatches())
+				{
+					if (p.DefaultEnabled)
+					{
+						p.Enabled = true;
+					}
+				}
+			}
+			
+		}
+    } // End of Class
 } // End of Namespace 

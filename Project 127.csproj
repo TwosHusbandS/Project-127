@@ -197,6 +197,7 @@
     <Compile Include="HelperClasses\BlurBackgroundBehaviour.cs" />
     <Compile Include="HelperClasses\IPCPipes.cs" />
     <Compile Include="HelperClasses\MissionIdentifiers.cs" />
+    <Compile Include="HelperClasses\SpecialPatchHandler.cs" />
     <Compile Include="HelperClasses\WindowChangeListenerTwo.cs" />
     <Compile Include="MyColors.cs" />
     <Compile Include="HelperClasses\BuildVersionTable.cs" />
@@ -254,6 +255,12 @@
     </Compile>
     <Compile Include="Popups\PopupMode.xaml.cs">
       <DependentUpon>PopupMode.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Popups\PopupPatchEditor.xaml.cs">
+      <DependentUpon>PopupPatchEditor.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Popups\PopupSpecialPatcher.xaml.cs">
+      <DependentUpon>PopupSpecialPatcher.xaml</DependentUpon>
     </Compile>
     <Compile Include="Popups\PopupTextbox.xaml.cs">
       <DependentUpon>PopupTextbox.xaml</DependentUpon>
@@ -341,6 +348,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Popups\PopupPatchEditor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Popups\PopupProgress.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -363,6 +374,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Popups\PopupDownload.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Popups\PopupSpecialPatcher.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -406,11 +421,14 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <None Include="app.manifest" />
+    <Resource Include="HelperClasses\llpatch.json" />
+    <None Include="Installer\Info\AdvancedPatcher.md" />
     <None Include="Installer\Info\AdvancedNotefile.md" />
     <None Include="Installer\Info\Changelogs\V_1_2_2_1_Changelog.md" />
     <None Include="Installer\Info\Changelogs\V_1_2_2_0_Changelog.md" />
     <None Include="Installer\Info\Changelogs\V_1_2_2_2_Changelog.md" />
     <None Include="Installer\Info\Changelogs\V_1_2_2_3_Changelog.md" />
+    <None Include="Installer\Info\Changelogs\V_1_2_3_0_Changelog.md" />
     <None Include="Installer\Info\Help.md" />
     <None Include="Installer\Info\Features.md" />
     <None Include="Installer\Info\Changelogs\V_1_2_0_0_Changelog.md" />
@@ -532,9 +550,6 @@
     <None Include="Artwork\bg_valentine.png" />
     <None Include="Artwork\bg_turkey.png" />
     <Content Include="Installer\NewSetup.iss" />
-    <Content Include="MTLInterface.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Resource Include="Overlay\richard\001.jpg" />
     <Resource Include="Overlay\richard\002.jpg" />
     <Resource Include="Overlay\richard\003.jpg" />
@@ -588,30 +603,14 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PreBuildEvent>mkdir "$(ProjectDir)\bin\x64\Release\UglyFiles\Artwork\"
-copy "$(ProjectDir)Artwork\bg_default.png" "$(ProjectDir)\bin\x64\Release\UglyFiles\Artwork\bg_default.png"
-copy "$(ProjectDir)Artwork\bg_winter.png" "$(ProjectDir)\bin\x64\Release\UglyFiles\Artwork\bg_winter.png"
-copy "$(ProjectDir)Artwork\bg_spooky.png" "$(ProjectDir)\bin\x64\Release\UglyFiles\Artwork\bg_spooky.png"
-copy "$(ProjectDir)Artwork\bg_fourtwenty.png" "$(ProjectDir)\bin\x64\Release\UglyFiles\Artwork\bg_fourtwenty.png"
-copy "$(ProjectDir)Artwork\bg_valentine.png" "$(ProjectDir)\bin\x64\Release\UglyFiles\Artwork\bg_valentine.png"
-copy "$(ProjectDir)Artwork\bg_murica.png" "$(ProjectDir)\bin\x64\Release\UglyFiles\Artwork\bg_murica.png"
-copy "$(ProjectDir)Artwork\bg_germania.png" "$(ProjectDir)\bin\x64\Release\UglyFiles\Artwork\bg_germania.png"
-copy "$(ProjectDir)Artwork\bg_turkey.png" "$(ProjectDir)\bin\x64\Release\UglyFiles\Artwork\bg_turkey.png"
-copy "$(ProjectDir)Artwork\bg_cat.png" "$(ProjectDir)\bin\x64\Release\UglyFiles\Artwork\bg_cat.png"
-copy "$(ProjectDir)Artwork\P127_Slogan.png" "$(ProjectDir)\bin\x64\Release\UglyFiles\Artwork\P127_Slogan.png"
-copy "$(ProjectDir)Artwork\Preview_1.png" "$(ProjectDir)\bin\x64\Release\UglyFiles\Artwork\Preview_1.png"
-copy "$(ProjectDir)Artwork\Preview_2.png" "$(ProjectDir)\bin\x64\Release\UglyFiles\Artwork\Preview_2.png"
-copy "$(ProjectDir)Artwork\Preview_3.png" "$(ProjectDir)\bin\x64\Release\UglyFiles\Artwork\Preview_3.png"
-copy "$(ProjectDir)Artwork\Preview_4.png" "$(ProjectDir)\bin\x64\Release\UglyFiles\Artwork\Preview_4.png"
-copy "$(ProjectDir)Artwork\Preview_5.png" "$(ProjectDir)\bin\x64\Release\UglyFiles\Artwork\Preview_5.png"
-copy "$(ProjectDir)Artwork\Preview_6.png" "$(ProjectDir)\bin\x64\Release\UglyFiles\Artwork\Preview_6.png"
-copy "$(ProjectDir)Artwork\Preview_7.png" "$(ProjectDir)\bin\x64\Release\UglyFiles\Artwork\Preview_7.png"
-copy "$(ProjectDir)Artwork\Preview_8.png" "$(ProjectDir)\bin\x64\Release\UglyFiles\Artwork\Preview_8.png"
-copy "$(ProjectDir)Artwork\Preview_9.png" "$(ProjectDir)\bin\x64\Release\UglyFiles\Artwork\Preview_9.png"
-copy "$(ProjectDir)Artwork\Preview_10.png" "$(ProjectDir)\bin\x64\Release\UglyFiles\Artwork\Preview_10.png"
+    <PreBuildEvent>mkdir "$(TargetDir)\Artwork\"
+copy "$(ProjectDir)Artwork\bg_*.png" "$(TargetDir)\Artwork\"
+copy "$(ProjectDir)Artwork\P127_Slogan.png" "$(TargetDir)\Artwork\P127_Slogan.png"
+copy "$(ProjectDir)Artwork\Preview_*.png" "$(TargetDir)\Artwork\"
 copy "$(ProjectDir)LICENSE" "$(ProjectDir)\bin\x64\Release\LICENSE"
 copy "$(ProjectDir)JUMPSCRIPT_LICENSE" "$(ProjectDir)\bin\x64\Release\JUMPSCRIPT_LICENSE"
-copy "$(ProjectDir)AAA_HybridCode\Jumpscript\P127_Jumpscript.exe" "$(TargetDir)P127_Jumpscript.exe"</PreBuildEvent>
+copy "$(ProjectDir)AAA_HybridCode\Jumpscript\P127_Jumpscript.exe" "$(TargetDir)P127_Jumpscript.exe"
+copy "$(ProjectDir)AAA_HybridCode\ScriptHook\P127_ASMPATCHER_SCRIPTHOOK.dll" "$(TargetDir)P127_ASMPATCHER_SCRIPTHOOK.dll"</PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
     <PostBuildEvent>

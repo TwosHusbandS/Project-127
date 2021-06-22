@@ -274,6 +274,8 @@ namespace Project_127
 
 			AddHyperlinkText(rtb_Credits, "https://github.com/DaWolf85/GTAVAutoPatcher/", "open-sourcing his Tool", "Shoutout to @DaWolf85 for ", " the Community used to Upgrade / Downgrade previously. It helped us a ton.");
 
+			AddParagraph(rtb_Credits, "Shoutout to @Rayope for finding a Bug, fixing it himself, and providing us with the solution.Thanks mate. (P127 crashing on Token Gen when losing internet after P127 Startup)");
+
 			AddParagraph(rtb_Credits, "Shoutout to @burhac, @Crapideot, @Hoxi, @rollschuh2282, @GearsOfW, @Ollie, @Alfie, @AntherXx for being awesome members of the GTA Speedrunning community, always being nice and respectful, and providing Help / Testing. You guys are much appreciated.");
 
 			AddParagraph(rtb_Credits, "");
@@ -301,9 +303,9 @@ namespace Project_127
 
 			AddHyperlinkText(rtb_About, "https://www.mind.org.uk/donate", "Charity", "If you want to support us, we encourage you to donate to a ", " of your chosing.");
 
-			AddHyperlinkText(rtb_About, DragonsLink, "here", "@d490n, who did all of the game-launch related work which made P127 possible, uploaded his work, sourcecode and documented his findings on his Github ", ".");
+			AddHyperlinkText(rtb_About, DragonsLink, "here", "@dr490n, who did all of the game-launch related work which made P127 possible, uploaded his work, sourcecode and documented his findings on his Github ", ".");
 
-			AddHyperlinkText(rtb_About, "https://github.com/TwosHusbandS/Project-127/blob/master/Readme.md", "here", "A more lengthy and detailed version of this can be found on github ", "");
+			AddHyperlinkText(rtb_About, "https://github.com/TwosHusbandS/Project-127/blob/master/README.md", "here", "A more lengthy and detailed version of this can be found on github ", "");
 
 			AddParagraph(rtb_About, "If you are having trouble with Project 1.27 or are running into any issues, please read the \"Help-Section\" and visit the GTA V Speedrun Discord and post it in the \"Project-1-27-Chat\" Channel.");
 
@@ -339,7 +341,7 @@ namespace Project_127
 
 			AddParagraph(rtb_Help, "If GTA (mainly Downgraded) does not launch AT ALL, UNCHECK \"Overwrite GTA CommandLineArgs\" inside \"Additional GTA Commandline Options\" inside \"GTA & Launch Settings\".");
 
-			AddParagraph(rtb_Help, "If one Lauch - Method(for downgraded GTA) is not working for you, it is worth trying to switch the way P127 Launches the downgraded Game, by doing so inside \"GTA & Launch Settings\".");
+			AddParagraph(rtb_Help, "If one Launch - Method(for downgraded GTA) is not working for you, it is worth trying to switch the way P127 Launches the downgraded Game, by doing so inside \"GTA & Launch Settings\".");
 
 			AddParagraph(rtb_Help, "If the current Authentication Method for the dr490n emu is not working, it is worth trying to switch the way P127 tries to authenticate your GTA ownership by doing so inside the Orange Border inside \"GTA & Launch Settings\".");
 
@@ -371,7 +373,11 @@ namespace Project_127
 
 			AddParagraph(rtb_Help, "I hope everything works for you and you dont experience any crashes or anything like that.");
 
+			AddHyperlinkText(rtb_Help, "https://github.com/TwosHusbandS/Project-127/blob/master/Installer/Info/Help.md#help--common-issues", "here", "A more lengthy and detailed version of this help-page can be found on github ", "");
+
 			AddParagraph(rtb_Help, "I hope whoever reads this has a great day : )");
+
+			AddParagraph(rtb_Help, "");
 
 		}
 

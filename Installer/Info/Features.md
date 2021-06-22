@@ -45,8 +45,10 @@
   * Ability to back up the Folder P127 uses to Upgrade your Game. 
   * Ability to apply / use a Backup of your UpgradeFiles.
   * This means if 1.52 is latest, you back up 1.52 files, 1.53 hits, you then sometime apply the 1.52 backup, clicking "Upgraded" will get you to 1.52
+* Abiliy to binary / assembly patch the game at will, as well as interpreting autosplit-style pointer paths and displaying the resultant values to the overlay as part of @dr490ns patcher. More info [here](AdvancedPatcher.md)
 
   ## Advanced Users:
 * Advanced User Features and hidden options can be found [here](AdvancedUser.md)
+
 
 

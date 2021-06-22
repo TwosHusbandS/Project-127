@@ -25,7 +25,7 @@
 
         <Button x:Name="btn_SettingsGeneral" Margin="0,10,5,10" Content="General P127 Settings" Grid.Row="1" Grid.Column="0" Click="btn_SettingsGeneral_Click" MouseRightButtonDown="btn_SettingsGeneral_MouseRightButtonDown" Style="{StaticResource btn_hamburgeritem}"/>
         <Button x:Name="btn_SettingsGTA" Margin="5,10,5,10" Content="GTA &amp; Launch Settings" Grid.Row="1" Grid.Column="1" Click="btn_SettingsGTA_Click" Style="{StaticResource btn_hamburgeritem}" MouseRightButtonDown="btn_SettingsGTA_MouseRightButtonDown"/>
-        <Button x:Name="btn_SettingsExtra" Margin="5,10,0,10" Content="Extra Features" Grid.Row="1" Grid.Column="2" Click="btn_SettingsExtra_Click" Style="{StaticResource btn_hamburgeritem}"/>
+        <Button x:Name="btn_SettingsExtra" Margin="5,10,0,10" Content="Extra Features" Grid.Row="1" Grid.Column="2" Click="btn_SettingsExtra_Click" MouseRightButtonDown="btn_SettingsExtra_MouseRightButtonDown" Style="{StaticResource btn_hamburgeritem}"/>
 
         <Border  Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" Margin="0,0,0,20" BorderBrush="{x:Static local:MyColors.SE_BorderBrush_Inner}" BorderThickness="2" Background="{x:Static local:MyColors.SE_RowBackground}">
             <Grid>
@@ -223,7 +223,7 @@
                                     </Grid.ColumnDefinitions>
                                     <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" x:Name="lbl_LaunchWays" Content="Launch - Method" Style="{StaticResource lbl_Set_Info}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                     <Button Grid.Row="1" Grid.Column="0" Margin="20,0,20,15" x:Name="btn_LaunchWays_SCL" ToolTip="Launch through original Socialclub. This needs the corresponding Launch-Through-SocialClub Component" Style="{StaticResource btn_LaunchWays_SCL}" Content="Launch through Social Club" Click="btn_LaunchWays_SCL_Click"/>
-                                    <Button Grid.Row="1" Grid.Column="1" Margin="20,0,20,15" x:Name="btn_LaunchWays_DragonEmu" ToolTip="Launch through @d490ns Launcher. Only needs 'Required Files'" Style="{StaticResource btn_LaunchWays_DragonEmu}" Content="Launch through Dr490n Launcher" Click="btn_LaunchWays_DragonEmu_Click"/>
+                                    <Button Grid.Row="1" Grid.Column="1" Margin="20,0,20,15" x:Name="btn_LaunchWays_DragonEmu" ToolTip="Launch through @dr490ns Launcher. Only needs 'Required Files'" Style="{StaticResource btn_LaunchWays_DragonEmu}" Content="Launch through Dr490n Launcher" Click="btn_LaunchWays_DragonEmu_Click"/>
                                     <Rectangle x:Name="Rect_HideOptions_SCL_Launch" Grid.Row="1" Grid.Column="0" Margin="20,0,20,15" Fill="{x:Static local:MyColors.MyColorOffWhite85}" ToolTip="Not available on Epic."/>
                                 </Grid>
                             </Border>
@@ -332,6 +332,7 @@
                                 <RowDefinition Height="40"/>
                                 <RowDefinition Height="40"/>
                                 <RowDefinition Height="40"/>
+                                <RowDefinition Height="40"/>
 
                             </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
@@ -358,6 +359,7 @@
                             <Rectangle Grid.Row="16" Grid.Column="0" Grid.ColumnSpan="3" Fill="Transparent"/>
                             <Rectangle Grid.Row="17" Grid.Column="0" Grid.ColumnSpan="3" Fill="{x:Static local:MyColors.SE_AlternateRowBackground}"/>
                             <Rectangle Grid.Row="18" Grid.Column="0" Grid.ColumnSpan="3" Fill="Transparent"/>
+                            <Rectangle Grid.Row="19" Grid.Column="0" Grid.ColumnSpan="3" Fill="{x:Static local:MyColors.SE_AlternateRowBackground}"/>
 
 
                             <Label Grid.Row="0" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Enable Project 1.27 Notes - Overlay"/>
@@ -429,6 +431,78 @@
                             <Button Grid.Row="17" Grid.Column="1" x:Name="btn_cb_Set_EnableAutoStartNohboard"  Style="{StaticResource btn_cb}" Click="btn_cb_Click"  MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
 
                             <Button Grid.Row="18" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource btn_SE_Path}" x:Name="btn_Set_PathNohboard" Click="btn_Path_Click" MouseRightButtonDown="btn_Path_RightClick"/>
+                            
+                            <Button Grid.Row="19" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource btn_SE_Path}" Content="Open @dr490ns assembly patcher" x:Name="btn_OpenPatcher" Click="btn_OpenPatcher_Click"/>
+
+
+                        </Grid>
+                    </StackPanel>
+                </ScrollViewer>
+
+                <ScrollViewer Grid.Row="1" x:Name="sv_Settings_Secret">
+                    <StackPanel x:Name="sp_Settings_Secret">
+                        <Grid x:Name="Grid_Settings_Secret">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="40"/>
+                                <RowDefinition Height="40"/>
+                                <RowDefinition Height="40"/>
+                                <RowDefinition Height="40"/>
+                                <RowDefinition Height="40"/>
+                                <RowDefinition Height="40"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="3*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <Rectangle Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Fill="Transparent"/>
+                            <Rectangle Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Fill="{x:Static local:MyColors.SE_AlternateRowBackground}"/>
+                            <Rectangle Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" Fill="Transparent"/>
+                            <Rectangle Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3" Fill="{x:Static local:MyColors.SE_AlternateRowBackground}"/>
+                            <Rectangle Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3" Fill="Transparent"/>
+                            <Rectangle Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="3" Fill="{x:Static local:MyColors.SE_AlternateRowBackground}"/>
+
+                            <Label Grid.Row="0" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Enable PointerPath Tester" ToolTip="Shows pointerpath contents in overlay. To View Output, add a $ppTester flag into a notefile."/>
+                            <Button Grid.Row="0" Grid.Column="1" x:Name="btn_cb_EnablePPTester"  Style="{StaticResource btn_cb}" Click="btn_cb_Click"  MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
+                            <Button Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource btn_SE_Path}" x:Name="btn_open_pptest_dialog" Click="btn_open_pptest_dialog_Click" Content="Setup Pointer Path Test Flag"/>
+                            <Popup x:Name="PopupPPTesterSetup" PlacementTarget="{Binding ElementName=btn_open_pptest_dialog}" Placement="MousePoint" Width="500" Height="300" Margin="0,0,0,0" StaysOpen="False" Opened="PopupPPTesterSetup_Opened" Closed="PopupPPTesterSetup_Closed">
+                                <Popup.Resources>
+                                    <Style TargetType="TextBox" x:Key="tb_nomax">
+                                        <Setter Property="Margin" Value="10,10,10,10"/>
+                                        <Setter Property="Background" Value="{x:Static local:MyColors.MyColorOffWhite}"/>
+                                        <Setter Property="Foreground" Value="{x:Static local:MyColors.MyColorOffBlack}"/>
+                                        <Setter Property="MinHeight" Value="25"/>
+                                        <Setter Property="BorderThickness" Value="0"/>
+                                    </Style>
+                                </Popup.Resources>
+                                <Border BorderBrush="{x:Static local:MyColors.MyColorWhite}" BorderThickness="2" Background="{x:Static local:MyColors.MyColorOffBlack}" MouseLeave="Border_MouseLeave">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="40"/>
+                                            <RowDefinition Height="250"/>
+                                        </Grid.RowDefinitions>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition/>
+                                        </Grid.ColumnDefinitions>
+                                        <Label Grid.Row="0" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Variables: "/>
+                                        <TextBox x:Name="tb_pptestervars" Style="{StaticResource tb_nomax}" Grid.Row="1" Grid.Column="0" Margin="20,20,20,20" 
+                                          TextWrapping="NoWrap"
+                                          AcceptsReturn="True"
+                                          VerticalScrollBarVisibility="Auto"
+                                        >
+                                        </TextBox>
+
+                                    </Grid>
+                                </Border>
+                            </Popup>
+
+                            <Label Grid.Row="2" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Enable Special Patcher"/>
+                            <Button Grid.Row="2" Grid.Column="1" x:Name="btn_cb_EnableSpecialPatcher"  Style="{StaticResource btn_cb}" Click="btn_cb_Click"  MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
+                            <Label Grid.Row="3" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="        Special Patcher Primary Toggle Key"/>
+                            <Button Grid.Row="3" Grid.Column="1" x:Name="btn_Set_Special_Patcher_Key"  Style="{StaticResource btn_SE_Path}" Click="btn_Set_Special_Patcher_Key_Click"/>
+                            <Button Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource btn_SE_Path}" x:Name="btn_open_patch_dialog" Click="btn_open_patch_dialog_Click" Content="Setup Patches"/>
+                            <Button Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" x:Name="btn_Set_Special_Patcher_Add_llfix" Content="Load @Special For's taxi long-load patch" Style="{StaticResource btn_SE_Path}" Click="btn_Set_Special_Patcher_Add_llfix_Click"/>
+                            
 
 
                         </Grid>

@@ -426,11 +426,11 @@ namespace Project_127.Overlay
 		{
 			if (!GTAOverlay.DebugMode)
 			{
-				if (Settings.EnableOverlay == false)
+				if (!Settings.EnableOverlay && !MySettings.Settings.SpecialPatcherEnabled)
 				{
 					DisposeAllOverlayStuff();
 				}
-				else if (Settings.EnableOverlay == true)
+				else
 				{
 					DisposeAllOverlayStuff(true);
 

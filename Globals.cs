@@ -230,7 +230,8 @@ namespace Project_127
 		/// <summary>
 		/// Property of other Buildinfo. Will be in the top message of logs
 		/// </summary>
-		public static string BuildInfo = "1.2.2.3 - Build 2";
+		public static string BuildInfo = "1.2.3.0 - Built 1";
+
 
 		/// <summary>
 		/// Returns all Command Line Args as StringArray
@@ -303,7 +304,7 @@ namespace Project_127
 			{"LastLaunchedVersion", Globals.ProjectVersion.ToString() },
 			{"InstallationPath", Process.GetCurrentProcess().MainModule.FileName.Substring(0, Process.GetCurrentProcess().MainModule.FileName.LastIndexOf('\\')) },
 			{"EnableRememberMe", "False" },
-			{"AllFilesEverPlacedInsideGTA", @"bink2w64.dll;GFSDK_ShadowLib.win64.dll;GTA5.exe;launc.dll;orig_socialclub.dll;PlayGTAV.exe;ROSCrypto.dll;socialclub.dll;x64a.rpf;update\update.rpf;scemu.cfg;launc.dat;version.txt" },
+			{"AllFilesEverPlacedInsideGTA", @"bink2w64.dll;GFSDK_ShadowLib.win64.dll;GTA5.exe;launc.dll;orig_socialclub.dll;PlayGTAV.exe;ROSCrypto.dll;socialclub.dll;x64a.rpf;update\update.rpf;scemu.cfg;launc.dat;version.txt;P127_ASMPATCHER_SCRIPTHOOK.dll" },
 
 			// Project 1.27 Settings
 			{"GTAVInstallationPath", ""},
@@ -386,6 +387,13 @@ namespace Project_127
 			{"OverlayNotesPresetD",""},
 			{"OverlayNotesPresetE",""},
 			{"OverlayNotesPresetF",""},
+
+			{"SpecialPatcherEnabledSetting","False"},
+			// {"SpecialPatcherToggleKey","F14"}, // gonna use the same way of storing Keys like all other Keybinds. New Regidit value is called SpecialPatcherKey, ToggleKey is NOT used anymore
+			{"SpecialPatcherKey","112"},
+			{"SpecialPatcherPatches", "{}"},
+			{"PointerPathTesterEnabled", "False" },
+			{"PointerPathTesterString", "" },
 		};
 
 		/// <summary>
@@ -611,7 +619,12 @@ namespace Project_127
 					HelperClasses.FileHandling.deleteFile(Globals.ProjectInstallationPathBinary.TrimEnd('\\') + @"\LICENSE");
 				}
 
-				Settings.LastLaunchedVersion = Globals.ProjectVersion;
+				if (Settings.LastLaunchedVersion < new Version("1.2.3.0"))
+				{
+					Settings.AllFilesEverPlacedInsideGTAMyAdd("P127_ASMPATCHER_SCRIPTHOOK.dll");
+				}
+
+				 Settings.LastLaunchedVersion = Globals.ProjectVersion;
 			}
 
 
@@ -627,7 +640,7 @@ namespace Project_127
 			// Loading Info for Version stuff.
 			HelperClasses.BuildVersionTable.ReadFromGithub();
 
-		
+
 			// SetUpDownloadManager
 			SetUpDownloadManager();
 
@@ -653,7 +666,14 @@ namespace Project_127
 
 			initIPC();
 
-			Settings.GTAWindowTitle = GTAOverlay.targetWindowBorderlessDefault;
+			//INIT Special Patcher
+			initGamePatches();
+
+			//Init pointer-path tester
+			preparsedPPs = ASPointerPath.pointerPathParse(Settings.PointerPathTesterString);
+
+
+				Settings.GTAWindowTitle = GTAOverlay.targetWindowBorderlessDefault;
 
 			// INIT the dynamic text handler for the overlay
 			initDynamicTextGetters();
@@ -707,11 +727,35 @@ namespace Project_127
 				return new byte[] { Convert.ToByte(true) };
 			});
 
+			
+			pipeServer.registerEndpoint("getActivePatches", () =>
+			{
+				return Settings.SpecialPatcherEnabled ? SpecialPatchHandler.patchBlob : BitConverter.GetBytes(0);
+			});
+
+			
+			
+
 			pipeServer.run();
 
 			//var pc = new IPCPipeClient("Project127Launcher");
 			//pc.call("test", Encoding.UTF8.GetBytes("Hi"));
 		}
+
+		/// <summary>
+		/// Sets up the special game patcher
+		/// </summary>
+		private static void initGamePatches()
+        {
+            foreach (var p in HelperClasses.SpecialPatchHandler.patch.GetPatches())
+            {
+				if (p.DefaultEnabled)
+                {
+					p.Enabled = true;
+                }
+            }
+			HelperClasses.SpecialPatchHandler.checkCopyScripthook();
+        }
 
 		/// <summary>
 		/// Handles pointer path interpretation similarly to AutoSplit
@@ -857,9 +901,54 @@ namespace Project_127
 					 ).ToString()
 				 )
 			);
+			DynamicText.registerVarGetter("spEnabled", () => SpecialPatchHandler.PatcherEnabled.ToString());
+
+			
+
+			DynamicText.registerVarGetter("ppTester", () =>
+			{
+				if (!Settings.PointerPathTesterEnabled)
+				{
+					return "";
+				}
+				try
+                {
+					string output = "";
+					foreach(var pp in preparsedPPs)
+                    {
+						output += pp.Name + ":";
+
+						try
+						{
+							var ret = pp.evaluate();
+							if (ret.Item1 != typeof(Byte[]))
+                            {
+								output += ret.Item2.ToString() + '\n';
+							}
+                            else
+                            {
+								output += BitConverter.ToString((Byte[])ret.Item2).Replace("-", "").ToLower();
+                            }
+						}
+                        catch
+                        {
+							output += "[ERR]\n";
+                        }
+                    }
+					return output;
+                }
+                catch
+                {
+					return "Eval Error!";
+                }
+				
+			});
 		}
 
-
+		/// <summary>
+		/// Pre-parsed pointer paths
+		/// </summary>
+		public static List<ASPointerPath.pointerPath> preparsedPPs;
 
 		/// <summary>
 		/// Dictionary with all pointer paths for 1.27 vars (steam)
@@ -978,30 +1067,46 @@ namespace Project_127
 			// Check online File for Version.
 			string MyVersionOnlineString = HelperClasses.FileHandling.GetXMLTagContent(XML_Autoupdate_Temp, "version");
 
-			// If this is empty,  github returned ""
-			if (!(String.IsNullOrEmpty(MyVersionOnlineString)))
+			// Just so we have one big code snippet we can exit at any point we want.
+			while (true)
 			{
-				// Building a Version out of the String
-				Version MyVersionOnline = new Version(MyVersionOnlineString);
-
-				// Logging some stuff
-				HelperClasses.Logger.Log("Checking for Project 1.27 Update during start up procedure");
-				HelperClasses.Logger.Log("MyVersionOnline = '" + MyVersionOnline.ToString() + "', Globals.ProjectVersion = '" + Globals.ProjectVersion + "'", 1);
-
-				// If Online Version is "bigger" than our own local Version
-				if (MyVersionOnline > Globals.ProjectVersion)
+				// If this is empty,  github returned ""
+				if (!(String.IsNullOrEmpty(MyVersionOnlineString)))
 				{
-					// Update Found.
-					HelperClasses.Logger.Log("Update found (Version Check returning true).", 1);
-					HelperClasses.Logger.Log("Checking if URL is reachable.", 1);
+					// Building a Version out of the String
+					Version MyVersionOnline = new Version(MyVersionOnlineString);
 
-					string DLPath = HelperClasses.FileHandling.GetXMLTagContent(XML_Autoupdate_Temp, "url");
-					string DLFilename = DLPath.Substring(DLPath.LastIndexOf('/') + 1);
-					string LocalFileName = Globals.ProjectInstallationPath.TrimEnd('\\') + @"\" + DLFilename;
+					// Logging some stuff
+					HelperClasses.Logger.Log("Checking for Project 1.27 Update during start up procedure");
+					HelperClasses.Logger.Log("MyVersionOnline = '" + MyVersionOnline.ToString() + "', Globals.ProjectVersion = '" + Globals.ProjectVersion + "'", 1);
 
-					if (HelperClasses.FileHandling.URLExists(DLPath, 2500))
+					// If Online Version is "bigger" than our own local Version
+					if (MyVersionOnline > Globals.ProjectVersion)
 					{
-						HelperClasses.Logger.Log("Update URL Reachabe");
+						// Update Found.
+						HelperClasses.Logger.Log("Update found (Version Check returning true).", 1);
+						HelperClasses.Logger.Log("Checking if URL is reachable.", 1);
+
+						string DLPath = HelperClasses.FileHandling.GetXMLTagContent(XML_Autoupdate_Temp, "url");
+						string DLFilename = DLPath.Substring(DLPath.LastIndexOf('/') + 1);
+						string LocalFileName = Globals.ProjectInstallationPath.TrimEnd('\\') + @"\" + DLFilename;
+
+						if (!HelperClasses.FileHandling.URLExists(DLPath, 2500))
+						{
+							HelperClasses.Logger.Log("Cant reach URL, will throw choice");
+							Popup yesno2 = new Popup(Popup.PopupWindowTypes.PopupYesNo, "There is an Update, but P127 cant seem to reach it. Do you want to try to get the Update anyways?");
+							yesno2.ShowDialog();
+							if (yesno2.DialogResult == true)
+							{
+								HelperClasses.Logger.Log("Cant reach URL, Choice thrown, will try to get Update anyways.");
+							}
+							else
+							{
+								// Do last Lines of this function anyway. Cant hurt.
+								HelperClasses.Logger.Log("Cant reach URL, Choice thrown, will NOT try to update.");
+								break;
+							}
+						}
 
 						Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Version: '" + MyVersionOnline.ToString() + "' found on the Server.\nVersion: '" + Globals.ProjectVersion.ToString() + "' found installed.\nDo you want to upgrade?");
 						yesno.ShowDialog();
@@ -1033,19 +1138,16 @@ namespace Project_127
 					}
 					else
 					{
-						HelperClasses.Logger.Log("Cant reach URL, will abondon Update");
+						// No update found
+						HelperClasses.Logger.Log("No Update Found");
 					}
 				}
 				else
 				{
-					// No update found
-					HelperClasses.Logger.Log("No Update Found");
+					// String return is fucked
+					HelperClasses.Logger.Log("Did not get most up to date Project 1.27 Version from Github. Github offline or your PC offline. Probably. Lets hope so.");
 				}
-			}
-			else
-			{
-				// String return is fucked
-				HelperClasses.Logger.Log("Did not get most up to date Project 1.27 Version from Github. Github offline or your PC offline. Probably. Lets hope so.");
+				break;
 			}
 
 			HelperClasses.BuildVersionTable.ReadFromGithub(XML_Autoupdate_Temp);

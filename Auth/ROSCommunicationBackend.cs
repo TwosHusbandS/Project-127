@@ -497,6 +497,7 @@ namespace Project_127.Auth
 			//addLaunchExtension("saveDirOverride", Encoding.UTF8.GetBytes());
 			setFlag(Flags.preorder, Settings.EnablePreOrderBonus);
 			setFlag(Flags.supressASILoading, !Settings.EnableScripthookOnDowngraded);
+			setFlag(Flags.useSpecialPatcher, Settings.SpecialPatcherEnabled);
 			LKey.Add(laflags);
 
 			byte[] reqHeaders = HeaderBuild(
@@ -697,11 +698,19 @@ namespace Project_127.Auth
 
 		private static async void sessionValidityCheck()
         {
-			if ((await GenLaunchToken()).error)
-			{
-				nextSessionValidityCheck = 0;
+            try
+            {
+				if ((await GenLaunchToken()).error)
+				{
+					nextSessionValidityCheck = 0;
+					session.destroy();
+				}
+			}
+            catch
+            {
 				session.destroy();
 			}
+
 		}
 
 		/// <summary>
@@ -919,7 +928,7 @@ namespace Project_127.Auth
 			preorder,
 			supressASILoading,
 			indicateTheLessThanLegalProcurementOfMotorVehicles,
-			RES3,
+			useSpecialPatcher,
 			RES4,
 			RES5,
 			RES6,
