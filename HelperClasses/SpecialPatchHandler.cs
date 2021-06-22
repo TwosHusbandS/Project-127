@@ -624,24 +624,22 @@ namespace Project_127.HelperClasses
             {
                 return;
             }
-            var targetPath = System.IO.Path.Combine(
-                 MySettings.Settings.GTAVInstallationPath,
-                "P127_ASMPATCHER_SCRIPTHOOK.dll"
-            );
-            if (!System.IO.File.Exists(targetPath))
-            {
-                try
-                {
-                    System.IO.File.Copy("P127_ASMPATCHER_SCRIPTHOOK.dll", targetPath);
-                }
-                catch
-                {
-                    new Popups.Popup(
-                        Popups.Popup.PopupWindowTypes.PopupOkError,
-                        "Failed to copy scripthook. ASM patcher will not load"
-                        ).ShowDialog();
-                }
-            }
+
+			string source = HelperClasses.FileHandling.PathCombine(Globals.ProjectInstallationPathBinary, "P127_ASMPATCHER_SCRIPTHOOK.dll");
+			string target = HelperClasses.FileHandling.PathCombine(MySettings.Settings.GTAVInstallationPath, "P127_ASMPATCHER_SCRIPTHOOK.dll");
+
+			if (!HelperClasses.FileHandling.doesFileExist(target))
+			{
+				HelperClasses.FileHandling.copyFile(source, target);
+				if (!HelperClasses.FileHandling.doesFileExist(target))
+				{
+					new Popups.Popup(
+					   Popups.Popup.PopupWindowTypes.PopupOkError,
+					   "Failed to copy scripthook. ASM patcher will not load"
+					   ).ShowDialog();
+				}
+			}
+
         }
     }
     

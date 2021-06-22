@@ -304,7 +304,7 @@ namespace Project_127
 			{"LastLaunchedVersion", Globals.ProjectVersion.ToString() },
 			{"InstallationPath", Process.GetCurrentProcess().MainModule.FileName.Substring(0, Process.GetCurrentProcess().MainModule.FileName.LastIndexOf('\\')) },
 			{"EnableRememberMe", "False" },
-			{"AllFilesEverPlacedInsideGTA", @"bink2w64.dll;GFSDK_ShadowLib.win64.dll;GTA5.exe;launc.dll;orig_socialclub.dll;PlayGTAV.exe;ROSCrypto.dll;socialclub.dll;x64a.rpf;update\update.rpf;scemu.cfg;launc.dat;version.txt" },
+			{"AllFilesEverPlacedInsideGTA", @"bink2w64.dll;GFSDK_ShadowLib.win64.dll;GTA5.exe;launc.dll;orig_socialclub.dll;PlayGTAV.exe;ROSCrypto.dll;socialclub.dll;x64a.rpf;update\update.rpf;scemu.cfg;launc.dat;version.txt;P127_ASMPATCHER_SCRIPTHOOK.dll" },
 
 			// Project 1.27 Settings
 			{"GTAVInstallationPath", ""},
@@ -619,7 +619,12 @@ namespace Project_127
 					HelperClasses.FileHandling.deleteFile(Globals.ProjectInstallationPathBinary.TrimEnd('\\') + @"\LICENSE");
 				}
 
-				Settings.LastLaunchedVersion = Globals.ProjectVersion;
+				if (Settings.LastLaunchedVersion < new Version("1.2.3.0"))
+				{
+					Settings.AllFilesEverPlacedInsideGTAMyAdd("P127_ASMPATCHER_SCRIPTHOOK.dll");
+				}
+
+				 Settings.LastLaunchedVersion = Globals.ProjectVersion;
 			}
 
 
