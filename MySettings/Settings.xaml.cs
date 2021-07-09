@@ -93,7 +93,7 @@ namespace Project_127.MySettings
 			GTAVPathGuesses.Add(HelperClasses.RegeditHandler.GetValue(myRKTemp3, "InstallFolder"));
 			GTAVPathGuesses.Add(Globals.ProjectInstallationPath.TrimEnd('\\').Substring(0, Globals.ProjectInstallationPath.LastIndexOf('\\')));
 			GTAVPathGuesses.Add(Globals.ProjectInstallationPath.TrimEnd('\\'));
-			GTAVPathGuesses.Add(Settings.ZIPExtractionPath.TrimEnd('\\').Substring(0, Globals.ProjectInstallationPath.LastIndexOf('\\')));
+			GTAVPathGuesses.Add(Settings.ZIPExtractionPath.TrimEnd('\\').Substring(0, Settings.ZIPExtractionPath.LastIndexOf('\\')));
 			GTAVPathGuesses.Add(Settings.ZIPExtractionPath);
 
 
