@@ -1357,6 +1357,7 @@ namespace Project_127
 						if (MyLines[i].Contains("\"InstallLocation\":"))
 						{
 							string path = MyLines[i].Substring(MyLines[i].LastIndexOf('"')).Replace(@"\\", @"\");
+							path = path.TrimStart('"').TrimEnd('"');
 							HelperClasses.Logger.Log("GTAV Path Magic by Epic detected to be: '" + path + "'", 3);
 							return path;
 						}
