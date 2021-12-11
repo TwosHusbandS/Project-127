@@ -413,6 +413,7 @@ namespace Project_127
 				lbl_GTA.Foreground = MyColors.MW_GTALabelUnsureForeground;
 				lbl_GTA.Content = "Unsure";
 			}
+			
 
 			lbl_GTA.Content += BuildVersionTable.GetNiceGameVersionString(Globals.GTABuild);
 

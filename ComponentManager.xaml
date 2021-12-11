@@ -14,10 +14,10 @@
         </Grid.RowDefinitions>
         <Label Style="{StaticResource lbl}" Grid.Row="0" HorizontalAlignment="Left" FontSize="24" Height="60" VerticalAlignment="Bottom" Margin="0,0,0,0" Content="Component Manager" Width="250"/>
         <Label Style="{StaticResource lbl}" x:Name="lbl_ComponentManager_Mode" Grid.Row="0" HorizontalAlignment="Left" HorizontalContentAlignment="Left" FontSize="20" Height="60" VerticalAlignment="Bottom" Margin="250,0,0,0" Content="" Width="300" Foreground="{x:Static local:MyColors.MyColorOrange}"/>
-        
+
         <Button x:Name="btn_lbl_Mode" Style="{StaticResource btn}" Height="60" MouseRightButtonDown="btn_lbl_Mode_MouseRightButtonDown" MouseLeftButtonDown="btn_DragMove"
                             VerticalAlignment="Bottom" HorizontalAlignment="Left" Background="Transparent" Width="480" BorderThickness="0"/>
-        
+
         <Button Style="{StaticResource btn_SmallIcon}"  MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"  Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Margin="0,15,55,0" VerticalAlignment="Top" HorizontalAlignment="Right" x:Name="btn_Refresh"  ToolTip="Refresh"  Height="40" Width="40" Click="btn_Refresh_Click" MouseRightButtonDown="btn_Refresh_MouseRightButtonDown"/>
 
         <Border x:Name="Border_Main" Grid.Row="1" Margin="0,15,0,15" BorderThickness="2" BorderBrush="{x:Static local:MyColors.MW_BorderBrush}"  Background="{x:Static local:MyColors.SE_RowBackground}">
@@ -36,6 +36,7 @@
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
                 <Rectangle Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4" Fill="Transparent"/>
@@ -45,6 +46,7 @@
                 <Rectangle Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="4" Fill="Transparent"/>
                 <Rectangle Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="4" Fill="{x:Static local:MyColors.SE_AlternateRowBackground}"/>
                 <Rectangle Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="4" Fill="Transparent"/>
+                <Rectangle Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="4" Fill="{x:Static local:MyColors.SE_AlternateRowBackground}"/>
 
                 <Button Grid.Row="0" Grid.Column="0" x:Name="btn_lbl_FilesMain_Name" Content="Required Files"  MouseLeftButtonDown="btn_DragMove" ToolTip="Required Files. 'Normal' P127 Launch Files and Savefiles / Notes" Tag="FilesBase" Style="{StaticResource btn_Set_Header}" Foreground="{x:Static local:MyColors.App_LabelForeground}" FontFamily="Tahoma" FontSize="16" Background="Transparent" HorizontalAlignment="Left" BorderThickness="0" MouseRightButtonDown="btn_lbl_Component_Name_MouseRightButtonDown" Margin="8"/>
                 <Button Grid.Row="0" Grid.Column="1" x:Name="lbl_FilesMain_Status" Content="Not installed" Style="{StaticResource btn_Set_Trans}" Foreground="{x:Static local:MyColors.MyColorGreen}" Tag="FilesBase" MouseRightButtonDown="btn_lbl_Status_MouseRightButtonDown"/>
@@ -80,7 +82,13 @@
                 <Button Grid.Row="6" Grid.Column="1" x:Name="lbl_FilesAdditionalSF_Status" Content="Status" Style="{StaticResource btn_Set_Trans}" Foreground="{x:Static local:MyColors.MyColorGreen}" Tag="FilesAdditionalSaveFiles" MouseRightButtonDown="btn_lbl_Status_MouseRightButtonDown"/>
                 <Button Grid.Row="6" Grid.Column="2" x:Name="btn_FilesAdditionalSF_Install" Click="btn_Install_Click" MouseRightButtonDown="btn_Install_MouseRightButtonDown" Tag="FilesAdditionalSaveFiles" Content="(Re-)install" ToolTip="Rightclick to Verify Files" Style="{StaticResource btn_CM_Action}"/>
                 <Button Grid.Row="6" Grid.Column="3" x:Name="btn_FilesAdditionalSF_Uninstall" Click="btn_Uninstall_Click" MouseRightButtonDown="btn_Uninstall_MouseRightButtonDown" Tag="FilesAdditionalSaveFiles" Content="Uninstall" Style="{StaticResource btn_CM_Action}"/>
-            </Grid>                                                                                                            
+
+                <Button Grid.Row="7" Grid.Column="0" x:Name="lbl_DeBloatFiles_Name" Content="DeBloat Files (Soon)"  MouseLeftButtonDown="btn_DragMove" ToolTip="Required files for downgrading the game" Tag="FilesAdditionalSaveFiles"  Style="{StaticResource btn_Set_Header}"  Foreground="{x:Static local:MyColors.App_LabelForeground}" FontFamily="Tahoma" FontSize="16" Background="Transparent" HorizontalAlignment="Left" BorderThickness="0" MouseRightButtonDown="btn_lbl_Component_Name_MouseRightButtonDown" Margin="8"/>
+                <Button Grid.Row="7" Grid.Column="1" x:Name="lbl_DeBloatFiles_Status" Content="placeholder" Style="{StaticResource btn_Set_Trans}" Foreground="{x:Static local:MyColors.MyColorGreen}" Tag="FilesAdditionalSaveFiles" MouseRightButtonDown="btn_lbl_Status_MouseRightButtonDown"/>
+                <Button Grid.Row="7" Grid.Column="2" x:Name="btn_DeBloatFiles_Install" Click="btn_Install_Click" Tag="DeBloatFiles" Content="(Re-)install" Style="{StaticResource btn_CM_Action}" IsEnabled="False"/>
+                <Button Grid.Row="7" Grid.Column="3" x:Name="btn_DeBloatFiles_Uninstall" Click="btn_Uninstall_Click" Tag="DeBloatFiles" Content="Uninstall" Style="{StaticResource btn_CM_Action}" IsEnabled="False"/>
+
+            </Grid>
         </Border>
 
     </Grid>

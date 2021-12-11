@@ -3,6 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.IO;
+using System.IO.Compression;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -540,8 +542,27 @@ namespace Project_127.MySettings
 							Settings.PathFPSLimiter = UserChoice4;
 						}
 					}
-
 					break;
+				case "btn_DeBloatZIP":
+					string UserChoice5 = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.File, "Pick your DebloatV ZIP file.", @"C:\");
+					if (!String.IsNullOrWhiteSpace(UserChoice5))
+                    {
+						try
+						{
+							try { Directory.Delete(LauncherLogic.SupportFilePath + @"\DeBloatV\RequiredFiles"); } catch { }
+							Directory.CreateDirectory(LauncherLogic.SupportFilePath + @"\DeBloatV");
+							Directory.CreateDirectory(LauncherLogic.SupportFilePath + @"\DeBloatV\RequiredFiles");
+							ZipFile.ExtractToDirectory(UserChoice5, LauncherLogic.SupportFilePath + @"\DeBloatV\RequiredFiles");
+							Popup nice = new Popup(Popup.PopupWindowTypes.PopupOk, "ZIP imported successfully");
+							nice.ShowDialog();
+						} catch (Exception ex)
+                        {
+							Popup errorZip = new Popup(Popup.PopupWindowTypes.PopupOkError, ex.Message);
+							errorZip.ShowDialog();
+                        }
+						
+					}
+				break;
 			}
 
 			if (IsRightClick)

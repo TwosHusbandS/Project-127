@@ -23,7 +23,7 @@
                 <ColumnDefinition x:Name="cd_Preview" Width="700"/>
             </Grid.ColumnDefinitions>
             <Grid x:Name="GridBackground" Height="536" Width="896" Grid.Column="0" HorizontalAlignment="Left">
-                
+
             </Grid>
 
             <Grid x:Name="Blur_Hamburger" HorizontalAlignment="Left" Width="275">
@@ -44,8 +44,9 @@
 
             <Grid x:Name="GridMain" Height="536" Width="896" Grid.Column="0" HorizontalAlignment="Left" Background="Transparent">
                 <Grid x:Name="GridHamburgerOuter" HorizontalAlignment="Left" Width="275" Background="{x:Static local:MyColors.MW_HamburgerMenuGridBackground}">
-                    <Grid x:Name="GridHamburgerInner" Margin="15, 120, 15, 30">
+                    <Grid x:Name="GridHamburgerInner" Margin="15, 90, 15, 20">
                         <Grid.RowDefinitions>
+                            <RowDefinition/>
                             <RowDefinition/>
                             <RowDefinition/>
                             <RowDefinition/>
@@ -61,6 +62,7 @@
                         <Button x:Name="btn_ComponentManager" Grid.Row="4" Style="{StaticResource btn_hamburgeritem}" BorderThickness="0" Content="Component Manager" Click="btn_ComponentManager_Click"  MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
                         <Button x:Name="btn_Settings" Grid.Row="5" Style="{StaticResource btn_hamburgeritem}" BorderThickness="0" Content="Settings" Click="btn_Settings_Click" MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
                         <Button x:Name="btn_ReadMe" Grid.Row="6" Style="{StaticResource btn_hamburgeritem}" BorderThickness="0" Content="Information" Click="btn_ReadMe_Click" MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
+                        <Button x:Name="btn_BloatDebloat" Grid.Row="7" Style="{StaticResource btn_hamburgeritem}" BorderThickness="0" Content="Debloat/Bloat" Click="btn_BloatDebloat_Click" MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
                     </Grid>
 
 

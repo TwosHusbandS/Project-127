@@ -8,9 +8,8 @@
       d:DesignHeight="570" d:DesignWidth="619"
       Title="GTA_Page">
     <Page.Resources>
-   
     </Page.Resources>
-    <Grid Height="570" Width="619">
+    <Grid Height="540" Width="619">
         <!--<Label x:Name="lbl_Mode" Style="{StaticResource lbl_Set_Header}" Background="Transparent" Foreground="{x:Static local:Globals.MyColorOrange}" FontSize="24" VerticalAlignment="Bottom" HorizontalAlignment="Left"/>-->
         <Button x:Name="btn_GTA" Style="{StaticResource btn_gta}" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,60,65" Height="75" Width="215"  Content="Launch GTA V" Click="btn_GTA_Click" MouseRightButtonDown="btn_GTA_MouseRightButtonDown"/>
     </Grid>

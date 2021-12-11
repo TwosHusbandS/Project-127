@@ -381,7 +381,6 @@ namespace Project_127
 			}
 		}
 
-
 		#endregion
 
 		#region Properties for often used Stuff
@@ -498,6 +497,11 @@ namespace Project_127
 		/// Property of often used variable. (EmuCfgPath)
 		/// </summary>
 		public static string EmuCfgPath { get { return Settings.GTAVInstallationPath.TrimEnd('\\') + @"\scemu.cfg"; } }
+
+		/// <summary>
+		/// Property of often used variable. (DeBloatFilesPath)
+		/// </summary>
+		public static string DeBloatFilesPath { get { return LauncherLogic.DeBloatFilesPath.TrimEnd('\\') + @"\Project_127_Files\SupportFiles\DeBloatV\RequiredFiles\"; } }
 
 		#endregion
 
