@@ -54,6 +54,7 @@ namespace Project_127.Auth
 	{
 		//private static bool CEFInited = false;
 		private bool signinInProgress = false;
+		private bool softReloaded = false;
 		private int sendCount = 0;
 		private static bool newInstance = false;
 
@@ -336,10 +337,14 @@ namespace Project_127.Auth
 					sendCount = 5;
 					return;
 				}
-				if (signinInProgress || sendCount > 2)
+				if ((signinInProgress || sendCount > 2) && !softReloaded)
 				{
 					return;
 				}
+				if (softReloaded)
+                {
+					softReloaded = false;
+                }
 				sendCount++;
 				HelperClasses.Logger.Log("Page loaded, sending init script(s)...");
 				frame.ExecuteJavaScriptAsync(jsf, "https://rgl.rockstargames.com/temp.js", 0);
@@ -512,6 +517,10 @@ namespace Project_127.Auth
 				case "HardReload":
 					sendCount = 0;
 					browser.Reload(true);
+					break;
+				case "SoftReload":
+					softReloaded = true;
+					browser.Reload(false);
 					break;
 				default:
 					System.Windows.Forms.MessageBox.Show(e.Message.ToString());
