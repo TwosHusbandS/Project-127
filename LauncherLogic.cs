@@ -970,6 +970,29 @@ namespace Project_127
 						HelperClasses.FileHandling.WriteStringToFileOverwrite(EmuCfgPath, LaunchOptions);
 					}
 
+					if (Settings.Retailer == Settings.Retailers.Steam && !Settings.EnableDontLaunchThroughSteam && LaunchWay == LaunchWays.DragonEmu)
+                    {
+						var steamprocs = Process.GetProcessesByName("steam");
+						if (steamprocs.Length > 0)
+                        {
+							var steamproc = steamprocs[0];
+							Int64 coreaffinity = steamproc.ProcessorAffinity.ToInt64();
+							int corecount = 0;
+							for (int i = 0; i < 64; i++)
+							{
+								corecount += (coreaffinity & ((Int64)1 << i)) != 0 ? 1 : 0;
+							}
+							HelperClasses.Logger.Log("Current core affinity for steam is " + coreaffinity.ToString("X") + " (" + corecount + " cores)");
+							if (corecount > 16)
+							{
+								HelperClasses.Logger.Log("Settings steam's core affinity to FFFF (16 cores)");
+								Int64 NewAffinity = 0xFFFF;
+								steamproc.ProcessorAffinity = (IntPtr)NewAffinity;
+							}
+						}
+						
+                    }
+
 					HelperClasses.ProcessHandler.StartDowngradedGame();
 
 				}

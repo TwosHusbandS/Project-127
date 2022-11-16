@@ -252,14 +252,41 @@ var mhSRTCounter = 0;
 
 
 
+function find_matchclass(class_base){
+    var allClasses = [];
+
+    var allElements = document.querySelectorAll('*');
+
+    for (var i = 0; i < allElements.length; i++) {
+      var classes = allElements[i].className.toString().split(/\s+/);
+      for (var j = 0; j < classes.length; j++) {
+        var cls = classes[j];
+        if (cls && allClasses.indexOf(cls) === -1)
+          allClasses.push(cls);
+      }
+    }
+
+    var class_filter_rgx = new RegExp("^" + class_base);
+    var class_candidates = allClasses.filter(x => x.match(class_filter_rgx));
+    if (class_candidates){
+        return '.' + class_candidates[0];
+    } else {
+        return '';
+    }
+}
 
 function modHtml() {
-    if (!document.querySelector('.AppControls__appControls')) {
+    
+
+
+//     if (!document.querySelector('.AppControls__appControls')) {
+    if (!document.querySelector(find_matchclass('AppControls__appControls'))) {
         setTimeout(modHtml, 100);
         mhRTCounter++;
         return;
 
-    } else if (!document.querySelector('.SignInForm__signInButton').innerText) {
+//     } else if (!document.querySelector('.SignInForm__signInButton').innerText) {
+    } else if (!document.querySelector(find_matchclass('SignInForm__signInButton')).innerText) {
         if ((mhSRTCounter - mhRTCounter) > 10) {
             invokeNative('HardReload', '');
         }
@@ -268,10 +295,23 @@ function modHtml() {
         return;
     }
     document.querySelector('div[style=\'display: initial;\']').outerHTML = '';
-    document.querySelector('.AppControls__appControls').outerHTML = '';
-    document.querySelector('.Footer__container').outerHTML = '';
-    document.querySelector('.HeaderLayout__header').outerHTML = '';
+//     document.querySelector('.AppControls__appControls').outerHTML = '';
+//     document.querySelector('.Footer__container').outerHTML = '';
+//     document.querySelector('.HeaderLayout__header').outerHTML = '';
+    document.querySelector(find_matchclass('AppControls__appControls')).outerHTML = '';
+    document.querySelector(find_matchclass('Footer__container')).outerHTML = '';
+    document.querySelector(find_matchclass('HeaderLayout__header')).outerHTML = '';
+    if (!sessionStorage.hasReloaded){
+        setTimeout(invokeNative, 200, 'SoftReload', '');
+        sessionStorage.hasReloaded = true;
+        return;
+    }
     setTimeout(invokeNative, 200, 'ready', '');
 }
 
-setTimeout(modHtml, 1000);
+if (sessionStorage.hasReloaded) {
+    setTimeout(modHtml, 100);
+} else {
+    setTimeout(modHtml, 1000);
+}
+
