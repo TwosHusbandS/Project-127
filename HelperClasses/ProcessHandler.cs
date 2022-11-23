@@ -12,6 +12,7 @@ using Project_127.HelperClasses;
 using Project_127.Overlay;
 using Project_127.Popups;
 using Project_127.MySettings;
+using System.Management;
 using Microsoft.Win32;
 
 namespace Project_127.HelperClasses
@@ -274,18 +275,55 @@ namespace Project_127.HelperClasses
 		{
 			if (!pProcess.HasExited)
 			{
-				Logger.Log("Trying to kill Process '" + pProcess.ProcessName + "'", 1);
-				try
-				{
-					pProcess.Kill();
-					Logger.Log("Killed Process '" + pProcess.ProcessName + "'", 1);
-				}
-				catch
-				{
-					Logger.Log("Failed to kill Process '" + pProcess.ProcessName + "'", 1);
-				}
+				Logger.Log("Trying to kill Process (and Children)'" + pProcess.ProcessName + "'", 1);
+
+				//Logger.Log("Trying to kill Process '" + pProcess.ProcessName + "'", 1);
+				//try
+				//{
+				//	pProcess.Kill();
+				//	Logger.Log("Killed Process '" + pProcess.ProcessName + "'", 1);
+				//}
+				//catch
+				//{
+				//	Logger.Log("Failed to kill Process '" + pProcess.ProcessName + "'", 1);
+				//}
+
+				KillProcessAndChildren(pProcess.Id);
 			}
 		}
+
+
+
+
+		/// <summary>
+		/// Killing Processes and their Children
+		/// </summary>
+		/// <param name="pid"></param>
+		private static void KillProcessAndChildren(int pid)
+		{
+			ManagementObjectSearcher searcher = new ManagementObjectSearcher
+			  ("Select * From Win32_Process Where ParentProcessID=" + pid);
+			ManagementObjectCollection moc = searcher.Get();
+			foreach (ManagementObject mo in moc)
+			{
+				KillProcessAndChildren(Convert.ToInt32(mo["ProcessID"]));
+			}
+			try
+			{
+				Process proc = Process.GetProcessById(pid);
+				string procname = proc.ProcessName;
+				proc.Kill();
+				Logger.Log("Killed Process '" + procname + "'", 1);
+			}
+			catch
+			{
+				Logger.Log("Failed to kill Process", 1);
+			}
+		}
+
+
+
+
 
 		/// <summary>
 		/// Starts a process

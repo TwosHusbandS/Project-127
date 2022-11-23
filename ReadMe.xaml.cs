@@ -263,6 +263,8 @@ namespace Project_127
 
 			AddParagraph(rtb_Credits, "Shoutout to @yoshi for providing the Information which Build Version corresponds with which Game Version and Testing our Social-Club Launch");
 
+			AddParagraph(rtb_Credits, "Shoutout to @Gogsi for being awesome and a pleasure to work with");
+
 			AddParagraph(rtb_Credits, "Shoutout to @Diamondo25 for finding a way to launch GTA without going through LaunchGTAV.exe or PlayGTAV.exe, which eased the development process to launch through Social Club");
 
 			AddParagraph(rtb_Credits, "Shoutout to @AntherXx for making the incredible P127 Demo + Help Video, as well as going through the trouble of tracking down and renaming SaveFiles for every single Mission in Classic% and to @Hossel for providing the SaveFiles for the main Categories");
@@ -273,6 +275,8 @@ namespace Project_127
 			}
 
 			AddHyperlinkText(rtb_Credits, "https://github.com/DaWolf85/GTAVAutoPatcher/", "open-sourcing his Tool", "Shoutout to @DaWolf85 for ", " the Community used to Upgrade / Downgrade previously. It helped us a ton.");
+
+			AddParagraph(rtb_Credits, "Shoutout to @cuzbabytonight on community.pcgamingwiki.com (and hoxi I think) for figuring out which DLC Folders are safe to delete when on 1.27");
 
 			AddParagraph(rtb_Credits, "Shoutout to @Rayope for finding a Bug, fixing it himself, and providing us with the solution.Thanks mate. (P127 crashing on Token Gen when losing internet after P127 Startup)");
 

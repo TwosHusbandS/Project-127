@@ -6,7 +6,7 @@ Actual code (partially closed source) which authentificates, handles entitlement
 @Special For, who also did a lot of RE'ing, testing, brainstorming, information gathering and 2nd level support, being available to bounce ideas off of.
 Main / Actual Project 1.27 Client by "@thS"
 A number of other members of the team, including but not limited to @MoMo, @Diamondo25, @S.M.G, @gogsi, @Antibones, @Unemployed, @Aperture, @luky, @CrynesSs, @Daniel Kinau contributed to this project one way or another, and my thanks go out to them.
-Version: 1.2.2.0
+Version: 1.2.4.0
 
 Build Instructions:
 	Press CTRLF + F5, pray that nuget does its magic.
@@ -29,10 +29,12 @@ Deploy Instructions:
 	Save Innosetup Script...
 	Push Commit to github branch.
 	Merge branch into master
+Change stuff in readme.md?
 
 Comments like "TODO", "TO DO", "CTRLF", "CTRL-F", and "CTRL F" are just ways of finding a specific line quickly via searching
 
 Hybrid code can be found in AAA_HybridCode.
+
 
 */
 
@@ -180,11 +182,11 @@ namespace Project_127
 
 			if (Globals.P127Branch == "internal")
 			{
-				string msg = "We are in internal mode. We need testing on:\n\n" +
-					"- Nothing" + "\n" +
-					"- Everything" + "\n" +
-					"\nI do expect everything to work, so no extensive Testing needed." + "\n" +
-					"\nThanks. Appreciated. Have a great day : )";
+				//string msg = "We are in internal mode. We need testing on:\n\n" +
+				//	"- Nothing" + "\n" +
+				//	"- Everything" + "\n" +
+				//	"\nI do expect everything to work, so no extensive Testing needed." + "\n" +
+				//	"\nThanks. Appreciated. Have a great day : )";
 
 				//new Popup(Popup.PopupWindowTypes.PopupOk, msg).ShowDialog();
 			}
@@ -461,7 +463,7 @@ namespace Project_127
 			}
 			else
 			{
-				Auth.ROSCommunicationBackend.LoginMTL();
+                _ = Auth.ROSCommunicationBackend.LoginMTL();
 			}
 		}
 
