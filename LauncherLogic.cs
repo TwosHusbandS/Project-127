@@ -495,6 +495,12 @@ namespace Project_127
 
 
 		/// <summary>
+		/// Property of often used variable. (DebloatVPath)
+		/// </summary>
+		public static string DebloatVPath { get { return LauncherLogic.GTAVFilePath + @"update\x64\dlcpacks"; } }
+
+
+		/// <summary>
 		/// Property of often used variable. (EmuCfgPath)
 		/// </summary>
 		public static string EmuCfgPath { get { return Settings.GTAVInstallationPath.TrimEnd('\\') + @"\scemu.cfg"; } }
@@ -579,6 +585,14 @@ namespace Project_127
 					HelperClasses.Logger.Log("User does not want to force this Upgrade. Will abondon.");
 					return;
 				}
+			}
+
+			// DebloatV check
+			if (HelperClasses.FileHandling.GetSubFolders(LauncherLogic.DebloatVPath).Length < 12)
+			{
+				HelperClasses.Logger.Log("DebloatV check inside Upgrade hit. Throwing User popup and canceling update.", 1);
+				(new Popup(Popup.PopupWindowTypes.PopupOkError, "Your GTA Folder is missing some critical files.\nYou cannot play updated GTA.\n\nYou probably ran DebloatV at some point.\n\nRepair your game via Steam / Rockstar / Epic.")).ShowDialog();
+				return;
 			}
 
 			if (LauncherLogic.InstallationState == LauncherLogic.InstallationStates.Downgraded)
@@ -743,14 +757,22 @@ namespace Project_127
 		/// <summary>
 		/// Method for "Repairing" our setup
 		/// </summary>
-		public static void Repair(bool quickRepair = false)
+		public static void Repair(bool quickRepair = false, bool skipUpdate = false)
 		{
-
 			// Saving all the File Operations I want to do, executing this at the end of this Method
 			List<MyFileOperation> MyFileOperations = new List<MyFileOperation>();
 
-			HelperClasses.Logger.Log("Initiating Repair. Lets do an Upgrade first.", 0);
-			LauncherLogic.Upgrade();
+			if (skipUpdate)
+			{
+				HelperClasses.Logger.Log("Initiating Repair. Lets do an Upgrade first.", 0);
+			}
+			else
+			{
+				HelperClasses.Logger.Log("Initiating Repair. Lets do an Upgrade first.", 0);
+				LauncherLogic.Upgrade();
+				HelperClasses.Logger.Log("Initiating Repair. Done with Upgrade.", 0);
+			}
+
 			HelperClasses.Logger.Log("Initiating Repair. Done with Upgrade.", 0);
 			HelperClasses.Logger.Log("GTAV Installation Path: " + GTAVFilePath, 1);
 			HelperClasses.Logger.Log("InstallationLocation: " + Globals.ProjectInstallationPath, 1);
@@ -969,6 +991,29 @@ namespace Project_127
 
 						HelperClasses.FileHandling.WriteStringToFileOverwrite(EmuCfgPath, LaunchOptions);
 					}
+
+					if (Settings.Retailer == Settings.Retailers.Steam && !Settings.EnableDontLaunchThroughSteam && LaunchWay == LaunchWays.DragonEmu)
+                    {
+						var steamprocs = Process.GetProcessesByName("steam");
+						if (steamprocs.Length > 0)
+                        {
+							var steamproc = steamprocs[0];
+							Int64 coreaffinity = steamproc.ProcessorAffinity.ToInt64();
+							int corecount = 0;
+							for (int i = 0; i < 64; i++)
+							{
+								corecount += (coreaffinity & ((Int64)1 << i)) != 0 ? 1 : 0;
+							}
+							HelperClasses.Logger.Log("Current core affinity for steam is " + coreaffinity.ToString("X") + " (" + corecount + " cores)");
+							if (corecount > 16)
+							{
+								HelperClasses.Logger.Log("Settings steam's core affinity to FFFF (16 cores)");
+								Int64 NewAffinity = 0xFFFF;
+								steamproc.ProcessorAffinity = (IntPtr)NewAffinity;
+							}
+						}
+						
+                    }
 
 					HelperClasses.ProcessHandler.StartDowngradedGame();
 
@@ -1357,6 +1402,7 @@ namespace Project_127
 						if (MyLines[i].Contains("\"InstallLocation\":"))
 						{
 							string path = MyLines[i].Substring(MyLines[i].LastIndexOf('"')).Replace(@"\\", @"\");
+							path = path.TrimStart('"').TrimEnd('"');
 							HelperClasses.Logger.Log("GTAV Path Magic by Epic detected to be: '" + path + "'", 3);
 							return path;
 						}

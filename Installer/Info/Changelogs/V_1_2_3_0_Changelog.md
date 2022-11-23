@@ -4,6 +4,7 @@
 #### New Features:
 * @dr490ns new Patcher. Allows Users to binary-patch the game at will, and enable / disable each patch by the use of a Hotkey.
 * @Special Fors config / setup for dragons patcher, which fixes the TaxiLongLoad.
+* More info on that [here](https://github.com/TwosHusbandS/Project-127/blob/master/Installer/Info/AdvancedPatcher.md)
 
 #### Improved Features:
 * Legacy Auth works with newest ServerSide Changes by Rockstar. (Thanks @dr490n)

@@ -333,6 +333,7 @@
                                 <RowDefinition Height="40"/>
                                 <RowDefinition Height="40"/>
                                 <RowDefinition Height="40"/>
+                                <RowDefinition Height="40"/>
 
                             </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
@@ -360,6 +361,7 @@
                             <Rectangle Grid.Row="17" Grid.Column="0" Grid.ColumnSpan="3" Fill="{x:Static local:MyColors.SE_AlternateRowBackground}"/>
                             <Rectangle Grid.Row="18" Grid.Column="0" Grid.ColumnSpan="3" Fill="Transparent"/>
                             <Rectangle Grid.Row="19" Grid.Column="0" Grid.ColumnSpan="3" Fill="{x:Static local:MyColors.SE_AlternateRowBackground}"/>
+                            <Rectangle Grid.Row="20" Grid.Column="0" Grid.ColumnSpan="3" Fill="Transparent"/>
 
 
                             <Label Grid.Row="0" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Enable Project 1.27 Notes - Overlay"/>
@@ -434,7 +436,7 @@
                             
                             <Button Grid.Row="19" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource btn_SE_Path}" Content="Open @dr490ns assembly patcher" x:Name="btn_OpenPatcher" Click="btn_OpenPatcher_Click"/>
 
-
+                            <Button Grid.Row="20" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource btn_SE_Path}" Content="DebloatIV" x:Name="btn_DebloatIV" Click="btn_DebloatIV_Click"/>
                         </Grid>
                     </StackPanel>
                 </ScrollViewer>

@@ -1218,11 +1218,10 @@ namespace Project_127.SaveFileHandlerStuff
 				{
 					foreach (string myFile in FileHandling.GetFilesFromFolderAndSubFolder(MySaveFile.CurrGTASavesPath))
 					{
-						FileHandling.deleteFile(myFile);
-					}
-					foreach (string myFolder in FileHandling.GetSubFolders(MySaveFile.CurrGTASavesPath))
-					{
-						FileHandling.DeleteFolder(myFolder);
+						if (myFile.Contains("SGTA500"))
+						{
+							FileHandling.deleteFile(myFile);
+						}
 					}
 					Refresh(dg_GTAFiles);
 				}
@@ -1237,7 +1236,7 @@ namespace Project_127.SaveFileHandlerStuff
 					{
 						FileHandling.DeleteFolder(myFolder);
 					}
-					Refresh(dg_GTAFiles);
+					Refresh(dg_BackupFiles);
 				}
 			}
 		}

@@ -51,7 +51,7 @@ Shamelessly stolen from: https://github.com/othneildrew/Best-README-Template
 	.
     <a href="#contact">Contact me</a>
 	.
-	  <a href="Installer/Info/Changelogs/V_1_2_3_0_Changelog.md">Changelog</a>
+	  <a href="Installer/Info/Changelogs/V_1_2_4_0_Changelog.md">Changelog</a>
   </p>
 </p>
 
@@ -91,7 +91,7 @@ Over time it grew with Features and Launch - Capabilities
 
 Note:
 
-Project 1.27 now has the stability, user experience and core features we envisioned at the start of this project. While @dr490n and me (@thS / TwosHusbandS) both have ideas for potentially improvements and we may get around to working on them at some point, Project 1.27 is not under active development as of this very second (February 23rd, 2021). Big bugfixes etc. will still happen if needed, but we are making no promises either way. We want to thank everyone who has been a part of this incredible journey.
+Project 1.27 now has the stability, user experience and core features we envisioned at the start of this project. While @dr490n and me (@thS / TwosHusbandS) both have ideas for potentially improvements and we may get around to working on them at some point, Project 1.27 is not under active development as of this very second (November 23rd, 2022). Big bugfixes etc. will still happen if needed, but we are making no promises either way. We want to thank everyone who has been a part of this incredible journey.
 
 ### Help, How to get started, Support & Contact
 
@@ -187,8 +187,10 @@ Distributed under the MIT License. See `LICENSE` for more information.
 * Shoutout to FiveM and Goldberg, whose Source Code proved to be vital to understand and reverse engineer the GTA V Launch Process
 * Shoutout to @Fro for providing Hosting to the Files needed for Project 1.27. Youre an absolute legend
 * Shoutout to @yoshi for providing the Information which Build Version corresponds with which Game Version
+* Shoutout to @Gogsi for being awesome and a pleasure to work with
 * Shoutout to @Diamondo25 for finding a way to launch GTA without going through LaunchGTAV.exe or PlayGTAV.exe, which eased the development process to launch through Social Club
 * Shoutout to @DaWolf85 for [open sourcing his GTAVAutoPatcher Tool](https://github.com/DaWolf85/GTAVAutoPatcher/) the Community used to Upgrade / Downgrade previously.It helped us a ton.
+* Shoutout to @cuzbabytonight on community.pcgamingwiki.com (and hoxi I think) for figuring out which DLC Folders are safe to delete when on 1.27.
 * Shoutout to @Rayope for finding a Bug, fixing it himself, and providing us with the solution. Thanks mate. (P127 crashing on MTL Token Gen when losing internet after P127 Startup)
 * Shoutout to @burhac, @Crapideot, @GearsOfW, @rollschuh2282 , @Ollie, @Alfie, @AntherXx for being awesome members of the GTA Speedrunning community, always being nice and respectful, and providing Help / Testing. You guys are much appreciated.
 
@@ -219,7 +221,7 @@ Discord - [@ths#0305][discord-url]
 [license-url]: https://github.com/TwosHusbandS/Project-127/blob/master/LICENSE
 [maintained-shield]: https://img.shields.io/badge/Maintained-No-FFDB3A?style=plastic
 [maintained-url]: #about-the-project
-[version-shield]: https://img.shields.io/badge/Version-1.2.3.0_Installer-4DC71F?style=plastic
+[version-shield]: https://img.shields.io/badge/Version-1.2.4.0_Installer-4DC71F?style=plastic
 [help-shield]: https://img.shields.io/badge/Help-Here-F48041?style=plastic
 [features-shield]: https://img.shields.io/badge/Features-Click_Me-802BCF?style=plastic
 

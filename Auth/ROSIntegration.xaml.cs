@@ -54,6 +54,7 @@ namespace Project_127.Auth
 	{
 		//private static bool CEFInited = false;
 		private bool signinInProgress = false;
+		private bool softReloaded = false;
 		private int sendCount = 0;
 		private static bool newInstance = false;
 
@@ -99,13 +100,18 @@ namespace Project_127.Auth
 			key = key.OpenSubKey(@"SOFTWARE\WOW6432Node\Rockstar Games\Launcher");
 			if (key == null)
 			{
-				new Popup(Popup.PopupWindowTypes.PopupOkError, "Unable to find MTL registry key").ShowDialog();
+				new Popup(Popup.PopupWindowTypes.PopupOkError, "Unable to find MTL registry key.\n\nThis error is usually solved by reinstalling the rockstar launcher.").ShowDialog();
 				return;
 			}
 			var installFolder = RegeditHandler.GetValue(key, "InstallFolder");
 			if (installFolder == "")
 			{
-				Process.Start("explorer.exe", "mtl://");
+				var mtlkey = RegistryKey.OpenBaseKey(RegistryHive.ClassesRoot, RegistryView.Registry64);
+				mtlkey = mtlkey.OpenSubKey(@"mtl");
+				if (mtlkey != null)
+				{
+					Process.Start("explorer.exe", "mtl://");
+				}
 			}
 			else
 			{
@@ -336,10 +342,14 @@ namespace Project_127.Auth
 					sendCount = 5;
 					return;
 				}
-				if (signinInProgress || sendCount > 2)
+				if ((signinInProgress || sendCount > 2) && !softReloaded)
 				{
 					return;
 				}
+				if (softReloaded)
+                {
+					softReloaded = false;
+                }
 				sendCount++;
 				HelperClasses.Logger.Log("Page loaded, sending init script(s)...");
 				frame.ExecuteJavaScriptAsync(jsf, "https://rgl.rockstargames.com/temp.js", 0);
@@ -512,6 +522,10 @@ namespace Project_127.Auth
 				case "HardReload":
 					sendCount = 0;
 					browser.Reload(true);
+					break;
+				case "SoftReload":
+					softReloaded = true;
+					browser.Reload(false);
 					break;
 				default:
 					System.Windows.Forms.MessageBox.Show(e.Message.ToString());
