@@ -1,47 +1,53 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <item>
-  <version>1.2.3.0</version>
-  <url>https://github.com/TwosHusbandS/Project-127/raw/master/Installer/Project_127_Installer_V_1_2_3_0.exe</url>
+  <version>1.2.4.0</version>
+  <url>https://github.com/TwosHusbandS/Project-127/raw/master/Installer/Project_127_Installer_V_1_2_4_0.exe</url>
   <buildversiontable>
-    1.0.323.0;1.24:
-    1.0.350.0;1.25:
-    1.0.350.1;1.26:
-    1.0.350.3;1.27:
-    1.0.393.0;1.28:
-    1.0.463.0;1.29:
-    1.0.505.0;1.30:
-    1.0.573.0;1.31:
-    1.0.617.0;1.32:
-    1.0.678.0;1.33:
-    1.0.757.0;1.34:
-    1.0.757.0;1.34:
-    1.0.791.0;1.35:
-    1.0.877.0;1.36:
-    1.0.944.0;1.37:
-    1.0.1011.0;1.38:
-    1.0.1032.0;1.39:
-    1.0.1103.0;1.40:
-    1.0.1180.0;1.41:
-    1.0.1290.0;1.42:
-    1.0.1365.0;1.43:
-    1.0.1493.0;1.44:
-    1.0.1604.0;1.46:
-    1.0.1734.0;1.47:
-    1.0.1737.0;1.48:
-    1.0.1868.0;1.50:
-    1.0.2060.0;1.51:
-    1.0.2060.1;1.52:
-    1.0.2189.0;1.52:
-    1.0.2215.0;1.53:
-    1.0.2245.0;1.54:
+	  1.0.323.0;1.24:
+	  1.0.350.0;1.25:
+	  1.0.350.1;1.26:
+	  1.0.350.3;1.27:
+	  1.0.393.0;1.28:
+	  1.0.463.0;1.29:
+	  1.0.505.0;1.30:
+	  1.0.573.0;1.31:
+	  1.0.617.0;1.32:
+	  1.0.678.0;1.33:
+	  1.0.757.0;1.34:
+	  1.0.757.0;1.34:
+	  1.0.791.0;1.35:
+	  1.0.877.0;1.36:
+	  1.0.944.0;1.37:
+	  1.0.1011.0;1.38:
+	  1.0.1032.0;1.39:
+	  1.0.1103.0;1.40:
+	  1.0.1180.0;1.41:
+	  1.0.1290.0;1.42:
+	  1.0.1365.0;1.43:
+	  1.0.1493.0;1.44:
+	  1.0.1604.0;1.46:
+	  1.0.1734.0;1.47:
+	  1.0.1737.0;1.48:
+	  1.0.1868.0;1.50:
+	  1.0.2060.0;1.51:
+	  1.0.2060.1;1.52:
+	  1.0.2189.0;1.52:
+	  1.0.2215.0;1.53:
+	  1.0.2245.0;1.54:
+	  1.0.2372.0;1.5
+	  1.0.2545.0;1.5
+	  1.0.2612.1;1.5
+	  1.0.2628.2;1.6
+	  1.0.2699.0;1.61:
+	  1.0.2699.16;1.63:
   </buildversiontable>
   <announcement></announcement>
   <specialbuildname></specialbuildname>
   <dragonsreadme>https://github.com/jaredtb</dragonsreadme>
   <demovideo>https://www.youtube.com/watch?v=dQw4w9WgXcQ&t=PLACEHOLDER</demovideo>
-  <zip>https://gtav.anushk.net/Project_127_Files_V14_Big.zip</zip>
-  <bigzipmd5>690108ce3e0b5289630de1a074d56553</bigzipmd5>
-  <zipversion>14</zipversion>
+  <zip>https://gtav.anushk.net/Project_127_Files_V15_Big.zip</zip>
+  <bigzipmd5>9906c3bd2304e1372332d1ddd4151fd6</bigzipmd5>
+  <zipversion>15</zipversion>
   <hidevideo>True</hidevideo>
   <comment>Backwards Compability</comment>
   <comment2>dont THINK anything below here is actively used</comment2>
@@ -53,7 +59,7 @@
   <DLLinkUHash>1f2c8c0fd9f83d6ad82d9a0aa2567562</DLLinkUHash>
   <DLLinkX>https://github.com/TwosHusbandS/Project-127/releases/download/V_Final/file.x</DLLinkX>
   <DLLinkXHash>683610e269ba60c5fcc7a9f6d1a8bfd5</DLLinkXHash>
-  <zipmd5>82178aaca3a4efc796c70a7bafa25fc1</zipmd5>
+  <zipmd5>29415241fe6869fb2085ed3933ef4c12</zipmd5>
   <zip0>https://gtav.anushk.net/Project_127_Files_V14_Small.zip</zip0>
   <zip1>https://anonfiles.com/naO8d1q2pd/Project_127_Files_V12_Small_zip</zip1>
   <zip2>https://anonfiles.com/7eO3d0q3p4/Project_127_Files_V12_Small_zip</zip2>

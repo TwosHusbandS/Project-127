@@ -100,13 +100,18 @@ namespace Project_127.Auth
 			key = key.OpenSubKey(@"SOFTWARE\WOW6432Node\Rockstar Games\Launcher");
 			if (key == null)
 			{
-				new Popup(Popup.PopupWindowTypes.PopupOkError, "Unable to find MTL registry key").ShowDialog();
+				new Popup(Popup.PopupWindowTypes.PopupOkError, "Unable to find MTL registry key.\n\nThis error is usually solved by reinstalling the rockstar launcher.").ShowDialog();
 				return;
 			}
 			var installFolder = RegeditHandler.GetValue(key, "InstallFolder");
 			if (installFolder == "")
 			{
-				Process.Start("explorer.exe", "mtl://");
+				var mtlkey = RegistryKey.OpenBaseKey(RegistryHive.ClassesRoot, RegistryView.Registry64);
+				mtlkey = mtlkey.OpenSubKey(@"mtl");
+				if (mtlkey != null)
+				{
+					Process.Start("explorer.exe", "mtl://");
+				}
 			}
 			else
 			{

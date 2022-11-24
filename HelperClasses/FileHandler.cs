@@ -504,7 +504,7 @@ string lpSymlinkFileName, string lpTargetFileName, SymbolicLink dwFlags);
 			{
 				WebRequest webRequest = WebRequest.Create(url);
 				webRequest.Timeout = TimeOutMS;
-				webRequest.Method = "HEAD";
+				webRequest.Method = "GET";
 
 				webRequest.GetResponse();
 			}

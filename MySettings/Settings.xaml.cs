@@ -2167,5 +2167,70 @@ namespace Project_127.MySettings
 			}
 			
 		}
-    } // End of Class
+
+		/// <summary>
+		/// Debloating GTA V
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void btn_DebloatV_Click(object sender, RoutedEventArgs e)
+		{
+			if (LauncherLogic.InstallationState != LauncherLogic.InstallationStates.Downgraded)
+			{
+				(new Popup(Popup.PopupWindowTypes.PopupOk, "You need to be downgraded to do that.")).ShowDialog();
+				return;
+			}
+
+
+			Popup yna = new Popup(Popup.PopupWindowTypes.PopupYesNo, "This will remove all DLCs (online and later GTA Versions),\nwhich are not needed for GTA Version 1.27.\nThis will save a few GB of storage.\n\nDo you want to continue?");
+			yna.ShowDialog();
+			if (yna.DialogResult == true)
+			{
+				Popup ynb = new Popup(Popup.PopupWindowTypes.PopupYesNo, "If you continue, you will save a bit of storage space\nbut you will need to verify gamefiles via your Retailer\n(Steam, Rockstar or EpicGames)\nif you want to update GTA or play online.\n\nAre you REALLY sure you want to continue?");
+				ynb.ShowDialog();
+				if (ynb.DialogResult == true)
+				{
+
+
+					HelperClasses.Logger.Log("Called DebloatV. Gonna QUICK Repair now. Only need to yeet upgradefiles and upgradebackup files to force people to verify gamefiles. Not allfileseverplaced.");
+					// rockstar processes are killed
+					LauncherLogic.Repair(true, true);
+
+
+					// https://community.pcgamingwiki.com/topic/4837-gta-5-150-downgraded-to-127-to-save-on-size-which-files-are-safe-to-delete/#comment-14299
+					List<string> FoldersToKeep = new List<string>();
+					FoldersToKeep.Add("mpchristmas2");
+					FoldersToKeep.Add("mpheist");
+					FoldersToKeep.Add("mpluxe");
+					FoldersToKeep.Add("mppatchesng");
+					FoldersToKeep.Add("patchday1ng");
+					FoldersToKeep.Add("patchday2bng");
+					FoldersToKeep.Add("patchday2ng");
+					FoldersToKeep.Add("patchday3ng");
+
+
+					List<MyFileOperation> MyFileOperations = new List<MyFileOperation>();
+					HelperClasses.Logger.Log("DebloatV. Quick repair done. Deleting folders now.");
+
+					string[] Folders = HelperClasses.FileHandling.GetSubFolders(LauncherLogic.DebloatVPath);
+					foreach (string Folder in Folders)
+					{
+						string tmp = Folder.Substring(Folder.LastIndexOf('\\') + 1);
+						if (!FoldersToKeep.Contains(tmp))
+						{
+							MyFileOperations.Add(new MyFileOperation(MyFileOperation.FileOperations.Delete, Folder, "", "Deleting '" + (tmp) + @"' from the $GTAVPath\update\x64\dlcpacks", 2, MyFileOperation.FileOrFolder.Folder));
+						}
+					}
+
+					new PopupProgress(PopupProgress.ProgressTypes.FileOperation, "Performing DebloatV", MyFileOperations).ShowDialog();
+
+					HelperClasses.Logger.Log("DebloatV. Done.");
+
+
+					(new Popup(Popup.PopupWindowTypes.PopupOk, "Successfully ran DebloatV")).ShowDialog();
+				}
+			}
+		}
+
+	} // End of Class
 } // End of Namespace 
