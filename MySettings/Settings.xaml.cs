@@ -2173,7 +2173,7 @@ namespace Project_127.MySettings
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
-		private void btn_DebloatIV_Click(object sender, RoutedEventArgs e)
+		private void btn_DebloatV_Click(object sender, RoutedEventArgs e)
 		{
 			if (LauncherLogic.InstallationState != LauncherLogic.InstallationStates.Downgraded)
 			{
@@ -2227,7 +2227,7 @@ namespace Project_127.MySettings
 					HelperClasses.Logger.Log("DebloatV. Done.");
 
 
-					(new Popup(Popup.PopupWindowTypes.PopupOk, "Successfully ran DebloatIV")).ShowDialog();
+					(new Popup(Popup.PopupWindowTypes.PopupOk, "Successfully ran DebloatV")).ShowDialog();
 				}
 			}
 		}

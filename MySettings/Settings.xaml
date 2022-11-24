@@ -436,7 +436,7 @@
                             
                             <Button Grid.Row="19" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource btn_SE_Path}" Content="Open @dr490ns assembly patcher" x:Name="btn_OpenPatcher" Click="btn_OpenPatcher_Click"/>
 
-                            <Button Grid.Row="20" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource btn_SE_Path}" Content="DebloatIV" x:Name="btn_DebloatIV" Click="btn_DebloatIV_Click"/>
+                            <Button Grid.Row="20" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource btn_SE_Path}" Content="DebloatV" x:Name="btn_DebloatV" Click="btn_DebloatV_Click"/>
                         </Grid>
                     </StackPanel>
                 </ScrollViewer>
