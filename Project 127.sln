@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.4.33205.214
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30104.148
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Project 127", "Project 127.csproj", "{A3C371FC-B027-4451-9D07-41302A90B250}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -23,7 +23,6 @@ Global
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{A3C371FC-B027-4451-9D07-41302A90B250}.Debug|Any CPU.ActiveCfg = Debug|x64
-		{A3C371FC-B027-4451-9D07-41302A90B250}.Debug|Any CPU.Build.0 = Debug|x64
 		{A3C371FC-B027-4451-9D07-41302A90B250}.Debug|x64.ActiveCfg = Debug|x64
 		{A3C371FC-B027-4451-9D07-41302A90B250}.Debug|x64.Build.0 = Debug|x64
 		{A3C371FC-B027-4451-9D07-41302A90B250}.Debug|x86.ActiveCfg = Debug|x64
@@ -32,7 +31,6 @@ Global
 		{A3C371FC-B027-4451-9D07-41302A90B250}.Release|x64.Build.0 = Release|x64
 		{A3C371FC-B027-4451-9D07-41302A90B250}.Release|x86.ActiveCfg = Release|x64
 		{225A2F5D-B9EC-4691-A4F6-81C70B182903}.Debug|Any CPU.ActiveCfg = Debug|Win32
-		{225A2F5D-B9EC-4691-A4F6-81C70B182903}.Debug|Any CPU.Build.0 = Debug|Win32
 		{225A2F5D-B9EC-4691-A4F6-81C70B182903}.Debug|x64.ActiveCfg = StaticDebug|x64
 		{225A2F5D-B9EC-4691-A4F6-81C70B182903}.Debug|x64.Build.0 = StaticDebug|x64
 		{225A2F5D-B9EC-4691-A4F6-81C70B182903}.Debug|x86.ActiveCfg = Debug|Win32
