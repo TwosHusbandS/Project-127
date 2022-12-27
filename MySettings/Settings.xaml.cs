@@ -751,7 +751,8 @@ namespace Project_127.MySettings
 			ButtonMouseOverMagic(btn_cb_Set_EnableAlternativeLaunchForceCProgramFiles);
 			ButtonMouseOverMagic(btn_cb_Set_EnableJumpscriptUseCustomScript);
 			ButtonMouseOverMagic(btn_cb_Set_EnablePreOrderBonus);
-			ButtonMouseOverMagic(btn_cb_Set_EnableAutoStartFPSLimiter);
+            ButtonMouseOverMagic(btn_cb_Set_EnableReturningPlayer);
+            ButtonMouseOverMagic(btn_cb_Set_EnableAutoStartFPSLimiter);
 			ButtonMouseOverMagic(btn_cb_Set_EnableScripthookOnDowngraded);
 			ButtonMouseOverMagic(btn_cb_Set_EnableAutoStartLiveSplit);
 			ButtonMouseOverMagic(btn_cb_Set_EnableAutoStartNohboard);
@@ -983,7 +984,10 @@ namespace Project_127.MySettings
 				case "btn_cb_Set_EnablePreOrderBonus":
 					SetCheckBoxBackground(myBtn, Settings.EnablePreOrderBonus);
 					break;
-				case "btn_cb_Set_AutoSetHighPriority":
+                case "btn_cb_Set_EnableReturningPlayer":
+                    SetCheckBoxBackground(myBtn, Settings.EnableReturningPlayer);
+                    break;
+                case "btn_cb_Set_AutoSetHighPriority":
 					SetCheckBoxBackground(myBtn, Settings.EnableAutoSetHighPriority);
 					break;
 				case "btn_cb_Set_OnlyAutoStartProgramsWhenDowngraded":
@@ -1303,7 +1307,10 @@ namespace Project_127.MySettings
 				case "btn_cb_Set_EnablePreOrderBonus":
 					Settings.EnablePreOrderBonus = !Settings.EnablePreOrderBonus;
 					break;
-				case "btn_cb_Set_EnableCoreFix":
+                case "btn_cb_Set_EnableReturningPlayer":
+                    Settings.EnableReturningPlayer = !Settings.EnableReturningPlayer;
+                    break;
+                case "btn_cb_Set_EnableCoreFix":
 					Settings.EnableCoreFix = !Settings.EnableCoreFix;
 					break;
 				case "btn_cb_Set_AutoSetHighPriority":

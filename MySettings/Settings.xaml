@@ -258,6 +258,7 @@
                                         <RowDefinition Height="*"/>
                                         <RowDefinition Height="*"/>
                                         <RowDefinition Height="*"/>
+                                        <RowDefinition Height="*"/>
                                     </Grid.RowDefinitions>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*"/>
@@ -272,7 +273,7 @@
                                     <Rectangle x:Name="Rect_Bullshit_2" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Fill="{x:Static local:MyColors.SE_AlternateRowBackground}"/>
                                     <Rectangle Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" Fill="Transparent"/>
                                     <Rectangle x:Name="Rect_Bullshit_3" Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2" Fill="{x:Static local:MyColors.SE_AlternateRowBackground}"/>
-                                    <Rectangle Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2" Fill="Transparent"/>
+                                    <Rectangle Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="2" Fill="Transparent"/>
 
 
                                     <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" x:Name="lbl_AuthWays" Content="Auth - Method" Style="{StaticResource lbl_Set_Info}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
@@ -293,12 +294,15 @@
                                     <Label Grid.Row="5" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Enable In-Game Pre-order bonus"/>
                                     <Button Grid.Row="5" Grid.Column="1" x:Name="btn_cb_Set_EnablePreOrderBonus"  Style="{StaticResource btn_cb}" Click="btn_cb_Click" MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
 
-                                    <Button Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2" x:Name="btn_Set_ImportGTAVSettings" ToolTip="Import your normal Social Club Settings for the Dragon Launcher. Pick your Profile Folder" Style="{StaticResource btn_SE_Path}" Content="Import GTA V Settings" Click="btn_Set_ImportGTAVSettings_Click" MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
+                                    <Label Grid.Row="6" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Enable Returning Player Content"/>
+                                    <Button Grid.Row="6" Grid.Column="1" x:Name="btn_cb_Set_EnableReturningPlayer"  Style="{StaticResource btn_cb}" Click="btn_cb_Click" MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
+                                    
+                                    <Button Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2" x:Name="btn_Set_ImportGTAVSettings" ToolTip="Import your normal Social Club Settings for the Dragon Launcher. Pick your Profile Folder" Style="{StaticResource btn_SE_Path}" Content="Import GTA V Settings" Click="btn_Set_ImportGTAVSettings_Click" MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
 
-                                    <Label Grid.Row="7" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Hide from Steam"/>
-                                    <Button Grid.Row="7" Grid.Column="1" x:Name="btn_cb_Set_EnableDontLaunchThroughSteam"  Style="{StaticResource btn_cb}" Click="btn_cb_Click" MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
+                                    <Label Grid.Row="8" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Hide from Steam"/>
+                                    <Button Grid.Row="8" Grid.Column="1" x:Name="btn_cb_Set_EnableDontLaunchThroughSteam"  Style="{StaticResource btn_cb}" Click="btn_cb_Click" MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
 
-                                    <Rectangle x:Name="Rect_HideOptions_HideFromSteam" Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2" Fill="{x:Static local:MyColors.MyColorOffWhite85}" ToolTip="Non effective when Retailer is not Steam"/>
+                                    <Rectangle x:Name="Rect_HideOptions_HideFromSteam" Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="2" Fill="{x:Static local:MyColors.MyColorOffWhite85}" ToolTip="Non effective when Retailer is not Steam"/>
 
                                     <Button x:Name="btn_HideEmuOptions" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="8" MouseRightButtonDown="btn_HideEmuOptions_MouseRightButtonDown" ToolTip="Hidden, because they are not effective on your LaunchMethod. Rightclick to edit anyways."  Style="{StaticResource btn_Hide}" Background="{x:Static local:MyColors.MyColorEmuHidden}" />
 
