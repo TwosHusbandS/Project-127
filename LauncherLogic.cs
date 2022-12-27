@@ -1672,6 +1672,111 @@ namespace Project_127
 		#endregion
 
 
+
+
+		/// <summary>
+		/// Sets the ReturningPlayerBonus Setting based on actual contents of file
+		/// </summary>
+		public static void SetReturningPlayerBonusSetting()
+		{
+			HelperClasses.Logger.Log("Reading pc_settings.bin to determine if setting should be set to true or false");
+			try
+			{
+				var settingsPath = @"\Rockstar Games\GTA V\Profiles\Project127\GTA V\0F74F4C4\pc_settings.bin";
+				var fullSettingsPath = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal) + settingsPath;
+				byte[] settings_bytes = File.ReadAllBytes(fullSettingsPath);
+				byte[] bytes_to_remove = { 98, 3, 0, 0, 1, 0, 0, 0 }; // this sequence of bytes enables the returning player content
+
+				// definitely not just copied from method below
+				for (int i = 0; i < settings_bytes.Length; i++)
+				{
+					if (settings_bytes.Skip(i).Take(bytes_to_remove.Length).SequenceEqual(bytes_to_remove))
+					{
+						Settings.EnableReturningPlayer = true;
+						return;
+					}
+				}
+				Settings.EnableReturningPlayer = false;
+				return;
+			}
+			catch
+			{
+				Settings.EnableReturningPlayer = false;
+				return;
+			}
+		}
+
+
+		/// <summary>
+		/// Enables or Disables the Returning Player Bonus by writing to the file.
+		/// </summary>
+		/// <param name="IsEnabled"></param>
+		public static void SetReturningPlayerBonus(bool IsEnabled)
+		{
+			// Main code by Special For and Hoxi, slightly adapted (try/catch)
+
+			var settingsPath = @"\Rockstar Games\GTA V\Profiles\Project127\GTA V\0F74F4C4\pc_settings.bin";
+			var fullSettingsPath = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal) + settingsPath;
+			if (File.Exists(fullSettingsPath))
+			{
+				if (IsEnabled)
+				{
+
+					FileStream writeStream;
+					try
+					{
+						writeStream = new FileStream(fullSettingsPath, FileMode.Append, FileAccess.Write);
+						BinaryWriter writeBinary = new BinaryWriter(writeStream);
+						writeBinary.Write(0x00000362);
+						writeBinary.Write(0x00000001);
+						writeBinary.Close();
+					}
+					catch (Exception ex)
+					{
+						HelperClasses.Logger.Log("Returning Player Bonus Enabler: Error enabling returning player bonus: " + ex.ToString());
+					}
+					HelperClasses.Logger.Log("Returning Player Bonus Enabler: Returning Player Bonus Enabled");
+				}
+				else
+				{
+					try
+					{
+						byte[] settings_bytes = File.ReadAllBytes(fullSettingsPath);
+						byte[] bytes_to_remove = { 98, 3, 0, 0, 1, 0, 0, 0 }; // this sequence of bytes enables the returning player content
+
+
+						// definitely not just copied from https://stackoverflow.com/a/40284498 xdd
+						byte[] result = new byte[settings_bytes.Length];
+						int k = 0;
+						for (int i = 0; i < settings_bytes.Length;)
+						{
+							if (settings_bytes.Skip(i).Take(bytes_to_remove.Length).SequenceEqual(bytes_to_remove))
+							{
+
+								i += bytes_to_remove.Length;
+							}
+							else
+							{
+								result[k] = settings_bytes[i];
+								i++;
+								k++;
+							}
+						}
+						File.WriteAllBytes(fullSettingsPath, result); // write new array of bytes to settings file
+						HelperClasses.Logger.Log("Returning Player Bonus Enabler: Returning Player Bonus Disabled");
+					}
+					catch (Exception ex)
+					{
+						HelperClasses.Logger.Log("Returning Player Bonus Enabler: Error enabling returning player bonus: " + ex.ToString());
+					}
+				}
+			}
+			else
+			{
+				HelperClasses.Logger.Log("Returning Player Bonus Enabler: Settings file not found!");
+			}
+		}
+
 	} // End of Class
 } // End of NameSpace
 

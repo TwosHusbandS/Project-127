@@ -670,6 +670,9 @@ namespace Project_127
 			//INIT Special Patcher
 			initGamePatches();
 
+			// Read Settings of Emu Profile for ReturningPlayerContent
+			LauncherLogic.SetReturningPlayerBonusSetting();
+
 			//Init pointer-path tester
 			preparsedPPs = ASPointerPath.pointerPathParse(Settings.PointerPathTesterString);
 

@@ -273,7 +273,8 @@
                                     <Rectangle x:Name="Rect_Bullshit_2" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Fill="{x:Static local:MyColors.SE_AlternateRowBackground}"/>
                                     <Rectangle Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" Fill="Transparent"/>
                                     <Rectangle x:Name="Rect_Bullshit_3" Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2" Fill="{x:Static local:MyColors.SE_AlternateRowBackground}"/>
-                                    <Rectangle Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="2" Fill="Transparent"/>
+                                    <Rectangle Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2" Fill="Transparent"/>
+                                    <Rectangle x:Name="Rect_Bullshit_33" Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="2" Fill="{x:Static local:MyColors.SE_AlternateRowBackground}"/>
 
 
                                     <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" x:Name="lbl_AuthWays" Content="Auth - Method" Style="{StaticResource lbl_Set_Info}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
