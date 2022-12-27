@@ -369,7 +369,7 @@ namespace Project_127
 
 			AddHyperlinkText(rtb_Help, "http://RightClickAuthIcon.com", "RIGHT-click the Auth icon", "If you still cant get it to work or you wish to get Help, please ", " (the one with the lock icon in the top left corner) and send me the AAA - Logfile.log and the AAA - Debugfile.txt from the folder which will open (Project 1.27 Installation Directory) and include a detailed Report of what you did and whats not working. Note: These Files may contain Filepaths which may contain your Name.");
 
-			AddHyperlinkText(rtb_Help, "http://SpeedrunReadMe.com", "\"Speedrun\"", "Please post a detailed description of what you did and what is not working as expected, in the GTA V Speedrun Discord - project - 1 - 27 - chat Channel. Invite links are in the ", " Section of this Page.");
+			AddHyperlinkText(rtb_Help, "http://SpeedrunReadMe.com", "\"Speedrun\"", "Please post a detailed description of what you did and what is not working as expected, in the GTA V Speedrun Discord - tech-support - chat Channel. Invite links are in the ", " Section of this Page.");
 
 			AddHyperlinkText(rtb_Help, "https://github.com/TwosHusbandS/Project-127/blob/master/Installer/Info/Help.md", "here", "A more lengthy and detailed version of this can be found on github ", "");
 

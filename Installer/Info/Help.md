@@ -77,7 +77,7 @@ It can do this in two ways:
 
 * **If you still cant get it to work or you wish to get Help, please RIGHT-click the Auth icon (the one with the lock icon in the top left corner) and send me the AAA - Logfile.log and the AAA - Debugfile.txt from the folder which will open (Project 1.27 Installation Directory) and include a detailed Report of what you did and whats not working. Note: These Files may contain Filepaths which may contain your Name.**
 
-* Please post a detailed description of what you did and what is not working as expected, in the GTA V Speedrun Discord - project-1-27-chat Channel. Invite links [here](https://discord.gg/3qjGGBM), and [here](https://discord.gg/rRrTGUV), as well as [here](https://discord.com/invite/zQt8wZg)
+* Please post a detailed description of what you did and what is not working as expected, in the GTA V Speedrun Discord - tech-support Channel. Invite links [here](https://discord.gg/3qjGGBM), and [here](https://discord.gg/rRrTGUV), as well as [here](https://discord.com/invite/zQt8wZg)
 
 * I do not recommend uploading these 2 Files inside a public channel. They do contain things like your email adresses, and Path / Folder - Names which can contain usernames.
 
