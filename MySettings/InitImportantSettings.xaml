@@ -3,59 +3,66 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Project_127.MySettings"
+        xmlns:local="clr-namespace:Project_127"
         mc:Ignorable="d"
         Title="Popup" 
-        Background="#1a1a1a"
         WindowStyle="None" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" MouseLeftButtonDown="Window_MouseLeftButtonDown"
         Height="540" Width="900"
         SourceInitialized="Window_SourceInitialized"
         SizeToContent="Manual"
-        Icon="/Artwork/icon.png">
-    <!--Background="{x:Static local:MyColors.PU_Background}"-->
-    <Grid x:Name="Grid_Outer" Margin="5,5,5,5">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="3*"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
+        LocationChanged="Window_LocationChanged"
+        Icon="/Artwork/icon.png"
+        Background="{x:Static local:MyColors.MyColorOffBlack}">
+    <!--Background="#1a1a1a"-->
+    <Border  BorderThickness="2" BorderBrush="{x:Static local:MyColors.MyColorWhite}">
 
-        <Label x:Name="lbl_Header" Style="{StaticResource lbl}" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Content="Initiating the most important Settings Project 1.27 needs."/>
+        <Grid x:Name="Grid_Outer" Margin="5,5,5,5">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="3*"/>
+                <RowDefinition Height="2*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
 
-        <Label x:Name="lbl_Main" Style="{StaticResource lbl_Set_Info}" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Content="" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"/>
+            <Label x:Name="lbl_Header" Style="{StaticResource lbl}" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Content="Initiating the most important Settings Project 1.27 needs."/>
 
-        <ComboBox x:Name="cb_cb" Grid.Row="2" Grid.Column="0" Style="{StaticResource cobo}"/>
-        <Button x:Name="btn_Yes" Style="{StaticResource btn_SM}" Content="Yes" Click="btn_Yes_Click" Grid.Row="2" Grid.Column="0"/>
-        <Button x:Name="btn_No" Style="{StaticResource btn_SM}" Content="No" Click="btn_No_Click" Grid.Row="2" Grid.Column="1"/>
-        <Button x:Name="btn_BigBtn" Style="{StaticResource btn_SM}" Content="[[ CLICK ME ]]" Click="btn_BigBtn_Click" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"/>
+            <Border x:Name="brdr" Grid.Row="1" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="2" BorderThickness="2" Margin="5" BorderBrush="{x:Static local:MyColors.ProgressBarBorderBrush}" Background="{x:Static local:MyColors.MyColorBlack}"/>
+
+            <Label x:Name="lbl_Main" Style="{StaticResource lbl_Set_Info}" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Content="" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"/>
+
+            <ComboBox x:Name="cb_cb" Grid.Row="2" Grid.Column="0" Style="{StaticResource cobo}" Margin="20"/>
+            <Button x:Name="btn_Yes" Style="{StaticResource btn_SM}" Content="Yes" Click="btn_Yes_Click" Grid.Row="2" Grid.Column="0" FontSize="12" Margin="20"/>
+            <Button x:Name="btn_No" Style="{StaticResource btn_SM}" Content="No" Click="btn_No_Click" Grid.Row="2" Grid.Column="1" FontSize="12" Margin="20"/>
+            <Button x:Name="btn_BigBtn" Style="{StaticResource btn_SM}" Content="[[ CLICK ME ]]" Click="btn_BigBtn_Click" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" FontSize="12" Margin="20"/>
 
 
-        <ProgressBar x:Name="pb_sth" Style="{StaticResource pb}" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2"/>
+            <ProgressBar x:Name="pb_sth" Style="{StaticResource pb}" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Margin="5"/>
 
-        <Label x:Name="lbl_GTAVPath" Style="{StaticResource lbl_Set_Info}" HorizontalAlignment="Right" Grid.Row="4" Grid.Column="0" Content="GTA V - Path"/>
-        <Label x:Name="lbl_GTAVPath_Setting" Style="{StaticResource lbl_Set_Info}" HorizontalAlignment="Left" Grid.Row="4" Grid.Column="1" Content=""/>
+            <Label x:Name="lbl_GTAVPath" Style="{StaticResource lbl_Set_Info}" HorizontalAlignment="Right" Grid.Row="4" Grid.Column="0" Content="GTA V - Path"/>
+            <Label x:Name="lbl_GTAVPath_Setting" Style="{StaticResource lbl_Set_Info}" HorizontalAlignment="Left" Grid.Row="4" Grid.Column="1" Content=""/>
 
-        <Label x:Name="lbl_P127Path" Style="{StaticResource lbl_Set_Info}" HorizontalAlignment="Right" Grid.Row="5" Grid.Column="0" Content="Upgrade/Downgrade Files"/>
-        <Label x:Name="lbl_P127Path_Setting" Style="{StaticResource lbl_Set_Info}" HorizontalAlignment="Left" Grid.Row="5" Grid.Column="1" Content=""/>
+            <Label x:Name="lbl_P127Path" Style="{StaticResource lbl_Set_Info}" HorizontalAlignment="Right" Grid.Row="5" Grid.Column="0" Content="Upgrade/Downgrade Files"/>
+            <Label x:Name="lbl_P127Path_Setting" Style="{StaticResource lbl_Set_Info}" HorizontalAlignment="Left" Grid.Row="5" Grid.Column="1" Content=""/>
 
-        <Label x:Name="lbl_Hardlinking" Style="{StaticResource lbl_Set_Info}" HorizontalAlignment="Right" Grid.Row="6" Grid.Column="0" Content="Hardlink files if possible"/>
-        <Label x:Name="lbl_Hardlinking_Setting" Style="{StaticResource lbl_Set_Info}" HorizontalAlignment="Left" Grid.Row="6" Grid.Column="1" Content=""/>
+            <Label x:Name="lbl_Hardlinking" Style="{StaticResource lbl_Set_Info}" HorizontalAlignment="Right" Grid.Row="6" Grid.Column="0" Content="Hardlink files if possible"/>
+            <Label x:Name="lbl_Hardlinking_Setting" Style="{StaticResource lbl_Set_Info}" HorizontalAlignment="Left" Grid.Row="6" Grid.Column="1" Content=""/>
 
-        <Label x:Name="lbl_Retailer" Style="{StaticResource lbl_Set_Info}" HorizontalAlignment="Right" Grid.Row="7" Grid.Column="0" Content="Retailer"/>
-        <Label x:Name="lbl_Retailer_Setting" Style="{StaticResource lbl_Set_Info}" HorizontalAlignment="Left" Grid.Row="7" Grid.Column="1" Content=""/>
+            <Label x:Name="lbl_Retailer" Style="{StaticResource lbl_Set_Info}" HorizontalAlignment="Right" Grid.Row="7" Grid.Column="0" Content="Retailer"/>
+            <Label x:Name="lbl_Retailer_Setting" Style="{StaticResource lbl_Set_Info}" HorizontalAlignment="Left" Grid.Row="7" Grid.Column="1" Content=""/>
 
-        <Button x:Name="btn_Exit" Style="{StaticResource btn_SM}" Margin="5,1" FontSize="12"  Grid.Row="8" Grid.Column="0" Click="btn_Exit_Click" Content="Exit"/>
-        <Button x:Name="btn_Save" Style="{StaticResource btn_SM}" Margin="5,1" FontSize="12"  Grid.Row="8" Grid.Column="1" Click="btn_Save_Click" Content="Save"/>
+            <Button x:Name="btn_Exit" Style="{StaticResource btn_SM}" Margin="5,1" FontSize="12"  Grid.Row="8" Grid.Column="0" Click="btn_Exit_Click" Content="Exit"/>
+            <Button x:Name="btn_Save" Style="{StaticResource btn_SM}" Margin="5,1" FontSize="12"  Grid.Row="8" Grid.Column="1" Click="btn_Save_Click" Content="Save"/>
 
-    </Grid>
+        </Grid>
+    </Border>
+
 </Window>

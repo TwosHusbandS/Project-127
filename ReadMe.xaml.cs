@@ -276,11 +276,13 @@ namespace Project_127
 
 			AddHyperlinkText(rtb_Credits, "https://github.com/DaWolf85/GTAVAutoPatcher/", "open-sourcing his Tool", "Shoutout to @DaWolf85 for ", " the Community used to Upgrade / Downgrade previously. It helped us a ton.");
 
+			AddParagraph(rtb_Credits, "Shoutout to @Hoxi and @Special For for implementing and integrating the ReturningPlayerBonus toggle on dr490n emu.");
+
 			AddParagraph(rtb_Credits, "Shoutout to @cuzbabytonight on community.pcgamingwiki.com (and hoxi I think) for figuring out which DLC Folders are safe to delete when on 1.27");
 
 			AddParagraph(rtb_Credits, "Shoutout to @Rayope for finding a Bug, fixing it himself, and providing us with the solution.Thanks mate. (P127 crashing on Token Gen when losing internet after P127 Startup)");
 
-			AddParagraph(rtb_Credits, "Shoutout to @burhac, @Crapideot, @Hoxi, @rollschuh2282, @GearsOfW, @Ollie, @Alfie, @AntherXx for being awesome members of the GTA Speedrunning community, always being nice and respectful, and providing Help / Testing. You guys are much appreciated.");
+			AddParagraph(rtb_Credits, "Shoutout to @burhac, @Crapideot, @rollschuh2282, @GearsOfW, @Ollie, @Alfie, @AntherXx for being awesome members of the GTA Speedrunning community, always being nice and respectful, and providing Help / Testing. You guys are much appreciated.");
 
 			AddParagraph(rtb_Credits, "");
 		}

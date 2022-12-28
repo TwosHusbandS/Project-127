@@ -230,7 +230,7 @@ namespace Project_127
 		/// <summary>
 		/// Property of other Buildinfo. Will be in the top message of logs
 		/// </summary>
-		public static string BuildInfo = "1.2.4.0 - Build 2";
+		public static string BuildInfo = "1.2.5.0 - Build 3";
 
 
 		/// <summary>
@@ -461,7 +461,7 @@ namespace Project_127
 
 			// Just checks if the GTAVInstallationPath is empty.
 			// So we dont have to "Force" the path every startup...
-			if (String.IsNullOrEmpty(Settings.GTAVInstallationPath) || String.IsNullOrEmpty(Settings.ZIPExtractionPath))
+			while (String.IsNullOrEmpty(Settings.GTAVInstallationPath) || String.IsNullOrEmpty(Settings.ZIPExtractionPath))
 			{
 				// Calling this to get the Path automatically
 				Settings.InitImportantSettings();

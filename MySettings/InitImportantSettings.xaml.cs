@@ -49,6 +49,7 @@ namespace Project_127.MySettings
             InitializeComponent();
             btn_Save.IsEnabled = false;
             pb_sth.Value = 5;
+            lbl_Header.Content = "Initiating the most important Settings Project 1.27 needs. (0/4)";
 
             AddGuesses();
             btn_No.Visibility = Visibility.Hidden;
@@ -139,13 +140,15 @@ namespace Project_127.MySettings
                 HelperClasses.Logger.Log("ZIP Path set: '" + NS_ZIPPath + "'");
 
                 pb_sth.Value = 55;
+                lbl_Header.Content = "Initiating the most important Settings Project 1.27 needs. (2/4)";
+
                 lbl_P127Path_Setting.Content = NS_ZIPPath;
+                lbl_P127Path_Setting.ToolTip = NS_ZIPPath;
 
                 lbl_Main.Content = "";
                 btn_No.Visibility = Visibility.Hidden;
                 btn_Yes.Visibility = Visibility.Hidden;
                 btn_BigBtn.Visibility = Visibility.Hidden;
-                Task.Delay(500).GetAwaiter();
 
                 SetUpDefaultEnableCopyingHardlinking();
             }
@@ -158,13 +161,15 @@ namespace Project_127.MySettings
                 HelperClasses.Logger.Log("GTAV Path set: '" + NS_GTAVPath + "'");
 
                 pb_sth.Value = 30;
+                lbl_Header.Content = "Initiating the most important Settings Project 1.27 needs. (1/4)";
+
                 lbl_GTAVPath_Setting.Content = NS_GTAVPath;
+                lbl_GTAVPath_Setting.ToolTip = NS_GTAVPath;
 
                 lbl_Main.Content = "";
                 btn_No.Visibility = Visibility.Hidden;
                 btn_Yes.Visibility = Visibility.Hidden;
                 btn_BigBtn.Visibility = Visibility.Hidden;
-                Task.Delay(500).GetAwaiter();
 
                 HelperClasses.Logger.Log("Asking about ZIP Path (Project_127_Folder) now");
                 lbl_Main.Content = "Project 1.27 needs a Folder where it installs all of its Components and saves Files for Upgrading and Downgrading.\nIt is recommend to do this on the same Drive / Partition as your GTAV Installation Path\nBest Case (and default Location) is your GTAV Path.\nDo you want to use the default recommendation?";
@@ -270,6 +275,8 @@ namespace Project_127.MySettings
                 HelperClasses.Logger.Log("Recommend Settings Value is the Current Settings Value");
 
                 pb_sth.Value = 80;
+                lbl_Header.Content = "Initiating the most important Settings Project 1.27 needs. (3/4)";
+
 
 
                 SetUpRetailer();
@@ -299,7 +306,18 @@ namespace Project_127.MySettings
 
         public void UserAnswer(bool replyvalue, string MyTag)
         {
-            if (MyTag == "ConfirmRetailer")
+            if (MyTag == "ConfirmRetailerGuess")
+            {
+                if (replyvalue)
+                {
+                    FinishSetup();
+                }
+                else
+                {
+                    ActualSetUpRetailer();
+                }
+            }
+            else if (MyTag == "ConfirmRetailer")
             {
                 NS_Retailer = cb_cb.SelectedItem.ToString();
                 FinishSetup();
@@ -321,7 +339,6 @@ namespace Project_127.MySettings
                 btn_No.Visibility = Visibility.Hidden;
                 btn_Yes.Visibility = Visibility.Hidden;
                 btn_BigBtn.Visibility = Visibility.Hidden;
-                Task.Delay(500).GetAwaiter();
                 SetUpRetailer();
             }
             else if (MyTag == "ConfirmGuess")
@@ -446,33 +463,47 @@ namespace Project_127.MySettings
         public void FinishSetup()
         {
             lbl_Retailer_Setting.Content = NS_Retailer;
+            lbl_Retailer_Setting.ToolTip = NS_Retailer;
             pb_sth.Value = 100;
+            lbl_Header.Content = "Initiating the most important Settings Project 1.27 needs. (4/4)";
+
             btn_No.Visibility = Visibility.Hidden;
             btn_Yes.Visibility = Visibility.Hidden;
             btn_BigBtn.Visibility = Visibility.Hidden;
             cb_cb.Visibility = Visibility.Hidden;
-            lbl_Main.Content = "Confirm your settings via the button\non the very bottom right.";
+            lbl_Main.Content = "Confirm your settings via the save-button\non the very bottom right.";
             btn_Save.IsEnabled = true;
         }
 
+        public void ActualSetUpRetailer()
+        {
+            btn_No.Visibility = Visibility.Visible;
+            btn_Yes.Visibility = Visibility.Hidden;
+            btn_BigBtn.Visibility = Visibility.Hidden;
+            btn_No.Content = "Confirm";
+            btn_No.Tag = "ConfirmRetailer";
+            lbl_Main.Content = "Select your Retailer.";
+            cb_cb.Visibility = Visibility.Visible;
+            cb_cb.ItemsSource = Enum.GetValues(typeof(Settings.Retailers));
+        }
 
         public void SetUpRetailer()
         {
             lbl_Hardlinking_Setting.Content = NS_EnableCopyFilesInsteadOfHardlinking;
+            lbl_Hardlinking_Setting.ToolTip = NS_EnableCopyFilesInsteadOfHardlinking;
             if (!String.IsNullOrWhiteSpace(NS_Retailer))
             {
-                FinishSetup();
+                // Ask if user actually wants it
+                btn_No.Visibility = Visibility.Visible;
+                btn_Yes.Visibility = Visibility.Visible;
+                btn_BigBtn.Visibility = Visibility.Hidden;
+                btn_No.Tag = "ConfirmRetailerGuess";
+                btn_Yes.Tag = "ConfirmRetailerGuess";
+                lbl_Main.Content = "Detected: '" + NS_Retailer + "' as your retailer.\nIs that correct?";
             }
             else
             {
-                btn_No.Visibility = Visibility.Visible;
-                btn_Yes.Visibility = Visibility.Hidden;
-                btn_BigBtn.Visibility = Visibility.Hidden;
-                btn_No.Content = "Confirm";
-                btn_No.Tag = "ConfirmRetailer";
-                lbl_Main.Content = "Select your Retailer.";
-                cb_cb.Visibility = Visibility.Visible;
-                cb_cb.ItemsSource = Enum.GetValues(typeof(Settings.Retailers));
+                ActualSetUpRetailer();
             }
 
         }
@@ -480,15 +511,35 @@ namespace Project_127.MySettings
 
         private void btn_Save_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("GTAVPath: '" + NS_GTAVPath + "'\nZIPPath: '" + NS_ZIPPath + "'\nHardlinkingSetting: '" + NS_EnableCopyFilesInsteadOfHardlinking + "'\nRetailer: '" + NS_Retailer + "'");
+            HelperClasses.Logger.Log("LogInfo - GTAVInstallationPath: '" + NS_GTAVPath + "'");
+            HelperClasses.Logger.Log("LogInfo - ZIPExtractionPath: '" + NS_ZIPPath + "'");
+            HelperClasses.Logger.Log("LogInfo - EnableCopyOverHardlink: '" + NS_EnableCopyFilesInsteadOfHardlinking + "'");
+            HelperClasses.Logger.Log("LogInfo - Retailer: '" + NS_Retailer + "'");
+            HelperClasses.Logger.Log("End of InitImportantSettings. Setting now and exiting.");
+
+            Settings.GTAVInstallationPath = NS_GTAVPath;
+            Settings.ChangeZIPExtractionPath(NS_ZIPPath);
+            Settings.EnableCopyFilesInsteadOfHardlinking = NS_EnableCopyFilesInsteadOfHardlinking;
+            Settings.Retailer = (Settings.Retailers)System.Enum.Parse(typeof(Settings.Retailers), NS_Retailer);
+
             this.Close();
         }
 
         private void btn_Exit_Click(object sender, RoutedEventArgs e)
         {
-            this.Close();
+            Popups.Popup yn = new Popups.Popup(Popups.Popup.PopupWindowTypes.PopupYesNo, "Are you sure you want to exit?\nYour new Settings will not save.");
+            yn.ShowDialog();
+            if (yn.DialogResult == true)
+            {
+                this.Close();
+            }
         }
 
+        private void Window_LocationChanged(object sender, EventArgs e)
+        {
+            MainWindow.MW.Left = this.Left;
+            MainWindow.MW.Top = this.Top;
+        }
     }
 }
 

@@ -69,6 +69,11 @@ namespace Project_127.MySettings
 		/// </summary>
 		public static void InitImportantSettings()
 		{
+			InitImportantSettings IIS = new InitImportantSettings();
+			IIS.ShowDialog();
+			return;
+
+			/*
 			// Cleaning the GTAV Installation Path since we are guessing (and manually getting it)
 			Settings.GTAVInstallationPath = "";
 
@@ -230,6 +235,7 @@ namespace Project_127.MySettings
 			HelperClasses.Logger.Log("LogInfo - EnableCopyOverHardlink: '" + Settings.EnableCopyFilesInsteadOfHardlinking + "'");
 			HelperClasses.Logger.Log("LogInfo - Retailer: '" + Settings.Retailer + "'");
 			HelperClasses.Logger.Log("End of InitImportantSettings");
+			*/
 		}
 
 
@@ -625,7 +631,12 @@ namespace Project_127.MySettings
 			{
 				HelperClasses.Logger.Log("Resetting Settings STARTED, this will explain the following messages");
 				Settings.ResetSettings();
-				Settings.InitImportantSettings();
+
+				// Just checks if the GTAVInstallationPath is empty.
+				while (String.IsNullOrEmpty(Settings.GTAVInstallationPath) || String.IsNullOrEmpty(Settings.ZIPExtractionPath))
+				{
+					Settings.InitImportantSettings();
+				}
 				Settings.FirstLaunch = false;
 				RefreshGUI();
 			}
