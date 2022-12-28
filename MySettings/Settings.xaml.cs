@@ -752,6 +752,7 @@ namespace Project_127.MySettings
 			ButtonMouseOverMagic(btn_cb_Set_EnableJumpscriptUseCustomScript);
 			ButtonMouseOverMagic(btn_cb_Set_EnablePreOrderBonus);
             ButtonMouseOverMagic(btn_cb_Set_EnableReturningPlayer);
+            ButtonMouseOverMagic(btn_cb_Set_EnableRunAsAdmin);
             ButtonMouseOverMagic(btn_cb_Set_EnableAutoStartFPSLimiter);
 			ButtonMouseOverMagic(btn_cb_Set_EnableScripthookOnDowngraded);
 			ButtonMouseOverMagic(btn_cb_Set_EnableAutoStartLiveSplit);
@@ -989,7 +990,10 @@ namespace Project_127.MySettings
                 case "btn_cb_Set_EnableReturningPlayer":
                     SetCheckBoxBackground(myBtn, Settings.EnableReturningPlayer);
                     break;
-                case "btn_cb_Set_AutoSetHighPriority":
+				case "btn_cb_Set_EnableRunAsAdmin":
+					SetCheckBoxBackground(myBtn, Settings.EnableRunAsAdminDowngraded);
+					break;
+				case "btn_cb_Set_AutoSetHighPriority":
 					SetCheckBoxBackground(myBtn, Settings.EnableAutoSetHighPriority);
 					break;
 				case "btn_cb_Set_OnlyAutoStartProgramsWhenDowngraded":
@@ -1122,8 +1126,8 @@ namespace Project_127.MySettings
 		private void CodeSnipped()
 		{
 
+			Grid_Settings_GTA.RowDefinitions.RemoveAt(7);
 			Grid_Settings_GTA.RowDefinitions.RemoveAt(6);
-			Grid_Settings_GTA.RowDefinitions.RemoveAt(5);
 			RowDefinition Row_SCL_Options = new RowDefinition();
 			Row_SCL_Options.Height = new GridLength(100);
 			RowDefinition Row_DragonEmu_Options = new RowDefinition();
@@ -1140,8 +1144,8 @@ namespace Project_127.MySettings
 				Grid_Settings_GTA.RowDefinitions.Add(Row_SCL_Options);
 				Grid_Settings_GTA.RowDefinitions.Add(Row_DragonEmu_Options);
 
-				Grid.SetRow(brdr_SCLOptions, 5);
-				Grid.SetRow(brdr_DragonEmuOptions, 6);
+				Grid.SetRow(brdr_SCLOptions, 6);
+				Grid.SetRow(brdr_DragonEmuOptions, 7);
 
 				btn_HideSCLOptions.Visibility = Visibility.Hidden;
 				btn_HideEmuOptions.Visibility = Visibility.Visible;
@@ -1166,8 +1170,8 @@ namespace Project_127.MySettings
 				Grid_Settings_GTA.RowDefinitions.Add(Row_DragonEmu_Options);
 				Grid_Settings_GTA.RowDefinitions.Add(Row_SCL_Options);
 
-				Grid.SetRow(brdr_DragonEmuOptions, 5);
-				Grid.SetRow(brdr_SCLOptions, 6);
+				Grid.SetRow(brdr_DragonEmuOptions, 6);
+				Grid.SetRow(brdr_SCLOptions, 7);
 
 				btn_HideSCLOptions.Visibility = Visibility.Visible;
 				btn_HideEmuOptions.Visibility = Visibility.Hidden;
@@ -1315,7 +1319,10 @@ namespace Project_127.MySettings
                 case "btn_cb_Set_EnableReturningPlayer":
                     Settings.EnableReturningPlayer = !Settings.EnableReturningPlayer;
                     break;
-                case "btn_cb_Set_EnableCoreFix":
+				case "btn_cb_Set_EnableRunAsAdmin":
+					Settings.EnableRunAsAdminDowngraded = !Settings.EnableRunAsAdminDowngraded;
+					break;
+				case "btn_cb_Set_EnableCoreFix":
 					Settings.EnableCoreFix = !Settings.EnableCoreFix;
 					break;
 				case "btn_cb_Set_AutoSetHighPriority":

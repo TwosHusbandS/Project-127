@@ -335,6 +335,7 @@ namespace Project_127
 			{"EnableScripthookOnDowngraded", "False"},
 			{"EnableOverWriteGTACommandLineArgs", "False"},
 			{"EnableCoreFix", "True"},
+			{"EnableRunAsAdminDowngraded", "False"},
 			{"OverWriteGTACommandLineArgs", ""},
    
 			// Extra Features

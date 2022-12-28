@@ -1040,6 +1040,21 @@ namespace Project_127.MySettings
 		}
 
 		/// <summary>
+		/// Settings RunAsAdmin. Gets and Sets from the Dictionary.
+		/// </summary>
+		public static bool EnableRunAsAdminDowngraded
+		{
+			get
+			{
+				return GetBoolFromString(GetSetting("EnableRunAsAdminDowngraded"));
+			}
+			set
+			{
+				SetSetting("EnableRunAsAdminDowngraded", value.ToString());
+			}
+		}
+
+		/// <summary>
 		/// Settings EnableAutoStartJumpScript. Gets and Sets from the Dictionary.
 		/// </summary>
 		public static bool EnableAutoStartJumpScript
