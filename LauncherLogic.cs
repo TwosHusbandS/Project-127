@@ -1420,9 +1420,16 @@ namespace Project_127
 		/// <returns></returns>
 		public static string GetGTAVPathMagicRockstar()
 		{
-			HelperClasses.Logger.Log("GTAV Path Magic by Rockstar", 2);
-			RegistryKey myRK2 = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64).OpenSubKey(@"SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\{5EFC6C07-6B87-43FC-9524-F9E967241741}");
-			return HelperClasses.RegeditHandler.GetValue(myRK2, "InstallLocation");
+			try
+			{
+				HelperClasses.Logger.Log("GTAV Path Magic by Rockstar", 2);
+				RegistryKey myRK2 = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64).OpenSubKey(@"SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\{5EFC6C07-6B87-43FC-9524-F9E967241741}");
+				return HelperClasses.RegeditHandler.GetValue(myRK2, "InstallLocation");
+			}
+			catch
+			{
+				return "";
+			}
 		}
 
 
@@ -1444,7 +1451,7 @@ namespace Project_127
 				MyLines[i] = MyLines[i].Replace("\t", "").Replace(" ", "");
 
 				// String from Regex: #"\d{1,4}""[a-zA-Z\\:]*"# (yes we are matching ", I used # as semicolons for string beginnign and end
-				Regex MyRegex = new Regex("\"\\d{1,4}\"\"[a-zA-Z\\\\:]*\"");
+				Regex MyRegex = new Regex("\"path\"\"[a-zA-Z]:\\\\");
 				Match MyMatch = MyRegex.Match(MyLines[i]);
 
 				// Regex Match them to see if we like them
