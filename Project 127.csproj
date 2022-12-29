@@ -210,6 +210,9 @@
     <Compile Include="LaunchAlternative.cs" />
     <Compile Include="MainWindow_ContextMenus.cs" />
     <Compile Include="MainWindow_UserInteractions.cs" />
+    <Compile Include="MySettings\InitImportantSettings.xaml.cs">
+      <DependentUpon>InitImportantSettings.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Overlay\EmptyPage.xaml.cs">
       <DependentUpon>EmptyPage.xaml</DependentUpon>
     </Compile>
@@ -301,6 +304,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="GTA_Page.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MySettings\InitImportantSettings.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -428,6 +435,7 @@
     <None Include="Installer\Info\Changelogs\V_1_2_2_0_Changelog.md" />
     <None Include="Installer\Info\Changelogs\V_1_2_2_2_Changelog.md" />
     <None Include="Installer\Info\Changelogs\V_1_2_2_3_Changelog.md" />
+    <None Include="Installer\Info\Changelogs\V_1_2_5_0_Changelog.md" />
     <None Include="Installer\Info\Changelogs\V_1_2_4_0_Changelog.md" />
     <None Include="Installer\Info\Changelogs\V_1_2_3_0_Changelog.md" />
     <None Include="Installer\Info\Help.md" />

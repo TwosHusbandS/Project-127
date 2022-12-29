@@ -230,7 +230,7 @@ namespace Project_127
 		/// <summary>
 		/// Property of other Buildinfo. Will be in the top message of logs
 		/// </summary>
-		public static string BuildInfo = "1.2.4.0 - Build 2";
+		public static string BuildInfo = "1.2.5.1 - Build 1";
 
 
 		/// <summary>
@@ -246,8 +246,15 @@ namespace Project_127
 		{
 			get
 			{
-				RegistryKey myRK = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64).CreateSubKey("SOFTWARE").CreateSubKey("WOW6432Node").CreateSubKey("Valve").CreateSubKey("Steam");
-				return HelperClasses.RegeditHandler.GetValue(myRK, "InstallPath");
+				try
+				{
+					RegistryKey myRK = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64).CreateSubKey("SOFTWARE").CreateSubKey("WOW6432Node").CreateSubKey("Valve").CreateSubKey("Steam");
+					return HelperClasses.RegeditHandler.GetValue(myRK, "InstallPath");
+				}
+				catch
+				{
+					return LauncherLogic.GTAVFilePath;
+				}
 			}
 		}
 
@@ -335,6 +342,7 @@ namespace Project_127
 			{"EnableScripthookOnDowngraded", "False"},
 			{"EnableOverWriteGTACommandLineArgs", "False"},
 			{"EnableCoreFix", "True"},
+			{"EnableRunAsAdminDowngraded", "False"},
 			{"OverWriteGTACommandLineArgs", ""},
    
 			// Extra Features
@@ -453,7 +461,7 @@ namespace Project_127
 
 			// Just checks if the GTAVInstallationPath is empty.
 			// So we dont have to "Force" the path every startup...
-			if (String.IsNullOrEmpty(Settings.GTAVInstallationPath) || String.IsNullOrEmpty(Settings.ZIPExtractionPath))
+			while (String.IsNullOrEmpty(Settings.GTAVInstallationPath) || String.IsNullOrEmpty(Settings.ZIPExtractionPath))
 			{
 				// Calling this to get the Path automatically
 				Settings.InitImportantSettings();
@@ -669,6 +677,9 @@ namespace Project_127
 
 			//INIT Special Patcher
 			initGamePatches();
+
+			// Read Settings of Emu Profile for ReturningPlayerContent
+			LauncherLogic.SetReturningPlayerBonusSetting();
 
 			//Init pointer-path tester
 			preparsedPPs = ASPointerPath.pointerPathParse(Settings.PointerPathTesterString);

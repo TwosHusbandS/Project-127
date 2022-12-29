@@ -69,6 +69,11 @@ namespace Project_127.MySettings
 		/// </summary>
 		public static void InitImportantSettings()
 		{
+			InitImportantSettings IIS = new InitImportantSettings();
+			IIS.ShowDialog();
+			return;
+
+			/*
 			// Cleaning the GTAV Installation Path since we are guessing (and manually getting it)
 			Settings.GTAVInstallationPath = "";
 
@@ -230,6 +235,7 @@ namespace Project_127.MySettings
 			HelperClasses.Logger.Log("LogInfo - EnableCopyOverHardlink: '" + Settings.EnableCopyFilesInsteadOfHardlinking + "'");
 			HelperClasses.Logger.Log("LogInfo - Retailer: '" + Settings.Retailer + "'");
 			HelperClasses.Logger.Log("End of InitImportantSettings");
+			*/
 		}
 
 
@@ -625,7 +631,12 @@ namespace Project_127.MySettings
 			{
 				HelperClasses.Logger.Log("Resetting Settings STARTED, this will explain the following messages");
 				Settings.ResetSettings();
-				Settings.InitImportantSettings();
+
+				// Just checks if the GTAVInstallationPath is empty.
+				while (String.IsNullOrEmpty(Settings.GTAVInstallationPath) || String.IsNullOrEmpty(Settings.ZIPExtractionPath))
+				{
+					Settings.InitImportantSettings();
+				}
 				Settings.FirstLaunch = false;
 				RefreshGUI();
 			}
@@ -752,6 +763,7 @@ namespace Project_127.MySettings
 			ButtonMouseOverMagic(btn_cb_Set_EnableJumpscriptUseCustomScript);
 			ButtonMouseOverMagic(btn_cb_Set_EnablePreOrderBonus);
             ButtonMouseOverMagic(btn_cb_Set_EnableReturningPlayer);
+            ButtonMouseOverMagic(btn_cb_Set_EnableRunAsAdmin);
             ButtonMouseOverMagic(btn_cb_Set_EnableAutoStartFPSLimiter);
 			ButtonMouseOverMagic(btn_cb_Set_EnableScripthookOnDowngraded);
 			ButtonMouseOverMagic(btn_cb_Set_EnableAutoStartLiveSplit);
@@ -858,6 +870,8 @@ namespace Project_127.MySettings
 						lbl_SettingsHeader.Content = "GTA & Launch Settings";
 						sv_Settings_GTA.ScrollToVerticalOffset(0);
 
+						LauncherLogic.SetReturningPlayerBonusSetting();
+						ButtonMouseOverMagic(btn_cb_Set_EnableReturningPlayer);
 						CodeSnipped();
 						break;
 
@@ -987,7 +1001,10 @@ namespace Project_127.MySettings
                 case "btn_cb_Set_EnableReturningPlayer":
                     SetCheckBoxBackground(myBtn, Settings.EnableReturningPlayer);
                     break;
-                case "btn_cb_Set_AutoSetHighPriority":
+				case "btn_cb_Set_EnableRunAsAdmin":
+					SetCheckBoxBackground(myBtn, Settings.EnableRunAsAdminDowngraded);
+					break;
+				case "btn_cb_Set_AutoSetHighPriority":
 					SetCheckBoxBackground(myBtn, Settings.EnableAutoSetHighPriority);
 					break;
 				case "btn_cb_Set_OnlyAutoStartProgramsWhenDowngraded":
@@ -1120,8 +1137,8 @@ namespace Project_127.MySettings
 		private void CodeSnipped()
 		{
 
+			Grid_Settings_GTA.RowDefinitions.RemoveAt(7);
 			Grid_Settings_GTA.RowDefinitions.RemoveAt(6);
-			Grid_Settings_GTA.RowDefinitions.RemoveAt(5);
 			RowDefinition Row_SCL_Options = new RowDefinition();
 			Row_SCL_Options.Height = new GridLength(100);
 			RowDefinition Row_DragonEmu_Options = new RowDefinition();
@@ -1138,8 +1155,8 @@ namespace Project_127.MySettings
 				Grid_Settings_GTA.RowDefinitions.Add(Row_SCL_Options);
 				Grid_Settings_GTA.RowDefinitions.Add(Row_DragonEmu_Options);
 
-				Grid.SetRow(brdr_SCLOptions, 5);
-				Grid.SetRow(brdr_DragonEmuOptions, 6);
+				Grid.SetRow(brdr_SCLOptions, 6);
+				Grid.SetRow(brdr_DragonEmuOptions, 7);
 
 				btn_HideSCLOptions.Visibility = Visibility.Hidden;
 				btn_HideEmuOptions.Visibility = Visibility.Visible;
@@ -1147,6 +1164,7 @@ namespace Project_127.MySettings
 				Rect_Bullshit_1.Visibility = Visibility.Hidden;
 				Rect_Bullshit_2.Visibility = Visibility.Hidden;
 				Rect_Bullshit_3.Visibility = Visibility.Hidden;
+				Rect_Bullshit_33.Visibility = Visibility.Hidden;
 				Rect_Bullshit_4.Visibility = Visibility.Visible;
 
 				Rect_HideOptions_HideFromSteam.Visibility = Visibility.Hidden;
@@ -1163,8 +1181,8 @@ namespace Project_127.MySettings
 				Grid_Settings_GTA.RowDefinitions.Add(Row_DragonEmu_Options);
 				Grid_Settings_GTA.RowDefinitions.Add(Row_SCL_Options);
 
-				Grid.SetRow(brdr_DragonEmuOptions, 5);
-				Grid.SetRow(brdr_SCLOptions, 6);
+				Grid.SetRow(brdr_DragonEmuOptions, 6);
+				Grid.SetRow(brdr_SCLOptions, 7);
 
 				btn_HideSCLOptions.Visibility = Visibility.Visible;
 				btn_HideEmuOptions.Visibility = Visibility.Hidden;
@@ -1172,6 +1190,7 @@ namespace Project_127.MySettings
 				Rect_Bullshit_1.Visibility = Visibility.Visible;
 				Rect_Bullshit_2.Visibility = Visibility.Visible;
 				Rect_Bullshit_3.Visibility = Visibility.Visible;
+				Rect_Bullshit_33.Visibility = Visibility.Visible;
 				Rect_Bullshit_4.Visibility = Visibility.Hidden;
 
 
@@ -1242,6 +1261,7 @@ namespace Project_127.MySettings
 			Rect_Bullshit_1.Visibility = Visibility.Visible;
 			Rect_Bullshit_2.Visibility = Visibility.Visible;
 			Rect_Bullshit_3.Visibility = Visibility.Visible;
+			Rect_Bullshit_33.Visibility = Visibility.Visible;
 
 
 
@@ -1309,8 +1329,12 @@ namespace Project_127.MySettings
 					break;
                 case "btn_cb_Set_EnableReturningPlayer":
                     Settings.EnableReturningPlayer = !Settings.EnableReturningPlayer;
-                    break;
-                case "btn_cb_Set_EnableCoreFix":
+					LauncherLogic.SetReturningPlayerBonusSetting();
+					break;
+				case "btn_cb_Set_EnableRunAsAdmin":
+					Settings.EnableRunAsAdminDowngraded = !Settings.EnableRunAsAdminDowngraded;
+					break;
+				case "btn_cb_Set_EnableCoreFix":
 					Settings.EnableCoreFix = !Settings.EnableCoreFix;
 					break;
 				case "btn_cb_Set_AutoSetHighPriority":
