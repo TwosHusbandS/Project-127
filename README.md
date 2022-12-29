@@ -51,7 +51,7 @@ Shamelessly stolen from: https://github.com/othneildrew/Best-README-Template
 	.
     <a href="#contact">Contact me</a>
 	.
-	  <a href="Installer/Info/Changelogs/V_1_2_5_0_Changelog.md">Changelog</a>
+	  <a href="Installer/Info/Changelogs/V_1_2_5_1_Changelog.md">Changelog</a>
   </p>
 </p>
 
@@ -91,7 +91,7 @@ Over time it grew with Features and Launch - Capabilities
 
 Note:
 
-Project 1.27 now has the stability, user experience and core features we envisioned at the start of this project. While @dr490n and me (@thS / TwosHusbandS) both have ideas for potentially improvements and we may get around to working on them at some point, Project 1.27 is not under active development as of this very second (28th December, 2022). Big bugfixes etc. will still happen if needed, but we are making no promises either way. We want to thank everyone who has been a part of this incredible journey.
+Project 1.27 now has the stability, user experience and core features we envisioned at the start of this project. While @dr490n and me (@thS / TwosHusbandS) both have ideas for potentially improvements and we may get around to working on them at some point, Project 1.27 is not under active development as of this very second (29th December, 2022). Big bugfixes etc. will still happen if needed, but we are making no promises either way. We want to thank everyone who has been a part of this incredible journey.
 
 ### Help, How to get started, Support & Contact
 
@@ -222,7 +222,7 @@ Discord - [@ths#0305][discord-url]
 [license-url]: https://github.com/TwosHusbandS/Project-127/blob/master/LICENSE
 [maintained-shield]: https://img.shields.io/badge/Maintained-No-FFDB3A?style=plastic
 [maintained-url]: #about-the-project
-[version-shield]: https://img.shields.io/badge/Version-1.2.5.0_Installer-4DC71F?style=plastic
+[version-shield]: https://img.shields.io/badge/Version-1.2.5.1_Installer-4DC71F?style=plastic
 [help-shield]: https://img.shields.io/badge/Help-Here-F48041?style=plastic
 [features-shield]: https://img.shields.io/badge/Features-Click_Me-802BCF?style=plastic
 

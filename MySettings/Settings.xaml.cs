@@ -1329,7 +1329,8 @@ namespace Project_127.MySettings
 					break;
                 case "btn_cb_Set_EnableReturningPlayer":
                     Settings.EnableReturningPlayer = !Settings.EnableReturningPlayer;
-                    break;
+					LauncherLogic.SetReturningPlayerBonusSetting();
+					break;
 				case "btn_cb_Set_EnableRunAsAdmin":
 					Settings.EnableRunAsAdminDowngraded = !Settings.EnableRunAsAdminDowngraded;
 					break;

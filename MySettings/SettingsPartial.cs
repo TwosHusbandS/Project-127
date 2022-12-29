@@ -566,8 +566,8 @@ namespace Project_127.MySettings
             }
             set
             {
-                SetSetting("EnableReturningPlayer", value.ToString());
 				LauncherLogic.SetReturningPlayerBonus(value);
+                SetSetting("EnableReturningPlayer", value.ToString());
             }
         }
 
