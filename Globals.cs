@@ -318,7 +318,9 @@ namespace Project_127
 			{"ZIPExtractionPath", Process.GetCurrentProcess().MainModule.FileName.Substring(0, Process.GetCurrentProcess().MainModule.FileName.LastIndexOf('\\')) },
 			{"EnableLogging", "True"},
 			{"EnableAlternativeLaunch", "False"},
-			{"EnableAlternativeLaunchForceCProgramFiles", "False"},
+            {"EnableBase124", "false"},
+            {"EnableDragonEmu", "true"},
+            {"EnableAlternativeLaunchForceCProgramFiles", "False"},
 			{"EnableCopyFilesInsteadOfHardlinking", "False"},
 			{"AutoMTLAuthOnStartup", "True"},
 			{"PostMTLAction", "MinimizeRGL"},
@@ -697,7 +699,7 @@ namespace Project_127
 
 			Auth.ROSIntegration.CEFInitialize();
 
-			if (LauncherLogic.LaunchWay == LauncherLogic.LaunchWays.DragonEmu)
+			if (LauncherLogic.LaunchWay == LauncherLogic.LaunchWays.DragonEmu || LauncherLogic.LaunchWay == LauncherLogic.LaunchWays.Base124)
 			{
 				if (LauncherLogic.AuthWay == LauncherLogic.AuthWays.MTL)
 				{

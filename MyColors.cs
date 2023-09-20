@@ -28,7 +28,8 @@ namespace Project_127
 		public static Brush MyColorOrange { get; private set; } = (Brush)new BrushConverter().ConvertFromString("#E35627");
 		public static Brush MyColorGray { get; private set; } = (Brush)new BrushConverter().ConvertFromString("#5a6373");
 		public static Brush MyColorGreen { get; private set; } = (Brush)new BrushConverter().ConvertFromString("#4cd213");
-		public static Brush MyColorEmu { get; private set; } = (Brush)new BrushConverter().ConvertFromString("#E35627");
+        public static Brush BrightGreen { get; private set; } = (Brush)new BrushConverter().ConvertFromString("#00FF00");
+        public static Brush MyColorEmu { get; private set; } = (Brush)new BrushConverter().ConvertFromString("#E35627");
 		public static Brush MyColorSCL { get; private set; } = (Brush)new BrushConverter().ConvertFromString("#3599e6");
 
 		public static Brush MyColorEmuHidden { get; private set; } = MyColorOffWhite85;

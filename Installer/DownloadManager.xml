@@ -208,6 +208,33 @@
             <subassembly target="MISC_FILES"/>
         </requires>
     </subassembly>
+
+	<subassembly name="124_DR490N" root="DowngradeFiles124\" version="1.15.0.0">
+		<file name="PlayGTAV.exe" linked="true" subassembly="EMU_BASE_SUBASSEMBLY"/>
+		<file name="launc.dll" linked="true" subassembly="EMU_BASE_SUBASSEMBLY"/>
+		<file name="orig_socialclub.dll" linked="true" subassembly="EMU_BASE_SUBASSEMBLY"/>
+		<file name="ROSCrypto.dll" linked="true" subassembly="EMU_BASE_SUBASSEMBLY"/>
+		<file name="socialclub.dll" linked="true" subassembly="EMU_BASE_SUBASSEMBLY"/>
+		<file name="GFSDK_ShadowLib.win64.dll" linked="true" subassembly="EMU_BASE_SUBASSEMBLY"/>
+
+		<file name="GTA5.exe">
+			<hash>BDF825CFEE2DBCE39DE5802F4464ACB8</hash>
+			<mirror>http://gtav.anushk.net/downloadManager/subassemblies/am124rockstar/GTA5.exe</mirror>
+		</file>
+
+		<folder name="update">
+			<file name="update.rpf" linked="true" subassembly="124_BASE_SUBASSEMBLY"/>
+		</folder>
+
+		<file name="bink2w64.dll" linked="true" subassembly="EMU_BASE_SUBASSEMBLY"/>
+		<file name="x64a.rpf" linked="true" subassembly="127_BASE_SUBASSEMBLY"/>
+
+		<requires>
+			<subassembly target="124_BASE_SUBASSEMBLY"/>
+			<subassembly target="EMU_BASE_SUBASSEMBLY"/>
+			<subassembly target="MISC_FILES"/>
+		</requires>
+	</subassembly>
     
 
     <subassembly name="EMU_BASE_SUBASSEMBLY" type="common" version ="1.15.0.0">
@@ -216,7 +243,7 @@
             <mirror>http://gtav.anushk.net/downloadManager/subassemblies/emuv14/PlayGTAV.exe</mirror>
         </file>
         <file name="launc.dll">
-            <hash>D3450084CD84FC61215843D64D25FE65</hash>
+            <hash>405F837067F8BB430872675B66AEF15E</hash>
             <mirror>http://gtav.anushk.net/downloadManager/subassemblies/emuv14/launc.dll</mirror>
         </file>
         <file name="orig_socialclub.dll">
@@ -228,7 +255,7 @@
             <mirror>http://gtav.anushk.net/downloadManager/subassemblies/emuv14/ROSCrypto.dll</mirror>
         </file>
         <file name="socialclub.dll">
-            <hash>B14C1AEC871D1CFB3B5E2E2D6EDC8BEA</hash>
+            <hash>A04F031AB2E56FE3D5C5AC10DEACCC4D</hash>
             <mirror>http://gtav.anushk.net/downloadManager/subassemblies/emuv15/socialclub.dll</mirror>
         </file>
         <file name="GFSDK_ShadowLib.win64.dll">

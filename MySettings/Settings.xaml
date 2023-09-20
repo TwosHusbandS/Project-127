@@ -215,20 +215,23 @@
                             </Popup>
 
                       
-                            <Border Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" BorderThickness="2" Margin="20,10" BorderBrush="{x:Static local:MyColors.MyColorWhite}" Background="{x:Static local:MyColors.MyColorOffBlack70}" x:Name="brdr_LaunchWays">
+                            <Border Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="3" BorderThickness="2" Margin="7,7,7,7" BorderBrush="{x:Static local:MyColors.MyColorWhite}" Background="{x:Static local:MyColors.MyColorOffBlack70}" x:Name="brdr_LaunchWays">
                                 <Grid>
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="*"/>
                                         <RowDefinition Height="*"/>
+										<RowDefinition Height="*"/>
                                     </Grid.RowDefinitions>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="*"/>
+										<ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
-                                    <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" x:Name="lbl_LaunchWays" Content="Launch - Method" Style="{StaticResource lbl_Set_Info}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                    <Button Grid.Row="1" Grid.Column="0" Margin="20,0,20,15" x:Name="btn_LaunchWays_SCL" ToolTip="Launch through original Socialclub. This needs the corresponding Launch-Through-SocialClub Component" Style="{StaticResource btn_LaunchWays_SCL}" Content="Launch through Social Club" Click="btn_LaunchWays_SCL_Click"/>
-                                    <Button Grid.Row="1" Grid.Column="1" Margin="20,0,20,15" x:Name="btn_LaunchWays_DragonEmu" ToolTip="Launch through @dr490ns Launcher. Only needs 'Required Files'" Style="{StaticResource btn_LaunchWays_DragonEmu}" Content="Launch through Dr490n Launcher" Click="btn_LaunchWays_DragonEmu_Click"/>
-                                    <Rectangle x:Name="Rect_HideOptions_SCL_Launch" Grid.Row="1" Grid.Column="0" Margin="20,0,20,15" Fill="{x:Static local:MyColors.MyColorOffWhite85}" ToolTip="Not available on Epic."/>
+                                    <Label Grid.Row="0" Grid.Column="0" Grid.RowSpan="1" Grid.ColumnSpan="3" Margin="0,0,0,0" x:Name="lbl_LaunchWays" Content="Launch - Method" Style="{StaticResource lbl_Set_Info}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    <Button Grid.Row="1" Grid.Column="0" Margin="7,7,7,7" Grid.RowSpan="2" x:Name="btn_LaunchWays_SCL" ToolTip="Launch through original Socialclub. This needs the corresponding Launch-Through-SocialClub Component" Style="{StaticResource btn_LaunchWays_SCL}" Content="Launch via Social Club" Click="btn_LaunchWays_SCL_Click"/>
+                                    <Button Grid.Row="1" Grid.Column="1" Margin="7,7,7,7" Grid.RowSpan="2" x:Name="btn_LaunchWays_DragonEmu" ToolTip="Launch 1.27 through @dr490ns Launcher. Only needs 'Required Files'" Style="{StaticResource btn_LaunchWays_DragonEmu}" Content="1.27 via dr490n Launcher" Click="btn_LaunchWays_DragonEmu_Click"/>
+                                    <Button Grid.Row="1" Grid.Column="2" Margin="7,7,7,7" Grid.RowSpan="2" x:Name="btn_LaunchWays_Base124" ToolTip="Launch 1.24 through @dr490ns Launcher." Style="{StaticResource btn_LaunchWays_Base124}" Content="1.24 via dr490n Launcher" Click="btn_LaunchWays_Base124_Click"/>
+                                    <Rectangle x:Name="Rect_HideOptions_SCL_Launch" Grid.Row="1" Grid.Column="0"  Fill="{x:Static local:MyColors.MyColorOffWhite85}" ToolTip="Not available on Epic."/>
                                 </Grid>
                             </Border>
 

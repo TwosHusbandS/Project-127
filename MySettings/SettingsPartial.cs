@@ -16,6 +16,7 @@ using System.Windows.Forms;
 using System.Reflection;
 using System.ComponentModel;
 using System.IO;
+using static Project_127.LauncherLogic;
 
 namespace Project_127.MySettings
 {
@@ -520,11 +521,33 @@ namespace Project_127.MySettings
 			}
 		}
 
+        public static bool EnableBase124
+        {
+            get
+            {
+                return GetBoolFromString(GetSetting("EnableBase124"));
+            }
+            set
+            {
+                SetSetting("EnableBase124", value.ToString());
+            }
+        }
+        public static bool EnableDragonEmu
+        {
+            get
+            {
+                return GetBoolFromString(GetSetting("EnableDragonEmu"));
+            }
+            set
+            {
+                SetSetting("EnableDragonEmu", value.ToString());
+            }
+        }
 
-		/// <summary>
-		/// Settings EnableAlternativeLaunchForceCProgramFiles. Gets and Sets from the Dictionary.
-		/// </summary>
-		public static bool EnableAlternativeLaunchForceCProgramFiles
+        /// <summary>
+        /// Settings EnableAlternativeLaunchForceCProgramFiles. Gets and Sets from the Dictionary.
+        /// </summary>
+        public static bool EnableAlternativeLaunchForceCProgramFiles
 		{
 			get
 			{
