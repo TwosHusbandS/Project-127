@@ -1216,8 +1216,8 @@ namespace Project_127.MySettings
 					Rect_HideOptions_HideFromSteam.Visibility = Visibility.Hidden;
 				}
 			}
-			else
-			{
+            if (LauncherLogic.LaunchWay == LauncherLogic.LaunchWays.Base124)
+            {
                 btn_LaunchWays_SCL.Style = Application.Current.FindResource("btn_LaunchWays_SCL") as Style;
                 btn_LaunchWays_DragonEmu.Style = Application.Current.FindResource("btn_LaunchWays_DragonEmu") as Style;
                 btn_LaunchWays_Base124.Style = Application.Current.FindResource("btn_LaunchWays_Base124_Enabled") as Style;
@@ -1265,8 +1265,8 @@ namespace Project_127.MySettings
 
 		private void btn_LaunchWays_SCL_Click(object sender, RoutedEventArgs e)
 		{
-			if (LauncherLogic.LaunchWay != LauncherLogic.LaunchWays.SocialClubLaunch)
-			{
+            if (LauncherLogic.LaunchWay != LauncherLogic.LaunchWays.SocialClubLaunch)
+			{ 
                 Settings.EnableAlternativeLaunch = true;
                 Settings.EnableBase124 = false;
                 Settings.EnableDragonEmu = false;

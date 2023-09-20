@@ -618,8 +618,13 @@ namespace Project_127
 					{
 						Settings.AllFilesEverPlacedInsideGTAMyAdd(tmp_i.Substring(LauncherLogic.UpgradeFilePathBackup.Length).TrimStart('\\'));
 					}
+                    string[] tmp8 = HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(LauncherLogic.DowngradeBase124FilePath);
+                    foreach (string tmp_i in tmp8)
+                    {
+                        Settings.AllFilesEverPlacedInsideGTAMyAdd(tmp_i.Substring(LauncherLogic.DowngradeBase124FilePath.Length).TrimStart('\\'));
+                    }
 
-					Settings.AntiVirusFix();
+                    Settings.AntiVirusFix();
 				}
 
 				if (Settings.LastLaunchedVersion < new Version("1.2.2.0"))

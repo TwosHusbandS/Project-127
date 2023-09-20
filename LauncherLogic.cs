@@ -329,7 +329,21 @@ namespace Project_127
             }
             set
             {
-                    if (ComponentManager.RecommendUpgradedGTA())
+                if (Settings.Retailer == Settings.Retailers.Epic)
+                {
+                    if (value == LaunchWays.SocialClubLaunch)
+                    {
+                        Settings.EnableAlternativeLaunch = false;
+                        Settings.EnableDragonEmu = true;
+                        Settings.EnableBase124 = false;
+                        return;
+                        // dont allow changing to social club
+                        //new Popup(Popup.PopupWindowTypes.PopupOk, "LaunchWay is set to DragonEmu as SC Launch has no Epic support.").ShowDialog();
+                        
+
+                    }
+                }
+                if (ComponentManager.RecommendUpgradedGTA())
                 {
                     if (value == LaunchWays.SocialClubLaunch)
                     {
@@ -440,8 +454,11 @@ namespace Project_127
                         }
                     }
                     if (LauncherLogic.LaunchWay == LauncherLogic.LaunchWays.Base124)
+                    {
                         return DowngradeBase124FilePath;
-                        {
+                    }
+                        else 
+                    {
                         return DowngradeEmuFilePath;
                     }
                 }
