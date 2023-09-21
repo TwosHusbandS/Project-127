@@ -244,7 +244,7 @@
         </file>
         <file name="launc.dll">
             <hash>405F837067F8BB430872675B66AEF15E</hash>
-            <mirror>http://gtav.anushk.net/downloadManager/subassemblies/emuv14/launc.dll</mirror>
+            <mirror><![CDATA[https://www.dropbox.com/scl/fi/xdv4utl28lr6wndbm6hna/launc.dll?rlkey=11rrpw06ak9v8hqlq3rhxd4o1&raw=1]]></mirror>
         </file>
         <file name="orig_socialclub.dll">
             <hash>B33FD2FCDD6E2EF9BD55DEC39D1DDFD2</hash>
@@ -256,7 +256,7 @@
         </file>
         <file name="socialclub.dll">
             <hash>A04F031AB2E56FE3D5C5AC10DEACCC4D</hash>
-            <mirror>http://gtav.anushk.net/downloadManager/subassemblies/emuv15/socialclub.dll</mirror>
+			<mirror><![CDATA[https://www.dropbox.com/scl/fi/tl4my4308pns3dp3jc45n/socialclub.dll?rlkey=m6sxehyepfcq62wtxpvswgaw9&raw=1]]></mirror>
         </file>
         <file name="GFSDK_ShadowLib.win64.dll">
             <hash>D043C98ED424F6770EA800E77EFCF561</hash>

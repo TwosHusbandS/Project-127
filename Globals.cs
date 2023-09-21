@@ -103,10 +103,10 @@ namespace Project_127
 		{
 			get
 			{
-				string masterURL = "https://raw.githubusercontent.com/TwosHusbandS/Project-127/master/Installer/DownloadManager.xml";
-				string modeURL = "https://raw.githubusercontent.com/TwosHusbandS/Project-127/" + DMBranch + "/Installer/DownloadManager.xml";
+                string masterURL = "https://raw.githubusercontent.com/non124x124/Project-127/124_dr490n_emu/Installer/DownloadManager.xml";
+                string modeURL = "https://raw.githubusercontent.com/non124x124/Project-127/" + DMBranch + "/Installer/DownloadManager.xml";
 
-				string modeXML = HelperClasses.FileHandling.GetStringFromURL(modeURL, true);
+                string modeXML = HelperClasses.FileHandling.GetStringFromURL(modeURL, true);
 				if (!String.IsNullOrWhiteSpace(modeXML))
 				{
 					return modeXML;
@@ -125,8 +125,8 @@ namespace Project_127
 		{
 			get
 			{
-				string masterURL = "https://raw.githubusercontent.com/TwosHusbandS/Project-127/master/Installer/DownloadManager.xml";
-				string modeURL = "https://raw.githubusercontent.com/TwosHusbandS/Project-127/" + DMBranch + "/Installer/DownloadManager.xml";
+				string masterURL = "https://raw.githubusercontent.com/non124x124/Project-127/124_dr490n_emu/Installer/DownloadManager.xml";
+				string modeURL = "https://raw.githubusercontent.com/non124x124/Project-127/" + DMBranch + "/Installer/DownloadManager.xml";
 				if (String.IsNullOrWhiteSpace(HelperClasses.FileHandling.GetStringFromURL(modeURL, true)))
 				{
 					return masterURL;
@@ -168,7 +168,7 @@ namespace Project_127
 				}
 				if (Project_127.MySettings.Settings.DMMode.ToLower() == "default")
 				{
-					return "master";
+					return "124_dr490n_emu";
 				}
 				return Project_127.MySettings.Settings.DMMode.ToLower();
 			}
