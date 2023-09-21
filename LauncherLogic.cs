@@ -334,11 +334,9 @@ namespace Project_127
                     if (value == LaunchWays.SocialClubLaunch)
                     {
                         Settings.EnableAlternativeLaunch = false;
-                        Settings.EnableDragonEmu = true;
-                        Settings.EnableBase124 = false;
                         return;
                         // dont allow changing to social club
-                        //new Popup(Popup.PopupWindowTypes.PopupOk, "LaunchWay is set to DragonEmu as SC Launch has no Epic support.").ShowDialog();
+                        //new Popup(Popup.PopupWindowTypes.PopupOk, "LaunchWay did not change.").ShowDialog();
                         
 
                     }
@@ -347,12 +345,26 @@ namespace Project_127
                 {
                     if (value == LaunchWays.SocialClubLaunch)
                     {
+                        Settings.EnableBase124 = false;
+                        Settings.EnableDragonEmu = false;
                         Settings.EnableAlternativeLaunch = true;
+
                     }
-                    else
+                    if (value == LaunchWays.Base124)
                     {
                         Settings.EnableAlternativeLaunch = false;
+                        Settings.EnableDragonEmu = false;
+                        Settings.EnableBase124 = true;
                     }
+                    if (value == LaunchWays.DragonEmu)
+                    {
+                        Settings.EnableBase124 = false;
+                        Settings.EnableAlternativeLaunch = false;
+                        Settings.EnableDragonEmu = true;
+                    }
+                    
+
+
                 }
                 else
                 {
@@ -453,20 +465,15 @@ namespace Project_127
                             return DowngradeAlternativeFilePathRockstar127;
                         }
                     }
-                    if (LauncherLogic.LaunchWay == LauncherLogic.LaunchWays.Base124)
-                    {
-                        return DowngradeBase124FilePath;
-                    }
-                        else 
-                    {
-                        return DowngradeEmuFilePath;
-                    }
+                }
+                if (LauncherLogic.LaunchWay == LauncherLogic.LaunchWays.Base124)
+                {
+                    return DowngradeBase124FilePath;
                 }
                 else
                 {
                     return DowngradeEmuFilePath;
                 }
-
             }
         }
 

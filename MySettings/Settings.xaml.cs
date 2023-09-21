@@ -1266,10 +1266,7 @@ namespace Project_127.MySettings
 		private void btn_LaunchWays_SCL_Click(object sender, RoutedEventArgs e)
 		{
             if (LauncherLogic.LaunchWay != LauncherLogic.LaunchWays.SocialClubLaunch)
-			{ 
-                Settings.EnableAlternativeLaunch = true;
-                Settings.EnableBase124 = false;
-                Settings.EnableDragonEmu = false;
+			{
                 LauncherLogic.LaunchWay = LauncherLogic.LaunchWays.SocialClubLaunch;
 				RefreshGUI();
 				CodeSnipped();
@@ -1279,10 +1276,7 @@ namespace Project_127.MySettings
         {
             if (LauncherLogic.LaunchWay != LauncherLogic.LaunchWays.Base124)
             {
-                Settings.EnableBase124 = true;
-                Settings.EnableAlternativeLaunch = false;
-                Settings.EnableDragonEmu = false;
-                LauncherLogic.LaunchWay = LauncherLogic.LaunchWays.Base124;
+				LauncherLogic.LaunchWay = LauncherLogic.LaunchWays.Base124;
                 RefreshGUI();
                 CodeSnipped();
             }
@@ -1291,9 +1285,6 @@ namespace Project_127.MySettings
 		{
 			if (LauncherLogic.LaunchWay != LauncherLogic.LaunchWays.DragonEmu)
 			{
-                Settings.EnableDragonEmu = true;
-                Settings.EnableAlternativeLaunch = false;
-                Settings.EnableBase124 = false;
                 LauncherLogic.LaunchWay = LauncherLogic.LaunchWays.DragonEmu;
 				RefreshGUI();
 				CodeSnipped();
