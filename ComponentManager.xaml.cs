@@ -80,10 +80,6 @@ namespace Project_127
                             tmp.Add(Components.SCLRockstar124);
                         }
                     }
-                    if (LauncherLogic.LaunchWay == LauncherLogic.LaunchWays.Base124)
-                    {
-                        tmp.Add(Components.Base124);
-                    }
                     else if (MySettings.Settings.SocialClubLaunchGameVersion == "127")
                     {
                         if (MySettings.Settings.Retailer == MySettings.Settings.Retailers.Steam)
@@ -96,6 +92,10 @@ namespace Project_127
                         }
                     }
                     tmp.Add(Components.DowngradedSC);
+                }
+                if (LauncherLogic.LaunchWay == LauncherLogic.LaunchWays.Base124)
+                {
+                    tmp.Add(Components.Base124);
                 }
                 return tmp;
             }
