@@ -93,9 +93,12 @@ namespace Project_127
                     }
                     tmp.Add(Components.DowngradedSC);
                 }
-                if (LauncherLogic.LaunchWay == LauncherLogic.LaunchWays.Base124)
+                if (LauncherLogic.LaunchWay == LauncherLogic.LaunchWays.DragonEmu)
                 {
-                    tmp.Add(Components.Base124);
+                    if (MySettings.Settings.DragonEmuGameVersion == "124")
+                    {
+                        tmp.Add(Components.Base124);
+                    }
                 }
                 return tmp;
             }

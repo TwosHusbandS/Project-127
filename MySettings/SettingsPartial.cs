@@ -521,33 +521,79 @@ namespace Project_127.MySettings
 			}
 		}
 
-        public static bool EnableBase124
-        {
-            get
-            {
-                return GetBoolFromString(GetSetting("EnableBase124"));
-            }
-            set
-            {
-                SetSetting("EnableBase124", value.ToString());
-            }
-        }
-        public static bool EnableDragonEmu
-        {
-            get
-            {
-                return GetBoolFromString(GetSetting("EnableDragonEmu"));
-            }
-            set
-            {
-                SetSetting("EnableDragonEmu", value.ToString());
-            }
-        }
+		/// <summary>
+		/// Version of Social Club Launch. Either "127" or "124"
+		/// </summary>
+		public static string DragonEmuGameVersion
+		{
+			get
+			{
+				if (GetSetting("DragonEmuGameVersion") == "124")
+				{
+					return "124";
+				}
+				else
+				{
+					return "127";
+				}
+			}
+			set
+			{
+				if (value != DragonEmuGameVersion)
+				{
+					if (ComponentManager.RecommendUpgradedGTA())
+					{
+						SetSetting("DragonEmuGameVersion", value);
+						if (!ComponentManager.CheckIfRequiredComponentsAreInstalled(true))
+						{
+							if (value == "124")
+							{
+								SetSetting("DragonEmuGameVersion", "127");
+							}
+							else
+							{
+								SetSetting("DragonEmuGameVersion", "124");
+							}
+							return;
+						}
+					}
+					else
+					{
+						new Popup(Popup.PopupWindowTypes.PopupOk, "Setting was not changed.");
+						return;
+					}
+				}
+			}
+		}
 
-        /// <summary>
-        /// Settings EnableAlternativeLaunchForceCProgramFiles. Gets and Sets from the Dictionary.
-        /// </summary>
-        public static bool EnableAlternativeLaunchForceCProgramFiles
+
+		//public static bool EnableBase124
+		//{
+		//    get
+		//    {
+		//        return GetBoolFromString(GetSetting("EnableBase124"));
+		//    }
+		//    set
+		//    {
+		//        SetSetting("EnableBase124", value.ToString());
+		//    }
+		//}
+		//public static bool EnableDragonEmu
+		//{
+		//    get
+		//    {
+		//        return GetBoolFromString(GetSetting("EnableDragonEmu"));
+		//    }
+		//    set
+		//    {
+		//        SetSetting("EnableDragonEmu", value.ToString());
+		//    }
+		//}
+
+		/// <summary>
+		/// Settings EnableAlternativeLaunchForceCProgramFiles. Gets and Sets from the Dictionary.
+		/// </summary>
+		public static bool EnableAlternativeLaunchForceCProgramFiles
 		{
 			get
 			{

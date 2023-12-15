@@ -302,7 +302,6 @@ namespace Project_127
         public enum LaunchWays
         {
             DragonEmu,
-            Base124,
             SocialClubLaunch
         }
 
@@ -313,14 +312,6 @@ namespace Project_127
                 if (Settings.EnableAlternativeLaunch)
                 {
                     return LaunchWays.SocialClubLaunch;
-                }
-                if (Settings.EnableBase124)
-                {
-                    return LaunchWays.Base124;
-                }
-                if (Settings.EnableDragonEmu)
-                {
-                    return LaunchWays.DragonEmu;
                 }
                 else
                 {
@@ -337,7 +328,7 @@ namespace Project_127
                         return;
                         // dont allow changing to social club
                         //new Popup(Popup.PopupWindowTypes.PopupOk, "LaunchWay did not change.").ShowDialog();
-                        
+
 
                     }
                 }
@@ -345,26 +336,12 @@ namespace Project_127
                 {
                     if (value == LaunchWays.SocialClubLaunch)
                     {
-                        Settings.EnableBase124 = false;
-                        Settings.EnableDragonEmu = false;
                         Settings.EnableAlternativeLaunch = true;
-
                     }
-                    if (value == LaunchWays.Base124)
+                    else
                     {
                         Settings.EnableAlternativeLaunch = false;
-                        Settings.EnableDragonEmu = false;
-                        Settings.EnableBase124 = true;
                     }
-                    if (value == LaunchWays.DragonEmu)
-                    {
-                        Settings.EnableBase124 = false;
-                        Settings.EnableAlternativeLaunch = false;
-                        Settings.EnableDragonEmu = true;
-                    }
-                    
-
-
                 }
                 else
                 {
@@ -465,17 +442,30 @@ namespace Project_127
                             return DowngradeAlternativeFilePathRockstar127;
                         }
                     }
-                }
-                if (LauncherLogic.LaunchWay == LauncherLogic.LaunchWays.Base124)
-                {
-                    return DowngradeBase124FilePath;
+                    else
+                    {
+                        return DowngradeEmuFilePath;
+                    }
                 }
                 else
                 {
-                    return DowngradeEmuFilePath;
+                    if (Settings.DragonEmuGameVersion == "127")
+                    {
+                        return DowngradeEmuFilePath;
+                    }
+                    else
+                    {
+                        return DowngradeBase124FilePath;
+                    }
                 }
             }
         }
+
+
+
+
+
+
 
         /// <summary>
         /// Property of often used variable. (DowngradeEmuFilePath)
@@ -861,7 +851,7 @@ namespace Project_127
 
         public static string GetFullCommandLineArgsForStarting()
         {
-            bool viaSteam = (Settings.Retailer == Settings.Retailers.Steam && !Settings.EnableDontLaunchThroughSteam && LaunchWay == LaunchWays.DragonEmu || Settings.Retailer == Settings.Retailers.Steam && !Settings.EnableDontLaunchThroughSteam &&  LaunchWay == LaunchWays.Base124);
+            bool viaSteam = (Settings.Retailer == Settings.Retailers.Steam && !Settings.EnableDontLaunchThroughSteam && LaunchWay == LaunchWays.DragonEmu);
 
             string tmp = "";
 
@@ -894,10 +884,6 @@ namespace Project_127
             else
             {
                 if (LaunchWay == LaunchWays.DragonEmu)
-                {
-                    tmp = tmp.Replace("gta_p127.exe", "playgtav.exe");
-                }
-                if (LaunchWay == LaunchWays.Base124)
                 {
                     tmp = tmp.Replace("gta_p127.exe", "playgtav.exe");
                 }
@@ -987,7 +973,7 @@ namespace Project_127
 
                 HelperClasses.Logger.Log("Installation State Downgraded Detected.", 1);
 
-                if (LauncherLogic.LaunchWay == LauncherLogic.LaunchWays.DragonEmu || LauncherLogic.LaunchWay == LaunchWays.Base124)
+                if (LauncherLogic.LaunchWay == LauncherLogic.LaunchWays.DragonEmu)
                 {
                     // If already Authed
                     if (AuthState == AuthStates.Auth)
@@ -1034,7 +1020,7 @@ namespace Project_127
                         HelperClasses.FileHandling.WriteStringToFileOverwrite(EmuCfgPath, LaunchOptions);
                     }
 
-                    if (Settings.Retailer == Settings.Retailers.Steam && !Settings.EnableDontLaunchThroughSteam && LaunchWay == LaunchWays.DragonEmu || Settings.Retailer == Settings.Retailers.Steam && !Settings.EnableDontLaunchThroughSteam && LaunchWay == LaunchWays.Base124)
+                    if (Settings.Retailer == Settings.Retailers.Steam && !Settings.EnableDontLaunchThroughSteam && LaunchWay == LaunchWays.DragonEmu)
                     {
                         var steamprocs = Process.GetProcessesByName("steam");
                         if (steamprocs.Length > 0)
@@ -1127,13 +1113,17 @@ namespace Project_127
 
                             if (LauncherLogic.LaunchWay == LauncherLogic.LaunchWays.DragonEmu || Settings.Retailer == Settings.Retailers.Epic)
                             {
-                                ComponentManager.Components.Base.ReInstall();
-                            }
-                             if (LauncherLogic.LaunchWay == LauncherLogic.LaunchWays.Base124)
-                            {
+                                if (Settings.DragonEmuGameVersion == "124")
                                 {
                                     ComponentManager.Components.Base124.ReInstall();
                                 }
+                                else
+                                {
+                                    ComponentManager.Components.Base.ReInstall();
+                                }
+                            }
+                            else
+                            {
                                 if (Settings.Retailer == Settings.Retailers.Rockstar)
                                 {
                                     if (Settings.SocialClubLaunchGameVersion == "124")
