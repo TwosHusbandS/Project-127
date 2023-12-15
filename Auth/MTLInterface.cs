@@ -106,7 +106,7 @@ namespace Project_127.Auth
             //var posixtime = BitConverter.ToInt32(blob.Skip(0x3170).Take(4).ToArray(), 0); //Broklen
             var posixtime = (int)ROSCommunicationBackend.GetPosixTime() + 24 * 3600;
             var RockstarID = BitConverter.ToUInt64(blob.Skip(0xEE8).Take(8).ToArray(), 0);
-            var sessKey = blob.Skip(0x10D8).Take(16).ToArray();
+            var sessKey = blob.Skip(0x1108).Take(16).ToArray();
             var ticket = Encoding.UTF8.GetString(blob.Skip(0xAF0).TakeWhile(a => a != 0).ToArray());
             var sessTicket = Encoding.UTF8.GetString(blob.Skip(0xCF0).TakeWhile(a => a != 0).ToArray());
             var rockstarNick = Encoding.UTF8.GetString(blob.Skip(0xE9F).TakeWhile(a => a != 0).ToArray());
