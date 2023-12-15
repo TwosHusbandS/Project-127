@@ -26,6 +26,7 @@ namespace Project_127
         public enum Components
         {
             Base,
+            Base124,
             SCLSteam127,
             SCLSteam124,
             SCLRockstar127,
@@ -91,6 +92,10 @@ namespace Project_127
                         }
                     }
                     tmp.Add(Components.DowngradedSC);
+                }
+                if (LauncherLogic.LaunchWay == LauncherLogic.LaunchWays.Base124)
+                {
+                    tmp.Add(Components.Base124);
                 }
                 return tmp;
             }
@@ -465,6 +470,7 @@ namespace Project_127
             }
 
             Components.Base.UpdateStatus(lbl_FilesMain_Status);
+            Components.Base124.UpdateStatus(lbl_FilesBase124_Status);
             Components.SCLRockstar124.UpdateStatus(lbl_FilesSCLRockstar124_Status);
             Components.SCLRockstar127.UpdateStatus(lbl_FilesSCLRockstar127_Status);
             Components.SCLSteam124.UpdateStatus(lbl_FilesSCLSteam124_Status);
@@ -473,6 +479,7 @@ namespace Project_127
             Components.AdditionalSaveFiles.UpdateStatus(lbl_FilesAdditionalSF_Status);
 
             btn_lbl_FilesMain_Name.ToolTip = Components.Base.GetToolTip();
+            lbl_FilesBase124_Name.ToolTip = Components.Base124.GetToolTip();
             lbl_FilesSCLRockstar124_Name.ToolTip = Components.SCLRockstar124.GetToolTip();
             lbl_FilesSCLRockstar127_Name.ToolTip = Components.SCLRockstar127.GetToolTip();
             lbl_FilesSCLSteam124_Name.ToolTip = Components.SCLSteam124.GetToolTip();
@@ -574,6 +581,10 @@ namespace Project_127
             HelperClasses.Logger.Log("ComponentMngr - Guess the ZIP Extraction worked since we got here...", 1);
 
             if (MyComponent == Components.Base)
+            {
+                tmpLocation = tmpLocation.TrimEnd('\\') + @"\Project_127_Files\";
+            }
+            if (MyComponent == Components.Base124)
             {
                 tmpLocation = tmpLocation.TrimEnd('\\') + @"\Project_127_Files\";
             }
@@ -704,6 +715,9 @@ namespace Project_127
                 case ComponentManager.Components.Base:
                     rtrn = "STANDARD_BASE";
                     break;
+                case ComponentManager.Components.Base124:
+                    rtrn = "124_DR490N";
+                    break;
                 case ComponentManager.Components.SCLRockstar124:
                     rtrn = "AM_124_ROCKSTAR";
                     break;
@@ -733,6 +747,9 @@ namespace Project_127
             {
                 case ComponentManager.Components.Base:
                     rtrn = "Required Files (P127 and Downgraded GTA)";
+                    break;
+                case ComponentManager.Components.Base124:
+                    rtrn = "Files required to launch version 1.24 through dr490n Launcher";
                     break;
                 case ComponentManager.Components.SCLRockstar124:
                     rtrn = "Files for Launching through Social Club for Rockstar 1.24";
@@ -783,6 +800,8 @@ namespace Project_127
             {
                 case ComponentManager.Components.Base:
                     return LauncherLogic.ZIPFilePath;
+                case ComponentManager.Components.Base124:
+                    return LauncherLogic.DowngradeBase124FilePath;
                 case ComponentManager.Components.DowngradedSC:
                     return LaunchAlternative.SCL_SC_DOWNGRADED;
                 case ComponentManager.Components.SCLRockstar124:
@@ -806,6 +825,8 @@ namespace Project_127
             {
                 case ComponentManager.Components.Base:
                     return LauncherLogic.IsDowngradedGTA(LauncherLogic.DowngradeEmuFilePath);
+                case ComponentManager.Components.Base124:
+                    return LauncherLogic.IsDowngradedGTA(LauncherLogic.DowngradeBase124FilePath);
                 case ComponentManager.Components.DowngradedSC:
                     return (LaunchAlternative.Get_SCL_InstallationState(LaunchAlternative.SCL_SC_DOWNGRADED) == LaunchAlternative.SCL_InstallationStates.Downgraded);
                 case ComponentManager.Components.SCLRockstar124:

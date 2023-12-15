@@ -103,10 +103,10 @@ namespace Project_127
 		{
 			get
 			{
-				string masterURL = "https://raw.githubusercontent.com/TwosHusbandS/Project-127/master/Installer/DownloadManager.xml";
-				string modeURL = "https://raw.githubusercontent.com/TwosHusbandS/Project-127/" + DMBranch + "/Installer/DownloadManager.xml";
+                string masterURL = "https://raw.githubusercontent.com/non124x124/Project-127/124_dr490n_emu/Installer/DownloadManager.xml";
+                string modeURL = "https://raw.githubusercontent.com/non124x124/Project-127/" + DMBranch + "/Installer/DownloadManager.xml";
 
-				string modeXML = HelperClasses.FileHandling.GetStringFromURL(modeURL, true);
+                string modeXML = HelperClasses.FileHandling.GetStringFromURL(modeURL, true);
 				if (!String.IsNullOrWhiteSpace(modeXML))
 				{
 					return modeXML;
@@ -125,8 +125,8 @@ namespace Project_127
 		{
 			get
 			{
-				string masterURL = "https://raw.githubusercontent.com/TwosHusbandS/Project-127/master/Installer/DownloadManager.xml";
-				string modeURL = "https://raw.githubusercontent.com/TwosHusbandS/Project-127/" + DMBranch + "/Installer/DownloadManager.xml";
+				string masterURL = "https://raw.githubusercontent.com/non124x124/Project-127/124_dr490n_emu/Installer/DownloadManager.xml";
+				string modeURL = "https://raw.githubusercontent.com/non124x124/Project-127/" + DMBranch + "/Installer/DownloadManager.xml";
 				if (String.IsNullOrWhiteSpace(HelperClasses.FileHandling.GetStringFromURL(modeURL, true)))
 				{
 					return masterURL;
@@ -168,7 +168,7 @@ namespace Project_127
 				}
 				if (Project_127.MySettings.Settings.DMMode.ToLower() == "default")
 				{
-					return "master";
+					return "124_dr490n_emu";
 				}
 				return Project_127.MySettings.Settings.DMMode.ToLower();
 			}
@@ -318,7 +318,9 @@ namespace Project_127
 			{"ZIPExtractionPath", Process.GetCurrentProcess().MainModule.FileName.Substring(0, Process.GetCurrentProcess().MainModule.FileName.LastIndexOf('\\')) },
 			{"EnableLogging", "True"},
 			{"EnableAlternativeLaunch", "False"},
-			{"EnableAlternativeLaunchForceCProgramFiles", "False"},
+            {"EnableBase124", "false"},
+            {"EnableDragonEmu", "true"},
+            {"EnableAlternativeLaunchForceCProgramFiles", "False"},
 			{"EnableCopyFilesInsteadOfHardlinking", "False"},
 			{"AutoMTLAuthOnStartup", "True"},
 			{"PostMTLAction", "MinimizeRGL"},
@@ -616,8 +618,13 @@ namespace Project_127
 					{
 						Settings.AllFilesEverPlacedInsideGTAMyAdd(tmp_i.Substring(LauncherLogic.UpgradeFilePathBackup.Length).TrimStart('\\'));
 					}
+                    string[] tmp8 = HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(LauncherLogic.DowngradeBase124FilePath);
+                    foreach (string tmp_i in tmp8)
+                    {
+                        Settings.AllFilesEverPlacedInsideGTAMyAdd(tmp_i.Substring(LauncherLogic.DowngradeBase124FilePath.Length).TrimStart('\\'));
+                    }
 
-					Settings.AntiVirusFix();
+                    Settings.AntiVirusFix();
 				}
 
 				if (Settings.LastLaunchedVersion < new Version("1.2.2.0"))
@@ -697,7 +704,7 @@ namespace Project_127
 
 			Auth.ROSIntegration.CEFInitialize();
 
-			if (LauncherLogic.LaunchWay == LauncherLogic.LaunchWays.DragonEmu)
+			if (LauncherLogic.LaunchWay == LauncherLogic.LaunchWays.DragonEmu || LauncherLogic.LaunchWay == LauncherLogic.LaunchWays.Base124)
 			{
 				if (LauncherLogic.AuthWay == LauncherLogic.AuthWays.MTL)
 				{
