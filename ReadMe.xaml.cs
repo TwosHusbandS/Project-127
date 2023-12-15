@@ -241,7 +241,7 @@ namespace Project_127
 			AddParagraph(rtb_Credits, "Solving the patch 1.27 Downgrade problem has been achieved by a month of hard work by a number of dedicated individuals. This would not have been possible without the time and effort of a number of very talented individuals from all walks of life, who have contributed skills in Reverse Engineering, Programming, Decryption, Project Management, Scripting and Testing. Below is a list of SOME of the main contributors to the project, although our thanks go out to EVERYONE who has helped throughout the process.");
 
 			AddParagraph(rtb_Credits, "Reverse Engineering:\n" +
-"@dr490n, @Special For, @zCri");
+"@dr490n, @Special For, @zCri, @Gogsi");
 
 			AddParagraph(rtb_Credits, "Launcher / Client Programming, Documenting:\n" +
 "@thS");
@@ -251,6 +251,9 @@ namespace Project_127
 
 			AddParagraph(rtb_Credits, "Special thanks to:\n" +
 "@JakeMiester, @Antibones, @Aperture, @MOMO");
+
+
+			AddParagraph(rtb_Credits, "GOGSI THE GOAT. Very special shoutouts to @Gogsi not only for being awesome and a pleasure to work with but also for continuing to reverse-engineer, help with information, provide fixes and PRs. Very much appreciated.");
 
 			AddParagraph(rtb_Credits, "Special shoutouts to @dr490n, who was responsible for getting the downgraded game to launch, adding patches against in-game triggers, writing the Overlay Backend, authentication backend, decryption and managed to get the preorder entitlement to work.");
 
@@ -262,8 +265,6 @@ namespace Project_127
 			AddParagraph(rtb_Credits, "Shoutout to @Fro for providing Hosting to the Files needed for Project 1.27");
 
 			AddParagraph(rtb_Credits, "Shoutout to @yoshi for providing the Information which Build Version corresponds with which Game Version and Testing our Social-Club Launch");
-
-			AddParagraph(rtb_Credits, "Shoutout to @Gogsi for being awesome and a pleasure to work with");
 
 			AddParagraph(rtb_Credits, "Shoutout to @Diamondo25 for finding a way to launch GTA without going through LaunchGTAV.exe or PlayGTAV.exe, which eased the development process to launch through Social Club");
 
