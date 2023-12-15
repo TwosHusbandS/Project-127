@@ -1146,7 +1146,7 @@ namespace Project_127.MySettings
 			RowDefinition Row_SCL_Options = new RowDefinition();
 			Row_SCL_Options.Height = new GridLength(100);
 			RowDefinition Row_DragonEmu_Options = new RowDefinition();
-			Row_DragonEmu_Options.Height = new GridLength(360);
+			Row_DragonEmu_Options.Height = new GridLength(400);
 
 			if (LauncherLogic.LaunchWay == LauncherLogic.LaunchWays.SocialClubLaunch)
 			{

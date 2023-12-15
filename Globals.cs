@@ -230,7 +230,7 @@ namespace Project_127
 		/// <summary>
 		/// Property of other Buildinfo. Will be in the top message of logs
 		/// </summary>
-		public static string BuildInfo = "1.2.5.2 - Gogsi_The_Goat_Edition";
+		public static string BuildInfo = "1.2.5.9 - First implementation of SpecialsFor-DragonEmu124 PR";
 
 
 		/// <summary>

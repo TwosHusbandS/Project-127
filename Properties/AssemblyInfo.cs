@@ -55,5 +55,5 @@ using System.Windows;
 
 
 // Lets keep both versions the same...
-[assembly: AssemblyVersion("1.2.5.2")]
-[assembly: AssemblyFileVersion("1.2.5.2")]
+[assembly: AssemblyVersion("1.2.5.9")]
+[assembly: AssemblyFileVersion("1.2.5.9")]
