@@ -132,8 +132,6 @@ namespace Project_127
 			StartUpStopwatch = new Stopwatch();
 			StartUpStopwatch.Start();
 
-			int tc = int.Parse(DateTime.Now.ToString("MMddss"));
-
 			// Initializing all WPF Elements
 			InitializeComponent();
 
@@ -171,14 +169,6 @@ namespace Project_127
 
 			myMutex.WaitOne();
 
-
-			// Some Background Change based on Date
-			ChangeBackgroundBasedOnSeason();
-
-			// Intepreting all Command Line shit
-			Globals.CommandLineArgumentIntepretation();
-
-
 			// Start the Init Process of Logger, Settings, Globals, Regedit here, since we need the Logger in the next Line if it fails...
 			Globals.Init();
 
@@ -199,20 +189,13 @@ namespace Project_127
 			SetButtonMouseOverMagic(btn_Hamburger);
 			Globals.PageState = Globals.PageStates.GTA;
 
-			tc &= 0x30FFFF;
+            // Some Background Change based on Date
+            ChangeBackgroundBasedOnSeason();
 
-#if DEBUG
-			if (tc > 32600 && tc < 40300 && (((tc & 0xF) < 4))
-			{
-				Globals.PageState = Globals.PageStates.Auth;
-			}
-#else
-			if (tc == 40130 || tc == 40101 || tc == 40104)
-            {
-				Globals.PageState = Globals.PageStates.Auth;
-			}
-#endif
-			Globals.HamburgerMenuState = Globals.HamburgerMenuStates.Visible;
+            // Intepreting all Command Line shit
+            Globals.CommandLineArgumentIntepretation();
+
+            Globals.HamburgerMenuState = Globals.HamburgerMenuStates.Visible;
 			if (Settings.P127Mode.ToLower() != "default")
 			{
 				MainWindow.MW.btn_lbl_Mode.Content = "Curr P127 Mode: '" + MySettings.Settings.P127Mode.ToLower() + "'";
@@ -617,6 +600,10 @@ namespace Project_127
 			else if (Now.Month == 4 && Now.Day == 1)
 			{
 				Globals.BackgroundImage = Globals.BackgroundImages.AprilFools;
+                if (Now.Second == 30 || Now.Second  == 1 || Now.Second == 4) 
+				{
+					Globals.PageState = Globals.PageStates.Auth;
+				}
 			}
 			else
 			{
