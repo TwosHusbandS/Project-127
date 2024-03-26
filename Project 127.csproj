@@ -558,6 +558,7 @@
     <None Include="Artwork\bg_murica.png" />
     <None Include="Artwork\bg_valentine.png" />
     <None Include="Artwork\bg_turkey.png" />
+    <Resource Include="Artwork\bg_aprilfools.png" />
     <Content Include="Installer\NewSetup.iss" />
     <Resource Include="Overlay\richard\001.jpg" />
     <Resource Include="Overlay\richard\002.jpg" />

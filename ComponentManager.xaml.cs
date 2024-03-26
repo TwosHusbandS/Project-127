@@ -108,9 +108,9 @@ namespace Project_127
         public static bool RecommendUpgradedGTA()
         {
             HelperClasses.Logger.Log("ComponentMngr - Recommending an Upgraded GTA before Uninstall / Updating Componenets.");
-            if (LauncherLogic.InstallationState != LauncherLogic.InstallationStates.Upgraded)
+            if (LauncherLogic.InstallationState == LauncherLogic.InstallationStates.Downgraded)
             {
-                HelperClasses.Logger.Log("ComponentMngr - GTA NOT Upgraded. Asking User", 1);
+                HelperClasses.Logger.Log("ComponentMngr - GTA is Downgraded. Asking User", 1);
 
                 Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "We need to Upgrade before doing that.\nAfter that you can Downgrade again.\nDo you want to Upgrade now?");
                 yesno.ShowDialog();
@@ -128,9 +128,31 @@ namespace Project_127
                     return false;
                 }
             }
-            else
+            else if (LauncherLogic.InstallationState == LauncherLogic.InstallationStates.Unsure)
+            {
+                HelperClasses.Logger.Log("ComponentMngr - GTA is Unsure. Asking User", 1);
+
+                Popup continueanyways = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Current installation state is UNSURE.\nThis can be fixed by going into Settings -> General P127 Settings -> Repair GTA V Installation.\n\nIt is recommend to fix it, before continuing.\n\nContinue anyways?");
+                continueanyways.ShowDialog();
+                if (continueanyways.DialogResult == true)
+                {
+                    HelperClasses.Logger.Log("ComponentMngr - User wants to continue anyways.", 1);
+                    return true;
+                }
+                else
+                {
+                    HelperClasses.Logger.Log("ComponentMngr - User does NOT want to continue anyways.", 1);
+                    return false;
+                }
+            }
+            else if (LauncherLogic.InstallationState == LauncherLogic.InstallationStates.Upgraded)
             {
                 HelperClasses.Logger.Log("ComponentMngr - Already Upgraded GTA,", 1);
+                return true;
+            }
+            else 
+            {
+                HelperClasses.Logger.Log("ComponentMngr - In else, we should never be here,", 1);
                 return true;
             }
         }

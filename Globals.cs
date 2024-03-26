@@ -230,7 +230,7 @@ namespace Project_127
 		/// <summary>
 		/// Property of other Buildinfo. Will be in the top message of logs
 		/// </summary>
-		public static string BuildInfo = "1.2.5.9 - First implementation of SpecialsFor-DragonEmu124 PR";
+		public static string BuildInfo = "1.2.6.1 - RC Nr. 1";
 
 
 		/// <summary>
@@ -1598,7 +1598,8 @@ namespace Project_127
 			Germania,
 			Turkey,
 			Murica,
-			Cat
+			Cat,
+			AprilFools
 
 			// If you touch this, please also change Installer/Info/AdvancedUser.md under #CommandLineOptions accordingly.
 		}
@@ -1942,7 +1943,8 @@ namespace Project_127
 		/// <param name="pMsg"></param>
 		public static void DebugPopup(string pMsg)
 		{
-			System.Windows.Forms.MessageBox.Show(pMsg);
+            HelperClasses.Logger.Log("Debug: " + pMsg, 1);
+            System.Windows.Forms.MessageBox.Show(pMsg);
 		}
 
 

@@ -333,7 +333,7 @@ namespace Project_127.HelperClasses
         /// <param name="pCommandLineArguments"></param>
         /// <param name="runAsAdmin"></param>
         /// <param name="waitForExit"></param>
-        public static Process StartProcess(string pFilepath, string pWorkingDir = null, string pCommandLineArguments = null, bool useShellExecute = false, bool runAsAdmin = false, bool waitForExit = false)
+        public static Process StartProcess(string pFilepath, string pWorkingDir = null, string pCommandLineArguments = null, bool useShellExecute = false, bool runAsAdmin = false)
         {
             if (FileHandling.doesFileExist(pFilepath))
             {
@@ -357,10 +357,6 @@ namespace Project_127.HelperClasses
                 //proc.ProcessorAffinity = (IntPtr)0xFFFFFFFF;
 
                 proc.Start();
-                if (waitForExit)
-                {
-                    proc.WaitForExit();
-                }
 
                 return proc;
             }

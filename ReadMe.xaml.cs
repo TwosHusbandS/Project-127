@@ -1,7 +1,9 @@
-﻿using System;
+﻿using GSF.Units;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -255,9 +257,11 @@ namespace Project_127
 
 			AddParagraph(rtb_Credits, "GOGSI THE GOAT. Very special shoutouts to @Gogsi not only for being awesome and a pleasure to work with but also for continuing to reverse-engineer, help with information, provide fixes and PRs. Very much appreciated.");
 
-			AddParagraph(rtb_Credits, "Special shoutouts to @dr490n, who was responsible for getting the downgraded game to launch, adding patches against in-game triggers, writing the Overlay Backend, authentication backend, decryption and managed to get the preorder entitlement to work.");
+			AddParagraph(rtb_Credits, "Special shoutouts to @dr490n, who was responsible for getting the downgraded game to launch, adding patches against in-game triggers, writing the Overlay Backend, downloadmanager backend, authentication backend, decryption and managed to get the preorder entitlement to work.");
 
 			AddParagraph(rtb_Credits, "Special shoutouts to @special for, for being there during the whole development phase, providing valuable insight, being available to bounce ideas off of, being available for brainstorming, and providing valuable help in regards to reverse engineering the GTA V Launch Process. We could not have done this without you.");
+
+			AddParagraph(rtb_Credits, "Also thanks to @special for, for implementing the ability to downgrade GTA to Version 1.24 via the DragonEmu into P127 by figuring out how P127 GUI and backend logic works and how my component manager and dr490ns download manager handles things.");
 
 			AddParagraph(rtb_Credits, "Shoutout to FiveM and Goldberg, whose Source Code proved to be vital\n" +
 "to understand and reverse engineer the GTA V Launch Process");
@@ -268,10 +272,13 @@ namespace Project_127
 
 			AddParagraph(rtb_Credits, "Shoutout to @Diamondo25 for finding a way to launch GTA without going through LaunchGTAV.exe or PlayGTAV.exe, which eased the development process to launch through Social Club");
 
-			AddParagraph(rtb_Credits, "Shoutout to @AntherXx for making the incredible P127 Demo + Help Video, as well as going through the trouble of tracking down and renaming SaveFiles for every single Mission in Classic% and to @Hossel for providing the SaveFiles for the main Categories");
+			// AddParagraph(rtb_Credits, "Shoutout to @AntherXx for making the incredible P127 Demo + Help Video, as well as going through the trouble of tracking down and renaming SaveFiles for every single Mission in Classic% and to @Hossel for providing the SaveFiles for the main Categories");
+            
+			AddStrikethroughParagraph(rtb_Credits, "Shoutout to @AntherXx for ", "making the incredible P127 Demo & Help Video, as well as", " going through the trouble of tracking down and renaming SaveFiles for every single Mission in Classic % and to @Hossel for providing the SaveFiles for the main Categories");
 
-			if (!HideVideo)
-			{
+
+            if (!HideVideo)
+                        {
 				AddHyperlinkText(rtb_Credits, AnthersDemoVideoLink, "P127 Demo & Help Video", "Shoutout to @AntherXx for making the incredible ", ", as well as going through the trouble of tracking down and renaming SaveFiles for every single Mission in Classic% and to @Hossel for providing the SaveFiles for the main Categories.");
 			}
 
@@ -283,7 +290,7 @@ namespace Project_127
 
 			AddParagraph(rtb_Credits, "Shoutout to @Rayope for finding a Bug, fixing it himself, and providing us with the solution.Thanks mate. (P127 crashing on Token Gen when losing internet after P127 Startup)");
 
-			AddParagraph(rtb_Credits, "Shoutout to @burhac, @Crapideot, @rollschuh2282, @GearsOfW, @Ollie, @Alfie, @AntherXx for being awesome members of the GTA Speedrunning community, always being nice and respectful, and providing Help / Testing. You guys are much appreciated.");
+			AddParagraph(rtb_Credits, "Shoutout to @burhac, @Crapideot, @rollschuh2282, @GearsOfW, @Ollie, @Alfie, and the aforementioned people for being awesome members of the GTA Speedrunning community, always being nice and respectful, and providing Help / Testing. You guys are much appreciated.");
 
 			AddParagraph(rtb_Credits, "");
 		}

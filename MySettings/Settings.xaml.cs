@@ -23,6 +23,7 @@ using Project_127.Popups;
 using Project_127.MySettings;
 using Project_127.HelperClasses.Keyboard;
 using CefSharp.DevTools.CSS;
+using static Project_127.ComponentManager;
 
 namespace Project_127.MySettings
 {
@@ -1155,9 +1156,16 @@ namespace Project_127.MySettings
                 //btn_LaunchWays_Base124.Style = Application.Current.FindResource("btn_LaunchWays_Base124") as Style;
                 brdr_LaunchWays.BorderBrush = MyColors.MyColorSCL;
 				lbl_LaunchWays.Foreground = MyColors.MyColorSCL;
-				lbl_LaunchWays.Content = "Launch - Method: SocialClubLaunch";
+                if (MySettings.Settings.SocialClubLaunchGameVersion == "124")
+                {
+                    lbl_LaunchWays.Content = "Launch - Method: 1.24 SocialClubLaunch";
+                }
+                else
+                {
+                    lbl_LaunchWays.Content = "Launch - Method: 1.27 SocialClubLaunch";
+                }
 
-				Grid_Settings_GTA.RowDefinitions.Add(Row_SCL_Options);
+                Grid_Settings_GTA.RowDefinitions.Add(Row_SCL_Options);
 				Grid_Settings_GTA.RowDefinitions.Add(Row_DragonEmu_Options);
 
 				Grid.SetRow(brdr_SCLOptions, 6);
@@ -1182,9 +1190,16 @@ namespace Project_127.MySettings
                 //btn_LaunchWays_Base124.Style = Application.Current.FindResource("btn_LaunchWays_Base124") as Style;
                 brdr_LaunchWays.BorderBrush = MyColors.MyColorEmu;
 				lbl_LaunchWays.Foreground = MyColors.MyColorEmu;
-				lbl_LaunchWays.Content = "Launch - Method: 1.27 Dragon Launcher";
+                if (MySettings.Settings.DragonEmuGameVersion == "124")
+                {
+                    lbl_LaunchWays.Content = "Launch - Method: 1.24 Dragon Launcher";
+                }
+				else
+				{
+                    lbl_LaunchWays.Content = "Launch - Method: 1.27 Dragon Launcher";
+                }
 
-				Grid_Settings_GTA.RowDefinitions.Add(Row_DragonEmu_Options);
+                Grid_Settings_GTA.RowDefinitions.Add(Row_DragonEmu_Options);
 				Grid_Settings_GTA.RowDefinitions.Add(Row_SCL_Options);
 
 				Grid.SetRow(brdr_DragonEmuOptions, 6);
@@ -1737,6 +1752,7 @@ namespace Project_127.MySettings
 		private void combox_Set_SocialClubGameVersion_SelectionChanged(object sender, SelectionChangedEventArgs e)
 		{
 			Settings.SocialClubLaunchGameVersion = combox_Set_SocialClubGameVersion.SelectedItem.ToString();
+			CodeSnipped();
 		}
 
 		/// <summary>
@@ -1747,6 +1763,7 @@ namespace Project_127.MySettings
 		private void combox_Set_DragonEmuGameVersion_SelectionChanged(object sender, SelectionChangedEventArgs e)
 		{
 			Settings.DragonEmuGameVersion = combox_Set_DragonEmuGameVersion.SelectedItem.ToString();
+			CodeSnipped();
 		}
 
 
@@ -2095,7 +2112,7 @@ namespace Project_127.MySettings
 
 		public static void AntiVirusFix()
 		{
-			string msg = "So Windows automatically deleting our Files got annoying really quick...\n P127 can automatically add an Exclusion of the following Folders:\n";
+			string msg = "Exclude P127 Folders from Windows Anti Virus?\n\nSo Windows automatically deleting our Files got annoying really quick...\n P127 can automatically add an Exclusion of the following Folders:\n";
 			msg += "\n- GTA Installation Directory\n- Project 1.27 Installation Directory\n- Project 1.27 Component Download Location\n";
 			msg += "\nto the Windows Defender.\nWindows defender will STILL BE ACTIVE,\nbut it will not scan for Viruses in those folders.\n\nDo you want me to do that?";
 
@@ -2116,12 +2133,12 @@ namespace Project_127.MySettings
 
 				if (HelperClasses.FileHandling.doesFileExist(powershell))
 				{
-					HelperClasses.ProcessHandler.StartProcess(powershell, "", command, true, true, false);
+					HelperClasses.ProcessHandler.StartProcess(powershell, "", command, true, true);
 					HelperClasses.Logger.Log("User should have the AntiVirus Fix.");
 				}
 				else if (HelperClasses.FileHandling.doesFileExist(powershell2))
 				{
-					HelperClasses.ProcessHandler.StartProcess(powershell2, "", command, true, true, false);
+					HelperClasses.ProcessHandler.StartProcess(powershell2, "", command, true, true);
 					HelperClasses.Logger.Log("User should have the AntiVirus Fix.");
 				}
 				else

@@ -529,7 +529,14 @@ namespace Project_127.MySettings
             Settings.GTAVInstallationPath = NS_GTAVPath;
             Settings.ChangeZIPExtractionPath(NS_ZIPPath);
             Settings.EnableCopyFilesInsteadOfHardlinking = NS_EnableCopyFilesInsteadOfHardlinking;
-            Settings.Retailer = (Settings.Retailers)System.Enum.Parse(typeof(Settings.Retailers), NS_Retailer);
+            try
+            {
+                Settings.Retailer = (Settings.Retailers)System.Enum.Parse(typeof(Settings.Retailers), NS_Retailer);
+            }
+            catch
+            {
+                Settings.Retailer = Settings.Retailers.Rockstar;
+            }
 
             this.Close();
         }

@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Project 1.27"
-#define MyAppVersion "1.2.5.2"
+#define MyAppVersion "1.2.6.1"
 #define MyAppPublisher "Project 1.27 Inc."
 #define MyAppURL "https://github.com/TwosHusbandS/Project-127/"
 #define MyAppExeName "Project 127 Launcher.exe"
@@ -26,7 +26,7 @@ AllowNoIcons=yes
 ;PrivilegesRequired=lowest
 PrivilegesRequiredOverridesAllowed=dialog
 OutputDir=.
-OutputBaseFilename=Project_127_Installer_V_1_2_5_2
+OutputBaseFilename=Project_127_Installer_V_1_2_6_1
 SetupIconFile=..\Artwork\icon.ico
 Compression=lzma
 SolidCompression=yes
@@ -93,6 +93,7 @@ Source: "..\bin\x64\Release\UglyFiles\Artwork\bg_murica.png"; DestDir: "{app}\Ug
 Source: "..\bin\x64\Release\UglyFiles\Artwork\bg_spooky.png"; DestDir: "{app}\UglyFiles\Artwork"; Flags: ignoreversion
 Source: "..\bin\x64\Release\UglyFiles\Artwork\bg_valentine.png"; DestDir: "{app}\UglyFiles\Artwork"; Flags: ignoreversion
 Source: "..\bin\x64\Release\UglyFiles\Artwork\bg_winter.png"; DestDir: "{app}\UglyFiles\Artwork"; Flags: ignoreversion
+Source: "..\bin\x64\Release\UglyFiles\Artwork\bg_aprilfools.png"; DestDir: "{app}\UglyFiles\Artwork"; Flags: ignoreversion
 Source: "..\bin\x64\Release\UglyFiles\Artwork\P127_Slogan.png"; DestDir: "{app}\UglyFiles\Artwork"; Flags: ignoreversion
 Source: "..\bin\x64\Release\UglyFiles\Artwork\Preview_1.png"; DestDir: "{app}\UglyFiles\Artwork"; Flags: ignoreversion
 Source: "..\bin\x64\Release\UglyFiles\Artwork\Preview_10.png"; DestDir: "{app}\UglyFiles\Artwork"; Flags: ignoreversion
