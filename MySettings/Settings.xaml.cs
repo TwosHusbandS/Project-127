@@ -787,7 +787,20 @@ namespace Project_127.MySettings
 			ButtonMouseOverMagic(btn_cb_EnableSpecialPatcher);
 			ButtonMouseOverMagic(btn_cb_EnablePPTester);
 
-			lbl_AuthWays.Content = "Auth - Method: MTL";
+
+			if (LauncherLogic.AuthWay == LauncherLogic.AuthWays.MTL)
+			{
+				btn_AuthMethod_LegacyAuth.Style = Application.Current.FindResource("btn_AuthWay") as Style;
+				btn_AuthMethod_MTL.Style = Application.Current.FindResource("btn_AuthWay_Enabled") as Style;
+				lbl_AuthWays.Content = "Auth - Method: MTL";
+			}
+			else
+			{
+				btn_AuthMethod_LegacyAuth.Style = Application.Current.FindResource("btn_AuthWay_Enabled") as Style;
+				btn_AuthMethod_MTL.Style = Application.Current.FindResource("btn_AuthWay") as Style;
+				lbl_AuthWays.Content = "Auth - Method: Legacy Auth";
+			}
+
 
 
 			Version myUpgradeVersion = HelperClasses.FileHandling.GetVersionFromFile(LauncherLogic.UpgradeFilePath.TrimEnd('\\') + @"\gta5.exe");
@@ -1089,6 +1102,17 @@ namespace Project_127.MySettings
 				Rect_HideOptions_SCL_Launch.Visibility = Visibility.Hidden;
 			}
 
+
+			if (LauncherLogic.AuthWay == LauncherLogic.AuthWays.MTL)
+			{
+				Rect_HideOptions_AutoMTLOnStartup.Visibility = Visibility.Hidden;
+
+			}
+			else
+			{
+				Rect_HideOptions_AutoMTLOnStartup.Visibility = Visibility.Visible;
+			}
+
 			if (btn_HideEmuOptions.Visibility == Visibility.Hidden)
 			{
 				if (Retailer != Retailers.Steam)
@@ -1153,9 +1177,11 @@ namespace Project_127.MySettings
 				Rect_Bullshit_1.Visibility = Visibility.Hidden;
 				Rect_Bullshit_2.Visibility = Visibility.Hidden;
 				Rect_Bullshit_3.Visibility = Visibility.Hidden;
+				Rect_Bullshit_33.Visibility = Visibility.Hidden;
 				Rect_Bullshit_4.Visibility = Visibility.Visible;
 
 				Rect_HideOptions_HideFromSteam.Visibility = Visibility.Hidden;
+				Rect_HideOptions_AutoMTLOnStartup.Visibility = Visibility.Hidden;
 			}
 			if (LauncherLogic.LaunchWay == LauncherLogic.LaunchWays.DragonEmu)
             {
@@ -1185,8 +1211,19 @@ namespace Project_127.MySettings
 				Rect_Bullshit_1.Visibility = Visibility.Visible;
 				Rect_Bullshit_2.Visibility = Visibility.Visible;
 				Rect_Bullshit_3.Visibility = Visibility.Visible;
+				Rect_Bullshit_33.Visibility = Visibility.Visible;
 				Rect_Bullshit_4.Visibility = Visibility.Hidden;
 
+
+				if (LauncherLogic.AuthWay == LauncherLogic.AuthWays.MTL)
+				{
+					Rect_HideOptions_AutoMTLOnStartup.Visibility = Visibility.Hidden;
+
+				}
+				else
+				{
+					Rect_HideOptions_AutoMTLOnStartup.Visibility = Visibility.Visible;
+				}
 
 				if (Retailer != Retailers.Steam)
 				{
@@ -1298,7 +1335,19 @@ namespace Project_127.MySettings
 			Rect_Bullshit_1.Visibility = Visibility.Visible;
 			Rect_Bullshit_2.Visibility = Visibility.Visible;
 			Rect_Bullshit_3.Visibility = Visibility.Visible;
+			Rect_Bullshit_33.Visibility = Visibility.Visible;
 
+
+
+			if (LauncherLogic.AuthWay == LauncherLogic.AuthWays.MTL)
+			{
+				Rect_HideOptions_AutoMTLOnStartup.Visibility = Visibility.Hidden;
+
+			}
+			else
+			{
+				Rect_HideOptions_AutoMTLOnStartup.Visibility = Visibility.Visible;
+			}
 
 			if (Retailer != Retailers.Steam)
 			{
