@@ -369,6 +369,17 @@ namespace Project_127
             get
             {
                 return AuthWays.MTL;
+                // Old
+                /*
+                if (Settings.EnableLegacyAuth)
+                {
+                    return AuthWays.LegacyAuth;
+                }
+                else
+                {
+                    return AuthWays.MTL;
+                }
+                */
             }
             set
             {

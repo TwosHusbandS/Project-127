@@ -285,6 +285,7 @@
                                     <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" x:Name="lbl_AuthWays" Content="Auth - Method" Style="{StaticResource lbl_Set_Info}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                     <Button Grid.Row="1" Grid.Column="0" Margin="40,0,40,10" Style="{StaticResource btn_AuthWay}" x:Name="btn_AuthMethod_MTL" Content="MTL (through RGL)" ToolTip="Opens RockstarGamesLauncher and gets Ownership Verification that way." Click="btn_AuthWays_MTL_Click"/>
                                     <Button Grid.Row="1" Grid.Column="1" Margin="40,0,40,10" Style="{StaticResource btn_AuthWay}" x:Name="btn_AuthMethod_LegacyAuth" Content="Legacy Auth" ToolTip="Grabs Ownership Verification by having you log in into your social club account inside P127."  Click="btn_AuthWays_Legacy_Click"/>
+                                    <Rectangle x:Name="Rect_HideOptions_LegacyAuth" Grid.Row="1" Grid.Column="1" Margin="40,0,40,10"  Fill="{x:Static local:MyColors.MyColorOffWhite85}" ToolTip="Legacy Auth is disabled"/>
 
                                     <Label Grid.Row="2" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Dragon Emu Game Version: "/>
                                     <ComboBox Grid.Row="2" Grid.Column="1" Margin="10,5" Style="{StaticResource cobo}" x:Name="combox_Set_DragonEmuGameVersion" SelectionChanged="combox_Set_DragonEmuGameVersion_SelectionChanged"/>

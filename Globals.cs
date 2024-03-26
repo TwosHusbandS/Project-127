@@ -643,7 +643,14 @@ namespace Project_127
 					Settings.AllFilesEverPlacedInsideGTAMyAdd("P127_ASMPATCHER_SCRIPTHOOK.dll");
 				}
 
-				 Settings.LastLaunchedVersion = Globals.ProjectVersion;
+
+				// legacy auth officially dead
+				if (Settings.LastLaunchedVersion < new Version("1.2.6.1"))
+				{
+					Settings.EnableLegacyAuth = false;
+				}
+
+                Settings.LastLaunchedVersion = Globals.ProjectVersion;
 			}
 
 
