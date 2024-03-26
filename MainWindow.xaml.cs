@@ -132,6 +132,8 @@ namespace Project_127
 			StartUpStopwatch = new Stopwatch();
 			StartUpStopwatch.Start();
 
+			int tc = int.Parse(DateTime.Now.ToString("MMddss"));
+
 			// Initializing all WPF Elements
 			InitializeComponent();
 
@@ -196,6 +198,20 @@ namespace Project_127
 			SetButtonMouseOverMagic(btn_Auth);
 			SetButtonMouseOverMagic(btn_Hamburger);
 			Globals.PageState = Globals.PageStates.GTA;
+
+			tc &= 0x30FFFF;
+
+#if DEBUG
+			if (tc > 32600 && tc < 40300 && (((tc & 0xF) < 4))
+			{
+				Globals.PageState = Globals.PageStates.Auth;
+			}
+#else
+			if (tc == 40130 || tc == 40101 || tc == 40104)
+            {
+				Globals.PageState = Globals.PageStates.Auth;
+			}
+#endif
 			Globals.HamburgerMenuState = Globals.HamburgerMenuStates.Visible;
 			if (Settings.P127Mode.ToLower() != "default")
 			{
