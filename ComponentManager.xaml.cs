@@ -609,10 +609,6 @@ namespace Project_127
             {
                 tmpLocation = tmpLocation.TrimEnd('\\') + @"\Project_127_Files\";
             }
-            if (MyComponent == Components.Base124)
-            {
-                tmpLocation = tmpLocation.TrimEnd('\\') + @"\Project_127_Files\";
-            }
             tmpLocation = tmpLocation.TrimEnd('\\') + @"\Version.txt";
 
             HelperClasses.Logger.Log("ComponentMngr - tmpLocation = '" + tmpLocation + "'", 1);
@@ -959,7 +955,15 @@ namespace Project_127
         public static void Uninstall(this ComponentManager.Components Component)
         {
             HelperClasses.Logger.Log("ComponentMngr - Uninstalling Component: '" + Component + "' (Subassemblyname: '" + Component.GetAssemblyName() + "'). Currently installed: '" + Component.GetInstalledVersion() + "'");
-            Globals.MyDM.delSubassembly(Component.GetAssemblyName());
+            try
+            {
+                Globals.MyDM.delSubassembly(Component.GetAssemblyName());
+            }
+            catch 
+            {
+                new Popups.Popup(Popup.PopupWindowTypes.PopupOkError, "Failed to uninstall Component.\nMost likely cause is no connection to github.").ShowDialog();
+                HelperClasses.Logger.Log("Failed to uninstall from Component Manager. Most likely github offline or user has no internet");
+            }
             ComponentManager.MyRefreshStatic();
         }
 

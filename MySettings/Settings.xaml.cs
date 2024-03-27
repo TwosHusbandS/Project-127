@@ -27,6 +27,7 @@ using static Project_127.ComponentManager;
 using GSF;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.Rebar;
 using System.Windows.Media.TextFormatting;
+using GSF.Parsing;
 
 namespace Project_127.MySettings
 {
@@ -610,16 +611,7 @@ namespace Project_127.MySettings
 		/// <param name="e"></param>
 		private void btn_Import_Zip_Click(object sender, RoutedEventArgs e)
 		{
-			string ZipFileLocation = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.File, "Import ZIP File", Globals.ProjectInstallationPath, pFilter: "ZIP Files|*.zip*");
-			if (HelperClasses.FileHandling.doesFileExist(ZipFileLocation))
-			{
-				LauncherLogic.ImportZip(ZipFileLocation);
-			}
-			else
-			{
-				new Popup(Popup.PopupWindowTypes.PopupOk, "No ZIP File selected").ShowDialog();
-			}
-			RefreshGUI();
+			new Popups.Popup(Popup.PopupWindowTypes.PopupOk, "This option is no longer available here.\n\nTo manually import a ZIP,\ntripple rightclick the 'installed / not installed' text inside the Componentmanager").ShowDialog();
 		}
 
 
@@ -2155,43 +2147,6 @@ namespace Project_127.MySettings
 			}
 		}
 
-		private void btn_Import_Zip_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
-		{
-			HelperClasses.Logger.Log("Importing ZIP from a DDL.");
-			PopupTextbox tb = new PopupTextbox("DirectDownLoadLink of Zip:", "https://someurl.com/somefile.zip");
-			tb.ShowDialog();
-			if (tb.DialogResult == true)
-			{
-				HelperClasses.Logger.Log("User wants it. Input is: '" + tb.MyReturnString + "'.");
-				if (HelperClasses.FileHandling.URLExists(tb.MyReturnString))
-				{
-					HelperClasses.Logger.Log("CAN find that File online. Downloading");
-					string Path = Globals.ProjectInstallationPath.TrimEnd('\\') + @"\dl.zip";
-					HelperClasses.FileHandling.deleteFile(Path);
-					PopupDownload pop = new PopupDownload(tb.MyReturnString, Path, "Downloading Zip File");
-					pop.ShowDialog();
-					if (HelperClasses.FileHandling.GetSizeOfFile(Path) > 100000)
-					{
-						HelperClasses.Logger.Log("Download Complete, importing now");
-						LauncherLogic.ImportZip(Path, true);
-					}
-					else
-					{
-						new Popup(Popup.PopupWindowTypes.PopupOkError, "Download Failed.").ShowDialog();
-						HelperClasses.Logger.Log("Download Complete, importing now");
-					}
-				}
-				else
-				{
-					HelperClasses.Logger.Log("Cant find that File online.");
-					new Popup(Popup.PopupWindowTypes.PopupOkError, "Cant find that File online.").ShowDialog();
-				}
-			}
-			else
-			{
-				HelperClasses.Logger.Log("Canceled by User.");
-			}
-		}
 
 		private void btn_GTACommandLineArgs_Click(object sender, RoutedEventArgs e)
 		{

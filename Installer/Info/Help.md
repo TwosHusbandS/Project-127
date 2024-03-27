@@ -39,8 +39,6 @@ It can do this in two ways:
 
 ## Help / Common Issues
 
-* When Project 1.27 crashes when Downloading or Importing Files, try to download the ZIP manually from the Help Section of P127 then go to Settings -> Import ZIP Manually and select the file you just downloaded. If that doesnt work, rightclick the ZIP Extraction Path in Settings, copy your downloaded zip file there, right click -> extract here.
-
 * When Launching GTA V does not launch the Version it says it is (Text in Top Left Corner), make sure the Path to GTA V is set correctly in the settings of Project 1.27.
 
 * When Upgrading / Downgrading does not work as expected in general, clicking \"Repair GTA\" inside P127 Generel Settings and re-install the components.

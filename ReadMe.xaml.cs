@@ -343,7 +343,7 @@ namespace Project_127
 				AddHyperlinkText(rtb_Help, AnthersDemoVideoLink, "P127 Demo & Help Video", "", "");
 			}
 
-			AddHyperlinkText(rtb_Help, "http://BigZip.com", "here", "When Project 1.27 crashes when Downloading or Importing Files, try to download the ZIP manually from ", ", then go to Settings -> Import ZIP Manually and select the file you just downloaded. If that doesnt work, rightclick the ZIP Extraction Path in Settings, copy your downloaded zip file there, right click -> extract here.");
+			// AddHyperlinkText(rtb_Help, "http://BigZip.com", "here", "When Project 1.27 crashes when Downloading or Importing Files, try to download the ZIP manually from ", ", then go to Settings -> Import ZIP Manually and select the file you just downloaded. If that doesnt work, rightclick the ZIP Extraction Path in Settings, copy your downloaded zip file there, right click -> extract here.");
 
 			AddParagraph(rtb_Help, "When Launching GTA V does not launch the Version it says it is (Text in Top Left Corner), make sure the Path to GTA V is set correctly in the settings of Project 1.27.");
 
@@ -525,11 +525,7 @@ namespace Project_127
 		/// <param name="e"></param>
 		private void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e)
 		{
-			if (e.Uri.ToString().ToLower().Contains("bigzip"))
-			{
-				TryBigZip();
-			}
-			else if (e.Uri.ToString().ToLower().Contains("repairgta"))
+			if (e.Uri.ToString().ToLower().Contains("repairgta"))
 			{
 				MySettings.Settings.RepairGTA_UserInteraction();
 			}
@@ -552,51 +548,6 @@ namespace Project_127
 			e.Handled = true;
 		}
 
-		/// <summary>
-		/// Some "failsafe" content deployment system
-		/// </summary>
-		private void TryBigZip()
-		{
-			string TMP_UpdateXML = Globals.XML_AutoUpdate;
-
-			string BigZipDownloadLink = HelperClasses.FileHandling.GetXMLTagContent(TMP_UpdateXML, "zip");
-			BigZipDownloadLink = Globals.GetDDL(BigZipDownloadLink);
-
-			Popups.Popup yesno = new Popups.Popup(Popups.Popup.PopupWindowTypes.PopupYesNo, "Do you want Project 1.27 to automatically handle the Download and Import?\n\nIf this keeps crashing / not working, feel free to press NO and try to do it manually.");
-			yesno.ShowDialog();
-			if (yesno.DialogResult == true)
-			{
-				string hashNeeded = HelperClasses.FileHandling.GetXMLTagContent(TMP_UpdateXML, "bigzipmd5");
-
-				HelperClasses.Logger.Log("DL Link: '" + BigZipDownloadLink + "'");
-				HelperClasses.Logger.Log("HashNeeded: " + hashNeeded);
-
-				// Deleting old ZIPFile
-				HelperClasses.FileHandling.deleteFile(Globals.ZipFileDownloadLocation);
-
-				// Downloading the ZIP File
-				new Popups.PopupDownload(BigZipDownloadLink, Globals.ZipFileDownloadLocation, "ZIP-File").ShowDialog();
-
-				// Checking the hash of the Download
-				string HashOfDownload = HelperClasses.FileHandling.GetHashFromFile(Globals.ZipFileDownloadLocation);
-				HelperClasses.Logger.Log("Download Done, Hash of Downloaded File: '" + HashOfDownload + "'");
-
-				// If Hash looks good, we import it
-				if (HashOfDownload == hashNeeded)
-				{
-					HelperClasses.Logger.Log("Hashes Match, will Import");
-					LauncherLogic.ImportZip(Globals.ZipFileDownloadLocation, true);
-					return;
-				}
-				HelperClasses.Logger.Log("Hashes dont match, will move on");
-			}
-			else
-			{
-				new Popups.Popup(Popups.Popup.PopupWindowTypes.PopupOk, "This will open the Download Link in your browser.\nDownload it, open Settings, click \"Import ZIP manually\"\nand select the file you just downloaded.").ShowDialog();
-
-				Process.Start(BigZipDownloadLink);
-			}
-		}
 	}
 }
 
