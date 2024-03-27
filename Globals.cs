@@ -230,7 +230,7 @@ namespace Project_127
 		/// <summary>
 		/// Property of other Buildinfo. Will be in the top message of logs
 		/// </summary>
-		public static string BuildInfo = "1.2.6.1 - RC Nr. 4";
+		public static string BuildInfo = "1.2.6.1 - RC Nr. 5";
 
 
 		/// <summary>
