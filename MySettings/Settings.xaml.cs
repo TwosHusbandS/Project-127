@@ -24,6 +24,9 @@ using Project_127.MySettings;
 using Project_127.HelperClasses.Keyboard;
 using CefSharp.DevTools.CSS;
 using static Project_127.ComponentManager;
+using GSF;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Rebar;
+using System.Windows.Media.TextFormatting;
 
 namespace Project_127.MySettings
 {
@@ -2314,8 +2317,10 @@ namespace Project_127.MySettings
 					LauncherLogic.Repair(true, true);
 
 
-					// https://community.pcgamingwiki.com/topic/4837-gta-5-150-downgraded-to-127-to-save-on-size-which-files-are-safe-to-delete/#comment-14299
-					List<string> FoldersToKeep = new List<string>();
+                    List<MyFileOperation> MyFileOperations = new List<MyFileOperation>();
+
+                    // https://community.pcgamingwiki.com/topic/4837-gta-5-150-downgraded-to-127-to-save-on-size-which-files-are-safe-to-delete/#comment-14299
+                    List<string> FoldersToKeep = new List<string>();
 					FoldersToKeep.Add("mpchristmas2");
 					FoldersToKeep.Add("mpheist");
 					FoldersToKeep.Add("mpluxe");
@@ -2325,9 +2330,11 @@ namespace Project_127.MySettings
 					FoldersToKeep.Add("patchday2ng");
 					FoldersToKeep.Add("patchday3ng");
 
+					// as per specials request
+                    string update2rpf_path = LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\update\update2.rpf";
+                    MyFileOperations.Add(new MyFileOperation(MyFileOperation.FileOperations.Delete, update2rpf_path, "", "Deleting '" + update2rpf_path + "'", 2, MyFileOperation.FileOrFolder.File));
 
-					List<MyFileOperation> MyFileOperations = new List<MyFileOperation>();
-					HelperClasses.Logger.Log("DebloatV. Quick repair done. Deleting folders now.");
+                    HelperClasses.Logger.Log("DebloatV. Quick repair done. Deleting folders now.");
 
 					string[] Folders = HelperClasses.FileHandling.GetSubFolders(LauncherLogic.DebloatVPath);
 					foreach (string Folder in Folders)
@@ -2336,8 +2343,8 @@ namespace Project_127.MySettings
 						if (!FoldersToKeep.Contains(tmp))
 						{
 							MyFileOperations.Add(new MyFileOperation(MyFileOperation.FileOperations.Delete, Folder, "", "Deleting '" + (tmp) + @"' from the $GTAVPath\update\x64\dlcpacks", 2, MyFileOperation.FileOrFolder.Folder));
-						}
-					}
+                        }
+                    }
 
 					new PopupProgress(PopupProgress.ProgressTypes.FileOperation, "Performing DebloatV", MyFileOperations).ShowDialog();
 
