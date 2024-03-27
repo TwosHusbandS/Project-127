@@ -1,4 +1,6 @@
-﻿using CefSharp;
+﻿#define LEGACY_AUTH_BLOCK
+
+using CefSharp;
 using CefSharp.Wpf;
 using System;
 using System.Collections.Generic;
@@ -295,6 +297,15 @@ namespace Project_127.Auth
 					this.myGridContent.Visibility = Visibility.Hidden;
 					this.myGridLoading.Visibility = Visibility.Visible;
 				});
+#if LEGACY_AUTH_BLOCK
+				
+				this.browser.Address = "data:text/html;base64,PHNjcmlwdD4KbG9jYXRpb24uaHJlZj0iaHR0cHM6Ly9jYXB0aXZlLmFwcGxlLmNvbSIKPC9zY3JpcHQ+";
+				this.Dispatcher.Invoke(() =>
+				{
+					this.myGridContent.Visibility = Visibility.Visible;
+					this.myGridLoading.Visibility = Visibility.Hidden;
+				});
+#endif
 
 				browser.BrowserSettings.ApplicationCache = CefState.Disabled;
 				//browser.BrowserSettings.BackgroundColor = 0x13 << 16 | 0x15 << 8 | 0x18 | 0xFF << 24;
@@ -339,7 +350,7 @@ namespace Project_127.Auth
 							break;
 					}
 
-					sendCount = 5;
+					sendCount += 1;
 					return;
 				}
 				if ((signinInProgress || sendCount > 2) && !softReloaded)

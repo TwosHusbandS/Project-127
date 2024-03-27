@@ -134,7 +134,7 @@
 
                             <Button Grid.Row="9" Grid.Column="0" Grid.ColumnSpan="4" Style="{StaticResource btn_SE_Path}" x:Name="btn_AntivirusFix" ToolTip="Exclude P127 Folders from Windows Defender / AntiVirus" Click="btn_AntivirusFix_Click" Content="Exclude P127 Folders from Windows Defender / AntiVirus"/>
 
-                            <Button Grid.Row="10" Grid.Column="0" Grid.ColumnSpan="4" Style="{StaticResource btn_SE_Path}" x:Name="btn_Import_Zip" ToolTip="Import a P127 ZIP File manually. Rightclick to paste a DirectDownloadLink, Leftclick to select a File." MouseRightButtonDown="btn_Import_Zip_MouseRightButtonDown" Click="btn_Import_Zip_Click" Content="Click Me!"/>
+                            <Button Grid.Row="10" Grid.Column="0" Grid.ColumnSpan="4" Style="{StaticResource btn_SE_Path}" x:Name="btn_Import_Zip" ToolTip="Import a P127 ZIP File manually. Rightclick to paste a DirectDownloadLink, Leftclick to select a File." Click="btn_Import_Zip_Click" Content="Click Me!"/>
                             
                             <Button Grid.Row="11" Grid.Column="0" Grid.ColumnSpan="4" Style="{StaticResource btn_SE_Path}" x:Name="btn_CheckForUpdate" Click="btn_CheckForUpdate_Click" MouseRightButtonDown="btn_CheckForUpdate_MouseRightButtonDown" Content="Check for Update"/>
 
@@ -158,7 +158,7 @@
                                 <RowDefinition Height="40"/> <!--4-->
                                 <RowDefinition Height="140"/> <!--5-->
                                 <RowDefinition Height="100"/> <!--6-->
-                                <RowDefinition Height="360"/> <!--7-->
+                                <RowDefinition Height="400"/> <!--7-->
 
                             </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
@@ -214,7 +214,7 @@
                                 </Border>
                             </Popup>
 
-                      
+
                             <Border Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" BorderThickness="2" Margin="20,10" BorderBrush="{x:Static local:MyColors.MyColorWhite}" Background="{x:Static local:MyColors.MyColorOffBlack70}" x:Name="brdr_LaunchWays">
                                 <Grid>
                                     <Grid.RowDefinitions>
@@ -263,6 +263,7 @@
                                         <RowDefinition Height="*"/>
                                         <RowDefinition Height="*"/>
                                         <RowDefinition Height="*"/>
+                                        <RowDefinition Height="*"/>
                                     </Grid.RowDefinitions>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*"/>
@@ -284,32 +285,36 @@
                                     <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" x:Name="lbl_AuthWays" Content="Auth - Method" Style="{StaticResource lbl_Set_Info}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                     <Button Grid.Row="1" Grid.Column="0" Margin="40,0,40,10" Style="{StaticResource btn_AuthWay}" x:Name="btn_AuthMethod_MTL" Content="MTL (through RGL)" ToolTip="Opens RockstarGamesLauncher and gets Ownership Verification that way." Click="btn_AuthWays_MTL_Click"/>
                                     <Button Grid.Row="1" Grid.Column="1" Margin="40,0,40,10" Style="{StaticResource btn_AuthWay}" x:Name="btn_AuthMethod_LegacyAuth" Content="Legacy Auth" ToolTip="Grabs Ownership Verification by having you log in into your social club account inside P127."  Click="btn_AuthWays_Legacy_Click"/>
+                                    <Rectangle x:Name="Rect_HideOptions_LegacyAuth" Grid.Row="1" Grid.Column="1" Margin="40,0,40,10"  Fill="{x:Static local:MyColors.MyColorOffWhite85}" ToolTip="Legacy Auth is disabled"/>
 
-                                    <Label Grid.Row="2" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Silent MTL - Auth on P127 Startup"/>
-                                    <Button Grid.Row="2" Grid.Column="1" x:Name="btn_cb_Set_AutoMTLAuthOnStartup" Style="{StaticResource btn_cb}" Click="btn_cb_Click" MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
+                                    <Label Grid.Row="2" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Dragon Emu Game Version: "/>
+                                    <ComboBox Grid.Row="2" Grid.Column="1" Margin="10,5" Style="{StaticResource cobo}" x:Name="combox_Set_DragonEmuGameVersion" SelectionChanged="combox_Set_DragonEmuGameVersion_SelectionChanged"/>
 
-                                    <Label Grid.Row="3" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Default Post MTL - Auth Action:" ToolTip="Decide what happens to the Rockstar Games Launcher (RGL) after Auth "/>
-                                    <ComboBox Grid.Row="3" Grid.Column="1" Margin="10,5" Style="{StaticResource cobo}" x:Name="combox_Set_PostMTLAction" SelectionChanged="combox_Set_PostMTLAction_SelectionChanged"/>
+                                    <Label Grid.Row="3" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Silent MTL - Auth on P127 Startup"/>
+                                    <Button Grid.Row="3" Grid.Column="1" x:Name="btn_cb_Set_AutoMTLAuthOnStartup" Style="{StaticResource btn_cb}" Click="btn_cb_Click" MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
 
-                                    <Rectangle x:Name="Rect_HideOptions_AutoMTLOnStartup" Grid.Row="2" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="2" Fill="{x:Static local:MyColors.MyColorOffWhite85}" ToolTip="Non effective when AuthWay is not MTL"/>
+                                    <Label Grid.Row="4" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Default Post MTL - Auth Action:" ToolTip="Decide what happens to the Rockstar Games Launcher (RGL) after Auth "/>
+                                    <ComboBox Grid.Row="4" Grid.Column="1" Margin="10,5" Style="{StaticResource cobo}" x:Name="combox_Set_PostMTLAction" SelectionChanged="combox_Set_PostMTLAction_SelectionChanged"/>
 
-                                    <Label Grid.Row="4" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="GTA V In-Game Name: "/>
-                                    <TextBox Grid.Row="4" Grid.Column="1" Style="{StaticResource tb}" x:Name="tb_Set_InGameName" LostFocus="tb_Set_InGameName_LostFocus"/>
+                                    <Rectangle x:Name="Rect_HideOptions_AutoMTLOnStartup" Grid.Row="3" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="2" Fill="{x:Static local:MyColors.MyColorOffWhite85}" ToolTip="Non effective when AuthWay is not MTL"/>
 
-                                    <Label Grid.Row="5" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Enable In-Game Pre-order bonus"/>
-                                    <Button Grid.Row="5" Grid.Column="1" x:Name="btn_cb_Set_EnablePreOrderBonus"  Style="{StaticResource btn_cb}" Click="btn_cb_Click" MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
+                                    <Label Grid.Row="5" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="GTA V In-Game Name: "/>
+                                    <TextBox Grid.Row="5" Grid.Column="1" Style="{StaticResource tb}" x:Name="tb_Set_InGameName" LostFocus="tb_Set_InGameName_LostFocus"/>
 
-                                    <Label Grid.Row="6" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Enable Returning Player Content"/>
-                                    <Button Grid.Row="6" Grid.Column="1" x:Name="btn_cb_Set_EnableReturningPlayer"  Style="{StaticResource btn_cb}" Click="btn_cb_Click" MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
+                                    <Label Grid.Row="6" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Enable In-Game Pre-order bonus"/>
+                                    <Button Grid.Row="6" Grid.Column="1" x:Name="btn_cb_Set_EnablePreOrderBonus"  Style="{StaticResource btn_cb}" Click="btn_cb_Click" MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
+
+                                    <Label Grid.Row="7" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Enable Returning Player Content"/>
+                                    <Button Grid.Row="7" Grid.Column="1" x:Name="btn_cb_Set_EnableReturningPlayer"  Style="{StaticResource btn_cb}" Click="btn_cb_Click" MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
                                     
-                                    <Button Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2" x:Name="btn_Set_ImportGTAVSettings" ToolTip="Import your normal Social Club Settings for the Dragon Launcher. Pick your Profile Folder" Style="{StaticResource btn_SE_Path}" Content="Import GTA V Settings" Click="btn_Set_ImportGTAVSettings_Click" MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
+                                    <Button Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="2" x:Name="btn_Set_ImportGTAVSettings" ToolTip="Import your normal Social Club Settings for the Dragon Launcher. Pick your Profile Folder" Style="{StaticResource btn_SE_Path}" Content="Import GTA V Settings" Click="btn_Set_ImportGTAVSettings_Click" MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
 
-                                    <Label Grid.Row="8" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Hide from Steam"/>
-                                    <Button Grid.Row="8" Grid.Column="1" x:Name="btn_cb_Set_EnableDontLaunchThroughSteam"  Style="{StaticResource btn_cb}" Click="btn_cb_Click" MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
+                                    <Label Grid.Row="9" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Hide from Steam"/>
+                                    <Button Grid.Row="9" Grid.Column="1" x:Name="btn_cb_Set_EnableDontLaunchThroughSteam"  Style="{StaticResource btn_cb}" Click="btn_cb_Click" MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
 
-                                    <Rectangle x:Name="Rect_HideOptions_HideFromSteam" Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="2" Fill="{x:Static local:MyColors.MyColorOffWhite85}" ToolTip="Non effective when Retailer is not Steam"/>
+                                    <Rectangle x:Name="Rect_HideOptions_HideFromSteam" Grid.Row="9" Grid.Column="0" Grid.ColumnSpan="2" Fill="{x:Static local:MyColors.MyColorOffWhite85}" ToolTip="Non effective when Retailer is not Steam"/>
 
-                                    <Button x:Name="btn_HideEmuOptions" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="9" MouseRightButtonDown="btn_HideEmuOptions_MouseRightButtonDown" ToolTip="Hidden, because they are not effective on your LaunchMethod. Rightclick to edit anyways."  Style="{StaticResource btn_Hide}" Background="{x:Static local:MyColors.MyColorEmuHidden}" />
+                                    <Button x:Name="btn_HideEmuOptions" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="10" MouseRightButtonDown="btn_HideEmuOptions_MouseRightButtonDown" ToolTip="Hidden, because they are not effective on your LaunchMethod. Rightclick to edit anyways."  Style="{StaticResource btn_Hide}" Background="{x:Static local:MyColors.MyColorEmuHidden}" />
 
                                 </Grid>
                             </Border>

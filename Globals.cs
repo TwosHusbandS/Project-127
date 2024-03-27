@@ -103,10 +103,10 @@ namespace Project_127
 		{
 			get
 			{
-				string masterURL = "https://raw.githubusercontent.com/TwosHusbandS/Project-127/master/Installer/DownloadManager.xml";
-				string modeURL = "https://raw.githubusercontent.com/TwosHusbandS/Project-127/" + DMBranch + "/Installer/DownloadManager.xml";
+                string masterURL = "https://raw.githubusercontent.com/TwosHusbandS/Project-127/master/Installer/DownloadManager.xml";
+                string modeURL = "https://raw.githubusercontent.com/TwosHusbandS/Project-127/" + DMBranch + "/Installer/DownloadManager.xml";
 
-				string modeXML = HelperClasses.FileHandling.GetStringFromURL(modeURL, true);
+                string modeXML = HelperClasses.FileHandling.GetStringFromURL(modeURL, true);
 				if (!String.IsNullOrWhiteSpace(modeXML))
 				{
 					return modeXML;
@@ -230,7 +230,7 @@ namespace Project_127
 		/// <summary>
 		/// Property of other Buildinfo. Will be in the top message of logs
 		/// </summary>
-		public static string BuildInfo = "1.2.5.2 - Gogsi_The_Goat_Edition";
+		public static string BuildInfo = "1.2.6.1 - RC Nr. 5";
 
 
 		/// <summary>
@@ -303,6 +303,8 @@ namespace Project_127
 				- "Theme"
 				- "EnableCopyFilesInsteadOfSyslinking_SocialClub"
 				- "TeasingFeatures"
+				- "EnableBase124"
+                - "EnableDragonEmu"
 			*/
 
 			// Internal Settings we dont show the user
@@ -318,7 +320,10 @@ namespace Project_127
 			{"ZIPExtractionPath", Process.GetCurrentProcess().MainModule.FileName.Substring(0, Process.GetCurrentProcess().MainModule.FileName.LastIndexOf('\\')) },
 			{"EnableLogging", "True"},
 			{"EnableAlternativeLaunch", "False"},
-			{"EnableAlternativeLaunchForceCProgramFiles", "False"},
+			// {"EnableBase124", "false"},
+			// {"EnableDragonEmu", "true"},
+			{"DragonEmuGameVersion", "127" },
+            {"EnableAlternativeLaunchForceCProgramFiles", "False"},
 			{"EnableCopyFilesInsteadOfHardlinking", "False"},
 			{"AutoMTLAuthOnStartup", "True"},
 			{"PostMTLAction", "MinimizeRGL"},
@@ -616,8 +621,13 @@ namespace Project_127
 					{
 						Settings.AllFilesEverPlacedInsideGTAMyAdd(tmp_i.Substring(LauncherLogic.UpgradeFilePathBackup.Length).TrimStart('\\'));
 					}
+                    string[] tmp8 = HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(LauncherLogic.DowngradeBase124FilePath);
+                    foreach (string tmp_i in tmp8)
+                    {
+                        Settings.AllFilesEverPlacedInsideGTAMyAdd(tmp_i.Substring(LauncherLogic.DowngradeBase124FilePath.Length).TrimStart('\\'));
+                    }
 
-					Settings.AntiVirusFix();
+                    Settings.AntiVirusFix();
 				}
 
 				if (Settings.LastLaunchedVersion < new Version("1.2.2.0"))
@@ -633,7 +643,14 @@ namespace Project_127
 					Settings.AllFilesEverPlacedInsideGTAMyAdd("P127_ASMPATCHER_SCRIPTHOOK.dll");
 				}
 
-				 Settings.LastLaunchedVersion = Globals.ProjectVersion;
+
+				// legacy auth officially dead
+				if (Settings.LastLaunchedVersion < new Version("1.2.6.1"))
+				{
+					Settings.EnableLegacyAuth = false;
+				}
+
+                Settings.LastLaunchedVersion = Globals.ProjectVersion;
 			}
 
 
@@ -1080,7 +1097,7 @@ namespace Project_127
 			string MyVersionOnlineString = HelperClasses.FileHandling.GetXMLTagContent(XML_Autoupdate_Temp, "version");
 
 			// Just so we have one big code snippet we can exit at any point we want.
-			while (true)
+			if (true)
 			{
 				// If this is empty,  github returned ""
 				if (!(String.IsNullOrEmpty(MyVersionOnlineString)))
@@ -1103,24 +1120,24 @@ namespace Project_127
 						string DLFilename = DLPath.Substring(DLPath.LastIndexOf('/') + 1);
 						string LocalFileName = Globals.ProjectInstallationPath.TrimEnd('\\') + @"\" + DLFilename;
 
-						if (!HelperClasses.FileHandling.URLExists(DLPath, 2500))
-						{
-							HelperClasses.Logger.Log("Cant reach URL, will throw choice");
-							Popup yesno2 = new Popup(Popup.PopupWindowTypes.PopupYesNo, "There is an Update, but P127 cant seem to reach it. Do you want to try to get the Update anyways?");
-							yesno2.ShowDialog();
-							if (yesno2.DialogResult == true)
-							{
-								HelperClasses.Logger.Log("Cant reach URL, Choice thrown, will try to get Update anyways.");
-							}
-							else
-							{
-								// Do last Lines of this function anyway. Cant hurt.
-								HelperClasses.Logger.Log("Cant reach URL, Choice thrown, will NOT try to update.");
-								break;
-							}
-						}
+                        //if (!HelperClasses.FileHandling.URLExists(DLPath, 2500))
+                        //{
+                        //	HelperClasses.Logger.Log("Cant reach URL, will throw choice");
+                        //	Popup yesno2 = new Popup(Popup.PopupWindowTypes.PopupYesNo, "There is an Update, but P127 cant seem to reach it. Do you want to try to get the Update anyways?");
+                        //	yesno2.ShowDialog();
+                        //	if (yesno2.DialogResult == true)
+                        //	{
+                        //		HelperClasses.Logger.Log("Cant reach URL, Choice thrown, will try to get Update anyways.");
+                        //	}
+                        //	else
+                        //	{
+                        //		// Do last Lines of this function anyway. Cant hurt.
+                        //		HelperClasses.Logger.Log("Cant reach URL, Choice thrown, will NOT try to update.");
+                        //		return;
+                        //	}
+                        //}
 
-						Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Version: '" + MyVersionOnline.ToString() + "' found on the Server.\nVersion: '" + Globals.ProjectVersion.ToString() + "' found installed.\nDo you want to upgrade?");
+                        Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Version: '" + MyVersionOnline.ToString() + "' found on the Server.\nVersion: '" + Globals.ProjectVersion.ToString() + "' found installed.\nDo you want to upgrade?");
 						yesno.ShowDialog();
 						// Asking User if he wants update.
 						if (yesno.DialogResult == true)
@@ -1159,7 +1176,6 @@ namespace Project_127
 					// String return is fucked
 					HelperClasses.Logger.Log("Did not get most up to date Project 1.27 Version from Github. Github offline or your PC offline. Probably. Lets hope so.");
 				}
-				break;
 			}
 
 			HelperClasses.BuildVersionTable.ReadFromGithub(XML_Autoupdate_Temp);
@@ -1588,7 +1604,8 @@ namespace Project_127
 			Germania,
 			Turkey,
 			Murica,
-			Cat
+			Cat,
+			AprilFools
 
 			// If you touch this, please also change Installer/Info/AdvancedUser.md under #CommandLineOptions accordingly.
 		}
@@ -1839,7 +1856,7 @@ namespace Project_127
 				if (myFile.ToLower().Contains("installer"))
 				{
 					HelperClasses.Logger.Log("Found old installer File ('" + HelperClasses.FileHandling.PathSplitUp(myFile)[1] + "') in the Directory. Will delete it.");
-					HelperClasses.FileHandling.deleteFile(myFile);
+					HelperClasses.FileHandling.deleteFile(myFile,false);
 				}
 				// If it is the Name of the ZIP File we download, we delete it
 				if (myFile == Globals.ZipFileDownloadLocation)
@@ -1932,7 +1949,8 @@ namespace Project_127
 		/// <param name="pMsg"></param>
 		public static void DebugPopup(string pMsg)
 		{
-			System.Windows.Forms.MessageBox.Show(pMsg);
+            HelperClasses.Logger.Log("Debug: " + pMsg, 1);
+            System.Windows.Forms.MessageBox.Show(pMsg);
 		}
 
 

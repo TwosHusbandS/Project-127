@@ -873,7 +873,7 @@ string lpSymlinkFileName, string lpTargetFileName, SymbolicLink dwFlags);
 		/// deleteFile
 		/// </summary>
 		/// <param name="pFilePath"></param>
-		public static void deleteFile(string pFilePath)
+		public static void deleteFile(string pFilePath, bool ShowErrorAsPopup = true)
 		{
 			try
 			{
@@ -885,9 +885,12 @@ string lpSymlinkFileName, string lpTargetFileName, SymbolicLink dwFlags);
 			}
 			catch (Exception e)
 			{
-				new Popup(Popup.PopupWindowTypes.PopupOkError, "Deleting File failed ('" + pFilePath + "').\nI suggest you restart the Program and contact me if it happens again.\n\nErrorMessage:\n" + e.ToString()).ShowDialog();
 				HelperClasses.Logger.Log("Deleting File failed ('" + pFilePath + "').", true, 0);
-			}
+                if (ShowErrorAsPopup)
+                {
+                    new Popup(Popup.PopupWindowTypes.PopupOkError, "Deleting File failed ('" + pFilePath + "').\nI suggest you restart the Program and contact me if it happens again.\n\nErrorMessage:\n" + e.ToString()).ShowDialog();
+                }
+            }
 		}
 
 
@@ -1073,8 +1076,10 @@ string lpSymlinkFileName, string lpTargetFileName, SymbolicLink dwFlags);
 			// TODO, CTRLF FIX THIS MESS. OTHERWISE ZIP EXTRACTING SHIT WILL BREAK BECAUSE ITS A PIECE OF SHIT
 			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files");
 			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\DowngradeFiles");
-			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\DowngradeFiles\update");
-			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\UpgradeFiles_Backup");
+            HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\DowngradeFiles124");
+            HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\DowngradeFiles\update");
+            HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\DowngradeFiles124\update");
+            HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\UpgradeFiles_Backup");
 			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\UpgradeFiles_Backup\update");
 			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\UpgradeFiles");
 			HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\UpgradeFiles\update");

@@ -6,7 +6,7 @@ Actual code (partially closed source) which authentificates, handles entitlement
 @Special For, who also did a lot of RE'ing, testing, brainstorming, information gathering and 2nd level support, being available to bounce ideas off of.
 Main / Actual Project 1.27 Client by "@thS"
 A number of other members of the team, including but not limited to @MoMo, @Diamondo25, @S.M.G, @gogsi, @Antibones, @Unemployed, @Aperture, @luky, @CrynesSs, @Daniel Kinau contributed to this project one way or another, and my thanks go out to them.
-Version: 1.2.5.2
+Version: 1.2.6.1
 
 Build Instructions:
 	Press CTRLF + F5, pray that nuget does its magic.
@@ -169,14 +169,6 @@ namespace Project_127
 
 			myMutex.WaitOne();
 
-
-			// Some Background Change based on Date
-			ChangeBackgroundBasedOnSeason();
-
-			// Intepreting all Command Line shit
-			Globals.CommandLineArgumentIntepretation();
-
-
 			// Start the Init Process of Logger, Settings, Globals, Regedit here, since we need the Logger in the next Line if it fails...
 			Globals.Init();
 
@@ -196,7 +188,14 @@ namespace Project_127
 			SetButtonMouseOverMagic(btn_Auth);
 			SetButtonMouseOverMagic(btn_Hamburger);
 			Globals.PageState = Globals.PageStates.GTA;
-			Globals.HamburgerMenuState = Globals.HamburgerMenuStates.Visible;
+
+            // Some Background Change based on Date
+            ChangeBackgroundBasedOnSeason();
+
+            // Intepreting all Command Line shit
+            Globals.CommandLineArgumentIntepretation();
+
+            Globals.HamburgerMenuState = Globals.HamburgerMenuStates.Visible;
 			if (Settings.P127Mode.ToLower() != "default")
 			{
 				MainWindow.MW.btn_lbl_Mode.Content = "Curr P127 Mode: '" + MySettings.Settings.P127Mode.ToLower() + "'";
@@ -348,7 +347,7 @@ namespace Project_127
 				{
 					string[] args = Environment.GetCommandLineArgs();
 					string arg = string.Join(" ", args.Skip(1).ToArray());
-					HelperClasses.ProcessHandler.StartProcess(Assembly.GetEntryAssembly().Location, Environment.CurrentDirectory, arg, true, true, false);
+					HelperClasses.ProcessHandler.StartProcess(Assembly.GetEntryAssembly().Location, Environment.CurrentDirectory, arg, true, true);
 					Environment.Exit(0);
 				}
 				catch (Exception)
@@ -597,6 +596,14 @@ namespace Project_127
 			else if (Now.Month == 10 && Now.Day == 3)
 			{
 				Globals.BackgroundImage = Globals.BackgroundImages.Germania;
+			}
+			else if (Now.Month == 4 && Now.Day == 1)
+			{
+				Globals.BackgroundImage = Globals.BackgroundImages.AprilFools;
+                if (Now.Second == 30 || Now.Second  == 1 || Now.Second == 4) 
+				{
+					Globals.PageState = Globals.PageStates.Auth;
+				}
 			}
 			else
 			{

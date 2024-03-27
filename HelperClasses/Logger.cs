@@ -181,7 +181,11 @@ namespace Project_127.HelperClasses
 				DebugMessage.Add("    Size of update.rpf in DowngradeFiles (Emu) Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeEmuFilePath.TrimEnd('\\') + @"\update\update.rpf"));
 				DebugMessage.Add("    Size of playgtav.exe in DowngradeFiles (Emu) Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeEmuFilePath.TrimEnd('\\') + @"\playgtav.exe"));
 				DebugMessage.Add("    ------------------------------------------------");
-				DebugMessage.Add("    Size of GTA5.exe in DowngradeFiles (SocialClubLaunch Steam 124) Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeAlternativeFilePathSteam124.TrimEnd('\\') + @"\GTA5.exe") + Globals.GetGameInfoForDebug(LauncherLogic.DowngradeAlternativeFilePathSteam124.TrimEnd('\\') + @"\GTA5.exe"));
+                DebugMessage.Add("    Size of GTA5.exe in DowngradeFiles (Base 124) Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeBase124FilePath.TrimEnd('\\') + @"\GTA5.exe") + Globals.GetGameInfoForDebug(LauncherLogic.DowngradeBase124FilePath.TrimEnd('\\') + @"\GTA5.exe"));
+                DebugMessage.Add("    Size of update.rpf in DowngradeFiles (Base 124) Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeBase124FilePath.TrimEnd('\\') + @"\update\update.rpf"));
+                DebugMessage.Add("    Size of playgtav.exe in DowngradeFiles (Base 124) Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeBase124FilePath.TrimEnd('\\') + @"\playgtav.exe"));
+                DebugMessage.Add("    ------------------------------------------------");
+                DebugMessage.Add("    Size of GTA5.exe in DowngradeFiles (SocialClubLaunch Steam 124) Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeAlternativeFilePathSteam124.TrimEnd('\\') + @"\GTA5.exe") + Globals.GetGameInfoForDebug(LauncherLogic.DowngradeAlternativeFilePathSteam124.TrimEnd('\\') + @"\GTA5.exe"));
 				DebugMessage.Add("    Size of update.rpf in DowngradeFiles (SocialClubLaunch Steam 124) Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeAlternativeFilePathSteam124.TrimEnd('\\') + @"\update\update.rpf"));
 				DebugMessage.Add("    Size of gtastub.exe in DowngradeFiles (SocialClubLaunch Steam 124) Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeAlternativeFilePathSteam124.TrimEnd('\\') + @"\gtastub.exe"));
 				DebugMessage.Add("    ------------------------------------------------");

@@ -41,6 +41,7 @@
 
             <ComboBox x:Name="cb_cb" Grid.Row="2" Grid.Column="0" Style="{StaticResource cobo}" Margin="20"/>
             <Button x:Name="btn_Yes" Style="{StaticResource btn_SM}" Content="Yes" Click="btn_Yes_Click" Grid.Row="2" Grid.Column="0" FontSize="12" Margin="20"/>
+			<Button x:Name="btn_Combo" Style="{StaticResource btn_SM}" Content="Yes" Click="btn_Combo_Click" Grid.Row="2" Grid.Column="0" FontSize="12" Margin="20"/>
             <Button x:Name="btn_No" Style="{StaticResource btn_SM}" Content="No" Click="btn_No_Click" Grid.Row="2" Grid.Column="1" FontSize="12" Margin="20"/>
             <Button x:Name="btn_BigBtn" Style="{StaticResource btn_SM}" Content="[[ CLICK ME ]]" Click="btn_BigBtn_Click" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" FontSize="12" Margin="20"/>
 

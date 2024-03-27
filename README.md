@@ -51,7 +51,7 @@ Shamelessly stolen from: https://github.com/othneildrew/Best-README-Template
 	.
     <a href="#contact">Contact me</a>
 	.
-	  <a href="Installer/Info/Changelogs/V_1_2_5_1_Changelog.md">Changelog</a>
+	  <a href="Installer/Info/Changelogs/V_1_2_6_1_Changelog.md">Changelog</a>
   </p>
 </p>
 
@@ -179,21 +179,24 @@ Distributed under the MIT License. See `LICENSE` for more information.
 ## Shoutouts and Credits
 
 * Project 1.27 Launcher / Client Programming, Documentating: @thS
-* Reverse Engineering: @dr490n, @Special For, @zCri
+* Reverse Engineering: @dr490n, @Special For, @zCri, @Gogsi
 * Launcher GUI Design & Artwork: @hossel
 * Special thanks to: @JakeMiester, @Antibones, @Aperture, @MOMO
+* GOGSI THE GOAT. Very special shoutouts to @Gogsi not only for being awesome and a pleasure to work with but also for continuing to reverse-engineer, help with information, provide fixes and PRs. Very much appreciated.
 * Special shoutouts to @dr490n, who was responsible for getting the downgraded game to launch, adding patches against in-game triggers, writing the Overlay Backend, writing the Download Manager Backend, Writing the Launch-Through-Socialclub launch process, Authentication backend, decryption and managed to get the preorder entitlement to work.
 * Special shoutouts to @special for, for being there during the whole development phase, providing valuable insight, being available to bounce ideas off of, being available for brainstorming, and providing valuable help in regards to reverse engineering the GTA V Launch Process. We could not have done this without you.
+* Also thanks to @special for, for implementing the ability to downgrade GTA to Version 1.24 via the DragonEmu into P127 by figuring out how P127 GUI and backend logic works and how my component manager and dr490ns download manager handles things.
 * Shoutout to FiveM and Goldberg, whose Source Code proved to be vital to understand and reverse engineer the GTA V Launch Process
 * Shoutout to @Fro for providing Hosting to the Files needed for Project 1.27. Youre an absolute legend
 * Shoutout to @yoshi for providing the Information which Build Version corresponds with which Game Version
 * Shoutout to @Gogsi for being awesome and a pleasure to work with
 * Shoutout to @Diamondo25 for finding a way to launch GTA without going through LaunchGTAV.exe or PlayGTAV.exe, which eased the development process to launch through Social Club
+* Shoutout to @AntherXx for ~~making the incredible P127 Demo + Help Video, as well as~~ going through the trouble of tracking down and renaming SaveFiles for every single Mission in Classic% and to @Hossel for providing the SaveFiles for the main Categories          
 * Shoutout to @DaWolf85 for [open sourcing his GTAVAutoPatcher Tool](https://github.com/DaWolf85/GTAVAutoPatcher/) the Community used to Upgrade / Downgrade previously.It helped us a ton.
 * Shoutout to @Hoxi and @Special For for implementing and integrating the ReturningPlayerBonus toggle on dr490n emu.
 * Shoutout to @cuzbabytonight on community.pcgamingwiki.com (and hoxi I think) for figuring out which DLC Folders are safe to delete when on 1.27.
 * Shoutout to @Rayope for finding a Bug, fixing it himself, and providing us with the solution. Thanks mate. (P127 crashing on MTL Token Gen when losing internet after P127 Startup)
-* Shoutout to @burhac, @Crapideot, @GearsOfW, @rollschuh2282, @Ollie, @Alfie, @AntherXx for being awesome members of the GTA Speedrunning community, always being nice and respectful, and providing Help / Testing. You guys are much appreciated.
+* Shoutout to @burhac, @Crapideot, @GearsOfW, @rollschuh2282, @Ollie, @Alfie, and the aforementioned people for being awesome members of the GTA Speedrunning community, always being nice and respectful, and providing Help / Testing. You guys are much appreciated.
 
 -----
 
@@ -222,7 +225,7 @@ Discord - [@ths#0305][discord-url]
 [license-url]: https://github.com/TwosHusbandS/Project-127/blob/master/LICENSE
 [maintained-shield]: https://img.shields.io/badge/Maintained-No-FFDB3A?style=plastic
 [maintained-url]: #about-the-project
-[version-shield]: https://img.shields.io/badge/Version-1.2.5.2_Installer-4DC71F?style=plastic
+[version-shield]: https://img.shields.io/badge/Version-1.2.6.1_Installer-4DC71F?style=plastic
 [help-shield]: https://img.shields.io/badge/Help-Here-F48041?style=plastic
 [features-shield]: https://img.shields.io/badge/Features-Click_Me-802BCF?style=plastic
 

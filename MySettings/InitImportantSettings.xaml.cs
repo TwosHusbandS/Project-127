@@ -443,6 +443,14 @@ namespace Project_127.MySettings
             UserAnswer(true, ((Button)sender).Tag.ToString());
         }
 
+        private void btn_Combo_Click(object sender, RoutedEventArgs e)
+        {
+            btn_Combo.Visibility = Visibility.Hidden;
+            cb_cb.Visibility = Visibility.Visible;
+            cb_cb.IsEditable = true;
+            cb_cb.IsDropDownOpen = true;
+            cb_cb.StaysOpenOnEdit = true;
+        }
         private void btn_No_Click(object sender, RoutedEventArgs e)
         {
             UserAnswer(false, ((Button)sender).Tag.ToString());
@@ -478,12 +486,13 @@ namespace Project_127.MySettings
         public void ActualSetUpRetailer()
         {
             btn_No.Visibility = Visibility.Visible;
+            btn_Combo.Visibility = Visibility.Visible;
+            btn_Combo.Content = "Click here to select your retailer";
             btn_Yes.Visibility = Visibility.Hidden;
             btn_BigBtn.Visibility = Visibility.Hidden;
             btn_No.Content = "Confirm";
             btn_No.Tag = "ConfirmRetailer";
-            lbl_Main.Content = "Select your Retailer.";
-            cb_cb.Visibility = Visibility.Visible;
+            lbl_Main.Content = "Select your Retailer. The button will be blank after you select it, don't worry, click Confirm to save your selection.";
             cb_cb.ItemsSource = Enum.GetValues(typeof(Settings.Retailers));
         }
 
@@ -520,7 +529,14 @@ namespace Project_127.MySettings
             Settings.GTAVInstallationPath = NS_GTAVPath;
             Settings.ChangeZIPExtractionPath(NS_ZIPPath);
             Settings.EnableCopyFilesInsteadOfHardlinking = NS_EnableCopyFilesInsteadOfHardlinking;
-            Settings.Retailer = (Settings.Retailers)System.Enum.Parse(typeof(Settings.Retailers), NS_Retailer);
+            try
+            {
+                Settings.Retailer = (Settings.Retailers)System.Enum.Parse(typeof(Settings.Retailers), NS_Retailer);
+            }
+            catch
+            {
+                Settings.Retailer = Settings.Retailers.Rockstar;
+            }
 
             this.Close();
         }

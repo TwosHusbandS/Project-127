@@ -26,6 +26,7 @@ namespace Project_127
         public enum Components
         {
             Base,
+            Base124,
             SCLSteam127,
             SCLSteam124,
             SCLRockstar127,
@@ -92,6 +93,13 @@ namespace Project_127
                     }
                     tmp.Add(Components.DowngradedSC);
                 }
+                if (LauncherLogic.LaunchWay == LauncherLogic.LaunchWays.DragonEmu)
+                {
+                    if (MySettings.Settings.DragonEmuGameVersion == "124")
+                    {
+                        tmp.Add(Components.Base124);
+                    }
+                }
                 return tmp;
             }
         }
@@ -100,9 +108,9 @@ namespace Project_127
         public static bool RecommendUpgradedGTA()
         {
             HelperClasses.Logger.Log("ComponentMngr - Recommending an Upgraded GTA before Uninstall / Updating Componenets.");
-            if (LauncherLogic.InstallationState != LauncherLogic.InstallationStates.Upgraded)
+            if (LauncherLogic.InstallationState == LauncherLogic.InstallationStates.Downgraded)
             {
-                HelperClasses.Logger.Log("ComponentMngr - GTA NOT Upgraded. Asking User", 1);
+                HelperClasses.Logger.Log("ComponentMngr - GTA is Downgraded. Asking User", 1);
 
                 Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "We need to Upgrade before doing that.\nAfter that you can Downgrade again.\nDo you want to Upgrade now?");
                 yesno.ShowDialog();
@@ -120,9 +128,31 @@ namespace Project_127
                     return false;
                 }
             }
-            else
+            else if (LauncherLogic.InstallationState == LauncherLogic.InstallationStates.Unsure)
+            {
+                HelperClasses.Logger.Log("ComponentMngr - GTA is Unsure. Asking User", 1);
+
+                Popup continueanyways = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Current installation state is UNSURE.\nThis can be fixed by going into Settings -> General P127 Settings -> Repair GTA V Installation.\n\nIt is recommend to fix it, before continuing.\n\nContinue anyways?");
+                continueanyways.ShowDialog();
+                if (continueanyways.DialogResult == true)
+                {
+                    HelperClasses.Logger.Log("ComponentMngr - User wants to continue anyways.", 1);
+                    return true;
+                }
+                else
+                {
+                    HelperClasses.Logger.Log("ComponentMngr - User does NOT want to continue anyways.", 1);
+                    return false;
+                }
+            }
+            else if (LauncherLogic.InstallationState == LauncherLogic.InstallationStates.Upgraded)
             {
                 HelperClasses.Logger.Log("ComponentMngr - Already Upgraded GTA,", 1);
+                return true;
+            }
+            else 
+            {
+                HelperClasses.Logger.Log("ComponentMngr - In else, we should never be here,", 1);
                 return true;
             }
         }
@@ -465,6 +495,7 @@ namespace Project_127
             }
 
             Components.Base.UpdateStatus(lbl_FilesMain_Status);
+            Components.Base124.UpdateStatus(lbl_FilesBase124_Status);
             Components.SCLRockstar124.UpdateStatus(lbl_FilesSCLRockstar124_Status);
             Components.SCLRockstar127.UpdateStatus(lbl_FilesSCLRockstar127_Status);
             Components.SCLSteam124.UpdateStatus(lbl_FilesSCLSteam124_Status);
@@ -473,6 +504,7 @@ namespace Project_127
             Components.AdditionalSaveFiles.UpdateStatus(lbl_FilesAdditionalSF_Status);
 
             btn_lbl_FilesMain_Name.ToolTip = Components.Base.GetToolTip();
+            lbl_FilesBase124_Name.ToolTip = Components.Base124.GetToolTip();
             lbl_FilesSCLRockstar124_Name.ToolTip = Components.SCLRockstar124.GetToolTip();
             lbl_FilesSCLRockstar127_Name.ToolTip = Components.SCLRockstar127.GetToolTip();
             lbl_FilesSCLSteam124_Name.ToolTip = Components.SCLSteam124.GetToolTip();
@@ -704,6 +736,9 @@ namespace Project_127
                 case ComponentManager.Components.Base:
                     rtrn = "STANDARD_BASE";
                     break;
+                case ComponentManager.Components.Base124:
+                    rtrn = "124_DR490N";
+                    break;
                 case ComponentManager.Components.SCLRockstar124:
                     rtrn = "AM_124_ROCKSTAR";
                     break;
@@ -733,6 +768,9 @@ namespace Project_127
             {
                 case ComponentManager.Components.Base:
                     rtrn = "Required Files (P127 and Downgraded GTA)";
+                    break;
+                case ComponentManager.Components.Base124:
+                    rtrn = "Files required to launch version 1.24 through dr490n Launcher";
                     break;
                 case ComponentManager.Components.SCLRockstar124:
                     rtrn = "Files for Launching through Social Club for Rockstar 1.24";
@@ -783,6 +821,8 @@ namespace Project_127
             {
                 case ComponentManager.Components.Base:
                     return LauncherLogic.ZIPFilePath;
+                case ComponentManager.Components.Base124:
+                    return LauncherLogic.DowngradeBase124FilePath;
                 case ComponentManager.Components.DowngradedSC:
                     return LaunchAlternative.SCL_SC_DOWNGRADED;
                 case ComponentManager.Components.SCLRockstar124:
@@ -806,6 +846,8 @@ namespace Project_127
             {
                 case ComponentManager.Components.Base:
                     return LauncherLogic.IsDowngradedGTA(LauncherLogic.DowngradeEmuFilePath);
+                case ComponentManager.Components.Base124:
+                    return LauncherLogic.IsDowngradedGTA(LauncherLogic.DowngradeBase124FilePath);
                 case ComponentManager.Components.DowngradedSC:
                     return (LaunchAlternative.Get_SCL_InstallationState(LaunchAlternative.SCL_SC_DOWNGRADED) == LaunchAlternative.SCL_InstallationStates.Downgraded);
                 case ComponentManager.Components.SCLRockstar124:
@@ -913,7 +955,15 @@ namespace Project_127
         public static void Uninstall(this ComponentManager.Components Component)
         {
             HelperClasses.Logger.Log("ComponentMngr - Uninstalling Component: '" + Component + "' (Subassemblyname: '" + Component.GetAssemblyName() + "'). Currently installed: '" + Component.GetInstalledVersion() + "'");
-            Globals.MyDM.delSubassembly(Component.GetAssemblyName());
+            try
+            {
+                Globals.MyDM.delSubassembly(Component.GetAssemblyName());
+            }
+            catch 
+            {
+                new Popups.Popup(Popup.PopupWindowTypes.PopupOkError, "Failed to uninstall Component.\nMost likely cause is no connection to github.").ShowDialog();
+                HelperClasses.Logger.Log("Failed to uninstall from Component Manager. Most likely github offline or user has no internet");
+            }
             ComponentManager.MyRefreshStatic();
         }
 

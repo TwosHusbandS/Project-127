@@ -22,6 +22,12 @@ using Project_127.Overlay;
 using Project_127.Popups;
 using Project_127.MySettings;
 using Project_127.HelperClasses.Keyboard;
+using CefSharp.DevTools.CSS;
+using static Project_127.ComponentManager;
+using GSF;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Rebar;
+using System.Windows.Media.TextFormatting;
+using GSF.Parsing;
 
 namespace Project_127.MySettings
 {
@@ -53,6 +59,8 @@ namespace Project_127.MySettings
 			combox_Set_StartWays.ItemsSource = Enum.GetValues(typeof(StartWays)).Cast<StartWays>();
 			combox_Set_SocialClubGameVersion.Items.Add("127");
 			combox_Set_SocialClubGameVersion.Items.Add("124");
+			combox_Set_DragonEmuGameVersion.Items.Add("127");
+			combox_Set_DragonEmuGameVersion.Items.Add("124");
 
 			SettingsState = LastSettingsState;
 
@@ -603,16 +611,7 @@ namespace Project_127.MySettings
 		/// <param name="e"></param>
 		private void btn_Import_Zip_Click(object sender, RoutedEventArgs e)
 		{
-			string ZipFileLocation = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.File, "Import ZIP File", Globals.ProjectInstallationPath, pFilter: "ZIP Files|*.zip*");
-			if (HelperClasses.FileHandling.doesFileExist(ZipFileLocation))
-			{
-				LauncherLogic.ImportZip(ZipFileLocation);
-			}
-			else
-			{
-				new Popup(Popup.PopupWindowTypes.PopupOk, "No ZIP File selected").ShowDialog();
-			}
-			RefreshGUI();
+			new Popups.Popup(Popup.PopupWindowTypes.PopupOk, "This option is no longer available here.\n\nTo manually import a ZIP,\ntripple rightclick the 'installed / not installed' text inside the Componentmanager").ShowDialog();
 		}
 
 
@@ -747,6 +746,7 @@ namespace Project_127.MySettings
 			combox_Set_ExitWays.SelectedItem = Settings.ExitWay;
 			combox_Set_StartWays.SelectedItem = Settings.StartWay;
 			combox_Set_SocialClubGameVersion.SelectedItem = Settings.SocialClubLaunchGameVersion;
+			combox_Set_DragonEmuGameVersion.SelectedItem = Settings.DragonEmuGameVersion;
 			combox_Set_PostMTLAction.SelectedItem = Settings.PostMTLAction;
 
 			tb_Set_InGameName.Text = Settings.InGameName;
@@ -1142,17 +1142,25 @@ namespace Project_127.MySettings
 			RowDefinition Row_SCL_Options = new RowDefinition();
 			Row_SCL_Options.Height = new GridLength(100);
 			RowDefinition Row_DragonEmu_Options = new RowDefinition();
-			Row_DragonEmu_Options.Height = new GridLength(360);
+			Row_DragonEmu_Options.Height = new GridLength(400);
 
 			if (LauncherLogic.LaunchWay == LauncherLogic.LaunchWays.SocialClubLaunch)
 			{
 				btn_LaunchWays_SCL.Style = Application.Current.FindResource("btn_LaunchWays_SCL_Enabled") as Style;
 				btn_LaunchWays_DragonEmu.Style = Application.Current.FindResource("btn_LaunchWays_DragonEmu") as Style;
-				brdr_LaunchWays.BorderBrush = MyColors.MyColorSCL;
+                //btn_LaunchWays_Base124.Style = Application.Current.FindResource("btn_LaunchWays_Base124") as Style;
+                brdr_LaunchWays.BorderBrush = MyColors.MyColorSCL;
 				lbl_LaunchWays.Foreground = MyColors.MyColorSCL;
-				lbl_LaunchWays.Content = "Launch - Method: SocialClubLaunch";
+                if (MySettings.Settings.SocialClubLaunchGameVersion == "124")
+                {
+                    lbl_LaunchWays.Content = "Launch - Method: 1.24 SocialClubLaunch";
+                }
+                else
+                {
+                    lbl_LaunchWays.Content = "Launch - Method: 1.27 SocialClubLaunch";
+                }
 
-				Grid_Settings_GTA.RowDefinitions.Add(Row_SCL_Options);
+                Grid_Settings_GTA.RowDefinitions.Add(Row_SCL_Options);
 				Grid_Settings_GTA.RowDefinitions.Add(Row_DragonEmu_Options);
 
 				Grid.SetRow(brdr_SCLOptions, 6);
@@ -1170,15 +1178,23 @@ namespace Project_127.MySettings
 				Rect_HideOptions_HideFromSteam.Visibility = Visibility.Hidden;
 				Rect_HideOptions_AutoMTLOnStartup.Visibility = Visibility.Hidden;
 			}
-			else
-			{
+			if (LauncherLogic.LaunchWay == LauncherLogic.LaunchWays.DragonEmu)
+            {
 				btn_LaunchWays_SCL.Style = Application.Current.FindResource("btn_LaunchWays_SCL") as Style;
 				btn_LaunchWays_DragonEmu.Style = Application.Current.FindResource("btn_LaunchWays_DragonEmu_Enabled") as Style;
-				brdr_LaunchWays.BorderBrush = MyColors.MyColorEmu;
+                //btn_LaunchWays_Base124.Style = Application.Current.FindResource("btn_LaunchWays_Base124") as Style;
+                brdr_LaunchWays.BorderBrush = MyColors.MyColorEmu;
 				lbl_LaunchWays.Foreground = MyColors.MyColorEmu;
-				lbl_LaunchWays.Content = "Launch - Method: Dragon Launcher";
+                if (MySettings.Settings.DragonEmuGameVersion == "124")
+                {
+                    lbl_LaunchWays.Content = "Launch - Method: 1.24 Dragon Launcher";
+                }
+				else
+				{
+                    lbl_LaunchWays.Content = "Launch - Method: 1.27 Dragon Launcher";
+                }
 
-				Grid_Settings_GTA.RowDefinitions.Add(Row_DragonEmu_Options);
+                Grid_Settings_GTA.RowDefinitions.Add(Row_DragonEmu_Options);
 				Grid_Settings_GTA.RowDefinitions.Add(Row_SCL_Options);
 
 				Grid.SetRow(brdr_DragonEmuOptions, 6);
@@ -1213,23 +1229,76 @@ namespace Project_127.MySettings
 					Rect_HideOptions_HideFromSteam.Visibility = Visibility.Hidden;
 				}
 			}
-		}
+            //if (LauncherLogic.LaunchWay == LauncherLogic.LaunchWays.Base124)
+            //{
+            //    btn_LaunchWays_SCL.Style = Application.Current.FindResource("btn_LaunchWays_SCL") as Style;
+            //    btn_LaunchWays_DragonEmu.Style = Application.Current.FindResource("btn_LaunchWays_DragonEmu") as Style;
+            //    btn_LaunchWays_Base124.Style = Application.Current.FindResource("btn_LaunchWays_Base124_Enabled") as Style;
+            //    brdr_LaunchWays.BorderBrush = MyColors.BrightGreen;
+            //    lbl_LaunchWays.Foreground = MyColors.BrightGreen;
+            //    lbl_LaunchWays.Content = "Launch - Method: 1.24 Dragon Launcher";
+			//
+            //    Grid_Settings_GTA.RowDefinitions.Add(Row_DragonEmu_Options);
+            //    Grid_Settings_GTA.RowDefinitions.Add(Row_SCL_Options);
+			//
+            //    Grid.SetRow(brdr_DragonEmuOptions, 6);
+            //    Grid.SetRow(brdr_SCLOptions, 7);
+			//
+            //    btn_HideSCLOptions.Visibility = Visibility.Visible;
+            //    btn_HideEmuOptions.Visibility = Visibility.Hidden;
+			//
+            //    Rect_Bullshit_1.Visibility = Visibility.Visible;
+            //    Rect_Bullshit_2.Visibility = Visibility.Visible;
+            //    Rect_Bullshit_3.Visibility = Visibility.Visible;
+            //    Rect_Bullshit_33.Visibility = Visibility.Visible;
+            //    Rect_Bullshit_4.Visibility = Visibility.Hidden;
+			//
+			//
+            //    if (LauncherLogic.AuthWay == LauncherLogic.AuthWays.MTL)
+            //    {
+            //        Rect_HideOptions_AutoMTLOnStartup.Visibility = Visibility.Hidden;
+			//
+            //    }
+            //    else
+            //    {
+            //        Rect_HideOptions_AutoMTLOnStartup.Visibility = Visibility.Visible;
+            //    }
+			//
+            //    if (Retailer != Retailers.Steam)
+            //    {
+            //        Rect_HideOptions_HideFromSteam.Visibility = Visibility.Visible;
+            //    }
+            //    else
+            //    {
+            //        Rect_HideOptions_HideFromSteam.Visibility = Visibility.Hidden;
+            //    }
+            //}
+
+        }
 
 		private void btn_LaunchWays_SCL_Click(object sender, RoutedEventArgs e)
 		{
-			if (LauncherLogic.LaunchWay != LauncherLogic.LaunchWays.SocialClubLaunch)
+            if (LauncherLogic.LaunchWay != LauncherLogic.LaunchWays.SocialClubLaunch)
 			{
-				LauncherLogic.LaunchWay = LauncherLogic.LaunchWays.SocialClubLaunch;
+                LauncherLogic.LaunchWay = LauncherLogic.LaunchWays.SocialClubLaunch;
 				RefreshGUI();
 				CodeSnipped();
 			}
 		}
-
-		private void btn_LaunchWays_DragonEmu_Click(object sender, RoutedEventArgs e)
+        private void btn_LaunchWays_Base124_Click(object sender, RoutedEventArgs e)
+        {
+            //if (LauncherLogic.LaunchWay != LauncherLogic.LaunchWays.Base124)
+            //{
+			//	LauncherLogic.LaunchWay = LauncherLogic.LaunchWays.Base124;
+            //    RefreshGUI();
+            //    CodeSnipped();
+            //}
+        }
+        private void btn_LaunchWays_DragonEmu_Click(object sender, RoutedEventArgs e)
 		{
 			if (LauncherLogic.LaunchWay != LauncherLogic.LaunchWays.DragonEmu)
 			{
-				LauncherLogic.LaunchWay = LauncherLogic.LaunchWays.DragonEmu;
+                LauncherLogic.LaunchWay = LauncherLogic.LaunchWays.DragonEmu;
 				RefreshGUI();
 				CodeSnipped();
 			}
@@ -1678,7 +1747,22 @@ namespace Project_127.MySettings
 		private void combox_Set_SocialClubGameVersion_SelectionChanged(object sender, SelectionChangedEventArgs e)
 		{
 			Settings.SocialClubLaunchGameVersion = combox_Set_SocialClubGameVersion.SelectedItem.ToString();
+            RefreshGUI();
+            CodeSnipped();
 		}
+
+		/// <summary>
+		/// Selection Changed of Version ComboBox
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void combox_Set_DragonEmuGameVersion_SelectionChanged(object sender, SelectionChangedEventArgs e)
+		{
+			Settings.DragonEmuGameVersion = combox_Set_DragonEmuGameVersion.SelectedItem.ToString();
+			RefreshGUI();
+            CodeSnipped();
+		}
+
 
 		private void combox_Set_PostMTLAction_SelectionChanged(object sender, SelectionChangedEventArgs e)
 		{
@@ -2016,8 +2100,7 @@ namespace Project_127.MySettings
 				new Popup(Popup.PopupWindowTypes.PopupOk, msg).ShowDialog();
 				RockstarDisableAutoUpdateThrownAlready = true;
 			}
-
-		}
+        }
 
 		private void btn_AntivirusFix_Click(object sender, RoutedEventArgs e)
 		{
@@ -2026,7 +2109,7 @@ namespace Project_127.MySettings
 
 		public static void AntiVirusFix()
 		{
-			string msg = "So Windows automatically deleting our Files got annoying really quick...\n P127 can automatically add an Exclusion of the following Folders:\n";
+			string msg = "Exclude P127 Folders from Windows Anti Virus?\n\nSo Windows automatically deleting our Files got annoying really quick...\n P127 can automatically add an Exclusion of the following Folders:\n";
 			msg += "\n- GTA Installation Directory\n- Project 1.27 Installation Directory\n- Project 1.27 Component Download Location\n";
 			msg += "\nto the Windows Defender.\nWindows defender will STILL BE ACTIVE,\nbut it will not scan for Viruses in those folders.\n\nDo you want me to do that?";
 
@@ -2047,12 +2130,12 @@ namespace Project_127.MySettings
 
 				if (HelperClasses.FileHandling.doesFileExist(powershell))
 				{
-					HelperClasses.ProcessHandler.StartProcess(powershell, "", command, true, true, false);
+					HelperClasses.ProcessHandler.StartProcess(powershell, "", command, true, true);
 					HelperClasses.Logger.Log("User should have the AntiVirus Fix.");
 				}
 				else if (HelperClasses.FileHandling.doesFileExist(powershell2))
 				{
-					HelperClasses.ProcessHandler.StartProcess(powershell2, "", command, true, true, false);
+					HelperClasses.ProcessHandler.StartProcess(powershell2, "", command, true, true);
 					HelperClasses.Logger.Log("User should have the AntiVirus Fix.");
 				}
 				else
@@ -2066,43 +2149,6 @@ namespace Project_127.MySettings
 			}
 		}
 
-		private void btn_Import_Zip_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
-		{
-			HelperClasses.Logger.Log("Importing ZIP from a DDL.");
-			PopupTextbox tb = new PopupTextbox("DirectDownLoadLink of Zip:", "https://someurl.com/somefile.zip");
-			tb.ShowDialog();
-			if (tb.DialogResult == true)
-			{
-				HelperClasses.Logger.Log("User wants it. Input is: '" + tb.MyReturnString + "'.");
-				if (HelperClasses.FileHandling.URLExists(tb.MyReturnString))
-				{
-					HelperClasses.Logger.Log("CAN find that File online. Downloading");
-					string Path = Globals.ProjectInstallationPath.TrimEnd('\\') + @"\dl.zip";
-					HelperClasses.FileHandling.deleteFile(Path);
-					PopupDownload pop = new PopupDownload(tb.MyReturnString, Path, "Downloading Zip File");
-					pop.ShowDialog();
-					if (HelperClasses.FileHandling.GetSizeOfFile(Path) > 100000)
-					{
-						HelperClasses.Logger.Log("Download Complete, importing now");
-						LauncherLogic.ImportZip(Path, true);
-					}
-					else
-					{
-						new Popup(Popup.PopupWindowTypes.PopupOkError, "Download Failed.").ShowDialog();
-						HelperClasses.Logger.Log("Download Complete, importing now");
-					}
-				}
-				else
-				{
-					HelperClasses.Logger.Log("Cant find that File online.");
-					new Popup(Popup.PopupWindowTypes.PopupOkError, "Cant find that File online.").ShowDialog();
-				}
-			}
-			else
-			{
-				HelperClasses.Logger.Log("Canceled by User.");
-			}
-		}
 
 		private void btn_GTACommandLineArgs_Click(object sender, RoutedEventArgs e)
 		{
@@ -2228,8 +2274,10 @@ namespace Project_127.MySettings
 					LauncherLogic.Repair(true, true);
 
 
-					// https://community.pcgamingwiki.com/topic/4837-gta-5-150-downgraded-to-127-to-save-on-size-which-files-are-safe-to-delete/#comment-14299
-					List<string> FoldersToKeep = new List<string>();
+                    List<MyFileOperation> MyFileOperations = new List<MyFileOperation>();
+
+                    // https://community.pcgamingwiki.com/topic/4837-gta-5-150-downgraded-to-127-to-save-on-size-which-files-are-safe-to-delete/#comment-14299
+                    List<string> FoldersToKeep = new List<string>();
 					FoldersToKeep.Add("mpchristmas2");
 					FoldersToKeep.Add("mpheist");
 					FoldersToKeep.Add("mpluxe");
@@ -2239,9 +2287,11 @@ namespace Project_127.MySettings
 					FoldersToKeep.Add("patchday2ng");
 					FoldersToKeep.Add("patchday3ng");
 
+					// as per specials request
+                    string update2rpf_path = LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\update\update2.rpf";
+                    MyFileOperations.Add(new MyFileOperation(MyFileOperation.FileOperations.Delete, update2rpf_path, "", "Deleting '" + update2rpf_path + "'", 2, MyFileOperation.FileOrFolder.File));
 
-					List<MyFileOperation> MyFileOperations = new List<MyFileOperation>();
-					HelperClasses.Logger.Log("DebloatV. Quick repair done. Deleting folders now.");
+                    HelperClasses.Logger.Log("DebloatV. Quick repair done. Deleting folders now.");
 
 					string[] Folders = HelperClasses.FileHandling.GetSubFolders(LauncherLogic.DebloatVPath);
 					foreach (string Folder in Folders)
@@ -2250,8 +2300,8 @@ namespace Project_127.MySettings
 						if (!FoldersToKeep.Contains(tmp))
 						{
 							MyFileOperations.Add(new MyFileOperation(MyFileOperation.FileOperations.Delete, Folder, "", "Deleting '" + (tmp) + @"' from the $GTAVPath\update\x64\dlcpacks", 2, MyFileOperation.FileOrFolder.Folder));
-						}
-					}
+                        }
+                    }
 
 					new PopupProgress(PopupProgress.ProgressTypes.FileOperation, "Performing DebloatV", MyFileOperations).ShowDialog();
 
