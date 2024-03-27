@@ -230,7 +230,7 @@ namespace Project_127
 		/// <summary>
 		/// Property of other Buildinfo. Will be in the top message of logs
 		/// </summary>
-		public static string BuildInfo = "1.2.6.1 - RC Nr. 3";
+		public static string BuildInfo = "1.2.6.1 - RC Nr. 4";
 
 
 		/// <summary>
@@ -1097,7 +1097,7 @@ namespace Project_127
 			string MyVersionOnlineString = HelperClasses.FileHandling.GetXMLTagContent(XML_Autoupdate_Temp, "version");
 
 			// Just so we have one big code snippet we can exit at any point we want.
-			while (true)
+			if (true)
 			{
 				// If this is empty,  github returned ""
 				if (!(String.IsNullOrEmpty(MyVersionOnlineString)))
@@ -1120,24 +1120,24 @@ namespace Project_127
 						string DLFilename = DLPath.Substring(DLPath.LastIndexOf('/') + 1);
 						string LocalFileName = Globals.ProjectInstallationPath.TrimEnd('\\') + @"\" + DLFilename;
 
-						if (!HelperClasses.FileHandling.URLExists(DLPath, 2500))
-						{
-							HelperClasses.Logger.Log("Cant reach URL, will throw choice");
-							Popup yesno2 = new Popup(Popup.PopupWindowTypes.PopupYesNo, "There is an Update, but P127 cant seem to reach it. Do you want to try to get the Update anyways?");
-							yesno2.ShowDialog();
-							if (yesno2.DialogResult == true)
-							{
-								HelperClasses.Logger.Log("Cant reach URL, Choice thrown, will try to get Update anyways.");
-							}
-							else
-							{
-								// Do last Lines of this function anyway. Cant hurt.
-								HelperClasses.Logger.Log("Cant reach URL, Choice thrown, will NOT try to update.");
-								break;
-							}
-						}
+                        //if (!HelperClasses.FileHandling.URLExists(DLPath, 2500))
+                        //{
+                        //	HelperClasses.Logger.Log("Cant reach URL, will throw choice");
+                        //	Popup yesno2 = new Popup(Popup.PopupWindowTypes.PopupYesNo, "There is an Update, but P127 cant seem to reach it. Do you want to try to get the Update anyways?");
+                        //	yesno2.ShowDialog();
+                        //	if (yesno2.DialogResult == true)
+                        //	{
+                        //		HelperClasses.Logger.Log("Cant reach URL, Choice thrown, will try to get Update anyways.");
+                        //	}
+                        //	else
+                        //	{
+                        //		// Do last Lines of this function anyway. Cant hurt.
+                        //		HelperClasses.Logger.Log("Cant reach URL, Choice thrown, will NOT try to update.");
+                        //		return;
+                        //	}
+                        //}
 
-						Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Version: '" + MyVersionOnline.ToString() + "' found on the Server.\nVersion: '" + Globals.ProjectVersion.ToString() + "' found installed.\nDo you want to upgrade?");
+                        Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Version: '" + MyVersionOnline.ToString() + "' found on the Server.\nVersion: '" + Globals.ProjectVersion.ToString() + "' found installed.\nDo you want to upgrade?");
 						yesno.ShowDialog();
 						// Asking User if he wants update.
 						if (yesno.DialogResult == true)
@@ -1176,7 +1176,6 @@ namespace Project_127
 					// String return is fucked
 					HelperClasses.Logger.Log("Did not get most up to date Project 1.27 Version from Github. Github offline or your PC offline. Probably. Lets hope so.");
 				}
-				break;
 			}
 
 			HelperClasses.BuildVersionTable.ReadFromGithub(XML_Autoupdate_Temp);
@@ -1857,7 +1856,7 @@ namespace Project_127
 				if (myFile.ToLower().Contains("installer"))
 				{
 					HelperClasses.Logger.Log("Found old installer File ('" + HelperClasses.FileHandling.PathSplitUp(myFile)[1] + "') in the Directory. Will delete it.");
-					HelperClasses.FileHandling.deleteFile(myFile);
+					HelperClasses.FileHandling.deleteFile(myFile,false);
 				}
 				// If it is the Name of the ZIP File we download, we delete it
 				if (myFile == Globals.ZipFileDownloadLocation)

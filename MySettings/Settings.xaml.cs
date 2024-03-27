@@ -1747,7 +1747,8 @@ namespace Project_127.MySettings
 		private void combox_Set_SocialClubGameVersion_SelectionChanged(object sender, SelectionChangedEventArgs e)
 		{
 			Settings.SocialClubLaunchGameVersion = combox_Set_SocialClubGameVersion.SelectedItem.ToString();
-			CodeSnipped();
+            RefreshGUI();
+            CodeSnipped();
 		}
 
 		/// <summary>
@@ -1758,7 +1759,8 @@ namespace Project_127.MySettings
 		private void combox_Set_DragonEmuGameVersion_SelectionChanged(object sender, SelectionChangedEventArgs e)
 		{
 			Settings.DragonEmuGameVersion = combox_Set_DragonEmuGameVersion.SelectedItem.ToString();
-			CodeSnipped();
+			RefreshGUI();
+            CodeSnipped();
 		}
 
 

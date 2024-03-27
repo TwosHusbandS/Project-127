@@ -873,7 +873,7 @@ string lpSymlinkFileName, string lpTargetFileName, SymbolicLink dwFlags);
 		/// deleteFile
 		/// </summary>
 		/// <param name="pFilePath"></param>
-		public static void deleteFile(string pFilePath)
+		public static void deleteFile(string pFilePath, bool ShowErrorAsPopup = true)
 		{
 			try
 			{
@@ -885,9 +885,12 @@ string lpSymlinkFileName, string lpTargetFileName, SymbolicLink dwFlags);
 			}
 			catch (Exception e)
 			{
-				new Popup(Popup.PopupWindowTypes.PopupOkError, "Deleting File failed ('" + pFilePath + "').\nI suggest you restart the Program and contact me if it happens again.\n\nErrorMessage:\n" + e.ToString()).ShowDialog();
 				HelperClasses.Logger.Log("Deleting File failed ('" + pFilePath + "').", true, 0);
-			}
+                if (ShowErrorAsPopup)
+                {
+                    new Popup(Popup.PopupWindowTypes.PopupOkError, "Deleting File failed ('" + pFilePath + "').\nI suggest you restart the Program and contact me if it happens again.\n\nErrorMessage:\n" + e.ToString()).ShowDialog();
+                }
+            }
 		}
 
 
