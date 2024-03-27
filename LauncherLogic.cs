@@ -934,146 +934,151 @@ namespace Project_127
         /// </summary>
         public static async void Launch()
         {
-            HelperClasses.Logger.Log("Trying to Launch the game.");
-
-            // If Upgraded
-            if (LauncherLogic.InstallationState == InstallationStates.Upgraded)
+            await Task.Run(async () =>
             {
-                HelperClasses.Logger.Log("Installation State Upgraded Detected.", 1);
 
-                // Checking if we can Upgrade Social Club before launchin Upgraded
-                LaunchAlternative.SocialClubUpgrade();
+                HelperClasses.Logger.Log("Trying to Launch the game.");
 
-                // If Steam
-                if (Settings.Retailer == Settings.Retailers.Steam)
+                // If Upgraded
+                if (LauncherLogic.InstallationState == InstallationStates.Upgraded)
                 {
-                    HelperClasses.Logger.Log("Trying to start Game normally through Steam.", 1);
-                    // Launch through steam
-                    HelperClasses.ProcessHandler.StartProcess(Globals.SteamInstallPath.TrimEnd('\\') + @"\steam.exe", pCommandLineArguments: "-applaunch 271590 -uilanguage " + Settings.ToMyLanguageString(Settings.LanguageSelected).ToLower());
-                }
-                // If Epic Games
-                else if (Settings.Retailer == Settings.Retailers.Epic)
-                {
+                    HelperClasses.Logger.Log("Installation State Upgraded Detected.", 1);
 
-                    HelperClasses.Logger.Log("Trying to start Game normally through EpicGames.", 1);
+                    // Checking if we can Upgrade Social Club before launchin Upgraded
+                    LaunchAlternative.SocialClubUpgrade();
 
-                    // This does not work with custom wrapper StartProcess in ProcessHandler...i guess this is fine
-                    Process.Start(@"com.epicgames.launcher://apps/9d2d0eb64d5c44529cece33fe2a46482?action=launch&silent=true");
-                }
-                // If Rockstar
-                else
-                {
-                    // Launch through Non Retail
-                    HelperClasses.ProcessHandler.StartDowngradedGame();
-                }
-            }
-            else if (LauncherLogic.InstallationState == InstallationStates.Downgraded)
-            {
-                if (!ComponentManager.CheckIfRequiredComponentsAreInstalled(true))
-                {
-                    new Popups.Popup(Popups.Popup.PopupWindowTypes.PopupOk, "Cant do that because of because of missing Components").ShowDialog();
-                    return;
-                }
-
-                HelperClasses.Logger.Log("Installation State Downgraded Detected.", 1);
-
-                if (LauncherLogic.LaunchWay == LauncherLogic.LaunchWays.DragonEmu)
-                {
-                    // If already Authed
-                    if (AuthState == AuthStates.Auth)
+                    // If Steam
+                    if (Settings.Retailer == Settings.Retailers.Steam)
                     {
-                        HelperClasses.Logger.Log("You are already Authenticated. Will Launch Game Now");
+                        HelperClasses.Logger.Log("Trying to start Game normally through Steam.", 1);
+                        // Launch through steam
+                        HelperClasses.ProcessHandler.StartProcess(Globals.SteamInstallPath.TrimEnd('\\') + @"\steam.exe", pCommandLineArguments: "-applaunch 271590 -uilanguage " + Settings.ToMyLanguageString(Settings.LanguageSelected).ToLower());
                     }
+                    // If Epic Games
+                    else if (Settings.Retailer == Settings.Retailers.Epic)
+                    {
 
-                    // If not Authed
+                        HelperClasses.Logger.Log("Trying to start Game normally through EpicGames.", 1);
+
+                        // This does not work with custom wrapper StartProcess in ProcessHandler...i guess this is fine
+                        Process.Start(@"com.epicgames.launcher://apps/9d2d0eb64d5c44529cece33fe2a46482?action=launch&silent=true");
+                    }
+                    // If Rockstar
                     else
                     {
-                        HelperClasses.Logger.Log("You are NOT already Authenticated. Throwing up Window now.");
-
-                        AuthClick(true);
+                        // Launch through Non Retail
+                        HelperClasses.ProcessHandler.StartDowngradedGame();
+                    }
+                }
+                else if (LauncherLogic.InstallationState == InstallationStates.Downgraded)
+                {
+                    if (!ComponentManager.CheckIfRequiredComponentsAreInstalled(true))
+                    {
+                        new Popups.Popup(Popups.Popup.PopupWindowTypes.PopupOk, "Cant do that because of because of missing Components").ShowDialog();
                         return;
                     }
 
-                    // Generates Token needed to Launch Downgraded GTAV
+                    HelperClasses.Logger.Log("Installation State Downgraded Detected.", 1);
 
-                    if (!AuthStateOverWrite)
+                    if (LauncherLogic.LaunchWay == LauncherLogic.LaunchWays.DragonEmu)
                     {
-                        HelperClasses.Logger.Log("Letting Dragon work his magic");
-                        try
+                        // If already Authed
+                        if (AuthState == AuthStates.Auth)
                         {
-                            await ROSCommunicationBackend.GenLaunchToken();
+                            HelperClasses.Logger.Log("You are already Authenticated. Will Launch Game Now");
                         }
-                        catch (Exception ex)
+
+                        // If not Authed
+                        else
                         {
-                            HelperClasses.Logger.Log("Unable to connect to the server. Probably best to restart P127.");
-                            new Popups.Popup(Popups.Popup.PopupWindowTypes.PopupOkError, "Unable to connect to the server. Probably best to restart P127.").ShowDialog();
+                            HelperClasses.Logger.Log("You are NOT already Authenticated. Throwing up Window now.");
+
+                            AuthClick(true);
                             return;
                         }
-                    }
 
-                    HelperClasses.FileHandling.deleteFile(EmuCfgPath);
-                    if (UseEmuConfigFile)
-                    {
-                        string[] LaunchOptions = new string[5];
-                        LaunchOptions[0] = "PreOrderBonus: \"" + Settings.EnablePreOrderBonus.ToString() + "\"";
-                        LaunchOptions[1] = "InGameName: \"" + Settings.InGameName + "\"";
-                        LaunchOptions[2] = "SavePath: \"" + Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\Rockstar Games\GTA V\Profiles\Project127\GTA V\0F74F4C4" + "\"";
-                        LaunchOptions[3] = "WindowTitleTomfoolery: \"" + Overlay.GTAOverlay.targetWindowBorderless + "\"";
-                        LaunchOptions[4] = "EnableScripthookOnDowngraded: \"" + Settings.EnableScripthookOnDowngraded.ToString() + "\"";
+                        // Generates Token needed to Launch Downgraded GTAV
 
-                        HelperClasses.FileHandling.WriteStringToFileOverwrite(EmuCfgPath, LaunchOptions);
-                    }
-
-                    if (Settings.Retailer == Settings.Retailers.Steam && !Settings.EnableDontLaunchThroughSteam && LaunchWay == LaunchWays.DragonEmu)
-                    {
-                        var steamprocs = Process.GetProcessesByName("steam");
-                        if (steamprocs.Length > 0)
+                        if (!AuthStateOverWrite)
                         {
-                            var steamproc = steamprocs[0];
-                            Int64 coreaffinity = steamproc.ProcessorAffinity.ToInt64();
-                            int corecount = 0;
-                            for (int i = 0; i < 64; i++)
+                            HelperClasses.Logger.Log("Letting Dragon work his magic");
+                            try
                             {
-                                corecount += (coreaffinity & ((Int64)1 << i)) != 0 ? 1 : 0;
+                                await ROSCommunicationBackend.GenLaunchToken();
                             }
-                            HelperClasses.Logger.Log("Current core affinity for steam is " + coreaffinity.ToString("X") + " (" + corecount + " cores)");
-                            if (corecount > 16)
+                            catch (Exception ex)
                             {
-                                HelperClasses.Logger.Log("Settings steam's core affinity to FFFF (16 cores)");
-                                Int64 NewAffinity = 0xFFFF;
-                                steamproc.ProcessorAffinity = (IntPtr)NewAffinity;
+                                HelperClasses.Logger.Log("Unable to connect to the server. Probably best to restart P127.");
+                                new Popups.Popup(Popups.Popup.PopupWindowTypes.PopupOkError, "Unable to connect to the server. Probably best to restart P127.").ShowDialog();
+                                return;
                             }
                         }
 
-                    }
+                        HelperClasses.FileHandling.deleteFile(EmuCfgPath);
+                        if (UseEmuConfigFile)
+                        {
+                            string[] LaunchOptions = new string[5];
+                            LaunchOptions[0] = "PreOrderBonus: \"" + Settings.EnablePreOrderBonus.ToString() + "\"";
+                            LaunchOptions[1] = "InGameName: \"" + Settings.InGameName + "\"";
+                            LaunchOptions[2] = "SavePath: \"" + Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\Rockstar Games\GTA V\Profiles\Project127\GTA V\0F74F4C4" + "\"";
+                            LaunchOptions[3] = "WindowTitleTomfoolery: \"" + Overlay.GTAOverlay.targetWindowBorderless + "\"";
+                            LaunchOptions[4] = "EnableScripthookOnDowngraded: \"" + Settings.EnableScripthookOnDowngraded.ToString() + "\"";
 
-                    HelperClasses.ProcessHandler.StartDowngradedGame();
+                            HelperClasses.FileHandling.WriteStringToFileOverwrite(EmuCfgPath, LaunchOptions);
+                        }
+
+                        if (Settings.Retailer == Settings.Retailers.Steam && !Settings.EnableDontLaunchThroughSteam && LaunchWay == LaunchWays.DragonEmu)
+                        {
+                            var steamprocs = Process.GetProcessesByName("steam");
+                            if (steamprocs.Length > 0)
+                            {
+                                var steamproc = steamprocs[0];
+                                Int64 coreaffinity = steamproc.ProcessorAffinity.ToInt64();
+                                int corecount = 0;
+                                for (int i = 0; i < 64; i++)
+                                {
+                                    corecount += (coreaffinity & ((Int64)1 << i)) != 0 ? 1 : 0;
+                                }
+                                HelperClasses.Logger.Log("Current core affinity for steam is " + coreaffinity.ToString("X") + " (" + corecount + " cores)");
+                                if (corecount > 16)
+                                {
+                                    HelperClasses.Logger.Log("Settings steam's core affinity to FFFF (16 cores)");
+                                    Int64 NewAffinity = 0xFFFF;
+                                    steamproc.ProcessorAffinity = (IntPtr)NewAffinity;
+                                }
+                            }
+
+                        }
+
+                        HelperClasses.ProcessHandler.StartDowngradedGame();
+
+                    }
+                    else
+                    {
+                        LaunchAlternative.Launch();
+                    }
 
                 }
                 else
                 {
-                    LaunchAlternative.Launch();
+                    HelperClasses.Logger.Log("Installation State Broken");
+                    HelperClasses.Logger.Log("    Size of GTA5.exe in GTAV Installation Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\GTA5.exe"));
+                    HelperClasses.Logger.Log("    Size of GTA5.exe in Downgrade Files Folder: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\GTA5.exe"));
+                    HelperClasses.Logger.Log("    Size of update.rpf in GTAV Installation Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\update\update.rpf"));
+                    HelperClasses.Logger.Log("    Size of update.rpf in Downgrade Files Folder: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\update\update.rpf"));
+
+                    new Popup(Popup.PopupWindowTypes.PopupOkError, "Installation State is broken for some reason. Try to repair.");
+                    return;
                 }
 
-            }
-            else
-            {
-                HelperClasses.Logger.Log("Installation State Broken");
-                HelperClasses.Logger.Log("    Size of GTA5.exe in GTAV Installation Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\GTA5.exe"));
-                HelperClasses.Logger.Log("    Size of GTA5.exe in Downgrade Files Folder: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\GTA5.exe"));
-                HelperClasses.Logger.Log("    Size of update.rpf in GTAV Installation Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\update\update.rpf"));
-                HelperClasses.Logger.Log("    Size of update.rpf in Downgrade Files Folder: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\update\update.rpf"));
-
-                new Popup(Popup.PopupWindowTypes.PopupOkError, "Installation State is broken for some reason. Try to repair.");
-                return;
-            }
 
 
 
+                HelperClasses.Logger.Log("Game should be launched");
 
-            HelperClasses.Logger.Log("Game should be launched");
+                PostLaunchEvents();
 
-            PostLaunchEvents();
+            });
         }
 
 
