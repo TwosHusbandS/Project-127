@@ -33,11 +33,11 @@ namespace Project_127
 		public static string DragonsLink = "https://github.com/jaredtb";
 		public static string AnthersDemoVideoLink = "https://www.youtube.com/watch?v=dQw4w9WgXcQ&t=PLACEHOLDER";
 
-		public static void DynamicLinksMethod(string XML = "")
-		{
-			if (XML == "")
-			{
-				XML = Globals.XML_AutoUpdate;
+		public static void DynamicLinksMethod(string XML = null)
+        {
+            if (XML is null) // actually needs null check and not nullOrEmpty
+            {
+                XML = Globals.XML_AutoUpdate;
 			}
 
 			//dragonsreadme

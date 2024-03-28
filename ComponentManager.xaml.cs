@@ -260,7 +260,7 @@ namespace Project_127
         public ComponentManager()
         {
             InitializeComponent();
-            MyRefresh(false);
+            // MyRefresh(false); this is already on load event
             ButtonMouseOverMagic(btn_Refresh);
             MyDirtyProgramming = this;
             SetMode(MySettings.Settings.DMMode);
@@ -297,7 +297,7 @@ namespace Project_127
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            this.MyRefresh();
+            this.MyRefresh(false);
         }
 
 

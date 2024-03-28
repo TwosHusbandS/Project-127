@@ -57,11 +57,11 @@ namespace Project_127.HelperClasses
 		/// <summary>
 		/// Reading in the Information from Github Update.xml. Needs to be called so this calss is able to do stuff.
 		/// </summary>
-		public static void ReadFromGithub(string xml = "")
-		{
-			if (xml == "")
+		public static void ReadFromGithub(string xml = null)
+        {
+            if (xml is null) // actually needs null check and not nullOrEmpty
 			{
-				xml = Globals.XML_AutoUpdate;
+                xml = Globals.XML_AutoUpdate;
 			}
 
 

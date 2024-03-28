@@ -189,13 +189,14 @@ namespace Project_127
 			SetButtonMouseOverMagic(btn_Hamburger);
 			Globals.PageState = Globals.PageStates.GTA;
 
+            Globals.HamburgerMenuState = Globals.HamburgerMenuStates.Visible;
+
             // Some Background Change based on Date
             ChangeBackgroundBasedOnSeason();
 
             // Intepreting all Command Line shit
             Globals.CommandLineArgumentIntepretation();
 
-            Globals.HamburgerMenuState = Globals.HamburgerMenuStates.Visible;
 			if (Settings.P127Mode.ToLower() != "default")
 			{
 				MainWindow.MW.btn_lbl_Mode.Content = "Curr P127 Mode: '" + MySettings.Settings.P127Mode.ToLower() + "'";
@@ -431,6 +432,8 @@ namespace Project_127
 			SetButtonMouseOverMagic(btn_Auth);
 		}
 
+
+
 		/// <summary>
 		/// Starting the Dispatcher Timer. 30 seconds. Used to control automatic MTL session retrieval
 		/// </summary>
@@ -600,6 +603,7 @@ namespace Project_127
 			else if (Now.Month == 4 && Now.Day == 1)
 			{
 				Globals.BackgroundImage = Globals.BackgroundImages.AprilFools;
+				Globals.HamburgerMenuState = Globals.HamburgerMenuStates.Hidden;
                 if (Now.Second == 30 || Now.Second  == 1 || Now.Second == 4) 
 				{
 					Globals.PageState = Globals.PageStates.Auth;
@@ -675,12 +679,29 @@ namespace Project_127
 		}
 
 
-		/// <summary>
-		/// Sets the Backgrund of a specific Button
-		/// </summary>
-		/// <param name="myCtrl"></param>
-		/// <param name="pArtpath"></param>
-		public void SetControlBackground(Control myCtrl, string pArtpath, bool FromFile = false)
+
+        /// <summary>
+        /// Updates the GUI with relevant stuff. Gets called every 2.5 Seconds
+        /// </summary>
+        public void SetOfflineModeLblVisibility()
+		{
+			if (Globals.OfflineMode)
+			{
+                btn_lbl_OfflineMode.Visibility = Visibility.Visible;
+			}
+			else
+			{
+                btn_lbl_OfflineMode.Visibility = Visibility.Hidden;
+			}
+		}
+
+
+        /// <summary>
+        /// Sets the Backgrund of a specific Button
+        /// </summary>
+        /// <param name="myCtrl"></param>
+        /// <param name="pArtpath"></param>
+        public void SetControlBackground(Control myCtrl, string pArtpath, bool FromFile = false)
 		{
 			try
 			{

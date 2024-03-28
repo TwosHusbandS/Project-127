@@ -39,9 +39,10 @@
 
             <Label x:Name="lbl_Main" Style="{StaticResource lbl_Set_Info}" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Content="" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"/>
 
-            <ComboBox x:Name="cb_cb" Grid.Row="2" Grid.Column="0" Style="{StaticResource cobo}" Margin="20"/>
+            <ComboBox x:Name="cb_cb" Grid.Row="2" Grid.Column="0" Style="{StaticResource cobo}" Margin="30,20"/>
+
             <Button x:Name="btn_Yes" Style="{StaticResource btn_SM}" Content="Yes" Click="btn_Yes_Click" Grid.Row="2" Grid.Column="0" FontSize="12" Margin="20"/>
-			<Button x:Name="btn_Combo" Style="{StaticResource btn_SM}" Content="Yes" Click="btn_Combo_Click" Grid.Row="2" Grid.Column="0" FontSize="12" Margin="20"/>
+			<Button x:Name="btn_Combo" Content="Yes" Click="btn_Combo_Click" Grid.Row="2" Grid.Column="0" FontSize="12" Margin="20"/>
             <Button x:Name="btn_No" Style="{StaticResource btn_SM}" Content="No" Click="btn_No_Click" Grid.Row="2" Grid.Column="1" FontSize="12" Margin="20"/>
             <Button x:Name="btn_BigBtn" Style="{StaticResource btn_SM}" Content="[[ CLICK ME ]]" Click="btn_BigBtn_Click" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" FontSize="12" Margin="20"/>
 
@@ -54,14 +55,15 @@
             <Label x:Name="lbl_P127Path" Style="{StaticResource lbl_Set_Info}" HorizontalAlignment="Right" Grid.Row="5" Grid.Column="0" Content="Upgrade/Downgrade Files"/>
             <Label x:Name="lbl_P127Path_Setting" Style="{StaticResource lbl_Set_Info}" HorizontalAlignment="Left" Grid.Row="5" Grid.Column="1" Content=""/>
 
-            <Label x:Name="lbl_Hardlinking" Style="{StaticResource lbl_Set_Info}" HorizontalAlignment="Right" Grid.Row="6" Grid.Column="0" Content="Hardlink files if possible"/>
+            <Label x:Name="lbl_Hardlinking" Style="{StaticResource lbl_Set_Info}" HorizontalAlignment="Right" Grid.Row="6" Grid.Column="0" Content="Prefer Copy over Hardlinking Files"/>
             <Label x:Name="lbl_Hardlinking_Setting" Style="{StaticResource lbl_Set_Info}" HorizontalAlignment="Left" Grid.Row="6" Grid.Column="1" Content=""/>
 
             <Label x:Name="lbl_Retailer" Style="{StaticResource lbl_Set_Info}" HorizontalAlignment="Right" Grid.Row="7" Grid.Column="0" Content="Retailer"/>
             <Label x:Name="lbl_Retailer_Setting" Style="{StaticResource lbl_Set_Info}" HorizontalAlignment="Left" Grid.Row="7" Grid.Column="1" Content=""/>
 
             <Button x:Name="btn_Exit" Style="{StaticResource btn_SM}" Margin="5,1" FontSize="12"  Grid.Row="8" Grid.Column="0" Click="btn_Exit_Click" Content="Exit"/>
-            <Button x:Name="btn_Save" Style="{StaticResource btn_SM}" Margin="5,1" FontSize="12"  Grid.Row="8" Grid.Column="1" Click="btn_Save_Click" Content="Save"/>
+            <Button x:Name="btn_Save" Style="{StaticResource btn_SM}" Margin="5,1" FontSize="12"  Grid.Row="8" Grid.Column="1" Click="btn_Save_Click" Content="Save / Continue"/>
+            <Rectangle x:Name="Rect_Hide_SaveButton" Margin="5,1" Grid.Row="8" Grid.Column="1" Fill="{x:Static local:MyColors.MyColorOffWhite85}" ToolTip="Not all Settings have been set."/>
 
         </Grid>
     </Border>

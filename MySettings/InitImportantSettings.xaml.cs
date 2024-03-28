@@ -12,13 +12,14 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace Project_127.MySettings
 {
     /// <summary>
     /// Interaction logic for InitImportantSettings.xaml
     /// </summary>
-    public partial class InitImportantSettings : Window
+    public partial class InitImportantSettings : System.Windows.Window
     {
         private void Window_SourceInitialized(object sender, EventArgs e)
         {
@@ -54,6 +55,7 @@ namespace Project_127.MySettings
             AddGuesses();
             btn_No.Visibility = Visibility.Hidden;
             btn_Yes.Visibility = Visibility.Hidden;
+            btn_Combo.Visibility = Visibility.Hidden;
             btn_BigBtn.Visibility = Visibility.Hidden;
             cb_cb.Visibility = Visibility.Hidden;
             Loop();
@@ -128,10 +130,15 @@ namespace Project_127.MySettings
             HelperClasses.Logger.Log("After " + GTAVPathGuesses.Count + " guesses we still dont have the correct GTAVInstallationPath. User has to do it manually now. Fucking casual");
             btn_No.Visibility = Visibility.Hidden;
             btn_Yes.Visibility = Visibility.Hidden;
+            cb_cb.Visibility = Visibility.Hidden;
+            btn_Combo.Visibility = Visibility.Hidden;
             btn_BigBtn.Visibility = Visibility.Visible;
             btn_BigBtn.Tag = "GTAVPath";
             lbl_Main.Content = "Select the Path where your gta5.exe is located.";
+ 
         }
+
+
 
         public void CheckIfZIPPathDone()
         {
@@ -203,7 +210,7 @@ namespace Project_127.MySettings
                 btn_Yes.Tag = "ZIPPathConfirmation";
                 btn_No.Tag = "ZIPPathConfirmation";
                 btn_BigBtn.Visibility = Visibility.Hidden;
-                lbl_Main.Content = "Do you want:\n'" + UserChoice + "'/nas your ZIP Path Location?";
+                lbl_Main.Content = "Do you want:\n'" + UserChoice + "'\nas your ZIP Path Location?";
                 lbl_Main.Tag = UserChoice;
                 UserChoice = "";
             }
@@ -319,8 +326,15 @@ namespace Project_127.MySettings
             }
             else if (MyTag == "ConfirmRetailer")
             {
-                NS_Retailer = cb_cb.SelectedItem.ToString();
-                FinishSetup();
+                try 
+                { 
+                    NS_Retailer = cb_cb.SelectedItem.ToString();
+                    FinishSetup();
+                }
+                catch
+                {
+                    new Popups.Popup(Popups.Popup.PopupWindowTypes.PopupOkError, "No Retailer selected.\nSelect a Retailer in the Dropdown next to this button").ShowDialog();
+                }
             }
             else if (MyTag == "RecommendedHardlinking")
             {
@@ -390,6 +404,7 @@ namespace Project_127.MySettings
                     HelperClasses.Logger.Log("GTAV Path force was canceled.");
                     btn_No.Visibility = Visibility.Hidden;
                     btn_Yes.Visibility = Visibility.Hidden;
+                    cb_cb.Visibility = Visibility.Hidden;
                     btn_BigBtn.Visibility = Visibility.Visible;
                     lbl_Main.Content = "Select the Path where your gta5.exe is located.";
                 }
@@ -432,6 +447,8 @@ namespace Project_127.MySettings
         {
             btn_No.Visibility = Visibility.Hidden;
             btn_Yes.Visibility = Visibility.Hidden;
+            cb_cb.Visibility = Visibility.Hidden;
+            btn_Combo.Visibility = Visibility.Hidden;
             btn_BigBtn.Visibility = Visibility.Visible;
             btn_BigBtn.Tag = "ZIPPath";
             lbl_Main.Content = "Pick the Folder you want to use to save P127 Files";
@@ -440,29 +457,78 @@ namespace Project_127.MySettings
 
         private void btn_Yes_Click(object sender, RoutedEventArgs e)
         {
-            UserAnswer(true, ((Button)sender).Tag.ToString());
+            UserAnswer(true, ((System.Windows.Controls.Button)sender).Tag.ToString());
         }
 
         private void btn_Combo_Click(object sender, RoutedEventArgs e)
         {
             btn_Combo.Visibility = Visibility.Hidden;
             cb_cb.Visibility = Visibility.Visible;
-            cb_cb.IsEditable = true;
+            cb_cb.IsEditable = false;
             cb_cb.IsDropDownOpen = true;
-            cb_cb.StaysOpenOnEdit = true;
+
+            btn_Yes.Visibility = Visibility.Hidden;
+            btn_Combo.Visibility = Visibility.Hidden;
+            btn_No.Visibility = Visibility.Visible;
+            btn_BigBtn.Visibility = Visibility.Hidden;
+
+            foreach (var ctrl in GetChildren(this))
+            {
+                try
+                {
+                    Control asdf = (Control)ctrl;
+                    if (asdf.Name.StartsWith("btn") || asdf.Name.StartsWith("cb"))
+                    {
+                        //Globals.DebugPopup(asdf.Name + " | " + asdf.Visibility.ToString());
+                    }
+                }
+                catch
+                {
+
+                }
+                // Process children here!
+            }
         }
+
+        public static IEnumerable<Visual> GetChildren(Visual parent, bool recurse = true)
+        {
+            if (parent != null)
+            {
+                int count = VisualTreeHelper.GetChildrenCount(parent);
+                for (int i = 0; i < count; i++)
+                {
+                    // Retrieve child visual at specified index value.
+                    var child = VisualTreeHelper.GetChild(parent, i) as Visual;
+
+                    if (child != null)
+                    {
+                        yield return child;
+
+                        if (recurse)
+                        {
+                            foreach (var grandChild in GetChildren(child, true))
+                            {
+                                yield return grandChild;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+
         private void btn_No_Click(object sender, RoutedEventArgs e)
         {
-            UserAnswer(false, ((Button)sender).Tag.ToString());
+            UserAnswer(false, ((System.Windows.Controls.Button)sender).Tag.ToString());
         }
 
         private void btn_BigBtn_Click(object sender, RoutedEventArgs e)
         {
-            if (((Button)sender).Tag.ToString() == "GTAVPath")
+            if (((System.Windows.Controls.Button)sender).Tag.ToString() == "GTAVPath")
             {
                 PickGTAVLocation();
             }
-            else if (((Button)sender).Tag.ToString() == "ZIPPath")
+            else if (((System.Windows.Controls.Button)sender).Tag.ToString() == "ZIPPath")
             {
                 PickZIPPathLocation();
             }
@@ -480,6 +546,7 @@ namespace Project_127.MySettings
             btn_BigBtn.Visibility = Visibility.Hidden;
             cb_cb.Visibility = Visibility.Hidden;
             lbl_Main.Content = "Confirm your settings via the save-button\non the very bottom right.";
+            Rect_Hide_SaveButton.Visibility = Visibility.Hidden;
             btn_Save.IsEnabled = true;
         }
 
@@ -492,7 +559,7 @@ namespace Project_127.MySettings
             btn_BigBtn.Visibility = Visibility.Hidden;
             btn_No.Content = "Confirm";
             btn_No.Tag = "ConfirmRetailer";
-            lbl_Main.Content = "Select your Retailer. The button will be blank after you select it, don't worry, click Confirm to save your selection.";
+            lbl_Main.Content = "Select your Retailer. Click Confirm to save your selection.";
             cb_cb.ItemsSource = Enum.GetValues(typeof(Settings.Retailers));
         }
 
@@ -547,7 +614,7 @@ namespace Project_127.MySettings
             yn.ShowDialog();
             if (yn.DialogResult == true)
             {
-                this.Close();
+                Globals.ProperExit();
             }
         }
 
@@ -556,6 +623,7 @@ namespace Project_127.MySettings
             MainWindow.MW.Left = this.Left;
             MainWindow.MW.Top = this.Top;
         }
+
     }
 }
 

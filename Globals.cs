@@ -104,39 +104,20 @@ namespace Project_127
 			get
 			{
                 string masterURL = "https://raw.githubusercontent.com/TwosHusbandS/Project-127/master/Installer/DownloadManager.xml";
-                string modeURL = "https://raw.githubusercontent.com/TwosHusbandS/Project-127/" + DMBranch + "/Installer/DownloadManager.xml";
+				string modeURL = "https://raw.githubusercontent.com/TwosHusbandS/Project-127/" + DMBranch + "/Installer/DownloadManager.xml";
 
-                string modeXML = HelperClasses.FileHandling.GetStringFromURL(modeURL, true);
+				string modeXML = HelperClasses.FileHandling.GetStringFromURL(modeURL, true);
 				if (!String.IsNullOrWhiteSpace(modeXML))
 				{
 					return modeXML;
 				}
 				else
 				{
-					return HelperClasses.FileHandling.GetStringFromURL(masterURL, true);
+					return HelperClasses.FileHandling.GetStringFromURL(masterURL);
 				}
 			}
 		}
 
-		/// <summary>
-		/// URL for DownloadManagerXML
-		/// </summary>
-		public static string URL_DownloadManager
-		{
-			get
-			{
-				string masterURL = "https://raw.githubusercontent.com/TwosHusbandS/Project-127/master/Installer/DownloadManager.xml";
-				string modeURL = "https://raw.githubusercontent.com/TwosHusbandS/Project-127/" + DMBranch + "/Installer/DownloadManager.xml";
-				if (String.IsNullOrWhiteSpace(HelperClasses.FileHandling.GetStringFromURL(modeURL, true)))
-				{
-					return masterURL;
-				}
-				else
-				{
-					return modeURL;
-				}
-			}
-		}
 
 		/// Gets the Branch we are in as actual branch.
 		/// </summary>
@@ -230,7 +211,7 @@ namespace Project_127
 		/// <summary>
 		/// Property of other Buildinfo. Will be in the top message of logs
 		/// </summary>
-		public static string BuildInfo = "1.2.6.1 - RC Nr. 5";
+		public static string BuildInfo = "1.2.6.2 - RC Nr. 2";
 
 
 		/// <summary>
@@ -260,15 +241,41 @@ namespace Project_127
 
 
 
-		/// <summary>
-		/// Property we use to keep track if we have already thrown one OfflineError Popup
-		/// </summary>
-		public static bool OfflineErrorThrown = false;
+	
+        /// <summary>
+        /// Property of User choice if we use to put P127 into offline mode, so it wont query every time, takes ages
+        /// </summary>
+        public static bool OfflineModeUserChoice { get { return _OfflineModeUserChoice; } set { _OfflineModeUserChoice = value; MainWindow.MW.SetOfflineModeLblVisibility(); } }
+        private static bool _OfflineModeUserChoice = false;
 
-		/// <summary>
-		/// Property of LogFile Location. Will always be in in the same folder as the executable, since we want to start logging before inititng regedit and loading settings
-		/// </summary>
-		public static string Logfile { get; private set; } = ProjectInstallationPath.TrimEnd('\\') + @"\AAA - Logfile.log";
+        /// <summary>
+        /// Property for Console Arg OfflineMode
+        /// </summary>
+        public static bool OfflineModeConsoleArg { get { return _OfflineModeConsoleArg; } set {  _OfflineModeConsoleArg = value; MainWindow.MW.SetOfflineModeLblVisibility(); } }
+        private static bool _OfflineModeConsoleArg = false;
+
+        /// <summary>
+        /// Property Offline mode, takes user choice and command line args int consideration
+        /// </summary>
+        public static bool OfflineMode
+        {
+            get
+            {
+				if (OfflineModeConsoleArg || OfflineModeUserChoice)
+				{
+                    return true;
+				}
+				else
+				{
+                    return false;
+				}
+            }
+        }
+
+        /// <summary>
+        /// Property of LogFile Location. Will always be in in the same folder as the executable, since we want to start logging before inititng regedit and loading settings
+        /// </summary>
+        public static string Logfile { get; private set; } = ProjectInstallationPath.TrimEnd('\\') + @"\AAA - Logfile.log";
 
 
 		public static IPCPipeServer pipeServer = new IPCPipeServer("Project127Launcher");
@@ -657,14 +664,17 @@ namespace Project_127
 			// Deleting all Installer and ZIP Files from own Project Installation Path
 			DeleteOldFiles();
 
+			string tmp_autoupdate_xml = Globals.XML_AutoUpdate;
+
 			// Throw annoucements
-			HandleAnnouncements();
+			HandleAnnouncements(tmp_autoupdate_xml);
 
 			// Auto Updater
-			CheckForUpdate();
+			CheckForUpdate(tmp_autoupdate_xml);
 
 			// Loading Info for Version stuff.
-			HelperClasses.BuildVersionTable.ReadFromGithub();
+			// Already done at the end of check for update...
+			// HelperClasses.BuildVersionTable.ReadFromGithub();
 
 
 			// SetUpDownloadManager
@@ -1085,11 +1095,11 @@ namespace Project_127
 		/// <summary>
 		/// Method which does the UpdateCheck on Startup
 		/// </summary>
-		public static void CheckForUpdate(string XML_Autoupdate_Temp = "")
+		public static void CheckForUpdate(string XML_Autoupdate_Temp = null)
 		{
-			if (XML_Autoupdate_Temp == "")
+			if (XML_Autoupdate_Temp is null) // actually needs null check and not nullOrEmpty
 			{
-				XML_Autoupdate_Temp = XML_AutoUpdate;
+                XML_Autoupdate_Temp = XML_AutoUpdate;
 			}
 
 
@@ -1114,7 +1124,7 @@ namespace Project_127
 					{
 						// Update Found.
 						HelperClasses.Logger.Log("Update found (Version Check returning true).", 1);
-						HelperClasses.Logger.Log("Checking if URL is reachable.", 1);
+						// HelperClasses.Logger.Log("Checking if URL is reachable.", 1);
 
 						string DLPath = HelperClasses.FileHandling.GetXMLTagContent(XML_Autoupdate_Temp, "url");
 						string DLFilename = DLPath.Substring(DLPath.LastIndexOf('/') + 1);
@@ -1797,8 +1807,25 @@ namespace Project_127
 							}
 						}
 					}
-
-					continue;
+                    else if (args[i].ToLower() == "-offlinemode")
+                    {
+                        if (args[i + 1].ToLower().StartsWith("-"))
+                        {
+                            Globals.OfflineModeConsoleArg = true;
+                        }
+                        else
+                        {
+                            if (args[i + 1].ToLower() == "true")
+                            {
+                                Globals.OfflineModeConsoleArg = true;
+                            }
+                            else
+                            {
+                                Globals.OfflineModeConsoleArg = false;
+                            }
+                        }
+                    }
+                    continue;
 				}
 
 				if (args[i].ToLower() == "-reset")
@@ -1835,10 +1862,13 @@ namespace Project_127
 				{
 					GTAOverlay.DisableRichard = true;
 				}
+                else if (args[i].ToLower() == "-offlinemode")
+                {
+                    Globals.OfflineModeConsoleArg = true;
+                }
 
 
-
-			}
+            }
 		}
 
 
@@ -1883,9 +1913,14 @@ namespace Project_127
 		}
 
 
-		private static void HandleAnnouncements()
-		{
-			string MyAnnoucment = HelperClasses.FileHandling.GetXMLTagContent(XML_AutoUpdate, "announcement");
+		private static void HandleAnnouncements(string XML_Autoupdate_Temp = null)
+        {
+            if (XML_Autoupdate_Temp is null) // actually needs null check and not nullOrEmpty
+            {
+                XML_Autoupdate_Temp = XML_AutoUpdate;
+            }
+
+            string MyAnnoucment = HelperClasses.FileHandling.GetXMLTagContent(XML_Autoupdate_Temp, "announcement");
 			if (MyAnnoucment != "")
 			{
 				MyAnnoucment = MyAnnoucment.Replace(@"\n", "\n");

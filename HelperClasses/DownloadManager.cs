@@ -731,7 +731,7 @@ namespace Project_127.HelperClasses
 		{
 			if (xmls == null)
 			{
-				xmls = HelperClasses.FileHandling.GetStringFromURL(Globals.URL_DownloadManager);
+				xmls = Globals.XML_DownloadManager;
 			}
 			XPathDocument xml = null;
 
@@ -741,7 +741,8 @@ namespace Project_127.HelperClasses
 			}
 			else
 			{
-				new Popup(Popup.PopupWindowTypes.PopupOkError, "Download Manager unable to fetch xml").ShowDialog();
+				// surpressing popup here, so user doesnt get 2 popups for 1 error.
+				// new Popup(Popup.PopupWindowTypes.PopupOkError, "Download Manager unable to fetch xml").ShowDialog();
 				xml = new XPathDocument(new System.IO.StringReader("<targets/>"));
 
 			}
