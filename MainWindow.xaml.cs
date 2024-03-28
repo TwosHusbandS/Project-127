@@ -687,11 +687,11 @@ namespace Project_127
 		{
 			if (Globals.OfflineMode)
 			{
-				lbl_OfflineMode.Visibility = Visibility.Visible;
+                btn_lbl_OfflineMode.Visibility = Visibility.Visible;
 			}
 			else
 			{
-				lbl_OfflineMode.Visibility = Visibility.Hidden;
+                btn_lbl_OfflineMode.Visibility = Visibility.Hidden;
 			}
 		}
 

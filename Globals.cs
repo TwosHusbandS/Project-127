@@ -211,7 +211,7 @@ namespace Project_127
 		/// <summary>
 		/// Property of other Buildinfo. Will be in the top message of logs
 		/// </summary>
-		public static string BuildInfo = "1.2.6.2 - RC Nr. 1";
+		public static string BuildInfo = "1.2.6.2 - RC Nr. 2";
 
 
 		/// <summary>
@@ -1124,7 +1124,7 @@ namespace Project_127
 					{
 						// Update Found.
 						HelperClasses.Logger.Log("Update found (Version Check returning true).", 1);
-						HelperClasses.Logger.Log("Checking if URL is reachable.", 1);
+						// HelperClasses.Logger.Log("Checking if URL is reachable.", 1);
 
 						string DLPath = HelperClasses.FileHandling.GetXMLTagContent(XML_Autoupdate_Temp, "url");
 						string DLFilename = DLPath.Substring(DLPath.LastIndexOf('/') + 1);
