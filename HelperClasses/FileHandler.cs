@@ -713,16 +713,26 @@ string lpSymlinkFileName, string lpTargetFileName, SymbolicLink dwFlags);
 		public static string GetStringFromURL(string pURL, bool surpressPopup = false)
 		{
 			string rtrn = "";
+			if (Globals.OfflineMode)
+			{
+				return "";
+			}
 			try
 			{
-				rtrn = new System.Net.Http.HttpClient().GetStringAsync(pURL).GetAwaiter().GetResult();
+				var tmp = new System.Net.Http.HttpClient();
+				tmp.Timeout = TimeSpan.FromMilliseconds(500);
+                rtrn = tmp.GetStringAsync(pURL).GetAwaiter().GetResult();
 			}
 			catch (Exception e)
 			{
-				if (Globals.OfflineErrorThrown == false && surpressPopup == false)
+				if (surpressPopup == false)
 				{
-					new Popup(Popup.PopupWindowTypes.PopupOkError, "Project 1.27 can not connect to Github and check for Latest Files or Updates.\nThis might cause some things to not work." + e.ToString()).ShowDialog();
-					Globals.OfflineErrorThrown = true;
+                    Popup yesno =  new Popup(Popup.PopupWindowTypes.PopupYesNo, "Project 1.27 can not connect to Github and check for Latest Files\nP127 Updates, GameBuildInfo or the Component Manager.\nThis might cause some things to not work.\n" + e.ToString() + "\n\n\nDo you want to put  P127 into offline mode until restart?\nThis prevents it from trying again and again and making you wait.");
+					yesno.ShowDialog();
+					if (yesno.DialogResult == true)
+					{
+						Globals.OfflineModeUserChoice = true;
+					}
 				}
 				HelperClasses.Logger.Log("GetStringFromURL failed. Probably Network related. URL = '" + pURL + "'", true, 0);
 				HelperClasses.Logger.Log("e.ToString():\n" + e.ToString(), true, 1);
