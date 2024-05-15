@@ -22,6 +22,21 @@ These Infos do NOT contain advanced-user-use-cases which are on a normal Leftcli
 * "-background CustomBackgroundName" -> Available Custom Backups: "Default", "FourTwenty", "Winter", "Spooky", "Valentine", "Murica", "Germania", "Turkey", "Cat", "AprilFools"
 * There are more, but these are staying internal. If you really want them and need them, you probably know where to look...
 
+### Dynamic MTL Offsets:
+* MTL Auth reads RAM (process memory) of the rockstar games launcher to verify you have a valid session and own the game.
+* To achieve this, you have to tell the PC exactly how much bytes it needs to read, and more importantly where they are / where they start.
+* This is called "offset". Any update of Rockstar games Launcher might change where rockstar games launcher stores your session (simplified).
+* This is what happened when the "mtl broken" spam begins. This used to require a full P127 to fix, because we needed to change the offset in our code.
+* Now there is something called "Dynamic MTL Offsets". 
+* P127 still comes with default (working at that time) offsets, but can also read new offsets from github and from a local file.
+* This means in the future we SHOULD be able to fix MTL issues remotely by changing files in the github repo, where P127 reads it from, without having to push an entire P127 Update.
+* P127 reads them from github [here](https://github.com/TwosHusbandS/Project-127/blob/master/Installer/MTLOffsets.xml)
+* The local file used to store offsets is (by default) C:\Program Files (x86)\Project 1.27\MTLOffsets.xml.
+* If your local file and github are NOT the same offsets (like in the event of a remote-fix after broken MTL, P127 will throw a popup asking you if you would like to overwrite your local offsets with the github offsets.
+* - If the github offsets are the broken ones, and your local ones are correct, this might get annoying quick...
+* - Set your local file to read-only and P127 will respect it and not offer you the github offsets anymore.
+* If MTL is broken, you may find a file with working offsets in the GTA V Speedrunning discord, even before P127 is officially remote-fixed.
+
 #### SaveFileHandler:
 * Keyboard support (arrow keys, delete, F2, F5, stuff like that)
 * Rightclick support + Mouse Over support

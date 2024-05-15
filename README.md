@@ -133,6 +133,7 @@ Pretty much built with straight C# visualized with WPF
 * If something is not working and you are contact me, I would appreciate the LogFile and the DebugFile, which are both in the InstallationFolder of this Program
 * Read the Help Section if something is not working.
 
+-----
 
 ### Advanced User Instructions:
 
@@ -141,7 +142,8 @@ Pretty much built with straight C# visualized with WPF
   * By default it recommends you to use your GTA Installation for that.
   * Again: Use your GTA Installation Folder for this.
 * Theres a lot of stuff you can rightclick. I mean. A lot.
-
+* A lot of "advanced user" stuff is explained [here](https://github.com/TwosHusbandS/Project-127/blob/master/Installer/Info/AdvancedUser.md)
+* There are also [explanations for the Note Overlay](https://github.com/TwosHusbandS/Project-127/blob/master/Installer/Info/AdvancedNotefile.md) as well as an [Advanced Patcher Guide](https://github.com/TwosHusbandS/Project-127/blob/master/Installer/Info/AdvancedPatcher.md)
 
 -----
 

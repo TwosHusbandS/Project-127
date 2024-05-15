@@ -119,9 +119,33 @@ namespace Project_127
 		}
 
 
-		/// Gets the Branch we are in as actual branch.
+		/// <summary>
+		/// XML for the MTL Offsets from Github
 		/// </summary>
-		public static string P127Branch
+        public static string XML_MTLOffsetsGithub
+        {
+            get
+            {
+                string masterURL = "https://raw.githubusercontent.com/TwosHusbandS/Project-127/master/Installer/MTLOffsets.xml";
+                string modeURL = "https://raw.githubusercontent.com/TwosHusbandS/Project-127/" + P127Branch.ToLower() + "/Installer/MTLOffsets.xml";
+
+                string modeXML = HelperClasses.FileHandling.GetStringFromURL(modeURL, true);
+
+                if (!String.IsNullOrWhiteSpace(modeXML))
+                {
+                    return modeXML;
+                }
+                else
+                {
+                    return HelperClasses.FileHandling.GetStringFromURL(masterURL);
+                }
+            }
+        }
+
+
+        /// Gets the Branch we are in as actual branch.
+        /// </summary>
+        public static string P127Branch
 		{
 			get
 			{
@@ -277,8 +301,19 @@ namespace Project_127
         /// </summary>
         public static string Logfile { get; private set; } = ProjectInstallationPath.TrimEnd('\\') + @"\AAA - Logfile.log";
 
+		/// <summary>
+		/// Property of Debugfile Location
+		/// </summary>
+        public static string DebugFile = Globals.ProjectInstallationPath.TrimEnd('\\') + @"\AAA - DEBUG.txt";
 
-		public static IPCPipeServer pipeServer = new IPCPipeServer("Project127Launcher");
+        /// <summary>
+        /// Property of the local XML file for MTL offsets
+        /// </summary>
+        public static string MTLOffsetsLocalFilepath { get; private set; } = ProjectInstallationPath.TrimEnd('\\') + @"\MTLOffsets.xml";
+
+
+
+        public static IPCPipeServer pipeServer = new IPCPipeServer("Project127Launcher");
 
 
 
@@ -683,6 +718,8 @@ namespace Project_127
 			// reading Social club install dir from registry
 			LaunchAlternative.SetUpSocialClubRegistryThing();
 			LaunchAlternative.SocialClubUpgrade();
+
+			MainWindow.DMO = Auth.DynamicMTLOffsets.GetMTLOffsets();
 
 			// OUTDATED
 			// Downloads the "big 3" gamefiles from github release

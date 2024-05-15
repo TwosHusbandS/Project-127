@@ -409,13 +409,11 @@ string lpSymlinkFileName, string lpTargetFileName, SymbolicLink dwFlags);
 
 			pLineContent = "[" + DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss") + "] (" + intrandom + ") - " + pLineContent;
 
-			string pFilePath = Globals.ProjectInstallationPath.TrimEnd('\\') + @"\AAA - DEBUG.txt";
-
 			// Should be quicker than checking if File exists, and also checks for more erros
 			try
 			{
 				StreamWriter sw;
-				sw = File.AppendText(pFilePath);
+				sw = File.AppendText(Globals.DebugFile);
 				sw.Write(pLineContent + Environment.NewLine);
 				sw.Close();
 			}
@@ -869,12 +867,32 @@ string lpSymlinkFileName, string lpTargetFileName, SymbolicLink dwFlags);
 			return rtrnList;
 		}
 
+
+
 		/// <summary>
-		/// deleteFile
+		/// Gets Bool if File is read only
 		/// </summary>
-		/// <param name="pPath"></param>
-		/// <param name="pFile"></param>
-		public static void deleteFile(string pPath, string pFile)
+		/// <param name="pFilePath"></param>
+		/// <returns></returns>
+        public static bool IsFileReadOnly(string pFilePath)
+        {
+            try
+            {
+                FileInfo fInfo = new FileInfo(pFilePath);
+                return fInfo.IsReadOnly;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// deleteFile
+        /// </summary>
+        /// <param name="pPath"></param>
+        /// <param name="pFile"></param>
+        public static void deleteFile(string pPath, string pFile)
 		{
 			deleteFile(PathCombine(pPath, pFile));
 		}

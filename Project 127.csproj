@@ -189,6 +189,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Auth\CEFResourceHandler.cs" />
+    <Compile Include="Auth\DynamicMTLOffsets.cs" />
     <Compile Include="Auth\MTLInterface.cs" />
     <Compile Include="ComponentManager.xaml.cs">
       <DependentUpon>ComponentManager.xaml</DependentUpon>
@@ -559,6 +560,7 @@
     <None Include="Artwork\bg_valentine.png" />
     <None Include="Artwork\bg_turkey.png" />
     <Resource Include="Artwork\bg_aprilfools.png" />
+    <Resource Include="Installer\MTLOffsets.xml" />
     <Content Include="Installer\NewSetup.iss" />
     <Resource Include="Overlay\richard\001.jpg" />
     <Resource Include="Overlay\richard\002.jpg" />

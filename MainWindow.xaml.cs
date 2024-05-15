@@ -124,6 +124,8 @@ namespace Project_127
 
 		private Stopwatch StartUpStopwatch;
 
+		public static Auth.DynamicMTLOffsets DMO;
+
 		/// <summary>
 		/// Constructor of Main Window
 		/// </summary>

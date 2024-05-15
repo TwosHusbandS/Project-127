@@ -282,16 +282,43 @@ namespace Project_127.HelperClasses
 				}
 				catch { }
 
+				try
+				{
+					DebugMessage.Add("Current Dynamic MTL Offsets in use, ask user to provide file from same folder as this debug if needed");
+                    List<string> tmp = new List<string>();
+                    List<string> tmp2 = new List<string>();
+                    for (int i = 0; i <= MainWindow.DMO.match_pattern.Length - 1; i++)
+                    {
+                        tmp.Add(String.Format("0x{0:X2}", MainWindow.DMO.match_pattern[i]));
+						tmp2.Add(MainWindow.DMO.match_pattern[i].ToString());
+                    }
+
+                    DebugMessage.Add("\tmatch_pattern: '" + String.Join(", ", tmp) + "' (" + String.Join(", ", tmp2) + ")");
+                    DebugMessage.Add("\tpattern_search_offset: '" + MainWindow.DMO.pattern_search_offset + "' (" + MainWindow.DMO.pattern_search_offset + ")");
+                    DebugMessage.Add("\tblob_offset: '" + MainWindow.DMO.blob_offset + "' (" + MainWindow.DMO.blob_offset + ")");
+                    DebugMessage.Add("\tblob_count: '" + MainWindow.DMO.blob_count + "' (" + MainWindow.DMO.blob_count + ")");
+                    DebugMessage.Add("\trockstarId_offset: '" + String.Format("0x{0:X}", MainWindow.DMO.rockstarId_offset) + "' (" + MainWindow.DMO.rockstarId_offset + ")");
+                    DebugMessage.Add("\trockstarId_take: '" + MainWindow.DMO.rockstarId_take + "' (" + MainWindow.DMO.rockstarId_take + ")");
+                    DebugMessage.Add("\tsessKey_offset: '" + String.Format("0x{0:X}", MainWindow.DMO.sessKey_offset) + "' (" + MainWindow.DMO.sessKey_offset + ")");
+                    DebugMessage.Add("\tsessKey_take: '" + MainWindow.DMO.sessKey_take + "' (" + MainWindow.DMO.sessKey_take + ")");
+                    DebugMessage.Add("\tticket_offset: '" + String.Format("0x{0:X}", MainWindow.DMO.ticket_offset) + "' (" + MainWindow.DMO.ticket_offset + ")");
+                    DebugMessage.Add("\tsessTicket_offset: '" + String.Format("0x{0:X}", MainWindow.DMO.sessTicket_offset) + "' (" + MainWindow.DMO.sessTicket_offset + ")");
+                    DebugMessage.Add("\trockstarNick_offset: '" + String.Format("0x{0:X}", MainWindow.DMO.rockstarNick_offset) + "' (" + MainWindow.DMO.rockstarNick_offset + ")");
+                    DebugMessage.Add("\tcountryCode_offset: '" + String.Format("0x{0:X}", MainWindow.DMO.countryCode_offset) + "' (" + MainWindow.DMO.countryCode_offset + ")");
+                    DebugMessage.Add("\tIDSegment_bitwiseXOR: '" + String.Format("0x{0:X}", MainWindow.DMO.IDSegment_bitwiseXOR) + "' (" + MainWindow.DMO.IDSegment_bitwiseXOR + ")");
+
+				}
+				catch { }
+
 				tmpsw.Stop();
 				DebugMessage.Add("Generating DebugFile took " + tmpsw.ElapsedMilliseconds + " ms.");
 
 				// Building DebugPath
-				string DebugFile = Globals.ProjectInstallationPath.TrimEnd('\\') + @"\AAA - DEBUG.txt";
 
 				// Deletes File, Creates File, Adds to it
 
 
-				HelperClasses.FileHandling.WriteStringToFileOverwrite(DebugFile, DebugMessage.ToArray());
+				HelperClasses.FileHandling.WriteStringToFileOverwrite(Globals.DebugFile, DebugMessage.ToArray());
 
 				HelperClasses.ProcessHandler.StartProcess(@"C:\Windows\explorer.exe", pCommandLineArguments: Globals.ProjectInstallationPath);
 			});
