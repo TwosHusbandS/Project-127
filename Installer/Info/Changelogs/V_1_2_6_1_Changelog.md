@@ -1,4 +1,4 @@
-### Changelog from 1.2.5.2 to 1.2.5.3:
+### Changelog from 1.2.5.2 to 1.2.6.1:
 
 
 #### New Stuff:
