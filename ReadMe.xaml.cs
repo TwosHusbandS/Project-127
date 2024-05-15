@@ -323,7 +323,7 @@ namespace Project_127
 
 			AddParagraph(rtb_About, "If you are having trouble with Project 1.27 or are running into any issues, please read the \"Help-Section\" and visit the GTA V Speedrun Discord and post it in the \"Project-1-27-Chat\" Channel.");
 
-			AddHyperlinkText(rtb_About, "https://discordapp.com/users/612259615291342861", "Discord (@thS#0305)", "For anything regarding this client, feel free to contact me on ", "");
+			AddHyperlinkText(rtb_About, "https://discordapp.com/users/612259615291342861", "Discord (@ths_was_taken)", "For anything regarding this client, feel free to contact me on ", "");
 
 			AddParagraph(rtb_About, "");
 

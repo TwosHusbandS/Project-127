@@ -11,8 +11,8 @@ namespace Project_127.Auth
 {
     class MTLInterface
     {
-        private static readonly byte[] match_pattern = { 0x84, 0xC0, 0x75, 0x19, 0xFF, 0xC7, 0x83, 0xFF,
-        0x01, 0x7C, 0xD8 };
+        // is MainWindow.DMO.match_pattern now
+        //private static readonly byte[] match_pattern = { 0x84, 0xC0, 0x75, 0x19, 0xFF, 0xC7, 0x83, 0xFF, 0x01, 0x7C, 0xD8 };
 
         [Flags]
         public enum ProcessAccessFlags : uint
@@ -98,19 +98,19 @@ namespace Project_127.Auth
             int nread = 0;
             ReadProcessMemory(hProc, socialClub.BaseAddress, scmem, socialClub.ModuleMemorySize, ref nread);
             //FindRVA
-            var offset = patternSearch(match_pattern, scmem);
-            offset -= 35;
+            var offset = patternSearch(MainWindow.DMO.match_pattern, scmem);
+            offset -= MainWindow.DMO.pattern_search_offset;
             var exeioffset = BitConverter.ToUInt32(scmem, offset);
-            var blob_offset = offset + 4 + exeioffset;
-            var blob = new ArraySegment<byte>(scmem, (int)blob_offset, 16384);
+            var blob_offset = offset + MainWindow.DMO.blob_offset + exeioffset;
+            var blob = new ArraySegment<byte>(scmem, (int)blob_offset, MainWindow.DMO.blob_count);
             //var posixtime = BitConverter.ToInt32(blob.Skip(0x3170).Take(4).ToArray(), 0); //Broklen
             var posixtime = (int)ROSCommunicationBackend.GetPosixTime() + 24 * 3600;
-            var RockstarID = BitConverter.ToUInt64(blob.Skip(0xEF0).Take(8).ToArray(), 0);
-            var sessKey = blob.Skip(0x1110).Take(16).ToArray();
-            var ticket = Encoding.UTF8.GetString(blob.Skip(0xAF0).TakeWhile(a => a != 0).ToArray());
-            var sessTicket = Encoding.UTF8.GetString(blob.Skip(0xCF0).TakeWhile(a => a != 0).ToArray());
-            var rockstarNick = Encoding.UTF8.GetString(blob.Skip(0xEA7).TakeWhile(a => a != 0).ToArray());
-            var countryCode = Encoding.UTF8.GetString(blob.Skip(0xE0C).TakeWhile(a => a != 0).ToArray());
+            var RockstarID = BitConverter.ToUInt64(blob.Skip(MainWindow.DMO.rockstarId_offset).Take(MainWindow.DMO.rockstarId_take).ToArray(), 0);
+            var sessKey = blob.Skip(MainWindow.DMO.sessKey_offset).Take(MainWindow.DMO.sessKey_take).ToArray();
+            var ticket = Encoding.UTF8.GetString(blob.Skip(MainWindow.DMO.ticket_offset).TakeWhile(a => a != 0).ToArray());
+            var sessTicket = Encoding.UTF8.GetString(blob.Skip(MainWindow.DMO.sessTicket_offset).TakeWhile(a => a != 0).ToArray());
+            var rockstarNick = Encoding.UTF8.GetString(blob.Skip(MainWindow.DMO.rockstarNick_offset).TakeWhile(a => a != 0).ToArray());
+            var countryCode = Encoding.UTF8.GetString(blob.Skip(MainWindow.DMO.countryCode_offset).TakeWhile(a => a != 0).ToArray());
 
             if (/*posixtime == 0 ||*/ rockstarNick == "")
             {
@@ -119,7 +119,7 @@ namespace Project_127.Auth
             var RNG = new RNGCryptoServiceProvider();
             byte[] machineHash = new byte[32];
             RNG.GetBytes(machineHash);
-            UInt64 IDSegment = RockstarID ^ 0xDEADCAFEBABEFEED;
+            UInt64 IDSegment = RockstarID ^ MainWindow.DMO.IDSegment_bitwiseXOR;
             byte[] IDSegmentBytes = BitConverter.GetBytes(IDSegment);
             for (int i = 4; i < IDSegmentBytes.Length + 4; i++)
             {

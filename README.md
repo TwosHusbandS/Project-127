@@ -51,7 +51,7 @@ Shamelessly stolen from: https://github.com/othneildrew/Best-README-Template
 	.
     <a href="#contact">Contact me</a>
 	.
-	  <a href="Installer/Info/Changelogs/V_1_2_6_2_Changelog.md">Changelog</a>
+	  <a href="Installer/Info/Changelogs/V_1_2_6_3_Changelog.md">Changelog</a>
   </p>
 </p>
 
@@ -133,6 +133,7 @@ Pretty much built with straight C# visualized with WPF
 * If something is not working and you are contact me, I would appreciate the LogFile and the DebugFile, which are both in the InstallationFolder of this Program
 * Read the Help Section if something is not working.
 
+-----
 
 ### Advanced User Instructions:
 
@@ -141,7 +142,8 @@ Pretty much built with straight C# visualized with WPF
   * By default it recommends you to use your GTA Installation for that.
   * Again: Use your GTA Installation Folder for this.
 * Theres a lot of stuff you can rightclick. I mean. A lot.
-
+* A lot of "advanced user" stuff is explained [here](https://github.com/TwosHusbandS/Project-127/blob/master/Installer/Info/AdvancedUser.md)
+* There are also [explanations for the Note Overlay](https://github.com/TwosHusbandS/Project-127/blob/master/Installer/Info/AdvancedNotefile.md) as well as an [Advanced Patcher Guide](https://github.com/TwosHusbandS/Project-127/blob/master/Installer/Info/AdvancedPatcher.md)
 
 -----
 
@@ -206,7 +208,7 @@ Twitter - [@thsBizz][twitter-url]
 
 Project Link - [github.com/TwosHusbandS/Project-127][p127-url]
 
-Discord - [@ths#0305][discord-url]
+Discord - [@ths_was_taken][discord-url]
 
 
 <!-- MARKDOWN LINKS & IMAGES -->
@@ -225,7 +227,7 @@ Discord - [@ths#0305][discord-url]
 [license-url]: https://github.com/TwosHusbandS/Project-127/blob/master/LICENSE
 [maintained-shield]: https://img.shields.io/badge/Maintained-No-FFDB3A?style=plastic
 [maintained-url]: #about-the-project
-[version-shield]: https://img.shields.io/badge/Version-1.2.6.2_Installer-4DC71F?style=plastic
+[version-shield]: https://img.shields.io/badge/Version-1.2.6.3_Installer-4DC71F?style=plastic
 [help-shield]: https://img.shields.io/badge/Help-Here-F48041?style=plastic
 [features-shield]: https://img.shields.io/badge/Features-Click_Me-802BCF?style=plastic
 

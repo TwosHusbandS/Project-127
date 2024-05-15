@@ -145,7 +145,7 @@ namespace Project_127.Overlay
 		public static void LoadPreview()
 		{
 			MainWindow.MW.Frame_Game.Content = new Overlay_Preview();
-			MainWindow.MW.Width = 1600;
+			MainWindow.MW.Width = 1700;
 			MainWindow.MW.Grid_Preview.Visibility = Visibility.Visible;
 
 			MM_WasOpen = false;
@@ -169,7 +169,7 @@ namespace Project_127.Overlay
 		/// </summary>
 		public static void DisposePreview()
 		{
-			MainWindow.MW.Width = 900;
+			MainWindow.MW.Width = 1000;
 			MainWindow.MW.Grid_Preview.Visibility = Visibility.Hidden;
 			MainWindow.MW.Frame_Game.Content = new EmptyPage();
 

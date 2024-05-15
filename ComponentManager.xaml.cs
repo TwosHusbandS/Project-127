@@ -715,13 +715,24 @@ namespace Project_127
         {
             if (e.ClickCount >= 3)
             {
-                string rtrn = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.File, "Select the ZIP File you want to import", @"C:\", false, "ZIP Files|*.zip*");
-
-                if (HelperClasses.FileHandling.doesFileExist(rtrn))
-                {
-                    ImportZIPForComponenet(GetComponentFromButton((Button)sender), rtrn);
-                }
+                ImportComponenet(GetComponentFromButton((Button)sender));
             }
+        }
+
+        private void ImportComponenet(Components Component)
+        {
+            string rtrn = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.File, "Select the ZIP File you want to import", @"C:\", false, "ZIP Files|*.zip*");
+
+            if (HelperClasses.FileHandling.doesFileExist(rtrn))
+            {
+                ImportZIPForComponenet(Component, rtrn);
+            }
+        }
+
+        private void btn_Import_Click(object sender, RoutedEventArgs e)
+        {
+            new Popup(Popup.PopupWindowTypes.PopupOk, "Select the ZIP file you want to import for this Component.\nIf you dont know what you are doing,\nor clicked this by accident,\njust close the File Picker.").ShowDialog();
+            ImportComponenet(GetComponentFromButton((Button)sender));
         }
     }
 

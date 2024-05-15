@@ -1536,7 +1536,11 @@ namespace Project_127.MySettings
 				HelperClasses.FileHandling.DeleteFolder(LauncherLogic.ZIPFilePath.TrimEnd('\\') + @"\Project_127_Files");
 				HelperClasses.Logger.Log("Done deleting all extracted ZIP Files.", 1);
 
-				Popup yesno2 = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Do you want to uninstall Project 1.27?");
+                HelperClasses.Logger.Log("Deleting all MTLOffsets.xml");
+				HelperClasses.FileHandling.deleteFile(Globals.MTLOffsetsLocalFilepath);
+                HelperClasses.Logger.Log("Done deleting MTLOffsets.xml.", 1);
+
+                Popup yesno2 = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Do you want to uninstall Project 1.27?");
 				yesno2.ShowDialog();
 				if (yesno2.DialogResult == true)
 				{

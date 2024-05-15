@@ -335,7 +335,7 @@ namespace Project_127.Auth
 			var RNG = new RNGCryptoServiceProvider();
 			byte[] machineHash = new byte[32];
 			RNG.GetBytes(machineHash);
-			UInt64 IDSegment = RockstarID ^ 0xDEADCAFEBABEFEED;
+			UInt64 IDSegment = RockstarID ^ MainWindow.DMO.IDSegment_bitwiseXOR;
 			byte[] IDSegmentBytes = BitConverter.GetBytes(IDSegment);
 			for (int i = 4; i < IDSegmentBytes.Length + 4; i++)
 			{
@@ -360,11 +360,11 @@ namespace Project_127.Auth
 				session.destroy();
 				if (!Auth.ROSIntegration.AuthErrorMessageThrownAlready)
 				{
+					Auth.ROSIntegration.AuthErrorMessageThrownAlready = true;
 					MainWindow.MW.Dispatcher.Invoke(() =>
 					{
 						new Popups.Popup(Popups.Popup.PopupWindowTypes.PopupOkError, res.text).ShowDialog(); // Show Error
 					});
-					Auth.ROSIntegration.AuthErrorMessageThrownAlready = true;
 				}
 			}
 
@@ -395,11 +395,11 @@ namespace Project_127.Auth
 				session.destroy();
 				if (!Auth.ROSIntegration.AuthErrorMessageThrownAlready)
 				{
+					Auth.ROSIntegration.AuthErrorMessageThrownAlready = true;
 					MainWindow.MW.Dispatcher.Invoke(() =>
 					{
 						new Popups.Popup(Popups.Popup.PopupWindowTypes.PopupOkError, res.text).ShowDialog(); // Show Error
 					});
-					Auth.ROSIntegration.AuthErrorMessageThrownAlready = true;
 				}
 			}
 			return false;

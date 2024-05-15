@@ -32,18 +32,21 @@ namespace Project_127
 				{
 					HelperClasses.Logger.Log("SCL - Launch, cfg.dat is NOT up to date.");
 
-					Popup yesno2 = new Popup(Popup.PopupWindowTypes.PopupYesNo, "The file rockstar uses for offline authentication\nis (probably) expired and wont work.\nUpgrade GTA and launch into main menu\nto generate a new one.\n\nWant me to try to launch anyways?");
-					yesno2.ShowDialog();
-					if (yesno2.DialogResult == true)
-					{
-						HelperClasses.Logger.Log("SCL - Launch, cfg.dat is NOT up to date, user wants to try anyways...lets go");
-					}
-					else
-					{
-						HelperClasses.Logger.Log("SCL - Launch, cfg.dat is NOT up to date, user does NOT want to try anyways...returning here");
-						return;
-					}
-				}
+                    MainWindow.MW.Dispatcher.Invoke(() =>
+                    {
+						Popup yesno2 = new Popup(Popup.PopupWindowTypes.PopupYesNo, "The file rockstar uses for offline authentication\nis (probably) expired and wont work.\nUpgrade GTA and launch into main menu\nto generate a new one.\n\nWant me to try to launch anyways?");
+						yesno2.ShowDialog();
+						if (yesno2.DialogResult == true)
+						{
+							HelperClasses.Logger.Log("SCL - Launch, cfg.dat is NOT up to date, user wants to try anyways...lets go");
+						}
+						else
+						{
+							HelperClasses.Logger.Log("SCL - Launch, cfg.dat is NOT up to date, user does NOT want to try anyways...returning here");
+							return;
+						}
+                    });
+                }
 				else
 				{
 					HelperClasses.Logger.Log("SCL - Launch, cfg.dat IS up to date.");
