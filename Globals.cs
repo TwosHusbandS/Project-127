@@ -235,7 +235,7 @@ namespace Project_127
 		/// <summary>
 		/// Property of other Buildinfo. Will be in the top message of logs
 		/// </summary>
-		public static string BuildInfo = "Testing";
+		public static string BuildInfo = "1.2.6.3 - Dynamic MTL Offsets, Build 1";
 
 
 		/// <summary>
