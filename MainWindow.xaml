@@ -19,10 +19,10 @@
     <Border BorderThickness="{x:Static local:MyColors.MW_BorderThickness}" BorderBrush="{x:Static local:MyColors.MW_BorderBrush}">
         <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition x:Name="cd_Main" Width="896"/>
+                <ColumnDefinition x:Name="cd_Main" Width="996"/>
                 <ColumnDefinition x:Name="cd_Preview" Width="700"/>
             </Grid.ColumnDefinitions>
-            <Grid x:Name="GridBackground" Height="536" Width="896" Grid.Column="0" HorizontalAlignment="Left">
+            <Grid x:Name="GridBackground" Height="536" Width="996" Grid.Column="0" HorizontalAlignment="Left">
                 
             </Grid>
 
@@ -34,7 +34,7 @@
                 </Rectangle>
             </Grid>
 
-            <Grid x:Name="Blur_All" Height="536" Width="896" Grid.Column="0" HorizontalAlignment="Left">
+            <Grid x:Name="Blur_All" Height="536" Width="996" Grid.Column="0" HorizontalAlignment="Left">
                 <Rectangle ClipToBounds="True">
                     <i:Interaction.Behaviors>
                         <local:BlurBackgroundBehavior BlurContainer="{Binding ElementName=GridBackground}"  />
@@ -42,7 +42,7 @@
                 </Rectangle>
             </Grid>
 
-            <Grid x:Name="GridMain" Height="536" Width="896" Grid.Column="0" HorizontalAlignment="Left" Background="Transparent">
+            <Grid x:Name="GridMain" Height="536" Width="996" Grid.Column="0" HorizontalAlignment="Left" Background="Transparent">
                 <Grid x:Name="GridHamburgerOuter" HorizontalAlignment="Left" Width="275" Background="{x:Static local:MyColors.MW_HamburgerMenuGridBackground}">
                     <Grid x:Name="GridHamburgerInner" Margin="15, 120, 15, 30">
                         <Grid.RowDefinitions>
@@ -81,7 +81,7 @@
 
                 <Button x:Name="btn_Hamburger" ToolTip="Toggle Hamburger Menu"  Style="{StaticResource btn_SmallIcon}" MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave" MouseDown="btn_Hamburger_MouseDown" MouseRightButtonDown="btn_Hamburger_MouseRightButtonDown" VerticalAlignment="Top" HorizontalAlignment="Left" Click="btn_Hamburger_Click" />
 
-                <Frame x:Name="Frame_Main" Navigating="Frame_Main_Navigating" NavigationUIVisibility="Hidden" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0" Width="619"/>
+                <Frame x:Name="Frame_Main" Navigating="Frame_Main_Navigating" NavigationUIVisibility="Hidden" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0" Width="719"/>
 
                 <Button x:Name="btn_Exit" ToolTip="Exit" Style="{StaticResource btn_SmallIcon}" MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave" VerticalAlignment="Top" HorizontalAlignment="Right" Click="btn_Exit_Click" MouseRightButtonDown="btn_Exit_MouseRightButtonDown"/>
             </Grid >

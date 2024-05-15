@@ -639,7 +639,8 @@ namespace Project_127
 				}
 				ImageBrush brush2 = new ImageBrush();
 				brush2.ImageSource = bitmap;
-				MainWindow.MW.GridBackground.Background = brush2;
+                brush2.Stretch = Stretch.UniformToFill;
+                MainWindow.MW.GridBackground.Background = brush2;
 			}
 			catch (Exception e)
 			{
