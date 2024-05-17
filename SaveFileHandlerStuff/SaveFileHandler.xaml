@@ -6,13 +6,13 @@
         xmlns:gif="http://wpfanimatedgif.codeplex.com"
         xmlns:local="clr-namespace:Project_127"
         mc:Ignorable="d"
-        Title="Save File Manager" d:DesignHeight="540" d:DesignWidth="625"        
+        Title="Save File Manager" d:DesignHeight="600" d:DesignWidth="720"        
         Background="{x:Static local:MyColors.App_Submenu_Background}" Loaded="Page_Loaded">
-    <Grid x:Name="Grid_Main" Margin="15,0,15,0" Height="540">
+    <Grid x:Name="Grid_Main" Margin="15,0,15,0" Height="600">
         <Grid.RowDefinitions>
             <RowDefinition Height="70"/>
             <RowDefinition Height="6*"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="70"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
@@ -26,7 +26,7 @@
 
         <Button Style="{StaticResource btn_SM}" FontSize="14" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Content="ASDF" Margin="15,15,110,15" Width="200" Height="40" VerticalAlignment="Top" HorizontalAlignment="Right" x:Name="btn_GTA_Path_Change"  Click="btn_GTA_Path_Change_Click" MouseRightButtonDown="btn_GTA_Path_Change_MouseRightButtonDown" ToolTip="Switch which GTA SaveFileLocation to display. Rightclick Me"/>
 
-        <Grid x:Name="Grid_Inner" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Margin="0">
+        <Grid x:Name="Grid_Inner" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Margin="0,10">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="3*"/>
                 <ColumnDefinition Width="*"/>

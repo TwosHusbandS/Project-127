@@ -5,7 +5,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:Project_127"
       mc:Ignorable="d" 
-      d:DesignHeight="450" d:DesignWidth="800"
+      d:DesignHeight="380" d:DesignWidth="705"
       Title="NoteOverlay_NoteFiles">
 
     <Grid>
@@ -28,7 +28,7 @@
 
         <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" FontSize="20" Content="Note Files Currently Loaded" Style="{StaticResource lbl}" Margin="0,0,2,0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Foreground="{x:Static local:MyColors.SFH_DGHeaderForeground}" Background="{x:Static local:MyColors.SFH_DGHeaderBackground}"/>
 
-        <Border x:Name="bdr_Files" Grid.Row="1" Grid.RowSpan="5" Grid.Column="0" Grid.ColumnSpan="2" BorderThickness="2" Margin="5" BorderBrush="{x:Static local:MyColors.MyColorOffWhite}">
+        <Border x:Name="bdr_Files" Grid.Row="1" Grid.RowSpan="5" Grid.Column="0" Grid.ColumnSpan="2" BorderThickness="2" Margin="5,5,5,0" BorderBrush="{x:Static local:MyColors.MyColorOffWhite}">
             <ScrollViewer x:Name="sv_Files">
                 <DataGrid x:Name="dg_Files" Style="{StaticResource dg}" PreviewMouseWheel="dg_Files_PreviewMouseWheel" PreviewKeyDown="dg_Files_PreviewKeyDown" PreviewMouseRightButtonDown="dg_Files_PreviewMouseRightButtonDown" SelectionMode="Extended" SelectionUnit="FullRow">
                     <DataGrid.Columns>
@@ -37,8 +37,8 @@
                 </DataGrid>
             </ScrollViewer>
         </Border>
-        <Button Style="{StaticResource btn_SM}" Grid.Row="6" Grid.Column="0" Margin="5" x:Name="btn_Add" Click="btn_Add_Click" Content="Add File" ToolTip="Add File to selection"/>
-        <Button Style="{StaticResource btn_SM}" Grid.Row="6" Grid.Column="1" Margin="5" x:Name="btn_Delete" Click="btn_Delete_Click" Content="Remove File" ToolTip="Remove File from selection"/>
+        <Button Style="{StaticResource btn_SM}" Grid.Row="6" Grid.Column="0" Margin="6" x:Name="btn_Add" Click="btn_Add_Click" Content="Add File" ToolTip="Add File to selection"/>
+        <Button Style="{StaticResource btn_SM}" Grid.Row="6" Grid.Column="1" Margin="6" x:Name="btn_Delete" Click="btn_Delete_Click" Content="Remove File" ToolTip="Remove File from selection"/>
 
 
 

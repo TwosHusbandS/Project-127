@@ -305,7 +305,7 @@
             <Setter Property="Foreground" Value="{x:Static local:MyColors.MW_ButtonHamburgerMenuForeground}"/>
             <Setter Property="BorderBrush" Value="{x:Static local:MyColors.MW_ButtonHamburgerMenuBorderBrush}"/>
             <Setter Property="BorderThickness" Value="{x:Static local:MyColors.MW_ButtonHamburgerMenuBorderThickness}"/>
-            <Setter Property="Margin" Value="0,6"/>
+            <Setter Property="Margin" Value="0,8"/>
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
                     <Setter Property="Background" Value="{x:Static local:MyColors.MW_ButtonHamburgerMenuMOBackground}"/>

@@ -5,9 +5,9 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:Project_127"
       mc:Ignorable="d" 
-        Title="Component Manager" d:DesignHeight="540" d:DesignWidth="625"        
+        Title="Component Manager" d:DesignHeight="600" d:DesignWidth="720"        
         Background="{x:Static local:MyColors.App_Submenu_Background}" Loaded="Page_Loaded">
-    <Grid x:Name="Grid_Outer"  Margin="15,0,15,0" Height="540">
+    <Grid x:Name="Grid_Outer"  Margin="15,0,15,0" Height="600">
         <Grid.RowDefinitions>
             <RowDefinition Height="70"/>
             <RowDefinition Height="*"/>
@@ -69,7 +69,7 @@
 
                 <Button Grid.Row="3" Grid.Column="0" x:Name="lbl_FilesSCLSteam124_Name" Content="Social Club Launch Steam 1.24"  MouseLeftButtonDown="btn_DragMove" ToolTip="Social Club Launch Steam 1.24" Tag="FilesSCLSteam124" Style="{StaticResource btn_Set_Header}"  Foreground="{x:Static local:MyColors.App_LabelForeground}" FontFamily="Tahoma" FontSize="14" Background="Transparent" HorizontalAlignment="Left" BorderThickness="0" MouseRightButtonDown="btn_lbl_Component_Name_MouseRightButtonDown" Margin="8"/>
                 <Button Grid.Row="3" Grid.Column="1" x:Name="lbl_FilesSCLSteam124_Status" Content="Status" Style="{StaticResource btn_Set_Trans}" Foreground="{x:Static local:MyColors.MyColorGreen}" Tag="FilesSCLSteam124" FontSize="16" Margin="0" MouseRightButtonDown="btn_lbl_Status_MouseRightButtonDown"/>
-                <Button Grid.Row="3" Grid.Column="2" x:Name="btn_FilesSCLSteam124_Import" Click="btn_Import_Click" Tag="FilesBase" Content="FilesSCLSteam124"  FontSize="14" Margin="8,12" ToolTip="Rightclick to Verify Files" Style="{StaticResource btn_CM_Action}"/>
+                <Button Grid.Row="3" Grid.Column="2" x:Name="btn_FilesSCLSteam124_Import" Click="btn_Import_Click" Tag="FilesSCLSteam124" Content="Import"  FontSize="14" Margin="8,12" ToolTip="Rightclick to Verify Files" Style="{StaticResource btn_CM_Action}"/>
                 <Button Grid.Row="3" Grid.Column="3" x:Name="btn_FilesSCLSteam124_Install" Click="btn_Install_Click" MouseRightButtonDown="btn_Install_MouseRightButtonDown" Tag="FilesSCLSteam124" Content="(Re-)install" FontSize="14" Margin="8,12"  ToolTip="Rightclick to Verify Files" Style="{StaticResource btn_CM_Action}"/>
                 <Button Grid.Row="3" Grid.Column="4" x:Name="btn_FilesSCLSteam124_Uninstall" Click="btn_Uninstall_Click" MouseRightButtonDown="btn_Uninstall_MouseRightButtonDown" Tag="FilesSCLSteam124" Content="Uninstall" FontSize="14" Margin="8,12"  Style="{StaticResource btn_CM_Action}"/>
 

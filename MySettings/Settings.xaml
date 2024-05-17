@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:Project_127"
         xmlns:control = "clr-namespace:Project_127" 
         mc:Ignorable="d"
-        Title="Settings" d:DesignHeight="570" d:DesignWidth="619"
+        Title="Settings" d:DesignHeight="600" d:DesignWidth="720"
         Background="{x:Static local:MyColors.App_Submenu_Background}">
     <Grid x:Name="Grid_Outer" Margin="15,0,15,0">
         <Grid.RowDefinitions>
