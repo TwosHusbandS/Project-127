@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <targets>
     <subassembly name="AM_127_STEAM" root="DowngradeFiles_Alternative\steam\127\" version="0.2.0.0">
-        <file name="GTAVLauncher.exe">
+        <file name="PlayGTAV.exe">
             <hash>f88b3a95904d70d1f57c57ab02450849</hash>
-            <mirror>http://gtav.anushk.net/downloadManager/subassemblies/sclbeta/am127steam/GTAVLauncher.exe</mirror>
+            <mirror>http://gtav.anushk.net/downloadManager/subassemblies/sclbeta/am127steam/PlayGTAV.exe</mirror>
         </file>
         
         <file name="GTA5.exe">
@@ -37,9 +37,9 @@
     </subassembly>
 
     <subassembly name="AM_124_STEAM" root="DowngradeFiles_Alternative\steam\124\" version="0.2.0.0">
-        <file name="GTAVLauncher.exe">
+        <file name="PlayGTAV.exe">
             <hash>3fccfce6dbd9fe0aa88185faf7de26b0</hash>
-            <mirror>http://gtav.anushk.net/downloadManager/subassemblies/sclbeta/am124steam/GTAVLauncher.exe</mirror>
+            <mirror>http://gtav.anushk.net/downloadManager/subassemblies/sclbeta/am124steam/PlayGTAV.exe</mirror>
         </file>
 
         <file name="GTA5.exe">
@@ -73,9 +73,9 @@
     </subassembly>
 
     <subassembly name="AM_127_ROCKSTAR" root="DowngradeFiles_Alternative\rockstar\127\" version="0.2.0.0">
-        <file name="GTAVLauncher.exe">
+        <file name="PlayGTAV.exe">
             <hash>32c5b70a1c43788b40f7324bdb64253a</hash>
-            <mirror>http://gtav.anushk.net/downloadManager/subassemblies/sclbeta/am127rockstar/GTAVLauncher.exe</mirror>
+            <mirror>http://gtav.anushk.net/downloadManager/subassemblies/sclbeta/am127rockstar/PlayGTAV.exe</mirror>
         </file>
         
         <file name="GTA5.exe">
@@ -100,9 +100,9 @@
 
 
     <subassembly name="AM_124_ROCKSTAR" root="DowngradeFiles_Alternative\rockstar\124\" version="0.2.0.0">
-        <file name="GTAVLauncher.exe">
+        <file name="PlayGTAV.exe">
             <hash>74b751f8a27b247f5ed86f8af091a347</hash>
-            <mirror>http://gtav.anushk.net/downloadManager/subassemblies/sclbeta/am124rockstar/GTAVLauncher.exe</mirror>
+            <mirror>http://gtav.anushk.net/downloadManager/subassemblies/sclbeta/am124rockstar/PlayGTAV.exe.exe</mirror>
         </file>
 
         <file name="GTA5.exe">
