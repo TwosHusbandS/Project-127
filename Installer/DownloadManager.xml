@@ -28,7 +28,7 @@
         <file name="bink2w64.dll" linked="true" subassembly="AM_BASE_SUBASSEMBLY"/>
 		<!--<file name="launc.dll" linked="true" subassembly="AM_BASE_SUBASSEMBLY"/>-->
 		<!--<file name="GTAStub.exe" linked="true" subassembly="AM_BASE_SUBASSEMBLY"/>-->
-		<!--<file name="x64a.rpf" linked="true" subassembly="127_BASE_SUBASSEMBLY"/>-->
+	<file name="x64a.rpf" linked="true" subassembly="127_BASE_SUBASSEMBLY"/>
 
 		<requires>
             <subassembly target="AM_BASE_SUBASSEMBLY"/>
@@ -64,7 +64,7 @@
         <file name="bink2w64.dll" linked="true" subassembly="AM_BASE_SUBASSEMBLY"/>
 		<!--<file name="launc.dll" linked="true" subassembly="AM_BASE_SUBASSEMBLY"/>-->
 		<!--<file name="GTAStub.exe" linked="true" subassembly="AM_BASE_SUBASSEMBLY"/>-->
-		<!--<file name="x64a.rpf" linked="true" subassembly="124_BASE_SUBASSEMBLY"/>-->
+	<file name="x64a.rpf" linked="true" subassembly="124_BASE_SUBASSEMBLY"/>
 
 		<requires>
             <subassembly target="AM_BASE_SUBASSEMBLY"/>
@@ -90,7 +90,7 @@
         <file name="bink2w64.dll" linked="true" subassembly="AM_BASE_SUBASSEMBLY"/>
 		<!--<file name="launc.dll" linked="true" subassembly="AM_BASE_SUBASSEMBLY"/>-->
 		<!--<file name="GTAStub.exe" linked="true" subassembly="AM_BASE_SUBASSEMBLY"/>-->
-		<!--<file name="x64a.rpf" linked="true" subassembly="127_BASE_SUBASSEMBLY"/>-->
+	<file name="x64a.rpf" linked="true" subassembly="127_BASE_SUBASSEMBLY"/>
 
 		<requires>
             <subassembly target="AM_BASE_SUBASSEMBLY"/>
@@ -117,7 +117,7 @@
         <file name="bink2w64.dll" linked="true" subassembly="AM_BASE_SUBASSEMBLY"/>
 		<!--<file name="launc.dll" linked="true" subassembly="AM_BASE_SUBASSEMBLY"/>-->
         <!--<file name="GTAStub.exe" linked="true" subassembly="AM_BASE_SUBASSEMBLY"/>-->
-        <!--<file name="x64a.rpf" linked="true" subassembly="124_BASE_SUBASSEMBLY"/>-->
+        <file name="x64a.rpf" linked="true" subassembly="124_BASE_SUBASSEMBLY"/>
 
         <requires>
             <subassembly target="AM_BASE_SUBASSEMBLY"/>
