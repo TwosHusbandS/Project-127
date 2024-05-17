@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <targets>
-    <subassembly name="AM_127_STEAM" root="DowngradeFiles_Alternative\steam\127\" version="0.1.0.0">
+    <subassembly name="AM_127_STEAM" root="DowngradeFiles_Alternative\steam\127\" version="0.2.0.0">
         <file name="GTAVLauncher.exe">
-            <hash>7E7FC8E19887C6F8747A78921E532929</hash>
-            <mirror>http://gtav.anushk.net/downloadManager/subassemblies/am127steam/GTAVLauncher.exe</mirror>
+            <hash>f88b3a95904d70d1f57c57ab02450849</hash>
+            <mirror>http://gtav.anushk.net/downloadManager/subassemblies/sclbeta/am127steam/GTAVLauncher.exe</mirror>
         </file>
         
         <file name="GTA5.exe">
-            <hash>D1DFF07E61C11DA6D574B928E3BDE5A4</hash>
-            <mirror>http://gtav.anushk.net/downloadManager/subassemblies/am127steam/GTA5.exe</mirror>
+            <hash>5c721930f4848ec572379914c02f1570</hash>
+            <mirror>http://gtav.anushk.net/downloadManager/subassemblies/sclbeta/am127steam/GTA5.exe</mirror>
         </file>
 
         <file name="steam_api64.dll">
@@ -26,25 +26,25 @@
         </file>
       
         <file name="bink2w64.dll" linked="true" subassembly="AM_BASE_SUBASSEMBLY"/>
-        <file name="launc.dll" linked="true" subassembly="AM_BASE_SUBASSEMBLY"/>
-        <file name="GTAStub.exe" linked="true" subassembly="AM_BASE_SUBASSEMBLY"/>
-        <file name="x64a.rpf" linked="true" subassembly="127_BASE_SUBASSEMBLY"/>
+		<!--<file name="launc.dll" linked="true" subassembly="AM_BASE_SUBASSEMBLY"/>-->
+		<!--<file name="GTAStub.exe" linked="true" subassembly="AM_BASE_SUBASSEMBLY"/>-->
+		<!--<file name="x64a.rpf" linked="true" subassembly="127_BASE_SUBASSEMBLY"/>-->
 
-        <requires>
+		<requires>
             <subassembly target="AM_BASE_SUBASSEMBLY"/>
             <subassembly target="127_BASE_SUBASSEMBLY"/>
         </requires>
     </subassembly>
 
-    <subassembly name="AM_124_STEAM" root="DowngradeFiles_Alternative\steam\124\" version="0.1.0.0">
+    <subassembly name="AM_124_STEAM" root="DowngradeFiles_Alternative\steam\124\" version="0.2.0.0">
         <file name="GTAVLauncher.exe">
-            <hash>A3941A72A65C5B93FF516552700F9D09</hash>
-            <mirror>http://gtav.anushk.net/downloadManager/subassemblies/am124steam/GTAVLauncher.exe</mirror>
+            <hash>3fccfce6dbd9fe0aa88185faf7de26b0</hash>
+            <mirror>http://gtav.anushk.net/downloadManager/subassemblies/sclbeta/am124steam/GTAVLauncher.exe</mirror>
         </file>
 
         <file name="GTA5.exe">
-            <hash>AAEE745ACF65869C4245777D014737BF</hash>
-            <mirror>http://gtav.anushk.net/downloadManager/subassemblies/am124steam/GTA5.exe</mirror>
+            <hash>223c15d099a68caf0f83d50e6afed419</hash>
+            <mirror>http://gtav.anushk.net/downloadManager/subassemblies/sclbeta/am124steam/GTA5.exe</mirror>
         </file>
 
         <file name="steam_api64.dll">
@@ -62,25 +62,25 @@
         </file>
       
         <file name="bink2w64.dll" linked="true" subassembly="AM_BASE_SUBASSEMBLY"/>
-        <file name="launc.dll" linked="true" subassembly="AM_BASE_SUBASSEMBLY"/>
-        <file name="GTAStub.exe" linked="true" subassembly="AM_BASE_SUBASSEMBLY"/>
-        <file name="x64a.rpf" linked="true" subassembly="124_BASE_SUBASSEMBLY"/>
+		<!--<file name="launc.dll" linked="true" subassembly="AM_BASE_SUBASSEMBLY"/>-->
+		<!--<file name="GTAStub.exe" linked="true" subassembly="AM_BASE_SUBASSEMBLY"/>-->
+		<!--<file name="x64a.rpf" linked="true" subassembly="124_BASE_SUBASSEMBLY"/>-->
 
-        <requires>
+		<requires>
             <subassembly target="AM_BASE_SUBASSEMBLY"/>
             <subassembly target="124_BASE_SUBASSEMBLY"/>
         </requires>
     </subassembly>
 
-    <subassembly name="AM_127_ROCKSTAR" root="DowngradeFiles_Alternative\rockstar\127\" version="0.1.0.0">
+    <subassembly name="AM_127_ROCKSTAR" root="DowngradeFiles_Alternative\rockstar\127\" version="0.2.0.0">
         <file name="GTAVLauncher.exe">
-            <hash>F1D7CBB4EA4240D3765897F2E2CFFA35</hash>
-            <mirror>http://gtav.anushk.net/downloadManager/subassemblies/am127rockstar/GTAVLauncher.exe</mirror>
+            <hash>32c5b70a1c43788b40f7324bdb64253a</hash>
+            <mirror>http://gtav.anushk.net/downloadManager/subassemblies/sclbeta/am127rockstar/GTAVLauncher.exe</mirror>
         </file>
         
         <file name="GTA5.exe">
-            <hash>5C706E27F1F204050450839F24E12C8A</hash>
-            <mirror>http://gtav.anushk.net/downloadManager/subassemblies/am127rockstar/GTA5.exe</mirror>
+            <hash>3e024c87b99e7f155b5be58ac8069f16</hash>
+            <mirror>http://gtav.anushk.net/downloadManager/subassemblies/sclbeta/am127rockstar/GTA5.exe</mirror>
         </file>
         
         <folder name="update">
@@ -88,26 +88,26 @@
         </folder>
         
         <file name="bink2w64.dll" linked="true" subassembly="AM_BASE_SUBASSEMBLY"/>
-        <file name="launc.dll" linked="true" subassembly="AM_BASE_SUBASSEMBLY"/>
-        <file name="GTAStub.exe" linked="true" subassembly="AM_BASE_SUBASSEMBLY"/>
-        <file name="x64a.rpf" linked="true" subassembly="127_BASE_SUBASSEMBLY"/>
-        
-        <requires>
+		<!--<file name="launc.dll" linked="true" subassembly="AM_BASE_SUBASSEMBLY"/>-->
+		<!--<file name="GTAStub.exe" linked="true" subassembly="AM_BASE_SUBASSEMBLY"/>-->
+		<!--<file name="x64a.rpf" linked="true" subassembly="127_BASE_SUBASSEMBLY"/>-->
+
+		<requires>
             <subassembly target="AM_BASE_SUBASSEMBLY"/>
             <subassembly target="127_BASE_SUBASSEMBLY"/>
         </requires>
     </subassembly>
 
 
-    <subassembly name="AM_124_ROCKSTAR" root="DowngradeFiles_Alternative\rockstar\124\" version="0.1.0.0">
+    <subassembly name="AM_124_ROCKSTAR" root="DowngradeFiles_Alternative\rockstar\124\" version="0.2.0.0">
         <file name="GTAVLauncher.exe">
-            <hash>3F2278BEB693C37D3C89D4194758AA79</hash>
-            <mirror>http://gtav.anushk.net/downloadManager/subassemblies/am124rockstar/GTAVLauncher.exe</mirror>
+            <hash>74b751f8a27b247f5ed86f8af091a347</hash>
+            <mirror>http://gtav.anushk.net/downloadManager/subassemblies/sclbeta/am124rockstar/GTAVLauncher.exe</mirror>
         </file>
 
         <file name="GTA5.exe">
-            <hash>BDF825CFEE2DBCE39DE5802F4464ACB8</hash>
-            <mirror>http://gtav.anushk.net/downloadManager/subassemblies/am124rockstar/GTA5.exe</mirror>
+            <hash>65c1e9a766e8f6d3258bb1cadb1fb49b</hash>
+            <mirror>http://gtav.anushk.net/downloadManager/subassemblies/sclbeta/am124rockstar/GTA5.exe</mirror>
         </file>
 
         <folder name="update">
@@ -115,9 +115,9 @@
         </folder>
 
         <file name="bink2w64.dll" linked="true" subassembly="AM_BASE_SUBASSEMBLY"/>
-        <file name="launc.dll" linked="true" subassembly="AM_BASE_SUBASSEMBLY"/>
-        <file name="GTAStub.exe" linked="true" subassembly="AM_BASE_SUBASSEMBLY"/>
-        <file name="x64a.rpf" linked="true" subassembly="124_BASE_SUBASSEMBLY"/>
+		<!--<file name="launc.dll" linked="true" subassembly="AM_BASE_SUBASSEMBLY"/>-->
+        <!--<file name="GTAStub.exe" linked="true" subassembly="AM_BASE_SUBASSEMBLY"/>-->
+        <!--<file name="x64a.rpf" linked="true" subassembly="124_BASE_SUBASSEMBLY"/>-->
 
         <requires>
             <subassembly target="AM_BASE_SUBASSEMBLY"/>
@@ -125,19 +125,19 @@
         </requires>
     </subassembly>
 
-    <subassembly name="AM_BASE_SUBASSEMBLY"  type="common" version="0.1.0.0">
+    <subassembly name="AM_BASE_SUBASSEMBLY"  type="common" version="0.2.0.0">
         <file name="bink2w64.dll">
-            <hash>518C9DA8D048F1DB89E835254E369EE0</hash>
-            <mirror>http://gtav.anushk.net/downloadManager/subassemblies/ambase/bink2w64.dll</mirror>
+            <hash>ac1d095886d206e07629a11013f0e855</hash>
+            <mirror>http://gtav.anushk.net/downloadManager/subassemblies/sclbeta/ambase/bink2w64.dll</mirror>
         </file>
-        <file name="launc.dll">
+		<!--<file name="launc.dll">
             <hash>1EE48A2DB262573C6E66338B13AEE825</hash>
             <mirror>http://gtav.anushk.net/downloadManager/subassemblies/ambase_v1/launc.dll</mirror>
-        </file>
-        <file name="GTAStub.exe">
+        </file>-->
+		<!--<file name="GTAStub.exe">
             <hash>739A01DE37D4DC3D90C87900F030D61B</hash>
             <mirror>http://gtav.anushk.net/downloadManager/subassemblies/ambase_v1/GTAStub.exe</mirror>
-        </file>
+        </file>-->
         <!--<file name="Play127.exe">
             <hash>34ADD5817F9B3B665EA42491EBB28A6D</hash>
             <mirror>http://gtav.anushk.net/downloadManager/subassemblies/ambase/PlayGTAADL.exe</mirror>
