@@ -935,9 +935,6 @@ namespace Project_127
         /// </summary>
         public static async void Launch()
         {
-            await Task.Run(async () =>
-            {
-
                 HelperClasses.Logger.Log("Trying to Launch the game.");
 
                 // If Upgraded
@@ -1078,8 +1075,6 @@ namespace Project_127
                 HelperClasses.Logger.Log("Game should be launched");
 
                 PostLaunchEvents();
-
-            });
         }
 
 

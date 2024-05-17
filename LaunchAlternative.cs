@@ -21,12 +21,10 @@ namespace Project_127
 		/// </summary>
 		public static void Launch()
 		{
-			string filePath = LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\GTAVLauncher.exe";
+			string filePath = LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\playgtav.exe";
 
 			HelperClasses.Logger.Log("SCL - Launch");
 
-            MainWindow.MW.Dispatcher.Invoke(() =>
-            {
             if (HelperClasses.FileHandling.doesFileExist(filePath))
 			{
 				HelperClasses.Logger.Log("SCL - Launch, GTA Stub exists");
@@ -72,7 +70,6 @@ namespace Project_127
 
 				new Popups.Popup(Popups.Popup.PopupWindowTypes.PopupOkError, "Cant find the required File ('GTAVLauncher.exe')\ninside your GTA Installation.\nSomething went wrong").ShowDialog();
 			}
-            });
         }
 
 
@@ -295,7 +292,7 @@ namespace Project_127
 			HelperClasses.Logger.Log("SCL - Initiating a Social Club Downgrade after " + msDelay + " ms of Delay", 0);
 
 			// KILL ALL PROCESSES
-			HelperClasses.ProcessHandler.SocialClubKillAllProcesses().GetAwaiter().GetResult();
+			HelperClasses.ProcessHandler.SocialClubKillAllProcesses();
 
 			if (!SCL_MakeSureDowngradedCacheIsCorrect())
 			{
@@ -399,7 +396,7 @@ namespace Project_127
 			HelperClasses.Logger.Log("SCL - Initiating a Social Club Upgrade after " + msDelay + " ms of Delay", 0);
 
 			// KILL ALL PROCESSES
-			HelperClasses.ProcessHandler.SocialClubKillAllProcesses().GetAwaiter().GetResult();
+			HelperClasses.ProcessHandler.SocialClubKillAllProcesses();
 
 			List<MyFileOperation> tmp = new List<MyFileOperation>();
 

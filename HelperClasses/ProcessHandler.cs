@@ -27,7 +27,7 @@ namespace Project_127.HelperClasses
         /// </summary>
         public static async void KillRockstarProcessesAsync()
         {
-            await SocialClubKillAllProcesses(0, true);
+            await SocialClubKillAllProcesses();
 
             // TODO CTRLF add other ProcessNames
             KillProcessesContains("gta");
@@ -41,7 +41,7 @@ namespace Project_127.HelperClasses
 
         public static void KillRockstarProcesses()
         {
-            SocialClubKillAllProcesses(0, true).GetAwaiter().GetResult();
+            SocialClubKillAllProcesses().GetAwaiter().GetResult();
 
             // TODO CTRLF add other ProcessNames
             KillProcessesContains("gta");
@@ -138,63 +138,13 @@ namespace Project_127.HelperClasses
         /// Killing all Social Club Related Processes
         /// </summary>
         /// <param name="msDelayAfter"></param>
-        public async static Task SocialClubKillAllProcesses(int msDelayAfter = 150, bool OnlyClose = false, bool SkipAllWait = false)
+        public async static Task SocialClubKillAllProcesses()
         {
             RegistryKey myRK = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64).CreateSubKey("SOFTWARE").CreateSubKey("WOW6432Node").CreateSubKey("Microsoft").CreateSubKey("Windows").CreateSubKey("CurrentVersion").CreateSubKey("Uninstall").CreateSubKey("Rockstar Games Launcher");
             string tmpInstallDir = HelperClasses.RegeditHandler.GetValue(myRK, "InstallLocation");
 
             HelperClasses.Logger.Log("Killing all Social Club Processes", 1);
             Process[] tmp = Process.GetProcesses();
-            foreach (Process p in tmp)
-            {
-                //// Checking if its gtavlauncher or one of the social club executables
-                //if ((p.ProcessName.ToLower() == LaunchAlternative.SCL_EXE_ADDON_DOWNGRADED.TrimStart('\\').TrimEnd(".exe").ToLower()) ||
-                //	(p.ProcessName.ToLower() == LaunchAlternative.SCL_EXE_ADDON_UPGRADED.TrimStart('\\').TrimEnd(".exe").ToLower()) ||
-                //	(p.ProcessName.ToLower() == "gtavlauncher"))
-                //{
-                // check if its actually a process from SC Install dir or GTA Install dir
-                try
-                {
-                    if (string.IsNullOrWhiteSpace(tmpInstallDir))
-                    {
-                        if ((p.MainModule.FileName.ToLower().Contains(LauncherLogic.GTAVFilePath.TrimEnd('\\').ToLower())) ||
-                        (p.MainModule.FileName.ToLower().Contains(@"C:\Program Files\Rockstar Games".ToLower())))
-                        {
-                            p.CloseMainWindow();
-                        }
-                    }
-                    else
-                    {
-                        if ((p.MainModule.FileName.ToLower().Contains(LauncherLogic.GTAVFilePath.TrimEnd('\\').ToLower())) ||
-                        (p.MainModule.FileName.ToLower().Contains(tmpInstallDir.TrimEnd('\\').ToLower())) ||
-                        (p.MainModule.FileName.ToLower().Contains(@"C:\Program Files\Rockstar Games".ToLower())))
-                        {
-                            p.CloseMainWindow();
-                        }
-                    }
-                }
-                catch
-                {
-                }
-
-                //}
-            }
-
-
-            if (OnlyClose)
-            {
-                return;
-            }
-
-
-
-            if (!SkipAllWait)
-            {
-                // wait 25 seconds
-                Task.Delay(50).GetAwaiter().GetResult();
-            }
-
-
 
             // Just making sure shit is really closed
             tmp = Process.GetProcesses();
@@ -231,12 +181,6 @@ namespace Project_127.HelperClasses
                 }
 
                 //}
-            }
-
-            if (!SkipAllWait)
-            {
-                // Waiting 150 ms after killing for process to really let go off file
-                Task.Delay(msDelayAfter).GetAwaiter().GetResult();
             }
         }
 
@@ -333,41 +277,46 @@ namespace Project_127.HelperClasses
         /// <param name="pCommandLineArguments"></param>
         /// <param name="runAsAdmin"></param>
         /// <param name="waitForExit"></param>
-        public static Process StartProcess(string pFilepath, string pWorkingDir = null, string pCommandLineArguments = null, bool useShellExecute = false, bool runAsAdmin = false)
+        public async static void StartProcess(string pFilepath, string pWorkingDir = null, string pCommandLineArguments = null, bool useShellExecute = false, bool runAsAdmin = false)
         {
-            if (FileHandling.doesFileExist(pFilepath))
+            _ = Task.Run(async () =>
             {
-                Process proc = new Process();
-                proc.StartInfo.FileName = pFilepath;
-                if (!string.IsNullOrEmpty(pCommandLineArguments))
+                if (FileHandling.doesFileExist(pFilepath))
                 {
-                    proc.StartInfo.Arguments = pCommandLineArguments;
-                }
-                if (!string.IsNullOrEmpty(pWorkingDir))
-                {
-                    proc.StartInfo.WorkingDirectory = pWorkingDir;
-                }
-                if (runAsAdmin)
-                {
-                    proc.StartInfo.Verb = "runas";
-                }
+                    Process proc = new Process();
+                    proc.StartInfo.FileName = pFilepath;
+                    if (!string.IsNullOrEmpty(pCommandLineArguments))
+                    {
+                        proc.StartInfo.Arguments = pCommandLineArguments;
+                    }
+                    if (!string.IsNullOrEmpty(pWorkingDir))
+                    {
+                        proc.StartInfo.WorkingDirectory = pWorkingDir;
+                    }
+                    if (runAsAdmin)
+                    {
+                        proc.StartInfo.Verb = "runas";
+                    }
 
-                proc.StartInfo.UseShellExecute = useShellExecute;
-                // Lets see if this works
-                //proc.ProcessorAffinity = (IntPtr)0xFFFFFFFF;
+                    proc.StartInfo.UseShellExecute = useShellExecute;
+                    // Lets see if this works
+                    //proc.ProcessorAffinity = (IntPtr)0xFFFFFFFF;
 
-                proc.Start();
+                    proc.Start();
 
-                return proc;
-            }
-            return null;
+                    return proc;
+                }
+                return null;
+            });
         }
 
         /// <summary>
         /// Starting Game as Non Retail
         /// </summary>
-        public static void StartDowngradedGame()
+        public static async void StartDowngradedGame()
         {
+            _ = Task.Run(async () =>
+            {
             if (Settings.EnableRunAsAdminDowngraded)
             {
                 HelperClasses.Logger.Log("Running downgraded game AS ADMIN");
@@ -378,6 +327,7 @@ namespace Project_127.HelperClasses
                 HelperClasses.Logger.Log("Running downgraded game not as admin");
                 Process tmp = GSF.Identity.UserAccountControl.CreateProcessAsStandardUser(@"cmd.exe", LauncherLogic.GetFullCommandLineArgsForStarting());
             }
+            });
         }
 
     } // End of Class
