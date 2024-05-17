@@ -21,7 +21,7 @@ namespace Project_127
 		/// </summary>
 		public static void Launch()
 		{
-			string filePath = LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\gtastub.exe";
+			string filePath = LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\GTAVLauncher.exe";
 
 			HelperClasses.Logger.Log("SCL - Launch");
 
@@ -68,9 +68,9 @@ namespace Project_127
 			}
 			else
 			{
-				HelperClasses.Logger.Log("SCL - Launch, GTA Stub does NOT exists");
+				HelperClasses.Logger.Log("SCL - Launch, GTAVLauncher.exe does NOT exists");
 
-				new Popups.Popup(Popups.Popup.PopupWindowTypes.PopupOkError, "Cant find the required File ('gtastub.exe')\ninside your GTA Installation.\nSomething went wrong").ShowDialog();
+				new Popups.Popup(Popups.Popup.PopupWindowTypes.PopupOkError, "Cant find the required File ('GTAVLauncher.exe')\ninside your GTA Installation.\nSomething went wrong").ShowDialog();
 			}
             });
         }

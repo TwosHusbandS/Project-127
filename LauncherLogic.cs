@@ -697,7 +697,7 @@ namespace Project_127
                 string GTA5Exe = MyDowngradePath.TrimEnd('\\') + @"\gta5.exe";
                 string Updaterpf = MyDowngradePath.TrimEnd('\\') + @"\update\update.rpf";
                 string launcher1 = MyDowngradePath.TrimEnd('\\') + @"\playgtav.exe";
-                string launcher2 = MyDowngradePath.TrimEnd('\\') + @"\gtastub.exe";
+                string launcher2 = MyDowngradePath.TrimEnd('\\') + @"\gtavlauncher.exe";
                 if (HelperClasses.BuildVersionTable.GetGameVersionOfBuild(HelperClasses.FileHandling.GetVersionFromFile(GTA5Exe)) < new Version(1, 30))
                 {
                     if (HelperClasses.FileHandling.GetSizeOfFile(Updaterpf) > 1000)
@@ -893,7 +893,7 @@ namespace Project_127
                 }
                 else
                 {
-                    tmp = tmp.Replace("gta_p127.exe", "gtastub.exe");
+                    tmp = tmp.Replace("gta_p127.exe", "GTAVLauncher.exe -scOfflineOnly");
                 }
             }
 

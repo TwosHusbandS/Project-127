@@ -6,7 +6,16 @@ Actual code (partially closed source) which authentificates, handles entitlement
 @Special For, who also did a lot of RE'ing, testing, brainstorming, information gathering and 2nd level support, being available to bounce ideas off of.
 Main / Actual Project 1.27 Client by "@thS"
 A number of other members of the team, including but not limited to @MoMo, @Diamondo25, @S.M.G, @gogsi, @Antibones, @Unemployed, @Aperture, @luky, @CrynesSs, @Daniel Kinau contributed to this project one way or another, and my thanks go out to them.
-Version: 1.2.6.3
+Version: 1.2.6.4
+
+Changelog:
+- Fix SCL still crashing P127
+- Fix ComponenetManager Import Button
+- Restored original P127 aspect Ratio by increasing window height
+- Download Manager stuff for SCL Beta
+- P127 implementation for SCL Beta
+- P127 installer for SCL Beta
+
 
 Build Instructions:
 	Press CTRLF + F5, pray that nuget does its magic.

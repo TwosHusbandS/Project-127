@@ -235,7 +235,7 @@ namespace Project_127
 		/// <summary>
 		/// Property of other Buildinfo. Will be in the top message of logs
 		/// </summary>
-		public static string BuildInfo = "1.2.6.3 - Dynamic MTL Offsets, Build 2";
+		public static string BuildInfo = "1.2.6.4 - SCL BETA, Build 1";
 
 
 		/// <summary>
@@ -691,6 +691,30 @@ namespace Project_127
 				{
 					Settings.EnableLegacyAuth = false;
 				}
+
+				// If first time launching 1.3.0.0
+				if (Settings.LastLaunchedVersion < new Version("1.3.0.0"))
+				{
+					List<string> OldFiles = new List<string>
+                    {
+                        "launc.dll",
+                        "GTAStub.exe",
+                        "Play127.exe",
+                        "GTATW28D.dll",
+                        "stubpatch.dll"
+                    };
+
+					foreach (string OldFile in OldFiles)
+					{
+						Settings.AllFilesEverPlacedInsideGTAMyAdd(OldFile);
+						HelperClasses.Logger.Log("Nuking " + OldFile +" from all possible folders, since LastLaunchedVersion is smaller than 1.3");
+						HelperClasses.FileHandling.deleteFile(LauncherLogic.DowngradeAlternativeFilePathRockstar124.TrimEnd('\\') + @"\" + OldFile);
+						HelperClasses.FileHandling.deleteFile(LauncherLogic.DowngradeAlternativeFilePathRockstar127.TrimEnd('\\') + @"\" + OldFile);
+						HelperClasses.FileHandling.deleteFile(LauncherLogic.DowngradeAlternativeFilePathSteam124.TrimEnd('\\') + @"\" + OldFile);
+						HelperClasses.FileHandling.deleteFile(LauncherLogic.DowngradeAlternativeFilePathSteam127.TrimEnd('\\') + @"\" + OldFile);
+						HelperClasses.FileHandling.deleteFile(LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\" + OldFile);
+                    }
+                }
 
                 Settings.LastLaunchedVersion = Globals.ProjectVersion;
 			}
