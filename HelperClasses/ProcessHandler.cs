@@ -161,10 +161,6 @@ namespace Project_127.HelperClasses
         /// <param name="msDelayAfter"></param>
         public static void SocialClubKillAllProcesses()
         {
-            Globals.MySWStart();
-            Globals.DebugPrint("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-
-
             // Kill all processes with these names
             List<string> ProcNames = new List<string>
             {
@@ -215,7 +211,6 @@ namespace Project_127.HelperClasses
                     }
                 }
             }
-            Globals.DebugPrint("CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC");
         }
 
 
