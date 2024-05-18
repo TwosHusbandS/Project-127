@@ -63,24 +63,19 @@ namespace Project_127.HelperClasses
 			List<BuildVersionTable> Github = GetFromGithub(online_xml);
 
 
-			Logger.Log("BVT - A");
 			if (Github.Count > 5)
 			{
-                Logger.Log("BVT - B1");
-                if (Github[Github.Count - 1].MyGameVersion > Local[Local.Count - 1].MyGameVersion)
+                if (Github[Github.Count - 1].MyBuildVersion > Local[Local.Count - 1].MyBuildVersion)
 				{
-                    Logger.Log("BVT - C1");
                     MyBuildVersionTables = Github;
                 }
 				else
 				{
-                    Logger.Log("BVT - C2");
                     MyBuildVersionTables = Local;
                 }
             }
             else
 			{
-                Logger.Log("BVT - B2");
                 MyBuildVersionTables = Local;
 			}
         }
