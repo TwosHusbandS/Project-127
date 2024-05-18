@@ -27,12 +27,11 @@ namespace Project_127.HelperClasses
         /// </summary>
         public static async void KillRockstarProcessesAsync()
         {
-            await SocialClubKillAllProcesses();
+            SocialClubKillAllProcesses();
 
             // TODO CTRLF add other ProcessNames
             KillProcessesContains("gta");
             KillProcessesContains("gtastub");
-            KillProcessesContains("rockstar");
             KillProcessesContains("play127");
             KillProcessesContains("gtaddl");
 
@@ -41,12 +40,11 @@ namespace Project_127.HelperClasses
 
         public static void KillRockstarProcesses()
         {
-            SocialClubKillAllProcesses().GetAwaiter().GetResult();
+            SocialClubKillAllProcesses();
 
             // TODO CTRLF add other ProcessNames
             KillProcessesContains("gta");
             KillProcessesContains("gtastub");
-            KillProcessesContains("rockstar");
             KillProcessesContains("play127");
             KillProcessesContains("gtaddl");
         }
@@ -134,54 +132,90 @@ namespace Project_127.HelperClasses
         }
 
 
+
+        [DllImport("Kernel32.dll")]
+        private static extern bool QueryFullProcessImageName([In] IntPtr hProcess, [In] uint dwFlags, [Out] StringBuilder lpExeName, [In, Out] ref uint lpdwSize);
+
+        public static string GetMainModuleFileName(this Process process, int buffer = 1024)
+        {
+            try
+            {
+            var fileNameBuilder = new StringBuilder(buffer);
+            uint bufferLength = (uint)fileNameBuilder.Capacity + 1;
+            return QueryFullProcessImageName(process.Handle, 0, fileNameBuilder, ref bufferLength) ?
+                fileNameBuilder.ToString() :
+                "";
+            }
+            catch (Exception ex)
+            {
+                return "";
+            }
+        }
+
+
+
+
         /// <summary>
         /// Killing all Social Club Related Processes
         /// </summary>
         /// <param name="msDelayAfter"></param>
-        public async static Task SocialClubKillAllProcesses()
+        public static void SocialClubKillAllProcesses()
         {
+            Globals.MySWStart();
+            Globals.DebugPrint("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+
+
+            // Kill all processes with these names
+            List<string> ProcNames = new List<string>
+            {
+                "rockstar",
+                "socialclub",
+                "launcher",
+                "subprocess"
+            };
+
+
+            // Only kill them if their filepath contains these
+            List<string> PathNames = new List<string>
+            {
+                LauncherLogic.GTAVFilePath.TrimEnd('\\').ToLower(),
+                //@"C:\Program Files\Rockstar Games"
+                "Rockstar Games"
+            };
             RegistryKey myRK = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64).CreateSubKey("SOFTWARE").CreateSubKey("WOW6432Node").CreateSubKey("Microsoft").CreateSubKey("Windows").CreateSubKey("CurrentVersion").CreateSubKey("Uninstall").CreateSubKey("Rockstar Games Launcher");
             string tmpInstallDir = HelperClasses.RegeditHandler.GetValue(myRK, "InstallLocation");
-
-            HelperClasses.Logger.Log("Killing all Social Club Processes", 1);
-            Process[] tmp = Process.GetProcesses();
-
-            // Just making sure shit is really closed
-            tmp = Process.GetProcesses();
-            foreach (Process p in tmp)
+            if (!String.IsNullOrWhiteSpace(tmpInstallDir))
             {
-                //// Checking if its gtavlauncher or one of the social club executables
-                //if ((p.ProcessName.ToLower() == LaunchAlternative.SCL_EXE_ADDON_DOWNGRADED.TrimStart('\\').TrimEnd(".exe").ToLower()) ||
-                //	(p.ProcessName.ToLower() == LaunchAlternative.SCL_EXE_ADDON_UPGRADED.TrimStart('\\').TrimEnd(".exe").ToLower()) ||
-                //	(p.ProcessName.ToLower() == "gtavlauncher"))
-                //{
-                // check if its actually a process from SC Install dir or GTA Install dir
-                try
-                {
-                    if (string.IsNullOrWhiteSpace(tmpInstallDir))
-                    {
-                        if ((p.MainModule.FileName.ToLower().Contains(LauncherLogic.GTAVFilePath.TrimEnd('\\').ToLower())) ||
-                        (p.MainModule.FileName.ToLower().Contains(@"C:\Program Files\Rockstar Games".TrimEnd('\\').ToLower())))
-                        {
-                            ProcessHandler.Kill(p);
-                        }
-                    }
-                    else
-                    {
-                        if ((p.MainModule.FileName.ToLower().Contains(LauncherLogic.GTAVFilePath.TrimEnd('\\').ToLower())) ||
-                        (p.MainModule.FileName.ToLower().Contains(tmpInstallDir.TrimEnd('\\').ToLower())) ||
-                        (p.MainModule.FileName.ToLower().Contains(@"C:\Program Files\Rockstar Games".TrimEnd('\\').ToLower())))
-                        {
-                            ProcessHandler.Kill(p);
-                        }
-                    }
-                }
-                catch
-                {
-                }
-
-                //}
+                PathNames.Add(tmpInstallDir);
             }
+
+
+
+            // Loop through all processes
+            Process[] Processes = Process.GetProcesses();
+            for (int i = 0; i <= Processes.Length - 1; i++)
+            {
+                // Loop through all processnames
+                foreach (string ProcName in ProcNames)
+                {
+                    // If processname hits
+                    if (Processes[i].ProcessName.ToLower().Contains(ProcName.ToLower().TrimEnd(".exe")))
+                    {
+                        // Loop through pathnames
+                        foreach (string Pathname in PathNames)
+                        {
+                            // If Pathnames hit
+                            if (Processes[i].GetMainModuleFileName().ToLower().Contains(Pathname.ToLower()))
+                            {
+                                Kill(Processes[i]);
+                                break;
+                            }
+                        }
+                        break;
+                    }
+                }
+            }
+            Globals.DebugPrint("CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC");
         }
 
 
@@ -202,11 +236,22 @@ namespace Project_127.HelperClasses
         /// Kills all processes which contain that string
         /// </summary>
         /// <param name="pProccessName"></param>
-        public static void KillProcessesContains(string pProccessName)
+        public static void KillProcessesContains(string pProccessName, bool MakeSureIsGTARelated = false)
         {
             foreach (Process myP in GetProcessesContains(pProccessName))
             {
-                Kill(myP);
+                if (MakeSureIsGTARelated)
+                {
+                    string tmp = "Rockstar Games";
+                    if (myP.GetMainModuleFileName().ToLower().Contains(tmp.ToLower()))
+                    {
+                        Kill(myP);
+                    }
+                }
+                else
+                {
+                    Kill(myP);
+                }
             }
         }
 
@@ -232,7 +277,19 @@ namespace Project_127.HelperClasses
                 //	Logger.Log("Failed to kill Process '" + pProcess.ProcessName + "'", 1);
                 //}
 
-                KillProcessAndChildren(pProcess.Id);
+
+
+                //KillProcessAndChildren(pProcess.Id);
+
+
+                try
+                {
+                    pProcess.Kill();
+                }
+                catch (Exception ex)
+                {
+                    Logger.Log("Failed to kill Process '" + pProcess.ProcessName + "' :" + ex.ToString(), 1);
+                }
             }
         }
 
