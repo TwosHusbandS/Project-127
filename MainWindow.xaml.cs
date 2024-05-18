@@ -15,7 +15,10 @@ Changelog:
 - Download Manager stuff for SCL Beta
 - P127 implementation for SCL Beta
 - P127 installer for SCL Beta
-
+- new BuildVersionTable thingy
+- better process.run async fast
+- better killsocialclubprocesses
+- better socialclub downgrade/upgrade
 
 Build Instructions:
 	Press CTRLF + F5, pray that nuget does its magic.

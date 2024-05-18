@@ -146,7 +146,7 @@ namespace Project_127
 
             if (UpgradeSocialClubAfterGame)
             {
-                LaunchAlternative.SocialClubDowngrade(7500);
+                LaunchAlternative.SocialClubUpgrade(2000);
                 UpgradeSocialClubAfterGame = false;
             }
         }
