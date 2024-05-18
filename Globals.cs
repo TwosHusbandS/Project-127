@@ -1249,7 +1249,7 @@ namespace Project_127
 				}
 			}
 
-			HelperClasses.BuildVersionTable.ReadFromGithub(XML_Autoupdate_Temp);
+			HelperClasses.BuildVersionTable.Init(XML_Autoupdate_Temp);
 			ReadMe.DynamicLinksMethod(XML_Autoupdate_Temp);
 		}
 
