@@ -19,6 +19,7 @@ Changelog:
 - better process.run async fast
 - better killsocialclubprocesses
 - better socialclub downgrade/upgrade
+- remove @Special for taxi long load patch, since its outdated
 
 Build Instructions:
 	Press CTRLF + F5, pray that nuget does its magic.

@@ -517,7 +517,7 @@
                             <Label Grid.Row="3" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="        Special Patcher Primary Toggle Key"/>
                             <Button Grid.Row="3" Grid.Column="1" x:Name="btn_Set_Special_Patcher_Key"  Style="{StaticResource btn_SE_Path}" Click="btn_Set_Special_Patcher_Key_Click"/>
                             <Button Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource btn_SE_Path}" x:Name="btn_open_patch_dialog" Click="btn_open_patch_dialog_Click" Content="Setup Patches"/>
-                            <Button Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" x:Name="btn_Set_Special_Patcher_Add_llfix" Content="Load @Special For's taxi long-load patch" Style="{StaticResource btn_SE_Path}" Click="btn_Set_Special_Patcher_Add_llfix_Click"/>
+                            <Button Visibility="Hidden" Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" x:Name="btn_Set_Special_Patcher_Add_llfix" Content="Load @Special For's taxi long-load patch" Style="{StaticResource btn_SE_Path}" Click="btn_Set_Special_Patcher_Add_llfix_Click"/>
                             
 
 
