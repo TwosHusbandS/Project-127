@@ -62,20 +62,26 @@ namespace Project_127.HelperClasses
 			List<BuildVersionTable> Local = GetHardcodedOnes();
 			List<BuildVersionTable> Github = GetFromGithub(online_xml);
 
+
+			Logger.Log("BVT - A");
 			if (Github.Count > 5)
 			{
+                Logger.Log("BVT - B1");
                 if (Github[Github.Count - 1].MyGameVersion > Local[Local.Count - 1].MyGameVersion)
 				{
-					MyBuildVersionTables = Github;
+                    Logger.Log("BVT - C1");
+                    MyBuildVersionTables = Github;
                 }
 				else
 				{
+                    Logger.Log("BVT - C2");
                     MyBuildVersionTables = Local;
                 }
             }
             else
 			{
-				MyBuildVersionTables = Local;
+                Logger.Log("BVT - B2");
+                MyBuildVersionTables = Local;
 			}
         }
 
@@ -124,6 +130,7 @@ namespace Project_127.HelperClasses
                 new BuildVersionTable("1.0.2845.0", "1.66"),
                 new BuildVersionTable("1.0.2944.0", "1.67"),
                 new BuildVersionTable("1.0.3028.0", "1.67"),
+                new BuildVersionTable("1.0.3095.0", "1.68"),
                 new BuildVersionTable("1.0.3179.0", "1.68")
             };
 
