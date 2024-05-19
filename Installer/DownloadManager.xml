@@ -2,7 +2,7 @@
 <targets>
     <subassembly name="AM_127_STEAM" root="DowngradeFiles_Alternative\steam\127\" version="0.2.0.0">
         <file name="PlayGTAV.exe">
-            <hash>f88b3a95904d70d1f57c57ab02450849</hash>
+            <hash>c91f226c9cfab68bff882893115f7593</hash>
             <mirror>http://gtav.anushk.net/downloadManager/subassemblies/sclbeta/am127steam/PlayGTAV.exe</mirror>
         </file>
         
@@ -38,7 +38,7 @@
 
     <subassembly name="AM_124_STEAM" root="DowngradeFiles_Alternative\steam\124\" version="0.2.0.0">
         <file name="PlayGTAV.exe">
-            <hash>3fccfce6dbd9fe0aa88185faf7de26b0</hash>
+            <hash>4e630b1597e1888a0ffe4a675950d42c</hash>
             <mirror>http://gtav.anushk.net/downloadManager/subassemblies/sclbeta/am124steam/PlayGTAV.exe</mirror>
         </file>
 
@@ -74,7 +74,7 @@
 
     <subassembly name="AM_127_ROCKSTAR" root="DowngradeFiles_Alternative\rockstar\127\" version="0.2.0.0">
         <file name="GTAVLauncher.exe">
-            <hash>32c5b70a1c43788b40f7324bdb64253a</hash>
+            <hash>51611b57e8042e637eb699f444691b29</hash>
             <mirror>http://gtav.anushk.net/downloadManager/subassemblies/sclbeta/am127rockstar/GTAVLauncher.exe</mirror>
         </file>
         
@@ -101,7 +101,7 @@
 
     <subassembly name="AM_124_ROCKSTAR" root="DowngradeFiles_Alternative\rockstar\124\" version="0.2.0.0">
         <file name="GTAVLauncher.exe">
-            <hash>74b751f8a27b247f5ed86f8af091a347</hash>
+            <hash>71843086e097b53abf8ac6a39c54b270</hash>
             <mirror>http://gtav.anushk.net/downloadManager/subassemblies/sclbeta/am124rockstar/GTAVLauncher.exe.exe</mirror>
         </file>
 
@@ -127,7 +127,7 @@
 
     <subassembly name="AM_BASE_SUBASSEMBLY"  type="common" version="0.2.0.0">
         <file name="bink2w64.dll">
-            <hash>ac1d095886d206e07629a11013f0e855</hash>
+            <hash>ed4ad086732d25ccffeaffadddaf0293</hash>
             <mirror>http://gtav.anushk.net/downloadManager/subassemblies/sclbeta/ambase/bink2w64.dll</mirror>
         </file>
 		<!--<file name="launc.dll">
