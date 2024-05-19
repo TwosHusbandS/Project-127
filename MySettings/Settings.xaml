@@ -208,7 +208,7 @@
                                         <Label Grid.Row="1" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Overwrite GTA Command Line Args" ToolTip="This will disable P127 Language Select and remove the automatically applied Core Fix.\nIF THE LINES BELOW ARE SHIT, YOUR GAME MIGHT NOT START YOU MUPPET"/>
                                         <Button Grid.Row="1" Grid.Column="1" x:Name="btn_cb_Set_EnableOverWriteGTACommandLineArgs"  Style="{StaticResource btn_cb}" Click="btn_cb_Click" MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
 
-                                        <TextBox x:Name="tb_OverWriteGTACommandLineArgs" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource tb}" LostFocus="tb_OverWriteGTACommandLineArgs_LostFocus"/>
+                                        <TextBox x:Name="tb_OverWriteGTACommandLineArgs" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource tb}" TextChanged="tb_OverWriteGTACommandLineArgs_TextChanged" LostFocus="tb_OverWriteGTACommandLineArgs_LostFocus"/>
                                         <Rectangle x:Name="Rect_HideOptions_CommandLineArg" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Fill="{x:Static local:MyColors.MyColorOffWhite85}" ToolTip="Enable Checkbox above to unlock."/>
                                     </Grid>
                                 </Border>

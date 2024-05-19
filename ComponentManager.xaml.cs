@@ -268,7 +268,6 @@ namespace Project_127
 
         public static void SetMode(string Mode)
         {
-            Mode = Mode.ToLower();
             if (MyDirtyProgramming != null)
             {
                 if (String.IsNullOrEmpty(Mode) || Mode == "default")

@@ -104,7 +104,7 @@ namespace Project_127
 			get
 			{
                 string masterURL = "https://raw.githubusercontent.com/TwosHusbandS/Project-127/master/Installer/DownloadManager.xml";
-				string modeURL = "https://raw.githubusercontent.com/TwosHusbandS/Project-127/" + DMBranch + "/Installer/DownloadManager.xml";
+				string modeURL = "https://raw.githubusercontent.com/TwosHusbandS/Project-127/" + DMBranch.ToLower() + "/Installer/DownloadManager.xml";
 
 				string modeXML = HelperClasses.FileHandling.GetStringFromURL(modeURL, true);
 				if (!String.IsNullOrWhiteSpace(modeXML))
@@ -157,7 +157,7 @@ namespace Project_127
 				{
 					return "master";
 				}
-				return Project_127.MySettings.Settings.P127Mode.ToLower();
+				return Project_127.MySettings.Settings.P127Mode;
 			}
 		}
 
@@ -175,7 +175,7 @@ namespace Project_127
 				{
 					return "master";
 				}
-				return Project_127.MySettings.Settings.DMMode.ToLower();
+				return Project_127.MySettings.Settings.DMMode;
 			}
 		}
 

@@ -372,7 +372,7 @@ namespace Project_127.MySettings
 
 					if (value.ToLower() != "default")
 					{
-						MainWindow.MW.btn_lbl_Mode.Content = "Curr P127 Mode: '" + value.ToLower() + "'";
+						MainWindow.MW.btn_lbl_Mode.Content = "Curr P127 Mode: '" + value + "'";
 						MainWindow.MW.btn_lbl_Mode.Visibility = Visibility.Visible;
 					}
 					else

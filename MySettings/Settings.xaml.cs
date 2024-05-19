@@ -2169,7 +2169,13 @@ namespace Project_127.MySettings
 
 		}
 
-		private void tb_OverWriteGTACommandLineArgs_LostFocus(object sender, RoutedEventArgs e)
+
+        private void tb_OverWriteGTACommandLineArgs_TextChanged(object sender, TextChangedEventArgs e)
+        {
+			tb_OverWriteGTACommandLineArgs_LostFocus(null, null);
+        }
+
+        private void tb_OverWriteGTACommandLineArgs_LostFocus(object sender, RoutedEventArgs e)
 		{
 			string txt = tb_OverWriteGTACommandLineArgs.Text;
 			if (String.IsNullOrWhiteSpace(txt)) { txt = LauncherLogic.GetStartCommandLineArgs(); }
@@ -2317,5 +2323,5 @@ namespace Project_127.MySettings
 			}
 		}
 
-	} // End of Class
+    } // End of Class
 } // End of Namespace 

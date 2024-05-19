@@ -214,7 +214,7 @@ namespace Project_127
 
 			if (Settings.P127Mode.ToLower() != "default")
 			{
-				MainWindow.MW.btn_lbl_Mode.Content = "Curr P127 Mode: '" + MySettings.Settings.P127Mode.ToLower() + "'";
+				MainWindow.MW.btn_lbl_Mode.Content = "Curr P127 Mode: '" + MySettings.Settings.P127Mode + "'";
 				MainWindow.MW.btn_lbl_Mode.Visibility = Visibility.Visible;
 			}
 			else
