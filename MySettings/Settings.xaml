@@ -185,7 +185,7 @@
                             <Label Grid.Row="3" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Run downgraded GTA as Admin" ToolTip="Runs downgraded GTA as Admin. You will also need to launch Livesplit, OBS etc. as Admin."/>
                             <Button Grid.Row="3" Grid.Column="1" x:Name="btn_cb_Set_EnableRunAsAdmin"  Style="{StaticResource btn_cb}" Click="btn_cb_Click" MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave" ToolTip="Runs downgraded GTA as Admin. You will also need to launch Livesplit, OBS etc. as Admin."/>
 
-                            <Button Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" x:Name="btn_GTACommandLineArgs"  Style="{StaticResource btn_SE_Path}" Click="btn_GTACommandLineArgs_Click" Content="Additional GTA CommandLine Options"/>
+                            <Button Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" x:Name="btn_GTACommandLineArgs"  Style="{StaticResource btn_SE_Path}" Click="btn_GTACommandLineArgs_Click" Content="Additional Downgraded GTA CommandLine Options"/>
                             <Popup x:Name="PopupGTACommandLineArgs"  PlacementTarget="{Binding ElementName=btn_GTACommandLineArgs}" Placement="MousePoint" Width="400" Height="150"  Margin="0,0,0,0" StaysOpen="False" Closed="PopupGTACommandLineArgs_Closed" Opened="PopupGTACommandLineArgs_Opened">
                                 <Border BorderBrush="{x:Static local:MyColors.MyColorWhite}" BorderThickness="2" Background="{x:Static local:MyColors.MyColorOffBlack}" MouseLeave="Border_MouseLeave">
                                     <Grid>

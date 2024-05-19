@@ -871,7 +871,7 @@ namespace Project_127
             }
 
 
-            if (Settings.EnableOverWriteGTACommandLineArgs)
+            if (Settings.EnableOverWriteGTACommandLineArgs && InstallationState == InstallationStates.Downgraded)
             {
                 tmp += Settings.OverWriteGTACommandLineArgs;
             }
@@ -888,13 +888,30 @@ namespace Project_127
             }
             else
             {
-                if (LaunchWay == LaunchWays.DragonEmu)
+                if (InstallationState == InstallationStates.Downgraded)
                 {
-                    tmp = tmp.Replace("gta_p127.exe", "playgtav.exe");
+                    if (LaunchWay == LaunchWays.DragonEmu)
+                    {
+                        tmp = tmp.Replace("gta_p127.exe", "playgtav.exe");
+                    }
+                    
+                    else if (LaunchWay == LaunchWays.SocialClubLaunch)
+                    {
+                        if (Settings.Retailer == Settings.Retailers.Steam)
+                        {
+                            tmp = tmp.Replace("gta_p127.exe", "playgtav.exe -scOfflineOnly");
+                        }
+                        else if (Settings.Retailer == Settings.Retailers.Rockstar)
+                        {
+                            tmp = tmp.Replace("gta_p127.exe", "playgtav.exe -scOfflineOnly");
+                        }
+                    }
                 }
                 else
                 {
-                    tmp = tmp.Replace("gta_p127.exe", "playgtav.exe -scOfflineOnly");
+                    // So this is called when upgraded
+                    // means upgraded rockstar
+                    tmp = tmp.Replace("gta_p127.exe", "gtavlauncher.exe");
                 }
             }
 
