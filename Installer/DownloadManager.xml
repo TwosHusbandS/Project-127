@@ -73,9 +73,9 @@
     </subassembly>
 
     <subassembly name="AM_127_ROCKSTAR" root="DowngradeFiles_Alternative\rockstar\127\" version="0.2.0.0">
-        <file name="PlayGTAV.exe">
+        <file name="GTAVLauncher.exe">
             <hash>32c5b70a1c43788b40f7324bdb64253a</hash>
-            <mirror>http://gtav.anushk.net/downloadManager/subassemblies/sclbeta/am127rockstar/PlayGTAV.exe</mirror>
+            <mirror>http://gtav.anushk.net/downloadManager/subassemblies/sclbeta/am127rockstar/GTAVLauncher.exe</mirror>
         </file>
         
         <file name="GTA5.exe">
@@ -100,9 +100,9 @@
 
 
     <subassembly name="AM_124_ROCKSTAR" root="DowngradeFiles_Alternative\rockstar\124\" version="0.2.0.0">
-        <file name="PlayGTAV.exe">
+        <file name="GTAVLauncher.exe">
             <hash>74b751f8a27b247f5ed86f8af091a347</hash>
-            <mirror>http://gtav.anushk.net/downloadManager/subassemblies/sclbeta/am124rockstar/PlayGTAV.exe.exe</mirror>
+            <mirror>http://gtav.anushk.net/downloadManager/subassemblies/sclbeta/am124rockstar/GTAVLauncher.exe.exe</mirror>
         </file>
 
         <file name="GTA5.exe">

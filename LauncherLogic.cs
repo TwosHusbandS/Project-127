@@ -903,7 +903,7 @@ namespace Project_127
                         }
                         else if (Settings.Retailer == Settings.Retailers.Rockstar)
                         {
-                            tmp = tmp.Replace("gta_p127.exe", "playgtav.exe -scOfflineOnly");
+                            tmp = tmp.Replace("gta_p127.exe", "gtavlauncher.exe -scOfflineOnly");
                         }
                     }
                 }
