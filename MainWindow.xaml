@@ -55,8 +55,8 @@
                             <RowDefinition/>
                         </Grid.RowDefinitions>
                         <Button x:Name="btn_Upgrade" Grid.Row="0" Style="{StaticResource btn_hamburgeritem}" Content="Upgrade" Click="btn_Upgrade_Click" MouseRightButtonDown="btn_Upgrade_MouseRightButtonDown"/>
-                        <Button x:Name="btn_Downgrade" Grid.Row="1" Style="{StaticResource btn_hamburgeritem}" Content="Downgrade" Click="btn_Downgrade_Click"/>
-                        <Button x:Name="btn_SaveFiles" Grid.Row="2" Style="{StaticResource btn_hamburgeritem}" BorderThickness="0" Content="Save File Handler" Click="btn_SaveFiles_Click" MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
+                        <Button x:Name="btn_Downgrade" Grid.Row="1" Style="{StaticResource btn_hamburgeritem}" Content="Downgrade" Click="btn_Downgrade_Click" MouseRightButtonDown="btn_Downgrade_MouseRightButtonDown"/>
+                        <Button x:Name="btn_SaveFiles" Grid.Row="2" Style="{StaticResource btn_hamburgeritem}" BorderThickness="0" Content="Save File Handler" Click="btn_SaveFiles_Click" MouseRightButtonDown="btn_SaveFiles_MouseRightButtonDown" MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
                         <Button x:Name="btn_NoteOverlay" Grid.Row="3" Style="{StaticResource btn_hamburgeritem}" BorderThickness="0" Content="NoteOverlay" Click="btn_NoteOverlay_Click" MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
                         <Button x:Name="btn_ComponentManager" Grid.Row="4" Style="{StaticResource btn_hamburgeritem}" BorderThickness="0" Content="Component Manager" Click="btn_ComponentManager_Click"  MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
                         <Button x:Name="btn_Settings" Grid.Row="5" Style="{StaticResource btn_hamburgeritem}" BorderThickness="0" Content="Settings" Click="btn_Settings_Click" MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>

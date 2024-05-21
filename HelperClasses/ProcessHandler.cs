@@ -155,12 +155,10 @@ namespace Project_127.HelperClasses
 
 
 
-        /// <summary>
-        /// Killing all Social Club Related Processes
-        /// </summary>
-        /// <param name="msDelayAfter"></param>
-        public static void SocialClubKillAllProcesses()
+        public static Process[] GetSocialClubProcesses()
         {
+            List<Process> rtrn = new List<Process>();
+
             // Kill all processes with these names
             List<string> ProcNames = new List<string>
             {
@@ -203,7 +201,7 @@ namespace Project_127.HelperClasses
                             // If Pathnames hit
                             if (Processes[i].GetMainModuleFileName().ToLower().Contains(Pathname.ToLower()))
                             {
-                                Kill(Processes[i]);
+                                rtrn.Add(Processes[i]);
                                 break;
                             }
                         }
@@ -211,8 +209,29 @@ namespace Project_127.HelperClasses
                     }
                 }
             }
+
+            return rtrn.ToArray();
         }
 
+        /// <summary>
+        /// Killing all Social Club Related Processes
+        /// </summary>
+        /// <param name="msDelayAfter"></param>
+        public static void SocialClubKillAllProcesses()
+        {
+            foreach (Process p in GetSocialClubProcesses())
+            {
+                Kill(p);
+            }
+
+            HelperClasses.Logger.Log("Check if processes are still running...");
+            while (GetSocialClubProcesses().Length > 0)
+            {
+                HelperClasses.Logger.Log("Still running process...");
+            }
+            HelperClasses.Logger.Log("Check if processes are still running, aparently thats not the case");
+            Task.Delay(25).GetAwaiter().GetResult();
+        }
 
         /// <summary>
         /// Kills all processes with that name

@@ -198,6 +198,9 @@
     <Compile Include="HelperClasses\BlurBackgroundBehaviour.cs" />
     <Compile Include="HelperClasses\IPCPipes.cs" />
     <Compile Include="HelperClasses\MissionIdentifiers.cs" />
+    <Compile Include="HelperClasses\SocialClubDebug.xaml.cs">
+      <DependentUpon>SocialClubDebug.xaml</DependentUpon>
+    </Compile>
     <Compile Include="HelperClasses\SpecialPatchHandler.cs" />
     <Compile Include="HelperClasses\WindowChangeListenerTwo.cs" />
     <Compile Include="MyColors.cs" />
@@ -305,6 +308,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="GTA_Page.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="HelperClasses\SocialClubDebug.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

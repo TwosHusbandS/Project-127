@@ -146,7 +146,12 @@ namespace Project_127
 
             if (UpgradeSocialClubAfterGame)
             {
-                LaunchAlternative.SocialClubUpgrade(2000);
+                //Popup yn = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Upgrade SocialClub after game exited.");
+                //yn.ShowDialog();
+                //if (yn.DialogResult == true)
+                //{
+                //    LaunchAlternative.SocialClubUpgrade(2000, "we are on GTAClosed and UpgradeSocialClubAfterGame");
+                //}
                 UpgradeSocialClubAfterGame = false;
             }
         }
@@ -899,7 +904,9 @@ namespace Project_127
                     {
                         if (Settings.Retailer == Settings.Retailers.Steam)
                         {
-                            tmp = tmp.Replace("gta_p127.exe", "playgtav.exe -scOfflineOnly");
+                            // This is normally correct, pushing debug version
+                            // tmp = tmp.Replace("gta_p127.exe", "playgtav.exe -scOfflineOnly");
+                            tmp = tmp.Replace("gta_p127.exe", "gtavlauncher.exe -scOfflineOnly");
                         }
                         else if (Settings.Retailer == Settings.Retailers.Rockstar)
                         {
@@ -953,6 +960,7 @@ namespace Project_127
         public static async void Launch()
         {
                 HelperClasses.Logger.Log("Trying to Launch the game.");
+                HelperClasses.FileHandling.AddToDebug("Launching game...");    
 
                 // If Upgraded
                 if (LauncherLogic.InstallationState == InstallationStates.Upgraded)
@@ -960,7 +968,7 @@ namespace Project_127
                     HelperClasses.Logger.Log("Installation State Upgraded Detected.", 1);
 
                     // Checking if we can Upgrade Social Club before launchin Upgraded
-                    LaunchAlternative.SocialClubUpgrade();
+                    LaunchAlternative.SocialClubUpgrade(0,"we are Launching upgraded Game and need it");
 
                     // If Steam
                     if (Settings.Retailer == Settings.Retailers.Steam)
@@ -1090,8 +1098,10 @@ namespace Project_127
 
 
                 HelperClasses.Logger.Log("Game should be launched");
+                HelperClasses.FileHandling.AddToDebug("Launching game...DONE");
 
-                PostLaunchEvents();
+
+            PostLaunchEvents();
         }
 
 

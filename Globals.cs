@@ -235,7 +235,7 @@ namespace Project_127
 		/// <summary>
 		/// Property of other Buildinfo. Will be in the top message of logs
 		/// </summary>
-		public static string BuildInfo = "1.2.6.4 - SCL BETA, Build 2";
+		public static string BuildInfo = "1.2.6.4 - SCL BETA, Build 3";
 
 
 		/// <summary>
@@ -741,7 +741,7 @@ namespace Project_127
 
 			// reading Social club install dir from registry
 			LaunchAlternative.SetUpSocialClubRegistryThing();
-			LaunchAlternative.SocialClubUpgrade();
+			LaunchAlternative.SocialClubUpgrade(0, "we are on P127 startup");
 
 			MainWindow.DMO = Auth.DynamicMTLOffsets.GetMTLOffsets();
 
