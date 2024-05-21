@@ -87,11 +87,11 @@ namespace Project_127.HelperClasses
         {
             try 
             {
-            if (!HelperClasses.FileHandling.doesPathExist(folder))
-            {
-                folder = HelperClasses.FileHandling.GetParentFolder(folder);
-            }
-            HelperClasses.ProcessHandler.StartProcess("explorer.exe",null,folder);
+                if (!HelperClasses.FileHandling.doesPathExist(folder))
+                {
+                    folder = HelperClasses.FileHandling.GetParentFolder(folder);
+                }
+                HelperClasses.ProcessHandler.StartProcess(@"C:\Windows\explorer.exe", pCommandLineArguments: folder);
             }
             catch (Exception ex)
             {
