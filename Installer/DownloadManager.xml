@@ -227,12 +227,11 @@
 		</folder>
 
 		<file name="bink2w64.dll" linked="true" subassembly="EMU_BASE_SUBASSEMBLY"/>
-		<file name="x64a.rpf" linked="true" subassembly="127_BASE_SUBASSEMBLY"/>
+		<file name="x64a.rpf" linked="true" subassembly="124_BASE_SUBASSEMBLY"/>
 
 		<requires>
 			<subassembly target="124_BASE_SUBASSEMBLY"/>
 			<subassembly target="EMU_BASE_SUBASSEMBLY"/>
-			<subassembly target="MISC_FILES"/>
 		</requires>
 	</subassembly>
     
