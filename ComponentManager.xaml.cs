@@ -827,14 +827,14 @@ namespace Project_127
 
         public static string GetPathWhereZIPIsExtracted(this ComponentManager.Components Component)
         {
+            // ALL ZIP FILES FROM DOWNLOAD MANAGER (GITHUB XML AND FRODOS FTP) ARE UNZIPPED WITH PROPER FOLDER STRUCTURE BAKED INTO THE ZIP
+            // ALL ZIP FILES FOR IMPORTING MANUALLY DO NOT HAVE THAT, AND ARE EXTRACTED AT THE EXACT PLACE WHERE WE WANT THE FILES
             switch (Component)
             {
                 case ComponentManager.Components.Base:
                     return LauncherLogic.ZIPFilePath;
                 case ComponentManager.Components.Base124:
                     return LauncherLogic.DowngradeBase124FilePath;
-                case ComponentManager.Components.DowngradedSC:
-                    return LaunchAlternative.SCL_SC_DOWNGRADED;
                 case ComponentManager.Components.SCLRockstar124:
                     return LauncherLogic.DowngradeAlternativeFilePathRockstar124;
                 case ComponentManager.Components.SCLRockstar127:
@@ -843,6 +843,8 @@ namespace Project_127
                     return LauncherLogic.DowngradeAlternativeFilePathSteam124;
                 case ComponentManager.Components.SCLSteam127:
                     return LauncherLogic.DowngradeAlternativeFilePathSteam127;
+                case ComponentManager.Components.DowngradedSC:
+                    return LaunchAlternative.SCL_SC_DOWNGRADED;
                 case ComponentManager.Components.AdditionalSaveFiles:
                     return LauncherLogic.ZIPFilePath.TrimEnd('\\') + @"\Project_127_Files\SupportFiles\SaveFiles";
                 default:

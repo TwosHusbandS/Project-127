@@ -20,6 +20,10 @@ Changelog:
 - better killsocialclubprocesses
 - better socialclub downgrade/upgrade
 - remove @Special for taxi long load patch, since its outdated
+- fixed download manager crashing on bad xml
+- improved savefilehandler speed and ui
+- commented zip patch extraction
+- kept returning player for emu only
 
 Build Instructions:
 	Press CTRLF + F5, pray that nuget does its magic.

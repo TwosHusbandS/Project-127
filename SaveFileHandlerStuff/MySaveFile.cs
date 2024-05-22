@@ -213,9 +213,9 @@ namespace Project_127.SaveFileHandlerStuff
 			// If this is a GTA SaveFileKind
 			if (this.SaveFileKind == SaveFileKinds.GTAV)
 			{
-				foreach (string MySaveFile in HelperClasses.FileHandling.GetFilesFromFolder(BackupSavesPath))
+				foreach (string MySaveFile in HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(BackupSavesPath))
 				{
-					if (HelperClasses.FileHandling.GetHashFromFile(MySaveFile) == HelperClasses.FileHandling.GetHashFromFile(pFilePath))
+					if (HelperClasses.FileHandling.AreFilesEqual(MySaveFile,pFilePath,true))
 					{
 						this.FileNameAddition = HelperClasses.FileHandling.PathSplitUp(MySaveFile)[1];
 						break;
