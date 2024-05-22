@@ -267,7 +267,7 @@
         </file>
     </subassembly>
 
-    <subassembly name="MISC_FILES" type="zip" version="1.14.0.0">
+    <subassembly name="MISC_FILES" type="zip" version="1.14.0.1">
         <hash>89F0471094C6082B74020F871180AB1D</hash>
         <mirror>http://gtav.anushk.net/MISC_FILES_V14.zip</mirror>
     </subassembly>
