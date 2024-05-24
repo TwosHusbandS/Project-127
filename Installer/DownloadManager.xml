@@ -43,6 +43,11 @@
             <mirror>http://gtav.anushk.net/downloadManager/subassemblies/scl_beta_temp/steam124/GTAVLauncher.exe</mirror>
         </file>
 
+		<file name="GTAVLauncher.exe">
+			<hash>a2d49106e14fb90f1146bddaa0db55a8</hash>
+			<mirror>http://gtav.anushk.net/downloadManager/subassemblies/scl_beta_temp/steam124/GTAVLauncher.exe</mirror>
+		</file>
+
         <file name="GTA5.exe">
             <hash>223c15d099a68caf0f83d50e6afed419</hash>
             <mirror>http://gtav.anushk.net/downloadManager/subassemblies/scl_beta_temp/steam124/GTA5.exe</mirror>
