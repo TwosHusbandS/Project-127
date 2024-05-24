@@ -23,7 +23,8 @@ namespace Project_127
 		{
             HelperClasses.FileHandling.AddToDebug("Launching Alternative...");
 
-            string filePath = LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\playgtav.exe";
+			// Should be playgtav or gtavlauncher, is this for debug purpuses
+            string filePath = LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\gtastub.exe";
 
 			HelperClasses.Logger.Log("SCL - Launch");
 

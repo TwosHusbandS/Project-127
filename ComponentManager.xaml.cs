@@ -390,7 +390,7 @@ namespace Project_127
             msg += "" + "\n";
             msg += "If there are any other questions/ comments / concerns, please let me know on discord at @AntherXx#5392";
 
-            new Popup(Popup.PopupWindowTypes.PopupOk, msg, 16).ShowDialog();
+            //new Popup(Popup.PopupWindowTypes.PopupOk, msg, 16).ShowDialog();
         }
 
         private void btn_Uninstall_Click(object sender, RoutedEventArgs e)

@@ -906,11 +906,14 @@ namespace Project_127
                         {
                             // This is normally correct, pushing debug version
                             // tmp = tmp.Replace("gta_p127.exe", "playgtav.exe -scOfflineOnly");
-                            tmp = tmp.Replace("gta_p127.exe", "gtavlauncher.exe -scOfflineOnly");
+
+                            // for SCLBETA we go back to gtastub.exe, should be playgtav
+                            tmp = tmp.Replace("gta_p127.exe", "gtastub.exe -scOfflineOnly");
                         }
                         else if (Settings.Retailer == Settings.Retailers.Rockstar)
                         {
-                            tmp = tmp.Replace("gta_p127.exe", "gtavlauncher.exe -scOfflineOnly");
+                            // for SCLBETA we go back to gtastub.exe, should be gtavlauncher
+                            tmp = tmp.Replace("gta_p127.exe", "gtastub.exe -scOfflineOnly");
                         }
                     }
                 }
