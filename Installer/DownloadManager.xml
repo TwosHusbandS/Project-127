@@ -36,15 +36,16 @@
         </requires>
     </subassembly>
 
-    <subassembly name="AM_124_STEAM" root="DowngradeFiles_Alternative\steam\124\" version="0.1.0.0">
-        <file name="GTAVLauncher.exe">
-            <hash>A3941A72A65C5B93FF516552700F9D09</hash>
-            <mirror>http://gtav.anushk.net/downloadManager/subassemblies/am124steam/GTAVLauncher.exe</mirror>
+    <subassembly name="AM_124_STEAM" root="DowngradeFiles_Alternative\steam\124\" version="0.1.1.0">
+        <file name="GTAStub.exe">
+			<!-- Rename back to GTAVLauncher or PlayGTAV -->
+            <hash>a2d49106e14fb90f1146bddaa0db55a8</hash>
+            <mirror>http://gtav.anushk.net/downloadManager/subassemblies/scl_beta_temp/steam124/GTAVLauncher.exe</mirror>
         </file>
 
         <file name="GTA5.exe">
-            <hash>AAEE745ACF65869C4245777D014737BF</hash>
-            <mirror>http://gtav.anushk.net/downloadManager/subassemblies/am124steam/GTA5.exe</mirror>
+            <hash>223c15d099a68caf0f83d50e6afed419</hash>
+            <mirror>http://gtav.anushk.net/downloadManager/subassemblies/scl_beta_temp/steam124/GTA5.exe</mirror>
         </file>
 
         <file name="steam_api64.dll">
@@ -60,13 +61,21 @@
             <hash>270A72E51E56508D77B916759E98E6C0</hash>
             <mirror>http://gtav.anushk.net/downloadManager/subassemblies/am127steam/steam_appid.txt</mirror>
         </file>
-      
-        <file name="bink2w64.dll" linked="true" subassembly="AM_BASE_SUBASSEMBLY"/>
-        <file name="launc.dll" linked="true" subassembly="AM_BASE_SUBASSEMBLY"/>
-        <file name="GTAStub.exe" linked="true" subassembly="AM_BASE_SUBASSEMBLY"/>
+
         <file name="x64a.rpf" linked="true" subassembly="124_BASE_SUBASSEMBLY"/>
 
-        <requires>
+		<!-- These TWO files should be in AM_BASE_SUBASSEMBLY, just for testing here, since we just want to modify scl steam124 -->
+		<file name="bink2w64.dll">
+			<hash>20f89df68114a5f4668d13cf68c6e310</hash>
+			<mirror>http://gtav.anushk.net/downloadManager/subassemblies/scl_beta_temp/steam124/bink2w64.dll</mirror>
+		</file>
+
+		<file name="SCLCustom.dll">
+			<hash>abc879bb0d042d31dfbd8f5d15b927c5</hash>
+			<mirror>http://gtav.anushk.net/downloadManager/subassemblies/scl_beta_temp/steam124/SCLCustom.dll</mirror>
+		</file>
+
+		<requires>
             <subassembly target="AM_BASE_SUBASSEMBLY"/>
             <subassembly target="124_BASE_SUBASSEMBLY"/>
         </requires>
