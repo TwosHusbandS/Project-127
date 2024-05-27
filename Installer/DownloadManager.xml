@@ -36,7 +36,7 @@
         </requires>
     </subassembly>
 
-    <subassembly name="AM_124_STEAM" root="DowngradeFiles_Alternative\steam\124\" version="0.1.1.0">
+    <subassembly name="AM_124_STEAM" root="DowngradeFiles_Alternative\steam\124\" version="0.2.0.0">
         <file name="GTAStub.exe">
 			<!-- Delete once public i guess -->
             <hash>a2d49106e14fb90f1146bddaa0db55a8</hash>
@@ -86,7 +86,7 @@
         </requires>
     </subassembly>
 
-    <subassembly name="AM_127_ROCKSTAR" root="DowngradeFiles_Alternative\rockstar\127\" version="0.1.0.0">
+    <subassembly name="AM_127_ROCKSTAR" root="DowngradeFiles_Alternative\rockstar\127\" version="0.2.0.0">
 		<file name="GTAStub.exe">
 			<!-- Delete once public i guess -->
 			<hash>974933e4b734676ec1821c331e612acc</hash>

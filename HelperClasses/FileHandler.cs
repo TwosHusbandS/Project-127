@@ -725,7 +725,7 @@ string lpSymlinkFileName, string lpTargetFileName, SymbolicLink dwFlags);
 			try
 			{
 				var tmp = new System.Net.Http.HttpClient();
-				tmp.Timeout = TimeSpan.FromMilliseconds(500);
+				tmp.Timeout = TimeSpan.FromMilliseconds(1000);
                 rtrn = tmp.GetStringAsync(pURL).GetAwaiter().GetResult();
 			}
 			catch (Exception e)

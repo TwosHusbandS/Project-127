@@ -235,7 +235,7 @@ namespace Project_127
 		/// <summary>
 		/// Property of other Buildinfo. Will be in the top message of logs
 		/// </summary>
-		public static string BuildInfo = "1.2.6.4 - SCL BETA, Build 3";
+		public static string BuildInfo = "1.2.6.5 - SCL BETA, Build 1";
 
 
 		/// <summary>
@@ -693,7 +693,7 @@ namespace Project_127
 				}
 
 				// If first time launching 1.3.0.0
-				if (Settings.LastLaunchedVersion < new Version("1.3.0.0"))
+				if (Settings.LastLaunchedVersion < new Version("1.2.6.4"))
 				{
 					List<string> OldFiles = new List<string>
                     {

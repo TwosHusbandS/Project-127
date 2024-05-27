@@ -901,15 +901,13 @@ namespace Project_127
                     
                     else if (LaunchWay == LaunchWays.SocialClubLaunch)
                     {
+                        // A bunch of code for Beta, in Productive, we just need to differ between steam and rockstar
+                        // and just cause we rename GTAVLauncher to PlayGTAV for steam, so steam plays nice on double click
                         if (Settings.Retailer == Settings.Retailers.Steam)
                         {
                             if (Settings.SocialClubLaunchGameVersion == "127")
                             {
-                                // This is normally correct, pushing debug version
-                                // tmp = tmp.Replace("gta_p127.exe", "playgtav.exe -scOfflineOnly");
-
-                                // for SCLBETA we go back to gtastub.exe, should be playgtav
-                                tmp = tmp.Replace("gta_p127.exe", "gtastub.exe -scOfflineOnly");
+                                tmp = tmp.Replace("gta_p127.exe", "gtastub.exe");
                             }
                             else
                             {
@@ -918,8 +916,14 @@ namespace Project_127
                         }
                         else if (Settings.Retailer == Settings.Retailers.Rockstar)
                         {
-                            // for SCLBETA we go back to gtastub.exe, should be gtavlauncher
-                            tmp = tmp.Replace("gta_p127.exe", "gtastub.exe -scOfflineOnly");
+                            if (Settings.SocialClubLaunchGameVersion == "127")
+                            {
+                                tmp = tmp.Replace("gta_p127.exe", "gtavlauncher.exe -scOfflineOnly");
+                            }
+                            else
+                            {
+                                tmp = tmp.Replace("gta_p127.exe", "gtastub.exe");
+                            }
                         }
                     }
                 }

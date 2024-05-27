@@ -1456,7 +1456,9 @@ namespace Project_127.MySettings
 		{
 			//Globals.CheckForBigThree();
 			//Globals.CheckForZipUpdate();
+
 			Globals.CheckForUpdate();
+			MainWindow.DMO = Auth.DynamicMTLOffsets.GetMTLOffsets();
 			Globals.SetUpDownloadManager();
 			new Popup(Popup.PopupWindowTypes.PopupOk, "Update check complete. All updates handled.\nIf you want to re-download certain files,\nyou can do so in the 'Component Manager'").ShowDialog();
 		}

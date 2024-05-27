@@ -383,8 +383,9 @@ namespace Project_127.MySettings
 					MainWindow.MW.btn_lbl_Mode.ToolTip = MainWindow.MW.btn_lbl_Mode.Content;
 
 					Globals.CheckForUpdate();
-				}
-			}
+                    MainWindow.DMO = Auth.DynamicMTLOffsets.GetMTLOffsets();
+                }
+            }
 		}
 
 

@@ -312,7 +312,7 @@ namespace Project_127.HelperClasses
 				catch { }
 
 
-
+				/*
 				string tmpPath = @"C:\Users\ingow\Downloads\SCLBETA\Social Club Launch 5\";
 				string URLBASE = @"http://gtav.anushk.net/downloadManager/subassemblies/scl_beta_5/";
 				string[] AllFiles = HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(tmpPath);
@@ -324,7 +324,7 @@ namespace Project_127.HelperClasses
 					DebugMessage.Add(HelperClasses.FileHandling.GetHashFromFile(File));
 					DebugMessage.Add("");
                 }
-
+				*/
 
 
 

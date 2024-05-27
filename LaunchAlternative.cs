@@ -542,7 +542,7 @@ namespace Project_127
 				{
 					HelperClasses.Logger.Log("SCL - most likely cfg.dat exists (LastWriteDate returns good value).", 2);
 					TimeSpan asdf = DateTime.Now - tmp;
-					if (asdf.TotalHours <= 72)
+					if (asdf.TotalHours <= 120) // 5 days, 5 * 24
 					{
 						HelperClasses.Logger.Log("SCL - most likely cfg.dat is less than 72 hours old. Will not throw popup", 2);
 						return true;

@@ -75,9 +75,10 @@ namespace Project_127.Popups
 			MySettings.Settings.P127Mode = mode1;
 			MySettings.Settings.DMMode = mode2;
 
-			Globals.CheckForUpdate();
+			// Globals.CheckForUpdate(); Gets checked on P127Mode setter
 			ComponentManager.MyRefreshStatic();
-			this.Close();
+
+            this.Close();
 		}
 
 		/// <summary>

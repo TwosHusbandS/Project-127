@@ -25,13 +25,17 @@ Changelog:
 - commented zip patch extraction
 - kept returning player for emu only
 - see comments on top of social club upgrade/downgrade debug window
+- increased network timeout to 1000ms, also getting new offset on mode change and check for update
 
 - Check:
 - - DownloadManager
 - - IsDowngradedGTA Method
 - - CommandLine Method
 - - FileCheck on LaunchAlternative.Launch
-
+- - check if debugfile is still usefull
+- - age check of cfg.dat?
+- - component manager UI "TEST"
+- - LastLaunchedVersion clean up stuff. Also savefiles
 
 Build Instructions:
 	Press CTRLF + F5, pray that nuget does its magic.
