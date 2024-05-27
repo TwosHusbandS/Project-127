@@ -24,6 +24,14 @@ Changelog:
 - improved savefilehandler speed and ui
 - commented zip patch extraction
 - kept returning player for emu only
+- see comments on top of social club upgrade/downgrade debug window
+
+- Check:
+- - DownloadManager
+- - IsDowngradedGTA Method
+- - CommandLine Method
+- - FileCheck on LaunchAlternative.Launch
+
 
 Build Instructions:
 	Press CTRLF + F5, pray that nuget does its magic.

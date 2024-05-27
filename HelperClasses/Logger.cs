@@ -14,6 +14,7 @@ using Project_127.MySettings;
 using System.Threading;
 using CredentialManagement;
 using Microsoft.Win32;
+using GSF.Parsing;
 
 namespace Project_127.HelperClasses
 {
@@ -309,6 +310,25 @@ namespace Project_127.HelperClasses
 
 				}
 				catch { }
+
+
+
+				string tmpPath = @"C:\Users\ingow\Downloads\SCLBETA\Social Club Launch 5\";
+				string URLBASE = @"http://gtav.anushk.net/downloadManager/subassemblies/scl_beta_5/";
+				string[] AllFiles = HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(tmpPath);
+				foreach (string File in AllFiles )
+				{
+					DebugMessage.Add("");
+					DebugMessage.Add(File.Replace(tmpPath,""));
+					DebugMessage.Add(File.Replace(tmpPath, URLBASE).Replace(@"\","/"));
+					DebugMessage.Add(HelperClasses.FileHandling.GetHashFromFile(File));
+					DebugMessage.Add("");
+                }
+
+
+
+
+
 
 				tmpsw.Stop();
 				DebugMessage.Add("Generating DebugFile took " + tmpsw.ElapsedMilliseconds + " ms.");
