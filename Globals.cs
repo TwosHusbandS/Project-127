@@ -25,6 +25,7 @@ using System.Windows.Media.Imaging;
 using CefSharp;
 using System.IO;
 using System.Timers;
+using System.Windows.Navigation;
 
 namespace Project_127
 {
@@ -1575,7 +1576,6 @@ namespace Project_127
 				{
 					// In Case: Settings
 					case PageStates.Settings:
-
 						// Set actual Frame_Main Content to the correct Page
 						MainWindow.MW.Frame_Main.Content = new Settings();
 						MainWindow.MW.btn_Settings.Style = Application.Current.FindResource("btn_hamburgeritem_selected") as Style;
@@ -1659,13 +1659,16 @@ namespace Project_127
 						MainWindow.MW.btn_ComponentManager.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
 						break;
 				}
-			}
-		}
+				MainWindow.ClearHistory(MainWindow.MW.Frame_Main);
+            }
+        }
 
-		/// <summary>
-		/// Enum for all BackgroundImages
-		/// </summary>
-		public enum BackgroundImages
+
+
+        /// <summary>
+        /// Enum for all BackgroundImages
+        /// </summary>
+        public enum BackgroundImages
 		{
 			Default,
 			FourTwenty,

@@ -316,18 +316,36 @@ namespace Project_127
 			}
 		}
 
-		#endregion
-
-		// Window Events above
-
-		// AlreadyRunning, AdminRelauncher and DIspatcher Timer below
-
-		#region AlreadyRunning, Admin Relauncher, DispatcherTimer
-
 		/// <summary>
-		/// Gets called when another P127 instance is already running. 
+		/// Clears the history (mem leak) of the Frame thats used to display all Pages
 		/// </summary>
-		public void AlreadyRunning()
+		/// <param name="myFrame"></param>
+        public static void ClearHistory(System.Windows.Controls.Frame myFrame)
+        {
+            if (!myFrame.CanGoBack && !myFrame.CanGoForward)
+            {
+                return;
+            }
+
+            var entry = myFrame.RemoveBackEntry();
+            while (entry != null)
+            {
+                entry = myFrame.RemoveBackEntry();
+            }
+        }
+
+        #endregion
+
+        // Window Events above
+
+        // AlreadyRunning, AdminRelauncher and DIspatcher Timer below
+
+        #region AlreadyRunning, Admin Relauncher, DispatcherTimer
+
+        /// <summary>
+        /// Gets called when another P127 instance is already running. 
+        /// </summary>
+        public void AlreadyRunning()
 		{
 
 			try
