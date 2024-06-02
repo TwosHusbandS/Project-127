@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Project 1.27"
-#define MyAppVersion "1.2.6.5"
+#define MyAppVersion "1.2.6.6"
 #define MyAppPublisher "Project 1.27 Inc."
 #define MyAppURL "https://github.com/TwosHusbandS/Project-127/"
 #define MyAppExeName "Project 127 Launcher.exe"
@@ -26,7 +26,7 @@ AllowNoIcons=yes
 ;PrivilegesRequired=lowest
 PrivilegesRequiredOverridesAllowed=dialog
 OutputDir=.
-OutputBaseFilename=Project_127_Installer_V_1_2_6_5
+OutputBaseFilename=Project_127_Installer_V_1_2_6_6
 SetupIconFile=..\Artwork\icon.ico
 Compression=lzma
 SolidCompression=yes
