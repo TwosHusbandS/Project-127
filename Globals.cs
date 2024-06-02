@@ -694,7 +694,7 @@ namespace Project_127
 				}
 
 				// If first time launching 1.3.0.0
-				if (Settings.LastLaunchedVersion < new Version("1.2.6.4"))
+				if (Settings.LastLaunchedVersion < new Version("1.3.0.0"))
 				{
 					List<string> OldFiles = new List<string>
                     {

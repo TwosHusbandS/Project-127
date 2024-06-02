@@ -24,13 +24,22 @@ namespace Project_127
             HelperClasses.FileHandling.AddToDebug("Launching Alternative...");
 
 			// Should be playgtav or gtavlauncher, is this for debug purpuses
-            string filePath = LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\gtastub.exe";
+			string filePath = "";
+			
+			if (Settings.Retailer  == Settings.Retailers.Steam)
+			{
+				filePath =LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\playgtav.exe";
+			}
+            else if (Settings.Retailer == Settings.Retailers.Rockstar)
+            {
+                filePath = LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\gtavlauncher.exe";
+            }
 
-			HelperClasses.Logger.Log("SCL - Launch");
+            HelperClasses.Logger.Log("SCL - Launch");
 
             if (HelperClasses.FileHandling.doesFileExist(filePath))
 			{
-				HelperClasses.Logger.Log("SCL - Launch, GTA Stub exists");
+				HelperClasses.Logger.Log("SCL - Launch, GTA Launcher filed exists");
 				if (!IsCfgDatUpToDate())
 				{
 					HelperClasses.Logger.Log("SCL - Launch, cfg.dat is NOT up to date.");
@@ -556,12 +565,12 @@ namespace Project_127
 					TimeSpan asdf = DateTime.Now - tmp;
 					if (asdf.TotalHours <= 120) // 5 days, 5 * 24
 					{
-						HelperClasses.Logger.Log("SCL - most likely cfg.dat is less than 72 hours old. Will not throw popup", 2);
+						HelperClasses.Logger.Log("SCL - most likely cfg.dat is less than 5 days old. Will not throw popup", 2);
 						return true;
 					}
 					else
 					{
-						HelperClasses.Logger.Log("SCL - most likely cfg.dat is older than 72 hours. Will throw popup", 2);
+						HelperClasses.Logger.Log("SCL - most likely cfg.dat is older than 5 days. Will throw popup", 2);
 						return false;
 					}
 				}

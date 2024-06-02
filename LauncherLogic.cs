@@ -95,6 +95,8 @@ namespace Project_127
 
             SetGTAProcessPriority();
 
+            GetGTACommandLineArgs();
+
             // Start Jumpscript
             if (Settings.EnableAutoStartJumpScript)
             {
@@ -901,29 +903,13 @@ namespace Project_127
                     
                     else if (LaunchWay == LaunchWays.SocialClubLaunch)
                     {
-                        // A bunch of code for Beta, in Productive, we just need to differ between steam and rockstar
-                        // and just cause we rename GTAVLauncher to PlayGTAV for steam, so steam plays nice on double click
                         if (Settings.Retailer == Settings.Retailers.Steam)
                         {
-                            if (Settings.SocialClubLaunchGameVersion == "127")
-                            {
-                                tmp = tmp.Replace("gta_p127.exe", "gtastub.exe");
-                            }
-                            else
-                            {
-                                tmp = tmp.Replace("gta_p127.exe", "gtavlauncher.exe -scOfflineOnly");
-                            }
+                            tmp = tmp.Replace("gta_p127.exe", "playgtav.exe -scOfflineOnly");
                         }
                         else if (Settings.Retailer == Settings.Retailers.Rockstar)
                         {
-                            if (Settings.SocialClubLaunchGameVersion == "127")
-                            {
-                                tmp = tmp.Replace("gta_p127.exe", "gtavlauncher.exe -scOfflineOnly");
-                            }
-                            else
-                            {
-                                tmp = tmp.Replace("gta_p127.exe", "gtastub.exe");
-                            }
+                            tmp = tmp.Replace("gta_p127.exe", "gtavlauncher.exe -scOfflineOnly");
                         }
                     }
                 }
@@ -1535,6 +1521,7 @@ namespace Project_127
             HelperClasses.Logger.Log("Waited a good bit");
 
             SetGTAProcessPriority();
+            GetGTACommandLineArgs();
 
             // If we DONT only auto start when downgraded OR if we are downgraded
             if (Settings.EnableOnlyAutoStartProgramsWhenDowngraded == false || LauncherLogic.InstallationState == InstallationStates.Downgraded)
@@ -1678,6 +1665,24 @@ namespace Project_127
             }
         }
 
+
+        public static void GetGTACommandLineArgs()
+        {
+            HelperClasses.Logger.Log("Trying to get GTAV Process Commandline");
+            try
+            {
+                Process[] processes = HelperClasses.ProcessHandler.GetProcesses("gta5");
+                if (processes.Length > 0)
+                {
+                    string tmp = processes[0].GetCommandLine();
+                    HelperClasses.Logger.Log("Found launched GTAV with Commandline: '" + tmp + "'");
+                }
+            }
+            catch
+            {
+                HelperClasses.Logger.Log("Failed to get GTA5 Process CommandLine...");
+            }
+        }
 
 
         #endregion

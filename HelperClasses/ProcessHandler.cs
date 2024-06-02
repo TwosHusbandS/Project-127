@@ -93,6 +93,25 @@ namespace Project_127.HelperClasses
 
 
 
+        public static string GetCommandLine(this Process process)
+        {
+            try
+            {
+                using (ManagementObjectSearcher searcher = new ManagementObjectSearcher("SELECT CommandLine FROM Win32_Process WHERE ProcessId = " + process.Id))
+                {
+                    using (ManagementObjectCollection objects = searcher.Get())
+                    {
+                        return objects.Cast<ManagementBaseObject>().SingleOrDefault()?["CommandLine"]?.ToString();
+                    }
+                }
+            }
+            catch
+            {
+                return "";
+            }
+        }
+
+
         /// <summary>
         /// Gets all Processes with a specific name
         /// </summary>

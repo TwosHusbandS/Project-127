@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <targets>
     <subassembly name="AM_127_STEAM" root="DowngradeFiles_Alternative\steam\127\" version="0.3.0.0">
-        <file name="GTAVLauncher.exe">
+		<!-- renamed GTAVLauncher to PlayGTAV for steam double click to work-->
+        <file name="PlayGTAV.exe">
             <hash>ed1bc7de053602c502495c218a9cfbc8</hash>
             <mirror>http://gtav.anushk.net/downloadManager/subassemblies/scl_beta_6/steam127/GTAVLauncher.exe</mirror>
         </file>
@@ -36,7 +37,8 @@
     </subassembly>
 
     <subassembly name="AM_124_STEAM" root="DowngradeFiles_Alternative\steam\124\" version="0.3.0.0">
-		<file name="GTAVLauncher.exe">
+		<!-- renamed GTAVLauncher to PlayGTAV for steam double click to work-->
+		<file name="PlayGTAV.exe">
 			<hash>9d9d42a96b2b098c3ce71c5231b49bdd</hash>
 			<mirror>http://gtav.anushk.net/downloadManager/subassemblies/scl_beta_6/steam124/GTAVLauncher.exe</mirror>
 		</file>
