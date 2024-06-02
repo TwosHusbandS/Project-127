@@ -19,6 +19,10 @@ Changelog:
 - better process.run async fast
 - better killsocialclubprocesses
 - better socialclub downgrade/upgrade
+- savefilehandler improvements
+- - checking against every subfolder in supportfiles
+- - ui improvements
+- refreshing settings UI after creating backup
 - remove @Special for taxi long load patch, since its outdated
 - fixed download manager crashing on bad xml
 - improved savefilehandler speed and ui

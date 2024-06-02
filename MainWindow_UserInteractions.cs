@@ -228,8 +228,8 @@ namespace Project_127
 		private void btn_SaveFiles_MouseRightButtonDown(object sender, RoutedEventArgs e)
 		{
             new HelperClasses.SocialClubDebug().Show();
-            HelperClasses.FileHandling.AddToDebug("Manual GetState, currState:");
-            HelperClasses.FileHandling.AddToDebug("");
+            //HelperClasses.FileHandling.AddToDebug("Manual GetState, currState:");
+            //HelperClasses.FileHandling.AddToDebug("");
         }
 
         private void btn_NoteOverlay_Click(object sender, RoutedEventArgs e)

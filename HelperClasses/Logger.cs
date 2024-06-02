@@ -313,8 +313,8 @@ namespace Project_127.HelperClasses
 
 
 				/*
-				string tmpPath = @"C:\Users\ingow\Downloads\SCLBETA\Social Club Launch 5\";
-				string URLBASE = @"http://gtav.anushk.net/downloadManager/subassemblies/scl_beta_5/";
+				string tmpPath = @"C:\Users\ingow\Downloads\SCLBETA\Social Club Launch 6";
+				string URLBASE = @"http://gtav.anushk.net/downloadManager/subassemblies/scl_beta_6";
 				string[] AllFiles = HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(tmpPath);
 				foreach (string File in AllFiles )
 				{

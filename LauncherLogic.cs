@@ -150,7 +150,7 @@ namespace Project_127
                 //yn.ShowDialog();
                 //if (yn.DialogResult == true)
                 //{
-                //    LaunchAlternative.SocialClubUpgrade(2000, "we are on GTAClosed and UpgradeSocialClubAfterGame");
+                    LaunchAlternative.SocialClubUpgrade(2000, "we are on GTAClosed and UpgradeSocialClubAfterGame");
                 //}
                 UpgradeSocialClubAfterGame = false;
             }

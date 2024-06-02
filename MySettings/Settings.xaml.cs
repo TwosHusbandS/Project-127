@@ -1664,15 +1664,16 @@ namespace Project_127.MySettings
 		private void btn_CreateBackup_Click(object sender, RoutedEventArgs e)
 		{
 			LauncherLogic.CreateBackup();
-		}
+            RefreshGUI();
+        }
 
 
-		/// <summary>
-		/// Use Backup Click
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
-		private void btn_UseBackup_Click(object sender, RoutedEventArgs e)
+        /// <summary>
+        /// Use Backup Click
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btn_UseBackup_Click(object sender, RoutedEventArgs e)
 		{
 			LauncherLogic.UseBackup();
 		}
@@ -1857,6 +1858,7 @@ namespace Project_127.MySettings
 				if (HelperClasses.FileHandling.doesPathExist(newPath))
 				{
 					LauncherLogic.CreateBackup(tb_Set_BackupName.Text);
+					RefreshGUI();
 				}
 				else
 				{

@@ -286,6 +286,9 @@ namespace Project_127
 		{
             if (LogReason != "")
             {
+                HelperClasses.FileHandling.AddToDebug("-----");
+                HelperClasses.FileHandling.AddToDebug("-----");
+                HelperClasses.FileHandling.AddToDebug("-----");
                 HelperClasses.FileHandling.AddToDebug("Downgrading Social Club bc. " + LogReason + ", giving curr State, ...");
                 HelperClasses.FileHandling.AddToDebug("");
             }
@@ -375,6 +378,9 @@ namespace Project_127
             {
                 HelperClasses.FileHandling.AddToDebug("Downgrading Social Club bc. " + LogReason + ", giving curr State, ...DONE");
                 HelperClasses.FileHandling.AddToDebug("");
+                HelperClasses.FileHandling.AddToDebug("-----");
+                HelperClasses.FileHandling.AddToDebug("-----");
+                HelperClasses.FileHandling.AddToDebug("-----");
             }
 
             // returning based on actual folder contents, not what we think should be in there.
@@ -411,7 +417,10 @@ namespace Project_127
 		{
 			if (LogReason != "")
 			{
-				HelperClasses.FileHandling.AddToDebug("Upgrading Social Club bc. " + LogReason + ", giving curr State, ...");
+                HelperClasses.FileHandling.AddToDebug("-----");
+                HelperClasses.FileHandling.AddToDebug("-----");
+                HelperClasses.FileHandling.AddToDebug("-----");
+                HelperClasses.FileHandling.AddToDebug("Upgrading Social Club bc. " + LogReason + ", giving curr State, ...");
 				HelperClasses.FileHandling.AddToDebug("");
 			}
 
@@ -513,6 +522,9 @@ namespace Project_127
             {
                 HelperClasses.FileHandling.AddToDebug("Upgrading Social Club bc. " + LogReason + ", giving curr State, ...DONE");
                 HelperClasses.FileHandling.AddToDebug("");
+                HelperClasses.FileHandling.AddToDebug("-----");
+                HelperClasses.FileHandling.AddToDebug("-----");
+                HelperClasses.FileHandling.AddToDebug("-----");
             }
 
             // returning based on actual folder contents, not what we think should be in there.
