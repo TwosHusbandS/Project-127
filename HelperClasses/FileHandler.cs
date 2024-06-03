@@ -255,12 +255,46 @@ string lpSymlinkFileName, string lpTargetFileName, SymbolicLink dwFlags);
 			return creation;
 		}
 
-		/// <summary>
-		/// Gets the GetLastWriteDate Date of one file in "yyyy-MM-ddTHH:mm:ss" Format
-		/// </summary>
-		/// <param name="pFilePath"></param>
-		/// <returns></returns>
-		public static DateTime GetLastWriteDate(string pFilePath, bool UTC = false)
+
+        /// <summary>
+        /// Gets the GetLastWriteDate Date of one file in "yyyy-MM-ddTHH:mm:ss" Format
+        /// </summary>
+        /// <param name="pFilePath"></param>
+        /// <returns></returns>
+        public static DateTime GetLastModifiedFolderDate(string pPath, bool UTC = false)
+        {
+            DateTime creation = DateTime.MinValue;
+            //rtrn = creation.ToString("yyyy-MM-ddTHH:mm:ss");
+            if (doesPathExist(pPath))
+            {
+                try
+                {
+                    if (UTC)
+                    {
+                        creation = new DirectoryInfo(pPath).LastWriteTimeUtc;
+                    }
+                    else
+                    {
+                        creation = new DirectoryInfo(pPath).LastWriteTime;
+                    }
+                    return creation;
+                }
+                catch
+                {
+                    HelperClasses.Logger.Log("Getting LastModified Date of Path: '" + pPath + "' failed.");
+                    new Popup(Popup.PopupWindowTypes.PopupOkError, "Getting LastModified Date of Path: '" + pPath + "' failed.").ShowDialog();
+                }
+            }
+            return creation;
+        }
+
+
+        /// <summary>
+        /// Gets the GetLastWriteDate Date of one file in "yyyy-MM-ddTHH:mm:ss" Format
+        /// </summary>
+        /// <param name="pFilePath"></param>
+        /// <returns></returns>
+        public static DateTime GetLastWriteDate(string pFilePath, bool UTC = false)
 		{
 			DateTime creation = DateTime.MinValue;
 			//rtrn = creation.ToString("yyyy-MM-ddTHH:mm:ss");
@@ -678,12 +712,45 @@ string lpSymlinkFileName, string lpTargetFileName, SymbolicLink dwFlags);
 			}
 		}
 
+
+		public static string MostLikelyProfileFolderNew()
+		{
+			string rtrn = "";
+
+			string rgx = "^[0-9A-F]{6,10}$";
+            Regex MyRegex = new Regex(rgx);
+
+            DateTime lastHigh = new DateTime(1900, 1, 1);
+
+            string GTAProfilePath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\Rockstar Games\GTA V\Profiles\";
+            string[] GTAProfiles = HelperClasses.FileHandling.GetSubFolders(GTAProfilePath);
+            foreach (string GTAProfile in GTAProfiles)
+			{
+				string FolderName = GTAProfile.TrimEnd('\\').Substring(GTAProfile.TrimEnd('\\').LastIndexOf('\\') + 1);
+				string CfgDatPath = HelperClasses.FileHandling.PathCombine(GTAProfile, "cfg.dat");
+
+                Match MyMatch = MyRegex.Match(FolderName);
+                if (MyMatch.Success)
+				{
+					DateTime currFileLastWriteDate = HelperClasses.FileHandling.GetLastWriteDate(CfgDatPath, true);
+
+                    if (currFileLastWriteDate > lastHigh)
+					{
+						lastHigh = currFileLastWriteDate;
+						rtrn = GTAProfile;
+                    }
+				}
+            }
+			return rtrn;
+        }
+
 		/// <summary>
 		/// Shoutout to Dr490n. Think I stole this off of him.
 		/// </summary>
 		/// <returns></returns>
 		public static string MostLikelyProfileFolder()
 		{
+			return MostLikelyProfileFolderNew();
 			string profilesDir = System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
 			profilesDir = System.IO.Path.Combine(profilesDir, @"Rockstar Games\GTA V\Profiles");
 			var di = new System.IO.DirectoryInfo(profilesDir);

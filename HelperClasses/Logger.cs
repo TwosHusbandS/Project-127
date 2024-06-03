@@ -232,6 +232,8 @@ namespace Project_127.HelperClasses
 						DebugMessage.Add("          CreationTimeUTC: '" + HelperClasses.FileHandling.GetCreationDate(cfgdatPath, true).ToString("yyyy-MM-ddTHH:mm:ss") + "'");
 						DebugMessage.Add("          LastModified: '" + HelperClasses.FileHandling.GetLastWriteDate(cfgdatPath).ToString("yyyy-MM-ddTHH:mm:ss") + "'");
 						DebugMessage.Add("          LastModifiedUTC: '" + HelperClasses.FileHandling.GetLastWriteDate(cfgdatPath, true).ToString("yyyy-MM-ddTHH:mm:ss") + "'");
+						DebugMessage.Add("          FOLDER-LastModified: '" + HelperClasses.FileHandling.GetLastModifiedFolderDate(GTAProfile).ToString("yyyy-MM-ddTHH:mm:ss") + "'");
+						DebugMessage.Add("          FOLDER-LastModifiedUTC: '" + HelperClasses.FileHandling.GetLastModifiedFolderDate(GTAProfile, true).ToString("yyyy-MM-ddTHH:mm:ss") + "'");
 					}
 					else
 					{

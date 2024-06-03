@@ -40,6 +40,7 @@ Changelog:
 - - age check of cfg.dat?
 - - component manager UI "TEST"
 - - LastLaunchedVersion clean up stuff. Also savefiles
+- - maybe  look at updating the upgraded/downgraded text immediately and not only after dispatchertimer
 - - maybe look at last modified folder for cfg.dat? gogsi and reloe reported broken?
 
 Build Instructions:
