@@ -305,7 +305,7 @@ namespace Project_127.MySettings
 					if (!ChangeZIPExtractionPath(GTAVInstallationPathUserChoice))
 					{
 						HelperClasses.Logger.Log("Changing ZIP Path did not work. Probably non existing Path or same Path as before (from Settings.SetGTAVPathManually())");
-						new Popup(Popup.PopupWindowTypes.PopupOkError, "Changing ZIP Path did not work. Probably non existing Path or same Path as before\nIf you read this message to anyone, tell them youre in Settings.SetGTAVPathManually()");
+                        Globals.PopupError("Changing ZIP Path did not work. Probably non existing Path or same Path as before\nIf you read this message to anyone, tell them youre in Settings.SetGTAVPathManually()");
 					}
 				}
 				else
@@ -459,7 +459,7 @@ namespace Project_127.MySettings
 						else
 						{
 							HelperClasses.Logger.Log("Changing ZIP Path did not work. Probably non existing Path or same Path as before");
-							new Popup(Popup.PopupWindowTypes.PopupOk, "Changing ZIP Path did not work. Probably non existing Path or same Path as before");
+							Globals.PopupError("Changing ZIP Path did not work. Probably non existing Path or same Path as before");
 						}
 					}
 					break;

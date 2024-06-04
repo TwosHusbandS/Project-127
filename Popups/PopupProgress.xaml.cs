@@ -256,7 +256,7 @@ namespace Project_127.Popups
 				catch (Exception e)
 				{
 					HelperClasses.Logger.Log("TryCatch failed while extracting ZIP with progressbar." + e.ToString());
-					new Popup(Popup.PopupWindowTypes.PopupOkError, "trycatch failed while extracting zip with progressbar\n" + e.ToString());
+					Globals.PopupError("trycatch failed while extracting zip with progressbar\n" + e.ToString());
 				}
 			}
 

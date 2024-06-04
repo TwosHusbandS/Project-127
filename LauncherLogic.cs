@@ -630,7 +630,7 @@ namespace Project_127
             if (HelperClasses.FileHandling.GetSubFolders(LauncherLogic.DebloatVPath).Length < 12)
             {
                 HelperClasses.Logger.Log("DebloatV check inside Upgrade hit. Throwing User popup and canceling update.", 1);
-                (new Popup(Popup.PopupWindowTypes.PopupOkError, "Your GTA Folder is missing some critical files.\nYou cannot play updated GTA.\n\nYou probably ran DebloatV at some point.\n\nRepair your game via Steam / Rockstar / Epic.")).ShowDialog();
+                Globals.PopupError("Your GTA Folder is missing some critical files.\nYou cannot play updated GTA.\n\nYou probably ran DebloatV at some point.\n\nRepair your game via Steam / Rockstar / Epic.");
                 return;
             }
 
@@ -645,7 +645,7 @@ namespace Project_127
             else
             {
                 HelperClasses.Logger.Log("Installation State Broken.", 1);
-                new Popup(Popup.PopupWindowTypes.PopupOkError, "Installation State is broken. I suggest trying to repair.\nWill try to Upgrade anyways.").ShowDialog();
+                Globals.PopupError("Installation State is broken. I suggest trying to repair.\nWill try to Upgrade anyways.");
             }
 
             IgnoreNewFilesWhileUpgradeDowngradeLogic = IgnoreNewFiles;
@@ -654,14 +654,14 @@ namespace Project_127
             {
                 if (!ComponentManager.CheckIfRequiredComponentsAreInstalled(true))
                 {
-                    new Popups.Popup(Popups.Popup.PopupWindowTypes.PopupOkError, "Error:\nCant do that because of because of missing Components").ShowDialog();
+                    Globals.PopupError("Error:\nCant do that because of because of missing Components");
                     return;
                 }
 
 
                 if (!(HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(DowngradeFilePath).Length >= 2 && HelperClasses.BuildVersionTable.IsDowngradedGTA(DowngradeFilePath)))
                 {
-                    new Popup(Popup.PopupWindowTypes.PopupOk, "Found no DowngradeFiles. Please make sure the required components are installed.").ShowDialog();
+                    Globals.PopupError("Found no DowngradeFiles. Please make sure the required components are installed.");
                     return;
                 }
             }
@@ -754,7 +754,7 @@ namespace Project_127
             else
             {
                 HelperClasses.Logger.Log("Installation State Broken.", 1);
-                new Popup(Popup.PopupWindowTypes.PopupOkError, "Installation State is broken. I suggest trying to repair.\nWill try to Downgrade anyways.").ShowDialog();
+                Globals.PopupError("Installation State is broken. I suggest trying to repair.\nWill try to Downgrade anyways.");
             }
 
             IgnoreNewFilesWhileUpgradeDowngradeLogic = IgnoreNewFiles;
@@ -1031,7 +1031,7 @@ namespace Project_127
                             catch (Exception ex)
                             {
                                 HelperClasses.Logger.Log("Unable to connect to the server. Probably best to restart P127.");
-                                new Popups.Popup(Popups.Popup.PopupWindowTypes.PopupOkError, "Unable to connect to the server. Probably best to restart P127.").ShowDialog();
+                                Globals.PopupError("Unable to connect to the server. Probably best to restart P127.");
                                 return;
                             }
                         }
@@ -1089,7 +1089,7 @@ namespace Project_127
                     HelperClasses.Logger.Log("    Size of update.rpf in GTAV Installation Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\update\update.rpf"));
                     HelperClasses.Logger.Log("    Size of update.rpf in Downgrade Files Folder: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\update\update.rpf"));
 
-                    new Popup(Popup.PopupWindowTypes.PopupOkError, "Installation State is broken for some reason. Try to repair.");
+                    Globals.PopupError("Installation State is broken for some reason. Try to repair.");
                     return;
                 }
 

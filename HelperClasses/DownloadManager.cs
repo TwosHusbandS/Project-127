@@ -744,9 +744,9 @@ namespace Project_127.HelperClasses
 				}
 				catch (Exception ex)
 				{
-					// Bad XML
+                    // Bad XML
 
-                    new Popup(Popup.PopupWindowTypes.PopupOkError, "Download Manager got bad xml from github.").ShowDialog();
+                    Globals.PopupError("Download Manager got bad xml from github.");
 					HelperClasses.Logger.Log("ERROR: Download Manager got bad xml from github.", true, 0);
 					HelperClasses.Logger.Log("ERROR: " + ex.ToString(), true, 1);
 					HelperClasses.Logger.Log("ERROR: " + xmls, true, 1);

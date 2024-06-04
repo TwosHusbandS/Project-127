@@ -132,11 +132,11 @@ namespace Project_127.HelperClasses
 						HelperClasses.Logger.Log(pMyFileOperation.Log, pMyFileOperation.LogLevel);
 						if (pMyFileOperation.MyFileOrFolder == FileOrFolder.File)
 						{
-							HelperClasses.FileHandling.copyFile(pMyFileOperation.OriginalFile, pMyFileOperation.NewFile);
+							HelperClasses.FileHandling.copyFile(pMyFileOperation.OriginalFile, pMyFileOperation.NewFile, RaiseException: true);
 						}
 						else
 						{
-							HelperClasses.FileHandling.CopyPath(pMyFileOperation.OriginalFile, pMyFileOperation.NewFile);
+							HelperClasses.FileHandling.CopyPath(pMyFileOperation.OriginalFile, pMyFileOperation.NewFile, RaiseException: true);
 						}
 						break;
 					}
@@ -145,11 +145,11 @@ namespace Project_127.HelperClasses
 						HelperClasses.Logger.Log(pMyFileOperation.Log, pMyFileOperation.LogLevel);
 						if (pMyFileOperation.MyFileOrFolder == FileOrFolder.File)
 						{
-							HelperClasses.FileHandling.createFile(pMyFileOperation.OriginalFile);
+							HelperClasses.FileHandling.createFile(pMyFileOperation.OriginalFile, RaiseException: true);
 						}
 						else
 						{
-							HelperClasses.FileHandling.createPath(pMyFileOperation.OriginalFile);
+							HelperClasses.FileHandling.createPath(pMyFileOperation.OriginalFile, RaiseException: true);
 						}
 						break;
 					}
@@ -158,11 +158,11 @@ namespace Project_127.HelperClasses
 						HelperClasses.Logger.Log(pMyFileOperation.Log, pMyFileOperation.LogLevel);
 						if (pMyFileOperation.MyFileOrFolder == FileOrFolder.File)
 						{
-							HelperClasses.FileHandling.moveFile(pMyFileOperation.OriginalFile, pMyFileOperation.NewFile);
+							HelperClasses.FileHandling.moveFile(pMyFileOperation.OriginalFile, pMyFileOperation.NewFile, RaiseException: true);
 						}
 						else
 						{
-							HelperClasses.FileHandling.movePath(pMyFileOperation.OriginalFile, pMyFileOperation.NewFile);
+							HelperClasses.FileHandling.movePath(pMyFileOperation.OriginalFile, pMyFileOperation.NewFile, RaiseException: true);
 						}
 						break;
 					}
@@ -175,23 +175,23 @@ namespace Project_127.HelperClasses
 								if (Settings.EnableCopyFilesInsteadOfHardlinking)
 								{
 									HelperClasses.Logger.Log(Globals.ReplaceCaseInsensitive(pMyFileOperation.Log, "hardlink", "Copy"), pMyFileOperation.LogLevel);
-									HelperClasses.FileHandling.copyFile(pMyFileOperation.OriginalFile, pMyFileOperation.NewFile);
+									HelperClasses.FileHandling.copyFile(pMyFileOperation.OriginalFile, pMyFileOperation.NewFile, RaiseException: true);
 								}
 								else
 								{
 									HelperClasses.Logger.Log(pMyFileOperation.Log, pMyFileOperation.LogLevel);
-									HelperClasses.FileHandling.HardLinkFiles(pMyFileOperation.NewFile, pMyFileOperation.OriginalFile);
+									HelperClasses.FileHandling.HardLinkFiles(pMyFileOperation.NewFile, pMyFileOperation.OriginalFile, RaiseException: true);
 								}
 							}
 							else
 							{
 								HelperClasses.Logger.Log(pMyFileOperation.Log, pMyFileOperation.LogLevel);
-								HelperClasses.FileHandling.HardLinkFiles(pMyFileOperation.NewFile, pMyFileOperation.OriginalFile);
+								HelperClasses.FileHandling.HardLinkFiles(pMyFileOperation.NewFile, pMyFileOperation.OriginalFile, RaiseException: true);
 							}
 						}
 						else
 						{
-							new Popup(Popup.PopupWindowTypes.PopupOkError, "No idea what happened here...MyFileOperation Execute Hardlink Folder");
+                            Globals.PopupError("No idea what happened here...MyFileOperation Execute Hardlink Folder");
 						}
 						break;
 					}
@@ -204,7 +204,7 @@ namespace Project_127.HelperClasses
 						}
 						else
 						{
-							HelperClasses.FileHandling.DeleteFolder(pMyFileOperation.OriginalFile);
+							HelperClasses.FileHandling.DeleteFolder(pMyFileOperation.OriginalFile, RaiseException: true);
 						}
 						break;
 					}

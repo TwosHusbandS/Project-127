@@ -73,14 +73,14 @@ namespace Project_127
 				else
 				{
 					HelperClasses.Logger.Log("SCL - Launch, Social Club Downgrade was NOT successfull.");
-					new Popups.Popup(Popups.Popup.PopupWindowTypes.PopupOkError, "Social Club downgrade went wrong.").ShowDialog();
+                    Globals.PopupError("Social Club downgrade went wrong.");
 				}
 			}
 			else
 			{
 				HelperClasses.Logger.Log("SCL - Launch, GTAVLauncher.exe does NOT exists");
 
-				new Popups.Popup(Popups.Popup.PopupWindowTypes.PopupOkError, "Cant find the required File ('GTAVLauncher.exe')\ninside your GTA Installation.\nSomething went wrong").ShowDialog();
+                Globals.PopupError("Cant find the required File ('GTAVLauncher.exe')\ninside your GTA Installation.\nSomething went wrong");
 			}
             HelperClasses.FileHandling.AddToDebug("Launching Alternative...DONE");
         }

@@ -559,7 +559,7 @@ namespace Project_127
             }
             catch
             {
-                new Popup(Popup.PopupWindowTypes.PopupOkError, "Error Code 6").ShowDialog();
+                Globals.PopupError("Error Code 6");
                 HelperClasses.Logger.Log("[AAAAAA] - Getting the enum from the Tag of the UI Stuff from the ComponenetManager failed");
                 Globals.ProperExit();
             }
@@ -973,7 +973,7 @@ namespace Project_127
             }
             catch 
             {
-                new Popups.Popup(Popup.PopupWindowTypes.PopupOkError, "Failed to uninstall Component.\nMost likely cause is no connection to github.").ShowDialog();
+                Globals.PopupError("Failed to uninstall Component.\nMost likely cause is no connection to github.");
                 HelperClasses.Logger.Log("Failed to uninstall from Component Manager. Most likely github offline or user has no internet");
             }
             ComponentManager.MyRefreshStatic();

@@ -249,7 +249,7 @@ string lpSymlinkFileName, string lpTargetFileName, SymbolicLink dwFlags);
 				catch
 				{
 					HelperClasses.Logger.Log("Getting Creation Date of File: '" + pFilePath + "' failed.");
-					new Popup(Popup.PopupWindowTypes.PopupOkError, "Getting Creation Date of File: '" + pFilePath + "' failed.").ShowDialog();
+                    Globals.PopupError("Getting Creation Date of File: '" + pFilePath + "' failed.");
 				}
 			}
 			return creation;
@@ -282,7 +282,7 @@ string lpSymlinkFileName, string lpTargetFileName, SymbolicLink dwFlags);
                 catch
                 {
                     HelperClasses.Logger.Log("Getting LastModified Date of Path: '" + pPath + "' failed.");
-                    new Popup(Popup.PopupWindowTypes.PopupOkError, "Getting LastModified Date of Path: '" + pPath + "' failed.").ShowDialog();
+                    Globals.PopupError("Getting LastModified Date of Path: '" + pPath + "' failed.");
                 }
             }
             return creation;
@@ -315,7 +315,7 @@ string lpSymlinkFileName, string lpTargetFileName, SymbolicLink dwFlags);
 				catch
 				{
 					HelperClasses.Logger.Log("Getting LastModified Date of File: '" + pFilePath + "' failed.");
-					new Popup(Popup.PopupWindowTypes.PopupOkError, "Getting LastModified Date of File: '" + pFilePath + "' failed.").ShowDialog();
+					Globals.PopupError("Getting LastModified Date of File: '" + pFilePath + "' failed.");
 				}
 			}
 			return creation;
@@ -348,7 +348,7 @@ string lpSymlinkFileName, string lpTargetFileName, SymbolicLink dwFlags);
 			}
 			catch (Exception e)
 			{
-				new Popup(Popup.PopupWindowTypes.PopupOkError, "Creating Hardlink in: '" + pLinkFilePath + "' for existing file '" + pRealFilePath + "' failed.\nI suggest you restart the Program (maybe Repair) and contact me if it happens again.\n\nErrorMessage:\n" + e.ToString()).ShowDialog();
+				Globals.PopupError("Creating Hardlink in: '" + pLinkFilePath + "' for existing file '" + pRealFilePath + "' failed.\nI suggest you restart the Program (maybe Repair) and contact me if it happens again.\n\nErrorMessage:\n" + e.ToString());
 				HelperClasses.Logger.Log("Creating Hardlink in: '" + pLinkFilePath + "' for existing file '" + pRealFilePath + "' failed", true, 0);
 				if (RaiseException)
 				{
@@ -377,7 +377,7 @@ string lpSymlinkFileName, string lpTargetFileName, SymbolicLink dwFlags);
 			}
 			catch (Exception e)
 			{
-				new Popup(Popup.PopupWindowTypes.PopupOkError, "Moving File: '" + pMoveFromFilePath + "' to '" + pMoveToFilePath + "' failed.\nI suggest you restart the Program and contact me if it happens again.\n\nErrorMessage:\n" + e.ToString()).ShowDialog();
+				Globals.PopupError("Moving File: '" + pMoveFromFilePath + "' to '" + pMoveToFilePath + "' failed.\nI suggest you restart the Program and contact me if it happens again.\n\nErrorMessage:\n" + e.ToString());
 				HelperClasses.Logger.Log("Moving File: '" + pMoveFromFilePath + "' to '" + pMoveToFilePath + "' failed.", true, 0);
 				if (RaiseException)
 				{
@@ -409,7 +409,7 @@ string lpSymlinkFileName, string lpTargetFileName, SymbolicLink dwFlags);
 				MainWindow.MW.Dispatcher.Invoke(() =>
 				{
 					HelperClasses.Logger.Log("Moving Path: '" + Source + "' to '" + Dest + "' failed.", true, 0);
-					new Popup(Popup.PopupWindowTypes.PopupOkError, "Moving Path: '" + Source + "' to '" + Dest + "' failed.\nI suggest you restart the Program and contact me if it happens again.\n\nErrorMessage:\n" + e.ToString()).ShowDialog();
+					Globals.PopupError("Moving Path: '" + Source + "' to '" + Dest + "' failed.\nI suggest you restart the Program and contact me if it happens again.\n\nErrorMessage:\n" + e.ToString());
 				});
 				if (RaiseException) 
 				{ 
@@ -472,7 +472,7 @@ string lpSymlinkFileName, string lpTargetFileName, SymbolicLink dwFlags);
 			}
 			catch (Exception e)
 			{
-				new Popup(Popup.PopupWindowTypes.PopupOkError, "Writing to Debug failed. File was probably deleted after start of Program.\nI suggest you restart the Program and contact me if it happens again.\n\nErrorMessage:\n" + e.ToString()).ShowDialog();
+                Globals.PopupError("Writing to Debug failed. File was probably deleted after start of Program.\nI suggest you restart the Program and contact me if it happens again.\n\nErrorMessage:\n" + e.ToString());
 			}
 		}
 
@@ -493,7 +493,7 @@ string lpSymlinkFileName, string lpTargetFileName, SymbolicLink dwFlags);
 			}
 			catch (Exception e)
 			{
-				new Popup(Popup.PopupWindowTypes.PopupOkError, "Writing to Log failed. File was probably deleted after start of Program.\nI suggest you restart the Program and contact me if it happens again.\n\nErrorMessage:\n" + e.ToString()).ShowDialog();
+                Globals.PopupError("Writing to Log failed. File was probably deleted after start of Program.\nI suggest you restart the Program and contact me if it happens again.\n\nErrorMessage:\n" + e.ToString());
 				//System.Windows.Forms.MessageBox.Show("Writing to Log failed. File was probably deleted after start of Program.\n\nLogmessage:'" + pLineContent + "'\nI suggest you restart the Program and contact me if it happens again.\n\nErrorMessage:\n" + e.ToString());
 			}
 		}
@@ -697,7 +697,7 @@ string lpSymlinkFileName, string lpTargetFileName, SymbolicLink dwFlags);
 			if (!doesPathExist(srcPath))
 			{
 				Logger.Log("ZIP Extraction Path is not a valid Filepath...wut");
-				new Popup(Popup.PopupWindowTypes.PopupOkError, "Could not find some of the Paths we use to keep track of GTA Files.").ShowDialog();
+                Globals.PopupError("Could not find some of the Paths we use to keep track of GTA Files.");
 				Environment.Exit(5);
 			}
 
@@ -890,7 +890,7 @@ string lpSymlinkFileName, string lpTargetFileName, SymbolicLink dwFlags);
 				}
 				catch (Exception e)
 				{
-					new Popup(Popup.PopupWindowTypes.PopupOkError, "Renaming File failed ('" + pFilePathSource + "' to '" + pFilePathDest + "').\nI suggest you restart the Program and contact me if it happens again.\n\nErrorMessage:\n" + e.ToString()).ShowDialog();
+                    Globals.PopupError("Renaming File failed ('" + pFilePathSource + "' to '" + pFilePathDest + "').\nI suggest you restart the Program and contact me if it happens again.\n\nErrorMessage:\n" + e.ToString());
 					HelperClasses.Logger.Log("Renaming File failed ('" + pFilePathSource + "' to '" + pFilePathDest + "').", true, 0);
 
 				}
@@ -1002,7 +1002,7 @@ string lpSymlinkFileName, string lpTargetFileName, SymbolicLink dwFlags);
 				HelperClasses.Logger.Log("Deleting File failed ('" + pFilePath + "').", true, 0);
                 if (ShowErrorAsPopup)
                 {
-                    new Popup(Popup.PopupWindowTypes.PopupOkError, "Deleting File failed ('" + pFilePath + "').\nI suggest you restart the Program and contact me if it happens again.\n\nErrorMessage:\n" + e.ToString()).ShowDialog();
+                    Globals.PopupError("Deleting File failed ('" + pFilePath + "').\nI suggest you restart the Program and contact me if it happens again.\n\nErrorMessage:\n" + e.ToString());
                 }
 				if (RaiseException)
 				{
@@ -1069,7 +1069,7 @@ string lpSymlinkFileName, string lpTargetFileName, SymbolicLink dwFlags);
 			}
 			catch (Exception e)
 			{
-				new Popup(Popup.PopupWindowTypes.PopupOkError, "Create File failed ('" + PathCombine(pPath, pFile) + "').\nI suggest you restart the Program and contact me if it happens again.\n\nErrorMessage:\n" + e.ToString()).ShowDialog();
+                Globals.PopupError("Create File failed ('" + PathCombine(pPath, pFile) + "').\nI suggest you restart the Program and contact me if it happens again.\n\nErrorMessage:\n" + e.ToString());
 				HelperClasses.Logger.Log("Create File failed ('" + PathCombine(pPath, pFile) + "').", true, 0);
 				if (RaiseException)
 				{

@@ -44,8 +44,6 @@ Changelog:
 - - maybe look at last modified folder for cfg.dat? gogsi and reloe reported broken?
 
 - upgrade Socialclub when mtl auth
-- p127 crashing on downgrade when gta5.exe being open due to popups
-- p127 attemtping downgrade if game is running
 - fix stuck gta5exe
 - test dragon emu debug file
 
@@ -185,7 +183,7 @@ namespace Project_127
 			//If this ever gets changed, take a second look at regedit class and path(different for 32 and 64 bit OS)
 			if (Environment.Is64BitOperatingSystem == false)
 			{
-				(new Popup(Popup.PopupWindowTypes.PopupOkError, "32 Bit Operating System detected.\nGTA (afaik) does not run on 32 Bit at all.")).ShowDialog();
+                Globals.PopupError("32 Bit Operating System detected.\nGTA (afaik) does not run on 32 Bit at all.");
 				Environment.Exit(1);
 			}
 
@@ -703,7 +701,7 @@ namespace Project_127
 			}
 			catch (Exception e)
 			{
-				new Popup(Popup.PopupWindowTypes.PopupOkError, "Error Settings Background Image.\n" + e.ToString()).ShowDialog();
+                Globals.PopupError("Error Settings Background Image.\n" + e.ToString());
 
 				string URL_Path = @"Artwork\bg_default.png";
 				Uri resourceUri = new Uri(URL_Path, UriKind.Relative);

@@ -1192,7 +1192,7 @@ namespace Project_127.MySettings
 			}
 			catch
 			{
-				new Popups.Popup(Popup.PopupWindowTypes.PopupOkError, "Something broke while getting the Hotkeys from the Settings.\n Try Resetting Settings").ShowDialog();
+                Globals.PopupError("Something broke while getting the Hotkeys from the Settings.\n Try Resetting Settings");
 				myReturnKey = Keys.None;
 			}
 			return myReturnKey;
@@ -1893,7 +1893,7 @@ namespace Project_127.MySettings
 			}
 			catch
 			{
-				new Popups.Popup(Popup.PopupWindowTypes.PopupOkError, "Something broke while getting the a Number from the Settings.\n Try Resetting Settings").ShowDialog();
+                Globals.PopupError("Something broke while getting the a Number from the Settings.\n Try Resetting Settings");
 			}
 			return rtrn;
 		}
@@ -1939,7 +1939,7 @@ namespace Project_127.MySettings
 			}
 			catch
 			{
-				new Popups.Popup(Popup.PopupWindowTypes.PopupOkError, "Something broke while getting the Colors from the Settings.\n Try Resetting Settings").ShowDialog();
+                Globals.PopupError("Something broke while getting the Colors from the Settings.\n Try Resetting Settings");
 			}
 			return rtrn;
 		}

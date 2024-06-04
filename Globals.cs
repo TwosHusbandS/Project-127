@@ -1815,7 +1815,7 @@ namespace Project_127
 						}
 						catch (Exception e)
 						{
-							new Popup(Popup.PopupWindowTypes.PopupOkError, "Error converting Command Line Argument to Background Image.\n" + e.ToString()).ShowDialog();
+                            Globals.PopupError("Error converting Command Line Argument to Background Image.\n" + e.ToString());
 						}
 					}
 					else if (args[i].ToLower() == "-authstateoverwrite")
@@ -2055,12 +2055,19 @@ namespace Project_127
 
 
 
+        public static void PopupError(string pMsg)
+        {
+            MainWindow.MW.Dispatcher.Invoke(() =>
+            {
+                new Popup(Popup.PopupWindowTypes.PopupOkError, pMsg).ShowDialog();
+            });
+        }
 
 
-		#endregion
+        #endregion
 
 
 
 
-	} // End of Class
+    } // End of Class
 } // End of Namespace
