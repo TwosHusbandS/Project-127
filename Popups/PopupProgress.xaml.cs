@@ -176,7 +176,7 @@ namespace Project_127.Popups
 				HelperClasses.Logger.Log("Lets do some File Operation Stuff");
 				for (int i = 0; i <= MyFileOperations.Count - 1; i++)
 				{
-					MyFileOperation.Execute(MyFileOperations[i]);
+					MyFileOperation.ExecuteWrapper(MyFileOperations[i]);
 
 					j++;
 					this.Dispatcher.Invoke(() =>

@@ -26,6 +26,7 @@ using CefSharp;
 using System.IO;
 using System.Timers;
 using System.Windows.Navigation;
+using System.Security.Cryptography;
 
 namespace Project_127
 {

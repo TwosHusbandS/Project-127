@@ -326,7 +326,7 @@ string lpSymlinkFileName, string lpTargetFileName, SymbolicLink dwFlags);
 		/// </summary>
 		/// <param name="pLinkFilePath"></param>
 		/// <param name="pRealFilePath"></param>
-		public static void HardLinkFiles(string pLinkFilePath, string pRealFilePath)
+		public static void HardLinkFiles(string pLinkFilePath, string pRealFilePath, bool RaiseException = false)
 		{
 			// If the file already exists, we delete it
 			if (doesFileExist(pLinkFilePath))
@@ -350,6 +350,10 @@ string lpSymlinkFileName, string lpTargetFileName, SymbolicLink dwFlags);
 			{
 				new Popup(Popup.PopupWindowTypes.PopupOkError, "Creating Hardlink in: '" + pLinkFilePath + "' for existing file '" + pRealFilePath + "' failed.\nI suggest you restart the Program (maybe Repair) and contact me if it happens again.\n\nErrorMessage:\n" + e.ToString()).ShowDialog();
 				HelperClasses.Logger.Log("Creating Hardlink in: '" + pLinkFilePath + "' for existing file '" + pRealFilePath + "' failed", true, 0);
+				if (RaiseException)
+				{
+					throw e;
+				}	
 			}
 		}
 
@@ -358,7 +362,7 @@ string lpSymlinkFileName, string lpTargetFileName, SymbolicLink dwFlags);
 		/// </summary>
 		/// <param name="pMoveFromFilePath"></param>
 		/// <param name="pMoveToFilePath"></param>
-		public static void moveFile(string pMoveFromFilePath, string pMoveToFilePath)
+		public static void moveFile(string pMoveFromFilePath, string pMoveToFilePath, bool RaiseException = false)
 		{
 			if (doesFileExist(pMoveToFilePath))
 			{
@@ -375,6 +379,10 @@ string lpSymlinkFileName, string lpTargetFileName, SymbolicLink dwFlags);
 			{
 				new Popup(Popup.PopupWindowTypes.PopupOkError, "Moving File: '" + pMoveFromFilePath + "' to '" + pMoveToFilePath + "' failed.\nI suggest you restart the Program and contact me if it happens again.\n\nErrorMessage:\n" + e.ToString()).ShowDialog();
 				HelperClasses.Logger.Log("Moving File: '" + pMoveFromFilePath + "' to '" + pMoveToFilePath + "' failed.", true, 0);
+				if (RaiseException)
+				{
+					throw e;
+				}
 			}
 		}
 
@@ -383,7 +391,7 @@ string lpSymlinkFileName, string lpTargetFileName, SymbolicLink dwFlags);
 		/// </summary>
 		/// <param name="Source"></param>
 		/// <param name="Dest"></param>
-		public static void movePath(string Source, string Dest)
+		public static void movePath(string Source, string Dest, bool RaiseException = false)
 		{
 			try
 			{
@@ -403,6 +411,10 @@ string lpSymlinkFileName, string lpTargetFileName, SymbolicLink dwFlags);
 					HelperClasses.Logger.Log("Moving Path: '" + Source + "' to '" + Dest + "' failed.", true, 0);
 					new Popup(Popup.PopupWindowTypes.PopupOkError, "Moving Path: '" + Source + "' to '" + Dest + "' failed.\nI suggest you restart the Program and contact me if it happens again.\n\nErrorMessage:\n" + e.ToString()).ShowDialog();
 				});
+				if (RaiseException) 
+				{ 
+					throw e; 
+				}
 			}
 		}
 
@@ -975,7 +987,7 @@ string lpSymlinkFileName, string lpTargetFileName, SymbolicLink dwFlags);
 		/// deleteFile
 		/// </summary>
 		/// <param name="pFilePath"></param>
-		public static void deleteFile(string pFilePath, bool ShowErrorAsPopup = true)
+		public static void deleteFile(string pFilePath, bool ShowErrorAsPopup = true, bool RaiseException = false)
 		{
 			try
 			{
@@ -992,6 +1004,10 @@ string lpSymlinkFileName, string lpTargetFileName, SymbolicLink dwFlags);
                 {
                     new Popup(Popup.PopupWindowTypes.PopupOkError, "Deleting File failed ('" + pFilePath + "').\nI suggest you restart the Program and contact me if it happens again.\n\nErrorMessage:\n" + e.ToString()).ShowDialog();
                 }
+				if (RaiseException)
+				{
+					throw e;
+				}
             }
 		}
 
@@ -1001,7 +1017,7 @@ string lpSymlinkFileName, string lpTargetFileName, SymbolicLink dwFlags);
 		/// </summary>
 		/// <param name="pSource"></param>
 		/// <param name="pDestination"></param>
-		public static void copyFile(string pSource, string pDestination)
+		public static void copyFile(string pSource, string pDestination, bool RaiseException = false)
 		{
 			if (!File.Exists(pSource))
 			{
@@ -1020,6 +1036,10 @@ string lpSymlinkFileName, string lpTargetFileName, SymbolicLink dwFlags);
 			catch (Exception e)
 			{
 				HelperClasses.Logger.Log("Copying File ['" + pSource + "' to '" + pDestination + "'] failed since trycatch failed." + e.Message.ToString(), true, 0);
+				if (RaiseException)
+				{
+					throw e;
+				}
 			}
 		}
 
@@ -1032,7 +1052,7 @@ string lpSymlinkFileName, string lpTargetFileName, SymbolicLink dwFlags);
 		/// </summary>
 		/// <param name="pPath"></param>
 		/// <param name="pFile"></param>
-		public static void createFile(string pPath, string pFile)
+		public static void createFile(string pPath, string pFile, bool RaiseException = false)
 		{
 			if (!doesPathExist(pPath))
 			{
@@ -1051,6 +1071,10 @@ string lpSymlinkFileName, string lpTargetFileName, SymbolicLink dwFlags);
 			{
 				new Popup(Popup.PopupWindowTypes.PopupOkError, "Create File failed ('" + PathCombine(pPath, pFile) + "').\nI suggest you restart the Program and contact me if it happens again.\n\nErrorMessage:\n" + e.ToString()).ShowDialog();
 				HelperClasses.Logger.Log("Create File failed ('" + PathCombine(pPath, pFile) + "').", true, 0);
+				if (RaiseException)
+				{
+					throw e;
+				}
 			}
 		}
 
@@ -1058,10 +1082,10 @@ string lpSymlinkFileName, string lpTargetFileName, SymbolicLink dwFlags);
 		/// Creates File (and Folder(s)). Overrides existing file.
 		/// </summary>
 		/// <param name="pFilePath"></param>
-		public static void createFile(string pFilePath)
+		public static void createFile(string pFilePath, bool RaiseException = false)
 		{
 			string[] paths = PathSplitUp(pFilePath);
-			createFile(paths[0], paths[1]);
+			createFile(paths[0], paths[1], RaiseException);
 		}
 
 		/// <summary>
@@ -1098,7 +1122,7 @@ string lpSymlinkFileName, string lpTargetFileName, SymbolicLink dwFlags);
 		/// Deletes a Folder
 		/// </summary>
 		/// <param name="pPath"></param>
-		public static void DeleteFolder(string pPath, bool recursive = true)
+		public static void DeleteFolder(string pPath, bool recursive = true, bool RaiseException = false)
 		{
 			try
 			{
@@ -1110,6 +1134,10 @@ string lpSymlinkFileName, string lpTargetFileName, SymbolicLink dwFlags);
 			catch (Exception e)
 			{
 				HelperClasses.Logger.Log("Failed to delete Folder for some reason. " + e.ToString());
+				if (RaiseException)
+				{
+					throw e;
+				}
 			}
 		}
 
@@ -1117,7 +1145,7 @@ string lpSymlinkFileName, string lpTargetFileName, SymbolicLink dwFlags);
 		/// Creates a Path. Works for SubSubPaths.
 		/// </summary>
 		/// <param name="pFolderPath"></param>
-		public static void createPath(string pFolderPath)
+		public static void createPath(string pFolderPath, bool RaiseException = false)
 		{
 			try
 			{
@@ -1129,6 +1157,10 @@ string lpSymlinkFileName, string lpTargetFileName, SymbolicLink dwFlags);
 			catch (Exception e)
 			{
 				HelperClasses.Logger.Log("The code looked good to me. #SadFace. Crashing while creating Path ('" + pFolderPath + "'): " + e.ToString());
+				if (RaiseException)
+				{
+					throw e;
+				}
 			}
 		}
 
@@ -1137,21 +1169,30 @@ string lpSymlinkFileName, string lpTargetFileName, SymbolicLink dwFlags);
 		/// </summary>
 		/// <param name="sourceDirectory"></param>
 		/// <param name="targetDirectory"></param>
-		public static void CopyPath(string sourceDirectory, string targetDirectory)
+		public static void CopyPath(string sourceDirectory, string targetDirectory, bool RaiseException = false)
 		{
-			if (doesPathExist(sourceDirectory))
+			try
 			{
-				if (doesPathExist(targetDirectory))
+				if (doesPathExist(sourceDirectory))
 				{
-					DeleteFolder(targetDirectory);
+					if (doesPathExist(targetDirectory))
+					{
+						DeleteFolder(targetDirectory);
+					}
+					var diTarget = new DirectoryInfo(targetDirectory);
+					var diSource = new DirectoryInfo(sourceDirectory);
+
+					CopyAll(diSource, diTarget);
 				}
-				var diTarget = new DirectoryInfo(targetDirectory);
-				var diSource = new DirectoryInfo(sourceDirectory);
-
-				CopyAll(diSource, diTarget);
 			}
-
-
+			catch (Exception e)
+			{
+				HelperClasses.Logger.Log("Copy path failed. Source: '" + sourceDirectory +"', Target: '" + targetDirectory + "'");
+				if (RaiseException)
+				{
+					throw e;
+				}
+			}
 		}
 
 		private static void CopyAll(DirectoryInfo source, DirectoryInfo target)

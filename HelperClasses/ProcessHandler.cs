@@ -37,11 +37,8 @@ namespace Project_127.HelperClasses
 
         public static void KillRockstarProcesses()
         {
-            HelperClasses.FileHandling.AddToDebug("A");
             SocialClubKillAllProcesses();
-            HelperClasses.FileHandling.AddToDebug("B");
             GTAKillAllProcesses();
-            HelperClasses.FileHandling.AddToDebug("C");
         }
 
         /// <summary>
@@ -214,26 +211,18 @@ namespace Project_127.HelperClasses
         /// </summary>
         public static void GTAKillAllProcesses()
         {
-            HelperClasses.FileHandling.AddToDebug("D 1");
-
             foreach (Process p in GetGTAProcesses())
             {
-                HelperClasses.FileHandling.AddToDebug("D 2");
                 Kill(p);
             }
-
-            HelperClasses.FileHandling.AddToDebug("D 3");
 
             HelperClasses.Logger.Log("Check if GTA processes are still running...");
             while (GetSocialClubProcesses().Length > 0)
             {
-                HelperClasses.FileHandling.AddToDebug("D 4");
                 HelperClasses.Logger.Log("Still running GTA process...");
             }
-            HelperClasses.FileHandling.AddToDebug("D 5");
             HelperClasses.Logger.Log("Check if GTA processes are still running, aparently thats not the case");
             Task.Delay(ProcessKillDelayMS).GetAwaiter().GetResult();
-            HelperClasses.FileHandling.AddToDebug("D 6");
         }
 
 

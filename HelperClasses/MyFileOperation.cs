@@ -69,15 +69,20 @@ namespace Project_127.HelperClasses
 		/// </summary>
 		public int LogLevel { get; private set; }
 
-		/// <summary>
-		/// Constructor, creates one MyFileOperation Object
-		/// </summary>
-		/// <param name="pFileOperation"></param>
-		/// <param name="pOriginalFile"></param>
-		/// <param name="pNewFile"></param>
-		/// <param name="pLog"></param>
-		/// <param name="pLogLevel"></param>
-		public MyFileOperation(FileOperations pFileOperation, string pOriginalFile, string pNewFile, string pLog, int pLogLevel, FileOrFolder pFileOrFolder = FileOrFolder.File)
+		public int RetryAttempts { get; private set; }
+
+        public int MSDelayBetweenAttempts { get; private set; }
+
+
+        /// <summary>
+        /// Constructor, creates one MyFileOperation Object
+        /// </summary>
+        /// <param name="pFileOperation"></param>
+        /// <param name="pOriginalFile"></param>
+        /// <param name="pNewFile"></param>
+        /// <param name="pLog"></param>
+        /// <param name="pLogLevel"></param>
+        public MyFileOperation(FileOperations pFileOperation, string pOriginalFile, string pNewFile, string pLog, int pLogLevel, FileOrFolder pFileOrFolder = FileOrFolder.File, int pRetryAttempts = 10, int pMSDelayBetweenAttempts = 100)
 		{
 			FileOperation = pFileOperation;
 			OriginalFile = pOriginalFile;
@@ -85,6 +90,33 @@ namespace Project_127.HelperClasses
 			Log = pLog;
 			LogLevel = pLogLevel;
 			MyFileOrFolder = pFileOrFolder;
+			RetryAttempts = pRetryAttempts;
+			MSDelayBetweenAttempts = pMSDelayBetweenAttempts;
+		}
+
+
+		public static void ExecuteWrapper(MyFileOperation pMyFileOperation)
+		{
+			if (pMyFileOperation.RetryAttempts < 1) { pMyFileOperation.RetryAttempts = 1; }
+
+			while (pMyFileOperation.RetryAttempts > 0)
+			{
+                try
+                {
+                    Execute(pMyFileOperation);
+					break;
+                }
+                catch (Exception ex)
+                {
+					pMyFileOperation.RetryAttempts -= 1;
+
+					// Just do this to not wait the delay at the very end
+					if (pMyFileOperation.RetryAttempts == 0) { break; }
+
+					Task.Delay(pMyFileOperation.MSDelayBetweenAttempts).GetAwaiter().GetResult();
+					HelperClasses.Logger.Log("Retrying file operation...");
+                }
+            }
 		}
 
 		/// <summary>
@@ -168,7 +200,7 @@ namespace Project_127.HelperClasses
 						HelperClasses.Logger.Log(pMyFileOperation.Log, pMyFileOperation.LogLevel);
 						if (pMyFileOperation.MyFileOrFolder == FileOrFolder.File)
 						{
-							HelperClasses.FileHandling.deleteFile(pMyFileOperation.OriginalFile);
+							HelperClasses.FileHandling.deleteFile(pMyFileOperation.OriginalFile, RaiseException:true);
 						}
 						else
 						{
