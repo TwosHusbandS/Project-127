@@ -30,6 +30,10 @@ Changelog:
 - kept returning player for emu only
 - see comments on top of social club upgrade/downgrade debug window
 - increased network timeout to 1000ms, also getting new offset on mode change and check for update
+- upgrade Socialclub when mtl auth
+- error popup crash
+- process kill better implementation
+- retry  on exception in fileoperation popup
 
 - Check:
 - - DownloadManager
@@ -43,9 +47,7 @@ Changelog:
 - - maybe  look at updating the upgraded/downgraded text immediately and not only after dispatchertimer
 - - maybe look at last modified folder for cfg.dat? gogsi and reloe reported broken?
 
-- upgrade Socialclub when mtl auth
 - fix stuck gta5exe
-- test dragon emu debug file
 
 Build Instructions:
 	Press CTRLF + F5, pray that nuget does its magic.

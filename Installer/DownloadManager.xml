@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <targets>
-    <subassembly name="AM_127_STEAM" root="DowngradeFiles_Alternative\steam\127\" version="0.3.0.0">
+    <subassembly name="AM_127_STEAM" root="DowngradeFiles_Alternative\steam\127\" version="0.4.0.0">
 		<!-- renamed GTAVLauncher to PlayGTAV for steam double click to work-->
         <file name="PlayGTAV.exe">
-            <hash>ed1bc7de053602c502495c218a9cfbc8</hash>
-            <mirror>http://gtav.anushk.net/downloadManager/subassemblies/scl_beta_6/steam127/GTAVLauncher.exe</mirror>
+            <hash>07d040a23e348676ffe29bc324eeee36</hash>
+            <mirror>http://gtav.anushk.net/downloadManager/subassemblies/scl_beta_7/steam127/GTAVLauncher.exe</mirror>
         </file>
         
         <file name="GTA5.exe">
             <hash>5c721930f4848ec572379914c02f1570</hash>
-            <mirror>http://gtav.anushk.net/downloadManager/subassemblies/scl_beta_6/steam127/GTA5.exe</mirror>
+            <mirror>http://gtav.anushk.net/downloadManager/subassemblies/scl_beta_7/steam127/GTA5.exe</mirror>
         </file>
 
         <file name="steam_api64.dll">
@@ -36,16 +36,16 @@
         </requires>
     </subassembly>
 
-    <subassembly name="AM_124_STEAM" root="DowngradeFiles_Alternative\steam\124\" version="0.3.0.0">
+    <subassembly name="AM_124_STEAM" root="DowngradeFiles_Alternative\steam\124\" version="0.4.0.0">
 		<!-- renamed GTAVLauncher to PlayGTAV for steam double click to work-->
 		<file name="PlayGTAV.exe">
-			<hash>9d9d42a96b2b098c3ce71c5231b49bdd</hash>
-			<mirror>http://gtav.anushk.net/downloadManager/subassemblies/scl_beta_6/steam124/GTAVLauncher.exe</mirror>
+			<hash>7fb7f5f22257e96cf7a190a0dd7ea30c</hash>
+			<mirror>http://gtav.anushk.net/downloadManager/subassemblies/scl_beta_7/steam124/GTAVLauncher.exe</mirror>
 		</file>
 
         <file name="GTA5.exe">
             <hash>223c15d099a68caf0f83d50e6afed419</hash>
-            <mirror>http://gtav.anushk.net/downloadManager/subassemblies/scl_beta_6/steam124/GTA5.exe</mirror>
+            <mirror>http://gtav.anushk.net/downloadManager/subassemblies/scl_beta_7/steam124/GTA5.exe</mirror>
         </file>
 
         <file name="steam_api64.dll">
@@ -72,15 +72,15 @@
         </requires>
     </subassembly>
 
-    <subassembly name="AM_127_ROCKSTAR" root="DowngradeFiles_Alternative\rockstar\127\" version="0.3.0.0">
+    <subassembly name="AM_127_ROCKSTAR" root="DowngradeFiles_Alternative\rockstar\127\" version="0.4.0.0">
 		<file name="GTAVLauncher.exe">
-            <hash>4407c0129c23bb334fde6345f3295413</hash>
-            <mirror>http://gtav.anushk.net/downloadManager/subassemblies/scl_beta_6/rockstar127/GTAVLauncher.exe</mirror>
+            <hash>8eb78e78a6eea31325154f9ba0552b3c</hash>
+            <mirror>http://gtav.anushk.net/downloadManager/subassemblies/scl_beta_7/rockstar127/GTAVLauncher.exe</mirror>
         </file>
         
         <file name="GTA5.exe">
             <hash>3e024c87b99e7f155b5be58ac8069f16</hash>
-            <mirror>http://gtav.anushk.net/downloadManager/subassemblies/scl_beta_6/rockstar127/GTA5.exe</mirror>
+            <mirror>http://gtav.anushk.net/downloadManager/subassemblies/scl_beta_7/rockstar127/GTA5.exe</mirror>
         </file>
         
         <folder name="update">
@@ -98,15 +98,15 @@
     </subassembly>
 
 
-    <subassembly name="AM_124_ROCKSTAR" root="DowngradeFiles_Alternative\rockstar\124\" version="0.3.0.0">
+    <subassembly name="AM_124_ROCKSTAR" root="DowngradeFiles_Alternative\rockstar\124\" version="0.4.0.0">
         <file name="GTAVLauncher.exe">
-            <hash>b43b0a15ee38599815dd3dfafc7d5cd3</hash>
-            <mirror>http://gtav.anushk.net/downloadManager/subassemblies/scl_beta_6/rockstar124/GTAVLauncher.exe</mirror>
+            <hash>14ee971755347b7ae9e84df8321541de</hash>
+            <mirror>http://gtav.anushk.net/downloadManager/subassemblies/scl_beta_7/rockstar124/GTAVLauncher.exe</mirror>
         </file>
 
         <file name="GTA5.exe">
             <hash>65c1e9a766e8f6d3258bb1cadb1fb49b</hash>
-            <mirror>http://gtav.anushk.net/downloadManager/subassemblies/scl_beta_6/rockstar124/GTA5.exe</mirror>
+            <mirror>http://gtav.anushk.net/downloadManager/subassemblies/scl_beta_7/rockstar124/GTA5.exe</mirror>
         </file>
 
         <folder name="update">
@@ -123,14 +123,14 @@
         </requires>
     </subassembly>
 
-    <subassembly name="AM_BASE_SUBASSEMBLY"  type="common" version="0.3.0.0">
+    <subassembly name="AM_BASE_SUBASSEMBLY"  type="common" version="0.4.0.0">
 		<file name="bink2w64.dll">
-			<hash>eb3f1c5fa5204419b55635e13d84559f</hash>
-			<mirror>http://gtav.anushk.net/downloadManager/subassemblies/scl_beta_6/bink2w64.dll</mirror>
+			<hash>9b3b443544b504bf0dc74ac166af0c84</hash>
+			<mirror>http://gtav.anushk.net/downloadManager/subassemblies/scl_beta_7/bink2w64.dll</mirror>
 		</file>
 		<file name="SCLCustom.dll">
-			<hash>72a29441a0a50ab320093daab7691bd4</hash>
-			<mirror>http://gtav.anushk.net/downloadManager/subassemblies/scl_beta_6/SCLCustom.dll</mirror>
+			<hash>b0d3d25a7b5a28091c34ac057dff3efa</hash>
+			<mirror>http://gtav.anushk.net/downloadManager/subassemblies/scl_beta_7/SCLCustom.dll</mirror>
 		</file>
 		<!--<file name="bink2w64.dll">
             <hash>518C9DA8D048F1DB89E835254E369EE0</hash>

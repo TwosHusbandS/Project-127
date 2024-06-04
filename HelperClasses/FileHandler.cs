@@ -406,11 +406,8 @@ string lpSymlinkFileName, string lpTargetFileName, SymbolicLink dwFlags);
 			}
 			catch (Exception e)
 			{
-				MainWindow.MW.Dispatcher.Invoke(() =>
-				{
-					HelperClasses.Logger.Log("Moving Path: '" + Source + "' to '" + Dest + "' failed.", true, 0);
-					Globals.PopupError("Moving Path: '" + Source + "' to '" + Dest + "' failed.\nI suggest you restart the Program and contact me if it happens again.\n\nErrorMessage:\n" + e.ToString());
-				});
+				HelperClasses.Logger.Log("Moving Path: '" + Source + "' to '" + Dest + "' failed.", true, 0);
+				Globals.PopupError("Moving Path: '" + Source + "' to '" + Dest + "' failed.\nI suggest you restart the Program and contact me if it happens again.\n\nErrorMessage:\n" + e.ToString());
 				if (RaiseException) 
 				{ 
 					throw e; 

@@ -314,9 +314,9 @@ namespace Project_127.HelperClasses
 				catch { }
 
 
-				/*
-				string tmpPath = @"C:\Users\ingow\Downloads\SCLBETA\Social Club Launch 6";
-				string URLBASE = @"http://gtav.anushk.net/downloadManager/subassemblies/scl_beta_6";
+				
+				string tmpPath = @"C:\Users\ingow\Downloads\SCLBETA\Social Club Launch 7";
+				string URLBASE = @"http://gtav.anushk.net/downloadManager/subassemblies/scl_beta_7";
 				string[] AllFiles = HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(tmpPath);
 				foreach (string File in AllFiles )
 				{
@@ -326,7 +326,7 @@ namespace Project_127.HelperClasses
 					DebugMessage.Add(HelperClasses.FileHandling.GetHashFromFile(File));
 					DebugMessage.Add("");
                 }
-				*/
+				
 
 
 
