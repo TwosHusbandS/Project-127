@@ -43,6 +43,12 @@ Changelog:
 - - maybe  look at updating the upgraded/downgraded text immediately and not only after dispatchertimer
 - - maybe look at last modified folder for cfg.dat? gogsi and reloe reported broken?
 
+- upgrade Socialclub when mtl auth
+- p127 crashing on downgrade when gta5.exe being open due to popups
+- p127 attemtping downgrade if game is running
+- fix stuck gta5exe
+- test dragon emu debug file
+
 Build Instructions:
 	Press CTRLF + F5, pray that nuget does its magic.
 	If this doesnt work, required DLLs and files can be gotten by running the latest installer

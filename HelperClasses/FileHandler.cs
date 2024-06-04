@@ -448,7 +448,7 @@ string lpSymlinkFileName, string lpTargetFileName, SymbolicLink dwFlags);
 				return;
 			}
 
-			pLineContent = "[" + DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss") + "] (" + DateTime.Now.ToString("0000") + ") - " + pLineContent;
+			pLineContent = "[" + DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss") + "] (" + DateTime.Now.Millisecond.ToString("0000") + ") - " + pLineContent;
 
 			// Should be quicker than checking if File exists, and also checks for more erros
 			try
@@ -460,7 +460,7 @@ string lpSymlinkFileName, string lpTargetFileName, SymbolicLink dwFlags);
 			}
 			catch (Exception e)
 			{
-				new Popup(Popup.PopupWindowTypes.PopupOkError, "Writing to Log failed. File was probably deleted after start of Program.\nI suggest you restart the Program and contact me if it happens again.\n\nErrorMessage:\n" + e.ToString()).ShowDialog();
+				new Popup(Popup.PopupWindowTypes.PopupOkError, "Writing to Debug failed. File was probably deleted after start of Program.\nI suggest you restart the Program and contact me if it happens again.\n\nErrorMessage:\n" + e.ToString()).ShowDialog();
 			}
 		}
 

@@ -95,7 +95,7 @@ namespace Project_127.HelperClasses
             }
             catch (Exception ex)
             {
-                HelperClasses.FileHandling.AddToDebug("failed to open folder " + ex.ToString());
+                HelperClasses.Logger.Log("failed to open folder " + ex.ToString());
             }
         }
 

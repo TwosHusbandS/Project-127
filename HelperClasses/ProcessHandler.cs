@@ -22,31 +22,26 @@ namespace Project_127.HelperClasses
     /// </summary>
     public static class ProcessHandler
     {
+        static private int ProcessKillDelayMS = 50;
+
         /// <summary>
         /// Kills all Rockstar / GTA / Social Club related processes
         /// </summary>
         public static async void KillRockstarProcessesAsync()
         {
             SocialClubKillAllProcesses();
-
-            // TODO CTRLF add other ProcessNames
-            KillProcessesContains("gta");
-            KillProcessesContains("gtastub");
-            KillProcessesContains("play127");
-            KillProcessesContains("gtaddl");
+            GTAKillAllProcesses();
 
             MainWindow.MW.UpdateGUIDispatcherTimer();
         }
 
         public static void KillRockstarProcesses()
         {
+            HelperClasses.FileHandling.AddToDebug("A");
             SocialClubKillAllProcesses();
-
-            // TODO CTRLF add other ProcessNames
-            KillProcessesContains("gta");
-            KillProcessesContains("gtastub");
-            KillProcessesContains("play127");
-            KillProcessesContains("gtaddl");
+            HelperClasses.FileHandling.AddToDebug("B");
+            GTAKillAllProcesses();
+            HelperClasses.FileHandling.AddToDebug("C");
         }
 
         /// <summary>
@@ -173,6 +168,74 @@ namespace Project_127.HelperClasses
 
 
 
+        public static Process[] GetGTAProcesses()
+        {
+            List<Process> rtrn = new List<Process>();
+
+            // Kill all processes with these names
+            List<string> ProcNames = new List<string>
+            {
+                "gta",
+                "gtavlauncher",
+                "playgtav",
+                "gtastub",
+                "gtaddl",
+                "play127"
+            };
+
+            // Only kill them if their filepath contains these
+            string Pathname = LauncherLogic.GTAVFilePath.TrimEnd('\\').ToLower();
+
+            // Loop through all processes
+            Process[] Processes = Process.GetProcesses();
+            for (int i = 0; i <= Processes.Length - 1; i++)
+            {
+                // Loop through all processnames
+                foreach (string ProcName in ProcNames)
+                {
+                    // If processname hits
+                    if (Processes[i].ProcessName.ToLower().Contains(ProcName.ToLower().TrimEnd(".exe")))
+                    {
+                        // If Pathnames hit
+                        if (Processes[i].GetMainModuleFileName().ToLower().Contains(Pathname.ToLower()))
+                        {
+                            rtrn.Add(Processes[i]);
+                        }
+                    }
+                }
+            }
+
+            return rtrn.ToArray();
+        }
+
+
+        /// <summary>
+        /// Killing all GTA Processes
+        /// </summary>
+        public static void GTAKillAllProcesses()
+        {
+            HelperClasses.FileHandling.AddToDebug("D 1");
+
+            foreach (Process p in GetGTAProcesses())
+            {
+                HelperClasses.FileHandling.AddToDebug("D 2");
+                Kill(p);
+            }
+
+            HelperClasses.FileHandling.AddToDebug("D 3");
+
+            HelperClasses.Logger.Log("Check if GTA processes are still running...");
+            while (GetSocialClubProcesses().Length > 0)
+            {
+                HelperClasses.FileHandling.AddToDebug("D 4");
+                HelperClasses.Logger.Log("Still running GTA process...");
+            }
+            HelperClasses.FileHandling.AddToDebug("D 5");
+            HelperClasses.Logger.Log("Check if GTA processes are still running, aparently thats not the case");
+            Task.Delay(ProcessKillDelayMS).GetAwaiter().GetResult();
+            HelperClasses.FileHandling.AddToDebug("D 6");
+        }
+
 
         public static Process[] GetSocialClubProcesses()
         {
@@ -243,13 +306,13 @@ namespace Project_127.HelperClasses
                 Kill(p);
             }
 
-            HelperClasses.Logger.Log("Check if processes are still running...");
+            HelperClasses.Logger.Log("Check if SocialClub processes are still running...");
             while (GetSocialClubProcesses().Length > 0)
             {
-                HelperClasses.Logger.Log("Still running process...");
+                HelperClasses.Logger.Log("Still running SocialClub process...");
             }
-            HelperClasses.Logger.Log("Check if processes are still running, aparently thats not the case");
-            Task.Delay(25).GetAwaiter().GetResult();
+            HelperClasses.Logger.Log("Check if SocialClub processes are still running, aparently thats not the case");
+            Task.Delay(ProcessKillDelayMS).GetAwaiter().GetResult();
         }
 
         /// <summary>
@@ -283,6 +346,7 @@ namespace Project_127.HelperClasses
                 }
                 else
                 {
+                    HelperClasses.Logger.Log("AAAAAA - Killing: " + myP.GetMainModuleFileName());
                     Kill(myP);
                 }
             }
