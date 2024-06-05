@@ -25,8 +25,10 @@ namespace Project_127.HelperClasses
 	/// </summary>
 	static class FileHandling
 	{
+        static string OrigUser = @"\" + Environment.UserName + @"\";
+        static string AnonUser = @"\" + "$USERNAME" + @"\";
 
-		[DllImport("kernel32.dll")]
+        [DllImport("kernel32.dll")]
 		static extern bool CreateSymbolicLink(
 string lpSymlinkFileName, string lpTargetFileName, SymbolicLink dwFlags);
 
@@ -55,15 +57,23 @@ string lpSymlinkFileName, string lpTargetFileName, SymbolicLink dwFlags);
 			Folder
 		}
 
-		/// <summary>
-		/// Opens Dialog for File or Folder picker. Returns "" if nothing is picked.
-		/// </summary>
-		/// <param name="pPathDialogType"></param>
-		/// <param name="pTitle"></param>
-		/// <param name="pFilter"></param>
-		/// <param name="pStartLocation"></param>
-		/// <returns></returns>
-		public static string OpenDialogExplorer(PathDialogType pPathDialogType, string pTitle, string pStartLocation, bool pMultiSelect = false, string pFilter = null)
+
+        
+		public static string AnonymizeUser(string tmp)
+		{
+			return tmp.Replace(OrigUser, AnonUser);
+		}
+
+
+        /// <summary>
+        /// Opens Dialog for File or Folder picker. Returns "" if nothing is picked.
+        /// </summary>
+        /// <param name="pPathDialogType"></param>
+        /// <param name="pTitle"></param>
+        /// <param name="pFilter"></param>
+        /// <param name="pStartLocation"></param>
+        /// <returns></returns>
+        public static string OpenDialogExplorer(PathDialogType pPathDialogType, string pTitle, string pStartLocation, bool pMultiSelect = false, string pFilter = null)
 		{
 			if (pPathDialogType == PathDialogType.File)
 			{

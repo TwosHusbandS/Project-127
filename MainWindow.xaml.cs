@@ -34,6 +34,7 @@ Changelog:
 - error popup crash
 - process kill better implementation
 - retry  on exception in fileoperation popup
+- anonymize debug and logfiles
 
 - Check:
 - - DownloadManager
@@ -55,7 +56,6 @@ Changelog:
 
 - new savefiles
 - delete social club downgraded cache, when upgrading social club component...maybe even more?
-- generating debug takes 8 seconds
 
 
 Build Instructions:
