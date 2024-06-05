@@ -506,19 +506,24 @@ namespace Project_127
 
 					HelperClasses.Logger.Log("SCL - Installation Folder is not Downgraded (nor Updated), Temp Folder is not Downgraded (nor Updated) either.", 1);
 					HelperClasses.Logger.Log("SCL - Lets see if we can save ourselves with the Downgraded Cache folder.", 1);
-					if (Get_SCL_InstallationState(SCL_SC_DOWNGRADED_CACHE) != SCL_InstallationStates.Trash)
+					if (Get_SCL_InstallationState(SCL_SC_DOWNGRADED_CACHE) == SCL_InstallationStates.Trash)
 					{
-						HelperClasses.Logger.Log("SCL - SCL_SC_DOWNGRADED_CACHE Folder is not Trash. Yay.", 2);
+                        HelperClasses.Logger.Log("SCL - SCL_SC_DOWNGRADED_CACHE Folder is trash, making it usable....", 2);
 
-						tmp.Add(new MyFileOperation(MyFileOperation.FileOperations.Delete, SCL_SC_Installation, "", "Deleting Installation Folder: '" + SCL_SC_Installation + "'", 2, MyFileOperation.FileOrFolder.Folder));
-						tmp.Add(new MyFileOperation(MyFileOperation.FileOperations.Move, SCL_SC_DOWNGRADED_CACHE, SCL_SC_Installation, "Renaming DowngradedCache ('" + SCL_SC_DOWNGRADED_CACHE + "') to Installation Folder ('" + SCL_SC_Installation + "')", 2, MyFileOperation.FileOrFolder.Folder));
-					}
-					else
-					{
-						HelperClasses.Logger.Log("SCL - Welp looks like everything is trash User gotta deal with it I guess.", 1);
+                        // Downgraded cache is trash too, lets make it not trash
+                        if (!SCL_MakeSureDowngradedCacheIsCorrect())
+                        {
+                            HelperClasses.Logger.Log("SCL - Upgrade, everything including freshly build downgraded ache is fucked.", 1);
+                            return false;
+                        }
+ 					}
 
-					}
-				}
+                    // Makes sure we have a downgraded SC in C:Program Files, copies it from $P127_FILES
+                    HelperClasses.Logger.Log("SCL - SCL_SC_DOWNGRADED_CACHE Folder is Now usable. Yay.", 2);
+
+                    tmp.Add(new MyFileOperation(MyFileOperation.FileOperations.Delete, SCL_SC_Installation, "", "Deleting Installation Folder: '" + SCL_SC_Installation + "'", 2, MyFileOperation.FileOrFolder.Folder));
+                    tmp.Add(new MyFileOperation(MyFileOperation.FileOperations.Move, SCL_SC_DOWNGRADED_CACHE, SCL_SC_Installation, "Renaming DowngradedCache ('" + SCL_SC_DOWNGRADED_CACHE + "') to Installation Folder ('" + SCL_SC_Installation + "')", 2, MyFileOperation.FileOrFolder.Folder));
+                }
 			}
 
 			// only actually throw pop up when its needed...

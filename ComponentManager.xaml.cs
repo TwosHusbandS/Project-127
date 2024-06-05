@@ -1,4 +1,5 @@
-﻿using Project_127.Popups;
+﻿using Project_127.HelperClasses;
+using Project_127.Popups;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -910,7 +911,40 @@ namespace Project_127
                     else
                     {
                         HelperClasses.Logger.Log("ComponentMngr - User wants update.");
+                        if (Component == ComponentManager.Components.DowngradedSC)
+                        {
+                            // if we update social club, delete all 4 folder locations if they are not upgraded, to remove all traces
+
+                            List<string> FilePaths = new List<string>
+                                {
+                                    LaunchAlternative.SCL_SC_DOWNGRADED,
+                                    LaunchAlternative.SCL_SC_DOWNGRADED_CACHE,
+                                    LaunchAlternative.SCL_SC_Installation,
+                                    LaunchAlternative.SCL_SC_TEMP_BACKUP
+                                };
+
+                            List<MyFileOperation> MFOs = new List<MyFileOperation>();
+
+                            foreach (string FilePath in FilePaths)
+                            {
+                                if (LaunchAlternative.Get_SCL_InstallationState(FilePath) != LaunchAlternative.SCL_InstallationStates.Upgraded)
+                                {
+                                    MFOs.Add(new MyFileOperation(MyFileOperation.FileOperations.Delete, FilePath, "", "Log", 0, MyFileOperation.FileOrFolder.Folder));
+                                }
+                            }
+
+                            if (MFOs.Count > 0)
+                            {
+                                new PopupProgress(PopupProgress.ProgressTypes.FileOperation, "Deleting previous downgraded Social Clubs", MFOs).ShowDialog();
+                            }
+                        }
                         Globals.MyDM.updateSubssembly(Component.GetAssemblyName(), true).GetAwaiter().GetResult();
+                        if (Component == ComponentManager.Components.DowngradedSC)
+                        {
+                            // So we just upgraded Social Club Component, after deleting all non-upgraded social club folders.
+                            // we now want to upgrade social club,
+                            LaunchAlternative.SocialClubUpgrade();
+                        }
                         ComponentManager.MyRefreshStatic();
                         return true;
                     }

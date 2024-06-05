@@ -35,6 +35,8 @@ Changelog:
 - process kill better implementation
 - retry  on exception in fileoperation popup
 - anonymize debug and logfiles
+- prepare for social club component upgrade by deleting all old downgraded social club folders and forcing social club upgrade after
+
 
 - Check:
 - - DownloadManager
@@ -48,6 +50,7 @@ Changelog:
 - - maybe  look at updating the upgraded/downgraded text immediately and not only after dispatchertimer
 - - maybe look at last modified folder for cfg.dat? gogsi and reloe reported broken?
 
+
 - fix stuck gta5exe
 - - so everything works
 - - issues:
@@ -55,7 +58,6 @@ Changelog:
 - - - popups for each single file
 
 - new savefiles
-- delete social club downgraded cache, when upgrading social club component...maybe even more?
 
 
 Build Instructions:
