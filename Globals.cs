@@ -2061,6 +2061,7 @@ namespace Project_127
             {
                 new Popup(Popup.PopupWindowTypes.PopupOkError, pMsg).ShowDialog();
             });
+            HelperClasses.FileHandling.AddToDebug("Throwing Error");
         }
 
 

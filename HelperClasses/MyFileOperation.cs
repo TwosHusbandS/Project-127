@@ -97,33 +97,37 @@ namespace Project_127.HelperClasses
 
 		public static void ExecuteWrapper(MyFileOperation pMyFileOperation)
 		{
-			if (pMyFileOperation.RetryAttempts < 1) { pMyFileOperation.RetryAttempts = 1; }
-
+			HelperClasses.FileHandling.AddToDebug("    ");
+			HelperClasses.FileHandling.AddToDebug(pMyFileOperation.FileOperation.ToString() + " | " + pMyFileOperation.OriginalFile);
+			HelperClasses.FileHandling.AddToDebug(pMyFileOperation.Log);
 			while (pMyFileOperation.RetryAttempts > 0)
 			{
                 try
                 {
-                    Execute(pMyFileOperation);
-					break;
+                    HelperClasses.FileHandling.AddToDebug("RetryAttempts: " + pMyFileOperation.RetryAttempts.ToString());
+                    Execute(pMyFileOperation, true);
+					return;
                 }
                 catch (Exception ex)
-                {
-					pMyFileOperation.RetryAttempts -= 1;
+                { 
+                    HelperClasses.FileHandling.AddToDebug("Failed");
 
-					// Just do this to not wait the delay at the very end
-					if (pMyFileOperation.RetryAttempts == 0) { break; }
+                    pMyFileOperation.RetryAttempts -= 1;
 
 					Task.Delay(pMyFileOperation.MSDelayBetweenAttempts).GetAwaiter().GetResult();
 					HelperClasses.Logger.Log("Retrying file operation...");
                 }
             }
-		}
+            HelperClasses.FileHandling.AddToDebug("Hail Mary Execute");
 
-		/// <summary>
-		/// Executes one MyFileOperationObject
-		/// </summary>
-		/// <param name="pMyFileOperation"></param>
-		public static void Execute(MyFileOperation pMyFileOperation)
+            Execute(pMyFileOperation);
+        }
+
+        /// <summary>
+        /// Executes one MyFileOperationObject
+        /// </summary>
+        /// <param name="pMyFileOperation"></param>
+        public static void Execute(MyFileOperation pMyFileOperation, bool pRaiseException = false)
 		{
 			switch (pMyFileOperation.FileOperation)
 			{
@@ -132,11 +136,11 @@ namespace Project_127.HelperClasses
 						HelperClasses.Logger.Log(pMyFileOperation.Log, pMyFileOperation.LogLevel);
 						if (pMyFileOperation.MyFileOrFolder == FileOrFolder.File)
 						{
-							HelperClasses.FileHandling.copyFile(pMyFileOperation.OriginalFile, pMyFileOperation.NewFile, RaiseException: true);
+							HelperClasses.FileHandling.copyFile(pMyFileOperation.OriginalFile, pMyFileOperation.NewFile, RaiseException: pRaiseException);
 						}
 						else
 						{
-							HelperClasses.FileHandling.CopyPath(pMyFileOperation.OriginalFile, pMyFileOperation.NewFile, RaiseException: true);
+							HelperClasses.FileHandling.CopyPath(pMyFileOperation.OriginalFile, pMyFileOperation.NewFile, RaiseException: pRaiseException);
 						}
 						break;
 					}
@@ -145,11 +149,11 @@ namespace Project_127.HelperClasses
 						HelperClasses.Logger.Log(pMyFileOperation.Log, pMyFileOperation.LogLevel);
 						if (pMyFileOperation.MyFileOrFolder == FileOrFolder.File)
 						{
-							HelperClasses.FileHandling.createFile(pMyFileOperation.OriginalFile, RaiseException: true);
+							HelperClasses.FileHandling.createFile(pMyFileOperation.OriginalFile, RaiseException: pRaiseException);
 						}
 						else
 						{
-							HelperClasses.FileHandling.createPath(pMyFileOperation.OriginalFile, RaiseException: true);
+							HelperClasses.FileHandling.createPath(pMyFileOperation.OriginalFile, RaiseException: pRaiseException);
 						}
 						break;
 					}
@@ -158,11 +162,11 @@ namespace Project_127.HelperClasses
 						HelperClasses.Logger.Log(pMyFileOperation.Log, pMyFileOperation.LogLevel);
 						if (pMyFileOperation.MyFileOrFolder == FileOrFolder.File)
 						{
-							HelperClasses.FileHandling.moveFile(pMyFileOperation.OriginalFile, pMyFileOperation.NewFile, RaiseException: true);
+							HelperClasses.FileHandling.moveFile(pMyFileOperation.OriginalFile, pMyFileOperation.NewFile, RaiseException: pRaiseException);
 						}
 						else
 						{
-							HelperClasses.FileHandling.movePath(pMyFileOperation.OriginalFile, pMyFileOperation.NewFile, RaiseException: true);
+							HelperClasses.FileHandling.movePath(pMyFileOperation.OriginalFile, pMyFileOperation.NewFile, RaiseException: pRaiseException);
 						}
 						break;
 					}
@@ -175,18 +179,18 @@ namespace Project_127.HelperClasses
 								if (Settings.EnableCopyFilesInsteadOfHardlinking)
 								{
 									HelperClasses.Logger.Log(Globals.ReplaceCaseInsensitive(pMyFileOperation.Log, "hardlink", "Copy"), pMyFileOperation.LogLevel);
-									HelperClasses.FileHandling.copyFile(pMyFileOperation.OriginalFile, pMyFileOperation.NewFile, RaiseException: true);
+									HelperClasses.FileHandling.copyFile(pMyFileOperation.OriginalFile, pMyFileOperation.NewFile, RaiseException: pRaiseException);
 								}
 								else
 								{
 									HelperClasses.Logger.Log(pMyFileOperation.Log, pMyFileOperation.LogLevel);
-									HelperClasses.FileHandling.HardLinkFiles(pMyFileOperation.NewFile, pMyFileOperation.OriginalFile, RaiseException: true);
+									HelperClasses.FileHandling.HardLinkFiles(pMyFileOperation.NewFile, pMyFileOperation.OriginalFile, RaiseException: pRaiseException);
 								}
 							}
 							else
 							{
 								HelperClasses.Logger.Log(pMyFileOperation.Log, pMyFileOperation.LogLevel);
-								HelperClasses.FileHandling.HardLinkFiles(pMyFileOperation.NewFile, pMyFileOperation.OriginalFile, RaiseException: true);
+								HelperClasses.FileHandling.HardLinkFiles(pMyFileOperation.NewFile, pMyFileOperation.OriginalFile, RaiseException: pRaiseException);
 							}
 						}
 						else
@@ -200,11 +204,11 @@ namespace Project_127.HelperClasses
 						HelperClasses.Logger.Log(pMyFileOperation.Log, pMyFileOperation.LogLevel);
 						if (pMyFileOperation.MyFileOrFolder == FileOrFolder.File)
 						{
-							HelperClasses.FileHandling.deleteFile(pMyFileOperation.OriginalFile, RaiseException:true);
+							HelperClasses.FileHandling.deleteFile(pMyFileOperation.OriginalFile, RaiseException: pRaiseException);
 						}
 						else
 						{
-							HelperClasses.FileHandling.DeleteFolder(pMyFileOperation.OriginalFile, RaiseException: true);
+							HelperClasses.FileHandling.DeleteFolder(pMyFileOperation.OriginalFile, RaiseException: pRaiseException);
 						}
 						break;
 					}

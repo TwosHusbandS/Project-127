@@ -331,7 +331,7 @@ string lpSymlinkFileName, string lpTargetFileName, SymbolicLink dwFlags);
 			// If the file already exists, we delete it
 			if (doesFileExist(pLinkFilePath))
 			{
-				deleteFile(pLinkFilePath);
+				deleteFile(pLinkFilePath, RaiseException: RaiseException);
 			}
 
 			// Try to Hardlink
@@ -348,13 +348,16 @@ string lpSymlinkFileName, string lpTargetFileName, SymbolicLink dwFlags);
 			}
 			catch (Exception e)
 			{
-				Globals.PopupError("Creating Hardlink in: '" + pLinkFilePath + "' for existing file '" + pRealFilePath + "' failed.\nI suggest you restart the Program (maybe Repair) and contact me if it happens again.\n\nErrorMessage:\n" + e.ToString());
 				HelperClasses.Logger.Log("Creating Hardlink in: '" + pLinkFilePath + "' for existing file '" + pRealFilePath + "' failed", true, 0);
 				if (RaiseException)
 				{
 					throw e;
 				}	
-			}
+				else
+				{
+                    Globals.PopupError("Creating Hardlink in: '" + pLinkFilePath + "' for existing file '" + pRealFilePath + "' failed.\nI suggest you restart the Program (maybe Repair) and contact me if it happens again.\n\nErrorMessage:\n" + e.ToString());
+                }
+            }
 		}
 
 		/// <summary>
@@ -377,11 +380,14 @@ string lpSymlinkFileName, string lpTargetFileName, SymbolicLink dwFlags);
 			}
 			catch (Exception e)
 			{
-				Globals.PopupError("Moving File: '" + pMoveFromFilePath + "' to '" + pMoveToFilePath + "' failed.\nI suggest you restart the Program and contact me if it happens again.\n\nErrorMessage:\n" + e.ToString());
 				HelperClasses.Logger.Log("Moving File: '" + pMoveFromFilePath + "' to '" + pMoveToFilePath + "' failed.", true, 0);
 				if (RaiseException)
 				{
 					throw e;
+				}
+				else
+				{
+					Globals.PopupError("Moving File: '" + pMoveFromFilePath + "' to '" + pMoveToFilePath + "' failed.\nI suggest you restart the Program and contact me if it happens again.\n\nErrorMessage:\n" + e.ToString());
 				}
 			}
 		}
@@ -407,12 +413,15 @@ string lpSymlinkFileName, string lpTargetFileName, SymbolicLink dwFlags);
 			catch (Exception e)
 			{
 				HelperClasses.Logger.Log("Moving Path: '" + Source + "' to '" + Dest + "' failed.", true, 0);
-				Globals.PopupError("Moving Path: '" + Source + "' to '" + Dest + "' failed.\nI suggest you restart the Program and contact me if it happens again.\n\nErrorMessage:\n" + e.ToString());
 				if (RaiseException) 
 				{ 
 					throw e; 
 				}
-			}
+				else
+				{
+                    Globals.PopupError("Moving Path: '" + Source + "' to '" + Dest + "' failed.\nI suggest you restart the Program and contact me if it happens again.\n\nErrorMessage:\n" + e.ToString());
+                }
+            }
 		}
 
 		/// <summary>
@@ -997,14 +1006,17 @@ string lpSymlinkFileName, string lpTargetFileName, SymbolicLink dwFlags);
 			catch (Exception e)
 			{
 				HelperClasses.Logger.Log("Deleting File failed ('" + pFilePath + "').", true, 0);
-                if (ShowErrorAsPopup)
-                {
-                    Globals.PopupError("Deleting File failed ('" + pFilePath + "').\nI suggest you restart the Program and contact me if it happens again.\n\nErrorMessage:\n" + e.ToString());
-                }
 				if (RaiseException)
 				{
 					throw e;
 				}
+				else
+				{
+                    if (ShowErrorAsPopup)
+                    {
+                        Globals.PopupError("Deleting File failed ('" + pFilePath + "').\nI suggest you restart the Program and contact me if it happens again.\n\nErrorMessage:\n" + e.ToString());
+                    }
+                }
             }
 		}
 
@@ -1023,7 +1035,7 @@ string lpSymlinkFileName, string lpTargetFileName, SymbolicLink dwFlags);
 			}
 			if (File.Exists(pDestination))
 			{
-				FileHandling.deleteFile(pDestination);
+				FileHandling.deleteFile(pDestination, RaiseException: RaiseException);
 			}
 			try
 			{
@@ -1066,11 +1078,14 @@ string lpSymlinkFileName, string lpTargetFileName, SymbolicLink dwFlags);
 			}
 			catch (Exception e)
 			{
-                Globals.PopupError("Create File failed ('" + PathCombine(pPath, pFile) + "').\nI suggest you restart the Program and contact me if it happens again.\n\nErrorMessage:\n" + e.ToString());
 				HelperClasses.Logger.Log("Create File failed ('" + PathCombine(pPath, pFile) + "').", true, 0);
 				if (RaiseException)
 				{
 					throw e;
+				}
+				else
+				{
+					Globals.PopupError("Create File failed ('" + PathCombine(pPath, pFile) + "').\nI suggest you restart the Program and contact me if it happens again.\n\nErrorMessage:\n" + e.ToString());
 				}
 			}
 		}

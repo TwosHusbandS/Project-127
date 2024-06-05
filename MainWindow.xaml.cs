@@ -48,6 +48,15 @@ Changelog:
 - - maybe look at last modified folder for cfg.dat? gogsi and reloe reported broken?
 
 - fix stuck gta5exe
+- - so everything works
+- - issues:
+- - - multiple popups for the same file. Since one is deleting and one is hardlinking which then calls deleting because deleting failed...
+- - - popups for each single file
+
+- new savefiles
+- delete social club downgraded cache, when upgrading social club component...maybe even more?
+- generating debug takes 8 seconds
+
 
 Build Instructions:
 	Press CTRLF + F5, pray that nuget does its magic.
