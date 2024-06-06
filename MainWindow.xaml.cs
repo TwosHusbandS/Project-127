@@ -8,47 +8,14 @@ Main / Actual Project 1.27 Client by "@thS"
 A number of other members of the team, including but not limited to @MoMo, @Diamondo25, @S.M.G, @gogsi, @Antibones, @Unemployed, @Aperture, @luky, @CrynesSs, @Daniel Kinau contributed to this project one way or another, and my thanks go out to them.
 Version: 1.2.6.4
 
-Changelog:
-- Fix SCL still crashing P127
-- Fix ComponenetManager Import Button
-- Restored original P127 aspect Ratio by increasing window height
-- Download Manager stuff for SCL Beta
-- P127 implementation for SCL Beta
-- P127 installer for SCL Beta
-- new BuildVersionTable thingy
-- better process.run async fast
-- better killsocialclubprocesses
-- better socialclub downgrade/upgrade
-- savefilehandler improvements
-- - checking against every subfolder in supportfiles
-- - ui improvements
-- refreshing settings UI after creating backup
-- remove @Special for taxi long load patch, since its outdated
-- fixed download manager crashing on bad xml
-- improved savefilehandler speed and ui
-- commented zip patch extraction
-- kept returning player for emu only
-- see comments on top of social club upgrade/downgrade debug window
-- increased network timeout to 1000ms, also getting new offset on mode change and check for update
-- upgrade Socialclub when mtl auth
-- error popup crash
-- process kill better implementation
-- retry  on exception in fileoperation popup
-- anonymize debug and logfiles
-- prepare for social club component upgrade by deleting all old downgraded social club folders and forcing social club upgrade after
-
 
 - Check:
 - - DownloadManager
 - - IsDowngradedGTA Method
 - - CommandLine Method
 - - FileCheck on LaunchAlternative.Launch
-- - check if debugfile is still usefull
-- - age check of cfg.dat?
-- - component manager UI "TEST"
 - - LastLaunchedVersion clean up stuff. Also savefiles
-- - maybe  look at updating the upgraded/downgraded text immediately and not only after dispatchertimer
-- - maybe look at last modified folder for cfg.dat? gogsi and reloe reported broken?
+- - sclbeta cleanup
 
 
 - fix stuck gta5exe
@@ -57,7 +24,6 @@ Changelog:
 - - - multiple popups for the same file. Since one is deleting and one is hardlinking which then calls deleting because deleting failed...
 - - - popups for each single file
 
-- new savefiles
 
 
 Build Instructions:

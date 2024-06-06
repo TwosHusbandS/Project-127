@@ -1,4 +1,5 @@
-﻿using GSF.IO;
+﻿using CefSharp.DevTools.IndexedDB;
+using GSF.IO;
 using GSF.Parsing;
 using Project_127.HelperClasses;
 using Project_127.Popups;
@@ -926,6 +927,7 @@ namespace Project_127
 
                                 // move everything one folder down
                                 string[] FilePaths = HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(LauncherLogic.SaveFilesPath);
+                                string[] SubFolders = HelperClasses.FileHandling.GetSubFolders(LauncherLogic.SaveFilesPath);
 
                                 string SaveFilesOldFolder = LauncherLogic.SaveFilesPath.TrimEnd('\\') + @"\Old_Savefiles";
                                 MFOs.Add(new MyFileOperation(MyFileOperation.FileOperations.Create, SaveFilesOldFolder, "", "Creating Old SaveFile Folder (" + SaveFilesOldFolder + ")", 0, MyFileOperation.FileOrFolder.Folder));
@@ -939,7 +941,10 @@ namespace Project_127
                                     }
                                     MFOs.Add(new MyFileOperation(MyFileOperation.FileOperations.Move, FilePath, NewPath, "Moving '" + FilePath + "' to '" + NewPath + "' to save old Savefiles", 0, MyFileOperation.FileOrFolder.File));
                                 }
-
+                                foreach (string SubFolder in SubFolders)
+                                {
+                                    MFOs.Add(new MyFileOperation(MyFileOperation.FileOperations.Delete, SubFolder, "", "Deleting '" + SubFolder + "' (subfolder) since we have moved the files to backup directory", 0, MyFileOperation.FileOrFolder.Folder));
+                                }
                             }
                             else
                             {
