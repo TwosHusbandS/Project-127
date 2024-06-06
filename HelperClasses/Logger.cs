@@ -271,7 +271,16 @@ namespace Project_127.HelperClasses
 						{
 							creds.Load();
 							DebugMessage.Add("Stored Credentials (legacy Auth):");
-							DebugMessage.Add("        Email: '" + creds.Username + "'");
+
+                            string email = creds.Username;
+                            if (email.IndexOf('@') > 4)
+                            {
+                                string endappend = email.Substring(email.IndexOf('@'));
+                                string start = email.Substring(0, email.IndexOf('@') - 1);
+                                email = start.Substring(0, 2) + "..." + start.Substring(start.Length - 2) + endappend;
+                            }
+
+                            DebugMessage.Add("        Email: '" + email + "'");
 							DebugMessage.Add("        LastWriteTime: '" + creds.LastWriteTime.ToString("yyyy-MM-ddTHH:mm:ss") + "'");
 							DebugMessage.Add("        LastWriteTimeUTC: '" + creds.LastWriteTimeUtc.ToString("yyyy-MM-ddTHH:mm:ss") + "'");
 						}
@@ -314,8 +323,8 @@ namespace Project_127.HelperClasses
 
 
 
-				//string tmpPath = @"C:\Users\ingow\Downloads\SCLBETA\Social Club Launch 7";
-				//string URLBASE = @"http://gtav.anushk.net/downloadManager/subassemblies/scl_beta_7";
+				//string tmpPath = @"C:\Users\ingow\Downloads\TMP\";
+				//string URLBASE = @"http://gtav.anushk.net";
 				//string[] AllFiles = HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(tmpPath);
 				//foreach (string File in AllFiles )
 				//{

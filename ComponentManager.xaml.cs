@@ -1,4 +1,6 @@
-﻿using Project_127.HelperClasses;
+﻿using GSF.IO;
+using GSF.Parsing;
+using Project_127.HelperClasses;
 using Project_127.Popups;
 using System;
 using System.Collections.Generic;
@@ -911,8 +913,51 @@ namespace Project_127
                     else
                     {
                         HelperClasses.Logger.Log("ComponentMngr - User wants update.");
+                        if (Component == ComponentManager.Components.AdditionalSaveFiles)
+                        {
+                            HelperClasses.Logger.Log("ComponentMngr - Updating SaveFiles.");
+
+                            List<MyFileOperation> MFOs = new List<MyFileOperation>();
+                            Popup yesno2 = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Do you want to back up your old SaveFiles??");
+                            yesno2.ShowDialog();
+                            if (yesno2.DialogResult == true)
+                            {
+                                HelperClasses.Logger.Log("ComponentMngr - User wants to back up old savefiles.");
+
+                                // move everything one folder down
+                                string[] FilePaths = HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(LauncherLogic.SaveFilesPath);
+
+                                string SaveFilesOldFolder = LauncherLogic.SaveFilesPath.TrimEnd('\\') + @"\Old_Savefiles";
+                                MFOs.Add(new MyFileOperation(MyFileOperation.FileOperations.Create, SaveFilesOldFolder, "", "Creating Old SaveFile Folder (" + SaveFilesOldFolder + ")", 0, MyFileOperation.FileOrFolder.Folder));
+
+                                foreach (string FilePath in FilePaths)
+                                {
+                                    string NewPath = FilePath.Replace(@"\Project_127_Files\SupportFiles\SaveFiles\", @"\Project_127_Files\SupportFiles\SaveFiles\Old_Savefiles\");
+                                    if (HelperClasses.FileHandling.doesFileExist(NewPath))
+                                    {
+                                        MFOs.Add(new MyFileOperation(MyFileOperation.FileOperations.Delete, NewPath, "", "Deleting '" + NewPath + "' since it exists and we want to move an old savefile there", 0, MyFileOperation.FileOrFolder.File));
+                                    }
+                                    MFOs.Add(new MyFileOperation(MyFileOperation.FileOperations.Move, FilePath, NewPath, "Moving '" + FilePath + "' to '" + NewPath + "' to save old Savefiles", 0, MyFileOperation.FileOrFolder.File));
+                                }
+
+                            }
+                            else
+                            {
+                                HelperClasses.Logger.Log("ComponentMngr - User wants to nuke old savefiles.");
+
+                                // nuke folder, re-create folder
+                                MFOs.Add(new MyFileOperation(MyFileOperation.FileOperations.Delete, LauncherLogic.SaveFilesPath, "", "Deleting old SaveFile Folder (" + LauncherLogic.SaveFilesPath + ")", 0, MyFileOperation.FileOrFolder.Folder));
+                                MFOs.Add(new MyFileOperation(MyFileOperation.FileOperations.Create, LauncherLogic.SaveFilesPath, "", "Re-creating SaveFile Folder (" + LauncherLogic.SaveFilesPath + ")", 0, MyFileOperation.FileOrFolder.Folder));
+                            }
+                            if (MFOs.Count > 0)
+                            {
+                                new PopupProgress(PopupProgress.ProgressTypes.FileOperation, "Managing old Savefiles...", MFOs).ShowDialog();
+                            }
+                        }
                         if (Component == ComponentManager.Components.DowngradedSC)
                         {
+                            HelperClasses.Logger.Log("ComponentMngr - Updating Downgraded SocialClub.");
+
                             // if we update social club, delete all 4 folder locations if they are not upgraded, to remove all traces
 
                             List<string> FilePaths = new List<string>
@@ -929,7 +974,7 @@ namespace Project_127
                             {
                                 if (LaunchAlternative.Get_SCL_InstallationState(FilePath) != LaunchAlternative.SCL_InstallationStates.Upgraded)
                                 {
-                                    MFOs.Add(new MyFileOperation(MyFileOperation.FileOperations.Delete, FilePath, "", "Log", 0, MyFileOperation.FileOrFolder.Folder));
+                                    MFOs.Add(new MyFileOperation(MyFileOperation.FileOperations.Delete, FilePath, "", "Deleting '" + FilePath + "' since we are Upgrading the Social Club Component and want all old downgrades gone.", 0, MyFileOperation.FileOrFolder.Folder));
                                 }
                             }
 
