@@ -78,7 +78,7 @@ Problem B) Is a bit more tricky.
 * For the past few years (before we were aware of the changed route 3), we just forced gtavlauncher to pick route 1, see if it works, and if not close itself and try again with route 2 (and if that also results in a failed game launch, try again with forced route 3).
 * Now, we just used the route-selection from an up-to-date GTA, and re-implemented it into the old gtavlauncher.exe (and gta5.exe)
 
-This results in a downgraded GTA V that should work for everyone, but still 
-a) requires you to actually own the game
-b) verifies rockstars entitlement (`cfg.dat`)
-c) needs you to have the same machine hash as you had when you last launched an up-to-date GTA with internet access
+This results in a downgraded GTA V that should work for everyone, but still   
+a) requires you to actually own the game  
+b) verifies rockstars entitlement (`cfg.dat`)  
+c) needs you to have the same machine hash as you had when you last launched an up-to-date GTA with internet access  
