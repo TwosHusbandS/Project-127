@@ -1,5 +1,11 @@
 # Social Club Launch
 
+## Credits:
+
+The following information are only known due to massive reverse-engineering efforts from @Special For and @dr490n. I'm just the messenger. 
+
+And while other community members probably contributed ideas and pieces of the puzzle during the community-driven research to fix the downgrade issue back in 2020, we would not have the deep understanding, nor the solution to the problem, without @Special For and @dr490n.
+
 ## Basics
 
 Normally, when you launch GTA V, you connect to Rockstar servers, they verify that your account owns GTA, and your game will boot successfully. So far so good.
@@ -12,7 +18,7 @@ This meant that the offline authentication comes into play.
 
 ## Rockstars solution to an offline game launch
 
-How Rockstars offline authentication works is quite simple. If you have internet and launch the game, Rockstar gets your `entitlement token` (verifying you own GTA and are eligible to play it) from Rockstar servers. It then takes one of three Routes, generates your `machine hash` (something unique to your computer and your computer only) and decrypts your aforementioned `entitlement token` and saves it into a file called cfg.dat.
+How Rockstars offline authentication works is quite simple. If you have internet and launch the game, Rockstar gets your `entitlement token` (verifying you own GTA and are eligible to play it) from Rockstar servers. It then takes one of three Routes, generates your `machine hash` (something unique to your computer and your computer only) and encrypts (using your machine hash) your aforementioned `entitlement token` and saves it into a file called cfg.dat.
 
 Up-to-date online GTA, generating cfg.dat:
 
@@ -49,13 +55,14 @@ To stop this from happening, people started putting steam in offline mode or lau
 
 This is also fine and works as intended, but there are two small issues when you attempt to do an offline-launch on old (1.24 and 1.27) GTA V:
 
-A)  Rockstar changed the algorithm for generating machine hash inside route 3 (around 2016)
+A)  Rockstar changed the algorithm for generating machine hash inside route 3 (around 2015)
 * Meaning even though route 3 is selected when you generate cfg.dat while connected to rockstar servers, and the same route 3 is selected when you do an offline launch, the **machine hashes generated are different**.
 * This is because when generating/encrypting cfg.dat the "new" machine hash algorithm is used, but when reading/decrypting cfg.dat the "old" machine hash algorithm from the old GTA V version is used.
 * Different machine hashes lead to an un-readable cfg.dat and a game that fails to launch.
+* (Fun fact: this was changed in 1.28)
  
  B) Rockstar changed the route selection
- * It used to be a combination of rockstar-account-ID and your local $PATH Windows variable
+ * It used to be a combination of windows username and your local $PATH Windows variable
  * Now its just your rockstar-account-ID
  * This however means that when getting a route for decrypting / reading cfg.dat, you may end up with a **different route** than you had when you encrypted / generated cfg.dat. 
  * Meaning you have a 2/3 chance of a failed offline game launch, because you cant decrypt cfg.dat, because you will have non-matching machine hashes due to the different route.
@@ -83,3 +90,11 @@ Problem B) Is a bit more tricky.
 a) requires you to actually own the game  
 b) verifies rockstars entitlement (`cfg.dat`)  
 c) needs you to have the same machine hash as you had when you last launched an up-to-date GTA with internet access  
+
+----
+
+#### Can this break?   
+
+Yes. Rockstar can break this by changing a machine hash algorithm, changing the route selection, adding more routes, not supporting offline game launches at all by not writing entitle token to file anymore etc.
+
+Do we think they will do that? No.
