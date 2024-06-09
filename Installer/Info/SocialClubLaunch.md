@@ -43,13 +43,13 @@ Now this worked fine (as designed) for many years.
 At some point, the latest social club was not compatible with old GTA versions and you needed to downgrade social club to launch downgraded GTA V. 
 At some other point rockstar stopped verifying game ownership (entitlement) for old game  social club versions and gives you an error message about outdated socialclub / rockstar games launcher and tries to auto-update. 
 To stop this from happening, people started putting steam in offline mode or launching GTA with the `-scOfflineOnly` command line argument.
-(Note: I actually do not know which of these issues came first, and cant be bothered investigating)
+(Note: I actually do not know which of these issues came first, and cant be bothered investigating)  
 
 ## The issues with that on old game versions:
 
 This is also fine and works as intended, but there are two small issues when you attempt to do an offline-launch on old (1.24 and 1.27) GTA V:
 
-A)  Rockstar changed the algorithm for generating machine hash inside route 3
+A)  Rockstar changed the algorithm for generating machine hash inside route 3 (around 2016)
 * Meaning even though route 3 is selected when you generate cfg.dat while connected to rockstar servers, and the same route 3 is selected when you do an offline launch, the **machine hashes generated are different**.
 * This is because when generating/encrypting cfg.dat the "new" machine hash algorithm is used, but when reading/decrypting cfg.dat the "old" machine hash algorithm from the old GTA V version is used.
 * Different machine hashes lead to an un-readable cfg.dat and a game that fails to launch.
@@ -60,7 +60,7 @@ A)  Rockstar changed the algorithm for generating machine hash inside route 3
  * This however means that when getting a route for decrypting / reading cfg.dat, you may end up with a **different route** than you had when you encrypted / generated cfg.dat. 
  * Meaning you have a 2/3 chance of a failed offline game launch, because you cant decrypt cfg.dat, because you will have non-matching machine hashes due to the different route.
 
-
+Steams users were NOT affected by these issues until 2020, because they did NOT have to use offline verification until then.
 
 ## @Specials For's Magic:
 
