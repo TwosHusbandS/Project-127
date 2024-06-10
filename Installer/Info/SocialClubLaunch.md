@@ -45,15 +45,15 @@ A -- Route 3 --> D(Machine Hash 3) --> E
 E --> F(Validate entitlement token and launch game)
 ```
 
-Now this worked fine (as designed) for many years. 
-At some point, the latest social club was not compatible with old GTA versions and you needed to downgrade social club to launch downgraded GTA V. 
-At some other point rockstar stopped verifying game ownership (entitlement) for old game  social club versions and gives you an error message about outdated socialclub / rockstar games launcher and tries to auto-update. 
-To stop this from happening, people started putting steam in offline mode or launching GTA with the `-scOfflineOnly` command line argument.
-(Note: I actually do not know which of these issues came first, and cant be bothered investigating)  
+Now this worked fine (as designed) for many years.  
+At some point, the latest social club was not compatible with old GTA versions and you needed to downgrade social club to launch downgraded GTA V.   
+At some other point rockstar stopped verifying game ownership (entitlement) for old game  social club versions and gives you an error message about outdated socialclub / rockstar games launcher and tries to auto-update.   
+To stop this from happening, people started putting steam in offline mode or launching GTA with the `-scOfflineOnly` command line argument.  
+(Note: I actually do not know which of these issues came first, and cant be bothered investigating)    
 
 ## The issues with that on old game versions:
 
-This is also fine and works as intended, but there are two small issues when you attempt to do an offline-launch on old (1.24 and 1.27) GTA V:
+There are two small issues when you attempt to do an offline-launch on old (1.24 and 1.27) GTA V:
 
 A)  Rockstar changed the algorithm for generating machine hash inside route 3 (around 2015)
 * Meaning even though route 3 is selected when you generate cfg.dat while connected to rockstar servers, and the same route 3 is selected when you do an offline launch, the **machine hashes generated are different**.
@@ -63,7 +63,7 @@ A)  Rockstar changed the algorithm for generating machine hash inside route 3 (a
  
  B) Rockstar changed the route selection
  * It used to be determined by a combination of windows username and your local $PATH Windows variable
- * Now its just depends on your rockstar-account-ID
+ * Now it just depends on your rockstar-account-ID
  * This however means that when getting a route for decrypting / reading cfg.dat, you may end up with a **different route** than you had when you encrypted / generated cfg.dat. 
  * Meaning you have a 2/3 chance of a failed offline game launch, because you cant decrypt cfg.dat, because you will have non-matching machine hashes due to the different route.
 
