@@ -32,7 +32,7 @@ A -- Route 2 --> C(Machine Hash 2) --> E
 A -- Route 3 --> D(Machine Hash 3) --> E
 ```
 
-Now, when you launch the game offline, it was designed to (again) determine with Route it would use, use the **SAME ROUTE** as it did before, and generate the **SAME MACHINE HASH** as it did before, before decrypting the cfg.dat with the generated machine hash, validating the session (mainly by checking if a timestamp included in the decrypted cfg.dat is in the past or not) and launches the game.
+Now, when you launch the game offline, it was designed to (again) determine which Route it would use, use the **SAME ROUTE** as it did before, and generate the **SAME MACHINE HASH** as it did before, before decrypting the cfg.dat with the generated machine hash, validating the session (mainly by checking if a timestamp included in the decrypted cfg.dat is in the past or not) and launches the game.
 
 Offline GTA, trying to offline-launch the game:
 
@@ -62,8 +62,8 @@ A)  Rockstar changed the algorithm for generating machine hash inside route 3 (a
 * (Fun fact: this was changed in 1.28)
  
  B) Rockstar changed the route selection
- * It used to be a combination of windows username and your local $PATH Windows variable
- * Now its just your rockstar-account-ID
+ * It used to be determined by a combination of windows username and your local $PATH Windows variable
+ * Now its just depends on your rockstar-account-ID
  * This however means that when getting a route for decrypting / reading cfg.dat, you may end up with a **different route** than you had when you encrypted / generated cfg.dat. 
  * Meaning you have a 2/3 chance of a failed offline game launch, because you cant decrypt cfg.dat, because you will have non-matching machine hashes due to the different route.
 
