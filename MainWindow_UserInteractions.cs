@@ -167,7 +167,7 @@ namespace Project_127
 		/// <param name="e"></param>
 		private void btn_Upgrade_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
 		{
-			LaunchAlternative.SocialClubUpgrade(0,"manually clicked");
+			// LaunchAlternative.SocialClubUpgrade(0,"manually clicked");
 		}
 
 
@@ -202,7 +202,7 @@ namespace Project_127
         /// <param name="e"></param>
         private void btn_Downgrade_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
-			LaunchAlternative.SocialClubDowngrade(0, "manually clicked");
+			// LaunchAlternative.SocialClubDowngrade(0, "manually clicked");
         }
 
 
@@ -227,7 +227,7 @@ namespace Project_127
 
 		private void btn_SaveFiles_MouseRightButtonDown(object sender, RoutedEventArgs e)
 		{
-            new HelperClasses.SocialClubDebug().Show();
+            //new HelperClasses.SocialClubDebug().Show();
             //HelperClasses.FileHandling.AddToDebug("Manual GetState, currState:");
             //HelperClasses.FileHandling.AddToDebug("");
         }

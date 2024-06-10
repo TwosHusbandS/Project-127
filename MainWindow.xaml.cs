@@ -6,23 +6,14 @@ Actual code (partially closed source) which authentificates, handles entitlement
 @Special For, who also did a lot of RE'ing, testing, brainstorming, information gathering and 2nd level support, being available to bounce ideas off of.
 Main / Actual Project 1.27 Client by "@thS"
 A number of other members of the team, including but not limited to @MoMo, @Diamondo25, @S.M.G, @gogsi, @Antibones, @Unemployed, @Aperture, @luky, @CrynesSs, @Daniel Kinau contributed to this project one way or another, and my thanks go out to them.
-Version: 1.2.6.4
-
-
-- Check:
-- - DownloadManager
-- - IsDowngradedGTA Method
-- - CommandLine Method
-- - FileCheck on LaunchAlternative.Launch
-- - LastLaunchedVersion clean up stuff. Also savefiles
-- - sclbeta cleanup
-
+Version: 1.3.0.0
 
 - fix stuck gta5exe
 - - so everything works
 - - issues:
 - - - multiple popups for the same file. Since one is deleting and one is hardlinking which then calls deleting because deleting failed...
 - - - popups for each single file
+- check AddToDebug
 
 
 
@@ -347,7 +338,13 @@ namespace Project_127
 
 				if (rtrn[0] == Convert.ToByte(true))
 				{
-					this.Close();
+                    try
+                    {
+                        this.Close();
+                        MainWindow.MW.Close();
+                    }
+                    catch { }
+                    Application.Current.Shutdown();
 					Environment.Exit(0);
 					return;
 				}

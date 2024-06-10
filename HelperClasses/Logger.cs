@@ -321,21 +321,6 @@ namespace Project_127.HelperClasses
 				}
 				catch { }
 
-
-
-				//string tmpPath = @"C:\Users\ingow\Downloads\TMP\";
-				//string URLBASE = @"http://gtav.anushk.net";
-				//string[] AllFiles = HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(tmpPath);
-				//foreach (string File in AllFiles )
-				//{
-				//	DebugMessage.Add("");
-				//	DebugMessage.Add(File.Replace(tmpPath,""));
-				//	DebugMessage.Add(File.Replace(tmpPath, URLBASE).Replace(@"\","/"));
-				//	DebugMessage.Add(HelperClasses.FileHandling.GetHashFromFile(File));
-				//	DebugMessage.Add("");
-				//}
-
-
                 for (int i = 0; i <= DebugMessage.Count - 1; i++)
 				{
 					DebugMessage[i] = HelperClasses.FileHandling.AnonymizeUser(DebugMessage[i]);

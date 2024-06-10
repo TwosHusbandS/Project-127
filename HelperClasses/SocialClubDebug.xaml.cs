@@ -22,25 +22,6 @@ namespace Project_127.HelperClasses
     {
         public DispatcherTimer dp = new DispatcherTimer();
 
-        /*
-
-        AAAAAAAAAAAAAAAAAAAAAAA
-        AAAAAAAAAAAAAAAAAAAAAAA
-        AAAAAAAAAAAAAAAAAAAAAAA
-
-        READ ME
-
-        Added this window,
-        added 25ms sleep on KillAllSocialClubProcesses, to actually close the file handle...
-        changed steamSCL back to GTAVLauncher.exe in CommandLineArgs (REVERT !!!!!!)
-        removed SocialClubUpgrade in GTAClosed(). Just commented out, if comment in remove popup
-
-        added a lot of AddToDebug
-        added rightclick upgrade/downgrade buttons to upgrade/downgrade social club
-        added rightclick savefilehandler to debugprint addtodebug and new window
-
-        */
-
 
         public SocialClubDebug()
         {
@@ -123,7 +104,7 @@ namespace Project_127.HelperClasses
         {
             MainWindow.MW.Dispatcher.Invoke(() =>
             {
-                LaunchAlternative.SocialClubDowngrade(0,"Manually clicked from debug window");
+                LaunchAlternative.SocialClubDowngrade(0);
             });
             UpdateGUIDispatcherTimer();
         }
@@ -132,7 +113,7 @@ namespace Project_127.HelperClasses
         {
             MainWindow.MW.Dispatcher.Invoke(() =>
             {
-                LaunchAlternative.SocialClubUpgrade(0, "Manually clicked from debug window");
+                LaunchAlternative.SocialClubUpgrade(0);
 
             });
             UpdateGUIDispatcherTimer();

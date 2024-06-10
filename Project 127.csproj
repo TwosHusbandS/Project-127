@@ -437,12 +437,14 @@
     </EmbeddedResource>
     <None Include="app.manifest" />
     <Resource Include="HelperClasses\llpatch.json" />
+    <None Include="Installer\Info\SocialClubLaunch.md" />
     <None Include="Installer\Info\AdvancedPatcher.md" />
     <None Include="Installer\Info\AdvancedNotefile.md" />
     <None Include="Installer\Info\Changelogs\V_1_2_2_1_Changelog.md" />
     <None Include="Installer\Info\Changelogs\V_1_2_2_0_Changelog.md" />
     <None Include="Installer\Info\Changelogs\V_1_2_2_2_Changelog.md" />
     <None Include="Installer\Info\Changelogs\V_1_2_2_3_Changelog.md" />
+    <None Include="Installer\Info\Changelogs\V_1_3_0_0_Changelog.md" />
     <None Include="Installer\Info\Changelogs\V_1_2_5_0_Changelog.md" />
     <None Include="Installer\Info\Changelogs\V_1_2_4_0_Changelog.md" />
     <None Include="Installer\Info\Changelogs\V_1_2_3_0_Changelog.md" />

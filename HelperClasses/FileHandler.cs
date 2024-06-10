@@ -468,14 +468,6 @@ string lpSymlinkFileName, string lpTargetFileName, SymbolicLink dwFlags);
 		/// <param name="pLineContent"></param>
 		public static void AddToDebug(string pLineContent)
 		{
-			if (pLineContent == "")
-			{
-				AddToDebug("\t\t\tSCL State (Installation): " + LaunchAlternative.Get_SCL_InstallationState(LaunchAlternative.SCL_SC_Installation).ToString());
-				AddToDebug("\t\t\tSCL State (Backup): " + LaunchAlternative.Get_SCL_InstallationState(LaunchAlternative.SCL_SC_TEMP_BACKUP).ToString());
-				AddToDebug("\t\t\tSCL State (Downgraded Cache): " + LaunchAlternative.Get_SCL_InstallationState(LaunchAlternative.SCL_SC_DOWNGRADED_CACHE).ToString());
-				return;
-			}
-
 			pLineContent = "[" + DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss") + "] (" + DateTime.Now.Millisecond.ToString("0000") + ") - " + pLineContent;
 
 			// Should be quicker than checking if File exists, and also checks for more erros

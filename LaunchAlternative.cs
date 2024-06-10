@@ -21,8 +21,6 @@ namespace Project_127
 		/// </summary>
 		public static void Launch()
 		{
-            HelperClasses.FileHandling.AddToDebug("Launching Alternative...");
-
 			// Should be playgtav or gtavlauncher, is this for debug purpuses
 			string filePath = "";
 			
@@ -61,7 +59,7 @@ namespace Project_127
 					HelperClasses.Logger.Log("SCL - Launch, cfg.dat IS up to date.");
 				}
 
-				if (SocialClubDowngrade(0, "we are launching downgraded SCL"))
+				if (SocialClubDowngrade(0))
 				{
 					LauncherLogic.UpgradeSocialClubAfterGame = true;
 
@@ -82,7 +80,6 @@ namespace Project_127
 
                 Globals.PopupError("Cant find the required File ('GTAVLauncher.exe')\ninside your GTA Installation.\nSomething went wrong");
 			}
-            HelperClasses.FileHandling.AddToDebug("Launching Alternative...DONE");
         }
 
 
@@ -291,25 +288,12 @@ namespace Project_127
 		/// </summary>
 		/// <param name="msDelay"></param>
 		/// <returns></returns>
-		public static bool SocialClubDowngrade(int msDelay = 0, string LogReason = "")
+		public static bool SocialClubDowngrade(int msDelay = 0)
 		{
-            if (LogReason != "")
-            {
-                HelperClasses.FileHandling.AddToDebug("-----");
-                HelperClasses.FileHandling.AddToDebug("-----");
-                HelperClasses.FileHandling.AddToDebug("-----");
-                HelperClasses.FileHandling.AddToDebug("Downgrading Social Club bc. " + LogReason + ", giving curr State, ...");
-                HelperClasses.FileHandling.AddToDebug("");
-            }
-
             // exit if we are already correct
             if (Get_SCL_InstallationState(SCL_SC_Installation) == SCL_InstallationStates.Downgraded)
 			{
 				HelperClasses.Logger.Log("SCL - SC Looks Downgraded already. No need to Downgrade.", 1);
-                if (LogReason != "")
-                {
-                    HelperClasses.FileHandling.AddToDebug("Downgrading Social Club bc. " + LogReason + ", giving curr State, ...Downgraded already, no change");
-                }
                 return true;
 			}
 
@@ -325,10 +309,6 @@ namespace Project_127
 			// Makes sure we have a downgraded SC in C:Program Files, copies it from $P127_FILES
 			if (!SCL_MakeSureDowngradedCacheIsCorrect())
 			{
-                if (LogReason != "")
-                {
-                    HelperClasses.FileHandling.AddToDebug("Downgrading Social Club bc. " + LogReason + ", giving curr State, ...fucked Cache");
-                }
                 return false;
 			}
 
@@ -383,15 +363,6 @@ namespace Project_127
 			}
 
 
-            if (LogReason != "")
-            {
-                HelperClasses.FileHandling.AddToDebug("Downgrading Social Club bc. " + LogReason + ", giving curr State, ...DONE");
-                HelperClasses.FileHandling.AddToDebug("");
-                HelperClasses.FileHandling.AddToDebug("-----");
-                HelperClasses.FileHandling.AddToDebug("-----");
-                HelperClasses.FileHandling.AddToDebug("-----");
-            }
-
             // returning based on actual folder contents, not what we think should be in there.
             if (Get_SCL_InstallationState(SCL_SC_Installation) == SCL_InstallationStates.Downgraded)
 			{
@@ -410,7 +381,7 @@ namespace Project_127
 		public static void SocialClubReset(int msDelay = 0)
 		{
 			HelperClasses.Logger.Log("SCL - RESETTING SC FOLDERS. DELETING EVERYTHING CUSTOM", 1);
-			SocialClubUpgrade(msDelay, "we are preparing a SocialClubReset");
+			SocialClubUpgrade(msDelay);
 			HelperClasses.FileHandling.DeleteFolder(SCL_SC_Installation);
 			HelperClasses.FileHandling.DeleteFolder(SCL_SC_DOWNGRADED_CACHE);
 			HelperClasses.FileHandling.DeleteFolder(SCL_SC_TEMP_BACKUP);
@@ -422,24 +393,11 @@ namespace Project_127
 		/// </summary>
 		/// <param name="msDelay"></param>
 		/// <returns></returns>
-		public static bool SocialClubUpgrade(int msDelay = 0, string LogReason = "")
+		public static bool SocialClubUpgrade(int msDelay = 0)
 		{
-			if (LogReason != "")
-			{
-                HelperClasses.FileHandling.AddToDebug("-----");
-                HelperClasses.FileHandling.AddToDebug("-----");
-                HelperClasses.FileHandling.AddToDebug("-----");
-                HelperClasses.FileHandling.AddToDebug("Upgrading Social Club bc. " + LogReason + ", giving curr State, ...");
-				HelperClasses.FileHandling.AddToDebug("");
-			}
-
 			if (Get_SCL_InstallationState(SCL_SC_Installation) == SCL_InstallationStates.Upgraded)
 			{
 				HelperClasses.Logger.Log("SCL - SC Looks Upgraded already. No need to Upgrade.", 1);
-                if (LogReason != "")
-                {
-                    HelperClasses.FileHandling.AddToDebug("Upgrading Social Club bc. " + LogReason + ", giving curr State, ...Upgraded already, no change");
-                }
                 return true;
 			}
 
@@ -531,15 +489,6 @@ namespace Project_127
 			{
 				new PopupProgress(PopupProgress.ProgressTypes.FileOperation, "Upgrading Social Club", tmp).ShowDialog();
 			}
-
-            if (LogReason != "")
-            {
-                HelperClasses.FileHandling.AddToDebug("Upgrading Social Club bc. " + LogReason + ", giving curr State, ...DONE");
-                HelperClasses.FileHandling.AddToDebug("");
-                HelperClasses.FileHandling.AddToDebug("-----");
-                HelperClasses.FileHandling.AddToDebug("-----");
-                HelperClasses.FileHandling.AddToDebug("-----");
-            }
 
             // returning based on actual folder contents, not what we think should be in there.
             if (Get_SCL_InstallationState(SCL_SC_Installation) != SCL_InstallationStates.Trash)

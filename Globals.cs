@@ -237,7 +237,7 @@ namespace Project_127
 		/// <summary>
 		/// Property of other Buildinfo. Will be in the top message of logs
 		/// </summary>
-		public static string BuildInfo = "1.2.6.6 - SCL BETA, Build 2 - Stormraid fix";
+		public static string BuildInfo = "1.2.6.7 - SCL BETA, Build 1";
 
 
 		/// <summary>
@@ -716,6 +716,9 @@ namespace Project_127
 						HelperClasses.FileHandling.deleteFile(LauncherLogic.DowngradeAlternativeFilePathSteam127.TrimEnd('\\') + @"\" + OldFile);
 						HelperClasses.FileHandling.deleteFile(LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\" + OldFile);
                     }
+
+					Settings.DMMode = "default";
+					Settings.P127Mode = "default";
                 }
 
                 Settings.LastLaunchedVersion = Globals.ProjectVersion;
@@ -743,7 +746,7 @@ namespace Project_127
 
 			// reading Social club install dir from registry
 			LaunchAlternative.SetUpSocialClubRegistryThing();
-			LaunchAlternative.SocialClubUpgrade(0, "we are on P127 startup");
+			LaunchAlternative.SocialClubUpgrade(0);
 
 			MainWindow.DMO = Auth.DynamicMTLOffsets.GetMTLOffsets();
 
@@ -2061,7 +2064,6 @@ namespace Project_127
             {
                 new Popup(Popup.PopupWindowTypes.PopupOkError, pMsg).ShowDialog();
             });
-            HelperClasses.FileHandling.AddToDebug("Throwing Error");
         }
 
 

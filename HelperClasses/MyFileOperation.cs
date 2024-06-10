@@ -111,14 +111,13 @@ namespace Project_127.HelperClasses
                 catch (Exception ex)
                 { 
                     HelperClasses.FileHandling.AddToDebug("Failed");
-
                     pMyFileOperation.RetryAttempts -= 1;
 
 					Task.Delay(pMyFileOperation.MSDelayBetweenAttempts).GetAwaiter().GetResult();
 					HelperClasses.Logger.Log("Retrying file operation...");
                 }
             }
-            HelperClasses.FileHandling.AddToDebug("Hail Mary Execute");
+            HelperClasses.Logger.Log("Hail Mary Execute");
 
             Execute(pMyFileOperation);
         }

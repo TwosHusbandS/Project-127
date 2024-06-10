@@ -90,7 +90,7 @@ namespace Project_127.Auth
 
 		public static async void MTLAuth(bool LaunchGameAfter = false, bool SilentMode = false)
 		{
-			LaunchAlternative.SocialClubUpgrade(0, "we are trying to MTL Auth");
+			LaunchAlternative.SocialClubUpgrade(0);
 
 			Auth.ROSIntegration.AuthErrorMessageThrownAlready = false;
 			Auth.ROSIntegration.FinishedMTL = false;

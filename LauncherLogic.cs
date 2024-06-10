@@ -152,7 +152,7 @@ namespace Project_127
                 //yn.ShowDialog();
                 //if (yn.DialogResult == true)
                 //{
-                    LaunchAlternative.SocialClubUpgrade(2000, "we are on GTAClosed and UpgradeSocialClubAfterGame");
+                    LaunchAlternative.SocialClubUpgrade(2000);
                 //}
                 UpgradeSocialClubAfterGame = false;
             }
@@ -959,7 +959,6 @@ namespace Project_127
         public static async void Launch()
         {
                 HelperClasses.Logger.Log("Trying to Launch the game.");
-                HelperClasses.FileHandling.AddToDebug("Launching game...");    
 
                 // If Upgraded
                 if (LauncherLogic.InstallationState == InstallationStates.Upgraded)
@@ -967,7 +966,7 @@ namespace Project_127
                     HelperClasses.Logger.Log("Installation State Upgraded Detected.", 1);
 
                     // Checking if we can Upgrade Social Club before launchin Upgraded
-                    LaunchAlternative.SocialClubUpgrade(0,"we are Launching upgraded Game and need it");
+                    LaunchAlternative.SocialClubUpgrade(0);
 
                     // If Steam
                     if (Settings.Retailer == Settings.Retailers.Steam)
@@ -1097,7 +1096,6 @@ namespace Project_127
 
 
                 HelperClasses.Logger.Log("Game should be launched");
-                HelperClasses.FileHandling.AddToDebug("Launching game...DONE");
 
 
             PostLaunchEvents();
