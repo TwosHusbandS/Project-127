@@ -372,7 +372,7 @@ namespace Project_127.MySettings
 
 					if (value.ToLower() != "default")
 					{
-						MainWindow.MW.btn_lbl_Mode.Content = "Curr P127 Mode: '" + value.ToLower() + "'";
+						MainWindow.MW.btn_lbl_Mode.Content = "Curr P127 Mode: '" + value + "'";
 						MainWindow.MW.btn_lbl_Mode.Visibility = Visibility.Visible;
 					}
 					else
@@ -383,8 +383,9 @@ namespace Project_127.MySettings
 					MainWindow.MW.btn_lbl_Mode.ToolTip = MainWindow.MW.btn_lbl_Mode.Content;
 
 					Globals.CheckForUpdate();
-				}
-			}
+                    MainWindow.DMO = Auth.DynamicMTLOffsets.GetMTLOffsets();
+                }
+            }
 		}
 
 
@@ -1191,7 +1192,7 @@ namespace Project_127.MySettings
 			}
 			catch
 			{
-				new Popups.Popup(Popup.PopupWindowTypes.PopupOkError, "Something broke while getting the Hotkeys from the Settings.\n Try Resetting Settings").ShowDialog();
+                Globals.PopupError("Something broke while getting the Hotkeys from the Settings.\n Try Resetting Settings");
 				myReturnKey = Keys.None;
 			}
 			return myReturnKey;
@@ -1892,7 +1893,7 @@ namespace Project_127.MySettings
 			}
 			catch
 			{
-				new Popups.Popup(Popup.PopupWindowTypes.PopupOkError, "Something broke while getting the a Number from the Settings.\n Try Resetting Settings").ShowDialog();
+                Globals.PopupError("Something broke while getting the a Number from the Settings.\n Try Resetting Settings");
 			}
 			return rtrn;
 		}
@@ -1938,7 +1939,7 @@ namespace Project_127.MySettings
 			}
 			catch
 			{
-				new Popups.Popup(Popup.PopupWindowTypes.PopupOkError, "Something broke while getting the Colors from the Settings.\n Try Resetting Settings").ShowDialog();
+                Globals.PopupError("Something broke while getting the Colors from the Settings.\n Try Resetting Settings");
 			}
 			return rtrn;
 		}

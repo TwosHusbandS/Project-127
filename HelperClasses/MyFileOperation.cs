@@ -9,6 +9,8 @@ using Project_127.HelperClasses;
 using Project_127.Overlay;
 using Project_127.Popups;
 using Project_127.MySettings;
+using System.Windows.Interop;
+using System.Diagnostics;
 
 namespace Project_127.HelperClasses
 {
@@ -69,15 +71,20 @@ namespace Project_127.HelperClasses
 		/// </summary>
 		public int LogLevel { get; private set; }
 
-		/// <summary>
-		/// Constructor, creates one MyFileOperation Object
-		/// </summary>
-		/// <param name="pFileOperation"></param>
-		/// <param name="pOriginalFile"></param>
-		/// <param name="pNewFile"></param>
-		/// <param name="pLog"></param>
-		/// <param name="pLogLevel"></param>
-		public MyFileOperation(FileOperations pFileOperation, string pOriginalFile, string pNewFile, string pLog, int pLogLevel, FileOrFolder pFileOrFolder = FileOrFolder.File)
+		public int RetryAttempts { get; private set; }
+
+        public int MSDelayBetweenAttempts { get; private set; }
+
+
+        /// <summary>
+        /// Constructor, creates one MyFileOperation Object
+        /// </summary>
+        /// <param name="pFileOperation"></param>
+        /// <param name="pOriginalFile"></param>
+        /// <param name="pNewFile"></param>
+        /// <param name="pLog"></param>
+        /// <param name="pLogLevel"></param>
+        public MyFileOperation(FileOperations pFileOperation, string pOriginalFile, string pNewFile, string pLog, int pLogLevel, FileOrFolder pFileOrFolder = FileOrFolder.File, int pRetryAttempts = 10, int pMSDelayBetweenAttempts = 100)
 		{
 			FileOperation = pFileOperation;
 			OriginalFile = pOriginalFile;
@@ -85,13 +92,78 @@ namespace Project_127.HelperClasses
 			Log = pLog;
 			LogLevel = pLogLevel;
 			MyFileOrFolder = pFileOrFolder;
+			RetryAttempts = pRetryAttempts;
+			MSDelayBetweenAttempts = pMSDelayBetweenAttempts;
 		}
 
-		/// <summary>
-		/// Executes one MyFileOperationObject
-		/// </summary>
-		/// <param name="pMyFileOperation"></param>
-		public static void Execute(MyFileOperation pMyFileOperation)
+
+		public static void ExecuteWrapper(MyFileOperation pMyFileOperation, ref bool WarnedUserOfStuckProcessAlready, ref bool CancelFileOperations)
+		{
+			Logger.Log("Executing wrapper for File Operation");
+            Logger.Log(pMyFileOperation.FileOperation.ToString() + " | " + pMyFileOperation.OriginalFile + " | " + pMyFileOperation.NewFile);
+            while (pMyFileOperation.RetryAttempts > 0)
+			{
+                try
+                {
+                    Logger.Log("RetryAttempts left: " + pMyFileOperation.RetryAttempts.ToString());
+                    Execute(pMyFileOperation, true);
+					return;
+                }
+                catch (Exception ex)
+                {
+                    Logger.Log("Executing wrapper for File Operation Failed");
+                    pMyFileOperation.RetryAttempts -= 1;
+
+					Task.Delay(pMyFileOperation.MSDelayBetweenAttempts).GetAwaiter().GetResult();
+                }
+            }
+            Logger.Log("Executing wrapper, all retry attemps done");
+
+            if (LauncherLogic.GameState == LauncherLogic.GameStates.Running)
+			{
+                Logger.Log("Executing wrapper, game still running");
+
+                if (!WarnedUserOfStuckProcessAlready)
+				{
+					WarnedUserOfStuckProcessAlready = true;
+
+                    Logger.Log("Executing wrapper, asking user if he wants a restart");
+
+                    string msg = "File Operation failed.\n\nThis is most likely due to a 'stuck' GTA V Process,\nas we have tried to kill it, waited, and its still running.\n\nThe only fix is to FULLY restart your computer.\nIf you manually do it, you have to hold SHIFT while clicking the restart button.\nDo you want P127 to restart your PC for you?";
+					if (Globals.PopupYesNo(msg) == true)
+					{
+                        Logger.Log("Executing wrapper, user wants a restart");
+                        Globals.PopupOk("Close all Files and Programs that need saving,\nand hit 'ok' to restart your PC.");
+                        Logger.Log("Executing wrapper, goodnight");
+                        Process.Start("shutdown.exe", "/r /f /t 0");
+                    }
+                    else
+					{
+                        Logger.Log("Executing wrapper, user does NOT want a restart. Asking if we should cancel file operation");
+
+                        if (Globals.PopupYesNo("Do you want to cancel the current FileOperations?\n\nNot canceling is fine, will just spamm you with errors.") == true)
+                        {
+                            Logger.Log("Executing wrapper, canceling file operation");
+                            CancelFileOperations = true;
+							return;
+					    }
+						else
+						{
+                            Logger.Log("Executing wrapper, NOT canceling file operation");
+                        }
+                    }
+                }
+            }
+
+            HelperClasses.Logger.Log("Hail Mary Execute");
+            Execute(pMyFileOperation);
+        }
+
+        /// <summary>
+        /// Executes one MyFileOperationObject
+        /// </summary>
+        /// <param name="pMyFileOperation"></param>
+        public static void Execute(MyFileOperation pMyFileOperation, bool pRaiseException = false)
 		{
 			switch (pMyFileOperation.FileOperation)
 			{
@@ -100,11 +172,11 @@ namespace Project_127.HelperClasses
 						HelperClasses.Logger.Log(pMyFileOperation.Log, pMyFileOperation.LogLevel);
 						if (pMyFileOperation.MyFileOrFolder == FileOrFolder.File)
 						{
-							HelperClasses.FileHandling.copyFile(pMyFileOperation.OriginalFile, pMyFileOperation.NewFile);
+							HelperClasses.FileHandling.copyFile(pMyFileOperation.OriginalFile, pMyFileOperation.NewFile, RaiseException: pRaiseException);
 						}
 						else
 						{
-							HelperClasses.FileHandling.CopyPath(pMyFileOperation.OriginalFile, pMyFileOperation.NewFile);
+							HelperClasses.FileHandling.CopyPath(pMyFileOperation.OriginalFile, pMyFileOperation.NewFile, RaiseException: pRaiseException);
 						}
 						break;
 					}
@@ -113,11 +185,11 @@ namespace Project_127.HelperClasses
 						HelperClasses.Logger.Log(pMyFileOperation.Log, pMyFileOperation.LogLevel);
 						if (pMyFileOperation.MyFileOrFolder == FileOrFolder.File)
 						{
-							HelperClasses.FileHandling.createFile(pMyFileOperation.OriginalFile);
+							HelperClasses.FileHandling.createFile(pMyFileOperation.OriginalFile, RaiseException: pRaiseException);
 						}
 						else
 						{
-							HelperClasses.FileHandling.createPath(pMyFileOperation.OriginalFile);
+							HelperClasses.FileHandling.createPath(pMyFileOperation.OriginalFile, RaiseException: pRaiseException);
 						}
 						break;
 					}
@@ -126,11 +198,11 @@ namespace Project_127.HelperClasses
 						HelperClasses.Logger.Log(pMyFileOperation.Log, pMyFileOperation.LogLevel);
 						if (pMyFileOperation.MyFileOrFolder == FileOrFolder.File)
 						{
-							HelperClasses.FileHandling.moveFile(pMyFileOperation.OriginalFile, pMyFileOperation.NewFile);
+							HelperClasses.FileHandling.moveFile(pMyFileOperation.OriginalFile, pMyFileOperation.NewFile, RaiseException: pRaiseException);
 						}
 						else
 						{
-							HelperClasses.FileHandling.movePath(pMyFileOperation.OriginalFile, pMyFileOperation.NewFile);
+							HelperClasses.FileHandling.movePath(pMyFileOperation.OriginalFile, pMyFileOperation.NewFile, RaiseException: pRaiseException);
 						}
 						break;
 					}
@@ -143,23 +215,23 @@ namespace Project_127.HelperClasses
 								if (Settings.EnableCopyFilesInsteadOfHardlinking)
 								{
 									HelperClasses.Logger.Log(Globals.ReplaceCaseInsensitive(pMyFileOperation.Log, "hardlink", "Copy"), pMyFileOperation.LogLevel);
-									HelperClasses.FileHandling.copyFile(pMyFileOperation.OriginalFile, pMyFileOperation.NewFile);
+									HelperClasses.FileHandling.copyFile(pMyFileOperation.OriginalFile, pMyFileOperation.NewFile, RaiseException: pRaiseException);
 								}
 								else
 								{
 									HelperClasses.Logger.Log(pMyFileOperation.Log, pMyFileOperation.LogLevel);
-									HelperClasses.FileHandling.HardLinkFiles(pMyFileOperation.NewFile, pMyFileOperation.OriginalFile);
+									HelperClasses.FileHandling.HardLinkFiles(pMyFileOperation.NewFile, pMyFileOperation.OriginalFile, RaiseException: pRaiseException);
 								}
 							}
 							else
 							{
 								HelperClasses.Logger.Log(pMyFileOperation.Log, pMyFileOperation.LogLevel);
-								HelperClasses.FileHandling.HardLinkFiles(pMyFileOperation.NewFile, pMyFileOperation.OriginalFile);
+								HelperClasses.FileHandling.HardLinkFiles(pMyFileOperation.NewFile, pMyFileOperation.OriginalFile, RaiseException: pRaiseException);
 							}
 						}
 						else
 						{
-							new Popup(Popup.PopupWindowTypes.PopupOkError, "No idea what happened here...MyFileOperation Execute Hardlink Folder");
+                            Globals.PopupError("No idea what happened here...MyFileOperation Execute Hardlink Folder");
 						}
 						break;
 					}
@@ -168,11 +240,11 @@ namespace Project_127.HelperClasses
 						HelperClasses.Logger.Log(pMyFileOperation.Log, pMyFileOperation.LogLevel);
 						if (pMyFileOperation.MyFileOrFolder == FileOrFolder.File)
 						{
-							HelperClasses.FileHandling.deleteFile(pMyFileOperation.OriginalFile);
+							HelperClasses.FileHandling.deleteFile(pMyFileOperation.OriginalFile, RaiseException: pRaiseException);
 						}
 						else
 						{
-							HelperClasses.FileHandling.DeleteFolder(pMyFileOperation.OriginalFile);
+							HelperClasses.FileHandling.DeleteFolder(pMyFileOperation.OriginalFile, RaiseException: pRaiseException);
 						}
 						break;
 					}

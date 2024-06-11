@@ -361,10 +361,7 @@ namespace Project_127.Auth
 				if (!Auth.ROSIntegration.AuthErrorMessageThrownAlready)
 				{
 					Auth.ROSIntegration.AuthErrorMessageThrownAlready = true;
-					MainWindow.MW.Dispatcher.Invoke(() =>
-					{
-						new Popups.Popup(Popups.Popup.PopupWindowTypes.PopupOkError, res.text).ShowDialog(); // Show Error
-					});
+                    Globals.PopupError(res.text); // Show Error
 				}
 			}
 
@@ -396,10 +393,7 @@ namespace Project_127.Auth
 				if (!Auth.ROSIntegration.AuthErrorMessageThrownAlready)
 				{
 					Auth.ROSIntegration.AuthErrorMessageThrownAlready = true;
-					MainWindow.MW.Dispatcher.Invoke(() =>
-					{
-						new Popups.Popup(Popups.Popup.PopupWindowTypes.PopupOkError, res.text).ShowDialog(); // Show Error
-					});
+					Globals.PopupError(res.text); // Show Error
 				}
 			}
 			return false;

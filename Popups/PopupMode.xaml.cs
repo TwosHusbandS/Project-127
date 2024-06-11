@@ -58,10 +58,10 @@ namespace Project_127.Popups
 		/// <param name="e"></param>
 		private void btn_SetNew_Click(object sender, RoutedEventArgs e)
 		{
-			string mode1 = tb_Main.Text.ToLower();
-			string mode2 = tb_Main_DM.Text.ToLower();
-			string URL1 = "https://raw.githubusercontent.com/TwosHusbandS/Project-127/" + mode1 + "/Installer/Update.xml";
-			string URL2 = "https://raw.githubusercontent.com/TwosHusbandS/Project-127/" + mode2 + "/Installer/DownloadManager.xml";
+			string mode1 = tb_Main.Text;
+			string mode2 = tb_Main_DM.Text;
+			string URL1 = "https://raw.githubusercontent.com/TwosHusbandS/Project-127/" + mode1.ToLower() + "/Installer/Update.xml";
+			string URL2 = "https://raw.githubusercontent.com/TwosHusbandS/Project-127/" + mode2.ToLower() + "/Installer/DownloadManager.xml";
 			if ((mode1 != "default" && String.IsNullOrWhiteSpace(HelperClasses.FileHandling.GetStringFromURL(URL1, true))) ||
 				(mode2 != "default" && String.IsNullOrWhiteSpace(HelperClasses.FileHandling.GetStringFromURL(URL2, true))))
 			{
@@ -75,9 +75,10 @@ namespace Project_127.Popups
 			MySettings.Settings.P127Mode = mode1;
 			MySettings.Settings.DMMode = mode2;
 
-			Globals.CheckForUpdate();
+			// Globals.CheckForUpdate(); Gets checked on P127Mode setter
 			ComponentManager.MyRefreshStatic();
-			this.Close();
+
+            this.Close();
 		}
 
 		/// <summary>
@@ -141,7 +142,7 @@ namespace Project_127.Popups
 		/// <param name="e"></param>
 		private void tb_Main_TextChanged(object sender, TextChangedEventArgs e)
 		{
-			tb_Main.Text = tb_Main.Text.ToLower();
+			//tb_Main.Text = tb_Main.Text.ToLower();
 		}
 	}
 }

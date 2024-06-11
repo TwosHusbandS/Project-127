@@ -198,6 +198,9 @@
     <Compile Include="HelperClasses\BlurBackgroundBehaviour.cs" />
     <Compile Include="HelperClasses\IPCPipes.cs" />
     <Compile Include="HelperClasses\MissionIdentifiers.cs" />
+    <Compile Include="HelperClasses\SocialClubDebug.xaml.cs">
+      <DependentUpon>SocialClubDebug.xaml</DependentUpon>
+    </Compile>
     <Compile Include="HelperClasses\SpecialPatchHandler.cs" />
     <Compile Include="HelperClasses\WindowChangeListenerTwo.cs" />
     <Compile Include="MyColors.cs" />
@@ -305,6 +308,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="GTA_Page.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="HelperClasses\SocialClubDebug.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -430,12 +437,14 @@
     </EmbeddedResource>
     <None Include="app.manifest" />
     <Resource Include="HelperClasses\llpatch.json" />
+    <None Include="Installer\Info\SocialClubLaunch.md" />
     <None Include="Installer\Info\AdvancedPatcher.md" />
     <None Include="Installer\Info\AdvancedNotefile.md" />
     <None Include="Installer\Info\Changelogs\V_1_2_2_1_Changelog.md" />
     <None Include="Installer\Info\Changelogs\V_1_2_2_0_Changelog.md" />
     <None Include="Installer\Info\Changelogs\V_1_2_2_2_Changelog.md" />
     <None Include="Installer\Info\Changelogs\V_1_2_2_3_Changelog.md" />
+    <None Include="Installer\Info\Changelogs\V_1_3_0_0_Changelog.md" />
     <None Include="Installer\Info\Changelogs\V_1_2_5_0_Changelog.md" />
     <None Include="Installer\Info\Changelogs\V_1_2_4_0_Changelog.md" />
     <None Include="Installer\Info\Changelogs\V_1_2_3_0_Changelog.md" />

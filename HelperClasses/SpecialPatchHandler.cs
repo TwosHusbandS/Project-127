@@ -633,10 +633,7 @@ namespace Project_127.HelperClasses
 				HelperClasses.FileHandling.copyFile(source, target);
 				if (!HelperClasses.FileHandling.doesFileExist(target))
 				{
-					new Popups.Popup(
-					   Popups.Popup.PopupWindowTypes.PopupOkError,
-					   "Failed to copy scripthook. ASM patcher will not load"
-					   ).ShowDialog();
+                    Globals.PopupError("Failed to copy scripthook. ASM patcher will not load");
 				}
 			}
 

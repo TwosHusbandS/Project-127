@@ -6,7 +6,8 @@ Actual code (partially closed source) which authentificates, handles entitlement
 @Special For, who also did a lot of RE'ing, testing, brainstorming, information gathering and 2nd level support, being available to bounce ideas off of.
 Main / Actual Project 1.27 Client by "@thS"
 A number of other members of the team, including but not limited to @MoMo, @Diamondo25, @S.M.G, @gogsi, @Antibones, @Unemployed, @Aperture, @luky, @CrynesSs, @Daniel Kinau contributed to this project one way or another, and my thanks go out to them.
-Version: 1.2.6.3
+Version: 1.3.0.0
+
 
 Build Instructions:
 	Press CTRLF + F5, pray that nuget does its magic.
@@ -144,7 +145,7 @@ namespace Project_127
 			//If this ever gets changed, take a second look at regedit class and path(different for 32 and 64 bit OS)
 			if (Environment.Is64BitOperatingSystem == false)
 			{
-				(new Popup(Popup.PopupWindowTypes.PopupOkError, "32 Bit Operating System detected.\nGTA (afaik) does not run on 32 Bit at all.")).ShowDialog();
+                Globals.PopupError("32 Bit Operating System detected.\nGTA (afaik) does not run on 32 Bit at all.");
 				Environment.Exit(1);
 			}
 
@@ -201,7 +202,7 @@ namespace Project_127
 
 			if (Settings.P127Mode.ToLower() != "default")
 			{
-				MainWindow.MW.btn_lbl_Mode.Content = "Curr P127 Mode: '" + MySettings.Settings.P127Mode.ToLower() + "'";
+				MainWindow.MW.btn_lbl_Mode.Content = "Curr P127 Mode: '" + MySettings.Settings.P127Mode + "'";
 				MainWindow.MW.btn_lbl_Mode.Visibility = Visibility.Visible;
 			}
 			else
@@ -287,18 +288,36 @@ namespace Project_127
 			}
 		}
 
-		#endregion
-
-		// Window Events above
-
-		// AlreadyRunning, AdminRelauncher and DIspatcher Timer below
-
-		#region AlreadyRunning, Admin Relauncher, DispatcherTimer
-
 		/// <summary>
-		/// Gets called when another P127 instance is already running. 
+		/// Clears the history (mem leak) of the Frame thats used to display all Pages
 		/// </summary>
-		public void AlreadyRunning()
+		/// <param name="myFrame"></param>
+        public static void ClearHistory(System.Windows.Controls.Frame myFrame)
+        {
+            if (!myFrame.CanGoBack && !myFrame.CanGoForward)
+            {
+                return;
+            }
+
+            var entry = myFrame.RemoveBackEntry();
+            while (entry != null)
+            {
+                entry = myFrame.RemoveBackEntry();
+            }
+        }
+
+        #endregion
+
+        // Window Events above
+
+        // AlreadyRunning, AdminRelauncher and DIspatcher Timer below
+
+        #region AlreadyRunning, Admin Relauncher, DispatcherTimer
+
+        /// <summary>
+        /// Gets called when another P127 instance is already running. 
+        /// </summary>
+        public void AlreadyRunning()
 		{
 
 			try
@@ -311,7 +330,13 @@ namespace Project_127
 
 				if (rtrn[0] == Convert.ToByte(true))
 				{
-					this.Close();
+                    try
+                    {
+                        this.Close();
+                        MainWindow.MW.Close();
+                    }
+                    catch { }
+                    Application.Current.Shutdown();
 					Environment.Exit(0);
 					return;
 				}
@@ -644,7 +669,7 @@ namespace Project_127
 			}
 			catch (Exception e)
 			{
-				new Popup(Popup.PopupWindowTypes.PopupOkError, "Error Settings Background Image.\n" + e.ToString()).ShowDialog();
+                Globals.PopupError("Error Settings Background Image.\n" + e.ToString());
 
 				string URL_Path = @"Artwork\bg_default.png";
 				Uri resourceUri = new Uri(URL_Path, UriKind.Relative);

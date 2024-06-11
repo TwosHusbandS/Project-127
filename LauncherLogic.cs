@@ -95,6 +95,8 @@ namespace Project_127
 
             SetGTAProcessPriority();
 
+            GetGTACommandLineArgs();
+
             // Start Jumpscript
             if (Settings.EnableAutoStartJumpScript)
             {
@@ -146,7 +148,12 @@ namespace Project_127
 
             if (UpgradeSocialClubAfterGame)
             {
-                LaunchAlternative.SocialClubDowngrade(7500);
+                //Popup yn = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Upgrade SocialClub after game exited.");
+                //yn.ShowDialog();
+                //if (yn.DialogResult == true)
+                //{
+                    LaunchAlternative.SocialClubUpgrade(2000);
+                //}
                 UpgradeSocialClubAfterGame = false;
             }
         }
@@ -623,7 +630,7 @@ namespace Project_127
             if (HelperClasses.FileHandling.GetSubFolders(LauncherLogic.DebloatVPath).Length < 12)
             {
                 HelperClasses.Logger.Log("DebloatV check inside Upgrade hit. Throwing User popup and canceling update.", 1);
-                (new Popup(Popup.PopupWindowTypes.PopupOkError, "Your GTA Folder is missing some critical files.\nYou cannot play updated GTA.\n\nYou probably ran DebloatV at some point.\n\nRepair your game via Steam / Rockstar / Epic.")).ShowDialog();
+                Globals.PopupError("Your GTA Folder is missing some critical files.\nYou cannot play updated GTA.\n\nYou probably ran DebloatV at some point.\n\nRepair your game via Steam / Rockstar / Epic.");
                 return;
             }
 
@@ -638,7 +645,7 @@ namespace Project_127
             else
             {
                 HelperClasses.Logger.Log("Installation State Broken.", 1);
-                new Popup(Popup.PopupWindowTypes.PopupOkError, "Installation State is broken. I suggest trying to repair.\nWill try to Upgrade anyways.").ShowDialog();
+                Globals.PopupError("Installation State is broken. I suggest trying to repair.\nWill try to Upgrade anyways.");
             }
 
             IgnoreNewFilesWhileUpgradeDowngradeLogic = IgnoreNewFiles;
@@ -647,14 +654,14 @@ namespace Project_127
             {
                 if (!ComponentManager.CheckIfRequiredComponentsAreInstalled(true))
                 {
-                    new Popups.Popup(Popups.Popup.PopupWindowTypes.PopupOkError, "Error:\nCant do that because of because of missing Components").ShowDialog();
+                    Globals.PopupError("Error:\nCant do that because of because of missing Components");
                     return;
                 }
 
 
                 if (!(HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(DowngradeFilePath).Length >= 2 && HelperClasses.BuildVersionTable.IsDowngradedGTA(DowngradeFilePath)))
                 {
-                    new Popup(Popup.PopupWindowTypes.PopupOk, "Found no DowngradeFiles. Please make sure the required components are installed.").ShowDialog();
+                    Globals.PopupError("Found no DowngradeFiles. Please make sure the required components are installed.");
                     return;
                 }
             }
@@ -697,7 +704,7 @@ namespace Project_127
                 string GTA5Exe = MyDowngradePath.TrimEnd('\\') + @"\gta5.exe";
                 string Updaterpf = MyDowngradePath.TrimEnd('\\') + @"\update\update.rpf";
                 string launcher1 = MyDowngradePath.TrimEnd('\\') + @"\playgtav.exe";
-                string launcher2 = MyDowngradePath.TrimEnd('\\') + @"\gtastub.exe";
+                string launcher2 = MyDowngradePath.TrimEnd('\\') + @"\gtavlauncher.exe";
                 if (HelperClasses.BuildVersionTable.GetGameVersionOfBuild(HelperClasses.FileHandling.GetVersionFromFile(GTA5Exe)) < new Version(1, 30))
                 {
                     if (HelperClasses.FileHandling.GetSizeOfFile(Updaterpf) > 1000)
@@ -747,7 +754,7 @@ namespace Project_127
             else
             {
                 HelperClasses.Logger.Log("Installation State Broken.", 1);
-                new Popup(Popup.PopupWindowTypes.PopupOkError, "Installation State is broken. I suggest trying to repair.\nWill try to Downgrade anyways.").ShowDialog();
+                Globals.PopupError("Installation State is broken. I suggest trying to repair.\nWill try to Downgrade anyways.");
             }
 
             IgnoreNewFilesWhileUpgradeDowngradeLogic = IgnoreNewFiles;
@@ -870,7 +877,7 @@ namespace Project_127
             }
 
 
-            if (Settings.EnableOverWriteGTACommandLineArgs)
+            if (Settings.EnableOverWriteGTACommandLineArgs && InstallationState == InstallationStates.Downgraded)
             {
                 tmp += Settings.OverWriteGTACommandLineArgs;
             }
@@ -887,13 +894,30 @@ namespace Project_127
             }
             else
             {
-                if (LaunchWay == LaunchWays.DragonEmu)
+                if (InstallationState == InstallationStates.Downgraded)
                 {
-                    tmp = tmp.Replace("gta_p127.exe", "playgtav.exe");
+                    if (LaunchWay == LaunchWays.DragonEmu)
+                    {
+                        tmp = tmp.Replace("gta_p127.exe", "playgtav.exe");
+                    }
+                    
+                    else if (LaunchWay == LaunchWays.SocialClubLaunch)
+                    {
+                        if (Settings.Retailer == Settings.Retailers.Steam)
+                        {
+                            tmp = tmp.Replace("gta_p127.exe", "playgtav.exe -scOfflineOnly");
+                        }
+                        else if (Settings.Retailer == Settings.Retailers.Rockstar)
+                        {
+                            tmp = tmp.Replace("gta_p127.exe", "gtavlauncher.exe -scOfflineOnly");
+                        }
+                    }
                 }
                 else
                 {
-                    tmp = tmp.Replace("gta_p127.exe", "gtastub.exe");
+                    // So this is called when upgraded
+                    // means upgraded rockstar
+                    tmp = tmp.Replace("gta_p127.exe", "gtavlauncher.exe");
                 }
             }
 
@@ -934,9 +958,6 @@ namespace Project_127
         /// </summary>
         public static async void Launch()
         {
-            await Task.Run(async () =>
-            {
-
                 HelperClasses.Logger.Log("Trying to Launch the game.");
 
                 // If Upgraded
@@ -945,7 +966,7 @@ namespace Project_127
                     HelperClasses.Logger.Log("Installation State Upgraded Detected.", 1);
 
                     // Checking if we can Upgrade Social Club before launchin Upgraded
-                    LaunchAlternative.SocialClubUpgrade();
+                    LaunchAlternative.SocialClubUpgrade(0);
 
                     // If Steam
                     if (Settings.Retailer == Settings.Retailers.Steam)
@@ -1009,7 +1030,7 @@ namespace Project_127
                             catch (Exception ex)
                             {
                                 HelperClasses.Logger.Log("Unable to connect to the server. Probably best to restart P127.");
-                                new Popups.Popup(Popups.Popup.PopupWindowTypes.PopupOkError, "Unable to connect to the server. Probably best to restart P127.").ShowDialog();
+                                Globals.PopupError("Unable to connect to the server. Probably best to restart P127.");
                                 return;
                             }
                         }
@@ -1067,7 +1088,7 @@ namespace Project_127
                     HelperClasses.Logger.Log("    Size of update.rpf in GTAV Installation Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\update\update.rpf"));
                     HelperClasses.Logger.Log("    Size of update.rpf in Downgrade Files Folder: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\update\update.rpf"));
 
-                    new Popup(Popup.PopupWindowTypes.PopupOkError, "Installation State is broken for some reason. Try to repair.");
+                    Globals.PopupError("Installation State is broken for some reason. Try to repair.");
                     return;
                 }
 
@@ -1076,9 +1097,8 @@ namespace Project_127
 
                 HelperClasses.Logger.Log("Game should be launched");
 
-                PostLaunchEvents();
 
-            });
+            PostLaunchEvents();
         }
 
 
@@ -1499,6 +1519,7 @@ namespace Project_127
             HelperClasses.Logger.Log("Waited a good bit");
 
             SetGTAProcessPriority();
+            GetGTACommandLineArgs();
 
             // If we DONT only auto start when downgraded OR if we are downgraded
             if (Settings.EnableOnlyAutoStartProgramsWhenDowngraded == false || LauncherLogic.InstallationState == InstallationStates.Downgraded)
@@ -1642,6 +1663,24 @@ namespace Project_127
             }
         }
 
+
+        public static void GetGTACommandLineArgs()
+        {
+            HelperClasses.Logger.Log("Trying to get GTAV Process Commandline");
+            try
+            {
+                Process[] processes = HelperClasses.ProcessHandler.GetProcesses("gta5");
+                if (processes.Length > 0)
+                {
+                    string tmp = processes[0].GetCommandLine();
+                    HelperClasses.Logger.Log("Found launched GTAV with Commandline: '" + tmp + "'");
+                }
+            }
+            catch
+            {
+                HelperClasses.Logger.Log("Failed to get GTA5 Process CommandLine...");
+            }
+        }
 
 
         #endregion

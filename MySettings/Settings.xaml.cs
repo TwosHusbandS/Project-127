@@ -305,7 +305,7 @@ namespace Project_127.MySettings
 					if (!ChangeZIPExtractionPath(GTAVInstallationPathUserChoice))
 					{
 						HelperClasses.Logger.Log("Changing ZIP Path did not work. Probably non existing Path or same Path as before (from Settings.SetGTAVPathManually())");
-						new Popup(Popup.PopupWindowTypes.PopupOkError, "Changing ZIP Path did not work. Probably non existing Path or same Path as before\nIf you read this message to anyone, tell them youre in Settings.SetGTAVPathManually()");
+                        Globals.PopupError("Changing ZIP Path did not work. Probably non existing Path or same Path as before\nIf you read this message to anyone, tell them youre in Settings.SetGTAVPathManually()");
 					}
 				}
 				else
@@ -459,7 +459,7 @@ namespace Project_127.MySettings
 						else
 						{
 							HelperClasses.Logger.Log("Changing ZIP Path did not work. Probably non existing Path or same Path as before");
-							new Popup(Popup.PopupWindowTypes.PopupOk, "Changing ZIP Path did not work. Probably non existing Path or same Path as before");
+							Globals.PopupError("Changing ZIP Path did not work. Probably non existing Path or same Path as before");
 						}
 					}
 					break;
@@ -1456,7 +1456,9 @@ namespace Project_127.MySettings
 		{
 			//Globals.CheckForBigThree();
 			//Globals.CheckForZipUpdate();
+
 			Globals.CheckForUpdate();
+			MainWindow.DMO = Auth.DynamicMTLOffsets.GetMTLOffsets();
 			Globals.SetUpDownloadManager();
 			new Popup(Popup.PopupWindowTypes.PopupOk, "Update check complete. All updates handled.\nIf you want to re-download certain files,\nyou can do so in the 'Component Manager'").ShowDialog();
 		}
@@ -1662,15 +1664,16 @@ namespace Project_127.MySettings
 		private void btn_CreateBackup_Click(object sender, RoutedEventArgs e)
 		{
 			LauncherLogic.CreateBackup();
-		}
+            RefreshGUI();
+        }
 
 
-		/// <summary>
-		/// Use Backup Click
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
-		private void btn_UseBackup_Click(object sender, RoutedEventArgs e)
+        /// <summary>
+        /// Use Backup Click
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btn_UseBackup_Click(object sender, RoutedEventArgs e)
 		{
 			LauncherLogic.UseBackup();
 		}
@@ -1855,6 +1858,7 @@ namespace Project_127.MySettings
 				if (HelperClasses.FileHandling.doesPathExist(newPath))
 				{
 					LauncherLogic.CreateBackup(tb_Set_BackupName.Text);
+					RefreshGUI();
 				}
 				else
 				{
@@ -2169,7 +2173,13 @@ namespace Project_127.MySettings
 
 		}
 
-		private void tb_OverWriteGTACommandLineArgs_LostFocus(object sender, RoutedEventArgs e)
+
+        private void tb_OverWriteGTACommandLineArgs_TextChanged(object sender, TextChangedEventArgs e)
+        {
+			tb_OverWriteGTACommandLineArgs_LostFocus(null, null);
+        }
+
+        private void tb_OverWriteGTACommandLineArgs_LostFocus(object sender, RoutedEventArgs e)
 		{
 			string txt = tb_OverWriteGTACommandLineArgs.Text;
 			if (String.IsNullOrWhiteSpace(txt)) { txt = LauncherLogic.GetStartCommandLineArgs(); }
@@ -2317,5 +2327,5 @@ namespace Project_127.MySettings
 			}
 		}
 
-	} // End of Class
+    } // End of Class
 } // End of Namespace 

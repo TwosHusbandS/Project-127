@@ -2,6 +2,7 @@
 using Project_127.Popups;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -167,19 +168,16 @@ namespace Project_127
 		/// <param name="e"></param>
 		private void btn_Upgrade_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
 		{
-			if (e.ClickCount == 3)
-			{
-				new Popups.Popup(Popups.Popup.PopupWindowTypes.PopupOk, "Shoutouts to @crapideot for being awesome and a\ngreat friend and Helper during Project 1.27 :)\nHope you have a great day buddy").ShowDialog();
-			}
-		}
+            // LaunchAlternative.SocialClubUpgrade(0,"manually clicked");
+        }
 
 
-		/// <summary>
-		/// Method which gets called when the Downgrade Button is clicked
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
-		private void btn_Downgrade_Click(object sender, RoutedEventArgs e)
+        /// <summary>
+        /// Method which gets called when the Downgrade Button is clicked
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btn_Downgrade_Click(object sender, RoutedEventArgs e)
 		{
 			// Confirmation Popup
 			Popup conf = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Do you want to Downgrade?");
@@ -198,12 +196,23 @@ namespace Project_127
 		}
 
 
-		/// <summary>
-		/// Method which gets called when the SaveFileHandler Button is clicked
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
-		private void btn_SaveFiles_Click(object sender, RoutedEventArgs e)
+        /// <summary>
+        /// Shoutouts to crapideot
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btn_Downgrade_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+        {
+			// LaunchAlternative.SocialClubDowngrade(0, "manually clicked");
+        }
+
+
+        /// <summary>
+        /// Method which gets called when the SaveFileHandler Button is clicked
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btn_SaveFiles_Click(object sender, RoutedEventArgs e)
 		{
 			if (Globals.PageState == Globals.PageStates.SaveFileHandler)
 			{
@@ -213,10 +222,18 @@ namespace Project_127
 			{
 				Globals.PageState = Globals.PageStates.SaveFileHandler;
 			}
-		}
+
+        }
 
 
-		private void btn_NoteOverlay_Click(object sender, RoutedEventArgs e)
+		private void btn_SaveFiles_MouseRightButtonDown(object sender, RoutedEventArgs e)
+		{
+            //new HelperClasses.SocialClubDebug().Show();
+            //HelperClasses.FileHandling.AddToDebug("Manual GetState, currState:");
+            //HelperClasses.FileHandling.AddToDebug("");
+        }
+
+        private void btn_NoteOverlay_Click(object sender, RoutedEventArgs e)
 		{
 			if (Globals.PageState == Globals.PageStates.NoteOverlay)
 			{
