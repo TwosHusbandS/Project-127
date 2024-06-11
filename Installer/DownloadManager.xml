@@ -233,12 +233,11 @@
 		</folder>
 
 		<file name="bink2w64.dll" linked="true" subassembly="EMU_BASE_SUBASSEMBLY"/>
-		<file name="x64a.rpf" linked="true" subassembly="127_BASE_SUBASSEMBLY"/>
+		<file name="x64a.rpf" linked="true" subassembly="124_BASE_SUBASSEMBLY"/>
 
 		<requires>
 			<subassembly target="124_BASE_SUBASSEMBLY"/>
 			<subassembly target="EMU_BASE_SUBASSEMBLY"/>
-			<subassembly target="MISC_FILES"/>
 		</requires>
 	</subassembly>
     
@@ -284,9 +283,10 @@
         <mirror>http://gtav.anushk.net/ADDITIONAL_SAVEFILES.zip</mirror>
     </subassembly>-->
 
-    <subassembly name="ADDITIONAL_SAVEFILES" type="zip" version="1.3.0.0">
+  <subassembly name="ADDITIONAL_SAVEFILES" type="zip" version="1.3.0.0">
     <hash>437465F88E8856A32431C097B549982E</hash>
     <mirror>http://gtav.anushk.net/ADDITIONAL_SAVEFILES_V_1_3.zip</mirror>
   </subassembly>
-  
+
+
 </targets>
