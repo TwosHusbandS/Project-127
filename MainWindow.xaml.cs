@@ -8,14 +8,6 @@ Main / Actual Project 1.27 Client by "@thS"
 A number of other members of the team, including but not limited to @MoMo, @Diamondo25, @S.M.G, @gogsi, @Antibones, @Unemployed, @Aperture, @luky, @CrynesSs, @Daniel Kinau contributed to this project one way or another, and my thanks go out to them.
 Version: 1.3.0.0
 
-- fix stuck gta5exe
-- - so everything works
-- - issues:
-- - - multiple popups for the same file. Since one is deleting and one is hardlinking which then calls deleting because deleting failed...
-- - - popups for each single file
-- check AddToDebug
-
-
 
 Build Instructions:
 	Press CTRLF + F5, pray that nuget does its magic.

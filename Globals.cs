@@ -237,7 +237,7 @@ namespace Project_127
 		/// <summary>
 		/// Property of other Buildinfo. Will be in the top message of logs
 		/// </summary>
-		public static string BuildInfo = "1.2.6.7 - SCL BETA, Build 1";
+		public static string BuildInfo = "1.3.0.0 - Build 1";
 
 
 		/// <summary>
