@@ -333,7 +333,7 @@ namespace Project_127.MySettings
                 }
                 catch
                 {
-                    new Popups.Popup(Popups.Popup.PopupWindowTypes.PopupOkError, "No Retailer selected.\nSelect a Retailer in the Dropdown next to this button").ShowDialog();
+                    Globals.PopupError("No Retailer selected.\nSelect a Retailer in the Dropdown next to this button");
                 }
             }
             else if (MyTag == "RecommendedHardlinking")

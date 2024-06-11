@@ -5,16 +5,16 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:Project_127"
       mc:Ignorable="d" 
-      d:DesignHeight="540" d:DesignWidth="700"
+      d:DesignHeight="600" d:DesignWidth="700"
       Title="Overlay_Preview">
     <Grid>
 
         <Rectangle x:Name="Rect_Something" Width="2" Height="9999" Fill="{x:Static local:MyColors.MW_HamburgerMenuSeperatorBrush}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,0,0"/>
 
-        <Label x:Name="lbl_Header" Style="{StaticResource lbl}" Margin="0,25,0,0" HorizontalAlignment="Center" FontSize="24" Height="60" VerticalAlignment="Top" Content="Overview - Preview (1/10)"/>
-        <Button Style="{StaticResource btn}" VerticalAlignment="Top" Margin="100,90,0,0" x:Name="btn_RightArrow" MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave" ToolTip="Next GTA V Screenshot" Height="40" Width="40" Click="btn_RightArrow_Click"/>
-        <Button Style="{StaticResource btn}" VerticalAlignment="Top" Margin="0,90,0,0" x:Name="btn_PlayPause" MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave" ToolTip="Pause Slideshow" Height="40" Width="40" Click="btn_PlayPause_Click"/>
-        <Button Style="{StaticResource btn}" VerticalAlignment="Top" Margin="0,90,100,0" x:Name="btn_LeftArrow" MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave" ToolTip="Prev GTA V Screenshot" Height="40" Width="40" Click="btn_LeftArrow_Click"/>
+        <Label x:Name="lbl_Header" Style="{StaticResource lbl}" Margin="0,50,0,0" HorizontalAlignment="Center" FontSize="24" Height="60" VerticalAlignment="Top" Content="Overview - Preview (1/10)"/>
+        <Button Style="{StaticResource btn}" VerticalAlignment="Top" Margin="100,110,0,0" x:Name="btn_RightArrow" MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave" ToolTip="Next GTA V Screenshot" Height="40" Width="40" Click="btn_RightArrow_Click"/>
+        <Button Style="{StaticResource btn}" VerticalAlignment="Top" Margin="0,110,0,0" x:Name="btn_PlayPause" MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave" ToolTip="Pause Slideshow" Height="40" Width="40" Click="btn_PlayPause_Click"/>
+        <Button Style="{StaticResource btn}" VerticalAlignment="Top" Margin="0,110,100,0" x:Name="btn_LeftArrow" MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave" ToolTip="Prev GTA V Screenshot" Height="40" Width="40" Click="btn_LeftArrow_Click"/>
 
         <Border x:Name="brdr_Preview" Height="360" Width="640" Margin="30" VerticalAlignment="Bottom" BorderBrush="{x:Static local:MyColors.MW_BorderBrush}" BorderThickness="{x:Static local:MyColors.MW_BorderThickness}">
             <Grid>

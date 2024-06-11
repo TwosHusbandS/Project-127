@@ -131,7 +131,7 @@ namespace Project_127.HelperClasses.Keyboard
 			// start keyboard listener when not already running
 			KeyboardListener.Start();
 			KeyboardListener.DontStop = true;
-
+			KeyboardListener.Stop(); // this sets WantToStop to true
 
 			// Checking if time has passed yet or we have a keypress
 			int MsPassed = 0;

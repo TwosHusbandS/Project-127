@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <item>
-  <version>1.2.6.3</version>
-  <url>https://github.com/TwosHusbandS/Project-127/raw/master/Installer/Project_127_Installer_V_1_2_6_3.exe</url>
+  <version>1.3.0.0</version>
+  <url>https://github.com/TwosHusbandS/Project-127/raw/master/Installer/Project_127_Installer_V_1_3_0_0.exe</url>
   <buildversiontable>
 	  1.0.323.0;1.24:
 	  1.0.350.0;1.25:
@@ -34,10 +34,10 @@
 	  1.0.2189.0;1.52:
 	  1.0.2215.0;1.53:
 	  1.0.2245.0;1.54:
-	  1.0.2372.0;1.5
-	  1.0.2545.0;1.5
-	  1.0.2612.1;1.5
-	  1.0.2628.2;1.6
+	  1.0.2372.0;1.57:
+	  1.0.2545.0;1.58:
+	  1.0.2612.1;1.59:
+	  1.0.2628.2;1.60:
 	  1.0.2699.0;1.61:
 	  1.0.2699.16;1.63:
 	  1.0.2802.0;1.64:
@@ -46,30 +46,10 @@
 	  1.0.2944.0;1.67:
 	  1.0.3028.0;1.67:
 	  1.0.3095.0;1.68:
+	  1.0.3179.0;1.68:
   </buildversiontable>
   <announcement></announcement>
-  <specialbuildname></specialbuildname>
   <dragonsreadme>https://github.com/jaredtb</dragonsreadme>
   <demovideo>https://www.youtube.com/watch?v=dQw4w9WgXcQ&t=PLACEHOLDER</demovideo>
-  <zip>https://gtav.anushk.net/Project_127_Files_V15_Big.zip</zip>
-  <bigzipmd5>9906c3bd2304e1372332d1ddd4151fd6</bigzipmd5>
-  <zipversion>15</zipversion>
   <hidevideo>True</hidevideo>
-  <comment>Backwards Compability</comment>
-  <comment2>dont THINK anything below here is actively used</comment2>
-  <tease>false</tease>
-  <authuser>https://raw.githubusercontent.com/TwosHusbandS/Project-127/master/Installer/AuthUser.txt</authuser>
-  <DLLinkG>https://github.com/TwosHusbandS/Project-127/releases/download/V_Final/file.g</DLLinkG>
-  <DLLinkGHash>5c706e27f1f204050450839f24e12c8a</DLLinkGHash>
-  <DLLinkU>https://github.com/TwosHusbandS/Project-127/releases/download/V_Final/file.u</DLLinkU>
-  <DLLinkUHash>1f2c8c0fd9f83d6ad82d9a0aa2567562</DLLinkUHash>
-  <DLLinkX>https://github.com/TwosHusbandS/Project-127/releases/download/V_Final/file.x</DLLinkX>
-  <DLLinkXHash>683610e269ba60c5fcc7a9f6d1a8bfd5</DLLinkXHash>
-  <zipmd5>29415241fe6869fb2085ed3933ef4c12</zipmd5>
-  <zip0>https://gtav.anushk.net/Project_127_Files_V14_Small.zip</zip0>
-  <zip1>https://anonfiles.com/naO8d1q2pd/Project_127_Files_V12_Small_zip</zip1>
-  <zip2>https://anonfiles.com/7eO3d0q3p4/Project_127_Files_V12_Small_zip</zip2>
-  <zip3>https://anonfiles.com/RfO4d8qcp6/Project_127_Files_V12_Small_zip</zip3>
-  <zip4>https://anonfiles.com/j0P5dfq1p7/Project_127_Files_V12_Small_zip</zip4>
-  <zip5>https://anonfiles.com/93P7d7q5pe/Project_127_Files_V12_Small_zip</zip5>
 </item>

@@ -735,18 +735,39 @@ namespace Project_127.HelperClasses
 			}
 			XPathDocument xml = null;
 
+           
 			if (!string.IsNullOrEmpty(xmls))
 			{
-				xml = new XPathDocument(new System.IO.StringReader(xmls));//);
-			}
+				try
+				{
+					xml = new XPathDocument(new System.IO.StringReader(xmls));//);
+				}
+				catch (Exception ex)
+				{
+                    // Bad XML
+
+                    Globals.PopupError("Download Manager got bad xml from github.");
+					HelperClasses.Logger.Log("ERROR: Download Manager got bad xml from github.", true, 0);
+					HelperClasses.Logger.Log("ERROR: " + ex.ToString(), true, 1);
+					HelperClasses.Logger.Log("ERROR: " + xmls, true, 1);
+					xml = new XPathDocument(new System.IO.StringReader("<targets/>"));
+                }
+            }
 			else
 			{
+				// Offline
+
 				// surpressing popup here, so user doesnt get 2 popups for 1 error.
 				// new Popup(Popup.PopupWindowTypes.PopupOkError, "Download Manager unable to fetch xml").ShowDialog();
 				xml = new XPathDocument(new System.IO.StringReader("<targets/>"));
-
 			}
-			nav = xml.CreateNavigator();
+			
+  
+
+
+
+
+            nav = xml.CreateNavigator();
 
 			var subassemblyEntries = nav.Select("/targets/subassembly");
 			availableSubassemblies = new Dictionary<string, XPathNavigator>();

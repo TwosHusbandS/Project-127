@@ -173,12 +173,23 @@ namespace Project_127.Popups
 				double count = MyFileOperations.Count;
 				double j = 0;
 
+				bool WarnedUserOfStuckProcessAlready = false;
+				bool CancelFileOperations = false;
+
 				HelperClasses.Logger.Log("Lets do some File Operation Stuff");
 				for (int i = 0; i <= MyFileOperations.Count - 1; i++)
 				{
-					MyFileOperation.Execute(MyFileOperations[i]);
+					if (!CancelFileOperations)
+					{
+						MyFileOperation.ExecuteWrapper(MyFileOperations[i], ref WarnedUserOfStuckProcessAlready, ref CancelFileOperations);
+					}
+					else
+					{
+                        HelperClasses.Logger.Log("File Operation Stuff canceled by user");
+						break;
+                    }
 
-					j++;
+                    j++;
 					this.Dispatcher.Invoke(() =>
 					{
 						myPB.Value = (int)(j / count * 100);
@@ -256,7 +267,7 @@ namespace Project_127.Popups
 				catch (Exception e)
 				{
 					HelperClasses.Logger.Log("TryCatch failed while extracting ZIP with progressbar." + e.ToString());
-					new Popup(Popup.PopupWindowTypes.PopupOkError, "trycatch failed while extracting zip with progressbar\n" + e.ToString());
+					Globals.PopupError("trycatch failed while extracting zip with progressbar\n" + e.ToString());
 				}
 			}
 

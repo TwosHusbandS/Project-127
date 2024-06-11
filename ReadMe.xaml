@@ -5,10 +5,10 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:Project_127"
       mc:Ignorable="d" 
-      d:DesignHeight="540" d:DesignWidth="625"      
+      d:DesignHeight="600" d:DesignWidth="720"      
       Background="{x:Static local:MyColors.App_Submenu_Background}"
       Title="ReadMe">
-    <Grid Height="540" Margin="15,0,15,0">
+    <Grid Height="600" Margin="15,0,15,0">
         <Grid.RowDefinitions>
             <RowDefinition Height="70"/>
             <RowDefinition Height="*"/>

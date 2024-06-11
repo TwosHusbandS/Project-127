@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:Project_127"
         xmlns:control = "clr-namespace:Project_127" 
         mc:Ignorable="d"
-        Title="Settings" d:DesignHeight="570" d:DesignWidth="619"
+        Title="Settings" d:DesignHeight="600" d:DesignWidth="720"
         Background="{x:Static local:MyColors.App_Submenu_Background}">
     <Grid x:Name="Grid_Outer" Margin="15,0,15,0">
         <Grid.RowDefinitions>
@@ -185,7 +185,7 @@
                             <Label Grid.Row="3" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Run downgraded GTA as Admin" ToolTip="Runs downgraded GTA as Admin. You will also need to launch Livesplit, OBS etc. as Admin."/>
                             <Button Grid.Row="3" Grid.Column="1" x:Name="btn_cb_Set_EnableRunAsAdmin"  Style="{StaticResource btn_cb}" Click="btn_cb_Click" MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave" ToolTip="Runs downgraded GTA as Admin. You will also need to launch Livesplit, OBS etc. as Admin."/>
 
-                            <Button Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" x:Name="btn_GTACommandLineArgs"  Style="{StaticResource btn_SE_Path}" Click="btn_GTACommandLineArgs_Click" Content="Additional GTA CommandLine Options"/>
+                            <Button Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" x:Name="btn_GTACommandLineArgs"  Style="{StaticResource btn_SE_Path}" Click="btn_GTACommandLineArgs_Click" Content="Additional Downgraded GTA CommandLine Options"/>
                             <Popup x:Name="PopupGTACommandLineArgs"  PlacementTarget="{Binding ElementName=btn_GTACommandLineArgs}" Placement="MousePoint" Width="400" Height="150"  Margin="0,0,0,0" StaysOpen="False" Closed="PopupGTACommandLineArgs_Closed" Opened="PopupGTACommandLineArgs_Opened">
                                 <Border BorderBrush="{x:Static local:MyColors.MyColorWhite}" BorderThickness="2" Background="{x:Static local:MyColors.MyColorOffBlack}" MouseLeave="Border_MouseLeave">
                                     <Grid>
@@ -208,7 +208,7 @@
                                         <Label Grid.Row="1" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Overwrite GTA Command Line Args" ToolTip="This will disable P127 Language Select and remove the automatically applied Core Fix.\nIF THE LINES BELOW ARE SHIT, YOUR GAME MIGHT NOT START YOU MUPPET"/>
                                         <Button Grid.Row="1" Grid.Column="1" x:Name="btn_cb_Set_EnableOverWriteGTACommandLineArgs"  Style="{StaticResource btn_cb}" Click="btn_cb_Click" MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
 
-                                        <TextBox x:Name="tb_OverWriteGTACommandLineArgs" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource tb}" LostFocus="tb_OverWriteGTACommandLineArgs_LostFocus"/>
+                                        <TextBox x:Name="tb_OverWriteGTACommandLineArgs" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource tb}" TextChanged="tb_OverWriteGTACommandLineArgs_TextChanged" LostFocus="tb_OverWriteGTACommandLineArgs_LostFocus"/>
                                         <Rectangle x:Name="Rect_HideOptions_CommandLineArg" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Fill="{x:Static local:MyColors.MyColorOffWhite85}" ToolTip="Enable Checkbox above to unlock."/>
                                     </Grid>
                                 </Border>
@@ -517,7 +517,7 @@
                             <Label Grid.Row="3" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="        Special Patcher Primary Toggle Key"/>
                             <Button Grid.Row="3" Grid.Column="1" x:Name="btn_Set_Special_Patcher_Key"  Style="{StaticResource btn_SE_Path}" Click="btn_Set_Special_Patcher_Key_Click"/>
                             <Button Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource btn_SE_Path}" x:Name="btn_open_patch_dialog" Click="btn_open_patch_dialog_Click" Content="Setup Patches"/>
-                            <Button Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" x:Name="btn_Set_Special_Patcher_Add_llfix" Content="Load @Special For's taxi long-load patch" Style="{StaticResource btn_SE_Path}" Click="btn_Set_Special_Patcher_Add_llfix_Click"/>
+                            <Button Visibility="Hidden" Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" x:Name="btn_Set_Special_Patcher_Add_llfix" Content="Load @Special For's taxi long-load patch" Style="{StaticResource btn_SE_Path}" Click="btn_Set_Special_Patcher_Add_llfix_Click"/>
                             
 
 

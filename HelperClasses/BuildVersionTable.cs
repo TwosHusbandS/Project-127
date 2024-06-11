@@ -39,7 +39,7 @@ namespace Project_127.HelperClasses
 		/// <summary>
 		/// Static List of all BuildVersionGameVersion Objects
 		/// </summary>
-		static List<BuildVersionTable> MyBuildVersionTable = new List<BuildVersionTable>();
+		static List<BuildVersionTable> MyBuildVersionTables = new List<BuildVersionTable>();
 
 		/// <summary>
 		/// Constructor of class. Adds it to the static list above.
@@ -51,79 +51,121 @@ namespace Project_127.HelperClasses
 			MyBuildVersion = new Version(pMyBuildVersion);
 			MyGameVersion = new Version(pMyGameVersion);
 
-			MyBuildVersionTable.Add(this);
+			//MyBuildVersionTables.Add(this);
 		}
 
-		/// <summary>
-		/// Reading in the Information from Github Update.xml. Needs to be called so this calss is able to do stuff.
-		/// </summary>
-		public static void ReadFromGithub(string xml = null)
-        {
-            if (xml is null) // actually needs null check and not nullOrEmpty
+
+		public static void Init(string online_xml = null)
+		{
+            MyBuildVersionTables.Clear();
+
+			List<BuildVersionTable> Local = GetHardcodedOnes();
+			List<BuildVersionTable> Github = GetFromGithub(online_xml);
+
+
+			if (Github.Count > 5)
 			{
-                xml = Globals.XML_AutoUpdate;
-			}
-
-
-			MyBuildVersionTable.Clear();
-
-			string uglyVersions = FileHandling.GetXMLTagContent(xml, "buildversiontable");
-
-			foreach (string OnePair in GetStringListFromString(uglyVersions, ':'))
-			{
-				List<string> OnePairList = GetStringListFromString(OnePair, ';');
-				if (OnePairList.Count == 2)
+                if (Github[Github.Count - 1].MyBuildVersion > Local[Local.Count - 1].MyBuildVersion)
 				{
-					new BuildVersionTable(OnePairList[0], OnePairList[1]);
+                    MyBuildVersionTables = Github;
+                }
+				else
+				{
+                    MyBuildVersionTables = Local;
+                }
+            }
+            else
+			{
+                MyBuildVersionTables = Local;
+			}
+        }
+
+        public static List<BuildVersionTable> GetHardcodedOnes()
+		{
+			List<BuildVersionTable> tmp = new List<BuildVersionTable>
+            {
+                new BuildVersionTable("1.0.323.0", "1.24"),
+                new BuildVersionTable("1.0.350.0", "1.25"),
+                new BuildVersionTable("1.0.350.1", "1.26"),
+                new BuildVersionTable("1.0.350.3", "1.27"),
+                new BuildVersionTable("1.0.393.0", "1.28"),
+                new BuildVersionTable("1.0.463.0", "1.29"),
+                new BuildVersionTable("1.0.505.0", "1.30"),
+                new BuildVersionTable("1.0.573.0", "1.31"),
+                new BuildVersionTable("1.0.617.0", "1.32"),
+                new BuildVersionTable("1.0.678.0", "1.33"),
+                new BuildVersionTable("1.0.757.0", "1.34"),
+                new BuildVersionTable("1.0.791.0", "1.35"),
+                new BuildVersionTable("1.0.877.0", "1.36"),
+                new BuildVersionTable("1.0.944.0", "1.37"),
+                new BuildVersionTable("1.0.1011.0", "1.38"),
+                new BuildVersionTable("1.0.1032.0", "1.39"),
+                new BuildVersionTable("1.0.1103.0", "1.40"),
+                new BuildVersionTable("1.0.1180.0", "1.41"),
+                new BuildVersionTable("1.0.1290.0", "1.42"),
+                new BuildVersionTable("1.0.1365.0", "1.43"),
+                new BuildVersionTable("1.0.1493.0", "1.44"),
+                new BuildVersionTable("1.0.1604.0", "1.46"),
+                new BuildVersionTable("1.0.1734.0", "1.47"),
+                new BuildVersionTable("1.0.1737.0", "1.48"),
+                new BuildVersionTable("1.0.1868.0", "1.50"),
+                new BuildVersionTable("1.0.2060.0", "1.51"),
+                new BuildVersionTable("1.0.2060.1", "1.52"),
+                new BuildVersionTable("1.0.2189.0", "1.52"),
+                new BuildVersionTable("1.0.2215.0", "1.53"),
+                new BuildVersionTable("1.0.2245.0", "1.54"),
+                new BuildVersionTable("1.0.2372.0", "1.57"),
+                new BuildVersionTable("1.0.2545.0", "1.58"),
+                new BuildVersionTable("1.0.2612.1", "1.59"),
+                new BuildVersionTable("1.0.2628.2", "1.60"),
+                new BuildVersionTable("1.0.2699.0", "1.61"),
+                new BuildVersionTable("1.0.2699.16", "1.63"),
+                new BuildVersionTable("1.0.2802.0", "1.64"),
+                new BuildVersionTable("1.0.2824.0", "1.66"),
+                new BuildVersionTable("1.0.2845.0", "1.66"),
+                new BuildVersionTable("1.0.2944.0", "1.67"),
+                new BuildVersionTable("1.0.3028.0", "1.67"),
+                new BuildVersionTable("1.0.3095.0", "1.68"),
+                new BuildVersionTable("1.0.3179.0", "1.68")
+            };
+
+			return tmp;
+        }
+
+
+		public static List<BuildVersionTable> GetFromGithub(string xml = null)
+		{
+			List<BuildVersionTable> tmp = new List<BuildVersionTable>();
+
+			try
+			{
+				if (xml is null) // actually needs null check and not nullOrEmpty
+				{
+				    xml = Globals.XML_AutoUpdate;
+				}
+
+				string uglyVersions = FileHandling.GetXMLTagContent(xml, "buildversiontable");
+
+				foreach (string OnePair in GetStringListFromString(uglyVersions, ':'))
+				{
+				    List<string> OnePairList = GetStringListFromString(OnePair, ';');
+				    if (OnePairList.Count == 2)
+				    {
+				        tmp.Add(new BuildVersionTable(OnePairList[0], OnePairList[1]));
+				    }
 				}
 			}
-
-			if (MyBuildVersionTable.Count < 2)
+			catch (Exception ex)
 			{
-				new BuildVersionTable("1.0.323.0", "1.24");
-				new BuildVersionTable("1.0.350.0", "1.25");
-				new BuildVersionTable("1.0.350.1", "1.26");
-				new BuildVersionTable("1.0.350.3", "1.27");
-				new BuildVersionTable("1.0.393.0", "1.28");
-				new BuildVersionTable("1.0.463.0", "1.29");
-				new BuildVersionTable("1.0.505.0", "1.30");
-				new BuildVersionTable("1.0.573.0", "1.31");
-				new BuildVersionTable("1.0.617.0", "1.32");
-				new BuildVersionTable("1.0.678.0", "1.33");
-				new BuildVersionTable("1.0.757.0", "1.34");
-				new BuildVersionTable("1.0.791.0", "1.35");
-				new BuildVersionTable("1.0.877.0", "1.36");
-				new BuildVersionTable("1.0.944.0", "1.37");
-				new BuildVersionTable("1.0.1011.0", "1.38");
-				new BuildVersionTable("1.0.1032.0", "1.39");
-				new BuildVersionTable("1.0.1103.0", "1.40");
-				new BuildVersionTable("1.0.1180.0", "1.41");
-				new BuildVersionTable("1.0.1290.0", "1.42");
-				new BuildVersionTable("1.0.1365.0", "1.43");
-				new BuildVersionTable("1.0.1493.0", "1.44");
-				new BuildVersionTable("1.0.1604.0", "1.46");
-				new BuildVersionTable("1.0.1734.0", "1.47");
-				new BuildVersionTable("1.0.1737.0", "1.48");
-				new BuildVersionTable("1.0.1868.0", "1.50");
-				new BuildVersionTable("1.0.2060.0", "1.51");
-				new BuildVersionTable("1.0.2060.1", "1.52");
-				new BuildVersionTable("1.0.2189.0", "1.52");
-				new BuildVersionTable("1.0.2215.0", "1.53");
-				new BuildVersionTable("1.0.2245.0", "1.54");
-				new BuildVersionTable("1.0.2372.0", "1.57");
-				new BuildVersionTable("1.0.2545.0", "1.58");
-				new BuildVersionTable("1.0.2612.1", "1.59");
-				new BuildVersionTable("1.0.2628.2", "1.60");
-				new BuildVersionTable("1.0.2699.0", "1.61");
-				new BuildVersionTable("1.0.2699.16", "1.63");
-				new BuildVersionTable("1.0.2802.0", "1.64");
-                new BuildVersionTable("1.0.2824.0", "1.66");
-                new BuildVersionTable("1.0.2845.0", "1.66");
-                new BuildVersionTable("1.0.2944.0", "1.67");
-                new BuildVersionTable("1.0.3028.0", "1.67");
-                new BuildVersionTable("1.0.3095.0", "1.68");
+				HelperClasses.Logger.Log("BuildVersionTable Conversion from Github failed. " + ex.ToString());
 			}
-		}
+			return tmp;
+        }
+
+
+
+
+
 
 
 		/// <summary>
@@ -172,15 +214,15 @@ namespace Project_127.HelperClasses
 		public static Version GetGameVersionOfBuild(Version pBuildVersion)
 		{
 			Version LastVersionIwasBiggerthan = new Version("1.0");
-			for (int i = 0; i <= MyBuildVersionTable.Count - 1; i++)
+			for (int i = 0; i <= MyBuildVersionTables.Count - 1; i++)
 			{
-				if (pBuildVersion >= MyBuildVersionTable[i].MyBuildVersion)
+				if (pBuildVersion >= MyBuildVersionTables[i].MyBuildVersion)
 				{
-					LastVersionIwasBiggerthan = MyBuildVersionTable[i].MyGameVersion;
+					LastVersionIwasBiggerthan = MyBuildVersionTables[i].MyGameVersion;
 
-					if (i == MyBuildVersionTable.Count - 1 && (pBuildVersion > MyBuildVersionTable[i].MyBuildVersion))
+					if (i == MyBuildVersionTables.Count - 1 && (pBuildVersion > MyBuildVersionTables[i].MyBuildVersion))
 					{
-						LastVersionIwasBiggerthan = MyBuildVersionTable[i].MyGameVersion;
+						LastVersionIwasBiggerthan = MyBuildVersionTables[i].MyGameVersion;
 					}
 				}
 			}
@@ -197,13 +239,13 @@ namespace Project_127.HelperClasses
 			string rtrn = "";
 
 			Version LastVersionIwasBiggerthan = new Version("1.0");
-			for (int i = 0; i <= MyBuildVersionTable.Count - 1; i++)
+			for (int i = 0; i <= MyBuildVersionTables.Count - 1; i++)
 			{
-				if (pBuildVersion >= MyBuildVersionTable[i].MyBuildVersion)
+				if (pBuildVersion >= MyBuildVersionTables[i].MyBuildVersion)
 				{
-					LastVersionIwasBiggerthan = MyBuildVersionTable[i].MyGameVersion;
+					LastVersionIwasBiggerthan = MyBuildVersionTables[i].MyGameVersion;
 
-					if (i == MyBuildVersionTable.Count - 1 && (pBuildVersion > MyBuildVersionTable[i].MyBuildVersion))
+					if (i == MyBuildVersionTables.Count - 1 && (pBuildVersion > MyBuildVersionTables[i].MyBuildVersion))
 					{
 						rtrn = ">";
 					}

@@ -66,14 +66,16 @@ namespace Project_127.SaveFileHandlerStuff
 			if (LauncherLogic.LaunchWay == LauncherLogic.LaunchWays.SocialClubLaunch)
 			{
 				MySaveFile.CurrGTASavesPath = MySaveFile.GTASavesPathSocialClub;
-				btn_GTA_Path_Change.Content = "P127 Emu SaveFilePath";
-			}
-			else
+				btn_GTA_Path_Change.Content = "Load Dr490n Launcher SaveFilePath";
+                btn_lbl_GTASavesHeader.Content = "GTA V Save Files (Social Club)";
+            }
+            else
 			{
 				MySaveFile.CurrGTASavesPath = MySaveFile.GTASavesPathDragonEmu;
-				btn_GTA_Path_Change.Content = "Social Club SaveFilePath";
-			}
-			this.sv_BackupFiles_Loading.Visibility = Visibility.Visible;
+				btn_GTA_Path_Change.Content = "Load Social Club SaveFilePath";
+                btn_lbl_GTASavesHeader.Content = "GTA V Save Files (Dr490n Launcher)";
+            }
+            this.sv_BackupFiles_Loading.Visibility = Visibility.Visible;
 			this.sv_BackupFiles.Visibility = Visibility.Hidden;
 			this.sv_GTAFiles_Loading.Visibility = Visibility.Visible;
 			this.sv_GTAFiles.Visibility = Visibility.Hidden;
@@ -1246,14 +1248,17 @@ namespace Project_127.SaveFileHandlerStuff
 			if (MySaveFile.CurrGTASavesPath == MySaveFile.GTASavesPathDragonEmu)
 			{
 				MySaveFile.CurrGTASavesPath = MySaveFile.GTASavesPathSocialClub;
-				btn_GTA_Path_Change.Content = "Load P127 Emu SaveFilePath";
-			}
+				btn_GTA_Path_Change.Content = "Load Dr490n Launcher SaveFilePath";
+				btn_lbl_GTASavesHeader.Content = "GTA V Save Files (Social Club)";
+
+            }
 			else
 			{
 				MySaveFile.CurrGTASavesPath = MySaveFile.GTASavesPathDragonEmu;
 				btn_GTA_Path_Change.Content = "Load Social Club SaveFilePath";
-			}
-			Refresh();
+                btn_lbl_GTASavesHeader.Content = "GTA V Save Files (Dr490n Launcher)";
+            }
+            Refresh();
 		}
 
 		private void btn_GTA_Path_Change_MouseRightButtonDown(object sender, MouseButtonEventArgs e)

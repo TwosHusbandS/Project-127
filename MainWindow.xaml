@@ -8,7 +8,7 @@
         mc:Ignorable="d"
         Closing="Window_Closing"
         Title="Project - 1.27"
-        Height="540" Width="1600"
+        Height="600" Width="1700"
         WindowStyle="None" 
         ResizeMode="CanMinimize"
         AllowsTransparency="False" 
@@ -22,7 +22,7 @@
                 <ColumnDefinition x:Name="cd_Main" Width="996"/>
                 <ColumnDefinition x:Name="cd_Preview" Width="700"/>
             </Grid.ColumnDefinitions>
-            <Grid x:Name="GridBackground" Height="536" Width="996" Grid.Column="0" HorizontalAlignment="Left">
+            <Grid x:Name="GridBackground" Height="596" Width="996" Grid.Column="0" HorizontalAlignment="Left">
                 
             </Grid>
 
@@ -34,7 +34,7 @@
                 </Rectangle>
             </Grid>
 
-            <Grid x:Name="Blur_All" Height="536" Width="996" Grid.Column="0" HorizontalAlignment="Left">
+            <Grid x:Name="Blur_All" Height="596" Width="996" Grid.Column="0" HorizontalAlignment="Left">
                 <Rectangle ClipToBounds="True">
                     <i:Interaction.Behaviors>
                         <local:BlurBackgroundBehavior BlurContainer="{Binding ElementName=GridBackground}"  />
@@ -42,9 +42,9 @@
                 </Rectangle>
             </Grid>
 
-            <Grid x:Name="GridMain" Height="536" Width="996" Grid.Column="0" HorizontalAlignment="Left" Background="Transparent">
+            <Grid x:Name="GridMain" Height="596" Width="996" Grid.Column="0" HorizontalAlignment="Left" Background="Transparent">
                 <Grid x:Name="GridHamburgerOuter" HorizontalAlignment="Left" Width="275" Background="{x:Static local:MyColors.MW_HamburgerMenuGridBackground}">
-                    <Grid x:Name="GridHamburgerInner" Margin="15, 120, 15, 30">
+                    <Grid x:Name="GridHamburgerInner" Margin="15, 120, 15, 10">
                         <Grid.RowDefinitions>
                             <RowDefinition/>
                             <RowDefinition/>
@@ -55,8 +55,8 @@
                             <RowDefinition/>
                         </Grid.RowDefinitions>
                         <Button x:Name="btn_Upgrade" Grid.Row="0" Style="{StaticResource btn_hamburgeritem}" Content="Upgrade" Click="btn_Upgrade_Click" MouseRightButtonDown="btn_Upgrade_MouseRightButtonDown"/>
-                        <Button x:Name="btn_Downgrade" Grid.Row="1" Style="{StaticResource btn_hamburgeritem}" Content="Downgrade" Click="btn_Downgrade_Click"/>
-                        <Button x:Name="btn_SaveFiles" Grid.Row="2" Style="{StaticResource btn_hamburgeritem}" BorderThickness="0" Content="Save File Handler" Click="btn_SaveFiles_Click" MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
+                        <Button x:Name="btn_Downgrade" Grid.Row="1" Style="{StaticResource btn_hamburgeritem}" Content="Downgrade" Click="btn_Downgrade_Click" MouseRightButtonDown="btn_Downgrade_MouseRightButtonDown"/>
+                        <Button x:Name="btn_SaveFiles" Grid.Row="2" Style="{StaticResource btn_hamburgeritem}" BorderThickness="0" Content="Save File Handler" Click="btn_SaveFiles_Click" MouseRightButtonDown="btn_SaveFiles_MouseRightButtonDown" MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
                         <Button x:Name="btn_NoteOverlay" Grid.Row="3" Style="{StaticResource btn_hamburgeritem}" BorderThickness="0" Content="NoteOverlay" Click="btn_NoteOverlay_Click" MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
                         <Button x:Name="btn_ComponentManager" Grid.Row="4" Style="{StaticResource btn_hamburgeritem}" BorderThickness="0" Content="Component Manager" Click="btn_ComponentManager_Click"  MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
                         <Button x:Name="btn_Settings" Grid.Row="5" Style="{StaticResource btn_hamburgeritem}" BorderThickness="0" Content="Settings" Click="btn_Settings_Click" MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
@@ -72,7 +72,7 @@
                     <Label x:Name="lbl_GTA" Style="{StaticResource lbl}" VerticalAlignment="Top" VerticalContentAlignment="Bottom" FontSize="18" Margin="110,30,0,0" Width="165" HorizontalContentAlignment="Left" HorizontalAlignment="Left"/>
                     <Button x:Name="btn_lbl_OfflineMode" Style="{StaticResource btn}" Height="40"  MouseRightButtonDown="btn_lbl_Mode_MouseRightButtonDown" Content="OFFLINE MODE" ToolTip="Restart P127 or change CommandLineArgs to disable."
                             VerticalAlignment="Top" HorizontalAlignment="Left" HorizontalContentAlignment="Left" FontSize="18" Foreground="{x:Static local:MyColors.MyColorOrange}"
-                            Background="Transparent" Margin="107,0,0,0" Width="150" BorderThickness="0" Visibility="Hidden"/>
+                            Background="Transparent" Margin="100,2,0,0" Width="150" BorderThickness="0" Visibility="Hidden"/>
                     <Button x:Name="btn_Auth" Style="{StaticResource btn_SmallIcon}" ToolTip="Login Button. Lock closed = Logged in. Lock open = Not logged in" Height="40" Width="40" MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave" MouseRightButtonDown="btn_Auth_MouseRightButtonDown" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="65,15,0,0" Click="btn_Auth_Click"/>
                 </Grid>
                 <!-- GridHamburgerOuter -->

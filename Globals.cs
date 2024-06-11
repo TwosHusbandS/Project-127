@@ -25,6 +25,8 @@ using System.Windows.Media.Imaging;
 using CefSharp;
 using System.IO;
 using System.Timers;
+using System.Windows.Navigation;
+using System.Security.Cryptography;
 
 namespace Project_127
 {
@@ -104,7 +106,7 @@ namespace Project_127
 			get
 			{
                 string masterURL = "https://raw.githubusercontent.com/TwosHusbandS/Project-127/master/Installer/DownloadManager.xml";
-				string modeURL = "https://raw.githubusercontent.com/TwosHusbandS/Project-127/" + DMBranch + "/Installer/DownloadManager.xml";
+				string modeURL = "https://raw.githubusercontent.com/TwosHusbandS/Project-127/" + DMBranch.ToLower() + "/Installer/DownloadManager.xml";
 
 				string modeXML = HelperClasses.FileHandling.GetStringFromURL(modeURL, true);
 				if (!String.IsNullOrWhiteSpace(modeXML))
@@ -157,7 +159,7 @@ namespace Project_127
 				{
 					return "master";
 				}
-				return Project_127.MySettings.Settings.P127Mode.ToLower();
+				return Project_127.MySettings.Settings.P127Mode;
 			}
 		}
 
@@ -175,7 +177,7 @@ namespace Project_127
 				{
 					return "master";
 				}
-				return Project_127.MySettings.Settings.DMMode.ToLower();
+				return Project_127.MySettings.Settings.DMMode;
 			}
 		}
 
@@ -235,7 +237,7 @@ namespace Project_127
 		/// <summary>
 		/// Property of other Buildinfo. Will be in the top message of logs
 		/// </summary>
-		public static string BuildInfo = "1.2.6.3 - Dynamic MTL Offsets, Build 2";
+		public static string BuildInfo = "1.3.0.0 - Build 1";
 
 
 		/// <summary>
@@ -692,6 +694,33 @@ namespace Project_127
 					Settings.EnableLegacyAuth = false;
 				}
 
+				// If first time launching 1.3.0.0
+				if (Settings.LastLaunchedVersion < new Version("1.3.0.0"))
+				{
+					List<string> OldFiles = new List<string>
+                    {
+                        "launc.dll",
+                        "GTAStub.exe",
+                        "Play127.exe",
+                        "GTATW28D.dll",
+                        "stubpatch.dll"
+                    };
+
+					foreach (string OldFile in OldFiles)
+					{
+						Settings.AllFilesEverPlacedInsideGTAMyAdd(OldFile);
+						HelperClasses.Logger.Log("Nuking " + OldFile +" from all possible folders, since LastLaunchedVersion is smaller than 1.3");
+						HelperClasses.FileHandling.deleteFile(LauncherLogic.DowngradeAlternativeFilePathRockstar124.TrimEnd('\\') + @"\" + OldFile);
+						HelperClasses.FileHandling.deleteFile(LauncherLogic.DowngradeAlternativeFilePathRockstar127.TrimEnd('\\') + @"\" + OldFile);
+						HelperClasses.FileHandling.deleteFile(LauncherLogic.DowngradeAlternativeFilePathSteam124.TrimEnd('\\') + @"\" + OldFile);
+						HelperClasses.FileHandling.deleteFile(LauncherLogic.DowngradeAlternativeFilePathSteam127.TrimEnd('\\') + @"\" + OldFile);
+						HelperClasses.FileHandling.deleteFile(LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\" + OldFile);
+                    }
+
+					Settings.DMMode = "default";
+					Settings.P127Mode = "default";
+                }
+
                 Settings.LastLaunchedVersion = Globals.ProjectVersion;
 			}
 
@@ -717,7 +746,7 @@ namespace Project_127
 
 			// reading Social club install dir from registry
 			LaunchAlternative.SetUpSocialClubRegistryThing();
-			LaunchAlternative.SocialClubUpgrade();
+			LaunchAlternative.SocialClubUpgrade(0);
 
 			MainWindow.DMO = Auth.DynamicMTLOffsets.GetMTLOffsets();
 
@@ -1225,7 +1254,7 @@ namespace Project_127
 				}
 			}
 
-			HelperClasses.BuildVersionTable.ReadFromGithub(XML_Autoupdate_Temp);
+			HelperClasses.BuildVersionTable.Init(XML_Autoupdate_Temp);
 			ReadMe.DynamicLinksMethod(XML_Autoupdate_Temp);
 		}
 
@@ -1551,7 +1580,6 @@ namespace Project_127
 				{
 					// In Case: Settings
 					case PageStates.Settings:
-
 						// Set actual Frame_Main Content to the correct Page
 						MainWindow.MW.Frame_Main.Content = new Settings();
 						MainWindow.MW.btn_Settings.Style = Application.Current.FindResource("btn_hamburgeritem_selected") as Style;
@@ -1635,13 +1663,16 @@ namespace Project_127
 						MainWindow.MW.btn_ComponentManager.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
 						break;
 				}
-			}
-		}
+				MainWindow.ClearHistory(MainWindow.MW.Frame_Main);
+            }
+        }
 
-		/// <summary>
-		/// Enum for all BackgroundImages
-		/// </summary>
-		public enum BackgroundImages
+
+
+        /// <summary>
+        /// Enum for all BackgroundImages
+        /// </summary>
+        public enum BackgroundImages
 		{
 			Default,
 			FourTwenty,
@@ -1787,7 +1818,7 @@ namespace Project_127
 						}
 						catch (Exception e)
 						{
-							new Popup(Popup.PopupWindowTypes.PopupOkError, "Error converting Command Line Argument to Background Image.\n" + e.ToString()).ShowDialog();
+                            Globals.PopupError("Error converting Command Line Argument to Background Image.\n" + e.ToString());
 						}
 					}
 					else if (args[i].ToLower() == "-authstateoverwrite")
@@ -2021,18 +2052,56 @@ namespace Project_127
 		/// <param name="pMsg"></param>
 		public static void DebugPopup(string pMsg)
 		{
-            HelperClasses.Logger.Log("Debug: " + pMsg, 1);
-            System.Windows.Forms.MessageBox.Show(pMsg);
-		}
+            MainWindow.MW.Dispatcher.Invoke(() =>
+            {
+                HelperClasses.Logger.Log("Debug: " + pMsg, 1);
+				System.Windows.Forms.MessageBox.Show(pMsg);
+            });
+        }
+
+
+
+        public static void PopupError(string pMsg)
+        {
+            MainWindow.MW.Dispatcher.Invoke(() =>
+            {
+                new Popup(Popup.PopupWindowTypes.PopupOkError, pMsg).ShowDialog();
+            });
+        }
+
+		public static bool PopupYesNo(string pMsg)
+		{
+			bool rtrn = true;
+            MainWindow.MW.Dispatcher.Invoke(() =>
+            {
+                Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, pMsg);
+				yesno.ShowDialog();
+				if (yesno.DialogResult == true)
+				{
+                    rtrn = true;
+				}
+				else
+				{
+                    rtrn = false;
+				}
+            });
+			return rtrn;
+        }
+
+        public static void PopupOk(string pMsg)
+        {
+            MainWindow.MW.Dispatcher.Invoke(() =>
+            {
+                new Popup(Popup.PopupWindowTypes.PopupOk, pMsg).ShowDialog();
+            });
+        }
+
+
+
+        #endregion
 
 
 
 
-
-		#endregion
-
-
-
-
-	} // End of Class
+    } // End of Class
 } // End of Namespace

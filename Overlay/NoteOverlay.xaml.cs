@@ -803,48 +803,7 @@ Never-gonna let you down, Never-gonna run around-and, dez-urt you. Never-gonna m
 
 		private async void btn_Looks_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
 		{
-			//if (e.ClickCount >= 3)
-			//{
-			//	if (!waitingForSecondRightClick)
-			//	{
-			//		await Task.Delay(1000);
-			//		waitingForSecondRightClick = true;
-			//		await Task.Delay(5000);
-			//		waitingForSecondRightClick = false;
-			//	}
-			//	else
-			//	{
-			//		string msg = "";
-			//		msg += "Speaking of 'Look'..." + "\n";
-
-			//		msg += "From an outside perspective the GTA 5 Speedrunning Community really doesnt look good." + "\n";
-
-			//		msg += "\nThe whole 'verified' system basically establishes a two-class-society." + "\n";
-			//		msg += "People get insulted left and right and nobody gives a shit." + "\n";
-			//		msg += "\nSome of the least pleasant interactions ive EVER had were with some of the" + "\n";
-
-			//		msg += "bigger and more well known members of this community (including mods)." + "\n";
-			//		msg += "Shoutouts to Burhac, Darkviper and Toriks btw. They were always nice and respectful." + "\n";
-
-			//		msg += "\nThe fact that 'DarkViper fan' is used as an insult on the GTA V Speedrun Discord," + "\n";
-			//		msg += "yet without 3 'DarkViper fans' Speedrunning GTA V on Patch 1.27 would be dead," + "\n";
-			//		msg += "is pretty funny if you ask me..." + "\n";
-
-			//		msg += "\nI have been THIS close to quit working on P127 due to comments and behaviour" + "\n";
-			//		msg += "of the entire community on more than one occasion. And tbh. I should have." + "\n";
-			//		msg += "Some of you are a bunch of ungrateful entitled bastards." + "\n";
-			//		msg += " Y'all can be thankful I'm petty enough to write this manifesto," + "\n";
-			//		msg += "but wasn't petty enough to pull the killswitch on P127 in moments where I've had it up to here." + "\n";
-
-			//		msg += "\nHow fucking hard can it be not to be a dick and treat people with respect? Seriously. FFS." + "\n";
-			//		msg += "\nSincerly, @thS" + "\n";
-
-
-			//		//msg += "\n" + "\n";
-			//		//msg += "" + "\n";
-			//		new Popups.Popup(Popups.Popup.PopupWindowTypes.PopupOk, msg).ShowDialog();
-			//	}
-			//}
+	
 		}
 	}
 }

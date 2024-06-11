@@ -1,4 +1,8 @@
-﻿using Project_127.Popups;
+﻿using CefSharp.DevTools.IndexedDB;
+using GSF.IO;
+using GSF.Parsing;
+using Project_127.HelperClasses;
+using Project_127.Popups;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -268,7 +272,6 @@ namespace Project_127
 
         public static void SetMode(string Mode)
         {
-            Mode = Mode.ToLower();
             if (MyDirtyProgramming != null)
             {
                 if (String.IsNullOrEmpty(Mode) || Mode == "default")
@@ -391,7 +394,7 @@ namespace Project_127
             msg += "" + "\n";
             msg += "If there are any other questions/ comments / concerns, please let me know on discord at @AntherXx#5392";
 
-            new Popup(Popup.PopupWindowTypes.PopupOk, msg, 16).ShowDialog();
+            //new Popup(Popup.PopupWindowTypes.PopupOk, msg, 16).ShowDialog();
         }
 
         private void btn_Uninstall_Click(object sender, RoutedEventArgs e)
@@ -560,7 +563,7 @@ namespace Project_127
             }
             catch
             {
-                new Popup(Popup.PopupWindowTypes.PopupOkError, "Error Code 6").ShowDialog();
+                Globals.PopupError("Error Code 6");
                 HelperClasses.Logger.Log("[AAAAAA] - Getting the enum from the Tag of the UI Stuff from the ComponenetManager failed");
                 Globals.ProperExit();
             }
@@ -828,14 +831,14 @@ namespace Project_127
 
         public static string GetPathWhereZIPIsExtracted(this ComponentManager.Components Component)
         {
+            // ALL ZIP FILES FROM DOWNLOAD MANAGER (GITHUB XML AND FRODOS FTP) ARE UNZIPPED WITH PROPER FOLDER STRUCTURE BAKED INTO THE ZIP
+            // ALL ZIP FILES FOR IMPORTING MANUALLY DO NOT HAVE THAT, AND ARE EXTRACTED AT THE EXACT PLACE WHERE WE WANT THE FILES
             switch (Component)
             {
                 case ComponentManager.Components.Base:
                     return LauncherLogic.ZIPFilePath;
                 case ComponentManager.Components.Base124:
                     return LauncherLogic.DowngradeBase124FilePath;
-                case ComponentManager.Components.DowngradedSC:
-                    return LaunchAlternative.SCL_SC_DOWNGRADED;
                 case ComponentManager.Components.SCLRockstar124:
                     return LauncherLogic.DowngradeAlternativeFilePathRockstar124;
                 case ComponentManager.Components.SCLRockstar127:
@@ -844,6 +847,8 @@ namespace Project_127
                     return LauncherLogic.DowngradeAlternativeFilePathSteam124;
                 case ComponentManager.Components.SCLSteam127:
                     return LauncherLogic.DowngradeAlternativeFilePathSteam127;
+                case ComponentManager.Components.DowngradedSC:
+                    return LaunchAlternative.SCL_SC_DOWNGRADED;
                 case ComponentManager.Components.AdditionalSaveFiles:
                     return LauncherLogic.ZIPFilePath.TrimEnd('\\') + @"\Project_127_Files\SupportFiles\SaveFiles";
                 default:
@@ -909,7 +914,87 @@ namespace Project_127
                     else
                     {
                         HelperClasses.Logger.Log("ComponentMngr - User wants update.");
+                        if (Component == ComponentManager.Components.AdditionalSaveFiles)
+                        {
+                            HelperClasses.Logger.Log("ComponentMngr - Updating SaveFiles.");
+
+                            List<MyFileOperation> MFOs = new List<MyFileOperation>();
+                            Popup yesno2 = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Do you want to back up your old SaveFiles??");
+                            yesno2.ShowDialog();
+                            if (yesno2.DialogResult == true)
+                            {
+                                HelperClasses.Logger.Log("ComponentMngr - User wants to back up old savefiles.");
+
+                                // move everything one folder down
+                                string[] FilePaths = HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(LauncherLogic.SaveFilesPath);
+                                string[] SubFolders = HelperClasses.FileHandling.GetSubFolders(LauncherLogic.SaveFilesPath);
+
+                                string SaveFilesOldFolder = LauncherLogic.SaveFilesPath.TrimEnd('\\') + @"\Old_Savefiles";
+                                MFOs.Add(new MyFileOperation(MyFileOperation.FileOperations.Create, SaveFilesOldFolder, "", "Creating Old SaveFile Folder (" + SaveFilesOldFolder + ")", 0, MyFileOperation.FileOrFolder.Folder));
+
+                                foreach (string FilePath in FilePaths)
+                                {
+                                    string NewPath = FilePath.Replace(@"\Project_127_Files\SupportFiles\SaveFiles\", @"\Project_127_Files\SupportFiles\SaveFiles\Old_Savefiles\");
+                                    if (HelperClasses.FileHandling.doesFileExist(NewPath))
+                                    {
+                                        MFOs.Add(new MyFileOperation(MyFileOperation.FileOperations.Delete, NewPath, "", "Deleting '" + NewPath + "' since it exists and we want to move an old savefile there", 0, MyFileOperation.FileOrFolder.File));
+                                    }
+                                    MFOs.Add(new MyFileOperation(MyFileOperation.FileOperations.Move, FilePath, NewPath, "Moving '" + FilePath + "' to '" + NewPath + "' to save old Savefiles", 0, MyFileOperation.FileOrFolder.File));
+                                }
+                                foreach (string SubFolder in SubFolders)
+                                {
+                                    MFOs.Add(new MyFileOperation(MyFileOperation.FileOperations.Delete, SubFolder, "", "Deleting '" + SubFolder + "' (subfolder) since we have moved the files to backup directory", 0, MyFileOperation.FileOrFolder.Folder));
+                                }
+                            }
+                            else
+                            {
+                                HelperClasses.Logger.Log("ComponentMngr - User wants to nuke old savefiles.");
+
+                                // nuke folder, re-create folder
+                                MFOs.Add(new MyFileOperation(MyFileOperation.FileOperations.Delete, LauncherLogic.SaveFilesPath, "", "Deleting old SaveFile Folder (" + LauncherLogic.SaveFilesPath + ")", 0, MyFileOperation.FileOrFolder.Folder));
+                                MFOs.Add(new MyFileOperation(MyFileOperation.FileOperations.Create, LauncherLogic.SaveFilesPath, "", "Re-creating SaveFile Folder (" + LauncherLogic.SaveFilesPath + ")", 0, MyFileOperation.FileOrFolder.Folder));
+                            }
+                            if (MFOs.Count > 0)
+                            {
+                                new PopupProgress(PopupProgress.ProgressTypes.FileOperation, "Managing old Savefiles...", MFOs).ShowDialog();
+                            }
+                        }
+                        if (Component == ComponentManager.Components.DowngradedSC)
+                        {
+                            HelperClasses.Logger.Log("ComponentMngr - Updating Downgraded SocialClub.");
+
+                            // if we update social club, delete all 4 folder locations if they are not upgraded, to remove all traces
+
+                            List<string> FilePaths = new List<string>
+                                {
+                                    LaunchAlternative.SCL_SC_DOWNGRADED,
+                                    LaunchAlternative.SCL_SC_DOWNGRADED_CACHE,
+                                    LaunchAlternative.SCL_SC_Installation,
+                                    LaunchAlternative.SCL_SC_TEMP_BACKUP
+                                };
+
+                            List<MyFileOperation> MFOs = new List<MyFileOperation>();
+
+                            foreach (string FilePath in FilePaths)
+                            {
+                                if (LaunchAlternative.Get_SCL_InstallationState(FilePath) != LaunchAlternative.SCL_InstallationStates.Upgraded)
+                                {
+                                    MFOs.Add(new MyFileOperation(MyFileOperation.FileOperations.Delete, FilePath, "", "Deleting '" + FilePath + "' since we are Upgrading the Social Club Component and want all old downgrades gone.", 0, MyFileOperation.FileOrFolder.Folder));
+                                }
+                            }
+
+                            if (MFOs.Count > 0)
+                            {
+                                new PopupProgress(PopupProgress.ProgressTypes.FileOperation, "Deleting previous downgraded Social Clubs", MFOs).ShowDialog();
+                            }
+                        }
                         Globals.MyDM.updateSubssembly(Component.GetAssemblyName(), true).GetAwaiter().GetResult();
+                        if (Component == ComponentManager.Components.DowngradedSC)
+                        {
+                            // So we just upgraded Social Club Component, after deleting all non-upgraded social club folders.
+                            // we now want to upgrade social club,
+                            LaunchAlternative.SocialClubUpgrade();
+                        }
                         ComponentManager.MyRefreshStatic();
                         return true;
                     }
@@ -972,7 +1057,7 @@ namespace Project_127
             }
             catch 
             {
-                new Popups.Popup(Popup.PopupWindowTypes.PopupOkError, "Failed to uninstall Component.\nMost likely cause is no connection to github.").ShowDialog();
+                Globals.PopupError("Failed to uninstall Component.\nMost likely cause is no connection to github.");
                 HelperClasses.Logger.Log("Failed to uninstall from Component Manager. Most likely github offline or user has no internet");
             }
             ComponentManager.MyRefreshStatic();

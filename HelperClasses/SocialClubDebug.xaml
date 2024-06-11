@@ -1,0 +1,28 @@
+﻿<Window x:Class="Project_127.HelperClasses.SocialClubDebug"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Project_127.HelperClasses"
+        mc:Ignorable="d"
+        Title="SocialClubDebug" Height="450" Width="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Button Grid.Row="0" Margin="10" x:Name="btn_UpgradeSC" Click="btn_UpgradeSC_Click" Content="UPGRADE SOCIAL CLUB"/>
+        <Button Grid.Row="1" Margin="10" x:Name="btn_DowngradeSC" Click="btn_DowngradeSC_Click" Content="DOWNGRADE SOCIAL CLUB"/>
+        <Button Grid.Row="2" Margin="10" x:Name="btn_IS_Installation" Click="btn_IS_Installation_Click"/>
+        <Button Grid.Row="3" Margin="10" x:Name="btn_IS_TempBackup" Click="btn_IS_TempBackup_Click"/>
+        <Button Grid.Row="4" Margin="10" x:Name="btn_IS_DowngradedCache" Click="btn_IS_DowngradedCache_Click"/>
+        <Button Grid.Row="5" Margin="10" x:Name="btn_IS_Downgraded" Click="btn_IS_Downgraded_Click"/>
+    </Grid>
+</Window>
