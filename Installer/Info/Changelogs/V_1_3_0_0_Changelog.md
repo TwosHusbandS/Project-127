@@ -53,6 +53,8 @@ Changes you probably care about most:
 * Completely overhauled SocialClubLaunch which should now work for everyone. (thanks @Special For for reverse engineering and implementing)
 * New Savefiles for all Segments, Any% Classic as well as 100% Classic (thanks @UnNameD for providing files and @Anthonio for coordinating)
 * SaveFileHandler improvements in terms of Performance, Usability and UI
+* Fixed a few P127 Crashes
+* Handle gta5.exe being stuck
 
 Thanks @Reloe for providing a steam account that owns GTAV. 
 

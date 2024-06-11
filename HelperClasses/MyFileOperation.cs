@@ -9,6 +9,8 @@ using Project_127.HelperClasses;
 using Project_127.Overlay;
 using Project_127.Popups;
 using Project_127.MySettings;
+using System.Windows.Interop;
+using System.Diagnostics;
 
 namespace Project_127.HelperClasses
 {
@@ -95,30 +97,65 @@ namespace Project_127.HelperClasses
 		}
 
 
-		public static void ExecuteWrapper(MyFileOperation pMyFileOperation)
+		public static void ExecuteWrapper(MyFileOperation pMyFileOperation, ref bool WarnedUserOfStuckProcessAlready, ref bool CancelFileOperations)
 		{
-			HelperClasses.FileHandling.AddToDebug("    ");
-			HelperClasses.FileHandling.AddToDebug(pMyFileOperation.FileOperation.ToString() + " | " + pMyFileOperation.OriginalFile);
-			HelperClasses.FileHandling.AddToDebug(pMyFileOperation.Log);
-			while (pMyFileOperation.RetryAttempts > 0)
+			Logger.Log("Executing wrapper for File Operation");
+            Logger.Log(pMyFileOperation.FileOperation.ToString() + " | " + pMyFileOperation.OriginalFile + " | " + pMyFileOperation.NewFile);
+            while (pMyFileOperation.RetryAttempts > 0)
 			{
                 try
                 {
-                    HelperClasses.FileHandling.AddToDebug("RetryAttempts: " + pMyFileOperation.RetryAttempts.ToString());
+                    Logger.Log("RetryAttempts left: " + pMyFileOperation.RetryAttempts.ToString());
                     Execute(pMyFileOperation, true);
 					return;
                 }
                 catch (Exception ex)
-                { 
-                    HelperClasses.FileHandling.AddToDebug("Failed");
+                {
+                    Logger.Log("Executing wrapper for File Operation Failed");
                     pMyFileOperation.RetryAttempts -= 1;
 
 					Task.Delay(pMyFileOperation.MSDelayBetweenAttempts).GetAwaiter().GetResult();
-					HelperClasses.Logger.Log("Retrying file operation...");
                 }
             }
-            HelperClasses.Logger.Log("Hail Mary Execute");
+            Logger.Log("Executing wrapper, all retry attemps done");
 
+            if (LauncherLogic.GameState == LauncherLogic.GameStates.Running)
+			{
+                Logger.Log("Executing wrapper, game still running");
+
+                if (!WarnedUserOfStuckProcessAlready)
+				{
+					WarnedUserOfStuckProcessAlready = true;
+
+                    Logger.Log("Executing wrapper, asking user if he wants a restart");
+
+                    string msg = "File Operation failed.\n\nThis is most likely due to a 'stuck' GTA V Process,\nas we have tried to kill it, waited, and its still running.\n\nThe only fix is to FULLY restart your computer.\nIf you manually do it, you have to hold SHIFT while clicking the restart button.\nDo you want P127 to restart your PC for you?";
+					if (Globals.PopupYesNo(msg) == true)
+					{
+                        Logger.Log("Executing wrapper, user wants a restart");
+                        Globals.PopupOk("Close all Files and Programs that need saving,\nand hit 'ok' to restart your PC.");
+                        Logger.Log("Executing wrapper, goodnight");
+                        Process.Start("shutdown.exe", "/r /f /t 0");
+                    }
+                    else
+					{
+                        Logger.Log("Executing wrapper, user does NOT want a restart. Asking if we should cancel file operation");
+
+                        if (Globals.PopupYesNo("Do you want to cancel the current FileOperations?\n\nNot canceling is fine, will just spamm you with errors.") == true)
+                        {
+                            Logger.Log("Executing wrapper, canceling file operation");
+                            CancelFileOperations = true;
+							return;
+					    }
+						else
+						{
+                            Logger.Log("Executing wrapper, NOT canceling file operation");
+                        }
+                    }
+                }
+            }
+
+            HelperClasses.Logger.Log("Hail Mary Execute");
             Execute(pMyFileOperation);
         }
 

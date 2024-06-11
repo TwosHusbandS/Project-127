@@ -173,12 +173,23 @@ namespace Project_127.Popups
 				double count = MyFileOperations.Count;
 				double j = 0;
 
+				bool WarnedUserOfStuckProcessAlready = false;
+				bool CancelFileOperations = false;
+
 				HelperClasses.Logger.Log("Lets do some File Operation Stuff");
 				for (int i = 0; i <= MyFileOperations.Count - 1; i++)
 				{
-					MyFileOperation.ExecuteWrapper(MyFileOperations[i]);
+					if (!CancelFileOperations)
+					{
+						MyFileOperation.ExecuteWrapper(MyFileOperations[i], ref WarnedUserOfStuckProcessAlready, ref CancelFileOperations);
+					}
+					else
+					{
+                        HelperClasses.Logger.Log("File Operation Stuff canceled by user");
+						break;
+                    }
 
-					j++;
+                    j++;
 					this.Dispatcher.Invoke(() =>
 					{
 						myPB.Value = (int)(j / count * 100);

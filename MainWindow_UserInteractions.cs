@@ -2,6 +2,7 @@
 using Project_127.Popups;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -167,16 +168,16 @@ namespace Project_127
 		/// <param name="e"></param>
 		private void btn_Upgrade_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
 		{
-			// LaunchAlternative.SocialClubUpgrade(0,"manually clicked");
-		}
+            // LaunchAlternative.SocialClubUpgrade(0,"manually clicked");
+        }
 
 
-		/// <summary>
-		/// Method which gets called when the Downgrade Button is clicked
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
-		private void btn_Downgrade_Click(object sender, RoutedEventArgs e)
+        /// <summary>
+        /// Method which gets called when the Downgrade Button is clicked
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btn_Downgrade_Click(object sender, RoutedEventArgs e)
 		{
 			// Confirmation Popup
 			Popup conf = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Do you want to Downgrade?");

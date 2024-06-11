@@ -2052,9 +2052,12 @@ namespace Project_127
 		/// <param name="pMsg"></param>
 		public static void DebugPopup(string pMsg)
 		{
-            HelperClasses.Logger.Log("Debug: " + pMsg, 1);
-            System.Windows.Forms.MessageBox.Show(pMsg);
-		}
+            MainWindow.MW.Dispatcher.Invoke(() =>
+            {
+                HelperClasses.Logger.Log("Debug: " + pMsg, 1);
+				System.Windows.Forms.MessageBox.Show(pMsg);
+            });
+        }
 
 
 
@@ -2065,6 +2068,34 @@ namespace Project_127
                 new Popup(Popup.PopupWindowTypes.PopupOkError, pMsg).ShowDialog();
             });
         }
+
+		public static bool PopupYesNo(string pMsg)
+		{
+			bool rtrn = true;
+            MainWindow.MW.Dispatcher.Invoke(() =>
+            {
+                Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, pMsg);
+				yesno.ShowDialog();
+				if (yesno.DialogResult == true)
+				{
+                    rtrn = true;
+				}
+				else
+				{
+                    rtrn = false;
+				}
+            });
+			return rtrn;
+        }
+
+        public static void PopupOk(string pMsg)
+        {
+            MainWindow.MW.Dispatcher.Invoke(() =>
+            {
+                new Popup(Popup.PopupWindowTypes.PopupOk, pMsg).ShowDialog();
+            });
+        }
+
 
 
         #endregion
