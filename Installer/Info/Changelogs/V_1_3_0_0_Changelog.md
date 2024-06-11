@@ -34,34 +34,3 @@
 * New Import Button now actually works, Oops
 * Small UI fixes here and there
 
-
-
-
-
-
-
-
-Copy paste for discord:
-
-@silent
-
-Hello everyone, Project 1.27 Version 1.3.0.0 is out now.
-
-Update shuld hit within the next few minutes, just click Yes on the auto update.
-
-Changes you probably care about most:
-* Completely overhauled SocialClubLaunch which should now work for everyone. (thanks @Special For for reverse engineering and implementing)
-* New Savefiles for all Segments, Any% Classic as well as 100% Classic (thanks @UnNameD for providing files and @Anthonio for coordinating)
-* SaveFileHandler improvements in terms of Performance, Usability and UI
-* Fixed a few P127 Crashes
-* Handle gta5.exe being stuck
-
-Thanks @Reloe for providing a steam account that owns GTAV. 
-
-Thanks to everyone who tested the SCLBeta. 
-
-If you participated in the SCLBeta, you will also get an auto-update prompt that will get you to the newest public P127 version and remove all traces of SCLBeta
-
-Full changelog: <https://github.com/TwosHusbandS/Project-127/blob/master/Installer/Info/Changelogs/V_1_2_6_3_Changelog.md>
-
-A new big _Everything.zip will be posted here in the following days, want to give it some time to see if everything works and nothing is majorly broken before putting together the big ZIP.
