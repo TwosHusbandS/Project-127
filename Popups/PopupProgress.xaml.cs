@@ -176,12 +176,14 @@ namespace Project_127.Popups
 				bool WarnedUserOfStuckProcessAlready = false;
 				bool CancelFileOperations = false;
 
-				HelperClasses.Logger.Log("Lets do some File Operation Stuff");
+                LauncherLogic.InFileOperationWrapperLoop = true;
+
+                HelperClasses.Logger.Log("Lets do some File Operation Stuff");
 				for (int i = 0; i <= MyFileOperations.Count - 1; i++)
 				{
 					if (!CancelFileOperations)
 					{
-						MyFileOperation.ExecuteWrapper(MyFileOperations[i], ref WarnedUserOfStuckProcessAlready, ref CancelFileOperations);
+                        MyFileOperation.ExecuteWrapper(MyFileOperations[i], ref WarnedUserOfStuckProcessAlready, ref CancelFileOperations);
 					}
 					else
 					{
@@ -196,7 +198,8 @@ namespace Project_127.Popups
 						myLBL.Content = Operation + "...(" + myPB.Value + "%)";
 					});
 				}
-				HelperClasses.Logger.Log("Done with File Operation Stuff");
+                LauncherLogic.InFileOperationWrapperLoop = false;
+                HelperClasses.Logger.Log("Done with File Operation Stuff");
 			}
 
 			// Extracting a ZIPFile

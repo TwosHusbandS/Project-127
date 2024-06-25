@@ -42,12 +42,18 @@ namespace Project_127
 
 			btn_GTA.IsEnabled = MainWindow.MW.btn_Upgrade.IsEnabled;
 
-			if (LauncherLogic.GameState == LauncherLogic.GameStates.Running)
+			LauncherLogic.GameStates currGameState = LauncherLogic.GameState;
+			if (currGameState == LauncherLogic.GameStates.Running)
 			{
 				GTA_Page.btn_GTA_static.BorderBrush = MyColors.MW_ButtonGTAGameRunningBorderBrush;
 				GTA_Page.btn_GTA_static.Content = "Exit GTA V";
 			}
-			else
+            else if (currGameState == LauncherLogic.GameStates.Stuck)
+            {
+                GTA_Page.btn_GTA_static.BorderBrush = MyColors.MW_ButtonGTAGameStuckBorderBrush;
+                GTA_Page.btn_GTA_static.Content = "Stuck GTA V";
+            }
+            else
 			{
 				GTA_Page.btn_GTA_static.BorderBrush = MyColors.MW_ButtonGTAGameNotRunningBorderBrush;
 				GTA_Page.btn_GTA_static.Content = "Launch GTA V";

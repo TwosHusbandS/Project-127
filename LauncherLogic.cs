@@ -33,9 +33,20 @@ namespace Project_127
         public enum GameStates
         {
             Running,
-            NonRunning
+            NonRunning,
+            Stuck
         }
 
+        /// <summary>
+        /// If we have thrown the userpopup due to polling gamestate already
+        /// </summary>
+        public static bool StuckGTAErrorThrownAlready = false;
+
+        /// <summary>
+        /// If we are currently in FileOperationWrapperLoop
+        /// </summary>
+        public static bool InFileOperationWrapperLoop = false;
+        
         /// <summary>
         /// Property of our GameState. Gets polled every 2.5 seconds
         /// </summary>
@@ -46,9 +57,19 @@ namespace Project_127
             get
             {
                 // Check if GTA V is running
-                if (HelperClasses.ProcessHandler.IsGtaRunning())
+                Process[] Procs = HelperClasses.ProcessHandler.GetProcesses("gta5.exe");
+                if (Procs.Length > 0)
                 {
-                    return GameStates.Running;
+                    Process Proc = Procs.FirstOrDefault();
+
+                    if (String.IsNullOrEmpty(Proc.GetMainModuleFileName()))
+                    {
+                        return GameStates.Stuck;
+                    }
+                    else
+                    {
+                        return GameStates.Running;
+                    }
                 }
                 else
                 {
@@ -72,13 +93,17 @@ namespace Project_127
                     GTAStarted();
                 }
             }
-            else
+            else if (currGameState == GameStates.NonRunning)
             {
                 if (LastGameState == GameStates.Running)
                 {
                     GTAClosed();
                 }
             }
+            else
+            {
+                HandleStuckGTA();
+            }    
 
             LastGameState = currGameState;
 
@@ -1123,6 +1148,39 @@ namespace Project_127
             }
         }
 
+
+        public static bool HandleStuckGTA(bool IgnoreAlreadyThrownError = false, string msg = "")
+        {
+            // if we ignore error and throw anywas
+            // or if we havent thrown error yet and we are not in file operation loop
+            if ((!StuckGTAErrorThrownAlready && !InFileOperationWrapperLoop) || IgnoreAlreadyThrownError)
+            {
+                StuckGTAErrorThrownAlready = true;
+
+                Logger.Log("Stuck GTA detected and need to tell user about it");
+
+                if (string.IsNullOrEmpty(msg))
+                {
+                    msg = "We have a 'stuck' GTA V Process,\nas we have tried to kill it, waited, and its still running.\n\nThe only fix is to FULLY restart your computer.\nIf you manually do it, you have to hold SHIFT while clicking the restart button.\nDo you want P127 to restart your PC for you?";
+                }
+
+                Logger.Log("Asking if User wants a restart");
+                if (Globals.PopupYesNo(msg) == true)
+                {
+                    Logger.Log("User wants a restart");
+                    Globals.PopupOk("Close all Files and Programs that need saving,\nand hit 'ok' to restart your PC.");
+                    Logger.Log("Goodnight");
+                    Process.Start("shutdown.exe", "/r /f /t 0");
+                }
+                else
+                {
+                    Logger.Log("User does NOT want a restart");
+
+                    return false;
+                }
+            }
+            return true;
+        }
 
         public static void HandleRockstarFuckingUs()
         {

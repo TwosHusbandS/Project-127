@@ -2053,7 +2053,7 @@ namespace Project_127.MySettings
 			}
 			else
 			{
-				new Popup(Popup.PopupWindowTypes.PopupOk, "Cant do that while the game is running.").ShowDialog();
+				new Popup(Popup.PopupWindowTypes.PopupOk, "Cant do that while the game is running or Stuck.").ShowDialog();
 			}
 		}
 

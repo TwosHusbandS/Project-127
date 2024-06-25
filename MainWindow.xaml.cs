@@ -413,7 +413,7 @@ namespace Project_127
 			// Starting the Dispatcher Timer for the automatic updates of the GTA V Button
 			MyDispatcherTimer = new System.Windows.Threading.DispatcherTimer();
 			MyDispatcherTimer.Tick += new EventHandler(MainWindow.MW.UpdateGUIDispatcherTimer);
-			MyDispatcherTimer.Interval = TimeSpan.FromMilliseconds(2500);
+			MyDispatcherTimer.Interval = TimeSpan.FromMilliseconds(1000);
 			MyDispatcherTimer.Start();
 			MainWindow.MW.UpdateGUIDispatcherTimer();
 		}
@@ -421,7 +421,7 @@ namespace Project_127
 
 
 		/// <summary>
-		/// Updates the GUI with relevant stuff. Gets called every 2.5 Seconds
+		/// Updates the GUI with relevant stuff. Gets called every 1 Seconds
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
@@ -445,12 +445,19 @@ namespace Project_127
 
 			lbl_GTA.Content += BuildVersionTable.GetNiceGameVersionString(Globals.GTABuild);
 
-			if (LauncherLogic.PollGameState() == LauncherLogic.GameStates.Running)
+			LauncherLogic.GameStates currGameState = LauncherLogic.PollGameState();
+
+            if (currGameState == LauncherLogic.GameStates.Running)
 			{
 				GTA_Page.btn_GTA_static.BorderBrush = MyColors.MW_ButtonGTAGameRunningBorderBrush;
 				GTA_Page.btn_GTA_static.Content = "Exit GTA V";
 			}
-			else
+            else if (currGameState == LauncherLogic.GameStates.Stuck)
+            {
+                GTA_Page.btn_GTA_static.BorderBrush = MyColors.MW_ButtonGTAGameStuckBorderBrush;
+                GTA_Page.btn_GTA_static.Content = "Stuck GTA V";
+            }
+            else
 			{
 				GTA_Page.btn_GTA_static.BorderBrush = MyColors.MW_ButtonGTAGameNotRunningBorderBrush;
 				GTA_Page.btn_GTA_static.Content = "Launch GTA V";
