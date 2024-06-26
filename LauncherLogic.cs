@@ -721,6 +721,29 @@ namespace Project_127
             HandleRockstarFuckingUs();
         }
 
+        public static bool IsUpgradedGTA(string MyUpgradePath)
+        {
+            if (HelperClasses.FileHandling.doesPathExist(MyUpgradePath))
+            {
+                string GTA5Exe = MyUpgradePath.TrimEnd('\\') + @"\gta5.exe";
+                string Updaterpf = MyUpgradePath.TrimEnd('\\') + @"\update\update.rpf";
+                string launcher1 = MyUpgradePath.TrimEnd('\\') + @"\playgtav.exe";
+                string launcher2 = MyUpgradePath.TrimEnd('\\') + @"\gtavlauncher.exe";
+                if (HelperClasses.BuildVersionTable.GetGameVersionOfBuild(HelperClasses.FileHandling.GetVersionFromFile(GTA5Exe)) > new Version(1, 30))
+                {
+                    if (HelperClasses.FileHandling.GetSizeOfFile(Updaterpf) > 1000)
+                    {
+                        if ((HelperClasses.FileHandling.GetSizeOfFile(launcher1) > 50) ||
+                            (HelperClasses.FileHandling.GetSizeOfFile(launcher2) > 50))
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+            return false;
+        }
+
 
         public static bool IsDowngradedGTA(string MyDowngradePath)
         {

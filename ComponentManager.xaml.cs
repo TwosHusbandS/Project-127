@@ -120,10 +120,19 @@ namespace Project_127
                 yesno.ShowDialog();
                 if (yesno.DialogResult == true)
                 {
-                    HelperClasses.Logger.Log("ComponentMngr - User wants Upgrade, lets do it and return true.", 1);
-
+                    HelperClasses.Logger.Log("ComponentMngr - User wants Upgrade, lets do it.", 1);
                     LauncherLogic.Upgrade();
-                    return true;
+
+                    if (LauncherLogic.IsUpgradedGTA(LauncherLogic.GTAVFilePath))
+                    {
+                        HelperClasses.Logger.Log("ComponentMngr - Upgrade successfully, returning true.", 1);
+                        return true;
+                    }
+                    else
+                    {
+                        HelperClasses.Logger.Log("ComponentMngr - Upgrade failed, returning false.", 1);
+                        return false;
+                    }
                 }
                 else
                 {
@@ -154,7 +163,7 @@ namespace Project_127
                 HelperClasses.Logger.Log("ComponentMngr - Already Upgraded GTA,", 1);
                 return true;
             }
-            else 
+            else
             {
                 HelperClasses.Logger.Log("ComponentMngr - In else, we should never be here,", 1);
                 return true;
@@ -1055,7 +1064,7 @@ namespace Project_127
             {
                 Globals.MyDM.delSubassembly(Component.GetAssemblyName());
             }
-            catch 
+            catch
             {
                 Globals.PopupError("Failed to uninstall Component.\nMost likely cause is no connection to github.");
                 HelperClasses.Logger.Log("Failed to uninstall from Component Manager. Most likely github offline or user has no internet");
