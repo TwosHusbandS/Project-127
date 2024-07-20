@@ -614,7 +614,7 @@ namespace Project_127.MySettings
         /// <param name="e"></param>
         private void btn_Import_Zip_Click(object sender, RoutedEventArgs e)
         {
-            PopupWrapper.PopupOk("This option is no longer available here.\n\nTo manually import a ZIP,\ntripple rightclick the 'installed / not installed' text inside the Componentmanager");
+            PopupWrapper.PopupOk("This option is no longer available here.\n\nTo manually import a ZIP,\nclick the 'import' button inside the Componentmanager");
         }
 
 
