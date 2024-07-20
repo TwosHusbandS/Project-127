@@ -173,7 +173,7 @@ namespace Project_127
 
             if (UpgradeSocialClubAfterGame)
             {
-                //Popup yn = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Upgrade SocialClub after game exited.");
+                //Popup yn = PopupWrapper.PopupYesNo("Upgrade SocialClub after game exited.");
                 //yn.ShowDialog();
                 //if (yn.DialogResult == true)
                 //{
@@ -359,7 +359,7 @@ namespace Project_127
                         Settings.EnableAlternativeLaunch = false;
                         return;
                         // dont allow changing to social club
-                        //new Popup(Popup.PopupWindowTypes.PopupOk, "LaunchWay did not change.").ShowDialog();
+                        //PopupWrapper.PopupOk("LaunchWay did not change.").ShowDialog();
 
 
                     }
@@ -377,7 +377,7 @@ namespace Project_127
                 }
                 else
                 {
-                    //new Popup(Popup.PopupWindowTypes.PopupOk, "LaunchWay was not changed.").ShowDialog();
+                    //PopupWrapper.PopupOk("LaunchWay was not changed.").ShowDialog();
                 }
 
                 MainWindow.MW.SetButtonMouseOverMagic(MainWindow.MW.btn_Auth);
@@ -576,9 +576,7 @@ namespace Project_127
         {
             if (LauncherLogic.LaunchWay == LauncherLogic.LaunchWays.SocialClubLaunch)
             {
-                Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "You do not need to auth,\nbased on your current settings.\n\nDo you still want to auth?");
-                yesno.ShowDialog();
-                if (yesno.DialogResult == false)
+                if (PopupWrapper.PopupYesNo("You do not need to auth,\nbased on your current settings.\n\nDo you still want to auth?") == false)
                 {
                     return;
                 }
@@ -594,7 +592,7 @@ namespace Project_127
                 }
                 else
                 {
-                    new Popup(Popup.PopupWindowTypes.PopupOk, "You are already authenticated.").ShowDialog();
+                    PopupWrapper.PopupOk("You are already authenticated.");
                 }
             }
             else
@@ -608,7 +606,7 @@ namespace Project_127
                     }
                     else
                     {
-                        new Popup(Popup.PopupWindowTypes.PopupOk, "You are already authenticated.").ShowDialog();
+                        PopupWrapper.PopupOk("You are already authenticated.");
                     }
                 }
                 else
@@ -637,9 +635,7 @@ namespace Project_127
             {
                 HelperClasses.Logger.Log("GTA V Installation Path not found or incorrect. User will get Popup");
 
-                Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Error:\nGTA V Installation Path is not a valid Path.\nDo you want to force this Upgrade?");
-                yesno.ShowDialog();
-                if (yesno.DialogResult == true)
+                if (PopupWrapper.PopupYesNo("Error:\nGTA V Installation Path is not a valid Path.\nDo you want to force this Upgrade?") == true)
                 {
                     HelperClasses.Logger.Log("User wants to force this Upgrade. Will not throw the WrongGTAVPathError again on this P127 instance.");
                     LauncherLogic.GTAVInstallationIncorrectMessageThrownAlready = true;
@@ -655,7 +651,7 @@ namespace Project_127
             if (HelperClasses.FileHandling.GetSubFolders(LauncherLogic.DebloatVPath).Length < 12)
             {
                 HelperClasses.Logger.Log("DebloatV check inside Upgrade hit. Throwing User popup and canceling update.", 1);
-                Globals.PopupError("Your GTA Folder is missing some critical files.\nYou cannot play updated GTA.\n\nYou probably ran DebloatV at some point.\n\nRepair your game via Steam / Rockstar / Epic.");
+                PopupWrapper.PopupError("Your GTA Folder is missing some critical files.\nYou cannot play updated GTA.\n\nYou probably ran DebloatV at some point.\n\nRepair your game via Steam / Rockstar / Epic.");
                 return;
             }
 
@@ -670,7 +666,7 @@ namespace Project_127
             else
             {
                 HelperClasses.Logger.Log("Installation State Broken.", 1);
-                Globals.PopupError("Installation State is broken. I suggest trying to repair.\nWill try to Upgrade anyways.");
+                PopupWrapper.PopupError("Installation State is broken. I suggest trying to repair.\nWill try to Upgrade anyways.");
             }
 
             IgnoreNewFilesWhileUpgradeDowngradeLogic = IgnoreNewFiles;
@@ -679,14 +675,14 @@ namespace Project_127
             {
                 if (!ComponentManager.CheckIfRequiredComponentsAreInstalled(true))
                 {
-                    Globals.PopupError("Error:\nCant do that because of because of missing Components");
+                    PopupWrapper.PopupError("Error:\nCant do that because of because of missing Components");
                     return;
                 }
 
 
                 if (!(HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(DowngradeFilePath).Length >= 2 && HelperClasses.BuildVersionTable.IsDowngradedGTA(DowngradeFilePath)))
                 {
-                    Globals.PopupError("Found no DowngradeFiles. Please make sure the required components are installed.");
+                    PopupWrapper.PopupError("Found no DowngradeFiles. Please make sure the required components are installed.");
                     return;
                 }
             }
@@ -696,20 +692,19 @@ namespace Project_127
             if (!(HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(UpgradeFilePath).Length >= 2 && HelperClasses.BuildVersionTable.IsUpgradedGTA(UpgradeFilePath)))
             {
                 // NO FILES TO UPGRADE
-                new Popup(Popup.PopupWindowTypes.PopupOk, "Found no Files to Upgrade with. I suggest verifying Files through steam\nor clicking \"Use Backup Files\" in Settings.\nWill abort Upgrade.").ShowDialog();
+                PopupWrapper.PopupOk("Found no Files to Upgrade with. I suggest verifying Files through steam\nor clicking \"Use Backup Files\" in Settings.\nWill abort Upgrade.");
                 return;
             }
 
-            PopupProgress tmp = new PopupProgress(PopupProgress.ProgressTypes.Upgrade, "");
-            tmp.ShowDialog();
+            List<HelperClasses.MyFileOperation> tmpRtrnMyFileOperations = PopupWrapper.PopupProgress(PopupProgress.ProgressTypes.Upgrade, "");
             // Actually executing the File Operations
-            new PopupProgress(PopupProgress.ProgressTypes.FileOperation, "Performing an Upgrade", tmp.RtrnMyFileOperations).ShowDialog();
+            PopupWrapper.PopupProgress(PopupProgress.ProgressTypes.FileOperation, "Performing an Upgrade", tmpRtrnMyFileOperations);
 
             // We dont need to mess with social club versions since the launch process doesnt depend on it
 
             if (InstallationState != InstallationStates.Upgraded)
             {
-                new Popup(Popup.PopupWindowTypes.PopupOk, "We just did an Upgrade but the detected InstallationState is not Upgraded.\nI suggest reading the \"Help\" Part of the Information Page");
+                PopupWrapper.PopupOk("We just did an Upgrade but the detected InstallationState is not Upgraded.\nI suggest reading the \"Help\" Part of the Information Page");
             }
 
 
@@ -777,9 +772,7 @@ namespace Project_127
             {
                 HelperClasses.Logger.Log("GTA V Installation Path not found or incorrect. User will get Popup");
 
-                Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Error:\nGTA V Installation Path is not a valid Path.\nDo you want to force this Downgrade?");
-                yesno.ShowDialog();
-                if (yesno.DialogResult == true)
+                if (PopupWrapper.PopupYesNo("Error:\nGTA V Installation Path is not a valid Path.\nDo you want to force this Downgrade?") == true)
                 {
                     HelperClasses.Logger.Log("User wants to force this Downgrade. Will not throw the WrongGTAVPathError again on this P127 instance.");
                     LauncherLogic.GTAVInstallationIncorrectMessageThrownAlready = true;
@@ -802,34 +795,33 @@ namespace Project_127
             else
             {
                 HelperClasses.Logger.Log("Installation State Broken.", 1);
-                Globals.PopupError("Installation State is broken. I suggest trying to repair.\nWill try to Downgrade anyways.");
+                PopupWrapper.PopupError("Installation State is broken. I suggest trying to repair.\nWill try to Downgrade anyways.");
             }
 
             IgnoreNewFilesWhileUpgradeDowngradeLogic = IgnoreNewFiles;
 
             if (!ComponentManager.CheckIfRequiredComponentsAreInstalled(true))
             {
-                new Popups.Popup(Popups.Popup.PopupWindowTypes.PopupOk, "Cant do that because of because of missing Components").ShowDialog();
+                PopupWrapper.PopupOk("Cant do that because of because of missing Components");
                 return;
             }
 
             if (!(HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(DowngradeFilePath).Length >= 2 && HelperClasses.BuildVersionTable.IsDowngradedGTA(DowngradeFilePath)))
             {
-                new Popup(Popup.PopupWindowTypes.PopupOk, "Found no DowngradeFiles. Please make sure the required components are installed.").ShowDialog();
+                PopupWrapper.PopupOk("Found no DowngradeFiles. Please make sure the required components are installed.");
                 return;
             }
 
-            PopupProgress tmp = new PopupProgress(PopupProgress.ProgressTypes.Downgrade, "");
-            tmp.ShowDialog();
+            List<HelperClasses.MyFileOperation> tmpRtrnMyFileOperations = PopupWrapper.PopupProgress(PopupProgress.ProgressTypes.Downgrade, "");
 
             // Actually executing the File Operations
-            new PopupProgress(PopupProgress.ProgressTypes.FileOperation, "Performing a Downgrade", tmp.RtrnMyFileOperations).ShowDialog();
+            PopupWrapper.PopupProgress(PopupProgress.ProgressTypes.FileOperation, "Performing a Downgrade", tmpRtrnMyFileOperations);
 
             // We dont need to mess with social club versions since the launch process doesnt depend on it
 
             if (InstallationState != InstallationStates.Downgraded)
             {
-                new Popup(Popup.PopupWindowTypes.PopupOk, "We just did an Downgraded but the detected InstallationState is not Downgraded.\nI suggest reading the \"Help\" Part of the Information Page");
+                PopupWrapper.PopupOk("We just did an Downgraded but the detected InstallationState is not Downgraded.\nI suggest reading the \"Help\" Part of the Information Page");
             }
 
             IgnoreNewFilesWhileUpgradeDowngradeLogic = false;
@@ -901,7 +893,7 @@ namespace Project_127
             }
 
             // Actually executing the File Operations
-            new PopupProgress(PopupProgress.ProgressTypes.FileOperation, "Performing a Repair", MyFileOperations).ShowDialog();
+            PopupWrapper.PopupProgress(PopupProgress.ProgressTypes.FileOperation, "Performing a Repair", MyFileOperations);
 
             // We dont need to mess with social club versions since the launch process doesnt depend on it
 
@@ -1043,7 +1035,7 @@ namespace Project_127
                 {
                     if (!ComponentManager.CheckIfRequiredComponentsAreInstalled(true))
                     {
-                        new Popups.Popup(Popups.Popup.PopupWindowTypes.PopupOk, "Cant do that because of because of missing Components").ShowDialog();
+                        PopupWrapper.PopupOk("Cant do that because of because of missing Components");
                         return;
                     }
 
@@ -1078,7 +1070,7 @@ namespace Project_127
                             catch (Exception ex)
                             {
                                 HelperClasses.Logger.Log("Unable to connect to the server. Probably best to restart P127.");
-                                Globals.PopupError("Unable to connect to the server. Probably best to restart P127.");
+                                PopupWrapper.PopupError("Unable to connect to the server. Probably best to restart P127.");
                                 return;
                             }
                         }
@@ -1136,7 +1128,7 @@ namespace Project_127
                     HelperClasses.Logger.Log("    Size of update.rpf in GTAV Installation Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\update\update.rpf"));
                     HelperClasses.Logger.Log("    Size of update.rpf in Downgrade Files Folder: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\update\update.rpf"));
 
-                    Globals.PopupError("Installation State is broken for some reason. Try to repair.");
+                PopupWrapper.PopupError("Installation State is broken for some reason. Try to repair.");
                     return;
                 }
 
@@ -1167,7 +1159,7 @@ namespace Project_127
                 msg += "- Settings -> General P127 Settings -> Enable \"Slow but stable Method for Upgrading / Downgrading\n";
                 msg += "(specifically applies if your GTA is on an external HDD)";
 
-                new Popup(Popup.PopupWindowTypes.PopupOk, msg).ShowDialog();
+                PopupWrapper.PopupOk(msg);
             }
         }
 
@@ -1188,10 +1180,10 @@ namespace Project_127
                 }
 
                 Logger.Log("Asking if User wants a restart");
-                if (Globals.PopupYesNo(msg) == true)
+                if (PopupWrapper.PopupYesNo(msg) == true)
                 {
                     Logger.Log("User wants a restart");
-                    Globals.PopupOk("Close all Files and Programs that need saving,\nand hit 'ok' to restart your PC.");
+                    PopupWrapper.PopupOk("Close all Files and Programs that need saving,\nand hit 'ok' to restart your PC.");
                     Logger.Log("Goodnight");
                     Process.Start("shutdown.exe", "/r /f /t 0");
                 }
@@ -1215,9 +1207,8 @@ namespace Project_127
                     if (!RockstarFuckedUsErrorThrownAlready)
                     {
                         RockstarFuckedUsErrorThrownAlready = true;
-                        Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "It appears like Rockstar (or Steam and Epic although unlikely) messed up Project 1.27 Files.\nDo you want to correct them?");
-                        yesno.ShowDialog();
-                        if (yesno.DialogResult == true)
+                        bool yesno = PopupWrapper.PopupYesNo("It appears like Rockstar (or Steam and Epic although unlikely) messed up Project 1.27 Files.\nDo you want to correct them?");
+                        if (yesno == true)
                         {
                             Upgrade(false, true);
 
@@ -1283,7 +1274,7 @@ namespace Project_127
 
             if (!(HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(UpgradeFilePath).Length >= 2 && HelperClasses.BuildVersionTable.IsUpgradedGTA(UpgradeFilePath)))
             {
-                new Popup(Popup.PopupWindowTypes.PopupOk, "No Upgrade Files available to back up.").ShowDialog();
+                PopupWrapper.PopupOk("No Upgrade Files available to back up.");
                 return;
             }
             else
@@ -1294,9 +1285,8 @@ namespace Project_127
                     combinedSize += FileHandling.GetSizeOfFile(myFile);
                     if (combinedSize > 5000)
                     {
-                        Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Backup Files already exist.\nOverwrite existing Backup Files?");
-                        yesno.ShowDialog();
-                        if (yesno.DialogResult == true)
+                        bool yesno = PopupWrapper.PopupYesNo("Backup Files already exist.\nOverwrite existing Backup Files?");
+                        if (yesno == true)
                         {
                             break;
                         }
@@ -1323,9 +1313,9 @@ namespace Project_127
                     MyFileOperations.Add(new MyFileOperation(MyFileOperation.FileOperations.Copy, FilesFromOrigPath[i], CorrespondingFilesFromNewPath[i], "Copying: '" + (FilesFromOrigPath[i]) + "' to '" + CorrespondingFilesFromNewPath[i] + "'", 2, MyFileOperation.FileOrFolder.File));
                 }
 
-                new PopupProgress(PopupProgress.ProgressTypes.FileOperation, "Creating Backup", MyFileOperations).ShowDialog();
+                PopupWrapper.PopupProgress(PopupProgress.ProgressTypes.FileOperation, "Creating Backup", MyFileOperations);
 
-                new Popup(Popup.PopupWindowTypes.PopupOk, "Files are now backed up.").ShowDialog();
+                PopupWrapper.PopupOk("Files are now backed up.");
             }
         }
 
@@ -1343,7 +1333,7 @@ namespace Project_127
 
             if (!(HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(UpgradeFilePathBackup).Length >= 2 && HelperClasses.BuildVersionTable.IsUpgradedGTA(UpgradeFilePathBackup)))
             {
-                new Popup(Popup.PopupWindowTypes.PopupOk, "No Backup Files available.").ShowDialog();
+                PopupWrapper.PopupOk("No Backup Files available.");
                 return;
             }
             else
@@ -1352,9 +1342,8 @@ namespace Project_127
                 List<MyFileOperation> MyFileOperations = new List<MyFileOperation>();
 
 
-                Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Do you want to back up your current \"Upgrade-Files\"\nbefore applying the backup and overwriting it?");
-                yesno.ShowDialog();
-                if (yesno.DialogResult == true)
+                bool yesno = PopupWrapper.PopupYesNo("Do you want to back up your current \"Upgrade-Files\"\nbefore applying the backup and overwriting it?");
+                if (yesno == true)
                 {
                     bool exitWhileLoop = false;
                     string input = "";
@@ -1362,18 +1351,15 @@ namespace Project_127
                     while (!exitWhileLoop)
                     {
                         // Asking for Name 
-                        PopupTextbox newNamePU = new PopupTextbox("Enter the Name of the Backup:", "MyNewBackupName");
-                        newNamePU.ShowDialog();
-                        input = newNamePU.MyReturnString;
-                        if (newNamePU.DialogResult == true && !string.IsNullOrWhiteSpace(input))
+                        input = PopupWrapper.PopupTextbox("Enter the Name of the Backup:", "MyNewBackupName");
+                        if (!string.IsNullOrWhiteSpace(input))
                         {
                             // Getting the Name chosen
                             string newPath = LauncherLogic.UpgradeFilePath.TrimEnd('\\') + @"_Backup_" + input;
                             if (HelperClasses.FileHandling.doesPathExist(newPath))
                             {
-                                Popup yesno2 = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Backup with that name ('" + input + "') already exists.\nDo you want to delete it?");
-                                yesno2.ShowDialog();
-                                if (yesno2.DialogResult == true)
+                                bool yesno2 = PopupWrapper.PopupYesNo("Backup with that name ('" + input + "') already exists.\nDo you want to delete it?");
+                                if (yesno2 == true)
                                 {
                                     HelperClasses.FileHandling.DeleteFolder(newPath);
                                     MyFileOperations.Add(new MyFileOperation(MyFileOperation.FileOperations.Delete, newPath, "", "Deleting Path: '" + (newPath) + "'", 2, MyFileOperation.FileOrFolder.Folder));
@@ -1411,9 +1397,9 @@ namespace Project_127
                     MyFileOperations.Add(new MyFileOperation(MyFileOperation.FileOperations.Copy, FilesFromNewPath[i], CorrespondingFilesFromOrigPath[i], "Copying: '" + (FilesFromNewPath[i]) + "' to '" + CorrespondingFilesFromOrigPath[i] + "'", 2, MyFileOperation.FileOrFolder.File));
                 }
 
-                new PopupProgress(PopupProgress.ProgressTypes.FileOperation, "Applying Backup", MyFileOperations).ShowDialog();
+                PopupWrapper.PopupProgress(PopupProgress.ProgressTypes.FileOperation, "Applying Backup", MyFileOperations);
 
-                new Popup(Popup.PopupWindowTypes.PopupOk, "Using backup files now.").ShowDialog();
+                PopupWrapper.PopupOk("Using backup files now.");
 
                 if (OldInstallationState == InstallationStates.Upgraded)
                 {

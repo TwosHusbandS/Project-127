@@ -19,7 +19,7 @@ namespace Project_127.Popups
 	/// </summary>
 	public partial class PopupMode : Window
 	{
-
+		public static bool DirtyNoUpdate = false;
 
 		private void Window_SourceInitialized(object sender, EventArgs e)
 		{
@@ -58,28 +58,41 @@ namespace Project_127.Popups
 		/// <param name="e"></param>
 		private void btn_SetNew_Click(object sender, RoutedEventArgs e)
 		{
-			string mode1 = tb_Main.Text;
-			string mode2 = tb_Main_DM.Text;
-			string URL1 = "https://raw.githubusercontent.com/TwosHusbandS/Project-127/" + mode1.ToLower() + "/Installer/Update.xml";
-			string URL2 = "https://raw.githubusercontent.com/TwosHusbandS/Project-127/" + mode2.ToLower() + "/Installer/DownloadManager.xml";
-			if ((mode1 != "default" && String.IsNullOrWhiteSpace(HelperClasses.FileHandling.GetStringFromURL(URL1, true))) ||
-				(mode2 != "default" && String.IsNullOrWhiteSpace(HelperClasses.FileHandling.GetStringFromURL(URL2, true))))
-			{
-				Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Cant find that version online. Do you still want to set this Mode?");
-				yesno.ShowDialog();
-				if (yesno.DialogResult == false)
-				{
-					return;
-				}
-			}
-			MySettings.Settings.P127Mode = mode1;
-			MySettings.Settings.DMMode = mode2;
-
-			// Globals.CheckForUpdate(); Gets checked on P127Mode setter
-			ComponentManager.MyRefreshStatic();
-
-            this.Close();
+			SetNew();
 		}
+
+		private async void SetNew()
+		{
+            Border_Loading.Visibility = Visibility.Visible;
+
+            string mode1 = tb_Main.Text;
+            string mode2 = tb_Main_DM.Text;
+            string URL1 = "https://raw.githubusercontent.com/TwosHusbandS/Project-127/" + mode1.ToLower() + "/Installer/Update.xml";
+            string URL2 = "https://raw.githubusercontent.com/TwosHusbandS/Project-127/" + mode2.ToLower() + "/Installer/DownloadManager.xml";
+			Task<string> Task1 = HelperClasses.FileHandling.GetStringFromURL(URL1, true);
+			Task<string> Task2 = HelperClasses.FileHandling.GetStringFromURL(URL2, true);
+			string Github1 = await Task1;
+			string Github2 = await Task2;
+
+            if ((mode1 != "default" && String.IsNullOrWhiteSpace(Github1)) ||
+                (mode2 != "default" && String.IsNullOrWhiteSpace(Github2)))
+            {
+                bool yesno = PopupWrapper.PopupYesNo("Cant find that version online. Do you still want to set this Mode?");
+                if (yesno == false)
+                {
+                    return;
+                }
+            }
+
+			DirtyNoUpdate = true;
+            MySettings.Settings.P127Mode = mode1;
+            MySettings.Settings.DMMode = mode2;
+			DirtyNoUpdate = false;
+
+			await MySettings.Settings.CheckForUpdateClick(false);
+
+			Border_Loading.Visibility = Visibility.Hidden;
+        }
 
 		/// <summary>
 		/// Exit Click. Closes Window

@@ -215,7 +215,7 @@ namespace Project_127.Popups
                 if (!HelperClasses.FileHandling.doesFileExist(ZipFileWeWannaExtract))
                 {
                     HelperClasses.Logger.Log("ERROR. ZIP File we are extracting in Popup window doesnt exist..", true, 0);
-                    new Popup(Popup.PopupWindowTypes.PopupOk, "ERROR. ZIP File we are extracting in Popup window doesnt exist..").ShowDialog();
+                    PopupWrapper.PopupOk("ERROR. ZIP File we are extracting in Popup window doesnt exist..");
                     return;
                 }
 
@@ -270,7 +270,7 @@ namespace Project_127.Popups
                 catch (Exception e)
                 {
                     HelperClasses.Logger.Log("TryCatch failed while extracting ZIP with progressbar." + e.ToString());
-                    Globals.PopupError("trycatch failed while extracting zip with progressbar\n" + e.ToString());
+                    PopupWrapper.PopupError("trycatch failed while extracting zip with progressbar\n" + e.ToString());
                 }
             }
 
@@ -353,9 +353,8 @@ namespace Project_127.Popups
                                     {
                                         Application.Current.Dispatcher.Invoke((Action)delegate
                                         {
-                                            Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Detected new Files inside your GTA Installation.\nP127 will use these as the files you revert to when Upgrading.\nDo you want me to back up your previous Upgrade - Files?");
-                                            yesno.ShowDialog();
-                                            if (yesno.DialogResult == true)
+                                            bool yesno = PopupWrapper.PopupYesNo("Detected new Files inside your GTA Installation.\nP127 will use these as the files you revert to when Upgrading.\nDo you want me to back up your previous Upgrade - Files?");
+                                            if (yesno == true)
                                             {
                                                 HelperClasses.Logger.Log("User does want it. Initiating CreateBackup()");
 
@@ -492,9 +491,8 @@ namespace Project_127.Popups
                                     {
                                         Application.Current.Dispatcher.Invoke((Action)delegate
                                         {
-                                            Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Detected new Files inside your GTA Installation.\nP127 will use these as the files you revert to when Upgrading.\nDo you want me to back up your previous Upgrade - Files?");
-                                            yesno.ShowDialog();
-                                            if (yesno.DialogResult == true)
+                                            bool yesno = PopupWrapper.PopupYesNo("Detected new Files inside your GTA Installation.\nP127 will use these as the files you revert to when Upgrading.\nDo you want me to back up your previous Upgrade - Files?");
+                                            if (yesno == true)
                                             {
                                                 HelperClasses.Logger.Log("User does want it. Initiating CreateBackup()");
 

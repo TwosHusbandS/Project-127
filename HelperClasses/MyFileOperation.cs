@@ -135,7 +135,7 @@ namespace Project_127.HelperClasses
 					{
                         Logger.Log("Executing wrapper, user does NOT want a restart. Asking if we should cancel file operation");
 
-                        if (Globals.PopupYesNo("Do you want to cancel the current FileOperations?\n\nNot canceling is fine, will just spamm you with errors.") == true)
+                        if (PopupWrapper.PopupYesNo("Do you want to cancel the current FileOperations?\n\nNot canceling is fine, will just spamm you with errors.") == true)
                         {
                             Logger.Log("Executing wrapper, canceling file operation");
                             CancelFileOperations = true;
@@ -225,7 +225,7 @@ namespace Project_127.HelperClasses
 						}
 						else
 						{
-                            Globals.PopupError("No idea what happened here...MyFileOperation Execute Hardlink Folder");
+                            PopupWrapper.PopupError("No idea what happened here...MyFileOperation Execute Hardlink Folder");
 						}
 						break;
 					}

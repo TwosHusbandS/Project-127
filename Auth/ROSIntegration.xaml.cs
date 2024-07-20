@@ -104,7 +104,7 @@ namespace Project_127.Auth
 			key = key.OpenSubKey(@"SOFTWARE\WOW6432Node\Rockstar Games\Launcher");
 			if (key == null)
 			{
-                Globals.PopupError("Unable to find MTL registry key.\n\nThis error is usually solved by reinstalling the rockstar launcher.");
+                PopupWrapper.PopupError("Unable to find MTL registry key.\n\nThis error is usually solved by reinstalling the rockstar launcher.");
 				return;
 			}
 			var installFolder = RegeditHandler.GetValue(key, "InstallFolder");
@@ -266,7 +266,7 @@ namespace Project_127.Auth
 			// this if else is new, just to check if we can reach the website
 			if (!WebSiteIsAvailable(@"https://rgl.rockstargames.com/launcher"))
 			{
-                Globals.PopupError("Cant reach rockstar server, cannot authenticate.");
+                PopupWrapper.PopupError("Cant reach rockstar server, cannot authenticate.");
 				this.Dispatcher.Invoke(() =>
 				{
 					Globals.PageState = Globals.PageStates.GTA;
@@ -475,7 +475,7 @@ namespace Project_127.Auth
 					else
 					{
 						HelperClasses.Logger.Log("Login Failure");
-						Globals.PopupError("Login Failure");
+                        PopupWrapper.PopupError("Login Failure");
 					}
 
 					this.Dispatcher.Invoke(() => this.Visibility = Visibility.Hidden);

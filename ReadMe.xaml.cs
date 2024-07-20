@@ -1,4 +1,5 @@
 ﻿using GSF.Units;
+using Project_127.Popups;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -29,36 +30,9 @@ namespace Project_127
 		/// </summary>
 		public static ReadMeStates LastReadMeState = ReadMeStates.About;
 
-		public static bool HideVideo = false;
+		public static bool HideVideo = true;
 		public static string DragonsLink = "https://github.com/jaredtb";
 		public static string AnthersDemoVideoLink = "https://www.youtube.com/watch?v=dQw4w9WgXcQ&t=PLACEHOLDER";
-
-		public static void DynamicLinksMethod(string XML = null)
-        {
-            if (XML is null) // actually needs null check and not nullOrEmpty
-            {
-                XML = Globals.XML_AutoUpdate;
-			}
-
-			//dragonsreadme
-			string dragonsReadMe = HelperClasses.FileHandling.GetXMLTagContent(XML, "dragonsreadme");
-			if (HelperClasses.FileHandling.URLExists(dragonsReadMe))
-			{
-				ReadMe.DragonsLink = dragonsReadMe;
-			}
-
-			string AntherTMP = HelperClasses.FileHandling.GetXMLTagContent(XML, "demovideo");
-			if (HelperClasses.FileHandling.URLExists(AntherTMP))
-			{
-				ReadMe.AnthersDemoVideoLink = AntherTMP;
-			}
-
-			string tmpBool = HelperClasses.FileHandling.GetXMLTagContent(XML, "hidevideo");
-			if (tmpBool == "True")
-			{
-				HideVideo = true;
-			}
-		}
 
 
 		/// <summary>
@@ -514,7 +488,7 @@ namespace Project_127
 		{
 			if (e.ClickCount == 3)
 			{
-				new Popups.Popup(Popups.Popup.PopupWindowTypes.PopupOk, "Shoutouts to @thedosei for being cool\nYou do matter, dont let someone tell you different\nAlso your cat picture is cute").ShowDialog();
+                PopupWrapper.PopupOk("Shoutouts to @thedosei for being cool\nYou do matter, dont let someone tell you different\nAlso your cat picture is cute");
 			}
 		}
 

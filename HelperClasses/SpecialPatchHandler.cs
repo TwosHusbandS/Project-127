@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Project_127.Popups;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -633,7 +634,7 @@ namespace Project_127.HelperClasses
 				HelperClasses.FileHandling.copyFile(source, target);
 				if (!HelperClasses.FileHandling.doesFileExist(target))
 				{
-                    Globals.PopupError("Failed to copy scripthook. ASM patcher will not load");
+                    PopupWrapper.PopupError("Failed to copy scripthook. ASM patcher will not load");
 				}
 			}
 

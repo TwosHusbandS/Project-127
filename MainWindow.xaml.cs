@@ -37,6 +37,12 @@ Comments like "TODO", "TO DO", "CTRLF", "CTRL-F", and "CTRL F" are just ways of 
 Hybrid code can be found in AAA_HybridCode.
 
 
+https://stackoverflow.com/questions/27851073/why-would-i-bother-to-use-task-configureawaitcontinueoncapturedcontext-false
+https://stackoverflow.com/questions/13489065/best-practice-to-call-configureawait-for-all-server-side-code
+https://stackoverflow.com/questions/10343632/httpclient-getasync-never-returns-when-using-await-async/10351400#10351400
+https://stackoverflow.com/questions/9895048/async-call-with-await-in-httpclient-never-returns
+https://blog.stephencleary.com/2012/02/async-and-await.html#avoiding-context
+using the ConfigureAwait thingy because otherwise it deadlocked and got the XML but was still stuck? like the await part didnt got notified
 */
 
 using System;
@@ -80,119 +86,123 @@ using System.DirectoryServices.AccountManagement;
 using System.Windows.Media.Effects;
 using System.Speech.Synthesis;
 using Microsoft.Xaml.Behaviors;
+using System.Windows.Interop;
+using static Project_127.Globals;
 
 namespace Project_127
 {
-	/// <summary>
-	/// CLass of Main Window which gets displayed when you start the application.
-	/// </summary>
-	public partial class MainWindow : Window
-	{
+    /// <summary>
+    /// CLass of Main Window which gets displayed when you start the application.
+    /// </summary>
+    public partial class MainWindow : Window
+    {
 
-		// Properties and Constructor below
+        // Properties and Constructor below
 
-		#region Properties and Constructor
+        #region Properties and Constructor
 
-		/// <summary>
-		/// Static Property to access Children (mainly Controls) of MainWindow Instance
-		/// </summary>
-		public static MainWindow MW;
+        /// <summary>
+        /// Static Property to access Children (mainly Controls) of MainWindow Instance
+        /// </summary>
+        public static MainWindow MW;
 
-		/// <summary>
-		/// Static Reference to our WPF Window for Multi Monitor Overlay
-		/// </summary>
-		public static Overlay_MultipleMonitor OL_MM = null;
+        public Task GlobalInitTask;
 
-		/// <summary>
-		/// Static Property to our NotifyIcon (Tray icon)
-		/// </summary>
-		public System.Windows.Forms.NotifyIcon notifyIcon = null;
+        /// <summary>
+        /// Static Reference to our WPF Window for Multi Monitor Overlay
+        /// </summary>
+        public static Overlay_MultipleMonitor OL_MM = null;
 
-		/// <summary>
-		/// Static Property of the Mutex we use to determine if P127 is already running in another instance
-		/// </summary>
-		public static Mutex myMutex;
+        /// <summary>
+        /// Static Property to our NotifyIcon (Tray icon)
+        /// </summary>
+        public System.Windows.Forms.NotifyIcon notifyIcon = null;
 
-		/// <summary>
-		/// Property of the Dispatcher Timer we use to keep track of GameState
-		/// </summary>
-		public static DispatcherTimer MyDispatcherTimer;
+        /// <summary>
+        /// Static Property of the Mutex we use to determine if P127 is already running in another instance
+        /// </summary>
+        public static Mutex myMutex;
 
-		/// <summary>
-		/// Property of the Dispatcher Timer we use to control automatic MTL session retrieval
-		/// </summary>
-		public static DispatcherTimer MTLAuthTimer;
+        /// <summary>
+        /// Property of the Dispatcher Timer we use to keep track of GameState
+        /// </summary>
+        public static DispatcherTimer MyDispatcherTimer;
 
-		private Stopwatch StartUpStopwatch;
+        /// <summary>
+        /// Property of the Dispatcher Timer we use to control automatic MTL session retrieval
+        /// </summary>
+        public static DispatcherTimer MTLAuthTimer;
 
-		public static Auth.DynamicMTLOffsets DMO;
+        private Stopwatch StartUpStopwatch;
 
-		/// <summary>
-		/// Constructor of Main Window
-		/// </summary>
-		public MainWindow()
-		{
-			StartUpStopwatch = new Stopwatch();
-			StartUpStopwatch.Start();
+        public static Auth.DynamicMTLOffsets DMO;
 
-			// Initializing all WPF Elements
-			InitializeComponent();
+        /// <summary>
+        /// Constructor of Main Window
+        /// </summary>
+        public MainWindow()
+        {
+            StartUpStopwatch = new Stopwatch();
+            StartUpStopwatch.Start();
 
-			// Setting this for use in other classes later
-			MainWindow.MW = this;
+            // Initializing all WPF Elements
+            InitializeComponent();
 
-			//Dont run anything when we are on 32 bit...
-			//If this ever gets changed, take a second look at regedit class and path(different for 32 and 64 bit OS)
-			if (Environment.Is64BitOperatingSystem == false)
-			{
-                Globals.PopupError("32 Bit Operating System detected.\nGTA (afaik) does not run on 32 Bit at all.");
-				Environment.Exit(1);
-			}
+            // Setting this for use in other classes later
+            MainWindow.MW = this;
 
-			// Admin Relauncher
-			AdminRelauncher();
+            Globals.HamburgerMenuState = Globals.HamburgerMenuStates.Loading;
 
-			// Some shit due to do with the multi monitor preview
-			this.Width = 900;
+            //Dont run anything when we are on 32 bit...
+            //If this ever gets changed, take a second look at regedit class and path(different for 32 and 64 bit OS)
+            if (Environment.Is64BitOperatingSystem == false)
+            {
+                PopupWrapper.PopupError("32 Bit Operating System detected.\nGTA (afaik) does not run on 32 Bit at all.");
+                Environment.Exit(1);
+            }
 
-			// Checking if Mutex is already running
-			Mutex m = new Mutex(false, "P127_Mutex");
-			if (m.WaitOne(100))
-			{
-				// When it isnt
-			}
-			else
-			{
-				// It is already running, calls Globals.ProperExit
-				AlreadyRunning();
-			}
+            // Admin Relauncher
+            AdminRelauncher();
 
-			// Starting our own Mutex since its not already running
-			myMutex = new Mutex(false, "P127_Mutex");
+            // Some shit due to do with the multi monitor preview
+            this.Width = 900;
 
-			myMutex.WaitOne();
+            // Checking if Mutex is already running
+            Mutex m = new Mutex(false, "P127_Mutex");
+            if (m.WaitOne(100))
+            {
+                // When it isnt
+            }
+            else
+            {
+                // It is already running, calls Globals.ProperExit
+                AlreadyRunning();
+            }
 
-			// Start the Init Process of Logger, Settings, Globals, Regedit here, since we need the Logger in the next Line if it fails...
-			Globals.Init();
+            // Starting our own Mutex since its not already running
+            myMutex = new Mutex(false, "P127_Mutex");
 
-			if (Globals.P127Branch == "internal")
-			{
-				//string msg = "We are in internal mode. We need testing on:\n\n" +
-				//	"- Nothing" + "\n" +
-				//	"- Everything" + "\n" +
-				//	"\nI do expect everything to work, so no extensive Testing needed." + "\n" +
-				//	"\nThanks. Appreciated. Have a great day : )";
+            myMutex.WaitOne();
 
-				//new Popup(Popup.PopupWindowTypes.PopupOk, msg).ShowDialog();
-			}
+            // Start the Init Process of Logger, Settings, Globals, Regedit here, since we need the Logger in the next Line if it fails...
+            GlobalInitTask = Globals.Init();
 
-			// GUI SHIT
-			SetButtonMouseOverMagic(btn_Exit);
-			SetButtonMouseOverMagic(btn_Auth);
-			SetButtonMouseOverMagic(btn_Hamburger);
-			Globals.PageState = Globals.PageStates.GTA;
+            if (Globals.P127Branch == "internal")
+            {
+                //string msg = "We are in internal mode. We need testing on:\n\n" +
+                //	"- Nothing" + "\n" +
+                //	"- Everything" + "\n" +
+                //	"\nI do expect everything to work, so no extensive Testing needed." + "\n" +
+                //	"\nThanks. Appreciated. Have a great day : )";
 
-            Globals.HamburgerMenuState = Globals.HamburgerMenuStates.Visible;
+                //PopupWrapper.PopupOk(msg).ShowDialog();
+            }
+
+            // GUI SHIT
+            SetButtonMouseOverMagic(btn_Exit);
+            SetButtonMouseOverMagic(btn_Auth);
+            SetButtonMouseOverMagic(btn_Hamburger);
+            Globals.PageState = Globals.PageStates.GTA;
 
             // Some Background Change based on Date
             ChangeBackgroundBasedOnSeason();
@@ -200,98 +210,107 @@ namespace Project_127
             // Intepreting all Command Line shit
             Globals.CommandLineArgumentIntepretation();
 
-			if (Settings.P127Mode.ToLower() != "default")
-			{
-				MainWindow.MW.btn_lbl_Mode.Content = "Curr P127 Mode: '" + MySettings.Settings.P127Mode + "'";
-				MainWindow.MW.btn_lbl_Mode.Visibility = Visibility.Visible;
-			}
-			else
-			{
-				MainWindow.MW.btn_lbl_Mode.Content = "";
-				MainWindow.MW.btn_lbl_Mode.Visibility = Visibility.Hidden;
-			}
-			MainWindow.MW.btn_lbl_Mode.ToolTip = MainWindow.MW.btn_lbl_Mode.Content;
+            if (Settings.P127Mode.ToLower() != "default")
+            {
+                MainWindow.MW.btn_lbl_Mode.Content = "Curr P127 Mode: '" + MySettings.Settings.P127Mode + "'";
+                MainWindow.MW.btn_lbl_Mode.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                MainWindow.MW.btn_lbl_Mode.Content = "";
+                MainWindow.MW.btn_lbl_Mode.Visibility = Visibility.Hidden;
+            }
+            MainWindow.MW.btn_lbl_Mode.ToolTip = MainWindow.MW.btn_lbl_Mode.Content;
 
-			StartDispatcherTimer();
+            StartDispatcherTimer();
 
-			// Making this show on WindowLoaded
-			//HelperClasses.Logger.Log("Startup procedure (Constructor of MainWindow) completed.");
-			//HelperClasses.Logger.Log("--------------------------------------------------------");
+            // Making this show on WindowLoaded
+            //HelperClasses.Logger.Log("Startup procedure (Constructor of MainWindow) completed.");
+            //HelperClasses.Logger.Log("--------------------------------------------------------");
 
-			// Testing Purpose for the overlay shit
-			if (GTAOverlay.DebugMode)
-			{
-				//We currently need this here, normally this will be started by GameState(but this points to GTA V.exe as of right now)
-				NoteOverlay.InitGTAOverlay();
+            // Testing Purpose for the overlay shit
+            if (GTAOverlay.DebugMode)
+            {
+                //We currently need this here, normally this will be started by GameState(but this points to GTA V.exe as of right now)
+                NoteOverlay.InitGTAOverlay();
 
-				// Same as other two thingies here lolerino
-				HelperClasses.WindowChangeListener.Start();
-			}
+                // Same as other two thingies here lolerino
+                HelperClasses.WindowChangeListener.Start();
+            }
 
-			HelperClasses.Logger.Log("Constructor of MainWindow Done. Will finish init with OnLoaded of WindowLoaded Event");
-		}
+            HelperClasses.Logger.Log("Constructor of MainWindow Done. Will finish init with OnLoaded of WindowLoaded Event");
+        }
 
-		#endregion
+        #endregion
 
-		// Properties and Constructor above
+        // Properties and Constructor above
 
-		// Windowevents below
+        // Windowevents below
 
-		#region windowevents
+        #region windowevents
 
-		/// <summary>
-		/// Event when Window finished Loading
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
-		private void Window_Loaded(object sender, RoutedEventArgs e)
-		{
-			InitNotifyIcon();
+        /// <summary>
+        /// Event when Window finished Loading
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private async void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            Task TaskWindowLoaded = Window_LoadedTask();
+        }
 
-			NoteOverlay.OverlaySettingsChanged();
+        private async Task Window_LoadedTask()
+        {
+            await MainWindow.MW.GlobalInitTask;
 
-			StartUpStopwatch.Stop();
+            InitNotifyIcon();
 
-			HelperClasses.Logger.Log("Startup procedure (Constructor of MainWindow) completed. It took " + StartUpStopwatch.ElapsedMilliseconds + " ms.");
-			HelperClasses.Logger.Log("------------------------------------------------------------------------------------");
-		}
+            NoteOverlay.OverlaySettingsChanged();
+
+            Globals.HamburgerMenuState = Globals.HamburgerMenuStates.Visible;
+
+            StartUpStopwatch.Stop();
+
+            HelperClasses.Logger.Log("Startup procedure (Constructor of MainWindow + GlobalInitTask + WindowLoaded Event) completed. It took " + StartUpStopwatch.ElapsedMilliseconds + " ms.");
+            HelperClasses.Logger.Log("------------------------------------------------------------------------------------");
+        }
 
 
-		/// <summary>
-		/// Gets called when MainWindow is being closed by user, task manager (not kill process), ALT+F4, or taskbar
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
-		private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
-		{
-			e.Cancel = true;
-			if (Settings.ExitWay == Settings.ExitWays.HideInTray)
-			{
-				menuItem_Hide_Click(null, null);
-			}
-			else
-			{
-				Globals.ProperExit();
-			}
-		}
+        /// <summary>
+        /// Gets called when MainWindow is being closed by user, task manager (not kill process), ALT+F4, or taskbar
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            e.Cancel = true;
+            if (Settings.ExitWay == Settings.ExitWays.HideInTray)
+            {
+                menuItem_Hide_Click(null, null);
+            }
+            else
+            {
+                Globals.ProperExit();
+            }
+        }
 
-		/// <summary>
-		/// WPF Magic to stop the Frame from doing dumb shit to its pages.
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
-		private void Frame_Main_Navigating(object sender, NavigatingCancelEventArgs e)
-		{
-			if (e.NavigationMode == NavigationMode.Back || e.NavigationMode == NavigationMode.Forward)
-			{
-				e.Cancel = true;
-			}
-		}
+        /// <summary>
+        /// WPF Magic to stop the Frame from doing dumb shit to its pages.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Frame_Main_Navigating(object sender, NavigatingCancelEventArgs e)
+        {
+            if (e.NavigationMode == NavigationMode.Back || e.NavigationMode == NavigationMode.Forward)
+            {
+                e.Cancel = true;
+            }
+        }
 
-		/// <summary>
-		/// Clears the history (mem leak) of the Frame thats used to display all Pages
-		/// </summary>
-		/// <param name="myFrame"></param>
+        /// <summary>
+        /// Clears the history (mem leak) of the Frame thats used to display all Pages
+        /// </summary>
+        /// <param name="myFrame"></param>
         public static void ClearHistory(System.Windows.Controls.Frame myFrame)
         {
             if (!myFrame.CanGoBack && !myFrame.CanGoForward)
@@ -318,18 +337,18 @@ namespace Project_127
         /// Gets called when another P127 instance is already running. 
         /// </summary>
         public void AlreadyRunning()
-		{
+        {
 
-			try
-			{
-				var pc = new IPCPipeClient("Project127Launcher");
+            try
+            {
+                var pc = new IPCPipeClient("Project127Launcher");
 
-				byte[] rtrn = pc.call("pleaseshow", Encoding.UTF8.GetBytes("ThanksDragonForImplementing"));
+                byte[] rtrn = pc.call("pleaseshow", Encoding.UTF8.GetBytes("ThanksDragonForImplementing"));
 
-				System.Threading.Thread.Sleep(500);
+                System.Threading.Thread.Sleep(500);
 
-				if (rtrn[0] == Convert.ToByte(true))
-				{
+                if (rtrn[0] == Convert.ToByte(true))
+                {
                     try
                     {
                         this.Close();
@@ -337,381 +356,384 @@ namespace Project_127
                     }
                     catch { }
                     Application.Current.Shutdown();
-					Environment.Exit(0);
-					return;
-				}
-			}
-			catch
-			{
+                    Environment.Exit(0);
+                    return;
+                }
+            }
+            catch
+            {
 
-			}
+            }
 
-			Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Program is open twice.\nAttempt to talk to already running instance failed.\nForce Close Everything?");
-			yesno.ShowDialog();
-			if (yesno.DialogResult == true)
-			{
-				foreach (Process p in HelperClasses.ProcessHandler.GetProcessesContains(Process.GetCurrentProcess().ProcessName))
-				{
-					if (p != Process.GetCurrentProcess())
-					{
-						HelperClasses.ProcessHandler.Kill(p);
-					}
-				}
-				Globals.ProperExit();
-			}
+            bool yesno = PopupWrapper.PopupYesNo("Program is open twice.\nAttempt to talk to already running instance failed.\nForce Close Everything?");
+            if (yesno == true)
+            {
+                foreach (Process p in HelperClasses.ProcessHandler.GetProcessesContains(Process.GetCurrentProcess().ProcessName))
+                {
+                    if (p != Process.GetCurrentProcess())
+                    {
+                        HelperClasses.ProcessHandler.Kill(p);
+                    }
+                }
+                Globals.ProperExit();
+            }
 
-		}
-
-
-		/// <summary>
-		/// Responsible for Re-Launching this App as Admin if it isnt.
-		/// </summary>
-		private void AdminRelauncher()
-		{
-			// If not run as Admin
-			if (!IsRunAsAdmin())
-			{
-				try
-				{
-					string[] args = Environment.GetCommandLineArgs();
-					string arg = string.Join(" ", args.Skip(1).ToArray());
-					HelperClasses.ProcessHandler.StartProcess(Assembly.GetEntryAssembly().Location, Environment.CurrentDirectory, arg, true, true);
-					Environment.Exit(0);
-				}
-				catch (Exception)
-				{
-					System.Windows.Forms.MessageBox.Show("This program must be run as an administrator!");
-				}
-			}
-		}
-
-		/// <summary>
-		/// Method which checks if this program is run as admin. Returns one bool
-		/// </summary>
-		/// <returns></returns>
-		private bool IsRunAsAdmin()
-		{
-			try
-			{
-				WindowsIdentity id = WindowsIdentity.GetCurrent();
-				WindowsPrincipal principal = new WindowsPrincipal(id);
-				return principal.IsInRole(WindowsBuiltInRole.Administrator);
-			}
-			catch (Exception)
-			{
-				return false;
-			}
-		}
+        }
 
 
+        /// <summary>
+        /// Responsible for Re-Launching this App as Admin if it isnt.
+        /// </summary>
+        private void AdminRelauncher()
+        {
+            // If not run as Admin
+            if (!IsRunAsAdmin())
+            {
+                try
+                {
+                    string[] args = Environment.GetCommandLineArgs();
+                    string arg = string.Join(" ", args.Skip(1).ToArray());
+                    HelperClasses.ProcessHandler.StartProcess(Assembly.GetEntryAssembly().Location, Environment.CurrentDirectory, arg, true, true);
+                    Environment.Exit(0);
+                }
+                catch (Exception)
+                {
+                    System.Windows.Forms.MessageBox.Show("This program must be run as an administrator!");
+                }
+            }
+        }
 
-		/// <summary>
-		/// Starting the Dispatcher Timer. 2,5 seconds. Used for Polling Gamestate and stuff
-		/// </summary>
-		private void StartDispatcherTimer()
-		{
-			// Starting the Dispatcher Timer for the automatic updates of the GTA V Button
-			MyDispatcherTimer = new System.Windows.Threading.DispatcherTimer();
-			MyDispatcherTimer.Tick += new EventHandler(MainWindow.MW.UpdateGUIDispatcherTimer);
-			MyDispatcherTimer.Interval = TimeSpan.FromMilliseconds(1000);
-			MyDispatcherTimer.Start();
-			MainWindow.MW.UpdateGUIDispatcherTimer();
-		}
+        /// <summary>
+        /// Method which checks if this program is run as admin. Returns one bool
+        /// </summary>
+        /// <returns></returns>
+        private bool IsRunAsAdmin()
+        {
+            try
+            {
+                WindowsIdentity id = WindowsIdentity.GetCurrent();
+                WindowsPrincipal principal = new WindowsPrincipal(id);
+                return principal.IsInRole(WindowsBuiltInRole.Administrator);
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
 
 
 
-		/// <summary>
-		/// Updates the GUI with relevant stuff. Gets called every 1 Seconds
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
-		public void UpdateGUIDispatcherTimer(object sender = null, EventArgs e = null) // Gets called every DispatcherTimer_Tick. Just starts the read function.
-		{
-			if (LauncherLogic.InstallationState == LauncherLogic.InstallationStates.Downgraded)
-			{
-				lbl_GTA.Foreground = MyColors.MW_GTALabelDowngradedForeground;
-				lbl_GTA.Content = "Downgraded";
-			}
-			else if (LauncherLogic.InstallationState == LauncherLogic.InstallationStates.Upgraded)
-			{
-				lbl_GTA.Foreground = MyColors.MW_GTALabelUpgradedForeground;
-				lbl_GTA.Content = "Upgraded";
-			}
-			else
-			{
-				lbl_GTA.Foreground = MyColors.MW_GTALabelUnsureForeground;
-				lbl_GTA.Content = "Unsure";
-			}
+        /// <summary>
+        /// Starting the Dispatcher Timer. 2,5 seconds. Used for Polling Gamestate and stuff
+        /// </summary>
+        private void StartDispatcherTimer()
+        {
+            // Starting the Dispatcher Timer for the automatic updates of the GTA V Button
+            MyDispatcherTimer = new System.Windows.Threading.DispatcherTimer();
+            MyDispatcherTimer.Tick += new EventHandler(MainWindow.MW.UpdateGUIDispatcherTimer);
+            MyDispatcherTimer.Interval = TimeSpan.FromMilliseconds(1000);
+            MyDispatcherTimer.Start();
+            MainWindow.MW.UpdateGUIDispatcherTimer();
+        }
 
-			lbl_GTA.Content += BuildVersionTable.GetNiceGameVersionString(Globals.GTABuild);
 
-			LauncherLogic.GameStates currGameState = LauncherLogic.PollGameState();
+
+        /// <summary>
+        /// Updates the GUI with relevant stuff. Gets called every 1 Seconds
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public void UpdateGUIDispatcherTimer(object sender = null, EventArgs e = null) // Gets called every DispatcherTimer_Tick. Just starts the read function.
+        {
+            if (LauncherLogic.InstallationState == LauncherLogic.InstallationStates.Downgraded)
+            {
+                lbl_GTA.Foreground = MyColors.MW_GTALabelDowngradedForeground;
+                lbl_GTA.Content = "Downgraded";
+            }
+            else if (LauncherLogic.InstallationState == LauncherLogic.InstallationStates.Upgraded)
+            {
+                lbl_GTA.Foreground = MyColors.MW_GTALabelUpgradedForeground;
+                lbl_GTA.Content = "Upgraded";
+            }
+            else
+            {
+                lbl_GTA.Foreground = MyColors.MW_GTALabelUnsureForeground;
+                lbl_GTA.Content = "Unsure";
+            }
+
+            lbl_GTA.Content += BuildVersionTable.GetNiceGameVersionString(Globals.GTABuild);
+
+            LauncherLogic.GameStates currGameState = LauncherLogic.PollGameState();
 
             if (currGameState == LauncherLogic.GameStates.Running)
-			{
-				GTA_Page.btn_GTA_static.BorderBrush = MyColors.MW_ButtonGTAGameRunningBorderBrush;
-				GTA_Page.btn_GTA_static.Content = "Exit GTA V";
-			}
+            {
+                GTA_Page.btn_GTA_static.BorderBrush = MyColors.MW_ButtonGTAGameRunningBorderBrush;
+                GTA_Page.btn_GTA_static.Content = "Exit GTA V";
+            }
             else if (currGameState == LauncherLogic.GameStates.Stuck)
             {
                 GTA_Page.btn_GTA_static.BorderBrush = MyColors.MW_ButtonGTAGameStuckBorderBrush;
                 GTA_Page.btn_GTA_static.Content = "Stuck GTA V";
             }
             else
-			{
-				GTA_Page.btn_GTA_static.BorderBrush = MyColors.MW_ButtonGTAGameNotRunningBorderBrush;
-				GTA_Page.btn_GTA_static.Content = "Launch GTA V";
-			}
+            {
+                GTA_Page.btn_GTA_static.BorderBrush = MyColors.MW_ButtonGTAGameNotRunningBorderBrush;
+                GTA_Page.btn_GTA_static.Content = "Launch GTA V";
+            }
 
-			SetButtonMouseOverMagic(btn_Auth);
-		}
+            SetButtonMouseOverMagic(btn_Auth);
+        }
 
 
 
-		/// <summary>
-		/// Starting the Dispatcher Timer. 30 seconds. Used to control automatic MTL session retrieval
-		/// </summary>
-		public void StartMTLDispatcherTimer()
-		{
-			// Starting the Dispatcher Timer for the automatic updates of the GTA V Button
-			MTLAuthTimer = new System.Windows.Threading.DispatcherTimer();
-			MTLAuthTimer.Tick += new EventHandler(MainWindow.MW.AutoAuthMTLTimer);
-			MTLAuthTimer.Interval = TimeSpan.FromMilliseconds(2000);
-			MTLAuthTimer.Start();
-			MainWindow.MW.AutoAuthMTLTimer();
-		}
+        /// <summary>
+        /// Starting the Dispatcher Timer. 30 seconds. Used to control automatic MTL session retrieval
+        /// </summary>
+        public void StartMTLDispatcherTimer()
+        {
+            // Starting the Dispatcher Timer for the automatic updates of the GTA V Button
+            MTLAuthTimer = new System.Windows.Threading.DispatcherTimer();
+            MTLAuthTimer.Tick += new EventHandler(MainWindow.MW.AutoAuthMTLTimer);
+            MTLAuthTimer.Interval = TimeSpan.FromMilliseconds(2000);
+            MTLAuthTimer.Start();
+            MainWindow.MW.AutoAuthMTLTimer();
+        }
 
-		/// <summary>
-		/// Attempts to update auth session using MTL session data. Runs every 30 seconds
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
-		public void AutoAuthMTLTimer(object sender = null, EventArgs e = null)
-		{
+        /// <summary>
+        /// Attempts to update auth session using MTL session data. Runs every 30 seconds
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public void AutoAuthMTLTimer(object sender = null, EventArgs e = null)
+        {
 
-			if (LauncherLogic.AuthState == LauncherLogic.AuthStates.Auth)
-			{
-				MTLAuthTimer.Stop();
-			}
-			else if (LauncherLogic.LaunchWay == LauncherLogic.LaunchWays.SocialClubLaunch)
-			{
-				return;
-			}
-			else
-			{
+            if (LauncherLogic.AuthState == LauncherLogic.AuthStates.Auth)
+            {
+                MTLAuthTimer.Stop();
+            }
+            else if (LauncherLogic.LaunchWay == LauncherLogic.LaunchWays.SocialClubLaunch)
+            {
+                return;
+            }
+            else
+            {
                 _ = Auth.ROSCommunicationBackend.LoginMTL();
-			}
-		}
+            }
+        }
 
-		#endregion
+        #endregion
 
-		// AlreadyRunning, AdminRelauncher and DIspatcher Timer anove
+        // AlreadyRunning, AdminRelauncher and DIspatcher Timer anove
 
-		// PureUI Logic and Helper Classes below
+        // PureUI Logic and Helper Classes below
 
-		#region PureUI Logic and helper Classes
+        #region PureUI Logic and helper Classes
 
-		/// <summary>
-		/// Method we use to call SetButtonBackground with the right parameters to Update GUI
-		/// </summary>
-		/// <param name="myBtn"></param>
-		public void SetButtonMouseOverMagic(Button myBtn)
-		{
-			switch (myBtn.Name)
-			{
-				case "btn_Hamburger":
-					if (myBtn.IsMouseOver)
-					{
-						SetControlBackground(myBtn, @"Artwork\hamburger_mo.png");
-					}
-					else
-					{
-						SetControlBackground(myBtn, @"Artwork\hamburger.png");
-					}
-					break;
-				case "btn_Exit":
-					if (myBtn.IsMouseOver)
-					{
-						SetControlBackground(myBtn, @"Artwork\exit_mo.png");
-					}
-					else
-					{
-						SetControlBackground(myBtn, @"Artwork\exit.png");
-					}
-					break;
-				case "btn_Auth":
-					string BaseArtworkPath = @"Artwork\lock";
+        /// <summary>
+        /// Method we use to call SetButtonBackground with the right parameters to Update GUI
+        /// </summary>
+        /// <param name="myBtn"></param>
+        public void SetButtonMouseOverMagic(Button myBtn)
+        {
+            switch (myBtn.Name)
+            {
+                case "btn_Hamburger":
+                    if (myBtn.IsMouseOver)
+                    {
+                        SetControlBackground(myBtn, @"Artwork\hamburger_mo.png");
+                    }
+                    else
+                    {
+                        SetControlBackground(myBtn, @"Artwork\hamburger.png");
+                    }
+                    break;
+                case "btn_Exit":
+                    if (myBtn.IsMouseOver)
+                    {
+                        SetControlBackground(myBtn, @"Artwork\exit_mo.png");
+                    }
+                    else
+                    {
+                        SetControlBackground(myBtn, @"Artwork\exit.png");
+                    }
+                    break;
+                case "btn_Auth":
+                    string BaseArtworkPath = @"Artwork\lock";
 
-					if (LauncherLogic.LaunchWay == LauncherLogic.LaunchWays.SocialClubLaunch)
-					{
-						BaseArtworkPath += "_crossed";
-						btn_Auth.ToolTip = "Not needed on this Launch - Method";
-					}
-					else
-					{
-						btn_Auth.ToolTip = "Login Button. Lock closed = Logged in. Lock open = Not logged in";
-					}
+                    if (LauncherLogic.LaunchWay == LauncherLogic.LaunchWays.SocialClubLaunch)
+                    {
+                        BaseArtworkPath += "_crossed";
+                        btn_Auth.ToolTip = "Not needed on this Launch - Method";
+                    }
+                    else
+                    {
+                        btn_Auth.ToolTip = "Login Button. Lock closed = Logged in. Lock open = Not logged in";
+                    }
 
-					if (LauncherLogic.AuthState == LauncherLogic.AuthStates.Auth)
-					{
-						BaseArtworkPath += "_closed";
-					}
-					else if (LauncherLogic.AuthState == LauncherLogic.AuthStates.NotAuth)
-					{
-						BaseArtworkPath += "_open";
-					}
+                    if (LauncherLogic.AuthState == LauncherLogic.AuthStates.Auth)
+                    {
+                        BaseArtworkPath += "_closed";
+                    }
+                    else if (LauncherLogic.AuthState == LauncherLogic.AuthStates.NotAuth)
+                    {
+                        BaseArtworkPath += "_open";
+                    }
 
-					if (Globals.PageState == Globals.PageStates.Auth)
-					{
-						// Reverse Mouse Over Effect
+                    if (Globals.PageState == Globals.PageStates.Auth)
+                    {
+                        // Reverse Mouse Over Effect
 
-						if (myBtn.IsMouseOver)
-						{
-							SetControlBackground(myBtn, BaseArtworkPath + ".png");
-						}
-						else
-						{
-							SetControlBackground(myBtn, BaseArtworkPath + "_mo.png");
-						}
-					}
-					else if (Globals.PageState != Globals.PageStates.Auth)
-					{
-						// Normal Mouse Over Effect
+                        if (myBtn.IsMouseOver)
+                        {
+                            SetControlBackground(myBtn, BaseArtworkPath + ".png");
+                        }
+                        else
+                        {
+                            SetControlBackground(myBtn, BaseArtworkPath + "_mo.png");
+                        }
+                    }
+                    else if (Globals.PageState != Globals.PageStates.Auth)
+                    {
+                        // Normal Mouse Over Effect
 
-						if (myBtn.IsMouseOver)
-						{
-							SetControlBackground(myBtn, BaseArtworkPath + "_mo.png");
-						}
-						else
-						{
-							SetControlBackground(myBtn, BaseArtworkPath + ".png");
-						}
-					}
+                        if (myBtn.IsMouseOver)
+                        {
+                            SetControlBackground(myBtn, BaseArtworkPath + "_mo.png");
+                        }
+                        else
+                        {
+                            SetControlBackground(myBtn, BaseArtworkPath + ".png");
+                        }
+                    }
 
-					break;
-			}
-		}
-
-
-		/// <summary>
-		/// Changing Background based on current Date
-		/// </summary>
-		private void ChangeBackgroundBasedOnSeason()
-		{
-			DateTime Now = DateTime.Now;
-
-			if ((Now.Month == 4 && Now.Day == 20) || (Now.Month == 4 && Now.Day == 22))
-			{
-				Globals.BackgroundImage = Globals.BackgroundImages.FourTwenty;
-			}
-			else if (Now.Month == 10 && Now.Day == 29)
-			{
-				Globals.BackgroundImage = Globals.BackgroundImages.Turkey;
-			}
-			else if ((Now.Month == 10 && Now.Day >= 30) ||
-					(Now.Month == 11 && Now.Day == 6))
-			{
-				Globals.BackgroundImage = Globals.BackgroundImages.Spooky;
-			}
-			else if ((Now.Month == 12 && Now.Day >= 6) ||
-					(Now.Month == 1 && Now.Day <= 9))
-			{
-				Globals.BackgroundImage = Globals.BackgroundImages.Winter;
-			}
-			else if (Now.Month == 2 && Now.Day == 14)
-			{
-				Globals.BackgroundImage = Globals.BackgroundImages.Valentine;
-			}
-			else if (Now.Month == 3 && Now.Day == 18)
-			{
-				Globals.BackgroundImage = Globals.BackgroundImages.Cat;
-			}
-			else if (Now.Month == 7 && Now.Day == 4)
-			{
-				Globals.BackgroundImage = Globals.BackgroundImages.Murica;
-			}
-			else if (Now.Month == 10 && Now.Day == 3)
-			{
-				Globals.BackgroundImage = Globals.BackgroundImages.Germania;
-			}
-			else if (Now.Month == 4 && Now.Day == 1)
-			{
-				Globals.BackgroundImage = Globals.BackgroundImages.AprilFools;
-				Globals.HamburgerMenuState = Globals.HamburgerMenuStates.Hidden;
-                if (Now.Second == 30 || Now.Second  == 1 || Now.Second == 4) 
-				{
-					Globals.PageState = Globals.PageStates.Auth;
-				}
-			}
-			else
-			{
-				Globals.BackgroundImage = Globals.BackgroundImages.Default;
-			}
-		}
+                    break;
+            }
+        }
 
 
-		/// <summary>
-		/// Set the Background to our WPF Window
-		/// </summary>
-		public void SetWindowBackgroundImage()
-		{
-			try
-			{
-				var bitmap = new BitmapImage();
+        /// <summary>
+        /// Changing Background based on current Date
+        /// </summary>
+        private void ChangeBackgroundBasedOnSeason()
+        {
+            DateTime Now = DateTime.Now;
 
-				string FilePath = Globals.ProjectInstallationPathBinary.TrimEnd('\\') + @"\Artwork\bg_" + Globals.BackgroundImage.ToString().ToLower() + ".png";
+            if ((Now.Month == 4 && Now.Day == 20) || (Now.Month == 4 && Now.Day == 22))
+            {
+                Globals.BackgroundImage = Globals.BackgroundImages.FourTwenty;
+            }
+            else if (Now.Month == 10 && Now.Day == 29)
+            {
+                Globals.BackgroundImage = Globals.BackgroundImages.Turkey;
+            }
+            else if ((Now.Month == 10 && Now.Day >= 30) ||
+                    (Now.Month == 11 && Now.Day == 6))
+            {
+                Globals.BackgroundImage = Globals.BackgroundImages.Spooky;
+            }
+            else if ((Now.Month == 12 && Now.Day >= 6) ||
+                    (Now.Month == 1 && Now.Day <= 9))
+            {
+                Globals.BackgroundImage = Globals.BackgroundImages.Winter;
+            }
+            else if (Now.Month == 2 && Now.Day == 14)
+            {
+                Globals.BackgroundImage = Globals.BackgroundImages.Valentine;
+            }
+            else if (Now.Month == 3 && Now.Day == 18)
+            {
+                Globals.BackgroundImage = Globals.BackgroundImages.Cat;
+            }
+            else if (Now.Month == 7 && Now.Day == 4)
+            {
+                Globals.BackgroundImage = Globals.BackgroundImages.Murica;
+            }
+            else if (Now.Month == 10 && Now.Day == 3)
+            {
+                Globals.BackgroundImage = Globals.BackgroundImages.Germania;
+            }
+            else if (Now.Month == 4 && Now.Day == 1)
+            {
+                Globals.BackgroundImage = Globals.BackgroundImages.AprilFools;
+                if (Now.Second == 30 || Now.Second == 1 || Now.Second == 4)
+                {
+                    Globals.PageState = Globals.PageStates.Auth;
+                }
+            }
+            else
+            {
+                Globals.BackgroundImage = Globals.BackgroundImages.Default;
+            }
+        }
 
-				using (var stream = new FileStream(FilePath, FileMode.Open))
-				{
-					bitmap.BeginInit();
-					bitmap.CacheOption = BitmapCacheOption.OnLoad;
-					bitmap.StreamSource = stream;
-					bitmap.EndInit();
-					bitmap.Freeze(); // optional
-				}
-				ImageBrush brush2 = new ImageBrush();
-				brush2.ImageSource = bitmap;
+
+        /// <summary>
+        /// Set the Background to our WPF Window
+        /// </summary>
+        public void SetWindowBackgroundImage()
+        {
+            try
+            {
+                var bitmap = new BitmapImage();
+
+                string FilePath = Globals.ProjectInstallationPathBinary.TrimEnd('\\') + @"\Artwork\bg_" + Globals.BackgroundImage.ToString().ToLower() + ".png";
+
+                using (var stream = new FileStream(FilePath, FileMode.Open))
+                {
+                    bitmap.BeginInit();
+                    bitmap.CacheOption = BitmapCacheOption.OnLoad;
+                    bitmap.StreamSource = stream;
+                    bitmap.EndInit();
+                    bitmap.Freeze(); // optional
+                }
+                ImageBrush brush2 = new ImageBrush();
+                brush2.ImageSource = bitmap;
                 brush2.Stretch = Stretch.UniformToFill;
                 MainWindow.MW.GridBackground.Background = brush2;
-			}
-			catch (Exception e)
-			{
-                Globals.PopupError("Error Settings Background Image.\n" + e.ToString());
+            }
+            catch (Exception e)
+            {
+                PopupWrapper.PopupError("Error Settings Background Image.\n" + e.ToString());
 
-				string URL_Path = @"Artwork\bg_default.png";
-				Uri resourceUri = new Uri(URL_Path, UriKind.Relative);
-				StreamResourceInfo streamInfo = Application.GetResourceStream(resourceUri);
-				BitmapFrame temp = BitmapFrame.Create(streamInfo.Stream);
-				ImageBrush brush = new ImageBrush();
-				brush.ImageSource = temp;
-				MainWindow.MW.GridBackground.Background = brush;
-			}
+                string URL_Path = @"Artwork\bg_default.png";
+                Uri resourceUri = new Uri(URL_Path, UriKind.Relative);
+                StreamResourceInfo streamInfo = Application.GetResourceStream(resourceUri);
+                BitmapFrame temp = BitmapFrame.Create(streamInfo.Stream);
+                ImageBrush brush = new ImageBrush();
+                brush.ImageSource = temp;
+                MainWindow.MW.GridBackground.Background = brush;
+            }
 
-			SetWindowBackgroundBlur();
-		}
+            SetWindowBackgroundBlur();
+        }
 
 
-		public void SetWindowBackgroundBlur()
-		{
-			if (Globals.HamburgerMenuState == Globals.HamburgerMenuStates.Hidden)
-			{
-				Blur_All.Visibility = Visibility.Hidden;
-				Blur_Hamburger.Visibility = Visibility.Hidden;
-			}
-			else if (Globals.HamburgerMenuState == Globals.HamburgerMenuStates.Visible)
-			{
-				if (Globals.PageState == Globals.PageStates.GTA)
-				{
-					Blur_All.Visibility = Visibility.Hidden;
-					Blur_Hamburger.Visibility = Visibility.Visible;
-				}
-				else
-				{
-					Blur_All.Visibility = Visibility.Visible;
-					Blur_Hamburger.Visibility = Visibility.Hidden;
-				}
-			}
-		}
+        public void SetWindowBackgroundBlur()
+        {
+            if (Globals.HamburgerMenuState == HamburgerMenuStates.Loading)
+            {
+                Blur_All.Visibility = Visibility.Hidden;
+                Blur_Hamburger.Visibility = Visibility.Hidden;
+            }
+            else if (Globals.HamburgerMenuState == Globals.HamburgerMenuStates.Hidden)
+            {
+                Blur_All.Visibility = Visibility.Hidden;
+                Blur_Hamburger.Visibility = Visibility.Hidden;
+            }
+            else if (Globals.HamburgerMenuState == Globals.HamburgerMenuStates.Visible)
+            {
+                if (Globals.PageState == Globals.PageStates.GTA)
+                {
+                    Blur_All.Visibility = Visibility.Hidden;
+                    Blur_Hamburger.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    Blur_All.Visibility = Visibility.Visible;
+                    Blur_Hamburger.Visibility = Visibility.Hidden;
+                }
+            }
+        }
 
 
 
@@ -719,16 +741,16 @@ namespace Project_127
         /// Updates the GUI with relevant stuff. Gets called every 2.5 Seconds
         /// </summary>
         public void SetOfflineModeLblVisibility()
-		{
-			if (Globals.OfflineMode)
-			{
+        {
+            if (Globals.OfflineMode)
+            {
                 btn_lbl_OfflineMode.Visibility = Visibility.Visible;
-			}
-			else
-			{
+            }
+            else
+            {
                 btn_lbl_OfflineMode.Visibility = Visibility.Hidden;
-			}
-		}
+            }
+        }
 
 
         /// <summary>
@@ -737,73 +759,73 @@ namespace Project_127
         /// <param name="myCtrl"></param>
         /// <param name="pArtpath"></param>
         public void SetControlBackground(Control myCtrl, string pArtpath, bool FromFile = false)
-		{
-			try
-			{
-				Uri resourceUri;
-				if (FromFile)
-				{
-					var bitmap = new BitmapImage();
+        {
+            try
+            {
+                Uri resourceUri;
+                if (FromFile)
+                {
+                    var bitmap = new BitmapImage();
 
-					using (var stream = new FileStream(pArtpath, FileMode.Open))
-					{
-						bitmap.BeginInit();
-						bitmap.CacheOption = BitmapCacheOption.OnLoad;
-						bitmap.StreamSource = stream;
-						bitmap.EndInit();
-						bitmap.Freeze(); // optional
-					}
-					ImageBrush brush2 = new ImageBrush();
-					brush2.ImageSource = bitmap;
-					myCtrl.Background = brush2;
-				}
-				else
-				{
-					resourceUri = new Uri(pArtpath, UriKind.Relative);
-					StreamResourceInfo streamInfo = Application.GetResourceStream(resourceUri);
-					BitmapFrame temp = BitmapFrame.Create(streamInfo.Stream);
-					ImageBrush brush = new ImageBrush();
-					brush.ImageSource = temp;
-					myCtrl.Background = brush;
-				}
-			}
-			catch
-			{
-				HelperClasses.Logger.Log("Failed to set Background Image for Button");
-			}
-		}
-
-
-
-		/// <summary>
-		/// MouseEnter event for updating background image of buttons
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
-		private void btn_MouseEnter(object sender, MouseEventArgs e)
-		{
-			SetButtonMouseOverMagic((Button)sender);
-		}
-
-		/// <summary>
-		/// MouseLeave event for updating background image of buttons
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
-		private void btn_MouseLeave(object sender, MouseEventArgs e)
-		{
-			SetButtonMouseOverMagic((Button)sender);
-		}
+                    using (var stream = new FileStream(pArtpath, FileMode.Open))
+                    {
+                        bitmap.BeginInit();
+                        bitmap.CacheOption = BitmapCacheOption.OnLoad;
+                        bitmap.StreamSource = stream;
+                        bitmap.EndInit();
+                        bitmap.Freeze(); // optional
+                    }
+                    ImageBrush brush2 = new ImageBrush();
+                    brush2.ImageSource = bitmap;
+                    myCtrl.Background = brush2;
+                }
+                else
+                {
+                    resourceUri = new Uri(pArtpath, UriKind.Relative);
+                    StreamResourceInfo streamInfo = Application.GetResourceStream(resourceUri);
+                    BitmapFrame temp = BitmapFrame.Create(streamInfo.Stream);
+                    ImageBrush brush = new ImageBrush();
+                    brush.ImageSource = temp;
+                    myCtrl.Background = brush;
+                }
+            }
+            catch
+            {
+                HelperClasses.Logger.Log("Failed to set Background Image for Button");
+            }
+        }
 
 
+
+        /// <summary>
+        /// MouseEnter event for updating background image of buttons
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btn_MouseEnter(object sender, MouseEventArgs e)
+        {
+            SetButtonMouseOverMagic((Button)sender);
+        }
+
+        /// <summary>
+        /// MouseLeave event for updating background image of buttons
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btn_MouseLeave(object sender, MouseEventArgs e)
+        {
+            SetButtonMouseOverMagic((Button)sender);
+        }
 
 
 
 
-		#endregion
-
-		// PureUI Logic and Helper Classes above
 
 
-	} // End of Class
+        #endregion
+
+        // PureUI Logic and Helper Classes above
+
+
+    } // End of Class
 } // End of Namespace

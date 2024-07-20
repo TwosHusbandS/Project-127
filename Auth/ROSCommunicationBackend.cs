@@ -21,6 +21,7 @@ using System.Security.Permissions;
 using System.Configuration;
 using System.Text.RegularExpressions;
 using Project_127.MySettings;
+using Project_127.Popups;
 
 /*
  * This file is based on partially on SCUIStub/LegitimacyChecking from the CitizenFX Project - http://citizen.re/
@@ -361,7 +362,7 @@ namespace Project_127.Auth
 				if (!Auth.ROSIntegration.AuthErrorMessageThrownAlready)
 				{
 					Auth.ROSIntegration.AuthErrorMessageThrownAlready = true;
-                    Globals.PopupError(res.text); // Show Error
+                    PopupWrapper.PopupError(res.text); // Show Error
 				}
 			}
 
@@ -393,7 +394,7 @@ namespace Project_127.Auth
 				if (!Auth.ROSIntegration.AuthErrorMessageThrownAlready)
 				{
 					Auth.ROSIntegration.AuthErrorMessageThrownAlready = true;
-					Globals.PopupError(res.text); // Show Error
+                    PopupWrapper.PopupError(res.text); // Show Error
 				}
 			}
 			return false;

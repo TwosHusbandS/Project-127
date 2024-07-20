@@ -1,4 +1,5 @@
 ﻿using Microsoft.Win32;
+using Project_127.Popups;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -333,7 +334,7 @@ namespace Project_127.MySettings
                 }
                 catch
                 {
-                    Globals.PopupError("No Retailer selected.\nSelect a Retailer in the Dropdown next to this button");
+                    PopupWrapper.PopupError("No Retailer selected.\nSelect a Retailer in the Dropdown next to this button");
                 }
             }
             else if (MyTag == "RecommendedHardlinking")
@@ -610,9 +611,8 @@ namespace Project_127.MySettings
 
         private void btn_Exit_Click(object sender, RoutedEventArgs e)
         {
-            Popups.Popup yn = new Popups.Popup(Popups.Popup.PopupWindowTypes.PopupYesNo, "Are you sure you want to exit?\nYour new Settings will not save.");
-            yn.ShowDialog();
-            if (yn.DialogResult == true)
+            bool yn = PopupWrapper.PopupYesNo("Are you sure you want to exit?\nYour new Settings will not save.");
+            if (yn == true)
             {
                 Globals.ProperExit();
             }

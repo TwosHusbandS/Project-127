@@ -85,17 +85,15 @@ namespace Project_127.HelperClasses
 						var zipdlpath = System.IO.Path.Combine(Globals.ProjectInstallationPath, "dl.zip");
 						string link = zipMirror.Value;
 
-						var pd = new PopupDownload(link, zipdlpath, "zip...", true);
-						pd.ShowDialog();
-						var zipmd5 = pd.HashString;
+						var zipmd5 = PopupWrapper.PopupDownload(link, zipdlpath, "zip...", true);
 
-						succeeded = s.SelectSingleNode("./hash").Value.ToLower() == zipmd5;
+                        succeeded = s.SelectSingleNode("./hash").Value.ToLower() == zipmd5;
 						if (!succeeded)
 						{
 							HelperClasses.Logger.Log("Hash comparison inside Download Manager failed.");
 							continue;
 						}
-						new PopupProgress(PopupProgress.ProgressTypes.ZIPFile, zipdlpath).ShowDialog();
+                        PopupWrapper.PopupProgress(PopupProgress.ProgressTypes.ZIPFile, zipdlpath);
 						HelperClasses.FileHandling.DeleteFolder(zipdlpath);
 						break;
 					}
@@ -177,10 +175,8 @@ namespace Project_127.HelperClasses
 								foreach (XPathNavigator mirror in mirrors)
 								{
 									string link = mirror.Value;
-									var pd = new PopupDownload(link, fullPath, file.name, true);
-									pd.ShowDialog();
-									var md5hash = pd.HashString;
-									succeeded = fileEntry.SelectSingleNode("./hash").Value.ToLower() == md5hash;
+									var md5hash = PopupWrapper.PopupDownload(link, fullPath, file.name, true);
+                                    succeeded = fileEntry.SelectSingleNode("./hash").Value.ToLower() == md5hash;
 									if (succeeded)
 									{
 										break;
@@ -365,9 +361,7 @@ namespace Project_127.HelperClasses
 			foreach (XPathNavigator mirror in mirrors)
 			{
 				string link = mirror.Value;
-				var pd = new PopupDownload(link, fullPath, filename, true);
-				pd.ShowDialog();
-				var md5hash = pd.HashString;
+				var md5hash = PopupWrapper.PopupDownload(link, fullPath, filename, true);
 				succeeded = fileEntry.SelectSingleNode("./hash").Value.ToLower() == md5hash;
 				if (succeeded)
 				{
@@ -455,10 +449,8 @@ namespace Project_127.HelperClasses
 					foreach (XPathNavigator mirror in mirrors)
 					{
 						string link = mirror.Value;
-						var pd = new PopupDownload(link, fullPath, filename, true);
-						pd.ShowDialog();
-						var md5hash = pd.HashString;
-						succeeded = file.SelectSingleNode("./hash").Value.ToLower() == md5hash;
+						var md5hash = PopupWrapper.PopupDownload(link, fullPath, filename, true);
+                        succeeded = file.SelectSingleNode("./hash").Value.ToLower() == md5hash;
 						if (succeeded)
 						{
 							break;
@@ -727,12 +719,8 @@ namespace Project_127.HelperClasses
 			updateInstalled();
 		}
 
-		public DownloadManager(string xmls = null)
+		public DownloadManager(string xmls)
 		{
-			if (xmls == null)
-			{
-				xmls = Globals.XML_DownloadManager;
-			}
 			XPathDocument xml = null;
 
            
@@ -746,7 +734,7 @@ namespace Project_127.HelperClasses
 				{
                     // Bad XML
 
-                    Globals.PopupError("Download Manager got bad xml from github.");
+                    PopupWrapper.PopupError("Download Manager got bad xml from github.");
 					HelperClasses.Logger.Log("ERROR: Download Manager got bad xml from github.", true, 0);
 					HelperClasses.Logger.Log("ERROR: " + ex.ToString(), true, 1);
 					HelperClasses.Logger.Log("ERROR: " + xmls, true, 1);

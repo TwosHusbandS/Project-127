@@ -31,7 +31,7 @@ namespace Project_127
                 Globals.HamburgerMenuState = Globals.HamburgerMenuStates.Hidden;
             }
             // If is not visible
-            else
+            else if (Globals.HamburgerMenuState == Globals.HamburgerMenuStates.Hidden)
             {
                 Globals.HamburgerMenuState = Globals.HamburgerMenuStates.Visible;
             }
@@ -100,9 +100,8 @@ namespace Project_127
             {
                 if (Settings.ExitWay == Settings.ExitWays.Close)
                 {
-                    Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Do you really want to quit?");
-                    yesno.ShowDialog();
-                    if (yesno.DialogResult == true)
+                    bool yesno = PopupWrapper.PopupYesNo("Do you really want to quit?");
+                    if (yesno == true)
                     {
                         Globals.ProperExit();
                     }
@@ -146,9 +145,8 @@ namespace Project_127
         private void btn_Upgrade_Click(object sender, RoutedEventArgs e)
         {
             // Confirmation Popup
-            Popup conf = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Do you want to Upgrade?");
-            conf.ShowDialog();
-            if (conf.DialogResult == false)
+            bool conf = PopupWrapper.PopupYesNo("Do you want to Upgrade?");
+            if (conf == false)
             {
                 return;
             }
@@ -182,9 +180,8 @@ namespace Project_127
         private void btn_Downgrade_Click(object sender, RoutedEventArgs e)
         {
             // Confirmation Popup
-            Popup conf = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Do you want to Downgrade?");
-            conf.ShowDialog();
-            if (conf.DialogResult == false)
+            bool conf = PopupWrapper.PopupYesNo("Do you want to Downgrade?");
+            if (conf == false)
             {
                 return;
             }
@@ -305,9 +302,8 @@ namespace Project_127
         /// </summary>
         public static void btn_GTA_MouseRightButtonDown_Static()
         {
-            Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "Do you want to close GTAV?");
-            yesno.ShowDialog();
-            if (yesno.DialogResult == true)
+            bool yesno = PopupWrapper.PopupYesNo("Do you want to close GTAV?");
+            if (yesno == true)
             {
                 HelperClasses.ProcessHandler.KillRockstarProcessesAsync();
             }
@@ -353,7 +349,7 @@ namespace Project_127
             {
                 if (e.ClickCount >= 3)
                 {
-                    new PopupMode().ShowDialog();
+                    PopupWrapper.PopupMode();
                 }
             }
         }

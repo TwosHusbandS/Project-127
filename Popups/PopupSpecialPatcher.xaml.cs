@@ -55,7 +55,7 @@ namespace Project_127.Popups
         private void DataGridRow_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             var si = (patch)dg_patches.SelectedItem;
-            new PopupPatchEditor(si.Name).ShowDialog();
+            PopupWrapper.PopupPatchEditor(si.Name);
         }
 
         private void btn_patch_minus_Click(object sender, RoutedEventArgs e)
@@ -63,7 +63,7 @@ namespace Project_127.Popups
             if (dg_patches.SelectedItem != null)
             {
                 var si = (patch)dg_patches.SelectedItem;
-                bool doDelete = new Popup(Popup.PopupWindowTypes.PopupYesNo, String.Format("Are you sure you would like to delete patch \"{0}\"?", si.Name)).ShowDialog()??false;
+                bool doDelete = PopupWrapper.PopupYesNo(String.Format("Are you sure you would like to delete patch \"{0}\"?", si.Name));
                 if (doDelete)
                 {
                     patch.deletePatch(si.Name);
@@ -74,7 +74,7 @@ namespace Project_127.Popups
 
         private void btn_patch_plus_Click(object sender, RoutedEventArgs e)
         {
-            new PopupPatchEditor(null).ShowDialog();
+            PopupWrapper.PopupPatchEditor(null);
         }
 
         private void btn_DisableAll_Click(object sender, RoutedEventArgs e)

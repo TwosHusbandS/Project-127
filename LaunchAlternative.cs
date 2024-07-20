@@ -42,9 +42,7 @@ namespace Project_127
 				{
 					HelperClasses.Logger.Log("SCL - Launch, cfg.dat is NOT up to date.");
 
-						Popup yesno2 = new Popup(Popup.PopupWindowTypes.PopupYesNo, "The file rockstar uses for offline authentication\nis (probably) expired and wont work.\nUpgrade GTA and launch into main menu\nto generate a new one.\n\nWant me to try to launch anyways?");
-						yesno2.ShowDialog();
-						if (yesno2.DialogResult == true)
+						if (PopupWrapper.PopupYesNo("The file rockstar uses for offline authentication\nis (probably) expired and wont work.\nUpgrade GTA and launch into main menu\nto generate a new one.\n\nWant me to try to launch anyways?") == true)
 						{
 							HelperClasses.Logger.Log("SCL - Launch, cfg.dat is NOT up to date, user wants to try anyways...lets go");
 						}
@@ -71,14 +69,14 @@ namespace Project_127
 				else
 				{
 					HelperClasses.Logger.Log("SCL - Launch, Social Club Downgrade was NOT successfull.");
-                    Globals.PopupError("Social Club downgrade went wrong.");
+                    PopupWrapper.PopupError("Social Club downgrade went wrong.");
 				}
 			}
 			else
 			{
 				HelperClasses.Logger.Log("SCL - Launch, GTAVLauncher.exe does NOT exists");
 
-                Globals.PopupError("Cant find the required File ('GTAVLauncher.exe')\ninside your GTA Installation.\nSomething went wrong");
+                PopupWrapper.PopupError("Cant find the required File ('GTAVLauncher.exe')\ninside your GTA Installation.\nSomething went wrong");
 			}
         }
 
@@ -218,10 +216,7 @@ namespace Project_127
 					// ERROR, RE-INSTALL SOCIAL CLUB DOWNGRADED
 					HelperClasses.Logger.Log("SCL - $SC_DOWNGRADE_FILES isnt looking good. Asking User if he wants to re-install", 1);
 
-					string msg = "The Components needed to downgrade Social Club\nare not installed.\nWant to install them now?";
-					Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, msg);
-					yesno.ShowDialog();
-					if (yesno.DialogResult == true)
+					if (PopupWrapper.PopupYesNo("The Components needed to downgrade Social Club\nare not installed.\nWant to install them now?") == true)
 					{
 						HelperClasses.Logger.Log("SCL - User wants to, lets download.", 1);
 
@@ -271,7 +266,7 @@ namespace Project_127
 				// only actually throw pop up when its needed...
 				if (tmp.Count > 0)
 				{
-					new PopupProgress(PopupProgress.ProgressTypes.FileOperation, "Creating Social Club Cache", tmp).ShowDialog();
+                    PopupWrapper.PopupProgress(PopupProgress.ProgressTypes.FileOperation, "Creating Social Club Cache", tmp);
 				}
 
 				// Return true when needed
@@ -359,7 +354,7 @@ namespace Project_127
 			// only actually throw pop up when its needed...
 			if (tmp.Count > 0)
 			{
-				new PopupProgress(PopupProgress.ProgressTypes.FileOperation, "Downgrading Social Club", tmp).ShowDialog();
+				PopupWrapper.PopupProgress(PopupProgress.ProgressTypes.FileOperation, "Downgrading Social Club", tmp);
 			}
 
 
@@ -487,7 +482,7 @@ namespace Project_127
 			// only actually throw pop up when its needed...
 			if (tmp.Count > 0)
 			{
-				new PopupProgress(PopupProgress.ProgressTypes.FileOperation, "Upgrading Social Club", tmp).ShowDialog();
+                PopupWrapper.PopupProgress(PopupProgress.ProgressTypes.FileOperation, "Upgrading Social Club", tmp);
 			}
 
             // returning based on actual folder contents, not what we think should be in there.

@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:gif="http://wpfanimatedgif.codeplex.com"
         xmlns:local="clr-namespace:Project_127"
         mc:Ignorable="d"
     Title="Popup" 
@@ -14,7 +15,7 @@
         SizeToContent="Manual"
         Icon="/Artwork/icon.png">
     <Border BorderBrush="{x:Static local:MyColors.PU_BorderBrush}" BorderThickness="2" >
-        <Grid x:Name="myGrid" Margin="10,5">
+        <Grid x:Name="myGrid" Margin="0">
             <Grid.RowDefinitions>
                 <RowDefinition x:Name="myRow0" Height="*"/>
                 <RowDefinition x:Name="myRow1" Height="*"/>
@@ -44,8 +45,11 @@
             <Button x:Name="btn_SetNew" Grid.Row="4" Grid.Column="1" Style="{StaticResource PU_btn}" Content="Set Mode" Click="btn_SetNew_Click"/>
             <Button x:Name="btn_Exit" Grid.Row="4" Grid.Column="2" Style="{StaticResource PU_btn}" Content="Exit" Click="btn_Exit_Click"/>
 
-        </Grid>
+            <Border x:Name="Border_Loading" Visibility="Hidden" Grid.Row="0" Grid.RowSpan="5" Grid.Column="0" Grid.ColumnSpan="3" Margin="0" BorderThickness="0" BorderBrush="{x:Static local:MyColors.MW_BorderBrush}"  Background="{x:Static local:MyColors.SE_RowBackground}">
+                    <Image x:Name="Image_Loading" gif:ImageBehavior.AnimatedSource="../Artwork/loading.gif" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Height="48" Width="48" />
+            </Border>
 
+        </Grid>
     </Border>
 </Window>
 
