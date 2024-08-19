@@ -52,8 +52,6 @@ namespace Project_127
         /// </summary>
         public static GameStates GameState
         {
-            // Shit is commented out, because we dont handle the Overlay and the Keyboard Listener automatically here
-            // because we use TeamSpeak 3 for testing the overlay, instead of GTA V
             get
             {
                 // Check if GTA V is running
