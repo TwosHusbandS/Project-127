@@ -235,7 +235,7 @@ namespace Project_127
         /// <summary>
         /// Property of other Buildinfo. Will be in the top message of logs
         /// </summary>
-        public static string BuildInfo = "1.3.0.1 Dev - Build X";
+        public static string BuildInfo = "1.3.0.1 - Build 1";
 
 
         /// <summary>
