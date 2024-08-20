@@ -80,6 +80,7 @@ namespace Project_127.Popups
                 bool yesno = PopupWrapper.PopupYesNo("Cant find that version online. Do you still want to set this Mode?");
                 if (yesno == false)
                 {
+                    Border_Loading.Visibility = Visibility.Hidden;
                     return;
                 }
             }
