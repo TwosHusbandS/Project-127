@@ -76,6 +76,7 @@ namespace Project_127
             }
         }
 
+        private static GameStates LastLastGameState = GameStates.NonRunning;
         private static GameStates LastGameState = GameStates.NonRunning;
 
         public static GameStates PollGameState()
@@ -100,9 +101,14 @@ namespace Project_127
             }
             else
             {
-                HandleStuckGTA();
-            }    
+                // if we are currently stuck, and were stuck last time, and the time before that.
+                if (LastGameState == GameStates.Stuck && LastLastGameState == GameStates.Stuck)
+                {
+                    HandleStuckGTA();
+                }
+            }
 
+            LastLastGameState = LastGameState;
             LastGameState = currGameState;
 
             return currGameState;
