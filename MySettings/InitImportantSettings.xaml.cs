@@ -1,4 +1,5 @@
 ﻿using Microsoft.Win32;
+using Project_127.Popups;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,15 +13,51 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using static Project_127.MySettings.Settings;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace Project_127.MySettings
 {
+    public class GTAVPathGuess
+    {
+        public string PathGuess;
+        public Retailers CorrespondingRetailer;
+        public bool HasRetailer;
+
+        public GTAVPathGuess(string pPathGuess, Retailers pCorrespondingRetailer)
+        {
+            this.PathGuess = pPathGuess.Replace("/", @"\");
+            this.HasRetailer = true;
+            this.CorrespondingRetailer = pCorrespondingRetailer;
+        }
+
+        public GTAVPathGuess(string pPathGuess)
+        {
+            this.PathGuess = pPathGuess.Replace("/", @"\");
+            this.HasRetailer = false;
+        }
+    }
+
+
+
+
     /// <summary>
     /// Interaction logic for InitImportantSettings.xaml
     /// </summary>
     public partial class InitImportantSettings : System.Windows.Window
     {
+        public static bool IfCustomListAlreadyContainsPath(List<GTAVPathGuess> GTAVPGL, string Path)
+        {
+            foreach (GTAVPathGuess MyGTAVPathGuess in GTAVPGL)
+            {
+                if (MyGTAVPathGuess.PathGuess.TrimEnd('\\') == Path.TrimEnd('\\'))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         private void Window_SourceInitialized(object sender, EventArgs e)
         {
             if (MainWindow.MW.IsVisible)
@@ -61,7 +98,7 @@ namespace Project_127.MySettings
             Loop();
         }
 
-        List<string> GTAVPathGuesses = new List<string>();
+        List<GTAVPathGuess> GTAVPathGuesses = new List<GTAVPathGuess>();
         int currIndex = -1;
 
         public string NS_GTAVPath = "";
@@ -71,36 +108,61 @@ namespace Project_127.MySettings
 
         public void AddGuesses()
         {
+            List<GTAVPathGuess> GTAVPathGuessesDuplicates = new List<GTAVPathGuess>();
+
             // Adding all Guesses
-            GTAVPathGuesses.Add(LauncherLogic.GetGTAVPathMagicSteam());
-            GTAVPathGuesses.Add(LauncherLogic.GetGTAVPathMagicRockstar());
-            GTAVPathGuesses.Add(LauncherLogic.GetGTAVPathMagicEpic());
+            GTAVPathGuessesDuplicates.Add(new GTAVPathGuess(LauncherLogic.GetGTAVPathMagicSteam(), Retailers.Steam));
+            GTAVPathGuessesDuplicates.Add(new GTAVPathGuess(LauncherLogic.GetGTAVPathMagicRockstar(), Retailers.Rockstar));
+            GTAVPathGuessesDuplicates.Add(new GTAVPathGuess(LauncherLogic.GetGTAVPathMagicEpic(), Retailers.Epic));
 
-            try
+            List<string> RegistryBaseKeys = new List<string>
             {
-                RegistryKey myRKTemp1 = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64).OpenSubKey(@"SOFTWARE\WOW6432Node\Rockstar Games\GTAV");
-                GTAVPathGuesses.Add(HelperClasses.RegeditHandler.GetValue(myRKTemp1, "InstallFolderSteam"));
-            }
-            catch { }
+                @"SOFTWARE\Rockstar Games\GTAV",
+                @"SOFTWARE\Rockstar Games\Grand Theft Auto V",
+                @"SOFTWARE\WOW6432Node\Rockstar Games\GTAV",
+                @"SOFTWARE\WOW6432Node\Rockstar Games\Grand Theft Auto V"
+            };
 
-            try
+            foreach (string RegistryBaseKey in RegistryBaseKeys)
             {
-                RegistryKey myRKTemp2 = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64).OpenSubKey(@"SOFTWARE\Rockstar Games\Grand Theft Auto V");
-                GTAVPathGuesses.Add(HelperClasses.RegeditHandler.GetValue(myRKTemp2, "InstallFolderEpic"));
-            }
-            catch { }
+                try
+                {
+                    RegistryKey myRKTemp = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64).OpenSubKey(RegistryBaseKey);
 
-            try
+                    string PossibleSteam = HelperClasses.RegeditHandler.GetValue(myRKTemp, "InstallFolderSteam");
+                    string PossibleEpic = HelperClasses.RegeditHandler.GetValue(myRKTemp, "InstallFolderEpic");
+                    string PossibleRockstar = HelperClasses.RegeditHandler.GetValue(myRKTemp, "InstallFolder");
+
+                    if (!string.IsNullOrEmpty(PossibleSteam))
+                    {
+                        GTAVPathGuessesDuplicates.Add(new GTAVPathGuess(PossibleSteam, Retailers.Steam));
+                    }
+                    if (!string.IsNullOrEmpty(PossibleEpic))
+                    {
+                        GTAVPathGuessesDuplicates.Add(new GTAVPathGuess(PossibleEpic, Retailers.Epic));
+                    }
+                    if (!string.IsNullOrEmpty(PossibleRockstar))
+                    {
+                        GTAVPathGuessesDuplicates.Add(new GTAVPathGuess(PossibleRockstar, Retailers.Rockstar));
+                    }
+                }
+                catch { }
+            }
+
+
+            GTAVPathGuessesDuplicates.Add(new GTAVPathGuess(Globals.ProjectInstallationPath.TrimEnd('\\').Substring(0, Globals.ProjectInstallationPath.TrimEnd('\\').LastIndexOf('\\'))));
+            GTAVPathGuessesDuplicates.Add(new GTAVPathGuess(Globals.ProjectInstallationPath.TrimEnd('\\')));
+            GTAVPathGuessesDuplicates.Add(new GTAVPathGuess(Settings.ZIPExtractionPath.TrimEnd('\\').Substring(0, Settings.ZIPExtractionPath.TrimEnd('\\').LastIndexOf('\\'))));
+            GTAVPathGuessesDuplicates.Add(new GTAVPathGuess(Settings.ZIPExtractionPath));
+
+            // logic um keine doppelten drin zu haben...argh.
+            for (int i = 0; i <= GTAVPathGuessesDuplicates.Count - 1; i++)
             {
-                RegistryKey myRKTemp3 = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64).OpenSubKey(@"SOFTWARE\WOW6432Node\Rockstar Games\Grand Theft Auto V");
-                GTAVPathGuesses.Add(HelperClasses.RegeditHandler.GetValue(myRKTemp3, "InstallFolder"));
+                if (!IfCustomListAlreadyContainsPath(GTAVPathGuesses, GTAVPathGuessesDuplicates[i].PathGuess))
+                {
+                    GTAVPathGuesses.Add(GTAVPathGuessesDuplicates[i]);
+                }
             }
-            catch { }
-
-            GTAVPathGuesses.Add(Globals.ProjectInstallationPath.TrimEnd('\\').Substring(0, Globals.ProjectInstallationPath.LastIndexOf('\\')));
-            GTAVPathGuesses.Add(Globals.ProjectInstallationPath.TrimEnd('\\'));
-            GTAVPathGuesses.Add(Settings.ZIPExtractionPath.TrimEnd('\\').Substring(0, Settings.ZIPExtractionPath.LastIndexOf('\\')));
-            GTAVPathGuesses.Add(Settings.ZIPExtractionPath);
         }
 
         public void Loop(int start = 0)
@@ -109,7 +171,7 @@ namespace Project_127.MySettings
             for (int i = start; i <= GTAVPathGuesses.Count - 1; i++)
             {
                 HelperClasses.Logger.Log("GTAV Guess Number " + (i + 1).ToString() + " is: '" + GTAVPathGuesses[i] + "'");
-                if (LauncherLogic.IsGTAVInstallationPathCorrect(GTAVPathGuesses[i], false))
+                if (LauncherLogic.IsGTAVInstallationPathCorrect(GTAVPathGuesses[i].PathGuess, false))
                 {
                     HelperClasses.Logger.Log("GTAV Guess Number " + (i + 1).ToString() + " is theoretically VALID. Asking user if he wants it");
                     btn_No.Visibility = Visibility.Visible;
@@ -117,7 +179,7 @@ namespace Project_127.MySettings
                     btn_Yes.Tag = "ConfirmGuess";
                     btn_No.Tag = "ConfirmGuess";
                     btn_BigBtn.Visibility = Visibility.Hidden;
-                    lbl_Main.Content = "Is: '" + GTAVPathGuesses[i] + "'\nyour GTA V Install Location?";
+                    lbl_Main.Content = "Is: '" + GTAVPathGuesses[i].PathGuess + "'\nyour GTA V Install Location?";
                     currIndex = i;
                     return;
                 }
@@ -135,7 +197,7 @@ namespace Project_127.MySettings
             btn_BigBtn.Visibility = Visibility.Visible;
             btn_BigBtn.Tag = "GTAVPath";
             lbl_Main.Content = "Select the Path where your gta5.exe is located.";
- 
+
         }
 
 
@@ -326,14 +388,14 @@ namespace Project_127.MySettings
             }
             else if (MyTag == "ConfirmRetailer")
             {
-                try 
-                { 
+                try
+                {
                     NS_Retailer = cb_cb.SelectedItem.ToString();
                     FinishSetup();
                 }
                 catch
                 {
-                    Globals.PopupError("No Retailer selected.\nSelect a Retailer in the Dropdown next to this button");
+                    PopupWrapper.PopupError("No Retailer selected.\nSelect a Retailer in the Dropdown next to this button");
                 }
             }
             else if (MyTag == "RecommendedHardlinking")
@@ -361,28 +423,12 @@ namespace Project_127.MySettings
                 {
                     HelperClasses.Logger.Log("GTAV Guess Number " + (currIndex + 1).ToString() + " was picked by User");
 
-                    switch (currIndex)
+                    if (GTAVPathGuesses[currIndex].HasRetailer)
                     {
-                        case 0:
-                            NS_Retailer = "Steam";
-                            break;
-                        case 1:
-                            NS_Retailer = "Rockstar";
-                            break;
-                        case 2:
-                            NS_Retailer = "Epic";
-                            break;
-                        case 3:
-                            NS_Retailer = "Steam";
-                            break;
-                        case 4:
-                            NS_Retailer = "Epic";
-                            break;
-                        default:
-                            break;
+                        NS_Retailer = GTAVPathGuesses[currIndex].CorrespondingRetailer.ToString();
                     }
 
-                    NS_GTAVPath = GTAVPathGuesses[currIndex];
+                    NS_GTAVPath = GTAVPathGuesses[currIndex].PathGuess;
                 }
                 else
                 {
@@ -610,9 +656,8 @@ namespace Project_127.MySettings
 
         private void btn_Exit_Click(object sender, RoutedEventArgs e)
         {
-            Popups.Popup yn = new Popups.Popup(Popups.Popup.PopupWindowTypes.PopupYesNo, "Are you sure you want to exit?\nYour new Settings will not save.");
-            yn.ShowDialog();
-            if (yn.DialogResult == true)
+            bool yn = PopupWrapper.PopupYesNo("Are you sure you want to exit?\nYour new Settings will not save.");
+            if (yn == true)
             {
                 Globals.ProperExit();
             }

@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Project_127"
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+        xmlns:gif="http://wpfanimatedgif.codeplex.com"
         mc:Ignorable="d"
         Closing="Window_Closing"
         Title="Project - 1.27"
@@ -90,6 +91,16 @@
                 <Frame x:Name="Frame_Game"  NavigationUIVisibility="Hidden">
 
                 </Frame>
+            </Grid>
+
+            <Grid x:Name="Grid_Loading" Height="596" Width="996" Grid.Column="0" HorizontalAlignment="Left" Background="{x:Static local:MyColors.MW_HamburgerMenuGridBackground}">
+                <!--<Rectangle ClipToBounds="True">
+                    <i:Interaction.Behaviors>
+                        <local:BlurBackgroundBehavior BlurContainer="{Binding ElementName=GridMain}"/>
+                    </i:Interaction.Behaviors>
+                </Rectangle>-->
+                <Image x:Name="Image_Loading" gif:ImageBehavior.AnimatedSource="./Artwork/loading.gif" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Height="48" Width="48" />
+
             </Grid>
         </Grid>
     </Border>

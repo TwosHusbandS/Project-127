@@ -4,6 +4,8 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:Project_127"
+      xmlns:gif="http://wpfanimatedgif.codeplex.com"
+      xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
       mc:Ignorable="d" 
         Title="Component Manager" d:DesignHeight="600" d:DesignWidth="720"        
         Background="{x:Static local:MyColors.App_Submenu_Background}" Loaded="Page_Loaded">
@@ -14,10 +16,10 @@
         </Grid.RowDefinitions>
         <Label Style="{StaticResource lbl}" Grid.Row="0" HorizontalAlignment="Left" FontSize="24" Height="60" VerticalAlignment="Bottom" Margin="0,0,0,0" Content="Component Manager" Width="250"/>
         <Label Style="{StaticResource lbl}" x:Name="lbl_ComponentManager_Mode" Grid.Row="0" HorizontalAlignment="Left" HorizontalContentAlignment="Left" FontSize="20" Height="60" VerticalAlignment="Bottom" Margin="250,0,0,0" Content="" Width="300" Foreground="{x:Static local:MyColors.MyColorOrange}"/>
-        
+
         <Button x:Name="btn_lbl_Mode" Style="{StaticResource btn}" Height="45" Margin="240,0,0,15" MouseRightButtonDown="btn_lbl_Mode_MouseRightButtonDown" MouseLeftButtonDown="btn_DragMove"
                             VerticalAlignment="Bottom" HorizontalAlignment="Left" Background="Transparent" Width="250" BorderThickness="0"/>
-        
+
         <Button Style="{StaticResource btn_SmallIcon}"  MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"  Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Margin="0,15,55,0" VerticalAlignment="Top" HorizontalAlignment="Right" x:Name="btn_Refresh"  ToolTip="Refresh"  Height="40" Width="40" Click="btn_Refresh_Click" MouseRightButtonDown="btn_Refresh_MouseRightButtonDown"/>
 
         <Border x:Name="Border_Main" Grid.Row="1" Margin="0,15,0,15" BorderThickness="2" BorderBrush="{x:Static local:MyColors.MW_BorderBrush}"  Background="{x:Static local:MyColors.SE_RowBackground}">
@@ -37,7 +39,7 @@
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="*"/>
-					<RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
                 <Rectangle Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="5" Fill="Transparent"/>
@@ -47,56 +49,67 @@
                 <Rectangle Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="5" Fill="Transparent"/>
                 <Rectangle Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="5" Fill="{x:Static local:MyColors.SE_AlternateRowBackground}"/>
                 <Rectangle Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="5" Fill="Transparent"/>
-				<Rectangle Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="5" Fill="{x:Static local:MyColors.SE_AlternateRowBackground}"/>
+                <Rectangle Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="5" Fill="{x:Static local:MyColors.SE_AlternateRowBackground}"/>
 
                 <Button Grid.Row="0" Grid.Column="0" x:Name="btn_lbl_FilesMain_Name" Content="Required Files for 1.27"  MouseLeftButtonDown="btn_DragMove" ToolTip="Required Files. 'Normal' P127 Launch Files and Savefiles / Notes" Tag="FilesBase" Style="{StaticResource btn_Set_Header}" Foreground="{x:Static local:MyColors.App_LabelForeground}" FontFamily="Tahoma" FontSize="14" Background="Transparent" HorizontalAlignment="Left" BorderThickness="0" MouseRightButtonDown="btn_lbl_Component_Name_MouseRightButtonDown" Margin="8"/>
-                <Button Grid.Row="0" Grid.Column="1" x:Name="lbl_FilesMain_Status" Content="Not installed" Style="{StaticResource btn_Set_Trans}" Foreground="{x:Static local:MyColors.MyColorGreen}" Tag="FilesBase" FontSize="16" Margin="0" MouseRightButtonDown="btn_lbl_Status_MouseRightButtonDown"/>
+                <Button Grid.Row="0" Grid.Column="1" x:Name="lbl_FilesMain_Status" Content="Unknown" Style="{StaticResource btn_Set_Trans}" Foreground="{x:Static local:MyColors.MyColorWhite}" Tag="FilesBase" FontSize="16" Margin="0" MouseRightButtonDown="btn_lbl_Status_MouseRightButtonDown"/>
                 <Button Grid.Row="0" Grid.Column="2" x:Name="btn_FilesMain_Import" Click="btn_Import_Click" Tag="FilesBase" Content="Import"  FontSize="14" Margin="8,12" ToolTip="Rightclick to Verify Files" Style="{StaticResource btn_CM_Action}"/>
                 <Button Grid.Row="0" Grid.Column="3" x:Name="btn_FilesMain_Install" Click="btn_Install_Click" MouseRightButtonDown="btn_Install_MouseRightButtonDown" Tag="FilesBase" Content="(Re-)install"  FontSize="14" Margin="8,12" ToolTip="Rightclick to Verify Files" Style="{StaticResource btn_CM_Action}"/>
                 <Button Grid.Row="0" Grid.Column="4" x:Name="btn_FilesMain_Uninstall" Click="btn_Uninstall_Click" MouseRightButtonDown="btn_Uninstall_MouseRightButtonDown" Tag="FilesBase" Content="Uninstall"  FontSize="14" Margin="8,12" Style="{StaticResource btn_CM_Action_Disabled}"/>
 
-				<Button Grid.Row="1" Grid.Column="0" x:Name="lbl_FilesBase124_Name" Content="Required Files for 1.24"  MouseLeftButtonDown="btn_DragMove" ToolTip="dr490n launcher 1.24" Tag="FilesBase124" Style="{StaticResource btn_Set_Header}"  Foreground="{x:Static local:MyColors.App_LabelForeground}" FontFamily="Tahoma" FontSize="14" Background="Transparent" HorizontalAlignment="Left" BorderThickness="0" MouseRightButtonDown="btn_lbl_Component_Name_MouseRightButtonDown" Margin="8"/>
-                <Button Grid.Row="1" Grid.Column="1" x:Name="lbl_FilesBase124_Status" Content="Not installed" Style="{StaticResource btn_Set_Trans}" Foreground="{x:Static local:MyColors.MyColorGreen}" Tag="FilesBase124" FontSize="16" Margin="0" MouseRightButtonDown="btn_lbl_Status_MouseRightButtonDown"/>
+                <Button Grid.Row="1" Grid.Column="0" x:Name="lbl_FilesBase124_Name" Content="Required Files for 1.24"  MouseLeftButtonDown="btn_DragMove" ToolTip="dr490n launcher 1.24" Tag="FilesBase124" Style="{StaticResource btn_Set_Header}"  Foreground="{x:Static local:MyColors.App_LabelForeground}" FontFamily="Tahoma" FontSize="14" Background="Transparent" HorizontalAlignment="Left" BorderThickness="0" MouseRightButtonDown="btn_lbl_Component_Name_MouseRightButtonDown" Margin="8"/>
+                <Button Grid.Row="1" Grid.Column="1" x:Name="lbl_FilesBase124_Status" Content="Unknown" Style="{StaticResource btn_Set_Trans}" Foreground="{x:Static local:MyColors.MyColorWhite}" Tag="FilesBase124" FontSize="16" Margin="0" MouseRightButtonDown="btn_lbl_Status_MouseRightButtonDown"/>
                 <Button Grid.Row="1" Grid.Column="2" x:Name="btn_FilesBase124_Import" Click="btn_Import_Click" Tag="FilesBase124" Content="Import"  FontSize="14" Margin="8,12" ToolTip="Rightclick to Verify Files" Style="{StaticResource btn_CM_Action}"/>
                 <Button Grid.Row="1" Grid.Column="3" x:Name="btn_FilesBase124_Install" Click="btn_Install_Click" MouseRightButtonDown="btn_Install_MouseRightButtonDown" Tag="FilesBase124" Content="(Re-)install"  FontSize="14" Margin="8,12" ToolTip="Rightclick to Verify Files" Style="{StaticResource btn_CM_Action}"/>
                 <Button Grid.Row="1" Grid.Column="4" x:Name="btn_FilesBase124_Uninstall" Click="btn_Uninstall_Click" MouseRightButtonDown="btn_Uninstall_MouseRightButtonDown" Tag="FilesBase124" Content="Uninstall"  FontSize="14" Margin="8,12" Style="{StaticResource btn_CM_Action}"/>
 
                 <Button Grid.Row="2" Grid.Column="0" x:Name="lbl_FilesSCLSteam127_Name" Content="Social Club Launch Steam 1.27"  MouseLeftButtonDown="btn_DragMove" ToolTip="Social Club Launch Steam 1.27" Tag="FilesSCLSteam127" Style="{StaticResource btn_Set_Header}"  Foreground="{x:Static local:MyColors.App_LabelForeground}" FontFamily="Tahoma" FontSize="14" Background="Transparent" HorizontalAlignment="Left" BorderThickness="0" MouseRightButtonDown="btn_lbl_Component_Name_MouseRightButtonDown" Margin="8"/>
-                <Button Grid.Row="2" Grid.Column="1" x:Name="lbl_FilesSCLSteam127_Status" Content="Status" Style="{StaticResource btn_Set_Trans}" Foreground="{x:Static local:MyColors.MyColorGreen}" Tag="FilesSCLSteam127" FontSize="16" Margin="0" MouseRightButtonDown="btn_lbl_Status_MouseRightButtonDown"/>
+                <Button Grid.Row="2" Grid.Column="1" x:Name="lbl_FilesSCLSteam127_Status" Content="Unknown" Style="{StaticResource btn_Set_Trans}" Foreground="{x:Static local:MyColors.MyColorWhite}" Tag="FilesSCLSteam127" FontSize="16" Margin="0" MouseRightButtonDown="btn_lbl_Status_MouseRightButtonDown"/>
                 <Button Grid.Row="2" Grid.Column="2" x:Name="btn_FilesSCLSteam127_Import" Click="btn_Import_Click" Tag="FilesSCLSteam127" Content="Import"  FontSize="14" Margin="8,12" ToolTip="Rightclick to Verify Files" Style="{StaticResource btn_CM_Action}"/>
                 <Button Grid.Row="2" Grid.Column="3" x:Name="btn_FilesSCLSteam127_Install" Click="btn_Install_Click" MouseRightButtonDown="btn_Install_MouseRightButtonDown" Tag="FilesSCLSteam127" Content="(Re-)install" FontSize="14" Margin="8,12"  ToolTip="Rightclick to Verify Files" Style="{StaticResource btn_CM_Action}"/>
                 <Button Grid.Row="2" Grid.Column="4" x:Name="btn_FilesSCLSteam127_Uninstall" Click="btn_Uninstall_Click" MouseRightButtonDown="btn_Uninstall_MouseRightButtonDown" Tag="FilesSCLSteam127" Content="Uninstall" FontSize="14" Margin="8,12"  Style="{StaticResource btn_CM_Action}"/>
 
                 <Button Grid.Row="3" Grid.Column="0" x:Name="lbl_FilesSCLSteam124_Name" Content="Social Club Launch Steam 1.24"  MouseLeftButtonDown="btn_DragMove" ToolTip="Social Club Launch Steam 1.24" Tag="FilesSCLSteam124" Style="{StaticResource btn_Set_Header}"  Foreground="{x:Static local:MyColors.App_LabelForeground}" FontFamily="Tahoma" FontSize="14" Background="Transparent" HorizontalAlignment="Left" BorderThickness="0" MouseRightButtonDown="btn_lbl_Component_Name_MouseRightButtonDown" Margin="8"/>
-                <Button Grid.Row="3" Grid.Column="1" x:Name="lbl_FilesSCLSteam124_Status" Content="Status" Style="{StaticResource btn_Set_Trans}" Foreground="{x:Static local:MyColors.MyColorGreen}" Tag="FilesSCLSteam124" FontSize="16" Margin="0" MouseRightButtonDown="btn_lbl_Status_MouseRightButtonDown"/>
+                <Button Grid.Row="3" Grid.Column="1" x:Name="lbl_FilesSCLSteam124_Status" Content="Unknown" Style="{StaticResource btn_Set_Trans}" Foreground="{x:Static local:MyColors.MyColorWhite}" Tag="FilesSCLSteam124" FontSize="16" Margin="0" MouseRightButtonDown="btn_lbl_Status_MouseRightButtonDown"/>
                 <Button Grid.Row="3" Grid.Column="2" x:Name="btn_FilesSCLSteam124_Import" Click="btn_Import_Click" Tag="FilesSCLSteam124" Content="Import"  FontSize="14" Margin="8,12" ToolTip="Rightclick to Verify Files" Style="{StaticResource btn_CM_Action}"/>
                 <Button Grid.Row="3" Grid.Column="3" x:Name="btn_FilesSCLSteam124_Install" Click="btn_Install_Click" MouseRightButtonDown="btn_Install_MouseRightButtonDown" Tag="FilesSCLSteam124" Content="(Re-)install" FontSize="14" Margin="8,12"  ToolTip="Rightclick to Verify Files" Style="{StaticResource btn_CM_Action}"/>
                 <Button Grid.Row="3" Grid.Column="4" x:Name="btn_FilesSCLSteam124_Uninstall" Click="btn_Uninstall_Click" MouseRightButtonDown="btn_Uninstall_MouseRightButtonDown" Tag="FilesSCLSteam124" Content="Uninstall" FontSize="14" Margin="8,12"  Style="{StaticResource btn_CM_Action}"/>
 
                 <Button Grid.Row="4" Grid.Column="0" x:Name="lbl_FilesSCLRockstar127_Name" Content="Social Club Launch Rockstar 1.27"  MouseLeftButtonDown="btn_DragMove" ToolTip="Social Club Launch Rockstar 1.27" Tag="FilesSCLRockstar127" Style="{StaticResource btn_Set_Header}"  Foreground="{x:Static local:MyColors.App_LabelForeground}" FontFamily="Tahoma" FontSize="14" Background="Transparent" HorizontalAlignment="Left" BorderThickness="0" MouseRightButtonDown="btn_lbl_Component_Name_MouseRightButtonDown" Margin="8"/>
-                <Button Grid.Row="4" Grid.Column="1" x:Name="lbl_FilesSCLRockstar127_Status" Content="Status" Style="{StaticResource btn_Set_Trans}" Foreground="{x:Static local:MyColors.MyColorGreen}" Tag="FilesSCLRockstar127" FontSize="16" Margin="0" MouseRightButtonDown="btn_lbl_Status_MouseRightButtonDown"/>
+                <Button Grid.Row="4" Grid.Column="1" x:Name="lbl_FilesSCLRockstar127_Status" Content="Unknown" Style="{StaticResource btn_Set_Trans}" Foreground="{x:Static local:MyColors.MyColorWhite}" Tag="FilesSCLRockstar127" FontSize="16" Margin="0" MouseRightButtonDown="btn_lbl_Status_MouseRightButtonDown"/>
                 <Button Grid.Row="4" Grid.Column="2" x:Name="btn_FilesSCLRockstar127_Import" Click="btn_Import_Click" Tag="FilesSCLRockstar127" Content="Import"  FontSize="14" Margin="8,12" ToolTip="Rightclick to Verify Files" Style="{StaticResource btn_CM_Action}"/>
                 <Button Grid.Row="4" Grid.Column="3" x:Name="btn_FilesSCLRockstar127_Install" Click="btn_Install_Click" MouseRightButtonDown="btn_Install_MouseRightButtonDown" Tag="FilesSCLRockstar127" Content="(Re-)install" FontSize="14" Margin="8,12"  ToolTip="Rightclick to Verify Files" Style="{StaticResource btn_CM_Action}"/>
                 <Button Grid.Row="4" Grid.Column="4" x:Name="btn_FilesSCLRockstar127_Uninstall" Click="btn_Uninstall_Click" MouseRightButtonDown="btn_Uninstall_MouseRightButtonDown" Tag="FilesSCLRockstar127" Content="Uninstall" FontSize="14" Margin="8,12"  Style="{StaticResource btn_CM_Action}"/>
 
                 <Button Grid.Row="5" Grid.Column="0" x:Name="lbl_FilesSCLRockstar124_Name" Content="Social Club Launch Rockstar 1.24"  MouseLeftButtonDown="btn_DragMove" ToolTip="Social Club Launch Rockstar 1.24" Tag="FilesSCLRockstar124" Style="{StaticResource btn_Set_Header}"  Foreground="{x:Static local:MyColors.App_LabelForeground}" FontFamily="Tahoma" FontSize="14" Background="Transparent" HorizontalAlignment="Left" BorderThickness="0" MouseRightButtonDown="btn_lbl_Component_Name_MouseRightButtonDown" Margin="8"/>
-                <Button Grid.Row="5" Grid.Column="1" x:Name="lbl_FilesSCLRockstar124_Status" Content="Status" Style="{StaticResource btn_Set_Trans}" Foreground="{x:Static local:MyColors.MyColorGreen}" Tag="FilesSCLRockstar124" FontSize="16" Margin="0" MouseRightButtonDown="btn_lbl_Status_MouseRightButtonDown"/>
+                <Button Grid.Row="5" Grid.Column="1" x:Name="lbl_FilesSCLRockstar124_Status" Content="Unknown" Style="{StaticResource btn_Set_Trans}" Foreground="{x:Static local:MyColors.MyColorWhite}" Tag="FilesSCLRockstar124" FontSize="16" Margin="0" MouseRightButtonDown="btn_lbl_Status_MouseRightButtonDown"/>
                 <Button Grid.Row="5" Grid.Column="2" x:Name="btn_FilesSCLRockstar124_Import" Click="btn_Import_Click" Tag="FilesSCLRockstar124" Content="Import"  FontSize="14" Margin="8,12" ToolTip="Rightclick to Verify Files" Style="{StaticResource btn_CM_Action}"/>
                 <Button Grid.Row="5" Grid.Column="3" x:Name="btn_FilesSCLRockstar124_Install" Click="btn_Install_Click" MouseRightButtonDown="btn_Install_MouseRightButtonDown" Tag="FilesSCLRockstar124" Content="(Re-)install" FontSize="14" Margin="8,12"  ToolTip="Rightclick to Verify Files" Style="{StaticResource btn_CM_Action}"/>
                 <Button Grid.Row="5" Grid.Column="4" x:Name="btn_FilesSCLRockstar124_Uninstall" Click="btn_Uninstall_Click" MouseRightButtonDown="btn_Uninstall_MouseRightButtonDown" Tag="FilesSCLRockstar124" Content="Uninstall" FontSize="14" Margin="8,12"  Style="{StaticResource btn_CM_Action}"/>
 
                 <Button Grid.Row="6" Grid.Column="0" x:Name="lbl_FilesSCLDowngradedSC_Name" Content="Downgraded Social Club"  MouseLeftButtonDown="btn_DragMove" ToolTip="Social Club v. 1.1.7.8. Needed for Launching through Social Club" Tag="FilesDowngradedSC" Style="{StaticResource btn_Set_Header}"  Foreground="{x:Static local:MyColors.App_LabelForeground}" FontFamily="Tahoma" FontSize="14" Background="Transparent" HorizontalAlignment="Left" BorderThickness="0" MouseRightButtonDown="btn_lbl_Component_Name_MouseRightButtonDown" Margin="8"/>
-                <Button Grid.Row="6" Grid.Column="1" x:Name="lbl_FilesSCLDowngradedSC_Status" Content="Status" Style="{StaticResource btn_Set_Trans}" Foreground="{x:Static local:MyColors.MyColorGreen}" Tag="FilesDowngradedSC" FontSize="16" Margin="0" MouseRightButtonDown="btn_lbl_Status_MouseRightButtonDown"/>
+                <Button Grid.Row="6" Grid.Column="1" x:Name="lbl_FilesSCLDowngradedSC_Status" Content="Unknown" Style="{StaticResource btn_Set_Trans}" Foreground="{x:Static local:MyColors.MyColorWhite}" Tag="FilesDowngradedSC" FontSize="16" Margin="0" MouseRightButtonDown="btn_lbl_Status_MouseRightButtonDown"/>
                 <Button Grid.Row="6" Grid.Column="2" x:Name="btn_FilesSCLDowngradedSC_Import" Click="btn_Import_Click" Tag="FilesDowngradedSC" Content="Import"  FontSize="14" Margin="8,12" ToolTip="Rightclick to Verify Files" Style="{StaticResource btn_CM_Action}"/>
                 <Button Grid.Row="6" Grid.Column="3" x:Name="btn_FilesSCLDowngradedSC_Install" Click="btn_Install_Click" MouseRightButtonDown="btn_Install_MouseRightButtonDown" Tag="FilesDowngradedSC" Content="(Re-)install" FontSize="14" Margin="8,12"  ToolTip="Rightclick to Verify Files" Style="{StaticResource btn_CM_Action}"/>
                 <Button Grid.Row="6" Grid.Column="4" x:Name="btn_FilesSCLDowngradedSC_Uninstall" Click="btn_Uninstall_Click" MouseRightButtonDown="btn_Uninstall_MouseRightButtonDown" Tag="FilesDowngradedSC" Content="Uninstall" FontSize="14" Margin="8,12"  Style="{StaticResource btn_CM_Action}"/>
 
                 <Button Grid.Row="7" Grid.Column="0" x:Name="lbl_FilesAdditionalSF_Name" Content="Additional SaveFiles"  MouseLeftButtonDown="btn_DragMove" ToolTip="SaveFiles for every Mission in the Game" Tag="FilesAdditionalSaveFiles"  Style="{StaticResource btn_Set_Header}"  Foreground="{x:Static local:MyColors.App_LabelForeground}" FontFamily="Tahoma" FontSize="14" Background="Transparent" HorizontalAlignment="Left" BorderThickness="0" MouseRightButtonDown="btn_lbl_Component_Name_MouseRightButtonDown" Margin="8"/>
-                <Button Grid.Row="7" Grid.Column="1" x:Name="lbl_FilesAdditionalSF_Status" Content="Status" Style="{StaticResource btn_Set_Trans}" Foreground="{x:Static local:MyColors.MyColorGreen}" Tag="FilesAdditionalSaveFiles" FontSize="16" Margin="0" MouseRightButtonDown="btn_lbl_Status_MouseRightButtonDown"/>
+                <Button Grid.Row="7" Grid.Column="1" x:Name="lbl_FilesAdditionalSF_Status" Content="Unknown" Style="{StaticResource btn_Set_Trans}" Foreground="{x:Static local:MyColors.MyColorWhite}" Tag="FilesAdditionalSaveFiles" FontSize="16" Margin="0" MouseRightButtonDown="btn_lbl_Status_MouseRightButtonDown"/>
                 <Button Grid.Row="7" Grid.Column="2" x:Name="btn_FilesAdditionalSF_Import" Click="btn_Import_Click" Tag="FilesAdditionalSaveFiles" Content="Import"  FontSize="14" Margin="8,12" ToolTip="Rightclick to Verify Files" Style="{StaticResource btn_CM_Action}"/>
                 <Button Grid.Row="7" Grid.Column="3" x:Name="btn_FilesAdditionalSF_Install" Click="btn_Install_Click" MouseRightButtonDown="btn_Install_MouseRightButtonDown" Tag="FilesAdditionalSaveFiles" Content="(Re-)install" FontSize="14" Margin="8,12" ToolTip="Rightclick to Verify Files" Style="{StaticResource btn_CM_Action}"/>
                 <Button Grid.Row="7" Grid.Column="4" x:Name="btn_FilesAdditionalSF_Uninstall" Click="btn_Uninstall_Click" MouseRightButtonDown="btn_Uninstall_MouseRightButtonDown" Tag="FilesAdditionalSaveFiles" Content="Uninstall" FontSize="14" Margin="8,12"  Style="{StaticResource btn_CM_Action}"/>
-            </Grid>                                                                                                            
+            </Grid>
+        </Border>
+
+        <Border x:Name="Border_Loading" Visibility="Hidden" Grid.Row="1" Margin="0,15,0,15" BorderThickness="2" BorderBrush="{x:Static local:MyColors.MW_BorderBrush}"  Background="{x:Static local:MyColors.SE_RowBackground}">
+            <Grid x:Name="myGridLoading">
+                <!--<Rectangle ClipToBounds="True">
+                    <i:Interaction.Behaviors>
+                        <local:BlurBackgroundBehavior BlurContainer="{Binding ElementName=Grid_Main}"/>
+                    </i:Interaction.Behaviors>
+                </Rectangle>-->
+                <Image x:Name="Image_Loading" gif:ImageBehavior.AnimatedSource="./Artwork/loading.gif" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Height="48" Width="48" />
+            </Grid>
         </Border>
 
     </Grid>

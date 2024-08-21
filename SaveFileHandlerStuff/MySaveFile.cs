@@ -1,4 +1,5 @@
 ﻿using Project_127.HelperClasses;
+using Project_127.Popups;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -257,9 +258,8 @@ namespace Project_127.SaveFileHandlerStuff
 
 			if (HelperClasses.FileHandling.doesFileExist(newFilePath) || HelperClasses.FileHandling.doesFileExist(newFilePath + ".bak"))
 			{
-				Popups.Popup yesno = new Popups.Popup(Popups.Popup.PopupWindowTypes.PopupYesNo, "File already exists.\nDo you wish to overwrite it?");
-				yesno.ShowDialog();
-				if (yesno.DialogResult == false)
+				bool yesno = PopupWrapper.PopupYesNo("File already exists.\nDo you wish to overwrite it?");
+				if (yesno == false)
 				{
 					return;
 				}
@@ -279,9 +279,8 @@ namespace Project_127.SaveFileHandlerStuff
 
 			if (HelperClasses.FileHandling.doesFileExist(newFilePath) || HelperClasses.FileHandling.doesFileExist(newFilePath + ".bak"))
 			{
-				Popups.Popup yesno = new Popups.Popup(Popups.Popup.PopupWindowTypes.PopupYesNo, "File already exists.\nDo you wish to overwrite it?");
-				yesno.ShowDialog();
-				if (yesno.DialogResult == false)
+                bool yesno = PopupWrapper.PopupYesNo("File already exists.\nDo you wish to overwrite it?");
+				if (yesno == false)
 				{
 					return;
 				}
@@ -352,7 +351,7 @@ namespace Project_127.SaveFileHandlerStuff
 			tmp.Add(new MyFileOperation(MyFileOperation.FileOperations.Copy, pOriginalFilePath, newFilePath, "Copying SaveFiles to SupportFiles Folder", 1, MyFileOperation.FileOrFolder.File));
 			tmp.Add(new MyFileOperation(MyFileOperation.FileOperations.Copy, pOriginalFilePath + ".bak", newFilePath + ".bak", "Copying SaveFiles to SupportFiles Folder", 1, MyFileOperation.FileOrFolder.File));
 
-			new Popups.PopupProgress(Popups.PopupProgress.ProgressTypes.FileOperation, "Importing SaveFile", tmp).ShowDialog();
+            PopupWrapper.PopupProgress(Popups.PopupProgress.ProgressTypes.FileOperation, "Importing SaveFile", tmp);
 
 			MySaveFile.BackupSaves.Add(new MySaveFile(newFilePath));
 		}

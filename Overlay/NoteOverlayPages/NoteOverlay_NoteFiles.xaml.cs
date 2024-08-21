@@ -134,9 +134,8 @@ namespace Project_127.Overlay.NoteOverlayPages
 				{
 					if (HelperClasses.FileHandling.doesFileExist(filepath))
 					{
-						Popup yesno = new Popup(Popup.PopupWindowTypes.PopupYesNo, "The file: '" + filename + "' already exists in the note Folder.\nDo you want to overwrite it with '" + files[i] + "'");
-						yesno.ShowDialog();
-						if (yesno.DialogResult == true)
+						bool yesno = PopupWrapper.PopupYesNo("The file: '" + filename + "' already exists in the note Folder.\nDo you want to overwrite it with '" + files[i] + "'");
+						if (yesno == true)
 						{
 							HelperClasses.FileHandling.deleteFile(filepath);
 							HelperClasses.FileHandling.copyFile(files[i], filepath);

@@ -114,6 +114,7 @@ namespace Project_127
 		public static System.Windows.Thickness MW_ButtonGTABorderThickness { get; private set; } = new System.Windows.Thickness(5);
 		public static Brush MW_ButtonGTAGameNotRunningBorderBrush { get; private set; } = MyColorWhite;
 		public static Brush MW_ButtonGTAGameRunningBorderBrush { get; private set; } = MyColorGreen;
+		public static Brush MW_ButtonGTAGameStuckBorderBrush { get; private set; } = (Brush)new BrushConverter().ConvertFromString("#ff00ff");
 		public static Brush MW_ButtonGTABackground { get; private set; } = SetOpacity(MyColorBlack, 70);
 		public static Brush MW_ButtonGTAForeground { get; private set; } = MyColorWhite;
 		public static Brush MW_ButtonGTAMOBackground { get; private set; } = SetOpacity(MyColorOffWhite, 100);

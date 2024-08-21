@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <item>
-  <version>1.3.0.0</version>
-  <url>https://github.com/TwosHusbandS/Project-127/raw/master/Installer/Project_127_Installer_V_1_3_0_0.exe</url>
+  <version>1.3.1.0</version>
+  <url>https://github.com/TwosHusbandS/Project-127/raw/internal/Installer/Project_127_Installer_V_1_3_1_0.exe</url>
   <buildversiontable>
 	  1.0.323.0;1.24:
 	  1.0.350.0;1.25:
@@ -47,6 +47,7 @@
 	  1.0.3028.0;1.67:
 	  1.0.3095.0;1.68:
 	  1.0.3179.0;1.68:
+	  1.0.3258.0;1.69:
   </buildversiontable>
   <announcement></announcement>
   <dragonsreadme>https://github.com/jaredtb</dragonsreadme>

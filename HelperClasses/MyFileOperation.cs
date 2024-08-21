@@ -11,6 +11,7 @@ using Project_127.Popups;
 using Project_127.MySettings;
 using System.Windows.Interop;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 
 namespace Project_127.HelperClasses
 {
@@ -119,7 +120,7 @@ namespace Project_127.HelperClasses
             }
             Logger.Log("Executing wrapper, all retry attemps done");
 
-            if (LauncherLogic.GameState == LauncherLogic.GameStates.Running)
+            if (LauncherLogic.GameState == LauncherLogic.GameStates.Stuck)
 			{
                 Logger.Log("Executing wrapper, game still running");
 
@@ -130,18 +131,11 @@ namespace Project_127.HelperClasses
                     Logger.Log("Executing wrapper, asking user if he wants a restart");
 
                     string msg = "File Operation failed.\n\nThis is most likely due to a 'stuck' GTA V Process,\nas we have tried to kill it, waited, and its still running.\n\nThe only fix is to FULLY restart your computer.\nIf you manually do it, you have to hold SHIFT while clicking the restart button.\nDo you want P127 to restart your PC for you?";
-					if (Globals.PopupYesNo(msg) == true)
-					{
-                        Logger.Log("Executing wrapper, user wants a restart");
-                        Globals.PopupOk("Close all Files and Programs that need saving,\nand hit 'ok' to restart your PC.");
-                        Logger.Log("Executing wrapper, goodnight");
-                        Process.Start("shutdown.exe", "/r /f /t 0");
-                    }
-                    else
+					if (!LauncherLogic.HandleStuckGTA(true, msg))
 					{
                         Logger.Log("Executing wrapper, user does NOT want a restart. Asking if we should cancel file operation");
 
-                        if (Globals.PopupYesNo("Do you want to cancel the current FileOperations?\n\nNot canceling is fine, will just spamm you with errors.") == true)
+                        if (PopupWrapper.PopupYesNo("Do you want to cancel the current FileOperations?\n\nNot canceling is fine, will just spamm you with errors.") == true)
                         {
                             Logger.Log("Executing wrapper, canceling file operation");
                             CancelFileOperations = true;
@@ -231,7 +225,7 @@ namespace Project_127.HelperClasses
 						}
 						else
 						{
-                            Globals.PopupError("No idea what happened here...MyFileOperation Execute Hardlink Folder");
+                            PopupWrapper.PopupError("No idea what happened here...MyFileOperation Execute Hardlink Folder");
 						}
 						break;
 					}

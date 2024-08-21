@@ -273,6 +273,7 @@
       <DependentUpon>PopupTextbox.xaml</DependentUpon>
     </Compile>
     <Compile Include="Auth\RC4.cs" />
+    <Compile Include="Popups\PopupWrapper.cs" />
     <Compile Include="ReadMe.xaml.cs">
       <DependentUpon>ReadMe.xaml</DependentUpon>
     </Compile>

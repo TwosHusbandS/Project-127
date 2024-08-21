@@ -219,22 +219,22 @@ namespace Project_127.Popups
             {
 				if (content_string == "")
                 {
-					new Popup(Popup.PopupWindowTypes.PopupOk, "Patch cannot be empty!").ShowDialog();
+					PopupWrapper.PopupOk("Patch cannot be empty!");
 					return false;
 				}
 				else if (Content_string.Length % 2 != 0)
                 {
-					new Popup(Popup.PopupWindowTypes.PopupOk, "Patch must consist of full bytes!").ShowDialog();
+					PopupWrapper.PopupOk("Patch must consist of full bytes!");
 					return false;
                 }
 				else if (Name == "" || Name == null)
                 {
-					new Popup(Popup.PopupWindowTypes.PopupOk, "Patch must have name!").ShowDialog();
+					PopupWrapper.PopupOk("Patch must have name!");
 					return false;
 				}
 				else if (nameExists(Name) && !isEditing)
                 {
-					new Popup(Popup.PopupWindowTypes.PopupOk, "A patch by that name already exists!").ShowDialog();
+					PopupWrapper.PopupOk("A patch by that name already exists!");
 					return false;
                 }
 				return true;

@@ -401,7 +401,7 @@ namespace Project_127.Overlay
 		/// <summary>
 		/// Disposing everything to do with the Overlay
 		/// </summary>
-		public static void DisposeAllOverlayStuff(bool keepOverlay = false)
+		public static void DisposeAllOverlayStuff(bool keepOverlay = false, bool KeppPreview = false)
 		{
 			if (!keepOverlay)
 			{
@@ -412,8 +412,13 @@ namespace Project_127.Overlay
 				MainWindow.OL_MM.Close();
 				MainWindow.OL_MM = null;
 			}
-			DisposePreview();
-			HelperClasses.Keyboard.KeyboardListener.Stop();
+
+            if (!KeppPreview)
+            {
+                DisposePreview();
+            }
+
+            HelperClasses.Keyboard.KeyboardListener.Stop();
 			HelperClasses.WindowChangeListener.Stop();
 		}
 
@@ -428,8 +433,16 @@ namespace Project_127.Overlay
 			{
 				if (!Settings.EnableOverlay && !MySettings.Settings.SpecialPatcherEnabled)
 				{
-					DisposeAllOverlayStuff();
-				}
+                    // we cant dispose preview when we are on the UI tab
+                    if (_NoteOverlayPage == NoteOverlayPages.Look && Globals.PageState == Globals.PageStates.NoteOverlay)
+                    {
+                        DisposeAllOverlayStuff(false, true);
+                    }
+                    else
+                    {
+                        DisposeAllOverlayStuff(false, false);
+                    }
+                }
 				else
 				{
 					DisposeAllOverlayStuff(true);
@@ -464,7 +477,7 @@ namespace Project_127.Overlay
 						}
 					}
 
-					if (_NoteOverlayPage == NoteOverlayPages.Look)
+					if (_NoteOverlayPage == NoteOverlayPages.Look && Globals.PageState == Globals.PageStates.NoteOverlay)
 					{
 						if (GTAOverlay.OverlayMode == GTAOverlay.OverlayModes.MultiMonitor)
 						{

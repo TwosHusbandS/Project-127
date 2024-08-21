@@ -55,13 +55,12 @@ namespace Project_127.HelperClasses
 		}
 
 
-		public static void Init(string online_xml = null)
+		public static void Init(string online_xml)
 		{
             MyBuildVersionTables.Clear();
 
 			List<BuildVersionTable> Local = GetHardcodedOnes();
 			List<BuildVersionTable> Github = GetFromGithub(online_xml);
-
 
 			if (Github.Count > 5)
 			{
@@ -126,24 +125,20 @@ namespace Project_127.HelperClasses
                 new BuildVersionTable("1.0.2944.0", "1.67"),
                 new BuildVersionTable("1.0.3028.0", "1.67"),
                 new BuildVersionTable("1.0.3095.0", "1.68"),
-                new BuildVersionTable("1.0.3179.0", "1.68")
+                new BuildVersionTable("1.0.3179.0", "1.68"),
+                new BuildVersionTable("1.0.3258.0", "1.69")
             };
 
 			return tmp;
         }
 
 
-		public static List<BuildVersionTable> GetFromGithub(string xml = null)
+		public static List<BuildVersionTable> GetFromGithub(string xml)
 		{
 			List<BuildVersionTable> tmp = new List<BuildVersionTable>();
 
 			try
 			{
-				if (xml is null) // actually needs null check and not nullOrEmpty
-				{
-				    xml = Globals.XML_AutoUpdate;
-				}
-
 				string uglyVersions = FileHandling.GetXMLTagContent(xml, "buildversiontable");
 
 				foreach (string OnePair in GetStringListFromString(uglyVersions, ':'))

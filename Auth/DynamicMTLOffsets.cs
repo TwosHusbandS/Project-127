@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Project_127.Popups;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -159,12 +160,17 @@ namespace Project_127.Auth
         }
 
 
-        public static DynamicMTLOffsets GetMTLOffsets()
+        public static async Task SetUpMTLOffsets()
+        {
+            MainWindow.DMO = await GetMTLOffsets().ConfigureAwait(continueOnCapturedContext: false);
+        }
+
+        public static async Task<DynamicMTLOffsets> GetMTLOffsets()
         {
             // DMO = DynamicMtlOffsets
 
             DynamicMTLOffsets DMO_File = GetFromFile();
-            DynamicMTLOffsets DMO_Github = GetFromGithub();
+            DynamicMTLOffsets DMO_Github = await GetFromGithub().ConfigureAwait(continueOnCapturedContext: false);
             DynamicMTLOffsets DMO_Default = GetDefaults();
 
 
@@ -232,9 +238,8 @@ namespace Project_127.Auth
                         {
                             HelperClasses.Logger.Log("Dynamic MTL Offsets: local file is NOT read only, asking user");
 
-                            Popups.Popup yesno = new Popups.Popup(Popups.Popup.PopupWindowTypes.PopupYesNo, "There are new MTL Offsets on github.\nDo you want to replace your local ones?\n\nIf you do not know what you are doing,\nor have not been instructed otherwise,\nclick Yes.");
-                            yesno.ShowDialog();
-                            if (yesno.DialogResult == true)
+                            bool yesno = PopupWrapper.PopupYesNo("There are new MTL Offsets on github.\nDo you want to replace your local ones?\n\nIf you do not know what you are doing,\nor have not been instructed otherwise,\nclick Yes.");
+                            if (yesno == true)
                             {
                                 HelperClasses.Logger.Log("Dynamic MTL Offsets: User wants github. Writing github to file, returning github");
                                 DMO_Github.WriteToFile();
@@ -257,10 +262,10 @@ namespace Project_127.Auth
             return new DynamicMTLOffsets();
         }
 
-        private static DynamicMTLOffsets GetFromGithub()
+        private static async Task<DynamicMTLOffsets> GetFromGithub()
         {
             string input = "";
-            input = Globals.XML_MTLOffsetsGithub;
+            input = await Globals.XML_MTLOffsetsGithub().ConfigureAwait(continueOnCapturedContext: false);
             if (String.IsNullOrWhiteSpace(input))
             {
                 HelperClasses.Logger.Log("Dynamic MTL Offsets: Github input empty");
