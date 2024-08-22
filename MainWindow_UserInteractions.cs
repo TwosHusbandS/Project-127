@@ -322,6 +322,7 @@ namespace Project_127
             {
                 HelperClasses.Logger.Log("Game deteced running.", 1);
                 btn_GTA_MouseRightButtonDown_Static();
+                return;
             }
             else if (LauncherLogic.GameState == LauncherLogic.GameStates.NonRunning)
             {
