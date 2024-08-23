@@ -76,7 +76,7 @@ namespace Project_127
             }
         }
 
-        private static GameStates LastLastGameState = GameStates.NonRunning;
+        private static int GameStateStuckCounter = 0;
         private static GameStates LastGameState = GameStates.NonRunning;
 
         public static GameStates PollGameState()
@@ -85,6 +85,8 @@ namespace Project_127
 
             if (currGameState == GameStates.Running)
             {
+                GameStateStuckCounter = 0;
+
                 WindowChangeHander.WindowChangeEvent(WindowChangeListener.GetActiveWindowTitle());
 
                 if (LastGameState == GameStates.NonRunning)
@@ -94,21 +96,23 @@ namespace Project_127
             }
             else if (currGameState == GameStates.NonRunning)
             {
-                if (LastGameState == GameStates.Running)
+                GameStateStuckCounter = 0;
+
+                if (LastGameState != GameStates.NonRunning)
                 {
                     GTAClosed();
                 }
             }
             else
             {
-                // if we are currently stuck, and were stuck last time, and the time before that.
-                if (LastGameState == GameStates.Stuck && LastLastGameState == GameStates.Stuck)
+                GameStateStuckCounter += 1;
+                if (GameStateStuckCounter > 5)
                 {
+                    GameStateStuckCounter = 0;
                     HandleStuckGTA();
                 }
             }
 
-            LastLastGameState = LastGameState;
             LastGameState = currGameState;
 
             return currGameState;
