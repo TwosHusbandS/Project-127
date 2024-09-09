@@ -2018,7 +2018,7 @@ namespace Project_127.MySettings
                 HelperClasses.Logger.Log("DDL: " + tb);
                 Globals.ImportBuildFromUrl(tb);
             }
-            else if (tb != "")
+            else if (tb != "" && tb.ToLower() != "cancel")
             {
                 string DLLinkBranch = "https://github.com/TwosHusbandS/Project-127/raw/" + Globals.P127Branch + "/Installer/Builds/" + tb.TrimEnd(".exe") + ".exe";
                 string DLLinkMaster = "https://github.com/TwosHusbandS/Project-127/raw/Master" + "/Installer/Builds/" + tb.TrimEnd(".exe") + ".exe";

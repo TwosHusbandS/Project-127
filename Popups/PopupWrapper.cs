@@ -48,6 +48,10 @@ namespace Project_127.Popups
                 {
                     rtrn = pt.MyReturnString;
                 }
+                else
+                {
+                    rtrn = "CANCEL";
+                }    
             });
             return rtrn;
         }
