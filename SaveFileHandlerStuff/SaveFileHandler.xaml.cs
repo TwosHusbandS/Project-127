@@ -502,8 +502,13 @@ namespace Project_127.SaveFileHandlerStuff
             string newName = PopupWrapper.PopupTextbox("Enter new Name for the SaveFile:\n'" + pMySaveFileName + "'", pMySaveFileName);
 
             // While name was give OR fikle exists
-            while (String.IsNullOrWhiteSpace(newName) || HelperClasses.FileHandling.doesFileExist(pPathToCheck.TrimEnd('\\') + @"\" + newName))
+            while (String.IsNullOrWhiteSpace(newName) || HelperClasses.FileHandling.doesFileExist(pPathToCheck.TrimEnd('\\') + @"\" + newName) || newName.ToLower() == "cancel")
             {
+                if (newName.ToLower() == "cancel")
+                {
+                    return "";
+                }
+
                 // Not a Valid FilePath
                 bool yesno = PopupWrapper.PopupYesNo("File does already exists or is not a valid FileName.\nClick yes if you want to try again.");
                 if (yesno == false)
@@ -532,8 +537,13 @@ namespace Project_127.SaveFileHandlerStuff
             string newName = PopupWrapper.PopupTextbox("Enter new Folder-Name:", "");
 
             // While name was give OR fikle exists
-            while (String.IsNullOrWhiteSpace(newName) || HelperClasses.FileHandling.doesPathExist(pPathToCheck.TrimEnd('\\') + @"\" + newName))
+            while (String.IsNullOrWhiteSpace(newName) || HelperClasses.FileHandling.doesPathExist(pPathToCheck.TrimEnd('\\') + @"\" + newName) || newName.ToLower() == "cancel")
             {
+                if (newName.ToLower() == "cancel")
+                {
+                    return "";
+                }
+
                 // Not a Valid FilePath
                 bool yesno = PopupWrapper.PopupYesNo("Folder does already exists or is not a valid Folder-Name.\nClick yes if you want to try again.");
                 if (yesno == false)

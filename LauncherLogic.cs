@@ -1360,7 +1360,7 @@ namespace Project_127
                     {
                         // Asking for Name 
                         input = PopupWrapper.PopupTextbox("Enter the Name of the Backup:", "MyNewBackupName");
-                        if (!string.IsNullOrWhiteSpace(input))
+                        if (!string.IsNullOrWhiteSpace(input) && input.ToLower() != "cancel")
                         {
                             // Getting the Name chosen
                             string newPath = LauncherLogic.UpgradeFilePath.TrimEnd('\\') + @"_Backup_" + input;

@@ -824,22 +824,25 @@ string lpSymlinkFileName, string lpTargetFileName, SymbolicLink dwFlags);
             {
                 var tmp = new System.Net.Http.HttpClient();
                 tmp.Timeout = TimeSpan.FromMilliseconds(7500);
-                
+
                 // Artificial Delay for debugging etc.
                 // await Task.Delay(1000).ConfigureAwait(continueOnCapturedContext: false);
-                
-                rtrn = await tmp.GetStringAsync(pURL).ConfigureAwait(continueOnCapturedContext: false); 
+
+                rtrn = await tmp.GetStringAsync(pURL).ConfigureAwait(continueOnCapturedContext: false);
             }
             catch (Exception e)
             {
-                if (surpressPopup == false)
+                MainWindow.MW.Dispatcher.Invoke(() =>
                 {
-                    bool yesno = PopupWrapper.PopupYesNo("Project 1.27 can not connect to Github and check for Latest Files\nP127 Updates, GameBuildInfo or the Component Manager.\nThis might cause some things to not work.\n" + e.ToString() + "\n\n\nDo you want to put  P127 into offline mode until restart?\nThis prevents it from trying again and again and making you wait.");
-                    if (yesno == true)
+                    if (surpressPopup == false)
                     {
-                        Globals.OfflineModeUserChoice = true;
+                        bool yesno = PopupWrapper.PopupYesNo("Project 1.27 can not connect to Github and check for Latest Files\nP127 Updates, GameBuildInfo or the Component Manager.\nThis might cause some things to not work.\n" + e.ToString() + "\n\n\nDo you want to put  P127 into offline mode until restart?\nThis prevents it from trying again and again and making you wait.");
+                        if (yesno == true)
+                        {
+                            Globals.OfflineModeUserChoice = true;
+                        }
                     }
-                }
+                });
                 HelperClasses.Logger.Log("GetStringFromURL failed. Probably Network related. URL = '" + pURL + "'", true, 0);
                 HelperClasses.Logger.Log("e.ToString():\n" + e.ToString(), true, 1);
                 HelperClasses.Logger.Log("e.Message.ToString():\n" + e.Message.ToString(), true, 1);
