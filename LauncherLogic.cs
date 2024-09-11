@@ -934,7 +934,10 @@ namespace Project_127
                 tmp += GetStartCommandLineArgs();
             }
 
-            tmp += " && exit";
+            // thanks for nothing windows
+            // the && exit part is not needed, cmd window closes anyways
+            // and with it, command line args have a trailing spacebar. Yes. Really.
+            //tmp += " && exit";
 
             if (viaSteam)
             {
