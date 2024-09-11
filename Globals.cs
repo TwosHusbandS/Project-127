@@ -235,7 +235,7 @@ namespace Project_127
         /// <summary>
         /// Property of other Buildinfo. Will be in the top message of logs
         /// </summary>
-        public static string BuildInfo = "1.3.1.2 - RC 1";
+        public static string BuildInfo = "1.3.1.2 - StutterFix Edition";
 
 
         /// <summary>
@@ -391,6 +391,7 @@ namespace Project_127
             {"EnableCoreFix", "True"},
             {"EnableRunAsAdminDowngraded", "False"},
             {"OverWriteGTACommandLineArgs", ""},
+            {"EnableStutterFix", "False"},
    
 			// Extra Features
 			{"EnableOverlay", "False"},
@@ -715,6 +716,22 @@ namespace Project_127
                     Settings.DMMode = "default";
                     Settings.P127Mode = "default";
                 }
+
+
+                // If first time launching 1.3.1.3
+                if (Settings.LastLaunchedVersion < new Version("1.3.1.3"))
+                {
+                    if (String.IsNullOrWhiteSpace(Settings.OverWriteGTACommandLineArgs))
+                    {
+                        Settings.OverWriteGTACommandLineArgs = LauncherLogic.GetStartCommandLineArgs();
+                    }
+                    else
+                    {
+                        Settings.OverWriteGTACommandLineArgs += " -StutterFix";
+                    }
+                }
+
+                    
                 Settings.LastLaunchedVersion = Globals.ProjectVersion;
             }
 

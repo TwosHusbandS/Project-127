@@ -155,10 +155,9 @@
                                 <RowDefinition Height="40"/> <!--1-->
                                 <RowDefinition Height="40"/> <!--2-->
                                 <RowDefinition Height="40"/> <!--3-->
-                                <RowDefinition Height="40"/> <!--4-->
-                                <RowDefinition Height="140"/> <!--5-->
-                                <RowDefinition Height="100"/> <!--6-->
-                                <RowDefinition Height="400"/> <!--7-->
+                                <RowDefinition Height="140"/> <!--4-->
+                                <RowDefinition Height="100"/> <!--5-->
+                                <RowDefinition Height="480"/> <!--6-->
 
                             </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
@@ -179,13 +178,10 @@
                             <ComboBox Grid.Row="1" Grid.Column="1" Margin="10,5" Style="{StaticResource cobo}" x:Name="combox_Set_LanguageSelected" SelectionChanged="combox_Set_LanguageSelected_SelectionChanged"/>
                             <Rectangle x:Name="Rect_HideOptions_Language" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Fill="{x:Static local:MyColors.MyColorOffWhite85}" ToolTip="Disabled due to custom Command Line Args."/>
 
-                            <Label Grid.Row="2" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Enable Scripthook (if existing) on Downgraded GTA"/>
-                            <Button Grid.Row="2" Grid.Column="1" x:Name="btn_cb_Set_EnableScripthookOnDowngraded"  Style="{StaticResource btn_cb}" Click="btn_cb_Click" MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
+                            <Label Grid.Row="2" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Run downgraded GTA as Admin" ToolTip="Runs downgraded GTA as Admin. You will also need to launch Livesplit, OBS etc. as Admin."/>
+                            <Button Grid.Row="2" Grid.Column="1" x:Name="btn_cb_Set_EnableRunAsAdmin"  Style="{StaticResource btn_cb}" Click="btn_cb_Click" MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave" ToolTip="Runs downgraded GTA as Admin. You will also need to launch Livesplit, OBS etc. as Admin."/>
 
-                            <Label Grid.Row="3" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Run downgraded GTA as Admin" ToolTip="Runs downgraded GTA as Admin. You will also need to launch Livesplit, OBS etc. as Admin."/>
-                            <Button Grid.Row="3" Grid.Column="1" x:Name="btn_cb_Set_EnableRunAsAdmin"  Style="{StaticResource btn_cb}" Click="btn_cb_Click" MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave" ToolTip="Runs downgraded GTA as Admin. You will also need to launch Livesplit, OBS etc. as Admin."/>
-
-                            <Button Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" x:Name="btn_GTACommandLineArgs"  Style="{StaticResource btn_SE_Path}" Click="btn_GTACommandLineArgs_Click" Content="Additional Downgraded GTA CommandLine Options"/>
+                            <Button Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" x:Name="btn_GTACommandLineArgs"  Style="{StaticResource btn_SE_Path}" Click="btn_GTACommandLineArgs_Click" Content="Additional Downgraded GTA CommandLine Options"/>
                             <Popup x:Name="PopupGTACommandLineArgs"  PlacementTarget="{Binding ElementName=btn_GTACommandLineArgs}" Placement="MousePoint" Width="400" Height="150"  Margin="0,0,0,0" StaysOpen="False" Closed="PopupGTACommandLineArgs_Closed" Opened="PopupGTACommandLineArgs_Opened">
                                 <Border BorderBrush="{x:Static local:MyColors.MyColorWhite}" BorderThickness="2" Background="{x:Static local:MyColors.MyColorOffBlack}" MouseLeave="Border_MouseLeave">
                                     <Grid>
@@ -208,14 +204,14 @@
                                         <Label Grid.Row="1" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Overwrite GTA Command Line Args" ToolTip="This will disable P127 Language Select and remove the automatically applied Core Fix.\nIF THE LINES BELOW ARE SHIT, YOUR GAME MIGHT NOT START YOU MUPPET"/>
                                         <Button Grid.Row="1" Grid.Column="1" x:Name="btn_cb_Set_EnableOverWriteGTACommandLineArgs"  Style="{StaticResource btn_cb}" Click="btn_cb_Click" MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
 
-                                        <TextBox x:Name="tb_OverWriteGTACommandLineArgs" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource tb}" TextChanged="tb_OverWriteGTACommandLineArgs_TextChanged" LostFocus="tb_OverWriteGTACommandLineArgs_LostFocus"/>
+                                        <TextBox x:Name="tb_OverWriteGTACommandLineArgs" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource tb}" KeyDown="tb_OverWriteGTACommandLineArgs_TextChanged" LostFocus="tb_OverWriteGTACommandLineArgs_LostFocus"/>
                                         <Rectangle x:Name="Rect_HideOptions_CommandLineArg" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Fill="{x:Static local:MyColors.MyColorOffWhite85}" ToolTip="Enable Checkbox above to unlock."/>
                                     </Grid>
                                 </Border>
                             </Popup>
 
 
-                            <Border Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" BorderThickness="2" Margin="20,10" BorderBrush="{x:Static local:MyColors.MyColorWhite}" Background="{x:Static local:MyColors.MyColorOffBlack70}" x:Name="brdr_LaunchWays">
+                            <Border Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" BorderThickness="2" Margin="20,10" BorderBrush="{x:Static local:MyColors.MyColorWhite}" Background="{x:Static local:MyColors.MyColorOffBlack70}" x:Name="brdr_LaunchWays">
                                 <Grid>
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="*"/>
@@ -232,7 +228,7 @@
                                 </Grid>
                             </Border>
 
-                            <Border x:Name="brdr_SCLOptions" Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2" BorderThickness="2" Margin="20,10"  BorderBrush="{x:Static local:MyColors.MyColorSCL}" Background="{x:Static local:MyColors.MyColorOffBlack70}">
+                            <Border x:Name="brdr_SCLOptions" Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" BorderThickness="2" Margin="20,10"  BorderBrush="{x:Static local:MyColors.MyColorSCL}" Background="{x:Static local:MyColors.MyColorOffBlack70}">
                                 <Grid>
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="*"/>
@@ -242,7 +238,7 @@
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
-                                    <Rectangle x:Name="Rect_Bullshit_4" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Fill="{x:Static local:MyColors.SE_AlternateRowBackground}"/>
+                                    <Rectangle x:Name="Rect_Background_SCL_1" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Fill="{x:Static local:MyColors.SE_AlternateRowBackground}"/>
                                     <Label Grid.Row="0" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Social Club Launch Game Version: "/>
                                     <ComboBox Grid.Row="0" Grid.Column="1" Margin="10,5" Style="{StaticResource cobo}" x:Name="combox_Set_SocialClubGameVersion" SelectionChanged="combox_Set_SocialClubGameVersion_SelectionChanged"/>
                                     <Label Grid.Row="1" Grid.Column="0" Content="Force SocialClub Installation Path C" ToolTip="Uses C:\Program Files (x86)\Rockstar Games\Social Club regardless of Registry Values for Social Club Downgrading" Style="{StaticResource lbl_Set_Info}"/>
@@ -251,9 +247,11 @@
                                 </Grid>
                             </Border>
 
-                            <Border x:Name="brdr_DragonEmuOptions" Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2" BorderThickness="2" Margin="20,10" BorderBrush="{x:Static local:MyColors.MyColorEmu}" Background="{x:Static local:MyColors.MyColorOffBlack70}">
+                            <Border x:Name="brdr_DragonEmuOptions" Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2" BorderThickness="2" Margin="20,10" BorderBrush="{x:Static local:MyColors.MyColorEmu}" Background="{x:Static local:MyColors.MyColorOffBlack70}">
                                 <Grid>
                                     <Grid.RowDefinitions>
+                                        <RowDefinition Height="*"/>
+                                        <RowDefinition Height="*"/>
                                         <RowDefinition Height="*"/>
                                         <RowDefinition Height="*"/>
                                         <RowDefinition Height="*"/>
@@ -273,13 +271,15 @@
 
                                     <Rectangle Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Fill="Transparent"/>
                                     <Rectangle Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Fill="Transparent"/>
-                                    <Rectangle x:Name="Rect_Bullshit_1" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Fill="{x:Static local:MyColors.SE_AlternateRowBackground}"/>
+                                    <Rectangle x:Name="Rect_Background_DragonEmu_1" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Fill="{x:Static local:MyColors.SE_AlternateRowBackground}"/>
                                     <Rectangle Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Fill="Transparent"/>
-                                    <Rectangle x:Name="Rect_Bullshit_2" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Fill="{x:Static local:MyColors.SE_AlternateRowBackground}"/>
+                                    <Rectangle x:Name="Rect_Background_DragonEmu_2" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Fill="{x:Static local:MyColors.SE_AlternateRowBackground}"/>
                                     <Rectangle Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" Fill="Transparent"/>
-                                    <Rectangle x:Name="Rect_Bullshit_3" Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2" Fill="{x:Static local:MyColors.SE_AlternateRowBackground}"/>
+                                    <Rectangle x:Name="Rect_Background_DragonEmu_3" Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2" Fill="{x:Static local:MyColors.SE_AlternateRowBackground}"/>
                                     <Rectangle Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2" Fill="Transparent"/>
-                                    <Rectangle x:Name="Rect_Bullshit_33" Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="2" Fill="{x:Static local:MyColors.SE_AlternateRowBackground}"/>
+                                    <Rectangle x:Name="Rect_Background_DragonEmu_4" Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="2" Fill="{x:Static local:MyColors.SE_AlternateRowBackground}"/>
+                                    <Rectangle Grid.Row="9" Grid.Column="0" Grid.ColumnSpan="2" Fill="Transparent"/>
+                                    <Rectangle x:Name="Rect_Background_DragonEmu_5" Grid.Row="10" Grid.Column="0" Grid.ColumnSpan="2" Fill="{x:Static local:MyColors.SE_AlternateRowBackground}"/>
 
 
                                     <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" x:Name="lbl_AuthWays" Content="Auth - Method" Style="{StaticResource lbl_Set_Info}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
@@ -306,15 +306,21 @@
 
                                     <Label Grid.Row="7" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Enable Returning Player Content"/>
                                     <Button Grid.Row="7" Grid.Column="1" x:Name="btn_cb_Set_EnableReturningPlayer"  Style="{StaticResource btn_cb}" Click="btn_cb_Click" MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
-                                    
-                                    <Button Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="2" x:Name="btn_Set_ImportGTAVSettings" ToolTip="Import your normal Social Club Settings for the Dragon Launcher. Pick your Profile Folder" Style="{StaticResource btn_SE_Path}" Content="Import GTA V Settings" Click="btn_Set_ImportGTAVSettings_Click" MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
 
-                                    <Label Grid.Row="9" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Hide from Steam"/>
-                                    <Button Grid.Row="9" Grid.Column="1" x:Name="btn_cb_Set_EnableDontLaunchThroughSteam"  Style="{StaticResource btn_cb}" Click="btn_cb_Click" MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
+                                    <Label Grid.Row="8" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Enable Scripthook (if existing) on Downgraded GTA"/>
+                                    <Button Grid.Row="8" Grid.Column="1" x:Name="btn_cb_Set_EnableScripthookOnDowngraded"  Style="{StaticResource btn_cb}" Click="btn_cb_Click" MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
 
-                                    <Rectangle x:Name="Rect_HideOptions_HideFromSteam" Grid.Row="9" Grid.Column="0" Grid.ColumnSpan="2" Fill="{x:Static local:MyColors.MyColorOffWhite85}" ToolTip="Non effective when Retailer is not Steam"/>
+                                    <Label Grid.Row="9" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Enable Stutter Fix on 1.27 dr490n emu"/>
+                                    <Button Grid.Row="9" Grid.Column="1" x:Name="btn_cb_Set_EnableStutterFix"  Style="{StaticResource btn_cb}" Click="btn_cb_Click" MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
+                                    <Rectangle x:Name="Rect_HideOptions_StutterFix" Grid.Row="9" Grid.Column="0" Grid.ColumnSpan="2" Fill="{x:Static local:MyColors.MyColorOffWhite85}" ToolTip="Non effective when not on 1.27"/>
 
-                                    <Button x:Name="btn_HideEmuOptions" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="10" MouseRightButtonDown="btn_HideEmuOptions_MouseRightButtonDown" ToolTip="Hidden, because they are not effective on your LaunchMethod. Rightclick to edit anyways."  Style="{StaticResource btn_Hide}" Background="{x:Static local:MyColors.MyColorEmuHidden}" />
+                                    <Label Grid.Row="10" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Hide from Steam"/>
+                                    <Button Grid.Row="10" Grid.Column="1" x:Name="btn_cb_Set_EnableDontLaunchThroughSteam"  Style="{StaticResource btn_cb}" Click="btn_cb_Click" MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
+                                    <Rectangle x:Name="Rect_HideOptions_HideFromSteam" Grid.Row="10" Grid.Column="0" Grid.ColumnSpan="2" Fill="{x:Static local:MyColors.MyColorOffWhite85}" ToolTip="Non effective when Retailer is not Steam"/>
+
+                                    <Button Grid.Row="11" Grid.Column="0" Grid.ColumnSpan="2" x:Name="btn_Set_ImportGTAVSettings" ToolTip="Import your normal Social Club Settings for the Dragon Launcher. Pick your Profile Folder" Style="{StaticResource btn_SE_Path}" Content="Import GTA V Settings" Click="btn_Set_ImportGTAVSettings_Click" MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
+
+                                    <Button x:Name="btn_HideEmuOptions" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="12" MouseRightButtonDown="btn_HideEmuOptions_MouseRightButtonDown" ToolTip="Hidden, because they are not effective on your LaunchMethod. Rightclick to edit anyways."  Style="{StaticResource btn_Hide}" Background="{x:Static local:MyColors.MyColorEmuHidden}" />
 
                                 </Grid>
                             </Border>

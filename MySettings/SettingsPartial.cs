@@ -969,6 +969,21 @@ namespace Project_127.MySettings
         }
 
         /// <summary>
+        /// Settings EnableStutterFix. Gets and Sets from the Dictionary.
+        /// </summary>
+        public static bool EnableStutterFix
+        {
+            get
+            {
+                return GetBoolFromString(GetSetting("EnableStutterFix"));
+            }
+            set
+            {
+                SetSetting("EnableStutterFix", value.ToString());
+            }
+        }
+
+        /// <summary>
         /// Settings OverWriteGTACommandLineArgs. Gets and Sets from the Dictionary.
         /// </summary>
         public static string OverWriteGTACommandLineArgs
