@@ -768,7 +768,13 @@ namespace Project_127.MySettings
 
             tb_Set_InGameName.Text = Settings.InGameName;
 
-            tb_OverWriteGTACommandLineArgs.Text = Settings.OverWriteGTACommandLineArgs;
+            // Needs to be here...
+            // Settings.OverWriteGTACommandLineArgs returns command args alg comes up with, if its empty
+            // if SCL is selected as launch option, or user is on dr490n-124, this will not come with -StutterFix
+            // Appending so if user wants to overwrite gta command line args, user is a aware of that argument
+            string tmp = Settings.OverWriteGTACommandLineArgs;
+            if (!tmp.ToLower().Contains("-stutterfix")) { tmp += " -StutterFix"; }
+            tb_OverWriteGTACommandLineArgs.Text = tmp;
 
             btn_Set_JumpScriptKey1.Content = Settings.JumpScriptKey1;
             btn_Set_JumpScriptKey2.Content = Settings.JumpScriptKey2;
