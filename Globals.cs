@@ -1228,7 +1228,9 @@ namespace Project_127
                             if (HelperClasses.FileHandling.GetSizeOfFile(LocalFileName) > 50000)
                             {
                                 HelperClasses.Logger.Log("Installer on Disk looks good, Starting Installer, Exits this now.", 1);
-                                HelperClasses.ProcessHandler.StartProcess(LocalFileName);
+                                //HelperClasses.ProcessHandler.StartProcess(LocalFileName);
+                                Process.Start(LocalFileName);
+                                Task.Delay(500).GetAwaiter().GetResult();
                                 Globals.ProperExit();
                             }
                             else
