@@ -779,7 +779,7 @@ namespace Project_127
             initGamePatches();
 
             // Read Settings of Emu Profile for ReturningPlayerContent
-            LauncherLogic.SetReturningPlayerBonusSetting();
+            LauncherLogic.ResetReturningPlayerBonusSetting();
 
             //Init pointer-path tester
             preparsedPPs = ASPointerPath.pointerPathParse(Settings.PointerPathTesterString);

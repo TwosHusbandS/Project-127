@@ -228,7 +228,7 @@ namespace Project_127.MySettings
             {
                 Globals.MySettings[SingleSetting.Key] = HelperClasses.RegeditHandler.GetValue(SingleSetting.Key);
             }
-            LauncherLogic.SetReturningPlayerBonusSetting();
+            LauncherLogic.ResetReturningPlayerBonusSetting();
             HelperClasses.Logger.Log("Loaded Settings from Regedit", true, 1);
 
         }
@@ -641,8 +641,11 @@ namespace Project_127.MySettings
             }
             set
             {
-                LauncherLogic.SetReturningPlayerBonus(value);
-                SetSetting("EnableReturningPlayer", value.ToString());
+                if (value != EnableReturningPlayer)
+                {
+                    SetSetting("EnableReturningPlayer", value.ToString());
+                    LauncherLogic.WriteReturningPlayerBonusToFile();
+                }
             }
         }
 

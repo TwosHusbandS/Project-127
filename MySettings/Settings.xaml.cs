@@ -894,7 +894,7 @@ namespace Project_127.MySettings
                         lbl_SettingsHeader.Content = "GTA & Launch Settings";
                         sv_Settings_GTA.ScrollToVerticalOffset(0);
 
-                        LauncherLogic.SetReturningPlayerBonusSetting();
+                        LauncherLogic.ResetReturningPlayerBonusSetting();
                         ButtonMouseOverMagic(btn_cb_Set_EnableReturningPlayer);
                         Refresh_SCL_EMU_Order();
                         break;
@@ -1337,8 +1337,13 @@ namespace Project_127.MySettings
                     Settings.EnablePreOrderBonus = !Settings.EnablePreOrderBonus;
                     break;
                 case "btn_cb_Set_EnableReturningPlayer":
+                    bool prevSetting = Settings.EnableReturningPlayer;
                     Settings.EnableReturningPlayer = !Settings.EnableReturningPlayer;
-                    LauncherLogic.SetReturningPlayerBonusSetting();
+                    LauncherLogic.ResetReturningPlayerBonusSetting();
+                    if (prevSetting == Settings.EnableReturningPlayer)
+                    {
+                        PopupWrapper.PopupOk("Cant change ReturningPlayerBonus Setting.\n\nThis is most likely due to non existing pc_settings.bin\nStart the game once to fix.");
+                    }
                     break;
                 case "btn_cb_Set_EnableRunAsAdmin":
                     Settings.EnableRunAsAdminDowngraded = !Settings.EnableRunAsAdminDowngraded;
