@@ -63,6 +63,7 @@ namespace Project_127.Popups
 		/// </summary>
 		public string HashString = null;
 
+
 		/// <summary>
 		/// Constructor of our Popup download
 		/// </summary>

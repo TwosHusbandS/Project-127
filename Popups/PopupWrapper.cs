@@ -1,6 +1,7 @@
 ﻿using CefSharp.DevTools.Page;
 using GSF.IO;
 using GSF.Units;
+using Project_127.HelperClasses;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,6 +33,19 @@ namespace Project_127.Popups
                 PopupProgress PP = new PopupProgress(pProgressType, pParam1, pMyFileOperations, zipExtractionPath, betterPercentage);
                 PP.ShowDialog();
                 rtrn = PP.RtrnMyFileOperations;
+            });
+            return rtrn;
+        }
+
+
+        public static string PopupProgressMD5(string pFilePath)
+        {
+            string rtrn = "";
+            MainWindow.MW.Dispatcher.Invoke(() =>
+            {
+                PopupProgress PP = new PopupProgress(ProgressTypes.MD5, pFilePath, null);
+                PP.ShowDialog();
+                rtrn = PP.RtrnMD5;
             });
             return rtrn;
         }

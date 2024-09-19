@@ -57,7 +57,7 @@ namespace Project_127.HelperClasses
             {
                 if (reinstall && isInstalled(subassemblyName) && !installedSubassemblies[subassemblyName].common)
                 {
-                    delSubassembly(subassemblyName, true);
+                    delSubassembly(subassemblyName, true, true);
                 }
                 var s = availableSubassemblies[subassemblyName];
                 var subInfo = new subassemblyInfo();
@@ -172,27 +172,45 @@ namespace Project_127.HelperClasses
                                 var succeeded = false;
                                 var mirrors = fileEntry.Select("./mirror");
                                 var fullPath = System.IO.Path.Combine(System.IO.Path.GetTempPath(), System.IO.Path.GetRandomFileName());
-                                foreach (XPathNavigator mirror in mirrors)
-                                {
-                                    string link = mirror.Value;
-                                    var md5hash = PopupWrapper.PopupDownload(link, fullPath, file.name, true);
-                                    succeeded = fileEntry.SelectSingleNode("./hash").Value.ToLower() == md5hash;
-                                    if (succeeded)
-                                    {
-                                        break;
-                                    }
-                                }
-                                if (!succeeded)
-                                {
-                                    HelperClasses.Logger.Log("Hash comparison inside Download Manager failed.");
-                                    return false;
-                                }
+                                var expectedHash = fileEntry.SelectSingleNode("./hash").Value.ToLower();
+
+                                // check if all local paths maybe already have correct hash
+                                bool alreadyCorrect = true;
                                 foreach (var path in file.paths)
                                 {
                                     var outfullpath = System.IO.Path.Combine(Project127Files, path);
-                                    System.IO.File.Copy(fullPath, outfullpath, true);
+                                    string fileHash = PopupWrapper.PopupProgressMD5(outfullpath).ToLower();
+                                    if (fileHash != expectedHash)
+                                    {
+                                        alreadyCorrect = false;
+                                        break;
+                                    }
                                 }
-                                System.IO.File.Delete(fullPath);
+
+                                if (!alreadyCorrect)
+                                {
+                                    foreach (XPathNavigator mirror in mirrors)
+                                    {
+                                        string link = mirror.Value;
+                                        var downloadHash = PopupWrapper.PopupDownload(link, fullPath, file.name, true);
+                                        succeeded = expectedHash == downloadHash;
+                                        if (succeeded)
+                                        {
+                                            break;
+                                        }
+                                    }
+                                    if (!succeeded)
+                                    {
+                                        HelperClasses.Logger.Log("Hash comparison inside Download Manager failed.");
+                                        return false;
+                                    }
+                                    foreach (var path in file.paths)
+                                    {
+                                        var outfullpath = System.IO.Path.Combine(Project127Files, path);
+                                        System.IO.File.Copy(fullPath, outfullpath, true);
+                                    }
+                                    System.IO.File.Delete(fullPath);
+                                }
                             }
                         }
                         installedSubassemblies[subassemblyName] = subInfo;
@@ -317,7 +335,7 @@ namespace Project_127.HelperClasses
             return ret;
         }
 
-        private void delSubassembly(string subassemblyName, bool reqBySupress)
+        private void delSubassembly(string subassemblyName, bool reqBySupress, bool KeepFiles = false)
         {
             if (!installedSubassemblies.ContainsKey(subassemblyName))
             {
@@ -332,15 +350,19 @@ namespace Project_127.HelperClasses
                     delSubassembly(req);
                 }
             }
-            delSubassemblyFiles(sa.files);
-            if (sar != "")
+
+            if (!KeepFiles)
             {
-                var rootFullPath = System.IO.Path.Combine(Project127Files, sar);
-                try
+                delSubassemblyFiles(sa.files);
+                if (sar != "")
                 {
-                    System.IO.Directory.Delete(rootFullPath, true);
+                    var rootFullPath = System.IO.Path.Combine(Project127Files, sar);
+                    try
+                    {
+                        System.IO.Directory.Delete(rootFullPath, true);
+                    }
+                    catch { }
                 }
-                catch { }
             }
             installedSubassemblies.Remove(subassemblyName);
             updateInstalled();
@@ -361,8 +383,20 @@ namespace Project_127.HelperClasses
             foreach (XPathNavigator mirror in mirrors)
             {
                 string link = mirror.Value;
-                var md5hash = PopupWrapper.PopupDownload(link, fullPath, filename, true);
-                succeeded = fileEntry.SelectSingleNode("./hash").Value.ToLower() == md5hash;
+                string expectedHash = fileEntry.SelectSingleNode("./hash").Value.ToLower();
+
+                if (HelperClasses.FileHandling.doesFileExist(fullPath))
+                {
+                    string fileHash = PopupWrapper.PopupProgressMD5(fullPath).ToLower();
+                    if (expectedHash == fileHash)
+                    {
+                        succeeded = true;
+                        break;
+                    }
+                }
+
+                var downloadHash = PopupWrapper.PopupDownload(link, fullPath, filename, true);
+                succeeded = expectedHash == downloadHash;
                 if (succeeded)
                 {
                     break;
@@ -418,10 +452,13 @@ namespace Project_127.HelperClasses
                     {
                         var fpa = file.paths[0];
                         var fpafull = System.IO.Path.Combine(Project127Files, fpa);
-                        if (System.IO.File.Exists(fullPath))
-                        {
-                            System.IO.File.Delete(fullPath);
-                        }
+                        //if (System.IO.File.Exists(fullPath))
+                        //{
+                        //    // Since this is just called from getSubassemblyFile (so installing), we will just skip this delete
+                        //    // and hope it wasnt needed for anything...
+                        //    // lets pray
+                        //    // System.IO.File.Delete(fullPath);
+                        //}
                         try
                         {
                             System.IO.File.Copy(fpafull, fullPath);
@@ -449,8 +486,20 @@ namespace Project_127.HelperClasses
                     foreach (XPathNavigator mirror in mirrors)
                     {
                         string link = mirror.Value;
-                        var md5hash = PopupWrapper.PopupDownload(link, fullPath, filename, true);
-                        succeeded = file.SelectSingleNode("./hash").Value.ToLower() == md5hash;
+                        string expectedHash = file.SelectSingleNode("./hash").Value.ToLower();
+
+                        if (HelperClasses.FileHandling.doesFileExist(fullPath))
+                        {
+                            string fileHash = PopupWrapper.PopupProgressMD5(fullPath).ToLower();
+                            if (expectedHash == fileHash)
+                            {
+                                succeeded = true;
+                                break;
+                            }
+                        }
+
+                        var downloadHash = PopupWrapper.PopupDownload(link, fullPath, filename, true);
+                        succeeded = expectedHash == downloadHash;
                         if (succeeded)
                         {
                             break;
