@@ -731,7 +731,13 @@ namespace Project_127
                     }
                 }
 
-                    
+                if (Settings.LastLaunchedVersion < new Version("1.4.0.0"))
+                {
+                    string tmp = HelperClasses.RegeditHandler.GetValue("DownloadManagerInstalledSubassemblies");
+                    tmp = tmp.Replace(@"\\\\", @"\\");
+                    HelperClasses.RegeditHandler.SetValue("DownloadManagerInstalledSubassemblies", tmp);
+                }
+
                 Settings.LastLaunchedVersion = Globals.ProjectVersion;
             }
 

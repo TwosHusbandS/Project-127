@@ -349,8 +349,8 @@ namespace Project_127.HelperClasses
         private subAssemblyFile getSubassemblyFile(string path, XPathNavigator fileEntry)
         {
             var filename = fileEntry.GetAttribute("name", "");
-            path.TrimEnd("\\");
-            var relPath = path + "\\" + filename;
+            path = path.TrimEnd('\\');
+            var relPath = path + @"\" + filename;
             var fullPath = System.IO.Path.Combine(Project127Files, relPath);
             if (fileEntry.GetAttribute("linked", "").ToLower() == "true")
             {
@@ -387,8 +387,8 @@ namespace Project_127.HelperClasses
         private subAssemblyFile linkedGetManager(string path, XPathNavigator fileEntry)
         {
             var filename = fileEntry.GetAttribute("name", "");
-            path.TrimEnd("\\");
-            var relPath = path + "\\" + filename;
+            path = path.TrimEnd('\\');
+            var relPath = path + @"\" + filename;
             var fullPath = System.IO.Path.Combine(Project127Files, relPath);
             var from = fileEntry.GetAttribute("subassembly", "");
             var froma = availableSubassemblies[from];
@@ -484,8 +484,8 @@ namespace Project_127.HelperClasses
         private Tuple<List<subAssemblyFile>, bool> getSubassemblyFolder(string path, XPathNavigator folderEntry)
         {
             var outp = new List<subAssemblyFile>();
-            path.TrimEnd("\\");
-            path = path + "\\" + folderEntry.GetAttribute("name", "");
+            path = path.TrimEnd('\\');
+            path = path + @"\" + folderEntry.GetAttribute("name", "");
             var files = folderEntry.Select("./file");
             System.IO.Directory.CreateDirectory(System.IO.Path.Combine(Project127Files, path));
             foreach (XPathNavigator file in files)
