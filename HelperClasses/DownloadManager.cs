@@ -463,7 +463,10 @@ namespace Project_127.HelperClasses
                             if (filei.name == filename)
                             {
                                 filei.available = true;
-                                filei.paths.Add(relPath);
+                                if (!filei.paths.Contains(relPath))
+                                {
+                                    filei.paths.Add(relPath);
+                                }
                                 break;
                             }
                         }
@@ -789,7 +792,7 @@ namespace Project_127.HelperClasses
             return HelperClasses.FileHandling.URLExists(url);
         }
 
-        private class subassemblyInfo
+        public class subassemblyInfo
         {
             public string version = "0.0";
             public bool common = false;
@@ -798,7 +801,7 @@ namespace Project_127.HelperClasses
 
             public string extentedAttributes = ""; //Future-proofing
         }
-        private class subAssemblyFile
+        public class subAssemblyFile
         {
             public bool available = false;
             public bool linked = false;

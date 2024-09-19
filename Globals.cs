@@ -27,6 +27,7 @@ using System.IO;
 using System.Timers;
 using System.Windows.Navigation;
 using System.Security.Cryptography;
+using System.Web.Script.Serialization;
 
 namespace Project_127
 {
@@ -736,6 +737,30 @@ namespace Project_127
                     string tmp = HelperClasses.RegeditHandler.GetValue("DownloadManagerInstalledSubassemblies");
                     tmp = tmp.Replace(@"\\\\", @"\\");
                     HelperClasses.RegeditHandler.SetValue("DownloadManagerInstalledSubassemblies", tmp);
+
+                    Dictionary<string, HelperClasses.DownloadManager.subassemblyInfo> installedSubassemblies;
+                    JavaScriptSerializer json = new JavaScriptSerializer();
+                    try
+                    {
+                        installedSubassemblies = json.Deserialize<Dictionary<string, HelperClasses.DownloadManager.subassemblyInfo>>(tmp);
+                        foreach (var mykey in installedSubassemblies.Keys)
+                        {
+                            for (int i = 0; i <= installedSubassemblies[mykey].files.Count -1; i++)
+                            {
+                                List<string> PathsBackup = new List<string>(installedSubassemblies[mykey].files[i].paths);
+                                installedSubassemblies[mykey].files[i].paths.Clear();
+                                foreach (string mypath in  PathsBackup)
+                                {
+                                    if(!installedSubassemblies[mykey].files[i].paths.Contains(mypath))
+                                    {
+                                        installedSubassemblies[mykey].files[i].paths.Add(mypath);
+                                    }
+                                }
+                            }
+                        }
+                        HelperClasses.RegeditHandler.SetValue("DownloadManagerInstalledSubassemblies", json.Serialize(installedSubassemblies));
+                    }
+                    catch {}
                 }
 
                 Settings.LastLaunchedVersion = Globals.ProjectVersion;
