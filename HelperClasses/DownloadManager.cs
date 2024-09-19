@@ -207,9 +207,11 @@ namespace Project_127.HelperClasses
                                     foreach (var path in file.paths)
                                     {
                                         var outfullpath = System.IO.Path.Combine(Project127Files, path);
-                                        System.IO.File.Copy(fullPath, outfullpath, true);
+                                        HelperClasses.MyFileOperation MFO2 = new MyFileOperation(MyFileOperation.FileOperations.Copy, fullPath, outfullpath, "Copying: '" + fullPath + "' to '" + outfullpath + "' inside DownloadManager.", 0, MyFileOperation.FileOrFolder.File);
+                                        PopupWrapper.PopupProgress(PopupProgress.ProgressTypes.FileOperation, "DownloadManager", new List<HelperClasses.MyFileOperation> { MFO2 });
                                     }
-                                    System.IO.File.Delete(fullPath);
+                                    HelperClasses.MyFileOperation MFO = new MyFileOperation(MyFileOperation.FileOperations.Delete, fullPath, "", "Deleting: '" + fullPath + "' inside DownloadManager.", 0, MyFileOperation.FileOrFolder.File);
+                                    PopupWrapper.PopupProgress(PopupProgress.ProgressTypes.FileOperation, "DownloadManager", new List<HelperClasses.MyFileOperation> { MFO });
                                 }
                             }
                         }
@@ -295,7 +297,8 @@ namespace Project_127.HelperClasses
                 var fullPath = System.IO.Path.Combine(Project127Files, path);
                 try
                 {
-                    System.IO.File.Delete(fullPath);
+                    HelperClasses.MyFileOperation MFO = new MyFileOperation(MyFileOperation.FileOperations.Delete, fullPath, "", "Deleting: '" + fullPath + "' inside DownloadManager.", 0, MyFileOperation.FileOrFolder.File);
+                    PopupWrapper.PopupProgress(PopupProgress.ProgressTypes.FileOperation, "DownloadManager", new List<HelperClasses.MyFileOperation> { MFO });
                 }
                 catch { }
             }
@@ -457,11 +460,13 @@ namespace Project_127.HelperClasses
                         //    // Since this is just called from getSubassemblyFile (so installing), we will just skip this delete
                         //    // and hope it wasnt needed for anything...
                         //    // lets pray
+                        //    // Should moved to FileOperation and Popupprogress if re-enabled
                         //    // System.IO.File.Delete(fullPath);
                         //}
                         try
                         {
-                            System.IO.File.Copy(fpafull, fullPath);
+                            HelperClasses.MyFileOperation MFO2 = new MyFileOperation(MyFileOperation.FileOperations.Copy, fpafull, fullPath, "Copying: '" + fpafull + "' to '" + fullPath + "' inside DownloadManager.", 0, MyFileOperation.FileOrFolder.File);
+                            PopupWrapper.PopupProgress(PopupProgress.ProgressTypes.FileOperation, "DownloadManager", new List<HelperClasses.MyFileOperation> { MFO2 });
                             return new subAssemblyFile
                             {
                                 name = filename,
