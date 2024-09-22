@@ -684,7 +684,7 @@ namespace Project_127.HelperClasses
         /// </summary>
         /// <param name="subassemblyName">Subassembly to check</param>
         /// <returns>Boolean indicating whether or not there is an update</returns>
-        public bool isUpdateAvalailable(string subassemblyName)
+        public bool isUpdateAvalailable(string subassemblyName, bool CheckSubassemblies = false)
         {
             if (!availableSubassemblies.ContainsKey(subassemblyName))
             {
@@ -694,6 +694,20 @@ namespace Project_127.HelperClasses
             {
                 return true;
             }
+
+            if (CheckSubassemblies)
+            {
+                var sa = availableSubassemblies[subassemblyName];
+                var reqs = sa.Select("./requires/subassembly");
+                foreach (XPathNavigator req in reqs)
+                {
+                    if (isUpdateAvalailable(req.GetAttribute("target", ""), true))
+                    {
+                        return true;
+                    }
+                }
+            }
+
             var cver = getVersion(subassemblyName);
             var avers = availableSubassemblies[subassemblyName].GetAttribute("version", "");
             Version aver;
@@ -737,7 +751,9 @@ namespace Project_127.HelperClasses
         /// <returns></returns>
         public async Task<bool> updateSubssembly(string subassemblyName, bool checkVersion = true)
         {
-            if (checkVersion && !isUpdateAvalailable(subassemblyName))
+            // so i have to "update" the topmost subassembly anyways
+            // otherwise a sub-subassembly thats being used in multiple components counts as being updated, once its updated the first time...
+            if (checkVersion && !isUpdateAvalailable(subassemblyName, true))
             {
                 return true;
             }
@@ -746,13 +762,16 @@ namespace Project_127.HelperClasses
             {
                 return false;
             }
-            var sa = availableSubassemblies[subassemblyName];
-            //var sai = installedSubassemblies[subassemblyName];
-            var reqs = sa.Select("./requires/subassembly");
-            foreach (XPathNavigator req in reqs)
+
+            try
             {
-                await updateSubssembly(req.GetAttribute("target", ""));
+                var reqs = availableSubassemblies[subassemblyName].Select("./requires/subassembly");
+                foreach (XPathNavigator req in reqs)
+                {
+                    await updateSubssembly(req.GetAttribute("target", ""), checkVersion);
+                }
             }
+            catch { }
 
             return await getSubassembly(subassemblyName, true, false);
         }

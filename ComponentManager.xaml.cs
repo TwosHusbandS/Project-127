@@ -916,7 +916,7 @@ namespace Project_127
         {
             HelperClasses.Logger.Log("ComponentMngr - Checking if Update for Component: '" + Component + "' (Subassemblyname: '" + Component.GetAssemblyName() + "') is available.");
 
-            if (Globals.MyDM.isUpdateAvalailable(Component.GetAssemblyName()))
+            if (Globals.MyDM.isUpdateAvalailable(Component.GetAssemblyName(), true))
             {
                 HelperClasses.Logger.Log("ComponentMngr - It is");
                 bool yesno = PopupWrapper.PopupYesNo("Update for: '" + Component.GetNiceName() + "' available.\nDo you want to Download it?");
