@@ -1176,6 +1176,12 @@ namespace Project_127
             }
         }
 
+        public static async Task<bool> HandleStuckGTAHailMary(bool IgnoreAlreadyThrownError = false, string msg = "")
+        {
+            HelperClasses.ProcessHandler.GTAKillAllProcesses();
+            await Task.Delay(100);
+            return HandleStuckGTA(IgnoreAlreadyThrownError, msg);
+        }
 
         public static bool HandleStuckGTA(bool IgnoreAlreadyThrownError = false, string msg = "")
         {
@@ -1822,7 +1828,7 @@ namespace Project_127
                 else
                 {
                     HelperClasses.Logger.Log("ReadReturningPlayerBonusFromFile: pc_settings.bin does not exist");
-                    HelperClasses.Logger.Log("ReadReturningPlayerBonusFromFile: "  + filePath);
+                    HelperClasses.Logger.Log("ReadReturningPlayerBonusFromFile: " + filePath);
                     return false;
                 }
             }
@@ -1893,7 +1899,7 @@ namespace Project_127
                         byte[] settings_bytes = File.ReadAllBytes(filePath);
 
                         List<byte> result = new List<byte>();
-                        
+
                         // loop through all read bytes
                         for (int i = 0; i < settings_bytes.Length;)
                         {

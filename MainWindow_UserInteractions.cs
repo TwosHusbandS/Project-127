@@ -316,7 +316,7 @@ namespace Project_127
         /// <summary>
         /// Static BTN GTA Click
         /// </summary>
-        public static void btn_GTA_Click_Static()
+        public static async void btn_GTA_Click_Static()
         {
             if (LauncherLogic.GameState == LauncherLogic.GameStates.Running)
             {
@@ -331,7 +331,7 @@ namespace Project_127
             }
             else
             {
-                HandleStuckGTA(true);
+                await HandleStuckGTAHailMary(true);
             }
             //FocusManager.SetFocusedElement(this, null);
             MainWindow.MW.UpdateGUIDispatcherTimer();
