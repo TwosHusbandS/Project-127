@@ -584,6 +584,22 @@ namespace Project_127.HelperClasses
             }
             var sa = availableSubassemblies[subassemblyName];
             var sai = installedSubassemblies[subassemblyName];
+
+            try
+            {
+                // fails if subassemblie has no required subassembly
+                var reqs = sa.Select("./requires/subassembly");
+                foreach (XPathNavigator req in reqs)
+                {
+                    // if verify of required subassembly failed
+                    if (!await verifySubassembly(req.GetAttribute("target", "")))
+                    {
+                        // return false here too
+                        return false;
+                    }
+                }
+            }
+            catch { }
             try
             {
                 if (new Version(sa.GetAttribute("version", "")) != new Version(sai.version))
@@ -599,7 +615,7 @@ namespace Project_127.HelperClasses
             Dictionary<string, string> hashdict;
             if (sai.common)
             {
-                var files = sa.Select(".//files");
+                var files = sa.Select("./file");
                 hashdict = new Dictionary<string, string>();
                 foreach (XPathNavigator file in files)
                 {
@@ -610,10 +626,13 @@ namespace Project_127.HelperClasses
                     foreach (var path in file.paths)
                     {
                         var fullpath = System.IO.Path.Combine(Project127Files, path);
-                        var fileHash = HelperClasses.FileHandling.GetHashFromFile(fullpath);
-                        if (hashdict[file.name].ToLower() != fileHash)
+                        var fileHash = PopupWrapper.PopupProgressMD5(fullpath);
+                        if (hashdict.ContainsKey(file.name))
                         {
-                            return false;
+                            if (hashdict[file.name].ToLower() != fileHash)
+                            {
+                                return false;
+                            }
                         }
                     }
                 }
@@ -629,7 +648,7 @@ namespace Project_127.HelperClasses
                 foreach (var filepath in file.paths)
                 {
                     var fullpath = System.IO.Path.Combine(Project127Files, filepath);
-                    var fileHash = HelperClasses.FileHandling.GetHashFromFile(fullpath);
+                    var fileHash = PopupWrapper.PopupProgressMD5(fullpath);
                     if (!hashdict.ContainsKey(filepath))
                     {
                         continue;
