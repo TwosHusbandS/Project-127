@@ -997,7 +997,7 @@ namespace Project_127
 
             rtrn += "gta_p127.exe -uilanguage " + Settings.ToMyLanguageString(Settings.LanguageSelected).ToLower();
 
-            if (Settings.EnableStutterFix && LaunchWay == LaunchWays.DragonEmu && Settings.DragonEmuGameVersion == "127" && InstallationState == InstallationStates.Downgraded)
+            if (Settings.EnableStutterFix && InstallationState == InstallationStates.Downgraded)
             {
                 rtrn += " -StutterFix";
             }

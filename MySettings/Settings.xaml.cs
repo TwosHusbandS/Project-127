@@ -1095,12 +1095,12 @@ namespace Project_127.MySettings
 
         private void Refresh_SCL_EMU_Order()
         {
+            Grid_Settings_GTA.RowDefinitions.RemoveAt(7);
             Grid_Settings_GTA.RowDefinitions.RemoveAt(6);
-            Grid_Settings_GTA.RowDefinitions.RemoveAt(5);
             RowDefinition Row_SCL_Options = new RowDefinition();
             Row_SCL_Options.Height = new GridLength(140);
             RowDefinition Row_DragonEmu_Options = new RowDefinition();
-            Row_DragonEmu_Options.Height = new GridLength(480);
+            Row_DragonEmu_Options.Height = new GridLength(440);
 
             if (LauncherLogic.LaunchWay == LauncherLogic.LaunchWays.SocialClubLaunch)
             {
@@ -1113,14 +1113,13 @@ namespace Project_127.MySettings
                 Grid_Settings_GTA.RowDefinitions.Add(Row_SCL_Options);
                 Grid_Settings_GTA.RowDefinitions.Add(Row_DragonEmu_Options);
 
-                Grid.SetRow(brdr_SCLOptions, 5);
-                Grid.SetRow(brdr_DragonEmuOptions, 6);
+                Grid.SetRow(brdr_SCLOptions, 6);
+                Grid.SetRow(brdr_DragonEmuOptions, 7);
 
                 btn_HideSCLOptions.Visibility = Visibility.Hidden;
                 btn_HideEmuOptions.Visibility = Visibility.Visible;
 
                 Rect_HideOptions_HideFromSteam.Visibility = Visibility.Hidden;
-                Rect_HideOptions_StutterFix.Visibility = Visibility.Hidden;
                 Rect_HideOptions_AutoMTLOnStartup.Visibility = Visibility.Hidden;
             }
             else if (LauncherLogic.LaunchWay == LauncherLogic.LaunchWays.DragonEmu)
@@ -1134,8 +1133,8 @@ namespace Project_127.MySettings
                 Grid_Settings_GTA.RowDefinitions.Add(Row_DragonEmu_Options);
                 Grid_Settings_GTA.RowDefinitions.Add(Row_SCL_Options);
 
-                Grid.SetRow(brdr_DragonEmuOptions, 5);
-                Grid.SetRow(brdr_SCLOptions, 6);
+                Grid.SetRow(brdr_DragonEmuOptions, 6);
+                Grid.SetRow(brdr_SCLOptions, 7);
 
                 btn_HideSCLOptions.Visibility = Visibility.Visible;
                 btn_HideEmuOptions.Visibility = Visibility.Hidden;
@@ -1209,15 +1208,6 @@ namespace Project_127.MySettings
 
             if (btn_HideEmuOptions.Visibility == Visibility.Hidden)
             {
-                if (DragonEmuGameVersion == "127")
-                {
-                    Rect_HideOptions_StutterFix.Visibility = Visibility.Hidden;
-                }
-                else
-                {
-                    Rect_HideOptions_StutterFix.Visibility = Visibility.Visible;
-                }
-
                 if (Retailer == Retailers.Steam)
                 {
                     Rect_HideOptions_HideFromSteam.Visibility = Visibility.Hidden;
@@ -1244,7 +1234,6 @@ namespace Project_127.MySettings
             }
             else
             {
-                Rect_HideOptions_StutterFix.Visibility = Visibility.Hidden;
                 Rect_HideOptions_HideFromSteam.Visibility = Visibility.Hidden;
                 Rect_HideOptions_AutoMTLOnStartup.Visibility = Visibility.Hidden;
 
