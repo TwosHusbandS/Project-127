@@ -1176,12 +1176,14 @@ namespace Project_127.MySettings
                 Rect_HideOptions_CommandLineArg.Visibility = Visibility.Hidden;
                 Rect_HideOptions_AutoCoreFix.Visibility = Visibility.Visible;
                 Rect_HideOptions_Language.Visibility = Visibility.Visible;
+                Rect_HideOptions_StutterFix.Visibility = Visibility.Visible;
             }
             else
             {
                 Rect_HideOptions_CommandLineArg.Visibility = Visibility.Visible;
                 Rect_HideOptions_AutoCoreFix.Visibility = Visibility.Hidden;
                 Rect_HideOptions_Language.Visibility = Visibility.Hidden;
+                Rect_HideOptions_StutterFix.Visibility = Visibility.Hidden;
             }
 
             if (Retailer == Retailers.Epic)
