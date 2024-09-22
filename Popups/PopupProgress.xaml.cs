@@ -76,7 +76,7 @@ namespace Project_127.Popups
         private string FilePath = "";
 
         public string RtrnMD5 = "";
-        
+
         /// <summary>
         /// Name of Operation for GUI
         /// </summary>
@@ -133,7 +133,7 @@ namespace Project_127.Popups
                 MyFileOperations = pMyFileOperations;
                 myLBL.Content = Operation + "...(0%)";
             }
-            else if (ProgressType  == ProgressTypes.MD5)
+            else if (ProgressType == ProgressTypes.MD5)
             {
                 FilePath = pParam1;
                 string tmp = HelperClasses.FileHandling.PathSplitUp(pParam1)[1];
@@ -218,47 +218,53 @@ namespace Project_127.Popups
 
             else if (ProgressType == ProgressTypes.MD5)
             {
-                string filePath = FilePath;
-
-                byte[] buffer;
-                int bytesRead;
-                long size;
-                long totalBytesRead = 0;
-
-                using (Stream file = File.OpenRead(filePath))
+                if (HelperClasses.FileHandling.doesFileExist(FilePath))
                 {
-                    size = file.Length;
+                    string filePath = FilePath;
 
-                    using (HashAlgorithm hasher = MD5.Create())
+                    byte[] buffer;
+                    int bytesRead;
+                    long size;
+                    long totalBytesRead = 0;
+
+                    using (Stream file = File.OpenRead(filePath))
                     {
-                        do
-                        {
-                            buffer = new byte[4096];
-                            bytesRead = file.Read(buffer, 0, buffer.Length);
-                            totalBytesRead += bytesRead;
-                            hasher.TransformBlock(buffer, 0, bytesRead, null, 0);
+                        size = file.Length;
 
-                            Application.Current.Dispatcher.Invoke((Action)delegate
+                        using (HashAlgorithm hasher = MD5.Create())
+                        {
+                            do
                             {
-                                long progress = (100 * totalBytesRead / size);
-                                myPB.Value = progress;
-                                myLBL.Content = Operation + "...(" + progress + "%)";
-                            });
-                        }
-                        while (bytesRead != 0);
+                                buffer = new byte[4096];
+                                bytesRead = file.Read(buffer, 0, buffer.Length);
+                                totalBytesRead += bytesRead;
+                                hasher.TransformBlock(buffer, 0, bytesRead, null, 0);
 
-                        hasher.TransformFinalBlock(buffer, 0, 0);
+                                Application.Current.Dispatcher.Invoke((Action)delegate
+                                {
+                                    long progress = (100 * totalBytesRead / size);
+                                    myPB.Value = progress;
+                                    myLBL.Content = Operation + "...(" + progress + "%)";
+                                });
+                            }
+                            while (bytesRead != 0);
 
-                        StringBuilder hash = new StringBuilder();
-                        foreach (byte b in hasher.Hash)
-                        {
-                            hash.Append(b.ToString("X2"));
+                            hasher.TransformFinalBlock(buffer, 0, 0);
+
+                            StringBuilder hash = new StringBuilder();
+                            foreach (byte b in hasher.Hash)
+                            {
+                                hash.Append(b.ToString("X2"));
+                            }
+                            RtrnMD5 = hash.ToString().ToLower();
                         }
-                        RtrnMD5 = hash.ToString().ToLower();
                     }
+                    HelperClasses.Logger.Log("MD5 Hash (PopupProgress) of '" + FilePath + "' is: '" + RtrnMD5 + "'");
                 }
-                HelperClasses.Logger.Log("MD5 Hash (PopupProgress) of '" + FilePath + "' is: '" + RtrnMD5 + "'");
-
+                else
+                {
+                    HelperClasses.Logger.Log("MD5 Hash (PopupProgress) of '" + FilePath + "' not possible because file doesnt exist.");
+                }
             }
 
 

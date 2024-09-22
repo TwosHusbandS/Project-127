@@ -1,7 +1,10 @@
-﻿using Microsoft.Win32;
+﻿using GSF.Collections;
+using Microsoft.Win32;
 using Project_127.Popups;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO.Packaging;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -455,26 +458,57 @@ namespace Project_127.HelperClasses
                     {
                         var fpa = file.paths[0];
                         var fpafull = System.IO.Path.Combine(Project127Files, fpa);
-                        //if (System.IO.File.Exists(fullPath))
-                        //{
-                        //    // Since this is just called from getSubassemblyFile (so installing), we will just skip this delete
-                        //    // and hope it wasnt needed for anything...
-                        //    // lets pray
-                        //    // Should moved to FileOperation and Popupprogress if re-enabled
-                        //    // System.IO.File.Delete(fullPath);
-                        //}
-                        try
+                        if (HelperClasses.FileHandling.doesFileExist(fullPath))
                         {
-                            HelperClasses.MyFileOperation MFO2 = new MyFileOperation(MyFileOperation.FileOperations.Copy, fpafull, fullPath, "Copying: '" + fpafull + "' to '" + fullPath + "' inside DownloadManager.", 0, MyFileOperation.FileOrFolder.File);
-                            PopupWrapper.PopupProgress(PopupProgress.ProgressTypes.FileOperation, "DownloadManager", new List<HelperClasses.MyFileOperation> { MFO2 });
-                            return new subAssemblyFile
-                            {
-                                name = filename,
-                                linked = true,
-                                paths = new List<string>(new string[] { relPath })
-                            };
+                            // Since this is just called from getSubassemblyFile (so installing), we will just skip this delete
+                            // and hope it wasnt needed for anything...
+                            // lets pray
+                            // Should moved to FileOperation and Popupprogress if re-enabled
+                            //System.IO.File.Delete(fullPath);
                         }
-                        catch { }
+                        else
+                        {
+                            try
+                            {
+                                if (fpafull.TrimEnd('\\') != fullPath.TrimEnd('\\'))
+                                {
+                                    // get expectedHash
+                                    string expectedHash = "";
+                                    foreach (XPathNavigator file_tmp in files)
+                                    {
+                                        if (file_tmp.GetAttribute("name", "") == filename)
+                                        {
+                                            expectedHash = file_tmp.SelectSingleNode("./hash").Value.ToLower();
+                                        }
+                                    }
+
+                                    // get fileHash if we have expectedHash and file exists
+                                    string fileHash = "";
+                                    if (HelperClasses.FileHandling.doesFileExist(fullPath) && !String.IsNullOrWhiteSpace(expectedHash))
+                                    {
+                                        fileHash = PopupWrapper.PopupProgressMD5(fullPath);
+                                    }
+
+                                    // if hashes DONT match or dont exist
+                                    if (expectedHash != fileHash || String.IsNullOrWhiteSpace(expectedHash) || String.IsNullOrWhiteSpace(fileHash))
+                                    {
+                                        // copy from other location
+                                        HelperClasses.MyFileOperation MFO2 = new MyFileOperation(MyFileOperation.FileOperations.Copy, fpafull, fullPath, "Copying: '" + fpafull + "' to '" + fullPath + "' inside DownloadManager.", 0, MyFileOperation.FileOrFolder.File);
+                                        PopupWrapper.PopupProgress(PopupProgress.ProgressTypes.FileOperation, "DownloadManager", new List<HelperClasses.MyFileOperation> { MFO2 });
+                                        // else do nothing, since fileHash is correct
+                                    }
+
+                                    // return this either way
+                                    return new subAssemblyFile
+                                    {
+                                        name = filename,
+                                        linked = true,
+                                        paths = new List<string>(new string[] { relPath })
+                                    };
+                                }
+                            }
+                            catch { }
+                        }
                     }
                     else
                     {

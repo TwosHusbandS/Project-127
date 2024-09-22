@@ -300,7 +300,7 @@ namespace Project_127
         {
             if (MyDirtyProgramming != null)
             {
-                MyDirtyProgramming.MyRefresh();
+                MyDirtyProgramming.MyRefresh(false,false);
             }
         }
 
