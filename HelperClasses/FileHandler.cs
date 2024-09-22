@@ -673,6 +673,19 @@ string lpSymlinkFileName, string lpTargetFileName, SymbolicLink dwFlags);
             }
         }
 
+
+        public static void LogMD5(string pFolderPath)
+        {
+            if (doesPathExist(pFolderPath))
+            {
+                string[] MyFiles = GetFilesFromFolderAndSubFolder(pFolderPath);
+                foreach (string File in MyFiles)
+                {
+                    PopupWrapper.PopupProgressMD5(File);
+                }
+            }    
+        }
+
         /// <summary>
         /// Gets the MD5 Hash of one file
         /// </summary>
@@ -816,6 +829,7 @@ string lpSymlinkFileName, string lpTargetFileName, SymbolicLink dwFlags);
         public async static Task<string> GetStringFromURL(string pURL, bool surpressPopup = false)
         {
             string rtrn = "";
+            HelperClasses.Logger.Log("GetStringFromURL " + pURL);
             if (Globals.OfflineMode)
             {
                 return "";

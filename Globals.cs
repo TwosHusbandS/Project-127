@@ -236,7 +236,7 @@ namespace Project_127
         /// <summary>
         /// Property of other Buildinfo. Will be in the top message of logs
         /// </summary>
-        public static string BuildInfo = "1.3.1.3 - StutterFix RC 1";
+        public static string BuildInfo = "1.4.0.0 - RC 1";
 
 
         /// <summary>
@@ -566,7 +566,7 @@ namespace Project_127
                     FileHandling.deleteFile(LauncherLogic.UpgradeFilePath.TrimEnd('\\') + @"\Readme.txt");
                     FileHandling.deleteFile(LauncherLogic.UpgradeFilePath.TrimEnd('\\') + @"\socialclub.dll");
                     FileHandling.deleteFile(LauncherLogic.UpgradeFilePath.TrimEnd('\\') + @"\tinyxml2.dll");
-
+                    
                     Globals.SetUpDownloadManager(false).GetAwaiter().GetResult();
                     ComponentManager.ZIPVersionSwitcheroo();
 
@@ -2096,7 +2096,7 @@ namespace Project_127
         {
             Application.Current.Dispatcher.Invoke(() =>
             {
-                //HelperClasses.Logger.Log("Debug: " + pMsg, 1);
+                HelperClasses.Logger.Log("Debug: " + pMsg, 1);
                 HelperClasses.FileHandling.AddToDebug("Debug: " + pMsg);
                 if (asdf)
                 {

@@ -3,6 +3,7 @@ using Project_127.MySettings;
 using Project_127.Popups;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
@@ -166,7 +167,7 @@ namespace Project_127
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void btn_Upgrade_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+        private async void btn_Upgrade_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
             // LaunchAlternative.SocialClubUpgrade(0,"manually clicked");
         }
