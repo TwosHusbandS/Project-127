@@ -386,6 +386,7 @@ namespace Project_127
             {"InGameName", "HiMomImOnYoutube"},
             {"EnablePreOrderBonus", "False"},
             {"EnableReturningPlayer", "False"},
+            {"EnableReturningPlayerSCL", "False"},
             {"EnableDontLaunchThroughSteam", "False"},
             {"EnableScripthookOnDowngraded", "False"},
             {"EnableOverWriteGTACommandLineArgs", "False"},
@@ -811,6 +812,7 @@ namespace Project_127
 
             // Read Settings of Emu Profile for ReturningPlayerContent
             LauncherLogic.ResetReturningPlayerBonusSetting();
+            LauncherLogic.ResetReturningPlayerBonusSettingSCL();
 
             //Init pointer-path tester
             preparsedPPs = ASPointerPath.pointerPathParse(Settings.PointerPathTesterString);

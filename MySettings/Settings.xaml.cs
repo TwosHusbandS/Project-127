@@ -895,7 +895,9 @@ namespace Project_127.MySettings
                         sv_Settings_GTA.ScrollToVerticalOffset(0);
 
                         LauncherLogic.ResetReturningPlayerBonusSetting();
+                        LauncherLogic.ResetReturningPlayerBonusSettingSCL();
                         ButtonMouseOverMagic(btn_cb_Set_EnableReturningPlayer);
+                        ButtonMouseOverMagic(btn_cb_Set_EnableReturningPlayerSCL);
                         Refresh_SCL_EMU_Order();
                         break;
 
@@ -1028,6 +1030,9 @@ namespace Project_127.MySettings
                 case "btn_cb_Set_EnableReturningPlayer":
                     SetCheckBoxBackground(myBtn, Settings.EnableReturningPlayer);
                     break;
+                case "btn_cb_Set_EnableReturningPlayerSCL":
+                    SetCheckBoxBackground(myBtn, Settings.EnableReturningPlayerSCL);
+                    break;
                 case "btn_cb_Set_EnableRunAsAdmin":
                     SetCheckBoxBackground(myBtn, Settings.EnableRunAsAdminDowngraded);
                     break;
@@ -1093,7 +1098,7 @@ namespace Project_127.MySettings
             Grid_Settings_GTA.RowDefinitions.RemoveAt(6);
             Grid_Settings_GTA.RowDefinitions.RemoveAt(5);
             RowDefinition Row_SCL_Options = new RowDefinition();
-            Row_SCL_Options.Height = new GridLength(100);
+            Row_SCL_Options.Height = new GridLength(140);
             RowDefinition Row_DragonEmu_Options = new RowDefinition();
             Row_DragonEmu_Options.Height = new GridLength(480);
 
@@ -1341,6 +1346,15 @@ namespace Project_127.MySettings
                     Settings.EnableReturningPlayer = !Settings.EnableReturningPlayer;
                     LauncherLogic.ResetReturningPlayerBonusSetting();
                     if (prevSetting == Settings.EnableReturningPlayer)
+                    {
+                        PopupWrapper.PopupOk("Cant change ReturningPlayerBonus Setting.\n\nThis is most likely due to non existing pc_settings.bin\nStart the game once to fix.");
+                    }
+                    break;
+                case "btn_cb_Set_EnableReturningPlayerSCL":
+                    bool prevSetting2 = Settings.EnableReturningPlayerSCL;
+                    Settings.EnableReturningPlayerSCL = !Settings.EnableReturningPlayerSCL;
+                    LauncherLogic.ResetReturningPlayerBonusSettingSCL();
+                    if (prevSetting2 == Settings.EnableReturningPlayerSCL)
                     {
                         PopupWrapper.PopupOk("Cant change ReturningPlayerBonus Setting.\n\nThis is most likely due to non existing pc_settings.bin\nStart the game once to fix.");
                     }

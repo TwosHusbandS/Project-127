@@ -1766,6 +1766,16 @@ namespace Project_127
         #endregion
 
 
+        public static string ReturningPlayerBonusFileSCL
+        {
+            get
+            {
+                string settingsFile = @"pc_settings.bin";
+                string ProfileFolder = HelperClasses.FileHandling.MostLikelyProfileFolder().TrimEnd('\\');
+                string FullFilePath = HelperClasses.FileHandling.PathCombine(ProfileFolder, settingsFile);
+                return FullFilePath;
+            }
+        }
 
         public static string ReturningPlayerBonusFile
         {
@@ -1787,14 +1797,14 @@ namespace Project_127
             }
         }
 
-        public static bool ReadReturningPlayerBonusFromFile()
+        public static bool ReadReturningPlayerBonusFromFile(string filePath)
         {
             HelperClasses.Logger.Log("ReadReturningPlayerBonusFromFile: Reading pc_settings.bin to determine if setting should be set to true or false");
             try
             {
-                if (HelperClasses.FileHandling.doesFileExist(ReturningPlayerBonusFile))
+                if (HelperClasses.FileHandling.doesFileExist(filePath))
                 {
-                    byte[] settings_bytes = File.ReadAllBytes(ReturningPlayerBonusFile);
+                    byte[] settings_bytes = File.ReadAllBytes(filePath);
 
                     // definitely not just copied from method below
                     for (int i = 0; i < settings_bytes.Length; i++)
@@ -1812,7 +1822,7 @@ namespace Project_127
                 else
                 {
                     HelperClasses.Logger.Log("ReadReturningPlayerBonusFromFile: pc_settings.bin does not exist");
-                    HelperClasses.Logger.Log("ReadReturningPlayerBonusFromFile: "  + ReturningPlayerBonusFile);
+                    HelperClasses.Logger.Log("ReadReturningPlayerBonusFromFile: "  + filePath);
                     return false;
                 }
             }
@@ -1828,33 +1838,40 @@ namespace Project_127
         /// </summary>
         public static void ResetReturningPlayerBonusSetting()
         {
-            Settings.EnableReturningPlayer = ReadReturningPlayerBonusFromFile();
+            Settings.EnableReturningPlayer = ReadReturningPlayerBonusFromFile(ReturningPlayerBonusFile);
         }
 
+        /// <summary>
+        /// Sets the ReturningPlayerBonusSCL Setting based on actual contents of file
+        /// </summary>
+        public static void ResetReturningPlayerBonusSettingSCL()
+        {
+            Settings.EnableReturningPlayerSCL = ReadReturningPlayerBonusFromFile(ReturningPlayerBonusFileSCL);
+        }
 
         /// <summary>
         /// Enables or Disables the Returning Player Bonus by writing to the file.
         /// </summary>
         /// <param name="IsEnabled"></param>
-        public static void WriteReturningPlayerBonusToFile()
+        public static void WriteReturningPlayerBonusToFile(string filePath, bool EnabledReturningPlayer)
         {
-            if (File.Exists(ReturningPlayerBonusFile))
+            if (File.Exists(filePath))
             {
                 // If file already does what user wants, dont write
-                if (ReadReturningPlayerBonusFromFile() == Settings.EnableReturningPlayer)
+                if (ReadReturningPlayerBonusFromFile(filePath) == EnabledReturningPlayer)
                 {
                     HelperClasses.Logger.Log("WriteReturningPlayerBonusToFile: Not touching anything, since file has what its supposed to be");
                     return;
                 }
 
-                if (Settings.EnableReturningPlayer)
+                if (EnabledReturningPlayer)
                 {
                     HelperClasses.Logger.Log("WriteReturningPlayerBonusToFile: We want to ENABLE Returning Player Bonus");
 
                     FileStream writeStream;
                     try
                     {
-                        writeStream = new FileStream(ReturningPlayerBonusFile, FileMode.Append, FileAccess.Write);
+                        writeStream = new FileStream(filePath, FileMode.Append, FileAccess.Write);
                         BinaryWriter writeBinary = new BinaryWriter(writeStream);
                         //writeBinary.Write(0x00000362);
                         //writeBinary.Write(0x00000001);
@@ -1873,7 +1890,7 @@ namespace Project_127
 
                     try
                     {
-                        byte[] settings_bytes = File.ReadAllBytes(ReturningPlayerBonusFile);
+                        byte[] settings_bytes = File.ReadAllBytes(filePath);
 
                         List<byte> result = new List<byte>();
                         
@@ -1895,7 +1912,7 @@ namespace Project_127
                                 i++;
                             }
                         }
-                        File.WriteAllBytes(ReturningPlayerBonusFile, result.ToArray()); // write new array of bytes to settings file
+                        File.WriteAllBytes(filePath, result.ToArray()); // write new array of bytes to settings file
                         HelperClasses.Logger.Log("WriteReturningPlayerBonusToFile: Returning Player Bonus Disabled");
                     }
                     catch (Exception ex)
@@ -1907,7 +1924,7 @@ namespace Project_127
             else
             {
                 HelperClasses.Logger.Log("WriteReturningPlayerBonusToFile: pc_settings.bin does not exist");
-                HelperClasses.Logger.Log("WriteReturningPlayerBonusToFile: " + ReturningPlayerBonusFile);
+                HelperClasses.Logger.Log("WriteReturningPlayerBonusToFile: " + filePath);
             }
         }
 
