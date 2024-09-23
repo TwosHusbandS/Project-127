@@ -374,6 +374,12 @@ namespace Project_127.SaveFileHandlerStuff
             MySaveFile tmp = GetSelectedSaveFile();
             if (tmp != null)
             {
+                if (tmp.FileOrFolder == MySaveFile.FileOrFolders.Folder)
+                {
+                    PopupWrapper.PopupOk("Cant rename a Folder.");
+                    return;
+                }
+                    
                 // If its inside GTA Save directory
                 if (tmp.SaveFileKind == MySaveFile.SaveFileKinds.GTAV)
                 {

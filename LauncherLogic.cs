@@ -46,7 +46,7 @@ namespace Project_127
         /// If we are currently in FileOperationWrapperLoop
         /// </summary>
         public static bool InFileOperationWrapperLoop = false;
-        
+
         /// <summary>
         /// Property of our GameState. Gets polled every 2.5 seconds
         /// </summary>
@@ -185,7 +185,7 @@ namespace Project_127
                 //yn.ShowDialog();
                 //if (yn.DialogResult == true)
                 //{
-                    LaunchAlternative.SocialClubUpgrade(2000);
+                LaunchAlternative.SocialClubUpgrade(2000);
                 //}
                 UpgradeSocialClubAfterGame = false;
             }
@@ -934,7 +934,10 @@ namespace Project_127
                 tmp += GetStartCommandLineArgs();
             }
 
-            tmp += " && exit";
+            // thanks for nothing windows
+            // the && exit part is not needed, cmd window closes anyways
+            // and with it, command line args have a trailing spacebar. Yes. Really.
+            //tmp += " && exit";
 
             if (viaSteam)
             {
@@ -948,7 +951,7 @@ namespace Project_127
                     {
                         tmp = tmp.Replace("gta_p127.exe", "playgtav.exe");
                     }
-                    
+
                     else if (LaunchWay == LaunchWays.SocialClubLaunch)
                     {
                         if (Settings.Retailer == Settings.Retailers.Steam)
@@ -997,6 +1000,11 @@ namespace Project_127
 
             rtrn += "gta_p127.exe -uilanguage " + Settings.ToMyLanguageString(Settings.LanguageSelected).ToLower();
 
+            if (Settings.EnableStutterFix && InstallationState == InstallationStates.Downgraded)
+            {
+                rtrn += " -StutterFix";
+            }
+
             return rtrn;
         }
 
@@ -1006,144 +1014,144 @@ namespace Project_127
         /// </summary>
         public static async void Launch()
         {
-                HelperClasses.Logger.Log("Trying to Launch the game.");
+            HelperClasses.Logger.Log("Trying to Launch the game.");
 
-                // If Upgraded
-                if (LauncherLogic.InstallationState == InstallationStates.Upgraded)
+            // If Upgraded
+            if (LauncherLogic.InstallationState == InstallationStates.Upgraded)
+            {
+                HelperClasses.Logger.Log("Installation State Upgraded Detected.", 1);
+
+                // Checking if we can Upgrade Social Club before launchin Upgraded
+                LaunchAlternative.SocialClubUpgrade(0);
+
+                // If Steam
+                if (Settings.Retailer == Settings.Retailers.Steam)
                 {
-                    HelperClasses.Logger.Log("Installation State Upgraded Detected.", 1);
+                    HelperClasses.Logger.Log("Trying to start Game normally through Steam.", 1);
+                    // Launch through steam
+                    HelperClasses.ProcessHandler.StartProcess(Globals.SteamInstallPath.TrimEnd('\\') + @"\steam.exe", pCommandLineArguments: "-applaunch 271590 -uilanguage " + Settings.ToMyLanguageString(Settings.LanguageSelected).ToLower());
+                }
+                // If Epic Games
+                else if (Settings.Retailer == Settings.Retailers.Epic)
+                {
 
-                    // Checking if we can Upgrade Social Club before launchin Upgraded
-                    LaunchAlternative.SocialClubUpgrade(0);
+                    HelperClasses.Logger.Log("Trying to start Game normally through EpicGames.", 1);
 
-                    // If Steam
-                    if (Settings.Retailer == Settings.Retailers.Steam)
+                    // This does not work with custom wrapper StartProcess in ProcessHandler...i guess this is fine
+                    Process.Start(@"com.epicgames.launcher://apps/9d2d0eb64d5c44529cece33fe2a46482?action=launch&silent=true");
+                }
+                // If Rockstar
+                else
+                {
+                    // Launch through Non Retail
+                    HelperClasses.ProcessHandler.StartDowngradedGame();
+                }
+            }
+            else if (LauncherLogic.InstallationState == InstallationStates.Downgraded)
+            {
+                if (!ComponentManager.CheckIfRequiredComponentsAreInstalled(true))
+                {
+                    PopupWrapper.PopupOk("Cant do that because of because of missing Components");
+                    return;
+                }
+
+                HelperClasses.Logger.Log("Installation State Downgraded Detected.", 1);
+
+                if (LauncherLogic.LaunchWay == LauncherLogic.LaunchWays.DragonEmu)
+                {
+                    // If already Authed
+                    if (AuthState == AuthStates.Auth)
                     {
-                        HelperClasses.Logger.Log("Trying to start Game normally through Steam.", 1);
-                        // Launch through steam
-                        HelperClasses.ProcessHandler.StartProcess(Globals.SteamInstallPath.TrimEnd('\\') + @"\steam.exe", pCommandLineArguments: "-applaunch 271590 -uilanguage " + Settings.ToMyLanguageString(Settings.LanguageSelected).ToLower());
+                        HelperClasses.Logger.Log("You are already Authenticated. Will Launch Game Now");
                     }
-                    // If Epic Games
-                    else if (Settings.Retailer == Settings.Retailers.Epic)
-                    {
 
-                        HelperClasses.Logger.Log("Trying to start Game normally through EpicGames.", 1);
-
-                        // This does not work with custom wrapper StartProcess in ProcessHandler...i guess this is fine
-                        Process.Start(@"com.epicgames.launcher://apps/9d2d0eb64d5c44529cece33fe2a46482?action=launch&silent=true");
-                    }
-                    // If Rockstar
+                    // If not Authed
                     else
                     {
-                        // Launch through Non Retail
-                        HelperClasses.ProcessHandler.StartDowngradedGame();
-                    }
-                }
-                else if (LauncherLogic.InstallationState == InstallationStates.Downgraded)
-                {
-                    if (!ComponentManager.CheckIfRequiredComponentsAreInstalled(true))
-                    {
-                        PopupWrapper.PopupOk("Cant do that because of because of missing Components");
+                        HelperClasses.Logger.Log("You are NOT already Authenticated. Throwing up Window now.");
+
+                        AuthClick(true);
                         return;
                     }
 
-                    HelperClasses.Logger.Log("Installation State Downgraded Detected.", 1);
+                    // Generates Token needed to Launch Downgraded GTAV
 
-                    if (LauncherLogic.LaunchWay == LauncherLogic.LaunchWays.DragonEmu)
+                    if (!AuthStateOverWrite)
                     {
-                        // If already Authed
-                        if (AuthState == AuthStates.Auth)
+                        HelperClasses.Logger.Log("Letting Dragon work his magic");
+                        try
                         {
-                            HelperClasses.Logger.Log("You are already Authenticated. Will Launch Game Now");
+                            await ROSCommunicationBackend.GenLaunchToken();
                         }
-
-                        // If not Authed
-                        else
+                        catch (Exception ex)
                         {
-                            HelperClasses.Logger.Log("You are NOT already Authenticated. Throwing up Window now.");
-
-                            AuthClick(true);
+                            HelperClasses.Logger.Log("Unable to connect to the server. Probably best to restart P127.");
+                            PopupWrapper.PopupError("Unable to connect to the server. Probably best to restart P127.");
                             return;
                         }
-
-                        // Generates Token needed to Launch Downgraded GTAV
-
-                        if (!AuthStateOverWrite)
-                        {
-                            HelperClasses.Logger.Log("Letting Dragon work his magic");
-                            try
-                            {
-                                await ROSCommunicationBackend.GenLaunchToken();
-                            }
-                            catch (Exception ex)
-                            {
-                                HelperClasses.Logger.Log("Unable to connect to the server. Probably best to restart P127.");
-                                PopupWrapper.PopupError("Unable to connect to the server. Probably best to restart P127.");
-                                return;
-                            }
-                        }
-
-                        HelperClasses.FileHandling.deleteFile(EmuCfgPath);
-                        if (UseEmuConfigFile)
-                        {
-                            string[] LaunchOptions = new string[5];
-                            LaunchOptions[0] = "PreOrderBonus: \"" + Settings.EnablePreOrderBonus.ToString() + "\"";
-                            LaunchOptions[1] = "InGameName: \"" + Settings.InGameName + "\"";
-                            LaunchOptions[2] = "SavePath: \"" + Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\Rockstar Games\GTA V\Profiles\Project127\GTA V\0F74F4C4" + "\"";
-                            LaunchOptions[3] = "WindowTitleTomfoolery: \"" + Overlay.GTAOverlay.targetWindowBorderless + "\"";
-                            LaunchOptions[4] = "EnableScripthookOnDowngraded: \"" + Settings.EnableScripthookOnDowngraded.ToString() + "\"";
-
-                            HelperClasses.FileHandling.WriteStringToFileOverwrite(EmuCfgPath, LaunchOptions);
-                        }
-
-                        if (Settings.Retailer == Settings.Retailers.Steam && !Settings.EnableDontLaunchThroughSteam && LaunchWay == LaunchWays.DragonEmu)
-                        {
-                            var steamprocs = Process.GetProcessesByName("steam");
-                            if (steamprocs.Length > 0)
-                            {
-                                var steamproc = steamprocs[0];
-                                Int64 coreaffinity = steamproc.ProcessorAffinity.ToInt64();
-                                int corecount = 0;
-                                for (int i = 0; i < 64; i++)
-                                {
-                                    corecount += (coreaffinity & ((Int64)1 << i)) != 0 ? 1 : 0;
-                                }
-                                HelperClasses.Logger.Log("Current core affinity for steam is " + coreaffinity.ToString("X") + " (" + corecount + " cores)");
-                                if (corecount > 16)
-                                {
-                                    HelperClasses.Logger.Log("Settings steam's core affinity to FFFF (16 cores)");
-                                    Int64 NewAffinity = 0xFFFF;
-                                    steamproc.ProcessorAffinity = (IntPtr)NewAffinity;
-                                }
-                            }
-
-                        }
-
-                        HelperClasses.ProcessHandler.StartDowngradedGame();
-
                     }
-                    else
+
+                    HelperClasses.FileHandling.deleteFile(EmuCfgPath);
+                    if (UseEmuConfigFile)
                     {
-                        LaunchAlternative.Launch();
+                        string[] LaunchOptions = new string[5];
+                        LaunchOptions[0] = "PreOrderBonus: \"" + Settings.EnablePreOrderBonus.ToString() + "\"";
+                        LaunchOptions[1] = "InGameName: \"" + Settings.InGameName + "\"";
+                        LaunchOptions[2] = "SavePath: \"" + Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\Rockstar Games\GTA V\Profiles\Project127\GTA V\0F74F4C4" + "\"";
+                        LaunchOptions[3] = "WindowTitleTomfoolery: \"" + Overlay.GTAOverlay.targetWindowBorderless + "\"";
+                        LaunchOptions[4] = "EnableScripthookOnDowngraded: \"" + Settings.EnableScripthookOnDowngraded.ToString() + "\"";
+
+                        HelperClasses.FileHandling.WriteStringToFileOverwrite(EmuCfgPath, LaunchOptions);
                     }
+
+                    if (Settings.Retailer == Settings.Retailers.Steam && !Settings.EnableDontLaunchThroughSteam && LaunchWay == LaunchWays.DragonEmu)
+                    {
+                        var steamprocs = Process.GetProcessesByName("steam");
+                        if (steamprocs.Length > 0)
+                        {
+                            var steamproc = steamprocs[0];
+                            Int64 coreaffinity = steamproc.ProcessorAffinity.ToInt64();
+                            int corecount = 0;
+                            for (int i = 0; i < 64; i++)
+                            {
+                                corecount += (coreaffinity & ((Int64)1 << i)) != 0 ? 1 : 0;
+                            }
+                            HelperClasses.Logger.Log("Current core affinity for steam is " + coreaffinity.ToString("X") + " (" + corecount + " cores)");
+                            if (corecount > 16)
+                            {
+                                HelperClasses.Logger.Log("Settings steam's core affinity to FFFF (16 cores)");
+                                Int64 NewAffinity = 0xFFFF;
+                                steamproc.ProcessorAffinity = (IntPtr)NewAffinity;
+                            }
+                        }
+
+                    }
+
+                    HelperClasses.ProcessHandler.StartDowngradedGame();
 
                 }
                 else
                 {
-                    HelperClasses.Logger.Log("Installation State Broken");
-                    HelperClasses.Logger.Log("    Size of GTA5.exe in GTAV Installation Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\GTA5.exe"));
-                    HelperClasses.Logger.Log("    Size of GTA5.exe in Downgrade Files Folder: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\GTA5.exe"));
-                    HelperClasses.Logger.Log("    Size of update.rpf in GTAV Installation Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\update\update.rpf"));
-                    HelperClasses.Logger.Log("    Size of update.rpf in Downgrade Files Folder: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\update\update.rpf"));
-
-                PopupWrapper.PopupError("Installation State is broken for some reason. Try to repair.");
-                    return;
+                    LaunchAlternative.Launch();
                 }
 
+            }
+            else
+            {
+                HelperClasses.Logger.Log("Installation State Broken");
+                HelperClasses.Logger.Log("    Size of GTA5.exe in GTAV Installation Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\GTA5.exe"));
+                HelperClasses.Logger.Log("    Size of GTA5.exe in Downgrade Files Folder: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\GTA5.exe"));
+                HelperClasses.Logger.Log("    Size of update.rpf in GTAV Installation Path: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\update\update.rpf"));
+                HelperClasses.Logger.Log("    Size of update.rpf in Downgrade Files Folder: " + HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeFilePath.TrimEnd('\\') + @"\update\update.rpf"));
+
+                PopupWrapper.PopupError("Installation State is broken for some reason. Try to repair.");
+                return;
+            }
 
 
 
-                HelperClasses.Logger.Log("Game should be launched");
+
+            HelperClasses.Logger.Log("Game should be launched");
 
 
             PostLaunchEvents();
@@ -1171,6 +1179,12 @@ namespace Project_127
             }
         }
 
+        public static async Task<bool> HandleStuckGTAHailMary(bool IgnoreAlreadyThrownError = false, string msg = "")
+        {
+            HelperClasses.ProcessHandler.GTAKillAllProcesses();
+            await Task.Delay(100);
+            return HandleStuckGTA(IgnoreAlreadyThrownError, msg);
+        }
 
         public static bool HandleStuckGTA(bool IgnoreAlreadyThrownError = false, string msg = "")
         {
@@ -1761,125 +1775,165 @@ namespace Project_127
         #endregion
 
 
-
-
-        /// <summary>
-        /// Sets the ReturningPlayerBonus Setting based on actual contents of file
-        /// </summary>
-        public static bool SetReturningPlayerBonusSetting(bool WriteToSettings = true)
+        public static string ReturningPlayerBonusFileSCL
         {
-            HelperClasses.Logger.Log("Reading pc_settings.bin to determine if setting should be set to true or false");
+            get
+            {
+                string settingsFile = @"pc_settings.bin";
+                string ProfileFolder = HelperClasses.FileHandling.MostLikelyProfileFolder().TrimEnd('\\');
+                string FullFilePath = HelperClasses.FileHandling.PathCombine(ProfileFolder, settingsFile);
+                return FullFilePath;
+            }
+        }
+
+        public static string ReturningPlayerBonusFile
+        {
+            get
+            {
+                string settingsFile = @"Rockstar Games\GTA V\Profiles\Project127\GTA V\0F74F4C4\pc_settings.bin";
+                string DocumentsFolder = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal);
+                string FullFilePath = HelperClasses.FileHandling.PathCombine(DocumentsFolder, settingsFile);
+                return FullFilePath;
+            }
+        }
+
+        public static byte[] ReturningPlayerBytes
+        {
+            get
+            {
+                byte[] bytes = { 98, 3, 0, 0, 1, 0, 0, 0 }; // this sequence of bytes enables the returning player content
+                return bytes;
+            }
+        }
+
+        public static bool ReadReturningPlayerBonusFromFile(string filePath)
+        {
+            HelperClasses.Logger.Log("ReadReturningPlayerBonusFromFile: Reading pc_settings.bin to determine if setting should be set to true or false");
             try
             {
-                var settingsPath = @"\Rockstar Games\GTA V\Profiles\Project127\GTA V\0F74F4C4\pc_settings.bin";
-                var fullSettingsPath = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal) + settingsPath;
-                byte[] settings_bytes = File.ReadAllBytes(fullSettingsPath);
-                byte[] bytes_to_remove = { 98, 3, 0, 0, 1, 0, 0, 0 }; // this sequence of bytes enables the returning player content
+                if (HelperClasses.FileHandling.doesFileExist(filePath))
+                {
+                    byte[] settings_bytes = File.ReadAllBytes(filePath);
 
-                // definitely not just copied from method below
-                for (int i = 0; i < settings_bytes.Length; i++)
-                {
-                    if (settings_bytes.Skip(i).Take(bytes_to_remove.Length).SequenceEqual(bytes_to_remove))
+                    // definitely not just copied from method below
+                    for (int i = 0; i < settings_bytes.Length; i++)
                     {
-                        if (WriteToSettings)
+                        if (settings_bytes.Skip(i).Take(ReturningPlayerBytes.Length).SequenceEqual(ReturningPlayerBytes))
                         {
-                            Settings.EnableReturningPlayer = true;
+                            HelperClasses.Logger.Log("ReadReturningPlayerBonusFromFile: Found target_bytes, will return true");
+                            return true;
                         }
-                        return true;
                     }
+
+                    HelperClasses.Logger.Log("ReadReturningPlayerBonusFromFile: target_bytes were NOT found, will return false");
+                    return false;
                 }
-                if (WriteToSettings)
+                else
                 {
-                    Settings.EnableReturningPlayer = false;
+                    HelperClasses.Logger.Log("ReadReturningPlayerBonusFromFile: pc_settings.bin does not exist");
+                    HelperClasses.Logger.Log("ReadReturningPlayerBonusFromFile: " + filePath);
+                    return false;
                 }
-                return false;
             }
-            catch
+            catch (Exception ex)
             {
-                if (WriteToSettings)
-                {
-                    Settings.EnableReturningPlayer = false;
-                }
+                HelperClasses.Logger.Log("ReadReturningPlayerBonusFromFile: Error reading returning player bonus from file: " + ex.ToString());
                 return false;
             }
         }
 
+        /// <summary>
+        /// Sets the ReturningPlayerBonus Setting based on actual contents of file
+        /// </summary>
+        public static void ResetReturningPlayerBonusSetting()
+        {
+            Settings.EnableReturningPlayer = ReadReturningPlayerBonusFromFile(ReturningPlayerBonusFile);
+        }
+
+        /// <summary>
+        /// Sets the ReturningPlayerBonusSCL Setting based on actual contents of file
+        /// </summary>
+        public static void ResetReturningPlayerBonusSettingSCL()
+        {
+            Settings.EnableReturningPlayerSCL = ReadReturningPlayerBonusFromFile(ReturningPlayerBonusFileSCL);
+        }
 
         /// <summary>
         /// Enables or Disables the Returning Player Bonus by writing to the file.
         /// </summary>
         /// <param name="IsEnabled"></param>
-        public static void SetReturningPlayerBonus(bool IsEnabled)
+        public static void WriteReturningPlayerBonusToFile(string filePath, bool EnabledReturningPlayer)
         {
-            // Main code by Special For and Hoxi, slightly adapted (try/catch), List instead of Array, checking what the file contains
-
-            // If file already does what user wants, dont write
-            if (SetReturningPlayerBonusSetting(false) == IsEnabled)
+            if (File.Exists(filePath))
             {
-                return;
-            }
-
-            var settingsPath = @"\Rockstar Games\GTA V\Profiles\Project127\GTA V\0F74F4C4\pc_settings.bin";
-            var fullSettingsPath = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal) + settingsPath;
-            if (File.Exists(fullSettingsPath))
-            {
-                if (IsEnabled)
+                // If file already does what user wants, dont write
+                if (ReadReturningPlayerBonusFromFile(filePath) == EnabledReturningPlayer)
                 {
+                    HelperClasses.Logger.Log("WriteReturningPlayerBonusToFile: Not touching anything, since file has what its supposed to be");
+                    return;
+                }
+
+                if (EnabledReturningPlayer)
+                {
+                    HelperClasses.Logger.Log("WriteReturningPlayerBonusToFile: We want to ENABLE Returning Player Bonus");
 
                     FileStream writeStream;
                     try
                     {
-                        writeStream = new FileStream(fullSettingsPath, FileMode.Append, FileAccess.Write);
+                        writeStream = new FileStream(filePath, FileMode.Append, FileAccess.Write);
                         BinaryWriter writeBinary = new BinaryWriter(writeStream);
-                        writeBinary.Write(0x00000362);
-                        writeBinary.Write(0x00000001);
+                        //writeBinary.Write(0x00000362);
+                        //writeBinary.Write(0x00000001);
+                        writeBinary.Write(ReturningPlayerBytes);
                         writeBinary.Close();
+                        HelperClasses.Logger.Log("WriteReturningPlayerBonusToFile: Returning Player Bonus Enabled");
                     }
                     catch (Exception ex)
                     {
-                        HelperClasses.Logger.Log("Returning Player Bonus Enabler: Error enabling returning player bonus: " + ex.ToString());
+                        HelperClasses.Logger.Log("WriteReturningPlayerBonusToFile: Error enabling returning player bonus: " + ex.ToString());
                     }
-                    HelperClasses.Logger.Log("Returning Player Bonus Enabler: Returning Player Bonus Enabled");
                 }
                 else
                 {
+                    HelperClasses.Logger.Log("WriteReturningPlayerBonusToFile: We want to DISABLE Returning Player Bonus");
+
                     try
                     {
-                        byte[] settings_bytes = File.ReadAllBytes(fullSettingsPath);
-                        byte[] bytes_to_remove = { 98, 3, 0, 0, 1, 0, 0, 0 }; // this sequence of bytes enables the returning player content
+                        byte[] settings_bytes = File.ReadAllBytes(filePath);
 
-
-                        // definitely not just copied from https://stackoverflow.com/a/40284498 xdd
-                        //byte[] result = new byte[settings_bytes.Length];
                         List<byte> result = new List<byte>();
-                        int k = 0;
+
+                        // loop through all read bytes
                         for (int i = 0; i < settings_bytes.Length;)
                         {
-                            if (settings_bytes.Skip(i).Take(bytes_to_remove.Length).SequenceEqual(bytes_to_remove))
+                            // if next bytes are ReturingPlayerBytes
+                            if (settings_bytes.Skip(i).Take(ReturningPlayerBytes.Length).SequenceEqual(ReturningPlayerBytes))
                             {
-
-                                i += bytes_to_remove.Length;
+                                // increment i, so we never read those
+                                i += ReturningPlayerBytes.Length;
                             }
+                            // if not
                             else
                             {
-                                //result[k] = settings_bytes[i];
+                                // add read byte to new list
                                 result.Add(settings_bytes[i]);
+                                // increment i and read next byte from file
                                 i++;
-                                k++;
                             }
                         }
-                        File.WriteAllBytes(fullSettingsPath, result.ToArray()); // write new array of bytes to settings file
-                        HelperClasses.Logger.Log("Returning Player Bonus Enabler: Returning Player Bonus Disabled");
+                        File.WriteAllBytes(filePath, result.ToArray()); // write new array of bytes to settings file
+                        HelperClasses.Logger.Log("WriteReturningPlayerBonusToFile: Returning Player Bonus Disabled");
                     }
                     catch (Exception ex)
                     {
-                        HelperClasses.Logger.Log("Returning Player Bonus Enabler: Error enabling returning player bonus: " + ex.ToString());
+                        HelperClasses.Logger.Log("WriteReturningPlayerBonusToFile: Error enabling returning player bonus: " + ex.ToString());
                     }
                 }
             }
             else
             {
-                HelperClasses.Logger.Log("Returning Player Bonus Enabler: Settings file not found!");
+                HelperClasses.Logger.Log("WriteReturningPlayerBonusToFile: pc_settings.bin does not exist");
+                HelperClasses.Logger.Log("WriteReturningPlayerBonusToFile: " + filePath);
             }
         }
 
