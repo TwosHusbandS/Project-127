@@ -165,7 +165,7 @@
         <mirror>http://gtav.anushk.net/downloadManager/subassemblies/Downgraded_Socialclub.zip</mirror>
     </subassembly>
 
-    <subassembly name="STANDARD_BASE" root="DowngradeFiles\" version="1.18.0.0">
+    <subassembly name="STANDARD_BASE" root="DowngradeFiles\" version="1.19.0.0">
         <file name="PlayGTAV.exe" linked="true" subassembly="EMU_BASE_SUBASSEMBLY"/>
         <file name="launc.dll" linked="true" subassembly="EMU_BASE_SUBASSEMBLY"/>
         <file name="orig_socialclub.dll" linked="true" subassembly="EMU_BASE_SUBASSEMBLY"/>
@@ -192,7 +192,7 @@
         </requires>
     </subassembly>
 
-	<subassembly name="124_DR490N" root="DowngradeFiles124\" version="1.18.0.0">
+	<subassembly name="124_DR490N" root="DowngradeFiles124\" version="1.19.0.0">
 		<file name="PlayGTAV.exe" linked="true" subassembly="EMU_BASE_SUBASSEMBLY"/>
 		<file name="launc.dll" linked="true" subassembly="EMU_BASE_SUBASSEMBLY"/>
 		<file name="orig_socialclub.dll" linked="true" subassembly="EMU_BASE_SUBASSEMBLY"/>
@@ -219,7 +219,7 @@
 	</subassembly>
     
 
-    <subassembly name="EMU_BASE_SUBASSEMBLY" type="common" version ="1.18.0.0">
+    <subassembly name="EMU_BASE_SUBASSEMBLY" type="common" version ="1.19.0.0">
         <file name="PlayGTAV.exe">
             <hash>5F4F8AE07CC5EED5204583B99E9889C0</hash>
             <mirror>http://gtav.anushk.net/downloadManager/subassemblies/emuv16_complete/PlayGTAV.exe</mirror>
@@ -236,21 +236,21 @@
             <hash>02227C8A0FA012A942A60777439B6FCF</hash>
             <mirror>http://gtav.anushk.net/downloadManager/subassemblies/emuv16_complete/ROSCrypto.dll</mirror>
         </file>
-        <!--<file name="socialclub.dll">
+        <file name="socialclub.dll">
             <hash>A04F031AB2E56FE3D5C5AC10DEACCC4D</hash>
-	    <mirror>http://gtav.anushk.net/downloadManager/subassemblies/emuv16_complete/socialclub.dll</mirror>
-        </file>-->
-		<file name="socialclub.dll">
-			<hash>2d8bbd36752f3eb501fb53cee5c27147</hash>
-			<mirror>http://gtav.anushk.net/downloadManager/subassemblies/emu_stutterfix_v3/socialclub.dll</mirror>
-		</file>
+	        <mirror>http://gtav.anushk.net/downloadManager/subassemblies/emuv16_complete/socialclub.dll</mirror>
+        </file>
         <file name="GFSDK_ShadowLib.win64.dll">
             <hash>D043C98ED424F6770EA800E77EFCF561</hash>
             <mirror>http://gtav.anushk.net/downloadManager/subassemblies/emuv16_complete/GFSDK_ShadowLib.win64.dll</mirror>
         </file>
-        <file name="bink2w64.dll">
+        <!--<file name="bink2w64.dll">
             <hash>518C9DA8D048F1DB89E835254E369EE0</hash>
             <mirror>http://gtav.anushk.net/downloadManager/subassemblies/emuv16_complete/bink2w64.dll</mirror>
+        </file>-->
+		<file name="bink2w64.dll">
+            <hash>f5ad65ea41759190dc0f97c1ba813d4a</hash>
+            <mirror>http://gtav.anushk.net/downloadManager/subassemblies/emu_stutterfix_v4/bink2w64.dll</mirror>
         </file>
     </subassembly>
 
