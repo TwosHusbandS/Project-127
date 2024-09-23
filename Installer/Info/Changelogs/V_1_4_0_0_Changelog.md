@@ -4,6 +4,7 @@
 * Fixed Bug where P127 would close itself before fully starting the new installer (during auto update)
 * StutterFix
   * New socialclub.dll files on ftp
+    * SCL (SocialClubLaunch) files also have an expiring-certificate patched out (would have expired and crashed on 26/11/2026) 
   * StutterFix is now an option for all available downgrades.
   * Adding "-StutterFix" to default CustomCommandLine value in UI, so user knows how it should look
   * Undo "stutterfix" mode (top left corner) for users who were on that beta
