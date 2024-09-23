@@ -768,7 +768,13 @@ namespace Project_127.MySettings
 
             tb_Set_InGameName.Text = Settings.InGameName;
 
-            tb_OverWriteGTACommandLineArgs.Text = Settings.OverWriteGTACommandLineArgs;
+            // Needs to be here...
+            // Settings.OverWriteGTACommandLineArgs returns command args alg comes up with, if its empty
+            // if SCL is selected as launch option, or user is on dr490n-124, this will not come with -StutterFix
+            // Appending so if user wants to overwrite gta command line args, user is a aware of that argument
+            string tmp = Settings.OverWriteGTACommandLineArgs;
+            if (!tmp.ToLower().Contains("-stutterfix")) { tmp += " -StutterFix"; }
+            tb_OverWriteGTACommandLineArgs.Text = tmp;
 
             btn_Set_JumpScriptKey1.Content = Settings.JumpScriptKey1;
             btn_Set_JumpScriptKey2.Content = Settings.JumpScriptKey2;
@@ -888,8 +894,10 @@ namespace Project_127.MySettings
                         lbl_SettingsHeader.Content = "GTA & Launch Settings";
                         sv_Settings_GTA.ScrollToVerticalOffset(0);
 
-                        LauncherLogic.SetReturningPlayerBonusSetting();
+                        LauncherLogic.ResetReturningPlayerBonusSetting();
+                        LauncherLogic.ResetReturningPlayerBonusSettingSCL();
                         ButtonMouseOverMagic(btn_cb_Set_EnableReturningPlayer);
+                        ButtonMouseOverMagic(btn_cb_Set_EnableReturningPlayerSCL);
                         Refresh_SCL_EMU_Order();
                         break;
 
@@ -1022,6 +1030,9 @@ namespace Project_127.MySettings
                 case "btn_cb_Set_EnableReturningPlayer":
                     SetCheckBoxBackground(myBtn, Settings.EnableReturningPlayer);
                     break;
+                case "btn_cb_Set_EnableReturningPlayerSCL":
+                    SetCheckBoxBackground(myBtn, Settings.EnableReturningPlayerSCL);
+                    break;
                 case "btn_cb_Set_EnableRunAsAdmin":
                     SetCheckBoxBackground(myBtn, Settings.EnableRunAsAdminDowngraded);
                     break;
@@ -1084,12 +1095,12 @@ namespace Project_127.MySettings
 
         private void Refresh_SCL_EMU_Order()
         {
+            Grid_Settings_GTA.RowDefinitions.RemoveAt(7);
             Grid_Settings_GTA.RowDefinitions.RemoveAt(6);
-            Grid_Settings_GTA.RowDefinitions.RemoveAt(5);
             RowDefinition Row_SCL_Options = new RowDefinition();
-            Row_SCL_Options.Height = new GridLength(100);
+            Row_SCL_Options.Height = new GridLength(140);
             RowDefinition Row_DragonEmu_Options = new RowDefinition();
-            Row_DragonEmu_Options.Height = new GridLength(480);
+            Row_DragonEmu_Options.Height = new GridLength(440);
 
             if (LauncherLogic.LaunchWay == LauncherLogic.LaunchWays.SocialClubLaunch)
             {
@@ -1102,14 +1113,13 @@ namespace Project_127.MySettings
                 Grid_Settings_GTA.RowDefinitions.Add(Row_SCL_Options);
                 Grid_Settings_GTA.RowDefinitions.Add(Row_DragonEmu_Options);
 
-                Grid.SetRow(brdr_SCLOptions, 5);
-                Grid.SetRow(brdr_DragonEmuOptions, 6);
+                Grid.SetRow(brdr_SCLOptions, 6);
+                Grid.SetRow(brdr_DragonEmuOptions, 7);
 
                 btn_HideSCLOptions.Visibility = Visibility.Hidden;
                 btn_HideEmuOptions.Visibility = Visibility.Visible;
 
                 Rect_HideOptions_HideFromSteam.Visibility = Visibility.Hidden;
-                Rect_HideOptions_StutterFix.Visibility = Visibility.Hidden;
                 Rect_HideOptions_AutoMTLOnStartup.Visibility = Visibility.Hidden;
             }
             else if (LauncherLogic.LaunchWay == LauncherLogic.LaunchWays.DragonEmu)
@@ -1123,8 +1133,8 @@ namespace Project_127.MySettings
                 Grid_Settings_GTA.RowDefinitions.Add(Row_DragonEmu_Options);
                 Grid_Settings_GTA.RowDefinitions.Add(Row_SCL_Options);
 
-                Grid.SetRow(brdr_DragonEmuOptions, 5);
-                Grid.SetRow(brdr_SCLOptions, 6);
+                Grid.SetRow(brdr_DragonEmuOptions, 6);
+                Grid.SetRow(brdr_SCLOptions, 7);
 
                 btn_HideSCLOptions.Visibility = Visibility.Visible;
                 btn_HideEmuOptions.Visibility = Visibility.Hidden;
@@ -1166,12 +1176,14 @@ namespace Project_127.MySettings
                 Rect_HideOptions_CommandLineArg.Visibility = Visibility.Hidden;
                 Rect_HideOptions_AutoCoreFix.Visibility = Visibility.Visible;
                 Rect_HideOptions_Language.Visibility = Visibility.Visible;
+                Rect_HideOptions_StutterFix.Visibility = Visibility.Visible;
             }
             else
             {
                 Rect_HideOptions_CommandLineArg.Visibility = Visibility.Visible;
                 Rect_HideOptions_AutoCoreFix.Visibility = Visibility.Hidden;
                 Rect_HideOptions_Language.Visibility = Visibility.Hidden;
+                Rect_HideOptions_StutterFix.Visibility = Visibility.Hidden;
             }
 
             if (Retailer == Retailers.Epic)
@@ -1198,15 +1210,6 @@ namespace Project_127.MySettings
 
             if (btn_HideEmuOptions.Visibility == Visibility.Hidden)
             {
-                if (DragonEmuGameVersion == "127")
-                {
-                    Rect_HideOptions_StutterFix.Visibility = Visibility.Hidden;
-                }
-                else
-                {
-                    Rect_HideOptions_StutterFix.Visibility = Visibility.Visible;
-                }
-
                 if (Retailer == Retailers.Steam)
                 {
                     Rect_HideOptions_HideFromSteam.Visibility = Visibility.Hidden;
@@ -1233,7 +1236,6 @@ namespace Project_127.MySettings
             }
             else
             {
-                Rect_HideOptions_StutterFix.Visibility = Visibility.Hidden;
                 Rect_HideOptions_HideFromSteam.Visibility = Visibility.Hidden;
                 Rect_HideOptions_AutoMTLOnStartup.Visibility = Visibility.Hidden;
 
@@ -1331,8 +1333,22 @@ namespace Project_127.MySettings
                     Settings.EnablePreOrderBonus = !Settings.EnablePreOrderBonus;
                     break;
                 case "btn_cb_Set_EnableReturningPlayer":
+                    bool prevSetting = Settings.EnableReturningPlayer;
                     Settings.EnableReturningPlayer = !Settings.EnableReturningPlayer;
-                    LauncherLogic.SetReturningPlayerBonusSetting();
+                    LauncherLogic.ResetReturningPlayerBonusSetting();
+                    if (prevSetting == Settings.EnableReturningPlayer)
+                    {
+                        PopupWrapper.PopupOk("Cant change ReturningPlayerBonus Setting.\n\nThis is most likely due to non existing pc_settings.bin\nStart the game once to fix.");
+                    }
+                    break;
+                case "btn_cb_Set_EnableReturningPlayerSCL":
+                    bool prevSetting2 = Settings.EnableReturningPlayerSCL;
+                    Settings.EnableReturningPlayerSCL = !Settings.EnableReturningPlayerSCL;
+                    LauncherLogic.ResetReturningPlayerBonusSettingSCL();
+                    if (prevSetting2 == Settings.EnableReturningPlayerSCL)
+                    {
+                        PopupWrapper.PopupOk("Cant change ReturningPlayerBonus Setting.\n\nThis is most likely due to non existing pc_settings.bin\nStart the game once to fix.");
+                    }
                     break;
                 case "btn_cb_Set_EnableRunAsAdmin":
                     Settings.EnableRunAsAdminDowngraded = !Settings.EnableRunAsAdminDowngraded;

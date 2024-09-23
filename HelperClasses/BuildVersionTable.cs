@@ -126,7 +126,9 @@ namespace Project_127.HelperClasses
                 new BuildVersionTable("1.0.3028.0", "1.67"),
                 new BuildVersionTable("1.0.3095.0", "1.68"),
                 new BuildVersionTable("1.0.3179.0", "1.68"),
-                new BuildVersionTable("1.0.3258.0", "1.69")
+                new BuildVersionTable("1.0.3258.0", "1.69"),
+                new BuildVersionTable("1.0.3274.0", "1.69"),
+                new BuildVersionTable("1.0.3323.0", "1.69")
             };
 
 			return tmp;

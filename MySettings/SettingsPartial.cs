@@ -228,7 +228,8 @@ namespace Project_127.MySettings
             {
                 Globals.MySettings[SingleSetting.Key] = HelperClasses.RegeditHandler.GetValue(SingleSetting.Key);
             }
-            LauncherLogic.SetReturningPlayerBonusSetting();
+            LauncherLogic.ResetReturningPlayerBonusSetting();
+            LauncherLogic.ResetReturningPlayerBonusSettingSCL();
             HelperClasses.Logger.Log("Loaded Settings from Regedit", true, 1);
 
         }
@@ -631,7 +632,7 @@ namespace Project_127.MySettings
         }
 
         /// <summary>
-        /// Settings EnableReturningPlayer. Gets and Sets from the Dictionary.
+        /// Settings EnableReturningPlayer (for dragon emu). Gets and Sets from the Dictionary.
         /// </summary>
         public static bool EnableReturningPlayer
         {
@@ -641,8 +642,30 @@ namespace Project_127.MySettings
             }
             set
             {
-                LauncherLogic.SetReturningPlayerBonus(value);
-                SetSetting("EnableReturningPlayer", value.ToString());
+                if (value != EnableReturningPlayer)
+                {
+                    SetSetting("EnableReturningPlayer", value.ToString());
+                    LauncherLogic.WriteReturningPlayerBonusToFile(LauncherLogic.ReturningPlayerBonusFile, value);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Settings EnableReturningPlayer (for SCL). Gets and Sets from the Dictionary.
+        /// </summary>
+        public static bool EnableReturningPlayerSCL
+        {
+            get
+            {
+                return GetBoolFromString(GetSetting("EnableReturningPlayerSCL"));
+            }
+            set
+            {
+                if (value != EnableReturningPlayerSCL)
+                {
+                    SetSetting("EnableReturningPlayerSCL", value.ToString());
+                    LauncherLogic.WriteReturningPlayerBonusToFile(LauncherLogic.ReturningPlayerBonusFileSCL, value);
+                }
             }
         }
 

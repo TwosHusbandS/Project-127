@@ -17,6 +17,9 @@ using System.IO.Compression;
 using Project_127.MySettings;
 using Project_127.HelperClasses;
 using System.Diagnostics;
+using GSF.IO;
+using System.Security.Cryptography;
+using CefSharp;
 
 namespace Project_127.Popups
 {
@@ -47,6 +50,7 @@ namespace Project_127.Popups
             FileOperation,
             Upgrade,
             Downgrade,
+            MD5,
         }
 
         /// <summary>
@@ -68,6 +72,10 @@ namespace Project_127.Popups
         /// Using this to return a Bool
         /// </summary>
         public bool RtrnBool = false;
+
+        private string FilePath = "";
+
+        public string RtrnMD5 = "";
 
         /// <summary>
         /// Name of Operation for GUI
@@ -125,6 +133,13 @@ namespace Project_127.Popups
                 MyFileOperations = pMyFileOperations;
                 myLBL.Content = Operation + "...(0%)";
             }
+            else if (ProgressType == ProgressTypes.MD5)
+            {
+                FilePath = pParam1;
+                string tmp = HelperClasses.FileHandling.PathSplitUp(pParam1)[1];
+                Operation = "Checking local file: " + tmp;
+                myLBL.Content = Operation + "...(0%)";
+            }
             else if (ProgressType == ProgressTypes.ZIPFile)
             {
                 ZipFileWeWannaExtract = pParam1;
@@ -165,8 +180,6 @@ namespace Project_127.Popups
         [STAThread]
         public void ActualWork()
         {
-            HelperClasses.Logger.Log("ProgressType: '" + ProgressType + "'");
-
             //Basically just executing a list of MyFileOperations
             if (ProgressType == ProgressTypes.FileOperation)
             {
@@ -178,7 +191,7 @@ namespace Project_127.Popups
 
                 LauncherLogic.InFileOperationWrapperLoop = true;
 
-                HelperClasses.Logger.Log("Lets do some File Operation Stuff");
+                HelperClasses.Logger.Log("PopupProgress Lets do some File Operation Stuff");
                 for (int i = 0; i <= MyFileOperations.Count - 1; i++)
                 {
                     if (!CancelFileOperations)
@@ -202,11 +215,64 @@ namespace Project_127.Popups
                 HelperClasses.Logger.Log("Done with File Operation Stuff");
             }
 
+
+            else if (ProgressType == ProgressTypes.MD5)
+            {
+                if (HelperClasses.FileHandling.doesFileExist(FilePath))
+                {
+                    string filePath = FilePath;
+
+                    byte[] buffer;
+                    int bytesRead;
+                    long size;
+                    long totalBytesRead = 0;
+
+                    using (Stream file = File.OpenRead(filePath))
+                    {
+                        size = file.Length;
+
+                        using (HashAlgorithm hasher = MD5.Create())
+                        {
+                            do
+                            {
+                                buffer = new byte[4096];
+                                bytesRead = file.Read(buffer, 0, buffer.Length);
+                                totalBytesRead += bytesRead;
+                                hasher.TransformBlock(buffer, 0, bytesRead, null, 0);
+
+                                Application.Current.Dispatcher.Invoke((Action)delegate
+                                {
+                                    long progress = (100 * totalBytesRead / size);
+                                    myPB.Value = progress;
+                                    myLBL.Content = Operation + "...(" + progress + "%)";
+                                });
+                            }
+                            while (bytesRead != 0);
+
+                            hasher.TransformFinalBlock(buffer, 0, 0);
+
+                            StringBuilder hash = new StringBuilder();
+                            foreach (byte b in hasher.Hash)
+                            {
+                                hash.Append(b.ToString("X2"));
+                            }
+                            RtrnMD5 = hash.ToString().ToLower();
+                        }
+                    }
+                    HelperClasses.Logger.Log("MD5 Hash (PopupProgress) of '" + FilePath + "' is: '" + RtrnMD5 + "'");
+                }
+                else
+                {
+                    HelperClasses.Logger.Log("MD5 Hash (PopupProgress) of '" + FilePath + "' not possible because file doesnt exist.");
+                }
+            }
+
+
             // Extracting a ZIPFile
             else if (ProgressType == ProgressTypes.ZIPFile)
             {
-                HelperClasses.Logger.Log("ZipFileWeWannaExtract: '" + ZipFileWeWannaExtract + "'");
-                HelperClasses.Logger.Log("ZIPExtractPath: '" + myZipExtractionPath + "'");
+                HelperClasses.Logger.Log("PopupProgress ZipFileWeWannaExtract: '" + ZipFileWeWannaExtract + "'");
+                HelperClasses.Logger.Log("PopupProgress ZIPExtractPath: '" + myZipExtractionPath + "'");
 
                 List<System.IO.Compression.ZipArchiveEntry> fileList = new List<System.IO.Compression.ZipArchiveEntry>();
                 var totalFiles = 0;
@@ -282,7 +348,7 @@ namespace Project_127.Popups
                 // Saving all the File Operations I want to do, executing this at the end of this Method
                 List<MyFileOperation> MyFileOperationsTmp = new List<MyFileOperation>();
 
-                HelperClasses.Logger.Log("Initiating DOWNGRADE", 0);
+                HelperClasses.Logger.Log("Initiating PopupProgress DOWNGRADE", 0);
                 HelperClasses.Logger.Log("GTAV Installation Path: " + LauncherLogic.GTAVFilePath, 1);
                 HelperClasses.Logger.Log("InstallationLocation: " + Globals.ProjectInstallationPath, 1);
                 HelperClasses.Logger.Log("InstallationLocationBinary: " + Globals.ProjectInstallationPathBinary, 1);
@@ -407,7 +473,7 @@ namespace Project_127.Popups
                 List<MyFileOperation> MyFileOperationsTmp = new List<MyFileOperation>();
                 bool UpdatePopupThrownAlready = false;
 
-                HelperClasses.Logger.Log("Initiating UPGRADE", 0);
+                HelperClasses.Logger.Log("Initiating PopupProgress UPGRADE", 0);
                 HelperClasses.Logger.Log("GTAV Installation Path: " + LauncherLogic.GTAVFilePath, 1);
                 HelperClasses.Logger.Log("InstallationLocation: " + Globals.ProjectInstallationPath, 1);
                 HelperClasses.Logger.Log("InstallationLocationBinary: " + Globals.ProjectInstallationPathBinary, 1);

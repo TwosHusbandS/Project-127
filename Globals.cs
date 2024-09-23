@@ -27,6 +27,7 @@ using System.IO;
 using System.Timers;
 using System.Windows.Navigation;
 using System.Security.Cryptography;
+using System.Web.Script.Serialization;
 
 namespace Project_127
 {
@@ -235,7 +236,7 @@ namespace Project_127
         /// <summary>
         /// Property of other Buildinfo. Will be in the top message of logs
         /// </summary>
-        public static string BuildInfo = "1.3.1.3 - StutterFix RC 2";
+        public static string BuildInfo = "1.4.0.0 - RC 3";
 
 
         /// <summary>
@@ -385,6 +386,7 @@ namespace Project_127
             {"InGameName", "HiMomImOnYoutube"},
             {"EnablePreOrderBonus", "False"},
             {"EnableReturningPlayer", "False"},
+            {"EnableReturningPlayerSCL", "False"},
             {"EnableDontLaunchThroughSteam", "False"},
             {"EnableScripthookOnDowngraded", "False"},
             {"EnableOverWriteGTACommandLineArgs", "False"},
@@ -564,7 +566,7 @@ namespace Project_127
                     FileHandling.deleteFile(LauncherLogic.UpgradeFilePath.TrimEnd('\\') + @"\Readme.txt");
                     FileHandling.deleteFile(LauncherLogic.UpgradeFilePath.TrimEnd('\\') + @"\socialclub.dll");
                     FileHandling.deleteFile(LauncherLogic.UpgradeFilePath.TrimEnd('\\') + @"\tinyxml2.dll");
-
+                    
                     Globals.SetUpDownloadManager(false).GetAwaiter().GetResult();
                     ComponentManager.ZIPVersionSwitcheroo();
 
@@ -731,7 +733,40 @@ namespace Project_127
                     }
                 }
 
-                    
+                if (Settings.LastLaunchedVersion < new Version("1.4.0.0"))
+                {
+                    Settings.P127Mode = "default";
+                    Settings.DMMode = "default";
+
+                    string tmp = HelperClasses.RegeditHandler.GetValue("DownloadManagerInstalledSubassemblies");
+                    tmp = tmp.Replace(@"\\\\", @"\\");
+                    HelperClasses.RegeditHandler.SetValue("DownloadManagerInstalledSubassemblies", tmp);
+
+                    Dictionary<string, HelperClasses.DownloadManager.subassemblyInfo> installedSubassemblies;
+                    JavaScriptSerializer json = new JavaScriptSerializer();
+                    try
+                    {
+                        installedSubassemblies = json.Deserialize<Dictionary<string, HelperClasses.DownloadManager.subassemblyInfo>>(tmp);
+                        foreach (var mykey in installedSubassemblies.Keys)
+                        {
+                            for (int i = 0; i <= installedSubassemblies[mykey].files.Count -1; i++)
+                            {
+                                List<string> PathsBackup = new List<string>(installedSubassemblies[mykey].files[i].paths);
+                                installedSubassemblies[mykey].files[i].paths.Clear();
+                                foreach (string mypath in  PathsBackup)
+                                {
+                                    if(!installedSubassemblies[mykey].files[i].paths.Contains(mypath))
+                                    {
+                                        installedSubassemblies[mykey].files[i].paths.Add(mypath);
+                                    }
+                                }
+                            }
+                        }
+                        HelperClasses.RegeditHandler.SetValue("DownloadManagerInstalledSubassemblies", json.Serialize(installedSubassemblies));
+                    }
+                    catch {}
+                }
+
                 Settings.LastLaunchedVersion = Globals.ProjectVersion;
             }
 
@@ -779,7 +814,8 @@ namespace Project_127
             initGamePatches();
 
             // Read Settings of Emu Profile for ReturningPlayerContent
-            LauncherLogic.SetReturningPlayerBonusSetting();
+            LauncherLogic.ResetReturningPlayerBonusSetting();
+            LauncherLogic.ResetReturningPlayerBonusSettingSCL();
 
             //Init pointer-path tester
             preparsedPPs = ASPointerPath.pointerPathParse(Settings.PointerPathTesterString);
@@ -1228,7 +1264,9 @@ namespace Project_127
                             if (HelperClasses.FileHandling.GetSizeOfFile(LocalFileName) > 50000)
                             {
                                 HelperClasses.Logger.Log("Installer on Disk looks good, Starting Installer, Exits this now.", 1);
-                                HelperClasses.ProcessHandler.StartProcess(LocalFileName);
+                                //HelperClasses.ProcessHandler.StartProcess(LocalFileName);
+                                Process.Start(LocalFileName);
+                                Task.Delay(500).GetAwaiter().GetResult();
                                 Globals.ProperExit();
                             }
                             else
@@ -2058,7 +2096,7 @@ namespace Project_127
         {
             Application.Current.Dispatcher.Invoke(() =>
             {
-                //HelperClasses.Logger.Log("Debug: " + pMsg, 1);
+                HelperClasses.Logger.Log("Debug: " + pMsg, 1);
                 HelperClasses.FileHandling.AddToDebug("Debug: " + pMsg);
                 if (asdf)
                 {
