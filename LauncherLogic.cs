@@ -1000,9 +1000,12 @@ namespace Project_127
 
             rtrn += "gta_p127.exe -uilanguage " + Settings.ToMyLanguageString(Settings.LanguageSelected).ToLower();
 
-            if (Settings.EnableStutterFix && InstallationState == InstallationStates.Downgraded)
+            if (InstallationState == InstallationStates.Downgraded)
             {
-                rtrn += " -StutterFix";
+                if (!Settings.EnableStutterFix)
+                {
+                    rtrn += " -NoStutterFix";
+                }
             }
 
             return rtrn;
