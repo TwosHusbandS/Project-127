@@ -627,7 +627,7 @@ namespace Project_127
                 Globals.BackgroundImage = Globals.BackgroundImages.Turkey;
             }
             else if ((Now.Month == 10 && Now.Day >= 30) ||
-                    (Now.Month == 11 && Now.Day == 6))
+                    (Now.Month == 11 && Now.Day <= 6))
             {
                 Globals.BackgroundImage = Globals.BackgroundImages.Spooky;
             }
