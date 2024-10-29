@@ -1007,6 +1007,37 @@ namespace Project_127.MySettings
         }
 
         /// <summary>
+        /// Settings EnableAudioFix. Gets and Sets from the Dictionary.
+        /// </summary>
+        public static bool EnableAudioFix
+        {
+            get
+            {
+                return GetBoolFromString(GetSetting("EnableAudioFix"));
+            }
+            set
+            {
+                SetSetting("EnableAudioFix", value.ToString());
+            }
+        }
+
+
+        /// <summary>
+        /// Settings EnableCrashFix. Gets and Sets from the Dictionary.
+        /// </summary>
+        public static bool EnableCrashFix
+        {
+            get
+            {
+                return GetBoolFromString(GetSetting("EnableCrashFix"));
+            }
+            set
+            {
+                SetSetting("EnableCrashFix", value.ToString());
+            }
+        }
+
+        /// <summary>
         /// Settings OverWriteGTACommandLineArgs. Gets and Sets from the Dictionary.
         /// </summary>
         public static string OverWriteGTACommandLineArgs

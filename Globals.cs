@@ -236,7 +236,7 @@ namespace Project_127
         /// <summary>
         /// Property of other Buildinfo. Will be in the top message of logs
         /// </summary>
-        public static string BuildInfo = "1.4.0.0 - RC 3";
+        public static string BuildInfo = "1.4.0.X - StutterFix,AudioFix,CrashFix changes 1";
 
 
         /// <summary>
@@ -393,7 +393,9 @@ namespace Project_127
             {"EnableCoreFix", "True"},
             {"EnableRunAsAdminDowngraded", "False"},
             {"OverWriteGTACommandLineArgs", ""},
-            {"EnableStutterFix", "False"},
+            {"EnableStutterFix", "True"},
+            {"EnableAudioFix", "True"},
+            {"EnableCrashFix", "True"},
    
 			// Extra Features
 			{"EnableOverlay", "False"},

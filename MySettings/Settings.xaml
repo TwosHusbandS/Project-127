@@ -156,9 +156,11 @@
                                 <RowDefinition Height="40"/> <!--2-->
                                 <RowDefinition Height="40"/> <!--3-->
                                 <RowDefinition Height="40"/> <!--4-->
-                                <RowDefinition Height="140"/> <!--5-->
-                                <RowDefinition Height="140"/> <!--6-->
-                                <RowDefinition Height="440"/> <!--7-->
+                                <RowDefinition Height="40"/> <!--5-->
+                                <RowDefinition Height="40"/> <!--6-->
+                                <RowDefinition Height="140"/> <!--7-->
+                                <RowDefinition Height="140"/> <!--8-->
+                                <RowDefinition Height="440"/> <!--9-->
 
                             </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
@@ -171,7 +173,9 @@
                             <Rectangle Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" Fill="Transparent"/>
                             <Rectangle Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3" Fill="{x:Static local:MyColors.SE_AlternateRowBackground}"/>
                             <Rectangle Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3" Grid.RowSpan="4" Fill="Transparent"/>
-
+                            <Rectangle Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="3" Fill="{x:Static local:MyColors.SE_AlternateRowBackground}"/>
+                            <Rectangle Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="3" Grid.RowSpan="4" Fill="Transparent"/>
+                            
                             <Label Grid.Row="0" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="GTA V Retailer: "/>
                             <ComboBox Grid.Row="0" Grid.Column="1" Margin="10,5" Style="{StaticResource cobo}" x:Name="combox_Set_Retail" SelectionChanged="combox_Set_Retail_SelectionChanged"/>
 
@@ -184,9 +188,16 @@
 
                             <Label Grid.Row="3" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Enable Stutter Fix on downgraded GTA"/>
                             <Button Grid.Row="3" Grid.Column="1" x:Name="btn_cb_Set_EnableStutterFix"  Style="{StaticResource btn_cb}" Click="btn_cb_Click" MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
-                            <Rectangle x:Name="Rect_HideOptions_StutterFix" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Fill="{x:Static local:MyColors.MyColorOffWhite85}" ToolTip="Disabled due to custom Command Line Args."/>
 
-                            <Button Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" x:Name="btn_GTACommandLineArgs"  Style="{StaticResource btn_SE_Path}" Click="btn_GTACommandLineArgs_Click" Content="Additional Downgraded GTA CommandLine Options"/>
+                            <Label Grid.Row="4" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Enable Audio Fix on downgraded GTA"/>
+                            <Button Grid.Row="4" Grid.Column="1" x:Name="btn_cb_Set_EnableAudioFix"  Style="{StaticResource btn_cb}" Click="btn_cb_Click" MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
+                            
+                            <Label Grid.Row="5" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Enable Crash Fix on downgraded GTA"/>
+                            <Button Grid.Row="5" Grid.Column="1" x:Name="btn_cb_Set_EnableCrashFix"  Style="{StaticResource btn_cb}" Click="btn_cb_Click" MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
+                            
+                            <Rectangle x:Name="Rect_HideOptions_Fixes" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="3" Fill="{x:Static local:MyColors.MyColorOffWhite85}" ToolTip="Disabled due to custom Command Line Args."/>
+
+                            <Button Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2" x:Name="btn_GTACommandLineArgs"  Style="{StaticResource btn_SE_Path}" Click="btn_GTACommandLineArgs_Click" Content="Additional Downgraded GTA CommandLine Options"/>
                             <Popup x:Name="PopupGTACommandLineArgs"  PlacementTarget="{Binding ElementName=btn_GTACommandLineArgs}" Placement="MousePoint" Width="400" Height="150"  Margin="0,0,0,0" StaysOpen="False" Closed="PopupGTACommandLineArgs_Closed" Opened="PopupGTACommandLineArgs_Opened">
                                 <Border BorderBrush="{x:Static local:MyColors.MyColorWhite}" BorderThickness="2" Background="{x:Static local:MyColors.MyColorOffBlack}" MouseLeave="Border_MouseLeave">
                                     <Grid>
@@ -216,7 +227,7 @@
                             </Popup>
 
 
-                            <Border Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" BorderThickness="2" Margin="20,10" BorderBrush="{x:Static local:MyColors.MyColorWhite}" Background="{x:Static local:MyColors.MyColorOffBlack70}" x:Name="brdr_LaunchWays">
+                            <Border Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2" BorderThickness="2" Margin="20,10" BorderBrush="{x:Static local:MyColors.MyColorWhite}" Background="{x:Static local:MyColors.MyColorOffBlack70}" x:Name="brdr_LaunchWays">
                                 <Grid>
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="*"/>
@@ -233,7 +244,7 @@
                                 </Grid>
                             </Border>
 
-                            <Border x:Name="brdr_SCLOptions" Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2" BorderThickness="2" Margin="20,10"  BorderBrush="{x:Static local:MyColors.MyColorSCL}" Background="{x:Static local:MyColors.MyColorOffBlack70}">
+                            <Border x:Name="brdr_SCLOptions" Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="2" BorderThickness="2" Margin="20,10"  BorderBrush="{x:Static local:MyColors.MyColorSCL}" Background="{x:Static local:MyColors.MyColorOffBlack70}">
                                 <Grid>
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="*"/>
@@ -255,7 +266,7 @@
                                 </Grid>
                             </Border>
 
-                            <Border x:Name="brdr_DragonEmuOptions" Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2" BorderThickness="2" Margin="20,10" BorderBrush="{x:Static local:MyColors.MyColorEmu}" Background="{x:Static local:MyColors.MyColorOffBlack70}">
+                            <Border x:Name="brdr_DragonEmuOptions" Grid.Row="9" Grid.Column="0" Grid.ColumnSpan="2" BorderThickness="2" Margin="20,10" BorderBrush="{x:Static local:MyColors.MyColorEmu}" Background="{x:Static local:MyColors.MyColorOffBlack70}">
                                 <Grid>
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="*"/>

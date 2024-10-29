@@ -1006,6 +1006,14 @@ namespace Project_127
                 {
                     rtrn += " -NoStutterFix";
                 }
+                if (!Settings.EnableAudioFix)
+                {
+                    rtrn += " -NoAudioFix";
+                }
+                if (!Settings.EnableCrashFix)
+                {
+                    rtrn += " -NoCrashFix";
+                }
             }
 
             return rtrn;
