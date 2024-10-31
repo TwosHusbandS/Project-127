@@ -768,12 +768,8 @@ namespace Project_127.MySettings
 
             tb_Set_InGameName.Text = Settings.InGameName;
 
-            // Needs to be here...
-            // Settings.OverWriteGTACommandLineArgs returns command args alg comes up with, if its empty
-            // if SCL is selected as launch option, or user is on dr490n-124, this will not come with -StutterFix
-            // Appending so if user wants to overwrite gta command line args, user is a aware of that argument
+            // No stutterfix magic needed here, since we swapped from giving -StutterFix when its wanted to giving -NoStutterFix when its not wanted
             string tmp = Settings.OverWriteGTACommandLineArgs;
-            if (!tmp.ToLower().Contains("-stutterfix")) { tmp += " -StutterFix"; }
             tb_OverWriteGTACommandLineArgs.Text = tmp;
 
             btn_Set_JumpScriptKey1.Content = Settings.JumpScriptKey1;
@@ -804,6 +800,8 @@ namespace Project_127.MySettings
             ButtonMouseOverMagic(btn_cb_Set_AutoMTLAuthOnStartup);
             ButtonMouseOverMagic(btn_cb_Set_EnableCoreFix);
             ButtonMouseOverMagic(btn_cb_Set_EnableStutterFix);
+            ButtonMouseOverMagic(btn_cb_Set_EnableAudioFix);
+            ButtonMouseOverMagic(btn_cb_Set_EnableCrashFix);
             ButtonMouseOverMagic(btn_cb_EnableSpecialPatcher);
             ButtonMouseOverMagic(btn_cb_EnablePPTester);
 
@@ -1009,6 +1007,12 @@ namespace Project_127.MySettings
                 case "btn_cb_Set_EnableStutterFix":
                     SetCheckBoxBackground(myBtn, Settings.EnableStutterFix);
                     break;
+                case "btn_cb_Set_EnableAudioFix":
+                    SetCheckBoxBackground(myBtn, Settings.EnableAudioFix);
+                    break;
+                case "btn_cb_Set_EnableCrashFix":
+                    SetCheckBoxBackground(myBtn, Settings.EnableCrashFix);
+                    break;
                 case "btn_cb_Set_EnableAlternativeLaunchForceCProgramFiles":
                     SetCheckBoxBackground(myBtn, Settings.EnableAlternativeLaunchForceCProgramFiles);
                     break;
@@ -1095,8 +1099,8 @@ namespace Project_127.MySettings
 
         private void Refresh_SCL_EMU_Order()
         {
-            Grid_Settings_GTA.RowDefinitions.RemoveAt(7);
-            Grid_Settings_GTA.RowDefinitions.RemoveAt(6);
+            Grid_Settings_GTA.RowDefinitions.RemoveAt(9);
+            Grid_Settings_GTA.RowDefinitions.RemoveAt(8);
             RowDefinition Row_SCL_Options = new RowDefinition();
             Row_SCL_Options.Height = new GridLength(140);
             RowDefinition Row_DragonEmu_Options = new RowDefinition();
@@ -1113,8 +1117,8 @@ namespace Project_127.MySettings
                 Grid_Settings_GTA.RowDefinitions.Add(Row_SCL_Options);
                 Grid_Settings_GTA.RowDefinitions.Add(Row_DragonEmu_Options);
 
-                Grid.SetRow(brdr_SCLOptions, 6);
-                Grid.SetRow(brdr_DragonEmuOptions, 7);
+                Grid.SetRow(brdr_SCLOptions, 8);
+                Grid.SetRow(brdr_DragonEmuOptions, 9);
 
                 btn_HideSCLOptions.Visibility = Visibility.Hidden;
                 btn_HideEmuOptions.Visibility = Visibility.Visible;
@@ -1133,8 +1137,8 @@ namespace Project_127.MySettings
                 Grid_Settings_GTA.RowDefinitions.Add(Row_DragonEmu_Options);
                 Grid_Settings_GTA.RowDefinitions.Add(Row_SCL_Options);
 
-                Grid.SetRow(brdr_DragonEmuOptions, 6);
-                Grid.SetRow(brdr_SCLOptions, 7);
+                Grid.SetRow(brdr_DragonEmuOptions, 8);
+                Grid.SetRow(brdr_SCLOptions, 9);
 
                 btn_HideSCLOptions.Visibility = Visibility.Visible;
                 btn_HideEmuOptions.Visibility = Visibility.Hidden;
@@ -1176,14 +1180,14 @@ namespace Project_127.MySettings
                 Rect_HideOptions_CommandLineArg.Visibility = Visibility.Hidden;
                 Rect_HideOptions_AutoCoreFix.Visibility = Visibility.Visible;
                 Rect_HideOptions_Language.Visibility = Visibility.Visible;
-                Rect_HideOptions_StutterFix.Visibility = Visibility.Visible;
+                Rect_HideOptions_Fixes.Visibility = Visibility.Visible;
             }
             else
             {
                 Rect_HideOptions_CommandLineArg.Visibility = Visibility.Visible;
                 Rect_HideOptions_AutoCoreFix.Visibility = Visibility.Hidden;
                 Rect_HideOptions_Language.Visibility = Visibility.Hidden;
-                Rect_HideOptions_StutterFix.Visibility = Visibility.Hidden;
+                Rect_HideOptions_Fixes.Visibility = Visibility.Hidden;
             }
 
             if (Retailer == Retailers.Epic)
@@ -1358,6 +1362,12 @@ namespace Project_127.MySettings
                     break;
                 case "btn_cb_Set_EnableStutterFix":
                     Settings.EnableStutterFix = !Settings.EnableStutterFix;
+                    break;
+                case "btn_cb_Set_EnableAudioFix":
+                    Settings.EnableAudioFix = !Settings.EnableAudioFix;
+                    break;
+                case "btn_cb_Set_EnableCrashFix":
+                    Settings.EnableCrashFix = !Settings.EnableCrashFix;
                     break;
                 case "btn_cb_Set_AutoSetHighPriority":
                     Settings.EnableAutoSetHighPriority = !Settings.EnableAutoSetHighPriority;

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <targets>
-    <subassembly name="AM_127_STEAM" root="DowngradeFiles_Alternative\steam\127\" version="0.6.0.0">
+    <subassembly name="AM_127_STEAM" root="DowngradeFiles_Alternative\steam\127\" version="0.7.0.0">
 		<!-- renamed GTAVLauncher to PlayGTAV for steam double click to work-->
         <file name="PlayGTAV.exe">
             <hash>e4a18838c8d37a9f83286f90940fa17b</hash>
@@ -36,7 +36,7 @@
         </requires>
     </subassembly>
 
-    <subassembly name="AM_124_STEAM" root="DowngradeFiles_Alternative\steam\124\" version="0.6.0.0">
+    <subassembly name="AM_124_STEAM" root="DowngradeFiles_Alternative\steam\124\" version="0.7.0.0">
 		<!-- renamed GTAVLauncher to PlayGTAV for steam double click to work-->
 		<file name="PlayGTAV.exe">
 			<hash>17aa3de5a863e630e986a3b174a8d058</hash>
@@ -72,7 +72,7 @@
         </requires>
     </subassembly>
 
-    <subassembly name="AM_127_ROCKSTAR" root="DowngradeFiles_Alternative\rockstar\127\" version="0.6.0.0">
+    <subassembly name="AM_127_ROCKSTAR" root="DowngradeFiles_Alternative\rockstar\127\" version="0.7.0.0">
 		<file name="GTAVLauncher.exe">
             <hash>251a3dd8ac04e42a4645b279676d99b2</hash>
             <mirror>http://gtav.anushk.net/downloadManager/subassemblies/scl_beta_9/rockstar127/GTAVLauncher.exe</mirror>
@@ -98,7 +98,7 @@
     </subassembly>
 
 
-    <subassembly name="AM_124_ROCKSTAR" root="DowngradeFiles_Alternative\rockstar\124\" version="0.6.0.0">
+    <subassembly name="AM_124_ROCKSTAR" root="DowngradeFiles_Alternative\rockstar\124\" version="0.7.0.0">
         <file name="GTAVLauncher.exe">
             <hash>56e46291e306b97ca5a00db54925998b</hash>
             <mirror>http://gtav.anushk.net/downloadManager/subassemblies/scl_beta_9/rockstar124/GTAVLauncher.exe</mirror>
@@ -123,14 +123,14 @@
         </requires>
     </subassembly>
 
-    <subassembly name="AM_BASE_SUBASSEMBLY"  type="common" version="0.6.0.0">
+    <subassembly name="AM_BASE_SUBASSEMBLY"  type="common" version="0.7.0.0">
 		<file name="bink2w64.dll">
-			<hash>84165fb1c8f8cce6353451124edb362e</hash>
-			<mirror>http://gtav.anushk.net/downloadManager/subassemblies/scl_beta_9/bink2w64.dll</mirror>
+			<hash>857887a45dc256bc0720275df1df9eef</hash>
+			<mirror>http://gtav.anushk.net/downloadManager/subassemblies/scl_beta_10/bink2w64.dll</mirror>
 		</file>
 		<file name="SCLCustom.dll">
-			<hash>e96d7320c98da628f277617dac281e32</hash>
-			<mirror>http://gtav.anushk.net/downloadManager/subassemblies/scl_beta_9/SCLCustom.dll</mirror>
+			<hash>2189214a9e9d191ef4b079c69e530bda</hash>
+			<mirror>http://gtav.anushk.net/downloadManager/subassemblies/scl_beta_10/SCLCustom.dll</mirror>
 		</file>
 		
         <requires>
@@ -165,7 +165,7 @@
         <mirror>http://gtav.anushk.net/downloadManager/subassemblies/Downgraded_Socialclub.zip</mirror>
     </subassembly>
 
-    <subassembly name="STANDARD_BASE" root="DowngradeFiles\" version="1.19.0.0">
+    <subassembly name="STANDARD_BASE" root="DowngradeFiles\" version="1.20.0.0">
         <file name="PlayGTAV.exe" linked="true" subassembly="EMU_BASE_SUBASSEMBLY"/>
         <file name="launc.dll" linked="true" subassembly="EMU_BASE_SUBASSEMBLY"/>
         <file name="orig_socialclub.dll" linked="true" subassembly="EMU_BASE_SUBASSEMBLY"/>
@@ -192,7 +192,7 @@
         </requires>
     </subassembly>
 
-	<subassembly name="124_DR490N" root="DowngradeFiles124\" version="1.19.0.0">
+	<subassembly name="124_DR490N" root="DowngradeFiles124\" version="1.20.0.0">
 		<file name="PlayGTAV.exe" linked="true" subassembly="EMU_BASE_SUBASSEMBLY"/>
 		<file name="launc.dll" linked="true" subassembly="EMU_BASE_SUBASSEMBLY"/>
 		<file name="orig_socialclub.dll" linked="true" subassembly="EMU_BASE_SUBASSEMBLY"/>
@@ -219,7 +219,7 @@
 	</subassembly>
     
 
-    <subassembly name="EMU_BASE_SUBASSEMBLY" type="common" version ="1.19.0.0">
+    <subassembly name="EMU_BASE_SUBASSEMBLY" type="common" version ="1.20.0.0">
         <file name="PlayGTAV.exe">
             <hash>5F4F8AE07CC5EED5204583B99E9889C0</hash>
             <mirror>http://gtav.anushk.net/downloadManager/subassemblies/emuv16_complete/PlayGTAV.exe</mirror>
@@ -249,8 +249,8 @@
             <mirror>http://gtav.anushk.net/downloadManager/subassemblies/emuv16_complete/bink2w64.dll</mirror>
         </file>-->
 		<file name="bink2w64.dll">
-            <hash>f5ad65ea41759190dc0f97c1ba813d4a</hash>
-            <mirror>http://gtav.anushk.net/downloadManager/subassemblies/emu_stutterfix_v4/bink2w64.dll</mirror>
+            <hash>3c73fbf789bf1ed34e4246940eb4d8f4</hash>
+            <mirror>http://gtav.anushk.net/downloadManager/subassemblies/emu_stutterfix_v5_allfixes/bink2w64.dll</mirror>
         </file>
     </subassembly>
 

@@ -236,7 +236,7 @@ namespace Project_127
         /// <summary>
         /// Property of other Buildinfo. Will be in the top message of logs
         /// </summary>
-        public static string BuildInfo = "1.4.0.0 - RC 3";
+        public static string BuildInfo = "1.4.1.0 - RC 1";
 
 
         /// <summary>
@@ -393,7 +393,9 @@ namespace Project_127
             {"EnableCoreFix", "True"},
             {"EnableRunAsAdminDowngraded", "False"},
             {"OverWriteGTACommandLineArgs", ""},
-            {"EnableStutterFix", "False"},
+            {"EnableStutterFix", "True"},
+            {"EnableAudioFix", "True"},
+            {"EnableCrashFix", "True"},
    
 			// Extra Features
 			{"EnableOverlay", "False"},
@@ -566,7 +568,7 @@ namespace Project_127
                     FileHandling.deleteFile(LauncherLogic.UpgradeFilePath.TrimEnd('\\') + @"\Readme.txt");
                     FileHandling.deleteFile(LauncherLogic.UpgradeFilePath.TrimEnd('\\') + @"\socialclub.dll");
                     FileHandling.deleteFile(LauncherLogic.UpgradeFilePath.TrimEnd('\\') + @"\tinyxml2.dll");
-                    
+
                     Globals.SetUpDownloadManager(false).GetAwaiter().GetResult();
                     ComponentManager.ZIPVersionSwitcheroo();
 
@@ -749,13 +751,13 @@ namespace Project_127
                         installedSubassemblies = json.Deserialize<Dictionary<string, HelperClasses.DownloadManager.subassemblyInfo>>(tmp);
                         foreach (var mykey in installedSubassemblies.Keys)
                         {
-                            for (int i = 0; i <= installedSubassemblies[mykey].files.Count -1; i++)
+                            for (int i = 0; i <= installedSubassemblies[mykey].files.Count - 1; i++)
                             {
                                 List<string> PathsBackup = new List<string>(installedSubassemblies[mykey].files[i].paths);
                                 installedSubassemblies[mykey].files[i].paths.Clear();
-                                foreach (string mypath in  PathsBackup)
+                                foreach (string mypath in PathsBackup)
                                 {
-                                    if(!installedSubassemblies[mykey].files[i].paths.Contains(mypath))
+                                    if (!installedSubassemblies[mykey].files[i].paths.Contains(mypath))
                                     {
                                         installedSubassemblies[mykey].files[i].paths.Add(mypath);
                                     }
@@ -764,7 +766,19 @@ namespace Project_127
                         }
                         HelperClasses.RegeditHandler.SetValue("DownloadManagerInstalledSubassemblies", json.Serialize(installedSubassemblies));
                     }
-                    catch {}
+                    catch { }
+                }
+
+                // Remove Stutterfix from overwrite command line args, since its now used the other way around ("-NoStutterFix" or nothing)
+                if (Settings.LastLaunchedVersion < new Version("1.4.1.0"))
+                {
+                    if (!String.IsNullOrWhiteSpace(Settings.OverWriteGTACommandLineArgs))
+                    {
+                        if (Settings.OverWriteGTACommandLineArgs.Contains(" -StutterFix"))
+                        {
+                            Settings.OverWriteGTACommandLineArgs = Settings.OverWriteGTACommandLineArgs.Replace(" -StutterFix", "");
+                        }
+                    }
                 }
 
                 Settings.LastLaunchedVersion = Globals.ProjectVersion;
