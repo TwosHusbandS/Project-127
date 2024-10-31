@@ -91,7 +91,7 @@ Over time it grew with Features and Launch - Capabilities
 
 Note:
 
-Project 1.27 now has the stability, user experience and core features we envisioned at the start of this project. While @dr490n and me (@thS / TwosHusbandS) both have ideas for potentially improvements and we may get around to working on them at some point, Project 1.27 is not under active development as of this very second (June 2024). Big bugfixes etc. will still happen if needed, but we are making no promises either way. We want to thank everyone who has been a part of this incredible journey.
+Project 1.27 now has the stability, user experience and core features we envisioned at the start of this project. While @dr490n, @Special For and me (@thS / TwosHusbandS) both have ideas for potentially improvements and we may get around to working on them at some point, Project 1.27 is not under active development as of this very second (November 2024). Big bugfixes etc. will still happen if needed, but we are making no promises either way. We want to thank everyone who has been a part of this incredible journey.
 
 ### Help, How to get started, Support & Contact
 
@@ -220,7 +220,7 @@ Discord - [@ths_was_taken][discord-url]
 [help-url]: https://github.com/TwosHusbandS/Project-127/blob/master/Installer/Info/Help.md
 [p127-url]: https://github.com/TwosHusbandS/Project-127/
 [twitter-shield]: https://img.shields.io/badge/Twitter-@thSbizz-1DA1F2?style=plastic&logo=Twitter
-[discord-shield]: https://img.shields.io/badge/Discord-@thS%230305-7289DA?style=plastic&logo=Discord
+[discord-shield]: https://img.shields.io/badge/Discord-@ths__was__taken-7289DA?style=plastic&logo=Discord
 [changelogs-url]: https://github.com/TwosHusbandS/Project-127/tree/master/Installer/Info/Changelogs
 [installer-folder-url]: https://github.com/TwosHusbandS/Project-127/tree/master/Installer
 [installer-latest-url]: https://github.com/TwosHusbandS/Project-127/raw/master/Installer/Project_127_Installer_Latest.exe
