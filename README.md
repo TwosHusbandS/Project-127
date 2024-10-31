@@ -51,7 +51,7 @@ Shamelessly stolen from: https://github.com/othneildrew/Best-README-Template
 	.
     <a href="#contact">Contact me</a>
 	.
-	  <a href="Installer/Info/Changelogs/V_1_4_0_0_Changelog.md">Changelog</a>
+	  <a href="Installer/Info/Changelogs/V_1_4_1_0_Changelog.md">Changelog</a>
   </p>
 </p>
 
@@ -188,6 +188,7 @@ Distributed under the MIT License. See `LICENSE` for more information.
 * Special shoutouts to @dr490n, who was responsible for getting the downgraded game to launch, adding patches against in-game triggers, writing the Overlay Backend, writing the Download Manager Backend, Writing the Launch-Through-Socialclub launch process, Authentication backend, decryption and managed to get the preorder entitlement to work.
 * Special shoutouts to @special for, for being there during the whole development phase, providing valuable insight, being available to bounce ideas off of, being available for brainstorming, and providing valuable help in regards to reverse engineering the GTA V Launch Process. We could not have done this without you.
 * Also thanks to @special for, for implementing the ability to downgrade GTA to Version 1.24 via the DragonEmu into P127 by figuring out how P127 GUI and backend logic works and how my component manager and dr490ns download manager handles things.
+* Also thanks to @special for, for reverse-engineering and implementing StutterFix, AudioFix, CrashFix for both DragonEmu and SocialClubLaunch, on 1.24 and 1.27 and all retailers.
 * Shoutout to FiveM and Goldberg, whose Source Code proved to be vital to understand and reverse engineer the GTA V Launch Process
 * Shoutout to @Fro for providing Hosting to the Files needed for Project 1.27. Youre an absolute legend
 * Shoutout to @yoshi for providing the Information which Build Version corresponds with which Game Version
@@ -227,7 +228,7 @@ Discord - [@ths_was_taken][discord-url]
 [license-url]: https://github.com/TwosHusbandS/Project-127/blob/master/LICENSE
 [maintained-shield]: https://img.shields.io/badge/Maintained-No-FFDB3A?style=plastic
 [maintained-url]: #about-the-project
-[version-shield]: https://img.shields.io/badge/Version-1.4.0.0_Installer-4DC71F?style=plastic
+[version-shield]: https://img.shields.io/badge/Version-1.4.1.0_Installer-4DC71F?style=plastic
 [help-shield]: https://img.shields.io/badge/Help-Here-F48041?style=plastic
 [features-shield]: https://img.shields.io/badge/Features-Click_Me-802BCF?style=plastic
 
