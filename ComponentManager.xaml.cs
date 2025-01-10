@@ -300,7 +300,7 @@ namespace Project_127
         {
             if (MyDirtyProgramming != null)
             {
-                MyDirtyProgramming.MyRefresh(false,false);
+                MyDirtyProgramming.MyRefresh(false, false);
             }
         }
 
@@ -521,51 +521,57 @@ namespace Project_127
 
         private async void MyRefresh(bool CheckForUpdatesPls = false, bool ReInitDownloadManager = true)
         {
-            ResetAllStatus();
+            MainWindow.MW.Dispatcher.Invoke((Action)delegate
+            {
+                ResetAllStatus();
 
-            Border_Loading.Visibility = Visibility.Visible;
+                Border_Loading.Visibility = Visibility.Visible;
+            });
 
             if (ReInitDownloadManager)
+                {
+                    await Globals.SetUpDownloadManager(false);
+                }
+
+                if (CheckForUpdatesPls)
+                {
+                    CheckForUpdates();
+                }
+
+            MainWindow.MW.Dispatcher.Invoke((Action)delegate
             {
-                await Globals.SetUpDownloadManager(false);
-            }
+                Components.Base.UpdateStatus(lbl_FilesMain_Status);
+                Components.Base124.UpdateStatus(lbl_FilesBase124_Status);
+                Components.SCLRockstar124.UpdateStatus(lbl_FilesSCLRockstar124_Status);
+                Components.SCLRockstar127.UpdateStatus(lbl_FilesSCLRockstar127_Status);
+                Components.SCLSteam124.UpdateStatus(lbl_FilesSCLSteam124_Status);
+                Components.SCLSteam127.UpdateStatus(lbl_FilesSCLSteam127_Status);
+                Components.DowngradedSC.UpdateStatus(lbl_FilesSCLDowngradedSC_Status);
+                Components.AdditionalSaveFiles.UpdateStatus(lbl_FilesAdditionalSF_Status);
 
-            if (CheckForUpdatesPls)
-            {
-                CheckForUpdates();
-            }
-
-            Components.Base.UpdateStatus(lbl_FilesMain_Status);
-            Components.Base124.UpdateStatus(lbl_FilesBase124_Status);
-            Components.SCLRockstar124.UpdateStatus(lbl_FilesSCLRockstar124_Status);
-            Components.SCLRockstar127.UpdateStatus(lbl_FilesSCLRockstar127_Status);
-            Components.SCLSteam124.UpdateStatus(lbl_FilesSCLSteam124_Status);
-            Components.SCLSteam127.UpdateStatus(lbl_FilesSCLSteam127_Status);
-            Components.DowngradedSC.UpdateStatus(lbl_FilesSCLDowngradedSC_Status);
-            Components.AdditionalSaveFiles.UpdateStatus(lbl_FilesAdditionalSF_Status);
-
-            btn_lbl_FilesMain_Name.ToolTip = Components.Base.GetToolTip();
-            lbl_FilesBase124_Name.ToolTip = Components.Base124.GetToolTip();
-            lbl_FilesSCLRockstar124_Name.ToolTip = Components.SCLRockstar124.GetToolTip();
-            lbl_FilesSCLRockstar127_Name.ToolTip = Components.SCLRockstar127.GetToolTip();
-            lbl_FilesSCLSteam124_Name.ToolTip = Components.SCLSteam124.GetToolTip();
-            lbl_FilesSCLSteam127_Name.ToolTip = Components.SCLSteam127.GetToolTip();
-            lbl_FilesSCLDowngradedSC_Name.ToolTip = Components.DowngradedSC.GetToolTip();
-            lbl_FilesAdditionalSF_Name.ToolTip = Components.AdditionalSaveFiles.GetToolTip();
+                btn_lbl_FilesMain_Name.ToolTip = Components.Base.GetToolTip();
+                lbl_FilesBase124_Name.ToolTip = Components.Base124.GetToolTip();
+                lbl_FilesSCLRockstar124_Name.ToolTip = Components.SCLRockstar124.GetToolTip();
+                lbl_FilesSCLRockstar127_Name.ToolTip = Components.SCLRockstar127.GetToolTip();
+                lbl_FilesSCLSteam124_Name.ToolTip = Components.SCLSteam124.GetToolTip();
+                lbl_FilesSCLSteam127_Name.ToolTip = Components.SCLSteam127.GetToolTip();
+                lbl_FilesSCLDowngradedSC_Name.ToolTip = Components.DowngradedSC.GetToolTip();
+                lbl_FilesAdditionalSF_Name.ToolTip = Components.AdditionalSaveFiles.GetToolTip();
 
 
 
-            Version tmp = Components.Base.GetInstalledVersion();
-            if (tmp != new Version("0.0.0.0"))
-            {
-                btn_lbl_FilesMain_Name.Content = "Required Files (v." + tmp.Minor + ")";
-            }
-            else
-            {
-                btn_lbl_FilesMain_Name.Content = "Required Files";
-            }
+                Version tmp = Components.Base.GetInstalledVersion();
+                if (tmp != new Version("0.0.0.0"))
+                {
+                    btn_lbl_FilesMain_Name.Content = "Required Files (v." + tmp.Minor + ")";
+                }
+                else
+                {
+                    btn_lbl_FilesMain_Name.Content = "Required Files";
+                }
 
-            Border_Loading.Visibility = Visibility.Hidden;
+                Border_Loading.Visibility = Visibility.Hidden;
+            });
         }
 
         private void btn_lbl_Component_Name_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
