@@ -186,13 +186,13 @@
                             <Label Grid.Row="2" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Run downgraded GTA as Admin" ToolTip="Runs downgraded GTA as Admin. You will also need to launch Livesplit, OBS etc. as Admin."/>
                             <Button Grid.Row="2" Grid.Column="1" x:Name="btn_cb_Set_EnableRunAsAdmin"  Style="{StaticResource btn_cb}" Click="btn_cb_Click" MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave" ToolTip="Runs downgraded GTA as Admin. You will also need to launch Livesplit, OBS etc. as Admin."/>
 
-                            <Label Grid.Row="3" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Enable Stutter Fix on downgraded GTA"/>
+                            <Label Grid.Row="3" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Enable Game Stutter Fix on downgraded GTA"/>
                             <Button Grid.Row="3" Grid.Column="1" x:Name="btn_cb_Set_EnableStutterFix"  Style="{StaticResource btn_cb}" Click="btn_cb_Click" MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
 
-                            <Label Grid.Row="4" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Enable Audio Fix on downgraded GTA"/>
+                            <Label Grid.Row="4" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Enable Audio Bug Fix on downgraded GTA"/>
                             <Button Grid.Row="4" Grid.Column="1" x:Name="btn_cb_Set_EnableAudioFix"  Style="{StaticResource btn_cb}" Click="btn_cb_Click" MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
                             
-                            <Label Grid.Row="5" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Enable Crash Fix on downgraded GTA"/>
+                            <Label Grid.Row="5" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Enable Uptime Crash Fix on downgraded GTA"/>
                             <Button Grid.Row="5" Grid.Column="1" x:Name="btn_cb_Set_EnableCrashFix"  Style="{StaticResource btn_cb}" Click="btn_cb_Click" MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
                             
                             <Rectangle x:Name="Rect_HideOptions_Fixes" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="3" Fill="{x:Static local:MyColors.MyColorOffWhite85}" ToolTip="Disabled due to custom Command Line Args."/>
