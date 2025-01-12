@@ -272,8 +272,14 @@ namespace Project_127.HelperClasses
                             // If Pathnames hit
                             if (Processes[i].GetMainModuleFileName().ToLower().Contains(Pathname.ToLower()))
                             {
-                                rtrn.Add(Processes[i]);
-                                break;
+                                // only add if its NOT our P127 Path...
+                                // otherwise, if user has P127 installed in gta directory
+                                // our own cefsharp subprocess will be detected as social club subprocess
+                                if (!Processes[i].GetMainModuleFileName().ToLower().Contains(Globals.ProjectInstallationPath.ToLower()))
+                                {
+                                    rtrn.Add(Processes[i]);
+                                    break;
+                                }
                             }
                         }
                         break;
