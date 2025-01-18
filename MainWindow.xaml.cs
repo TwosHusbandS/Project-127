@@ -393,12 +393,21 @@ namespace Project_127
                 {
                     string[] args = Environment.GetCommandLineArgs();
                     string arg = string.Join(" ", args.Skip(1).ToArray());
-                    HelperClasses.ProcessHandler.StartProcess(Assembly.GetEntryAssembly().Location, Environment.CurrentDirectory, arg, true, true);
+
+                    Process proc = new Process();
+                    proc.StartInfo.FileName = Assembly.GetExecutingAssembly().Location;
+                    proc.StartInfo.Arguments = arg;
+                    proc.StartInfo.WorkingDirectory = Environment.CurrentDirectory;
+                    proc.StartInfo.Verb = "runas";
+                    proc.StartInfo.UseShellExecute = true;
+                    proc.Start();
+                    Task.Delay(500).GetAwaiter().GetResult();
                     Environment.Exit(0);
                 }
                 catch (Exception)
                 {
                     System.Windows.Forms.MessageBox.Show("This program must be run as an administrator!");
+                    Environment.Exit(0);
                 }
             }
         }
