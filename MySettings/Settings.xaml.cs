@@ -778,6 +778,7 @@ namespace Project_127.MySettings
 
             ButtonMouseOverMagic(btn_Refresh);
             ButtonMouseOverMagic(btn_cb_Set_EnableLogging);
+            ButtonMouseOverMagic(btn_cb_Set_EnableWineCompability);
             ButtonMouseOverMagic(btn_cb_Set_CopyFilesInsteadOfHardlinking);
             ButtonMouseOverMagic(btn_cb_Set_EnableAlternativeLaunchForceCProgramFiles);
             ButtonMouseOverMagic(btn_cb_Set_EnableJumpscriptUseCustomScript);
@@ -1019,6 +1020,9 @@ namespace Project_127.MySettings
                 case "btn_cb_Set_EnableLogging":
                     SetCheckBoxBackground(myBtn, Settings.EnableLogging);
                     break;
+                case "btn_cb_Set_EnableWineCompability":
+                    SetCheckBoxBackground(myBtn, Settings.EnableWineCompability);
+                    break;
                 case "btn_cb_Set_SlowCompare":
                     SetCheckBoxBackground(myBtn, Settings.EnableSlowCompare);
                     break;
@@ -1190,6 +1194,11 @@ namespace Project_127.MySettings
                 Rect_HideOptions_Fixes.Visibility = Visibility.Hidden;
             }
 
+            if (Settings.EnableWineCompability)
+            {
+                Rect_HideOptions_AutoCoreFix.Visibility = Visibility.Visible;
+            }
+
             if (Retailer == Retailers.Epic)
             {
                 Rect_HideOptions_SCL_Launch.Visibility = Visibility.Visible;
@@ -1310,6 +1319,9 @@ namespace Project_127.MySettings
             {
                 case "btn_cb_Set_EnableLogging":
                     Settings.EnableLogging = !Settings.EnableLogging;
+                    break;
+                case "btn_cb_Set_EnableWineCompability":
+                    Settings.EnableWineCompability = !Settings.EnableWineCompability;
                     break;
                 case "btn_cb_Set_SlowCompare":
                     Settings.EnableSlowCompare = !Settings.EnableSlowCompare;

@@ -371,6 +371,7 @@ namespace Project_127
             {"AutoMTLAuthOnStartup", "True"},
             {"PostMTLAction", "MinimizeRGL"},
             {"EnableSlowCompare", "False"},
+            {"EnableWineCompability", "False"},
             {"EnableLegacyAuth", "False"},
             {"GTAWindowTitle", "Grand Theft Auto V"},
             {"Version", "127"},

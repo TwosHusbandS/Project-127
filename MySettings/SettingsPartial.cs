@@ -1199,6 +1199,21 @@ namespace Project_127.MySettings
         }
 
         /// <summary>
+        /// Settings EnableWineCompability. Gets and Sets from the Dictionary.
+        /// </summary>
+        public static bool EnableWineCompability
+        {
+            get
+            {
+                return GetBoolFromString(GetSetting("EnableWineCompability"));
+            }
+            set
+            {
+                SetSetting("EnableWineCompability", value.ToString());
+            }
+        }
+
+        /// <summary>
         /// Settings EnableAutoStartJumpScript. Gets and Sets from the Dictionary.
         /// </summary>
         public static bool EnableAutoStartJumpScript

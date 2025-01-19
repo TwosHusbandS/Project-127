@@ -54,6 +54,7 @@
                                 <RowDefinition Height="40"/>
                                 <RowDefinition Height="40"/>
                                 <RowDefinition Height="40"/>
+                                <RowDefinition Height="40"/>
 
                             </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
@@ -77,28 +78,32 @@
                             <Rectangle Grid.Row="11" Grid.Column="0" Grid.ColumnSpan="4" Fill="{x:Static local:MyColors.SE_AlternateRowBackground}"/>
                             <Rectangle Grid.Row="12" Grid.Column="0" Grid.ColumnSpan="4" Fill="Transparent"/>
                             <Rectangle Grid.Row="13" Grid.Column="0" Grid.ColumnSpan="4" Fill="{x:Static local:MyColors.SE_AlternateRowBackground}"/>
+                            <Rectangle Grid.Row="14" Grid.Column="0" Grid.ColumnSpan="4" Fill="Transparent"/>
 
                             <Button Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4" Style="{StaticResource btn_SE_Path}" x:Name="btn_Set_GTAVInstallationPath" Click="btn_Path_Click" MouseRightButtonDown="btn_Path_RightClick"/>
 
                             <Button Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="4" Style="{StaticResource btn_SE_Path}" x:Name="btn_Set_ZIPExtractionPath" Click="btn_Path_Click" MouseRightButtonDown="btn_Path_RightClick"/>
 
-                            <Label Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" Style="{StaticResource lbl_Set_Info}" Content="Enable Logging for Project 1.27"/>
+                            <Label Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" Style="{StaticResource lbl_Set_Info}" Content="Enable Logging for Project 1.27"  ToolTip="Starts GTA in a more stable way, ignores core affinity settings"/>
                             <Button Grid.Row="2" Grid.Column="3" x:Name="btn_cb_Set_EnableLogging" Style="{StaticResource btn_cb}" Click="btn_cb_Click"  MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
 
-                            <Label Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3"  Style="{StaticResource lbl_Set_Info}" Content="Slow, but stable method for Downgrading / Upgrading"/>
-                            <Button Grid.Row="3" Grid.Column="3" x:Name="btn_cb_Set_CopyFilesInsteadOfHardlinking" Style="{StaticResource btn_cb}" Click="btn_cb_Click"  MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
+                            <Label Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3" Style="{StaticResource lbl_Set_Info}" Content="Enable Wine Compability Mode"  ToolTip="Starts GTA in a more stable way, ignores core affinity settings"/>
+                            <Button Grid.Row="3" Grid.Column="3" x:Name="btn_cb_Set_EnableWineCompability" Style="{StaticResource btn_cb}" Click="btn_cb_Click"  MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
 
-                            <Label Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3"  Style="{StaticResource lbl_Set_Info}" Content="Slow, but stable method for comparing Files"/>
-                            <Button Grid.Row="4" Grid.Column="3" x:Name="btn_cb_Set_SlowCompare" Style="{StaticResource btn_cb}" Click="btn_cb_Click"  MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
+                            <Label Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3"  Style="{StaticResource lbl_Set_Info}" Content="Slow, but stable method for Downgrading / Upgrading"/>
+                            <Button Grid.Row="4" Grid.Column="3" x:Name="btn_cb_Set_CopyFilesInsteadOfHardlinking" Style="{StaticResource btn_cb}" Click="btn_cb_Click"  MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
 
-                            <Label Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="3"  Style="{StaticResource lbl_Set_Info}" Content="Start P127: "/>
-                            <ComboBox Grid.Row="5" Grid.Column="3" Margin="10,5" Style="{StaticResource cobo}" x:Name="combox_Set_StartWays" SelectionChanged="combox_Set_StartWays_SelectionChanged"/>
+                            <Label Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="3"  Style="{StaticResource lbl_Set_Info}" Content="Slow, but stable method for comparing Files"/>
+                            <Button Grid.Row="5" Grid.Column="3" x:Name="btn_cb_Set_SlowCompare" Style="{StaticResource btn_cb}" Click="btn_cb_Click"  MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
 
-                            <Label Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="3"  Style="{StaticResource lbl_Set_Info}" Content="Exit Action: "/>
-                            <ComboBox Grid.Row="6" Grid.Column="3" Margin="10,5" Style="{StaticResource cobo}" x:Name="combox_Set_ExitWays" SelectionChanged="combox_Set_ExitWays_SelectionChanged"/>
+                            <Label Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="3"  Style="{StaticResource lbl_Set_Info}" Content="Start P127: "/>
+                            <ComboBox Grid.Row="6" Grid.Column="3" Margin="10,5" Style="{StaticResource cobo}" x:Name="combox_Set_StartWays" SelectionChanged="combox_Set_StartWays_SelectionChanged"/>
+
+                            <Label Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="3"  Style="{StaticResource lbl_Set_Info}" Content="Exit Action: "/>
+                            <ComboBox Grid.Row="7" Grid.Column="3" Margin="10,5" Style="{StaticResource cobo}" x:Name="combox_Set_ExitWays" SelectionChanged="combox_Set_ExitWays_SelectionChanged"/>
 
 
-                            <Button Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource btn_SE_Path}" x:Name="btn_CreateBackup" Click="btn_CreateBackup_Click" MouseRightButtonDown="btn_CreateBackup_MouseRightButtonDown" Content="Create Backup Files for Upgrading"/>
+                            <Button Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource btn_SE_Path}" x:Name="btn_CreateBackup" Click="btn_CreateBackup_Click" MouseRightButtonDown="btn_CreateBackup_MouseRightButtonDown" Content="Create Backup Files for Upgrading"/>
                             <Popup x:Name="PopupCreateBackup"  PlacementTarget="{Binding ElementName=btn_CreateBackup}" Placement="MousePoint" Width="200" Height="140"  Margin="0,0,0,0" StaysOpen="False" Closed="PopupCreateBackup_Closed" Opened="PopupCreateBackup_Opened">
                                 <Border BorderBrush="{x:Static local:MyColors.MyColorWhite}" BorderThickness="2" Background="{x:Static local:MyColors.MyColorOffBlack}" MouseLeave="Border_MouseLeave">
                                     <Grid>
@@ -114,7 +119,7 @@
                                 </Border>
                             </Popup>
 
-                            <Button Grid.Row="7" Grid.Column="2" Grid.ColumnSpan="2" Style="{StaticResource btn_SE_Path}" x:Name="btn_UseBackup" Click="btn_UseBackup_Click" MouseRightButtonDown="btn_UseBackup_MouseRightButtonDown" Content="Use Backup Files for Upgrading"/>
+                            <Button Grid.Row="8" Grid.Column="2" Grid.ColumnSpan="2" Style="{StaticResource btn_SE_Path}" x:Name="btn_UseBackup" Click="btn_UseBackup_Click" MouseRightButtonDown="btn_UseBackup_MouseRightButtonDown" Content="Use Backup Files for Upgrading"/>
                             <Popup x:Name="PopupUseBackup"  PlacementTarget="{Binding ElementName=btn_UseBackup}" Placement="MousePoint" Width="200" Height="140"  Margin="0,0,0,0" StaysOpen="False" Closed="PopupUseBackup_Closed" Opened="PopupUseBackup_Opened">
                                 <Border BorderBrush="{x:Static local:MyColors.MyColorWhite}" BorderThickness="2" Background="{x:Static local:MyColors.MyColorOffBlack}" MouseLeave="Border_MouseLeave">
                                     <Grid>
@@ -130,17 +135,17 @@
                                 </Border>
                             </Popup>
 
-                            <Button Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="4" Style="{StaticResource btn_SE_Path}" x:Name="btn_RepairGTA" ToolTip="'Repairs' your GTA V Installation. Clears everything." Click="btn_RepairGTA_Click" Content="Repair GTA V Installation"/>
+                            <Button Grid.Row="9" Grid.Column="0" Grid.ColumnSpan="4" Style="{StaticResource btn_SE_Path}" x:Name="btn_RepairGTA" ToolTip="'Repairs' your GTA V Installation. Clears everything." Click="btn_RepairGTA_Click" Content="Repair GTA V Installation"/>
 
-                            <Button Grid.Row="9" Grid.Column="0" Grid.ColumnSpan="4" Style="{StaticResource btn_SE_Path}" x:Name="btn_AntivirusFix" ToolTip="Exclude P127 Folders from Windows Defender / AntiVirus" Click="btn_AntivirusFix_Click" Content="Exclude P127 Folders from Windows Defender / AntiVirus"/>
+                            <Button Grid.Row="10" Grid.Column="0" Grid.ColumnSpan="4" Style="{StaticResource btn_SE_Path}" x:Name="btn_AntivirusFix" ToolTip="Exclude P127 Folders from Windows Defender / AntiVirus" Click="btn_AntivirusFix_Click" Content="Exclude P127 Folders from Windows Defender / AntiVirus"/>
 
-                            <Button Grid.Row="10" Grid.Column="0" Grid.ColumnSpan="4" Style="{StaticResource btn_SE_Path}" x:Name="btn_Import_Zip" ToolTip="Import a P127 ZIP File manually. Rightclick to paste a DirectDownloadLink, Leftclick to select a File." Click="btn_Import_Zip_Click" Content="Click Me!"/>
+                            <Button Grid.Row="11" Grid.Column="0" Grid.ColumnSpan="4" Style="{StaticResource btn_SE_Path}" x:Name="btn_Import_Zip" ToolTip="Import a P127 ZIP File manually. Rightclick to paste a DirectDownloadLink, Leftclick to select a File." Click="btn_Import_Zip_Click" Content="Click Me!"/>
                             
-                            <Button Grid.Row="11" Grid.Column="0" Grid.ColumnSpan="4" Style="{StaticResource btn_SE_Path}" x:Name="btn_CheckForUpdate" Click="btn_CheckForUpdate_Click" MouseRightButtonDown="btn_CheckForUpdate_MouseRightButtonDown" Content="Check for Update"/>
+                            <Button Grid.Row="12" Grid.Column="0" Grid.ColumnSpan="4" Style="{StaticResource btn_SE_Path}" x:Name="btn_CheckForUpdate" Click="btn_CheckForUpdate_Click" MouseRightButtonDown="btn_CheckForUpdate_MouseRightButtonDown" Content="Check for Update"/>
 
-                            <Button Grid.Row="12" Grid.Column="0" Grid.ColumnSpan="4" Style="{StaticResource btn_SE_Path}" x:Name="btn_Reset" Click="btn_Reset_Click" ToolTip="Resets all P127 Settings by deleting our RegistryKey." Content="Reset P127 Settings to Default"/>
+                            <Button Grid.Row="13" Grid.Column="0" Grid.ColumnSpan="4" Style="{StaticResource btn_SE_Path}" x:Name="btn_Reset" Click="btn_Reset_Click" ToolTip="Resets all P127 Settings by deleting our RegistryKey." Content="Reset P127 Settings to Default"/>
 
-                            <Button Grid.Row="13" Grid.Column="0" Grid.ColumnSpan="4" Style="{StaticResource btn_SE_Path}" x:Name="btn_Reset_Everything" ToolTip="Resets P127. Settings, GTA Installation, All Files. Will ask if you want to Uninstall at the end." Click="btn_Reset_Everything_Click" Content="Reset Everything / Uninstall"/>
+                            <Button Grid.Row="14" Grid.Column="0" Grid.ColumnSpan="4" Style="{StaticResource btn_SE_Path}" x:Name="btn_Reset_Everything" ToolTip="Resets P127. Settings, GTA Installation, All Files. Will ask if you want to Uninstall at the end." Click="btn_Reset_Everything_Click" Content="Reset Everything / Uninstall"/>
 
                         </Grid>
                     </StackPanel>
@@ -215,7 +220,7 @@
 
                                         <Label Grid.Row="0" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Auto core-fix" ToolTip="Automatically apply the CoreFix for Performance / Stability"/>
                                         <Button Grid.Row="0" Grid.Column="1" x:Name="btn_cb_Set_EnableCoreFix"  Style="{StaticResource btn_cb}" Click="btn_cb_Click" MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
-                                        <Rectangle x:Name="Rect_HideOptions_AutoCoreFix" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Fill="{x:Static local:MyColors.MyColorOffWhite85}" ToolTip="Disable CommandLineOverwrite to enable this Option."/>
+                                        <Rectangle x:Name="Rect_HideOptions_AutoCoreFix" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Fill="{x:Static local:MyColors.MyColorOffWhite85}" ToolTip="Disable CommandLineOverwrite orr Wine Compability Mode to enable this Option."/>
 
                                         <Label Grid.Row="1" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Overwrite GTA Command Line Args" ToolTip="This will disable P127 Language Select and remove the automatically applied Core Fix.\nIF THE LINES BELOW ARE SHIT, YOUR GAME MIGHT NOT START YOU MUPPET"/>
                                         <Button Grid.Row="1" Grid.Column="1" x:Name="btn_cb_Set_EnableOverWriteGTACommandLineArgs"  Style="{StaticResource btn_cb}" Click="btn_cb_Click" MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
