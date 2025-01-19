@@ -977,23 +977,16 @@ namespace Project_127
             return tmp;
         }
 
+
+
         public static string GetStartCommandLineArgs()
         {
             string rtrn = "start ";
 
             if (Settings.EnableCoreFix)
             {
-                int AmountOfCores = Environment.ProcessorCount;
-                if (AmountOfCores < 4)
-                {
-                    AmountOfCores = 4;
-                }
-                else if (AmountOfCores > 23)
-                {
-                    AmountOfCores = 23;
-                }
-                UInt64 Possibilities = (UInt64)Math.Pow(2, AmountOfCores);
-                string MyHex = (Possibilities - 1).ToString("X");
+                UInt64 Possibilities = GetPreferedAffinity();
+                string MyHex = (Possibilities).ToString("X");
 
                 rtrn += "/affinity " + MyHex + " ";
             }
@@ -1019,6 +1012,23 @@ namespace Project_127
             return rtrn;
         }
 
+
+
+        public static int MaxGTACores = 16;
+
+        public static UInt64 GetPreferedAffinity()
+        {
+            int AmountOfCores = Environment.ProcessorCount;
+            if (AmountOfCores < 4)
+            {
+                AmountOfCores = 4;
+            }
+            else if (AmountOfCores > MaxGTACores)
+            {
+                AmountOfCores = MaxGTACores;
+            }
+            return (UInt64)(Math.Pow(2, AmountOfCores) - 1);
+        }
 
         /// <summary>
         /// This actually launches the game
@@ -1115,7 +1125,7 @@ namespace Project_127
                         HelperClasses.FileHandling.WriteStringToFileOverwrite(EmuCfgPath, LaunchOptions);
                     }
 
-                    if (Settings.Retailer == Settings.Retailers.Steam && !Settings.EnableDontLaunchThroughSteam && LaunchWay == LaunchWays.DragonEmu)
+                    if (Settings.Retailer == Settings.Retailers.Steam && !Settings.EnableDontLaunchThroughSteam && LaunchWay == LaunchWays.DragonEmu && Settings.EnableCoreFix)
                     {
                         var steamprocs = Process.GetProcessesByName("steam");
                         if (steamprocs.Length > 0)
@@ -1128,11 +1138,14 @@ namespace Project_127
                                 corecount += (coreaffinity & ((Int64)1 << i)) != 0 ? 1 : 0;
                             }
                             HelperClasses.Logger.Log("Current core affinity for steam is " + coreaffinity.ToString("X") + " (" + corecount + " cores)");
-                            if (corecount > 16)
+
+                            UInt64 PreferedAffinity = GetPreferedAffinity();
+                            HelperClasses.Logger.Log("Preferred core affinity is: " + PreferedAffinity);
+
+                            if ((UInt64)corecount != PreferedAffinity)
                             {
-                                HelperClasses.Logger.Log("Settings steam's core affinity to FFFF (16 cores)");
-                                Int64 NewAffinity = 0xFFFF;
-                                steamproc.ProcessorAffinity = (IntPtr)NewAffinity;
+                                HelperClasses.Logger.Log("Settings steam's core affinity to " + PreferedAffinity);
+                                steamproc.ProcessorAffinity = (IntPtr)PreferedAffinity;
                             }
                         }
 
