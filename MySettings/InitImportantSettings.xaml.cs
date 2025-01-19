@@ -111,9 +111,13 @@ namespace Project_127.MySettings
             List<GTAVPathGuess> GTAVPathGuessesDuplicates = new List<GTAVPathGuess>();
 
             // Adding all Guesses
+            HelperClasses.Logger.Log("Init important settings, in addGuesses");
             GTAVPathGuessesDuplicates.Add(new GTAVPathGuess(LauncherLogic.GetGTAVPathMagicSteam(), Retailers.Steam));
+            HelperClasses.Logger.Log("Init important settings, in addGuesses, post steam magic");
             GTAVPathGuessesDuplicates.Add(new GTAVPathGuess(LauncherLogic.GetGTAVPathMagicRockstar(), Retailers.Rockstar));
+            HelperClasses.Logger.Log("Init important settings, in addGuesses, post rockstar magic");
             GTAVPathGuessesDuplicates.Add(new GTAVPathGuess(LauncherLogic.GetGTAVPathMagicEpic(), Retailers.Epic));
+            HelperClasses.Logger.Log("Init important settings, in addGuesses, post epic magic");
 
             List<string> RegistryBaseKeys = new List<string>
             {
@@ -127,11 +131,15 @@ namespace Project_127.MySettings
             {
                 try
                 {
+                    HelperClasses.Logger.Log("Init important settings, in addGuesses, in RegistryBaseKey foreach: " + RegistryBaseKey);
                     RegistryKey myRKTemp = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64).OpenSubKey(RegistryBaseKey);
-
+                    HelperClasses.Logger.Log("Init important settings, in addGuesses, in RegistryBaseKey foreach, before steam");
                     string PossibleSteam = HelperClasses.RegeditHandler.GetValue(myRKTemp, "InstallFolderSteam");
+                    HelperClasses.Logger.Log("Init important settings, in addGuesses, in RegistryBaseKey foreach, post steam");
                     string PossibleEpic = HelperClasses.RegeditHandler.GetValue(myRKTemp, "InstallFolderEpic");
+                    HelperClasses.Logger.Log("Init important settings, in addGuesses, in RegistryBaseKey foreach, post epic");
                     string PossibleRockstar = HelperClasses.RegeditHandler.GetValue(myRKTemp, "InstallFolder");
+                    HelperClasses.Logger.Log("Init important settings, in addGuesses, in RegistryBaseKey foreach, post rockstar");
 
                     if (!string.IsNullOrEmpty(PossibleSteam))
                     {
@@ -149,12 +157,14 @@ namespace Project_127.MySettings
                 catch { }
             }
 
-
+            HelperClasses.Logger.Log("Init important settings, in addGuesses, in hardcoded related 4 paths");
             GTAVPathGuessesDuplicates.Add(new GTAVPathGuess(Globals.ProjectInstallationPath.TrimEnd('\\').Substring(0, Globals.ProjectInstallationPath.TrimEnd('\\').LastIndexOf('\\'))));
             GTAVPathGuessesDuplicates.Add(new GTAVPathGuess(Globals.ProjectInstallationPath.TrimEnd('\\')));
             GTAVPathGuessesDuplicates.Add(new GTAVPathGuess(Settings.ZIPExtractionPath.TrimEnd('\\').Substring(0, Settings.ZIPExtractionPath.TrimEnd('\\').LastIndexOf('\\'))));
             GTAVPathGuessesDuplicates.Add(new GTAVPathGuess(Settings.ZIPExtractionPath));
+            HelperClasses.Logger.Log("Init important settings, in addGuesses, after hardcoded related 4 paths");
 
+            HelperClasses.Logger.Log("Init important settings, in addGuesses, before duplicate logic");
             // logic um keine doppelten drin zu haben...argh.
             for (int i = 0; i <= GTAVPathGuessesDuplicates.Count - 1; i++)
             {
