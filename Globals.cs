@@ -915,7 +915,11 @@ namespace Project_127
                     p.Enabled = true;
                 }
             }
-            HelperClasses.SpecialPatchHandler.checkCopyScripthook();
+
+            if (LauncherLogic.InstallationState == LauncherLogic.InstallationStates.Downgraded)
+            {
+                HelperClasses.SpecialPatchHandler.checkCopyScripthook();
+            }
         }
 
         /// <summary>

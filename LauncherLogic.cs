@@ -708,6 +708,9 @@ namespace Project_127
             // Actually executing the File Operations
             PopupWrapper.PopupProgress(PopupProgress.ProgressTypes.FileOperation, "Performing an Upgrade", tmpRtrnMyFileOperations);
 
+            HelperClasses.FileHandling.deleteFile(LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\launc.dat");
+            HelperClasses.FileHandling.deleteFile(LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\P127_ASMPATCHER_SCRIPTHOOK.dll");
+
             // We dont need to mess with social club versions since the launch process doesnt depend on it
 
             if (InstallationState != InstallationStates.Upgraded)
@@ -830,6 +833,11 @@ namespace Project_127
             if (InstallationState != InstallationStates.Downgraded)
             {
                 PopupWrapper.PopupOk("We just did an Downgraded but the detected InstallationState is not Downgraded.\nI suggest reading the \"Help\" Part of the Information Page");
+            }
+            else
+            {
+                // ScriptHookDLL for special patcher, only if downgrade successfull
+                HelperClasses.SpecialPatchHandler.checkCopyScripthook();
             }
 
             IgnoreNewFilesWhileUpgradeDowngradeLogic = false;
