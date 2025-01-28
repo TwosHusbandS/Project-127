@@ -1639,8 +1639,6 @@ namespace Project_127
             await Task.Delay(5000);
             HelperClasses.Logger.Log("Waited a good bit (5 Seconds)");
 
-            SetGTAProcessPriority();
-            GetGTACommandLineArgs();
 
             // If we DONT only auto start when downgraded OR if we are downgraded
             if (Settings.EnableOnlyAutoStartProgramsWhenDowngraded == false || LauncherLogic.InstallationState == InstallationStates.Downgraded)
