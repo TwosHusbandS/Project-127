@@ -741,6 +741,17 @@ namespace Project_127.MySettings
         }
 
         /// <summary>
+        /// Enum for what to do after GTA Launch
+        /// </summary>
+        public enum PostGTALaunchActions
+        {
+            Nothing,
+            MinimizeP127,
+            HideP127ToTray,
+            CloseP127
+        }
+
+        /// <summary>
         /// Settings LanguageSelected. Gets and Sets from Dictionary.
         /// </summary>
         public static Languages LanguageSelected
@@ -919,6 +930,24 @@ namespace Project_127.MySettings
                 if (value != ExitWay)
                 {
                     SetSetting("ExitWay", value.ToString());
+                }
+            }
+        }
+
+        /// <summary>
+        /// Settings PostLaunchAction. Gets and Sets from Dictionary.
+        /// </summary>
+        public static PostGTALaunchActions PostGTALaunchAction
+        {
+            get
+            {
+                return (PostGTALaunchActions)System.Enum.Parse(typeof(PostGTALaunchActions), GetSetting("PostGTALaunchAction"));
+            }
+            set
+            {
+                if (value != PostGTALaunchAction)
+                {
+                    SetSetting("PostGTALaunchAction", value.ToString());
                 }
             }
         }

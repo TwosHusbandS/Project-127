@@ -303,17 +303,17 @@ namespace Project_127
 		}
 
 
-		private void MI_Minimize_Click(object sender, RoutedEventArgs e)
+        public void MI_Minimize_Click(object sender, RoutedEventArgs e)
 		{
 			this.WindowState = WindowState.Minimized;
 		}
 
-		private void MI_ExitToTray_Click(object sender, RoutedEventArgs e)
+		public void MI_ExitToTray_Click(object sender, RoutedEventArgs e)
 		{
 			this.Hide();
 		}
 
-		private void MI_Close_Click(object sender, RoutedEventArgs e)
+        public void MI_Close_Click(object sender, RoutedEventArgs e)
 		{
 			Globals.ProperExit();
 		}

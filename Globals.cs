@@ -378,6 +378,7 @@ namespace Project_127
 			//{"EnableCopyFilesInsteadOfSyslinking_SocialClub", "False"},
 			{"ExitWay", "Close"},
             {"StartWay", "Maximized"},
+            {"PostGTALaunchAction", "Nothing"},
             {"Mode", "default"},
             {"DMMode", "default"},
 	

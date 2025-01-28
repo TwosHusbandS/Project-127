@@ -55,6 +55,7 @@
                                 <RowDefinition Height="40"/>
                                 <RowDefinition Height="40"/>
                                 <RowDefinition Height="40"/>
+                                <RowDefinition Height="40"/>
 
                             </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
@@ -79,6 +80,7 @@
                             <Rectangle Grid.Row="12" Grid.Column="0" Grid.ColumnSpan="4" Fill="Transparent"/>
                             <Rectangle Grid.Row="13" Grid.Column="0" Grid.ColumnSpan="4" Fill="{x:Static local:MyColors.SE_AlternateRowBackground}"/>
                             <Rectangle Grid.Row="14" Grid.Column="0" Grid.ColumnSpan="4" Fill="Transparent"/>
+                            <Rectangle Grid.Row="15" Grid.Column="0" Grid.ColumnSpan="4" Fill="{x:Static local:MyColors.SE_AlternateRowBackground}"/>
 
                             <Button Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4" Style="{StaticResource btn_SE_Path}" x:Name="btn_Set_GTAVInstallationPath" Click="btn_Path_Click" MouseRightButtonDown="btn_Path_RightClick"/>
 
@@ -102,8 +104,10 @@
                             <Label Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="3"  Style="{StaticResource lbl_Set_Info}" Content="Exit Action: "/>
                             <ComboBox Grid.Row="7" Grid.Column="3" Margin="10,5" Style="{StaticResource cobo}" x:Name="combox_Set_ExitWays" SelectionChanged="combox_Set_ExitWays_SelectionChanged"/>
 
-
-                            <Button Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource btn_SE_Path}" x:Name="btn_CreateBackup" Click="btn_CreateBackup_Click" MouseRightButtonDown="btn_CreateBackup_MouseRightButtonDown" Content="Create Backup Files for Upgrading"/>
+                            <Label Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="3"  Style="{StaticResource lbl_Set_Info}" Content="Post GTA Launch Action: " ToolTip="Will execute, with ~5 seconds delay, after P127 launches GTA."/>
+                            <ComboBox Grid.Row="8" Grid.Column="3" Margin="10,5" Style="{StaticResource cobo}" x:Name="combox_Set_PostGTALaunchActions" SelectionChanged="combox_Set_PostGTALaunchActions_SelectionChanged" ToolTip="Will execute, with ~5 seconds delay, after P127 launches GTA."/>
+                            
+                            <Button Grid.Row="9" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource btn_SE_Path}" x:Name="btn_CreateBackup" Click="btn_CreateBackup_Click" MouseRightButtonDown="btn_CreateBackup_MouseRightButtonDown" Content="Create Backup Files for Upgrading"/>
                             <Popup x:Name="PopupCreateBackup"  PlacementTarget="{Binding ElementName=btn_CreateBackup}" Placement="MousePoint" Width="200" Height="140"  Margin="0,0,0,0" StaysOpen="False" Closed="PopupCreateBackup_Closed" Opened="PopupCreateBackup_Opened">
                                 <Border BorderBrush="{x:Static local:MyColors.MyColorWhite}" BorderThickness="2" Background="{x:Static local:MyColors.MyColorOffBlack}" MouseLeave="Border_MouseLeave">
                                     <Grid>
@@ -119,7 +123,7 @@
                                 </Border>
                             </Popup>
 
-                            <Button Grid.Row="8" Grid.Column="2" Grid.ColumnSpan="2" Style="{StaticResource btn_SE_Path}" x:Name="btn_UseBackup" Click="btn_UseBackup_Click" MouseRightButtonDown="btn_UseBackup_MouseRightButtonDown" Content="Use Backup Files for Upgrading"/>
+                            <Button Grid.Row="9" Grid.Column="2" Grid.ColumnSpan="2" Style="{StaticResource btn_SE_Path}" x:Name="btn_UseBackup" Click="btn_UseBackup_Click" MouseRightButtonDown="btn_UseBackup_MouseRightButtonDown" Content="Use Backup Files for Upgrading"/>
                             <Popup x:Name="PopupUseBackup"  PlacementTarget="{Binding ElementName=btn_UseBackup}" Placement="MousePoint" Width="200" Height="140"  Margin="0,0,0,0" StaysOpen="False" Closed="PopupUseBackup_Closed" Opened="PopupUseBackup_Opened">
                                 <Border BorderBrush="{x:Static local:MyColors.MyColorWhite}" BorderThickness="2" Background="{x:Static local:MyColors.MyColorOffBlack}" MouseLeave="Border_MouseLeave">
                                     <Grid>
@@ -135,17 +139,17 @@
                                 </Border>
                             </Popup>
 
-                            <Button Grid.Row="9" Grid.Column="0" Grid.ColumnSpan="4" Style="{StaticResource btn_SE_Path}" x:Name="btn_RepairGTA" ToolTip="'Repairs' your GTA V Installation. Clears everything." Click="btn_RepairGTA_Click" Content="Repair GTA V Installation"/>
+                            <Button Grid.Row="10" Grid.Column="0" Grid.ColumnSpan="4" Style="{StaticResource btn_SE_Path}" x:Name="btn_RepairGTA" ToolTip="'Repairs' your GTA V Installation. Clears everything." Click="btn_RepairGTA_Click" Content="Repair GTA V Installation"/>
 
-                            <Button Grid.Row="10" Grid.Column="0" Grid.ColumnSpan="4" Style="{StaticResource btn_SE_Path}" x:Name="btn_AntivirusFix" ToolTip="Exclude P127 Folders from Windows Defender / AntiVirus" Click="btn_AntivirusFix_Click" Content="Exclude P127 Folders from Windows Defender / AntiVirus"/>
+                            <Button Grid.Row="11" Grid.Column="0" Grid.ColumnSpan="4" Style="{StaticResource btn_SE_Path}" x:Name="btn_AntivirusFix" ToolTip="Exclude P127 Folders from Windows Defender / AntiVirus" Click="btn_AntivirusFix_Click" Content="Exclude P127 Folders from Windows Defender / AntiVirus"/>
 
-                            <Button Grid.Row="11" Grid.Column="0" Grid.ColumnSpan="4" Style="{StaticResource btn_SE_Path}" x:Name="btn_Import_Zip" ToolTip="Import a P127 ZIP File manually. Rightclick to paste a DirectDownloadLink, Leftclick to select a File." Click="btn_Import_Zip_Click" Content="Click Me!"/>
+                            <Button Grid.Row="12" Grid.Column="0" Grid.ColumnSpan="4" Style="{StaticResource btn_SE_Path}" x:Name="btn_Import_Zip" ToolTip="Import a P127 ZIP File manually. Rightclick to paste a DirectDownloadLink, Leftclick to select a File." Click="btn_Import_Zip_Click" Content="Click Me!"/>
                             
-                            <Button Grid.Row="12" Grid.Column="0" Grid.ColumnSpan="4" Style="{StaticResource btn_SE_Path}" x:Name="btn_CheckForUpdate" Click="btn_CheckForUpdate_Click" MouseRightButtonDown="btn_CheckForUpdate_MouseRightButtonDown" Content="Check for Update"/>
+                            <Button Grid.Row="13" Grid.Column="0" Grid.ColumnSpan="4" Style="{StaticResource btn_SE_Path}" x:Name="btn_CheckForUpdate" Click="btn_CheckForUpdate_Click" MouseRightButtonDown="btn_CheckForUpdate_MouseRightButtonDown" Content="Check for Update"/>
 
-                            <Button Grid.Row="13" Grid.Column="0" Grid.ColumnSpan="4" Style="{StaticResource btn_SE_Path}" x:Name="btn_Reset" Click="btn_Reset_Click" ToolTip="Resets all P127 Settings by deleting our RegistryKey." Content="Reset P127 Settings to Default"/>
+                            <Button Grid.Row="14" Grid.Column="0" Grid.ColumnSpan="4" Style="{StaticResource btn_SE_Path}" x:Name="btn_Reset" Click="btn_Reset_Click" ToolTip="Resets all P127 Settings by deleting our RegistryKey." Content="Reset P127 Settings to Default"/>
 
-                            <Button Grid.Row="14" Grid.Column="0" Grid.ColumnSpan="4" Style="{StaticResource btn_SE_Path}" x:Name="btn_Reset_Everything" ToolTip="Resets P127. Settings, GTA Installation, All Files. Will ask if you want to Uninstall at the end." Click="btn_Reset_Everything_Click" Content="Reset Everything / Uninstall"/>
+                            <Button Grid.Row="15" Grid.Column="0" Grid.ColumnSpan="4" Style="{StaticResource btn_SE_Path}" x:Name="btn_Reset_Everything" ToolTip="Resets P127. Settings, GTA Installation, All Files. Will ask if you want to Uninstall at the end." Click="btn_Reset_Everything_Click" Content="Reset Everything / Uninstall"/>
 
                         </Grid>
                     </StackPanel>

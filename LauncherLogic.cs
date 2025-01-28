@@ -1636,8 +1636,8 @@ namespace Project_127
         public async static void PostLaunchEvents()
         {
             HelperClasses.Logger.Log("Post Launch Events started");
-            await Task.Delay(2500);
-            HelperClasses.Logger.Log("Waited a good bit");
+            await Task.Delay(5000);
+            HelperClasses.Logger.Log("Waited a good bit (5 Seconds)");
 
             SetGTAProcessPriority();
             GetGTACommandLineArgs();
@@ -1756,6 +1756,33 @@ namespace Project_127
                 }
             }
 
+            HelperClasses.Logger.Log("GTAStarted, lets do Settings.PostGTALaunchAction.");
+            if (GameState == GameStates.Running)
+            {
+                if (Settings.PostGTALaunchAction == Settings.PostGTALaunchActions.CloseP127)
+                {
+                    HelperClasses.Logger.Log("Settings.PostGTALaunchAction = CloseP127, Goodbye");
+                    MainWindow.MW.Dispatcher.Invoke(() => { MainWindow.MW.MI_Close_Click(null, null); });
+                }
+                else if (Settings.PostGTALaunchAction == Settings.PostGTALaunchActions.MinimizeP127)
+                {
+                    HelperClasses.Logger.Log("Settings.PostGTALaunchAction = MinimizeP127, Cya later");
+                    MainWindow.MW.Dispatcher.Invoke(() => { MainWindow.MW.MI_Minimize_Click(null, null); });
+                }
+                else if (Settings.PostGTALaunchAction == Settings.PostGTALaunchActions.HideP127ToTray)
+                {
+                    HelperClasses.Logger.Log("Settings.PostGTALaunchAction = HideP127ToTray, Peekaboo");
+                    MainWindow.MW.Dispatcher.Invoke(() => { MainWindow.MW.MI_ExitToTray_Click(null, null); });
+                }
+                else
+                {
+                    HelperClasses.Logger.Log("Settings.PostGTALaunchAction = Else, do nothing");
+                }
+            }
+            else
+            {
+                HelperClasses.Logger.Log("Cant do Settings.PostGTALaunchAction, Game not running");
+            }
 
         }
 

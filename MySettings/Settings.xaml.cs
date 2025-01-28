@@ -58,6 +58,7 @@ namespace Project_127.MySettings
             combox_Set_PostMTLAction.ItemsSource = Enum.GetValues(typeof(PostMTLActions)).Cast<PostMTLActions>();
             combox_Set_LanguageSelected.ItemsSource = Enum.GetValues(typeof(Languages)).Cast<Languages>();
             combox_Set_ExitWays.ItemsSource = Enum.GetValues(typeof(ExitWays)).Cast<ExitWays>();
+            combox_Set_PostGTALaunchActions.ItemsSource = Enum.GetValues(typeof(PostGTALaunchActions)).Cast<PostGTALaunchActions>();
             combox_Set_StartWays.ItemsSource = Enum.GetValues(typeof(StartWays)).Cast<StartWays>();
             combox_Set_SocialClubGameVersion.Items.Add("127");
             combox_Set_SocialClubGameVersion.Items.Add("124");
@@ -378,6 +379,16 @@ namespace Project_127.MySettings
             ExitWay = (ExitWays)System.Enum.Parse(typeof(ExitWays), combox_Set_ExitWays.SelectedItem.ToString());
         }
 
+
+        /// <summary>
+        /// Event that gets raised when the ComboBox of PostGTALaunchActions changed
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void combox_Set_PostGTALaunchActions_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            PostGTALaunchAction = (PostGTALaunchActions)System.Enum.Parse(typeof(PostGTALaunchActions), combox_Set_PostGTALaunchActions.SelectedItem.ToString());
+        }
 
         /// <summary>
         /// Event for LeftClick on any Button which handles a Path
@@ -761,6 +772,7 @@ namespace Project_127.MySettings
             combox_Set_Retail.SelectedItem = Settings.Retailer;
             combox_Set_LanguageSelected.SelectedItem = Settings.LanguageSelected;
             combox_Set_ExitWays.SelectedItem = Settings.ExitWay;
+            combox_Set_PostGTALaunchActions.SelectedItem = Settings.PostGTALaunchAction;
             combox_Set_StartWays.SelectedItem = Settings.StartWay;
             combox_Set_SocialClubGameVersion.SelectedItem = Settings.SocialClubLaunchGameVersion;
             combox_Set_DragonEmuGameVersion.SelectedItem = Settings.DragonEmuGameVersion;
