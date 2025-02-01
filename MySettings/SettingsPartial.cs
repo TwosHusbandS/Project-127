@@ -1280,18 +1280,31 @@ namespace Project_127.MySettings
         }
 
 
+
         /// <summary>
-        /// Settings EnableLegacyAuth. Gets and Sets from the Dictionary.
+        /// Enum for AuthWays
         /// </summary>
-        public static bool EnableLegacyAuth
+        public enum AuthWays
+        {
+            MTL,
+            LegacyAuth,
+            NoAuth
+        }
+
+
+        public static AuthWays AuthWay
         {
             get
             {
-                return GetBoolFromString(GetSetting("EnableLegacyAuth"));
+                return (AuthWays)System.Enum.Parse(typeof(AuthWays), GetSetting("AuthWay"));
             }
             set
             {
-                SetSetting("EnableLegacyAuth", value.ToString());
+                if (value != AuthWay)
+                {
+                    SetSetting("AuthWay", value.ToString());
+                    Settings.TellRockstarUsersToDisableAutoUpdateIfNeeded();
+                }
             }
         }
 

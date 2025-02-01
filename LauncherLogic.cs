@@ -219,7 +219,7 @@ namespace Project_127
         {
             get
             {
-                if (AuthStateOverWrite)
+                if (AuthStateOverWrite || Settings.AuthWay == Settings.AuthWays.NoAuth)
                 {
                     return AuthStates.Auth;
                 }
@@ -394,48 +394,6 @@ namespace Project_127
         }
 
 
-
-        /// <summary>
-        /// Enum for AuthWays
-        /// </summary>
-        public enum AuthWays
-        {
-            MTL,
-            LegacyAuth
-        }
-
-        public static AuthWays AuthWay
-        {
-            get
-            {
-                return AuthWays.MTL;
-                // Old
-                /*
-                if (Settings.EnableLegacyAuth)
-                {
-                    return AuthWays.LegacyAuth;
-                }
-                else
-                {
-                    return AuthWays.MTL;
-                }
-                */
-            }
-            set
-            {
-                if (value == AuthWays.LegacyAuth)
-                {
-                    Settings.EnableLegacyAuth = true;
-                }
-                else
-                {
-                    Settings.EnableLegacyAuth = false;
-                }
-                Settings.TellRockstarUsersToDisableAutoUpdateIfNeeded();
-            }
-        }
-
-
         #endregion
 
         #region Properties for often used Stuff
@@ -592,7 +550,7 @@ namespace Project_127
 
 
 
-            if (!MySettings.Settings.EnableLegacyAuth)
+            if (MySettings.Settings.AuthWay == Settings.AuthWays.MTL)
             {
                 if (LauncherLogic.AuthState == LauncherLogic.AuthStates.NotAuth)
                 {
@@ -603,7 +561,7 @@ namespace Project_127
                     PopupWrapper.PopupOk("You are already authenticated.");
                 }
             }
-            else
+            else if (MySettings.Settings.AuthWay == Settings.AuthWays.LegacyAuth)
             {
                 if (Globals.PageState != Globals.PageStates.Auth)
                 {

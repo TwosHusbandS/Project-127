@@ -128,11 +128,6 @@ namespace Project_127
         /// </summary>
         public static DispatcherTimer MyDispatcherTimer;
 
-        /// <summary>
-        /// Property of the Dispatcher Timer we use to control automatic MTL session retrieval
-        /// </summary>
-        public static DispatcherTimer MTLAuthTimer;
-
         private Stopwatch StartUpStopwatch;
 
         public static Auth.DynamicMTLOffsets DMO;
@@ -495,41 +490,6 @@ namespace Project_127
 
 
 
-        /// <summary>
-        /// Starting the Dispatcher Timer. 30 seconds. Used to control automatic MTL session retrieval
-        /// </summary>
-        public void StartMTLDispatcherTimer()
-        {
-            // Starting the Dispatcher Timer for the automatic updates of the GTA V Button
-            MTLAuthTimer = new System.Windows.Threading.DispatcherTimer();
-            MTLAuthTimer.Tick += new EventHandler(MainWindow.MW.AutoAuthMTLTimer);
-            MTLAuthTimer.Interval = TimeSpan.FromMilliseconds(2000);
-            MTLAuthTimer.Start();
-            MainWindow.MW.AutoAuthMTLTimer();
-        }
-
-        /// <summary>
-        /// Attempts to update auth session using MTL session data. Runs every 30 seconds
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        public void AutoAuthMTLTimer(object sender = null, EventArgs e = null)
-        {
-
-            if (LauncherLogic.AuthState == LauncherLogic.AuthStates.Auth)
-            {
-                MTLAuthTimer.Stop();
-            }
-            else if (LauncherLogic.LaunchWay == LauncherLogic.LaunchWays.SocialClubLaunch)
-            {
-                return;
-            }
-            else
-            {
-                _ = Auth.ROSCommunicationBackend.LoginMTL();
-            }
-        }
-
         #endregion
 
         // AlreadyRunning, AdminRelauncher and DIspatcher Timer anove
@@ -576,7 +536,22 @@ namespace Project_127
                     }
                     else
                     {
-                        btn_Auth.ToolTip = "Login Button. Lock closed = Logged in. Lock open = Not logged in";
+                        if (Settings.AuthWay == Settings.AuthWays.NoAuth)
+                        {
+                            BaseArtworkPath += "_crossed";
+                            if (LauncherLogic.AuthStateOverWrite)
+                            {
+                                btn_Auth.ToolTip = "Auth not needed, since AuthStateOverWrite.";
+                            }
+                            else
+                            {
+                                btn_Auth.ToolTip = "Auth not needed, since NoAuth is being used for DragonEmu.";
+                            }
+                        }
+                        else
+                        {
+                            btn_Auth.ToolTip = "Login Button. Lock closed = Logged in. Lock open = Not logged in";
+                        }
                     }
 
                     if (LauncherLogic.AuthState == LauncherLogic.AuthStates.Auth)

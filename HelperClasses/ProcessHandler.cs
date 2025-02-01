@@ -14,6 +14,7 @@ using Project_127.Popups;
 using Project_127.MySettings;
 using System.Management;
 using Microsoft.Win32;
+using GSF.IO;
 
 namespace Project_127.HelperClasses
 {
@@ -533,6 +534,42 @@ namespace Project_127.HelperClasses
                     Process tmp = GSF.Identity.UserAccountControl.CreateProcessAsStandardUser(@"cmd.exe", LauncherLogic.GetFullCommandLineArgsForStarting());
                 }
             });
+        }
+
+
+        public static bool IsRGLProcess(Process p)
+        {
+            try
+            {
+                FileVersionInfo fvi = FileVersionInfo.GetVersionInfo(p.MainModule.FileName);
+                bool description = fvi.FileDescription.ToLower().Contains("rockstar games");
+                bool productname = fvi.ProductName.ToLower().Contains("rockstar games");
+                bool copyright = fvi.LegalCopyright.ToLower().Contains("rockstar games");
+                return description && productname && copyright;
+            }
+            catch (Exception ex)
+            {
+                HelperClasses.Logger.Log("IsRGLProcess TryCatch - " + ex.ToString());
+                return false;
+            }
+        }
+
+        public static bool IsRGLRunning()
+        {
+            var launcherProcs = Process.GetProcessesByName("Launcher");
+            if (launcherProcs.Length == 0)
+            {
+                return false;
+            }
+            Process launcherProcess = launcherProcs[0];
+            foreach (var p in launcherProcs)
+            {
+                if (IsRGLProcess(p))
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
     } // End of Class

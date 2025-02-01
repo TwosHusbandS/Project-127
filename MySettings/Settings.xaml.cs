@@ -819,17 +819,26 @@ namespace Project_127.MySettings
             ButtonMouseOverMagic(btn_cb_EnablePPTester);
 
 
-            if (LauncherLogic.AuthWay == LauncherLogic.AuthWays.MTL)
+            if (Settings.AuthWay == Settings.AuthWays.MTL)
             {
                 btn_AuthMethod_LegacyAuth.Style = Application.Current.FindResource("btn_AuthWay") as Style;
+                btn_AuthMethod_NoAuth.Style = Application.Current.FindResource("btn_AuthWay") as Style;
                 btn_AuthMethod_MTL.Style = Application.Current.FindResource("btn_AuthWay_Enabled") as Style;
                 lbl_AuthWays.Content = "Auth - Method: MTL";
             }
-            else
+            else if (Settings.AuthWay == Settings.AuthWays.LegacyAuth)
             {
                 btn_AuthMethod_LegacyAuth.Style = Application.Current.FindResource("btn_AuthWay_Enabled") as Style;
+                btn_AuthMethod_NoAuth.Style = Application.Current.FindResource("btn_AuthWay") as Style;
                 btn_AuthMethod_MTL.Style = Application.Current.FindResource("btn_AuthWay") as Style;
                 lbl_AuthWays.Content = "Auth - Method: Legacy Auth";
+            }
+            else
+            {
+                btn_AuthMethod_LegacyAuth.Style = Application.Current.FindResource("btn_AuthWay") as Style;
+                btn_AuthMethod_MTL.Style = Application.Current.FindResource("btn_AuthWay") as Style;
+                btn_AuthMethod_NoAuth.Style = Application.Current.FindResource("btn_AuthWay_Enabled") as Style;
+                lbl_AuthWays.Content = "Auth - Method: No Auth";
             }
 
 
@@ -1244,7 +1253,7 @@ namespace Project_127.MySettings
                     Rect_HideOptions_HideFromSteam.Visibility = Visibility.Visible;
                 }
 
-                if (EnableLegacyAuth)
+                if (Settings.AuthWay != AuthWays.MTL)
                 {
                     Rect_HideOptions_AutoMTLOnStartup.Visibility = Visibility.Visible;
                 }
@@ -1292,14 +1301,23 @@ namespace Project_127.MySettings
 
         private void btn_AuthWays_MTL_Click(object sender, RoutedEventArgs e)
         {
-            LauncherLogic.AuthWay = LauncherLogic.AuthWays.MTL;
+            Settings.AuthWay = Settings.AuthWays.MTL;
             RefreshGUI();
         }
 
         private void btn_AuthWays_Legacy_Click(object sender, RoutedEventArgs e)
         {
-            LauncherLogic.AuthWay = LauncherLogic.AuthWays.LegacyAuth;
+            Settings.AuthWay = Settings.AuthWays.LegacyAuth;
             RefreshGUI();
+        }
+        private void btn_AuthWays_NoAuth_Click(object sender, RoutedEventArgs e)
+        {
+            bool userchoice = PopupWrapper.PopupYesNo("This only works if you have files that can launch GTAV without any authentication.\nOnly proceed if you know what that means.\n\nContinue?");
+            if (userchoice)
+            {
+                Settings.AuthWay = Settings.AuthWays.NoAuth;
+                RefreshGUI();
+            }
         }
 
         private void btn_HideSCLOptions_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
@@ -2093,7 +2111,7 @@ namespace Project_127.MySettings
 
         public static void TellRockstarUsersToDisableAutoUpdateIfNeeded()
         {
-            if (Settings.Retailer == Retailers.Rockstar && LauncherLogic.AuthWay == LauncherLogic.AuthWays.MTL && LauncherLogic.LaunchWay == LauncherLogic.LaunchWays.DragonEmu && !RockstarDisableAutoUpdateThrownAlready)
+            if (Settings.Retailer == Retailers.Rockstar && Settings.AuthWay == Settings.AuthWays.MTL && LauncherLogic.LaunchWay == LauncherLogic.LaunchWays.DragonEmu && !RockstarDisableAutoUpdateThrownAlready)
             {
                 string msg = "You need to stop Rockstar Game Launcher\nfrom automatically Updating your GTA.\nOtherwise certain features might not work.\n\nTo do this:\nInside Rockstar Games Launcher,\nhead into Settings\n-> My Installed Games\n->Grand Theft Auto V\n-> uncheck the \"Enable automatic updates\" checkbox at the very top.";
                 PopupWrapper.PopupOk(msg);
