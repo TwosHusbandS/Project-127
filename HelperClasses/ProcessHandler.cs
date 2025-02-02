@@ -14,6 +14,7 @@ using Project_127.Popups;
 using Project_127.MySettings;
 using System.Management;
 using Microsoft.Win32;
+using GSF.IO;
 
 namespace Project_127.HelperClasses
 {
@@ -151,11 +152,11 @@ namespace Project_127.HelperClasses
         {
             try
             {
-            var fileNameBuilder = new StringBuilder(buffer);
-            uint bufferLength = (uint)fileNameBuilder.Capacity + 1;
-            return QueryFullProcessImageName(process.Handle, 0, fileNameBuilder, ref bufferLength) ?
-                fileNameBuilder.ToString() :
-                "";
+                var fileNameBuilder = new StringBuilder(buffer);
+                uint bufferLength = (uint)fileNameBuilder.Capacity + 1;
+                return QueryFullProcessImageName(process.Handle, 0, fileNameBuilder, ref bufferLength) ?
+                    fileNameBuilder.ToString() :
+                    "";
             }
             catch (Exception ex)
             {
@@ -272,8 +273,14 @@ namespace Project_127.HelperClasses
                             // If Pathnames hit
                             if (Processes[i].GetMainModuleFileName().ToLower().Contains(Pathname.ToLower()))
                             {
-                                rtrn.Add(Processes[i]);
-                                break;
+                                // only add if its NOT our P127 Path...
+                                // otherwise, if user has P127 installed in gta directory
+                                // our own cefsharp subprocess will be detected as social club subprocess
+                                if (!Processes[i].GetMainModuleFileName().ToLower().Contains(Globals.ProjectInstallationPath.ToLower()))
+                                {
+                                    rtrn.Add(Processes[i]);
+                                    break;
+                                }
                             }
                         }
                         break;
@@ -460,17 +467,109 @@ namespace Project_127.HelperClasses
         {
             _ = Task.Run(async () =>
             {
-            if (Settings.EnableRunAsAdminDowngraded)
-            {
-                HelperClasses.Logger.Log("Running downgraded game AS ADMIN");
-                Process tmp = Process.Start(@"cmd.exe", LauncherLogic.GetFullCommandLineArgsForStarting());
-            }
-            else
-            {
-                HelperClasses.Logger.Log("Running downgraded game not as admin");
-                Process tmp = GSF.Identity.UserAccountControl.CreateProcessAsStandardUser(@"cmd.exe", LauncherLogic.GetFullCommandLineArgsForStarting());
-            }
+
+                if (Settings.EnableWineCompability)
+                {
+                    try
+                    {
+
+                        HelperClasses.Logger.Log("StartDowngradedGame - EnableWineCompability");
+
+                        string FullCommandLineArgs = LauncherLogic.GetFullCommandLineArgsForStarting();
+                        int IndexOfQuotation = FullCommandLineArgs.IndexOf("\"");
+                        int LastIndexOfQuotation = FullCommandLineArgs.LastIndexOf("\"");
+                        int IndexOfAffinity = FullCommandLineArgs.IndexOf("/affinity");
+                        int LastIndexOfExe = FullCommandLineArgs.LastIndexOf(".exe");
+                        string Path = FullCommandLineArgs.Substring(IndexOfQuotation + 1, LastIndexOfQuotation - IndexOfQuotation - 1);
+                        string tmp = FullCommandLineArgs.Substring(IndexOfAffinity, LastIndexOfExe + 4 - IndexOfAffinity);
+                        string Affinity = tmp.Split(' ')[1];
+                        Affinity = "24";
+                        int AffinityInt = int.Parse(Affinity, System.Globalization.NumberStyles.HexNumber);
+                        string File = tmp.Split(' ')[2];
+                        string FullFilePath = Path.TrimEnd("\\") + @"\" + File;
+                        string Args = FullCommandLineArgs.Substring(FullCommandLineArgs.IndexOf("-"));
+
+                        HelperClasses.Logger.Log("StartDowngradedGame - EnableWineCompability - FullFilePath: '" + FullFilePath + "'");
+                        HelperClasses.Logger.Log("StartDowngradedGame - EnableWineCompability - Path: '" + Path + "'");
+                        HelperClasses.Logger.Log("StartDowngradedGame - EnableWineCompability - Args: '" + Args + "'");
+
+                        Process proc = new Process();
+                        proc.StartInfo.FileName = FullFilePath;
+                        proc.StartInfo.Arguments = Args;
+                        proc.StartInfo.WorkingDirectory = Path;
+                        proc.StartInfo.Verb = "runas";
+                        proc.StartInfo.UseShellExecute = true;
+                        proc.Start();
+                        // HelperClasses.ProcessHandler.StartProcess(FullFilePath, Path, Args);
+
+                        HelperClasses.Logger.Log("StartDowngradedGame - EnableWineCompability - launched");
+
+                        //for (int i = 0; i <= 30; i++) // never tested
+                        //{
+                        //    await Task.Delay(1000);
+                        //    Process[] processes = HelperClasses.ProcessHandler.GetProcesses("gta5");
+                        //    if (processes.Length > 0)
+                        //    {
+                        //        processes[0].ProcessorAffinity = (IntPtr)AffinityInt;
+                        //        break;
+                        //    }
+                        //}
+                    }
+                    catch (Exception ex)
+                    {
+                        HelperClasses.Logger.Log("StartDowngradedGame - EnableWineCompability - TryCatch");
+                        HelperClasses.Logger.Log(ex.ToString());
+                    }
+                    return;
+                }
+
+                if (Settings.EnableRunAsAdminDowngraded)
+                {
+                    HelperClasses.Logger.Log("Running downgraded game AS ADMIN");
+                    Process tmp = Process.Start(@"cmd.exe", LauncherLogic.GetFullCommandLineArgsForStarting());
+                }
+                else
+                {
+                    HelperClasses.Logger.Log("Running downgraded game not as admin");
+                    Process tmp = GSF.Identity.UserAccountControl.CreateProcessAsStandardUser(@"cmd.exe", LauncherLogic.GetFullCommandLineArgsForStarting());
+                }
             });
+        }
+
+
+        public static bool IsRGLProcess(Process p)
+        {
+            try
+            {
+                FileVersionInfo fvi = FileVersionInfo.GetVersionInfo(p.MainModule.FileName);
+                bool description = fvi.FileDescription.ToLower().Contains("rockstar games");
+                bool productname = fvi.ProductName.ToLower().Contains("rockstar games");
+                bool copyright = fvi.LegalCopyright.ToLower().Contains("rockstar games");
+                return description && productname && copyright;
+            }
+            catch (Exception ex)
+            {
+                HelperClasses.Logger.Log("IsRGLProcess TryCatch - " + ex.ToString());
+                return false;
+            }
+        }
+
+        public static bool IsRGLRunning()
+        {
+            var launcherProcs = Process.GetProcessesByName("Launcher");
+            if (launcherProcs.Length == 0)
+            {
+                return false;
+            }
+            Process launcherProcess = launcherProcs[0];
+            foreach (var p in launcherProcs)
+            {
+                if (IsRGLProcess(p))
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
     } // End of Class

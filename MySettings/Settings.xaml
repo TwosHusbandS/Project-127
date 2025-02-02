@@ -54,6 +54,8 @@
                                 <RowDefinition Height="40"/>
                                 <RowDefinition Height="40"/>
                                 <RowDefinition Height="40"/>
+                                <RowDefinition Height="40"/>
+                                <RowDefinition Height="40"/>
 
                             </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
@@ -77,28 +79,35 @@
                             <Rectangle Grid.Row="11" Grid.Column="0" Grid.ColumnSpan="4" Fill="{x:Static local:MyColors.SE_AlternateRowBackground}"/>
                             <Rectangle Grid.Row="12" Grid.Column="0" Grid.ColumnSpan="4" Fill="Transparent"/>
                             <Rectangle Grid.Row="13" Grid.Column="0" Grid.ColumnSpan="4" Fill="{x:Static local:MyColors.SE_AlternateRowBackground}"/>
+                            <Rectangle Grid.Row="14" Grid.Column="0" Grid.ColumnSpan="4" Fill="Transparent"/>
+                            <Rectangle Grid.Row="15" Grid.Column="0" Grid.ColumnSpan="4" Fill="{x:Static local:MyColors.SE_AlternateRowBackground}"/>
 
                             <Button Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4" Style="{StaticResource btn_SE_Path}" x:Name="btn_Set_GTAVInstallationPath" Click="btn_Path_Click" MouseRightButtonDown="btn_Path_RightClick"/>
 
                             <Button Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="4" Style="{StaticResource btn_SE_Path}" x:Name="btn_Set_ZIPExtractionPath" Click="btn_Path_Click" MouseRightButtonDown="btn_Path_RightClick"/>
 
-                            <Label Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" Style="{StaticResource lbl_Set_Info}" Content="Enable Logging for Project 1.27"/>
+                            <Label Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" Style="{StaticResource lbl_Set_Info}" Content="Enable Logging for Project 1.27"  ToolTip="Starts GTA in a more stable way, ignores core affinity settings"/>
                             <Button Grid.Row="2" Grid.Column="3" x:Name="btn_cb_Set_EnableLogging" Style="{StaticResource btn_cb}" Click="btn_cb_Click"  MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
 
-                            <Label Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3"  Style="{StaticResource lbl_Set_Info}" Content="Slow, but stable method for Downgrading / Upgrading"/>
-                            <Button Grid.Row="3" Grid.Column="3" x:Name="btn_cb_Set_CopyFilesInsteadOfHardlinking" Style="{StaticResource btn_cb}" Click="btn_cb_Click"  MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
+                            <Label Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3" Style="{StaticResource lbl_Set_Info}" Content="Enable Wine Compability Mode"  ToolTip="Starts GTA in a more stable way, ignores core affinity settings"/>
+                            <Button Grid.Row="3" Grid.Column="3" x:Name="btn_cb_Set_EnableWineCompability" Style="{StaticResource btn_cb}" Click="btn_cb_Click"  MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
 
-                            <Label Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3"  Style="{StaticResource lbl_Set_Info}" Content="Slow, but stable method for comparing Files"/>
-                            <Button Grid.Row="4" Grid.Column="3" x:Name="btn_cb_Set_SlowCompare" Style="{StaticResource btn_cb}" Click="btn_cb_Click"  MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
+                            <Label Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3"  Style="{StaticResource lbl_Set_Info}" Content="Slow, but stable method for Downgrading / Upgrading"/>
+                            <Button Grid.Row="4" Grid.Column="3" x:Name="btn_cb_Set_CopyFilesInsteadOfHardlinking" Style="{StaticResource btn_cb}" Click="btn_cb_Click"  MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
 
-                            <Label Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="3"  Style="{StaticResource lbl_Set_Info}" Content="Start P127: "/>
-                            <ComboBox Grid.Row="5" Grid.Column="3" Margin="10,5" Style="{StaticResource cobo}" x:Name="combox_Set_StartWays" SelectionChanged="combox_Set_StartWays_SelectionChanged"/>
+                            <Label Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="3"  Style="{StaticResource lbl_Set_Info}" Content="Slow, but stable method for comparing Files"/>
+                            <Button Grid.Row="5" Grid.Column="3" x:Name="btn_cb_Set_SlowCompare" Style="{StaticResource btn_cb}" Click="btn_cb_Click"  MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
 
-                            <Label Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="3"  Style="{StaticResource lbl_Set_Info}" Content="Exit Action: "/>
-                            <ComboBox Grid.Row="6" Grid.Column="3" Margin="10,5" Style="{StaticResource cobo}" x:Name="combox_Set_ExitWays" SelectionChanged="combox_Set_ExitWays_SelectionChanged"/>
+                            <Label Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="3"  Style="{StaticResource lbl_Set_Info}" Content="Start P127: "/>
+                            <ComboBox Grid.Row="6" Grid.Column="3" Margin="10,5" Style="{StaticResource cobo}" x:Name="combox_Set_StartWays" SelectionChanged="combox_Set_StartWays_SelectionChanged"/>
 
+                            <Label Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="3"  Style="{StaticResource lbl_Set_Info}" Content="Exit Action: "/>
+                            <ComboBox Grid.Row="7" Grid.Column="3" Margin="10,5" Style="{StaticResource cobo}" x:Name="combox_Set_ExitWays" SelectionChanged="combox_Set_ExitWays_SelectionChanged"/>
 
-                            <Button Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource btn_SE_Path}" x:Name="btn_CreateBackup" Click="btn_CreateBackup_Click" MouseRightButtonDown="btn_CreateBackup_MouseRightButtonDown" Content="Create Backup Files for Upgrading"/>
+                            <Label Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="3"  Style="{StaticResource lbl_Set_Info}" Content="Post GTA Launch Action: " ToolTip="Will execute, with ~5 seconds delay, after P127 launches GTA."/>
+                            <ComboBox Grid.Row="8" Grid.Column="3" Margin="10,5" Style="{StaticResource cobo}" x:Name="combox_Set_PostGTALaunchActions" SelectionChanged="combox_Set_PostGTALaunchActions_SelectionChanged" ToolTip="Will execute, with ~5 seconds delay, after P127 launches GTA."/>
+                            
+                            <Button Grid.Row="9" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource btn_SE_Path}" x:Name="btn_CreateBackup" Click="btn_CreateBackup_Click" MouseRightButtonDown="btn_CreateBackup_MouseRightButtonDown" Content="Create Backup Files for Upgrading"/>
                             <Popup x:Name="PopupCreateBackup"  PlacementTarget="{Binding ElementName=btn_CreateBackup}" Placement="MousePoint" Width="200" Height="140"  Margin="0,0,0,0" StaysOpen="False" Closed="PopupCreateBackup_Closed" Opened="PopupCreateBackup_Opened">
                                 <Border BorderBrush="{x:Static local:MyColors.MyColorWhite}" BorderThickness="2" Background="{x:Static local:MyColors.MyColorOffBlack}" MouseLeave="Border_MouseLeave">
                                     <Grid>
@@ -114,7 +123,7 @@
                                 </Border>
                             </Popup>
 
-                            <Button Grid.Row="7" Grid.Column="2" Grid.ColumnSpan="2" Style="{StaticResource btn_SE_Path}" x:Name="btn_UseBackup" Click="btn_UseBackup_Click" MouseRightButtonDown="btn_UseBackup_MouseRightButtonDown" Content="Use Backup Files for Upgrading"/>
+                            <Button Grid.Row="9" Grid.Column="2" Grid.ColumnSpan="2" Style="{StaticResource btn_SE_Path}" x:Name="btn_UseBackup" Click="btn_UseBackup_Click" MouseRightButtonDown="btn_UseBackup_MouseRightButtonDown" Content="Use Backup Files for Upgrading"/>
                             <Popup x:Name="PopupUseBackup"  PlacementTarget="{Binding ElementName=btn_UseBackup}" Placement="MousePoint" Width="200" Height="140"  Margin="0,0,0,0" StaysOpen="False" Closed="PopupUseBackup_Closed" Opened="PopupUseBackup_Opened">
                                 <Border BorderBrush="{x:Static local:MyColors.MyColorWhite}" BorderThickness="2" Background="{x:Static local:MyColors.MyColorOffBlack}" MouseLeave="Border_MouseLeave">
                                     <Grid>
@@ -130,17 +139,17 @@
                                 </Border>
                             </Popup>
 
-                            <Button Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="4" Style="{StaticResource btn_SE_Path}" x:Name="btn_RepairGTA" ToolTip="'Repairs' your GTA V Installation. Clears everything." Click="btn_RepairGTA_Click" Content="Repair GTA V Installation"/>
+                            <Button Grid.Row="10" Grid.Column="0" Grid.ColumnSpan="4" Style="{StaticResource btn_SE_Path}" x:Name="btn_RepairGTA" ToolTip="'Repairs' your GTA V Installation. Clears everything." Click="btn_RepairGTA_Click" Content="Repair GTA V Installation"/>
 
-                            <Button Grid.Row="9" Grid.Column="0" Grid.ColumnSpan="4" Style="{StaticResource btn_SE_Path}" x:Name="btn_AntivirusFix" ToolTip="Exclude P127 Folders from Windows Defender / AntiVirus" Click="btn_AntivirusFix_Click" Content="Exclude P127 Folders from Windows Defender / AntiVirus"/>
+                            <Button Grid.Row="11" Grid.Column="0" Grid.ColumnSpan="4" Style="{StaticResource btn_SE_Path}" x:Name="btn_AntivirusFix" ToolTip="Exclude P127 Folders from Windows Defender / AntiVirus" Click="btn_AntivirusFix_Click" Content="Exclude P127 Folders from Windows Defender / AntiVirus"/>
 
-                            <Button Grid.Row="10" Grid.Column="0" Grid.ColumnSpan="4" Style="{StaticResource btn_SE_Path}" x:Name="btn_Import_Zip" ToolTip="Import a P127 ZIP File manually. Rightclick to paste a DirectDownloadLink, Leftclick to select a File." Click="btn_Import_Zip_Click" Content="Click Me!"/>
+                            <Button Grid.Row="12" Grid.Column="0" Grid.ColumnSpan="4" Style="{StaticResource btn_SE_Path}" x:Name="btn_Import_Zip" ToolTip="Import a P127 ZIP File manually. Rightclick to paste a DirectDownloadLink, Leftclick to select a File." Click="btn_Import_Zip_Click" Content="Click Me!"/>
                             
-                            <Button Grid.Row="11" Grid.Column="0" Grid.ColumnSpan="4" Style="{StaticResource btn_SE_Path}" x:Name="btn_CheckForUpdate" Click="btn_CheckForUpdate_Click" MouseRightButtonDown="btn_CheckForUpdate_MouseRightButtonDown" Content="Check for Update"/>
+                            <Button Grid.Row="13" Grid.Column="0" Grid.ColumnSpan="4" Style="{StaticResource btn_SE_Path}" x:Name="btn_CheckForUpdate" Click="btn_CheckForUpdate_Click" MouseRightButtonDown="btn_CheckForUpdate_MouseRightButtonDown" Content="Check for Update"/>
 
-                            <Button Grid.Row="12" Grid.Column="0" Grid.ColumnSpan="4" Style="{StaticResource btn_SE_Path}" x:Name="btn_Reset" Click="btn_Reset_Click" ToolTip="Resets all P127 Settings by deleting our RegistryKey." Content="Reset P127 Settings to Default"/>
+                            <Button Grid.Row="14" Grid.Column="0" Grid.ColumnSpan="4" Style="{StaticResource btn_SE_Path}" x:Name="btn_Reset" Click="btn_Reset_Click" ToolTip="Resets all P127 Settings by deleting our RegistryKey." Content="Reset P127 Settings to Default"/>
 
-                            <Button Grid.Row="13" Grid.Column="0" Grid.ColumnSpan="4" Style="{StaticResource btn_SE_Path}" x:Name="btn_Reset_Everything" ToolTip="Resets P127. Settings, GTA Installation, All Files. Will ask if you want to Uninstall at the end." Click="btn_Reset_Everything_Click" Content="Reset Everything / Uninstall"/>
+                            <Button Grid.Row="15" Grid.Column="0" Grid.ColumnSpan="4" Style="{StaticResource btn_SE_Path}" x:Name="btn_Reset_Everything" ToolTip="Resets P127. Settings, GTA Installation, All Files. Will ask if you want to Uninstall at the end." Click="btn_Reset_Everything_Click" Content="Reset Everything / Uninstall"/>
 
                         </Grid>
                     </StackPanel>
@@ -186,13 +195,13 @@
                             <Label Grid.Row="2" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Run downgraded GTA as Admin" ToolTip="Runs downgraded GTA as Admin. You will also need to launch Livesplit, OBS etc. as Admin."/>
                             <Button Grid.Row="2" Grid.Column="1" x:Name="btn_cb_Set_EnableRunAsAdmin"  Style="{StaticResource btn_cb}" Click="btn_cb_Click" MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave" ToolTip="Runs downgraded GTA as Admin. You will also need to launch Livesplit, OBS etc. as Admin."/>
 
-                            <Label Grid.Row="3" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Enable Stutter Fix on downgraded GTA"/>
+                            <Label Grid.Row="3" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Enable Game Stutter Fix on downgraded GTA"/>
                             <Button Grid.Row="3" Grid.Column="1" x:Name="btn_cb_Set_EnableStutterFix"  Style="{StaticResource btn_cb}" Click="btn_cb_Click" MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
 
-                            <Label Grid.Row="4" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Enable Audio Fix on downgraded GTA"/>
+                            <Label Grid.Row="4" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Enable Audio Bug Fix on downgraded GTA"/>
                             <Button Grid.Row="4" Grid.Column="1" x:Name="btn_cb_Set_EnableAudioFix"  Style="{StaticResource btn_cb}" Click="btn_cb_Click" MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
                             
-                            <Label Grid.Row="5" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Enable Crash Fix on downgraded GTA"/>
+                            <Label Grid.Row="5" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Enable Uptime Crash Fix on downgraded GTA"/>
                             <Button Grid.Row="5" Grid.Column="1" x:Name="btn_cb_Set_EnableCrashFix"  Style="{StaticResource btn_cb}" Click="btn_cb_Click" MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
                             
                             <Rectangle x:Name="Rect_HideOptions_Fixes" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="3" Fill="{x:Static local:MyColors.MyColorOffWhite85}" ToolTip="Disabled due to custom Command Line Args."/>
@@ -215,7 +224,7 @@
 
                                         <Label Grid.Row="0" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Auto core-fix" ToolTip="Automatically apply the CoreFix for Performance / Stability"/>
                                         <Button Grid.Row="0" Grid.Column="1" x:Name="btn_cb_Set_EnableCoreFix"  Style="{StaticResource btn_cb}" Click="btn_cb_Click" MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
-                                        <Rectangle x:Name="Rect_HideOptions_AutoCoreFix" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Fill="{x:Static local:MyColors.MyColorOffWhite85}" ToolTip="Disable CommandLineOverwrite to enable this Option."/>
+                                        <Rectangle x:Name="Rect_HideOptions_AutoCoreFix" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Fill="{x:Static local:MyColors.MyColorOffWhite85}" ToolTip="Disable CommandLineOverwrite orr Wine Compability Mode to enable this Option."/>
 
                                         <Label Grid.Row="1" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Overwrite GTA Command Line Args" ToolTip="This will disable P127 Language Select and remove the automatically applied Core Fix.\nIF THE LINES BELOW ARE SHIT, YOUR GAME MIGHT NOT START YOU MUPPET"/>
                                         <Button Grid.Row="1" Grid.Column="1" x:Name="btn_cb_Set_EnableOverWriteGTACommandLineArgs"  Style="{StaticResource btn_cb}" Click="btn_cb_Click" MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
@@ -252,7 +261,7 @@
                                         <RowDefinition Height="*"/>
                                     </Grid.RowDefinitions>
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="2*"/>
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
                                     <Rectangle x:Name="Rect_Background_SCL_1" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Fill="{x:Static local:MyColors.SE_AlternateRowBackground}"/>
@@ -282,7 +291,7 @@
                                         <RowDefinition Height="*"/>
                                     </Grid.RowDefinitions>
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="2*"/>
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
 
@@ -301,19 +310,28 @@
 
 
                                     <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" x:Name="lbl_AuthWays" Content="Auth - Method" Style="{StaticResource lbl_Set_Info}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                    <Button Grid.Row="1" Grid.Column="0" Margin="40,0,40,10" Style="{StaticResource btn_AuthWay}" x:Name="btn_AuthMethod_MTL" Content="MTL (through RGL)" ToolTip="Opens RockstarGamesLauncher and gets Ownership Verification that way." Click="btn_AuthWays_MTL_Click"/>
-                                    <Button Grid.Row="1" Grid.Column="1" Margin="40,0,40,10" Style="{StaticResource btn_AuthWay}" x:Name="btn_AuthMethod_LegacyAuth" Content="Legacy Auth" ToolTip="Grabs Ownership Verification by having you log in into your social club account inside P127."  Click="btn_AuthWays_Legacy_Click"/>
-                                    <Rectangle x:Name="Rect_HideOptions_LegacyAuth" Grid.Row="1" Grid.Column="1" Margin="40,0,40,10"  Fill="{x:Static local:MyColors.MyColorOffWhite85}" ToolTip="Legacy Auth is disabled"/>
+                                    
+                                    <Grid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition/>
+                                            <ColumnDefinition/>
+                                            <ColumnDefinition/>
+                                        </Grid.ColumnDefinitions>
+                                        <Button Grid.Row="0" Grid.Column="0" Margin="40,0,40,10" Style="{StaticResource btn_AuthWay}" x:Name="btn_AuthMethod_MTL" Content="MTL (through RGL)" ToolTip="Opens RockstarGamesLauncher and gets Ownership Verification that way." Click="btn_AuthWays_MTL_Click"/>
+                                        <Button Grid.Row="0" Grid.Column="1" Margin="40,0,40,10" Style="{StaticResource btn_AuthWay}" x:Name="btn_AuthMethod_LegacyAuth" Content="Legacy Auth" ToolTip="Grabs Ownership Verification by having you log in into your social club account inside P127."  Click="btn_AuthWays_Legacy_Click"/>
+                                        <Button Grid.Row="0" Grid.Column="2" Margin="40,0,40,10" Style="{StaticResource btn_AuthWay}" x:Name="btn_AuthMethod_NoAuth" Content="No Auth" ToolTip="Disabled Auth. You will need DowngradeFiles that work without auth from somewhere else."  Click="btn_AuthWays_NoAuth_Click"/>
+                                        <Rectangle x:Name="Rect_HideOptions_LegacyAuth" Grid.Row="0" Grid.Column="1" Margin="40,0,40,10"  Fill="{x:Static local:MyColors.MyColorOffWhite85}" ToolTip="Legacy Auth is disabled"/>
+                                    </Grid>
 
                                     <Label Grid.Row="2" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Dragon Emu Game Version: "/>
                                     <ComboBox Grid.Row="2" Grid.Column="1" Margin="10,5" Style="{StaticResource cobo}" x:Name="combox_Set_DragonEmuGameVersion" SelectionChanged="combox_Set_DragonEmuGameVersion_SelectionChanged"/>
 
                                     <Label Grid.Row="3" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Silent MTL - Auth on P127 Startup"/>
                                     <Button Grid.Row="3" Grid.Column="1" x:Name="btn_cb_Set_AutoMTLAuthOnStartup" Style="{StaticResource btn_cb}" Click="btn_cb_Click" MouseEnter="btn_MouseEnter" MouseLeave="btn_MouseLeave"/>
-                                    <Rectangle x:Name="Rect_HideOptions_AutoMTLOnStartup" Grid.Row="3" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="2" Fill="{x:Static local:MyColors.MyColorOffWhite85}" ToolTip="Non effective when AuthWay is not MTL"/>
 
                                     <Label Grid.Row="4" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="Default Post MTL - Auth Action:" ToolTip="Decide what happens to the Rockstar Games Launcher (RGL) after Auth "/>
                                     <ComboBox Grid.Row="4" Grid.Column="1" Margin="10,5" Style="{StaticResource cobo}" x:Name="combox_Set_PostMTLAction" SelectionChanged="combox_Set_PostMTLAction_SelectionChanged"/>
+                                    <Rectangle x:Name="Rect_HideOptions_AutoMTLOnStartup" Grid.Row="3" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="2" Fill="{x:Static local:MyColors.MyColorOffWhite85}" ToolTip="Non effective when AuthWay is not MTL"/>
 
                                     <Label Grid.Row="5" Grid.Column="0" Style="{StaticResource lbl_Set_Info}" Content="GTA V In-Game Name: "/>
                                     <TextBox Grid.Row="5" Grid.Column="1" Style="{StaticResource tb}" x:Name="tb_Set_InGameName" LostFocus="tb_Set_InGameName_LostFocus"/>

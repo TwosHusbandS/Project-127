@@ -58,6 +58,7 @@ namespace Project_127.MySettings
             combox_Set_PostMTLAction.ItemsSource = Enum.GetValues(typeof(PostMTLActions)).Cast<PostMTLActions>();
             combox_Set_LanguageSelected.ItemsSource = Enum.GetValues(typeof(Languages)).Cast<Languages>();
             combox_Set_ExitWays.ItemsSource = Enum.GetValues(typeof(ExitWays)).Cast<ExitWays>();
+            combox_Set_PostGTALaunchActions.ItemsSource = Enum.GetValues(typeof(PostGTALaunchActions)).Cast<PostGTALaunchActions>();
             combox_Set_StartWays.ItemsSource = Enum.GetValues(typeof(StartWays)).Cast<StartWays>();
             combox_Set_SocialClubGameVersion.Items.Add("127");
             combox_Set_SocialClubGameVersion.Items.Add("124");
@@ -378,6 +379,16 @@ namespace Project_127.MySettings
             ExitWay = (ExitWays)System.Enum.Parse(typeof(ExitWays), combox_Set_ExitWays.SelectedItem.ToString());
         }
 
+
+        /// <summary>
+        /// Event that gets raised when the ComboBox of PostGTALaunchActions changed
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void combox_Set_PostGTALaunchActions_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            PostGTALaunchAction = (PostGTALaunchActions)System.Enum.Parse(typeof(PostGTALaunchActions), combox_Set_PostGTALaunchActions.SelectedItem.ToString());
+        }
 
         /// <summary>
         /// Event for LeftClick on any Button which handles a Path
@@ -761,6 +772,7 @@ namespace Project_127.MySettings
             combox_Set_Retail.SelectedItem = Settings.Retailer;
             combox_Set_LanguageSelected.SelectedItem = Settings.LanguageSelected;
             combox_Set_ExitWays.SelectedItem = Settings.ExitWay;
+            combox_Set_PostGTALaunchActions.SelectedItem = Settings.PostGTALaunchAction;
             combox_Set_StartWays.SelectedItem = Settings.StartWay;
             combox_Set_SocialClubGameVersion.SelectedItem = Settings.SocialClubLaunchGameVersion;
             combox_Set_DragonEmuGameVersion.SelectedItem = Settings.DragonEmuGameVersion;
@@ -778,6 +790,7 @@ namespace Project_127.MySettings
 
             ButtonMouseOverMagic(btn_Refresh);
             ButtonMouseOverMagic(btn_cb_Set_EnableLogging);
+            ButtonMouseOverMagic(btn_cb_Set_EnableWineCompability);
             ButtonMouseOverMagic(btn_cb_Set_CopyFilesInsteadOfHardlinking);
             ButtonMouseOverMagic(btn_cb_Set_EnableAlternativeLaunchForceCProgramFiles);
             ButtonMouseOverMagic(btn_cb_Set_EnableJumpscriptUseCustomScript);
@@ -806,17 +819,26 @@ namespace Project_127.MySettings
             ButtonMouseOverMagic(btn_cb_EnablePPTester);
 
 
-            if (LauncherLogic.AuthWay == LauncherLogic.AuthWays.MTL)
+            if (Settings.AuthWay == Settings.AuthWays.MTL)
             {
                 btn_AuthMethod_LegacyAuth.Style = Application.Current.FindResource("btn_AuthWay") as Style;
+                btn_AuthMethod_NoAuth.Style = Application.Current.FindResource("btn_AuthWay") as Style;
                 btn_AuthMethod_MTL.Style = Application.Current.FindResource("btn_AuthWay_Enabled") as Style;
                 lbl_AuthWays.Content = "Auth - Method: MTL";
             }
-            else
+            else if (Settings.AuthWay == Settings.AuthWays.LegacyAuth)
             {
                 btn_AuthMethod_LegacyAuth.Style = Application.Current.FindResource("btn_AuthWay_Enabled") as Style;
+                btn_AuthMethod_NoAuth.Style = Application.Current.FindResource("btn_AuthWay") as Style;
                 btn_AuthMethod_MTL.Style = Application.Current.FindResource("btn_AuthWay") as Style;
                 lbl_AuthWays.Content = "Auth - Method: Legacy Auth";
+            }
+            else
+            {
+                btn_AuthMethod_LegacyAuth.Style = Application.Current.FindResource("btn_AuthWay") as Style;
+                btn_AuthMethod_MTL.Style = Application.Current.FindResource("btn_AuthWay") as Style;
+                btn_AuthMethod_NoAuth.Style = Application.Current.FindResource("btn_AuthWay_Enabled") as Style;
+                lbl_AuthWays.Content = "Auth - Method: No Auth";
             }
 
 
@@ -1019,6 +1041,9 @@ namespace Project_127.MySettings
                 case "btn_cb_Set_EnableLogging":
                     SetCheckBoxBackground(myBtn, Settings.EnableLogging);
                     break;
+                case "btn_cb_Set_EnableWineCompability":
+                    SetCheckBoxBackground(myBtn, Settings.EnableWineCompability);
+                    break;
                 case "btn_cb_Set_SlowCompare":
                     SetCheckBoxBackground(myBtn, Settings.EnableSlowCompare);
                     break;
@@ -1190,6 +1215,11 @@ namespace Project_127.MySettings
                 Rect_HideOptions_Fixes.Visibility = Visibility.Hidden;
             }
 
+            if (Settings.EnableWineCompability)
+            {
+                Rect_HideOptions_AutoCoreFix.Visibility = Visibility.Visible;
+            }
+
             if (Retailer == Retailers.Epic)
             {
                 Rect_HideOptions_SCL_Launch.Visibility = Visibility.Visible;
@@ -1223,7 +1253,7 @@ namespace Project_127.MySettings
                     Rect_HideOptions_HideFromSteam.Visibility = Visibility.Visible;
                 }
 
-                if (EnableLegacyAuth)
+                if (Settings.AuthWay != AuthWays.MTL)
                 {
                     Rect_HideOptions_AutoMTLOnStartup.Visibility = Visibility.Visible;
                 }
@@ -1271,14 +1301,23 @@ namespace Project_127.MySettings
 
         private void btn_AuthWays_MTL_Click(object sender, RoutedEventArgs e)
         {
-            LauncherLogic.AuthWay = LauncherLogic.AuthWays.MTL;
+            Settings.AuthWay = Settings.AuthWays.MTL;
             RefreshGUI();
         }
 
         private void btn_AuthWays_Legacy_Click(object sender, RoutedEventArgs e)
         {
-            LauncherLogic.AuthWay = LauncherLogic.AuthWays.LegacyAuth;
+            Settings.AuthWay = Settings.AuthWays.LegacyAuth;
             RefreshGUI();
+        }
+        private void btn_AuthWays_NoAuth_Click(object sender, RoutedEventArgs e)
+        {
+            bool userchoice = PopupWrapper.PopupYesNo("This only works if you have files that can launch GTAV without any authentication.\nOnly proceed if you know what that means.\n\nContinue?");
+            if (userchoice)
+            {
+                Settings.AuthWay = Settings.AuthWays.NoAuth;
+                RefreshGUI();
+            }
         }
 
         private void btn_HideSCLOptions_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
@@ -1310,6 +1349,9 @@ namespace Project_127.MySettings
             {
                 case "btn_cb_Set_EnableLogging":
                     Settings.EnableLogging = !Settings.EnableLogging;
+                    break;
+                case "btn_cb_Set_EnableWineCompability":
+                    Settings.EnableWineCompability = !Settings.EnableWineCompability;
                     break;
                 case "btn_cb_Set_SlowCompare":
                     Settings.EnableSlowCompare = !Settings.EnableSlowCompare;
@@ -2069,7 +2111,7 @@ namespace Project_127.MySettings
 
         public static void TellRockstarUsersToDisableAutoUpdateIfNeeded()
         {
-            if (Settings.Retailer == Retailers.Rockstar && LauncherLogic.AuthWay == LauncherLogic.AuthWays.MTL && LauncherLogic.LaunchWay == LauncherLogic.LaunchWays.DragonEmu && !RockstarDisableAutoUpdateThrownAlready)
+            if (Settings.Retailer == Retailers.Rockstar && Settings.AuthWay == Settings.AuthWays.MTL && LauncherLogic.LaunchWay == LauncherLogic.LaunchWays.DragonEmu && !RockstarDisableAutoUpdateThrownAlready)
             {
                 string msg = "You need to stop Rockstar Game Launcher\nfrom automatically Updating your GTA.\nOtherwise certain features might not work.\n\nTo do this:\nInside Rockstar Games Launcher,\nhead into Settings\n-> My Installed Games\n->Grand Theft Auto V\n-> uncheck the \"Enable automatic updates\" checkbox at the very top.";
                 PopupWrapper.PopupOk(msg);

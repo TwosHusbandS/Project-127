@@ -62,6 +62,7 @@ namespace Project_127.Auth
             return -1;
         }
 
+
         public static ROSCommunicationBackend.sessionContainer GetMTLSession()
         {
             var launcherProcs = Process.GetProcessesByName("Launcher");
@@ -72,7 +73,7 @@ namespace Project_127.Auth
             Process launcherProcess = launcherProcs[0];
             foreach (var p in launcherProcs)
             {
-                if (p.MainModule.FileName == @"C:\Program Files\Rockstar Games\Launcher\Launcher.exe")
+                if (HelperClasses.ProcessHandler.IsRGLProcess(p))
                 {
                     launcherProcess = p;
                     break;

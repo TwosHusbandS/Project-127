@@ -236,7 +236,7 @@ namespace Project_127
         /// <summary>
         /// Property of other Buildinfo. Will be in the top message of logs
         /// </summary>
-        public static string BuildInfo = "1.4.1.0 - RC 1";
+        public static string BuildInfo = "1.5.0.0 - RC 1";
 
 
         /// <summary>
@@ -348,6 +348,7 @@ namespace Project_127
 				- "TeasingFeatures"
 				- "EnableBase124"
                 - "EnableDragonEmu"
+                - "EnableLegacyAuth"
 			*/
 
 			// Internal Settings we dont show the user
@@ -371,12 +372,15 @@ namespace Project_127
             {"AutoMTLAuthOnStartup", "True"},
             {"PostMTLAction", "MinimizeRGL"},
             {"EnableSlowCompare", "False"},
-            {"EnableLegacyAuth", "False"},
+            {"EnableWineCompability", "False"},
+            // {"EnableLegacyAuth", "False"},
+            {"AuthWay", "MTL"},
             {"GTAWindowTitle", "Grand Theft Auto V"},
             {"Version", "127"},
 			//{"EnableCopyFilesInsteadOfSyslinking_SocialClub", "False"},
 			{"ExitWay", "Close"},
             {"StartWay", "Maximized"},
+            {"PostGTALaunchAction", "Nothing"},
             {"Mode", "default"},
             {"DMMode", "default"},
 	
@@ -601,12 +605,12 @@ namespace Project_127
                     HelperClasses.RegeditHandler.DeleteValue("EnableCopyFilesInsteadOfSyslinking_SocialClub");
                     HelperClasses.RegeditHandler.DeleteValue("TeasingFeatures");
 
-                    if (Settings.EnableLegacyAuth)
+                    if (Settings.AuthWay == Settings.AuthWays.LegacyAuth)
                     {
                         bool yesno = PopupWrapper.PopupYesNo("The captcha-free-Authentication (MTL) has been improved,\nand should be working for everyone on this version.\nWould you like to enable it?");
                         if (yesno == true)
                         {
-                            Settings.EnableLegacyAuth = false;
+                            Settings.AuthWay = Settings.AuthWays.MTL;
                         }
                     }
 
@@ -691,7 +695,7 @@ namespace Project_127
                 // legacy auth officially dead
                 if (Settings.LastLaunchedVersion < new Version("1.2.6.1"))
                 {
-                    Settings.EnableLegacyAuth = false;
+                    Settings.AuthWay = Settings.AuthWays.MTL;
                 }
 
                 // If first time launching 1.3.0.0
@@ -839,15 +843,13 @@ namespace Project_127
             // INIT the dynamic text handler for the overlay
             initDynamicTextGetters();
 
-            MainWindow.MW.StartMTLDispatcherTimer();
-
             HelperClasses.Logger.Log("Only CEF Init to go...");
 
             Auth.ROSIntegration.CEFInitialize();
 
             if (LauncherLogic.LaunchWay == LauncherLogic.LaunchWays.DragonEmu)
             {
-                if (LauncherLogic.AuthWay == LauncherLogic.AuthWays.MTL)
+                if (Settings.AuthWay == Settings.AuthWays.MTL)
                 {
                     if (Settings.AutoMTLAuthOnStartup)
                     {
@@ -914,7 +916,11 @@ namespace Project_127
                     p.Enabled = true;
                 }
             }
-            HelperClasses.SpecialPatchHandler.checkCopyScripthook();
+
+            if (LauncherLogic.InstallationState == LauncherLogic.InstallationStates.Downgraded)
+            {
+                HelperClasses.SpecialPatchHandler.checkCopyScripthook();
+            }
         }
 
         /// <summary>
@@ -1175,7 +1181,6 @@ namespace Project_127
             try { NoteOverlay.DisposeAllOverlayStuff(); } catch { }
             try { Jumpscript.StopJumpscript(); } catch { }
             try { MainWindow.MyDispatcherTimer.Stop(); } catch { }
-            try { MainWindow.MTLAuthTimer.Stop(); } catch { }
             try { MainWindow.myMutex.ReleaseMutex(); } catch { }
             try { MainWindow.MW.notifyIcon.Visible = false; } catch { }
             try { MainWindow.MW.notifyIcon.Dispose(); } catch { }

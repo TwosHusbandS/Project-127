@@ -741,6 +741,17 @@ namespace Project_127.MySettings
         }
 
         /// <summary>
+        /// Enum for what to do after GTA Launch
+        /// </summary>
+        public enum PostGTALaunchActions
+        {
+            Nothing,
+            MinimizeP127,
+            HideP127ToTray,
+            CloseP127
+        }
+
+        /// <summary>
         /// Settings LanguageSelected. Gets and Sets from Dictionary.
         /// </summary>
         public static Languages LanguageSelected
@@ -919,6 +930,24 @@ namespace Project_127.MySettings
                 if (value != ExitWay)
                 {
                     SetSetting("ExitWay", value.ToString());
+                }
+            }
+        }
+
+        /// <summary>
+        /// Settings PostLaunchAction. Gets and Sets from Dictionary.
+        /// </summary>
+        public static PostGTALaunchActions PostGTALaunchAction
+        {
+            get
+            {
+                return (PostGTALaunchActions)System.Enum.Parse(typeof(PostGTALaunchActions), GetSetting("PostGTALaunchAction"));
+            }
+            set
+            {
+                if (value != PostGTALaunchAction)
+                {
+                    SetSetting("PostGTALaunchAction", value.ToString());
                 }
             }
         }
@@ -1199,6 +1228,21 @@ namespace Project_127.MySettings
         }
 
         /// <summary>
+        /// Settings EnableWineCompability. Gets and Sets from the Dictionary.
+        /// </summary>
+        public static bool EnableWineCompability
+        {
+            get
+            {
+                return GetBoolFromString(GetSetting("EnableWineCompability"));
+            }
+            set
+            {
+                SetSetting("EnableWineCompability", value.ToString());
+            }
+        }
+
+        /// <summary>
         /// Settings EnableAutoStartJumpScript. Gets and Sets from the Dictionary.
         /// </summary>
         public static bool EnableAutoStartJumpScript
@@ -1236,18 +1280,31 @@ namespace Project_127.MySettings
         }
 
 
+
         /// <summary>
-        /// Settings EnableLegacyAuth. Gets and Sets from the Dictionary.
+        /// Enum for AuthWays
         /// </summary>
-        public static bool EnableLegacyAuth
+        public enum AuthWays
+        {
+            MTL,
+            LegacyAuth,
+            NoAuth
+        }
+
+
+        public static AuthWays AuthWay
         {
             get
             {
-                return GetBoolFromString(GetSetting("EnableLegacyAuth"));
+                return (AuthWays)System.Enum.Parse(typeof(AuthWays), GetSetting("AuthWay"));
             }
             set
             {
-                SetSetting("EnableLegacyAuth", value.ToString());
+                if (value != AuthWay)
+                {
+                    SetSetting("AuthWay", value.ToString());
+                    Settings.TellRockstarUsersToDisableAutoUpdateIfNeeded();
+                }
             }
         }
 

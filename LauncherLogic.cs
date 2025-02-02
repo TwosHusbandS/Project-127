@@ -219,7 +219,7 @@ namespace Project_127
         {
             get
             {
-                if (AuthStateOverWrite)
+                if (AuthStateOverWrite || Settings.AuthWay == Settings.AuthWays.NoAuth)
                 {
                     return AuthStates.Auth;
                 }
@@ -394,48 +394,6 @@ namespace Project_127
         }
 
 
-
-        /// <summary>
-        /// Enum for AuthWays
-        /// </summary>
-        public enum AuthWays
-        {
-            MTL,
-            LegacyAuth
-        }
-
-        public static AuthWays AuthWay
-        {
-            get
-            {
-                return AuthWays.MTL;
-                // Old
-                /*
-                if (Settings.EnableLegacyAuth)
-                {
-                    return AuthWays.LegacyAuth;
-                }
-                else
-                {
-                    return AuthWays.MTL;
-                }
-                */
-            }
-            set
-            {
-                if (value == AuthWays.LegacyAuth)
-                {
-                    Settings.EnableLegacyAuth = true;
-                }
-                else
-                {
-                    Settings.EnableLegacyAuth = false;
-                }
-                Settings.TellRockstarUsersToDisableAutoUpdateIfNeeded();
-            }
-        }
-
-
         #endregion
 
         #region Properties for often used Stuff
@@ -592,7 +550,7 @@ namespace Project_127
 
 
 
-            if (!MySettings.Settings.EnableLegacyAuth)
+            if (MySettings.Settings.AuthWay == Settings.AuthWays.MTL)
             {
                 if (LauncherLogic.AuthState == LauncherLogic.AuthStates.NotAuth)
                 {
@@ -603,7 +561,7 @@ namespace Project_127
                     PopupWrapper.PopupOk("You are already authenticated.");
                 }
             }
-            else
+            else if (MySettings.Settings.AuthWay == Settings.AuthWays.LegacyAuth)
             {
                 if (Globals.PageState != Globals.PageStates.Auth)
                 {
@@ -707,6 +665,9 @@ namespace Project_127
             List<HelperClasses.MyFileOperation> tmpRtrnMyFileOperations = PopupWrapper.PopupProgress(PopupProgress.ProgressTypes.Upgrade, "");
             // Actually executing the File Operations
             PopupWrapper.PopupProgress(PopupProgress.ProgressTypes.FileOperation, "Performing an Upgrade", tmpRtrnMyFileOperations);
+
+            HelperClasses.FileHandling.deleteFile(LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\launc.dat");
+            HelperClasses.FileHandling.deleteFile(LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\P127_ASMPATCHER_SCRIPTHOOK.dll");
 
             // We dont need to mess with social club versions since the launch process doesnt depend on it
 
@@ -830,6 +791,11 @@ namespace Project_127
             if (InstallationState != InstallationStates.Downgraded)
             {
                 PopupWrapper.PopupOk("We just did an Downgraded but the detected InstallationState is not Downgraded.\nI suggest reading the \"Help\" Part of the Information Page");
+            }
+            else
+            {
+                // ScriptHookDLL for special patcher, only if downgrade successfull
+                HelperClasses.SpecialPatchHandler.checkCopyScripthook();
             }
 
             IgnoreNewFilesWhileUpgradeDowngradeLogic = false;
@@ -977,23 +943,16 @@ namespace Project_127
             return tmp;
         }
 
+
+
         public static string GetStartCommandLineArgs()
         {
             string rtrn = "start ";
 
             if (Settings.EnableCoreFix)
             {
-                int AmountOfCores = Environment.ProcessorCount;
-                if (AmountOfCores < 4)
-                {
-                    AmountOfCores = 4;
-                }
-                else if (AmountOfCores > 23)
-                {
-                    AmountOfCores = 23;
-                }
-                UInt64 Possibilities = (UInt64)Math.Pow(2, AmountOfCores);
-                string MyHex = (Possibilities - 1).ToString("X");
+                UInt64 Possibilities = GetPreferedAffinity();
+                string MyHex = (Possibilities).ToString("X");
 
                 rtrn += "/affinity " + MyHex + " ";
             }
@@ -1019,6 +978,23 @@ namespace Project_127
             return rtrn;
         }
 
+
+
+        public static int MaxGTACores = 16;
+
+        public static UInt64 GetPreferedAffinity()
+        {
+            int AmountOfCores = Environment.ProcessorCount;
+            if (AmountOfCores < 4)
+            {
+                AmountOfCores = 4;
+            }
+            else if (AmountOfCores > MaxGTACores)
+            {
+                AmountOfCores = MaxGTACores;
+            }
+            return (UInt64)(Math.Pow(2, AmountOfCores) - 1);
+        }
 
         /// <summary>
         /// This actually launches the game
@@ -1115,7 +1091,7 @@ namespace Project_127
                         HelperClasses.FileHandling.WriteStringToFileOverwrite(EmuCfgPath, LaunchOptions);
                     }
 
-                    if (Settings.Retailer == Settings.Retailers.Steam && !Settings.EnableDontLaunchThroughSteam && LaunchWay == LaunchWays.DragonEmu)
+                    if (Settings.Retailer == Settings.Retailers.Steam && !Settings.EnableDontLaunchThroughSteam && LaunchWay == LaunchWays.DragonEmu && Settings.EnableCoreFix)
                     {
                         var steamprocs = Process.GetProcessesByName("steam");
                         if (steamprocs.Length > 0)
@@ -1128,11 +1104,14 @@ namespace Project_127
                                 corecount += (coreaffinity & ((Int64)1 << i)) != 0 ? 1 : 0;
                             }
                             HelperClasses.Logger.Log("Current core affinity for steam is " + coreaffinity.ToString("X") + " (" + corecount + " cores)");
-                            if (corecount > 16)
+
+                            UInt64 PreferedAffinity = GetPreferedAffinity();
+                            HelperClasses.Logger.Log("Preferred core affinity is: " + PreferedAffinity);
+
+                            if ((UInt64)corecount != PreferedAffinity)
                             {
-                                HelperClasses.Logger.Log("Settings steam's core affinity to FFFF (16 cores)");
-                                Int64 NewAffinity = 0xFFFF;
-                                steamproc.ProcessorAffinity = (IntPtr)NewAffinity;
+                                HelperClasses.Logger.Log("Settings steam's core affinity to " + PreferedAffinity);
+                                steamproc.ProcessorAffinity = (IntPtr)PreferedAffinity;
                             }
                         }
 
@@ -1615,11 +1594,9 @@ namespace Project_127
         public async static void PostLaunchEvents()
         {
             HelperClasses.Logger.Log("Post Launch Events started");
-            await Task.Delay(2500);
-            HelperClasses.Logger.Log("Waited a good bit");
+            await Task.Delay(5000);
+            HelperClasses.Logger.Log("Waited a good bit (5 Seconds)");
 
-            SetGTAProcessPriority();
-            GetGTACommandLineArgs();
 
             // If we DONT only auto start when downgraded OR if we are downgraded
             if (Settings.EnableOnlyAutoStartProgramsWhenDowngraded == false || LauncherLogic.InstallationState == InstallationStates.Downgraded)
@@ -1735,6 +1712,33 @@ namespace Project_127
                 }
             }
 
+            HelperClasses.Logger.Log("GTAStarted, lets do Settings.PostGTALaunchAction.");
+            if (GameState == GameStates.Running)
+            {
+                if (Settings.PostGTALaunchAction == Settings.PostGTALaunchActions.CloseP127)
+                {
+                    HelperClasses.Logger.Log("Settings.PostGTALaunchAction = CloseP127, Goodbye");
+                    MainWindow.MW.Dispatcher.Invoke(() => { MainWindow.MW.MI_Close_Click(null, null); });
+                }
+                else if (Settings.PostGTALaunchAction == Settings.PostGTALaunchActions.MinimizeP127)
+                {
+                    HelperClasses.Logger.Log("Settings.PostGTALaunchAction = MinimizeP127, Cya later");
+                    MainWindow.MW.Dispatcher.Invoke(() => { MainWindow.MW.MI_Minimize_Click(null, null); });
+                }
+                else if (Settings.PostGTALaunchAction == Settings.PostGTALaunchActions.HideP127ToTray)
+                {
+                    HelperClasses.Logger.Log("Settings.PostGTALaunchAction = HideP127ToTray, Peekaboo");
+                    MainWindow.MW.Dispatcher.Invoke(() => { MainWindow.MW.MI_ExitToTray_Click(null, null); });
+                }
+                else
+                {
+                    HelperClasses.Logger.Log("Settings.PostGTALaunchAction = Else, do nothing");
+                }
+            }
+            else
+            {
+                HelperClasses.Logger.Log("Cant do Settings.PostGTALaunchAction, Game not running");
+            }
 
         }
 
