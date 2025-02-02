@@ -7,6 +7,7 @@
 * Support for ThirdParty NonP127 Authentication for DragonEmu Users
 * P127 can now be properly started without having to rely on the P127 Launcher 
 * * This means you can pin to taskbar without issues
+* New "PostGTALaunch" Action setting to do nothing, minimize P127, Hide p127 or close p127 once GTA has been launched
 * UI Text change of crash-fix options
 * UI Fix for cut off text due to too small column width
 * P127 will now remove assemblypatcher.dll and launc.dat on game upgrade.
