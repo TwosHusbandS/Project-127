@@ -6,7 +6,7 @@
 	<blob_count>16384</blob_count>
 	<rockstarId_offset>0xEF0</rockstarId_offset>
 	<rockstarId_take>8</rockstarId_take>
-	<sessKey_offset>0x1110</sessKey_offset>
+	<sessKey_offset>0x1180</sessKey_offset>
 	<sessKey_take>16</sessKey_take>
 	<ticket_offset>0xAF0</ticket_offset>
 	<sessTicket_offset>0xCF0</sessTicket_offset>

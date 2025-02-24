@@ -18,7 +18,7 @@ namespace Project_127.Auth
         static readonly Int32 blob_count_default = 16384;
         static readonly Int32 rockstarId_offset_default = 0xEF0;
         static readonly Int32 rockstarId_take_default = 8;
-        static readonly Int32 sessKey_offset_default = 0x1110;
+        static readonly Int32 sessKey_offset_default = 0x1180;
         static readonly Int32 sessKey_take_default = 16;
         static readonly Int32 ticket_offset_default = 0xAF0;
         static readonly Int32 sessTicket_offset_default = 0xCF0;
