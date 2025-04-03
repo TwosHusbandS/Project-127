@@ -18,7 +18,7 @@ namespace Project_127.HelperClasses
     {
         private XPathNavigator nav;
         private Dictionary<string, XPathNavigator> availableSubassemblies;
-        private Dictionary<string, subassemblyInfo> installedSubassemblies;
+        public Dictionary<string, subassemblyInfo> installedSubassemblies;
 
         private static string Project127Files
         {
@@ -28,7 +28,7 @@ namespace Project_127.HelperClasses
             }
         }
 
-        private void updateInstalled()
+        public void updateInstalled()
         {
             HelperClasses.RegeditHandler.SetValue("DownloadManagerInstalledSubassemblies", json.Serialize(installedSubassemblies));
         }

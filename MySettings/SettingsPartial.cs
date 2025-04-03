@@ -539,6 +539,10 @@ namespace Project_127.MySettings
                 {
                     return "124";
                 }
+                else if (GetSetting("DragonEmuGameVersion") == "129")
+                {
+                    return "129";
+                }
                 else
                 {
                     return "127";
@@ -550,17 +554,11 @@ namespace Project_127.MySettings
                 {
                     if (ComponentManager.RecommendUpgradedGTA())
                     {
+                        string OldSetting = DragonEmuGameVersion;
                         SetSetting("DragonEmuGameVersion", value);
                         if (!ComponentManager.CheckIfRequiredComponentsAreInstalled(true))
                         {
-                            if (value == "124")
-                            {
-                                SetSetting("DragonEmuGameVersion", "127");
-                            }
-                            else
-                            {
-                                SetSetting("DragonEmuGameVersion", "124");
-                            }
+                            SetSetting("DragonEmuGameVersion", OldSetting);
                             return;
                         }
                     }
@@ -792,6 +790,10 @@ namespace Project_127.MySettings
                 {
                     return "124";
                 }
+                else if (GetSetting("Version") == "129")
+                {
+                    return "129";
+                }
                 else
                 {
                     return "127";
@@ -803,17 +805,11 @@ namespace Project_127.MySettings
                 {
                     if (ComponentManager.RecommendUpgradedGTA())
                     {
+                        string OldSetting = SocialClubLaunchGameVersion;
                         SetSetting("Version", value);
                         if (!ComponentManager.CheckIfRequiredComponentsAreInstalled(true))
                         {
-                            if (value == "124")
-                            {
-                                SetSetting("Version", "127");
-                            }
-                            else
-                            {
-                                SetSetting("Version", "124");
-                            }
+                            SetSetting("Version", OldSetting);
                             return;
                         }
                     }
