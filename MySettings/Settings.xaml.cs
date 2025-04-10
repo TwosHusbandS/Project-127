@@ -2318,6 +2318,7 @@ namespace Project_127.MySettings
                     FoldersToKeep.Add("patchday2bng");
                     FoldersToKeep.Add("patchday2ng");
                     FoldersToKeep.Add("patchday3ng");
+                    FoldersToKeep.Add("patchday4ng");
 
                     // as per specials request
                     string update2rpf_path = LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\update\update2.rpf";
