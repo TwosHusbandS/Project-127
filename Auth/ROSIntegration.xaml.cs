@@ -300,8 +300,7 @@ namespace Project_127.Auth
                     this.myGridLoading.Visibility = Visibility.Hidden;
                 });
 #endif
-
-                browser.BrowserSettings.ApplicationCache = CefState.Disabled;
+                //browser.BrowserSettings.ApplicationCache = CefState.Disabled; //commented out by thS on 2025-04-03 after updating nuget
                 //browser.BrowserSettings.BackgroundColor = 0x13 << 16 | 0x15 << 8 | 0x18 | 0xFF << 24;
                 HelperClasses.Logger.Log("Initialization complete");
 
