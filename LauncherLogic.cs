@@ -708,6 +708,11 @@ namespace Project_127
             HelperClasses.FileHandling.deleteFile(LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\launc.dat");
             HelperClasses.FileHandling.deleteFile(LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\P127_ASMPATCHER_SCRIPTHOOK.dll");
 
+            if (Settings.Retailer != Settings.Retailers.Steam)
+            {
+                HelperClasses.FileHandling.deleteFile(LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\steam_appid.txt");
+            }
+
             // We dont need to mess with social club versions since the launch process doesnt depend on it
 
             if (InstallationState != InstallationStates.Upgraded)
