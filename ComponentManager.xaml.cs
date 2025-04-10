@@ -1150,32 +1150,6 @@ namespace Project_127
             }
             catch
             {
-                try
-                {
-                    if (Component.GetAssemblyName().Contains("129"))
-                    {
-                        string Folder = Component.GetPathWhereZIPIsExtracted();
-                        string[] Files = HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(Folder);
-                        List<MyFileOperation> MFOs = new List<MyFileOperation>();
-                        foreach (string File in Files)
-                        {
-                            MFOs.Add(new MyFileOperation(MyFileOperation.FileOperations.Delete, File, "", "Deleting: '" + File + "', in hacked together Uninstall for 129 offline components", 0, MyFileOperation.FileOrFolder.File));
-                        }
-                        if (MFOs.Count > 0)
-                        {
-                            PopupWrapper.PopupProgress(PopupProgress.ProgressTypes.FileOperation, "Delete some 129 Component Files...", MFOs);
-                        }
-
-                        Globals.MyDM.installedSubassemblies.Remove(Component.GetAssemblyName());
-                        Globals.MyDM.updateInstalled();
-                        ComponentManager.MyRefreshStatic();
-                        return;
-                    }
-                }
-                catch
-                {
-                    HelperClasses.Logger.Log("Custom hacked together uninstall failed, just remove this and make method and propery private again, once this goes to github");
-                }
                 PopupWrapper.PopupError("Failed to uninstall Component.\nMost likely cause is no connection to github.");
                 HelperClasses.Logger.Log("Failed to uninstall from Component Manager. Most likely github offline or user has no internet");
             }
