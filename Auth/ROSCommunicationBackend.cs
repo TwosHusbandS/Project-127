@@ -394,7 +394,36 @@ namespace Project_127.Auth
 				if (!Auth.ROSIntegration.AuthErrorMessageThrownAlready)
 				{
 					Auth.ROSIntegration.AuthErrorMessageThrownAlready = true;
-                    PopupWrapper.PopupError(res.text); // Show Error
+
+                    // if 429 error, we might actually be auth
+                    if (res.text.Contains("429"))
+                    {
+                        HelperClasses.Logger.Log("Initial token generation failed; 429 Error, waiting 3 seconds");
+
+                        _ = Task.Run(async () =>
+                        {
+                            await Task.Delay(3000); // wait 3 seconds
+
+							if (LauncherLogic.AuthState == LauncherLogic.AuthStates.Auth)
+							{
+                                HelperClasses.Logger.Log("Initial token generation failed; 429 Error, we waited 3 seconds, we ARE now Auth, NOT throwing error.");
+                            }
+							else
+							{
+                                HelperClasses.Logger.Log("Initial token generation failed; 429 Error, we waited 3 seconds, we are still NOT Auth, throwing error now.");
+								string errormessage = "Rockstar Games Launcher threw Error 429 when trying to generate launch token.";
+								errormessage += "\n\nSometimes this is fine and authentication still works.";
+								errormessage += "\n\nIf the lock in the top left corner is still not green,";
+								errormessage += "\ntry clicking it again or re-starting P127,";
+								errormessage += "\nand make sure the Account actually owns GTA V on PC.";
+                                PopupWrapper.PopupError(errormessage); // Show Error
+                            }
+                        });
+                    }
+                    else
+                    {
+                        PopupWrapper.PopupError(res.text); // Show Error
+                    }
 				}
 			}
 			return false;
