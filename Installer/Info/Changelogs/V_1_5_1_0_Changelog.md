@@ -9,6 +9,7 @@
 #### Changes:
 * Targeting .NET Framework 4.8 now, apparently helps with proton/wine?
 * Updated all nuget packages
+* * Small installer changes to accomondate new cefsharp version
 * Random small fixes
 * * New game version for buildversiontable
 * * Removing steam_appid.txt if youre upgrading and not on steam (should have no effect since it should not ever get there)
