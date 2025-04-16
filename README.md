@@ -51,7 +51,7 @@ Shamelessly stolen from: https://github.com/othneildrew/Best-README-Template
 	.
     <a href="#contact">Contact me</a>
 	.
-	  <a href="Installer/Info/Changelogs/V_1_5_0_0_Changelog.md">Changelog</a>
+	  <a href="Installer/Info/Changelogs/V_1_5_1_0_Changelog.md">Changelog</a>
   </p>
 </p>
 
@@ -118,6 +118,7 @@ Pretty much built with straight C# visualized with WPF
 * Grab the [latest Installer][installer-latest-url] from [the Installer folder][installer-folder-url]
 * Execute said Installer
 * Open Project 127
+* Legacy installers can be found in the [legacy-installers branch](https://github.com/TwosHusbandS/Project-127/tree/legacy_installers/Installer).
 
 ### User Instructions:
 
@@ -168,7 +169,7 @@ To get a local copy up and running follow these simple example steps.
 * Some of the Code (especially XAML / GUI related) is not the best looking and far from best practice.
 * If you can think of Improvements or new Features feel free to make a Pull Request or [contact me](#contact). 
 * Can always use an extra pair of eyes to make sure I dont do anything stupid.
-
+* **You need [Github LFS (Large File Storage](https://git-lfs.com/)** due to me being lazy and having installer binaries in code.
 
 -----
 
@@ -228,7 +229,7 @@ Discord - [@ths_was_taken][discord-url]
 [license-url]: https://github.com/TwosHusbandS/Project-127/blob/master/LICENSE
 [maintained-shield]: https://img.shields.io/badge/Maintained-No-FFDB3A?style=plastic
 [maintained-url]: #about-the-project
-[version-shield]: https://img.shields.io/badge/Version-1.5.0.0_Installer-4DC71F?style=plastic
+[version-shield]: https://img.shields.io/badge/Version-1.5.1.0_Installer-4DC71F?style=plastic
 [help-shield]: https://img.shields.io/badge/Help-Here-F48041?style=plastic
 [features-shield]: https://img.shields.io/badge/Features-Click_Me-802BCF?style=plastic
 

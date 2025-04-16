@@ -236,7 +236,7 @@ namespace Project_127
         /// <summary>
         /// Property of other Buildinfo. Will be in the top message of logs
         /// </summary>
-        public static string BuildInfo = "1.5.0.0 - RC 1";
+        public static string BuildInfo = "1.5.1.0 - RC 3";
 
 
         /// <summary>
@@ -525,6 +525,9 @@ namespace Project_127
             // Writing ProjectInstallationPath to Registry.
             Settings.InstallationPath = Globals.ProjectInstallationPath;
 
+            // 
+            HelperClasses.FileHandling.CreateAllZIPPaths(Settings.ZIPExtractionPath);
+
             // Last Launched Version Cleanup
             if (Settings.LastLaunchedVersion < Globals.ProjectVersion)
             {
@@ -783,6 +786,15 @@ namespace Project_127
                             Settings.OverWriteGTACommandLineArgs = Settings.OverWriteGTACommandLineArgs.Replace(" -StutterFix", "");
                         }
                     }
+                }
+
+                // Delete CEF_Cache when first time launching 1.5.1.0 or later
+                // cant only do it in installer, in case user skipps a version
+                if (Settings.LastLaunchedVersion < new Version("1.5.1.0"))
+                {
+                    HelperClasses.Logger.Log("Deleting CEF_CacheFiles since users last launched version is below 1.5.1.0");
+                    string cefcachepath = Globals.ProjectInstallationPathBinary.TrimEnd('\\') + @"\CEF_CacheFiles";
+                    HelperClasses.FileHandling.DeleteFolder(cefcachepath);
                 }
 
                 Settings.LastLaunchedVersion = Globals.ProjectVersion;

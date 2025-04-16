@@ -62,8 +62,10 @@ namespace Project_127.MySettings
             combox_Set_StartWays.ItemsSource = Enum.GetValues(typeof(StartWays)).Cast<StartWays>();
             combox_Set_SocialClubGameVersion.Items.Add("127");
             combox_Set_SocialClubGameVersion.Items.Add("124");
+            combox_Set_SocialClubGameVersion.Items.Add("129");
             combox_Set_DragonEmuGameVersion.Items.Add("127");
             combox_Set_DragonEmuGameVersion.Items.Add("124");
+            combox_Set_DragonEmuGameVersion.Items.Add("129");
 
             SettingsState = LastSettingsState;
 
@@ -727,6 +729,10 @@ namespace Project_127.MySettings
                 {
                     lbl_LaunchWays.Content = "Launch - Method: 1.24 SocialClubLaunch";
                 }
+                else if (SocialClubLaunchGameVersion == "129")
+                {
+                    lbl_LaunchWays.Content = "Launch - Method: 1.29 SocialClubLaunch";
+                }
                 else
                 {
                     lbl_LaunchWays.Content = "Launch - Method: 1.27 SocialClubLaunch";
@@ -737,6 +743,10 @@ namespace Project_127.MySettings
                 if (DragonEmuGameVersion == "124")
                 {
                     lbl_LaunchWays.Content = "Launch - Method: 1.24 Dragon Launcher";
+                }
+                else if (DragonEmuGameVersion == "129")
+                {
+                    lbl_LaunchWays.Content = "Launch - Method: 1.29 Dragon Launcher";
                 }
                 else
                 {
@@ -2308,6 +2318,7 @@ namespace Project_127.MySettings
                     FoldersToKeep.Add("patchday2bng");
                     FoldersToKeep.Add("patchday2ng");
                     FoldersToKeep.Add("patchday3ng");
+                    FoldersToKeep.Add("patchday4ng");
 
                     // as per specials request
                     string update2rpf_path = LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\update\update2.rpf";

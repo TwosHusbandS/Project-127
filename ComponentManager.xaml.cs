@@ -32,10 +32,13 @@ namespace Project_127
         {
             Base,
             Base124,
+            Base129,
             SCLSteam127,
             SCLSteam124,
+            SCLSteam129,
             SCLRockstar127,
             SCLRockstar124,
+            SCLRockstar129,
             DowngradedSC,
             AdditionalSaveFiles
         }
@@ -85,7 +88,18 @@ namespace Project_127
                             tmp.Add(Components.SCLRockstar124);
                         }
                     }
-                    else if (MySettings.Settings.SocialClubLaunchGameVersion == "127")
+                    else if (MySettings.Settings.SocialClubLaunchGameVersion == "129")
+                    {
+                        if (MySettings.Settings.Retailer == MySettings.Settings.Retailers.Steam)
+                        {
+                            tmp.Add(Components.SCLSteam129);
+                        }
+                        else if (MySettings.Settings.Retailer == MySettings.Settings.Retailers.Rockstar)
+                        {
+                            tmp.Add(Components.SCLRockstar129);
+                        }
+                    }
+                    else
                     {
                         if (MySettings.Settings.Retailer == MySettings.Settings.Retailers.Steam)
                         {
@@ -103,6 +117,10 @@ namespace Project_127
                     if (MySettings.Settings.DragonEmuGameVersion == "124")
                     {
                         tmp.Add(Components.Base124);
+                    }
+                    else if (MySettings.Settings.DragonEmuGameVersion == "129")
+                    {
+                        tmp.Add(Components.Base129);
                     }
                 }
                 return tmp;
@@ -497,16 +515,19 @@ namespace Project_127
 
         private void ResetAllStatus()
         {
-            btn_lbl_FilesMain_Name.Content = "Required Files";
+            btn_lbl_FilesMain_Name.Content = "Required Files (Dragon Emu)";
 
             List<Button> labels = new List<Button>
             {
                 lbl_FilesMain_Status,
                 lbl_FilesBase124_Status,
-                lbl_FilesSCLRockstar124_Status,
+                lbl_FilesBase129_Status,
                 lbl_FilesSCLRockstar127_Status,
-                lbl_FilesSCLSteam124_Status,
+                lbl_FilesSCLRockstar124_Status,
+                lbl_FilesSCLRockstar129_Status,
                 lbl_FilesSCLSteam127_Status,
+                lbl_FilesSCLSteam124_Status,
+                lbl_FilesSCLSteam129_Status,
                 lbl_FilesSCLDowngradedSC_Status,
                 lbl_FilesAdditionalSF_Status
             };
@@ -529,32 +550,38 @@ namespace Project_127
             });
 
             if (ReInitDownloadManager)
-                {
-                    await Globals.SetUpDownloadManager(false);
-                }
+            {
+                await Globals.SetUpDownloadManager(false);
+            }
 
-                if (CheckForUpdatesPls)
-                {
-                    CheckForUpdates();
-                }
+            if (CheckForUpdatesPls)
+            {
+                CheckForUpdates();
+            }
 
             MainWindow.MW.Dispatcher.Invoke((Action)delegate
             {
                 Components.Base.UpdateStatus(lbl_FilesMain_Status);
                 Components.Base124.UpdateStatus(lbl_FilesBase124_Status);
+                Components.Base129.UpdateStatus(lbl_FilesBase129_Status);
                 Components.SCLRockstar124.UpdateStatus(lbl_FilesSCLRockstar124_Status);
                 Components.SCLRockstar127.UpdateStatus(lbl_FilesSCLRockstar127_Status);
+                Components.SCLRockstar129.UpdateStatus(lbl_FilesSCLRockstar129_Status);
                 Components.SCLSteam124.UpdateStatus(lbl_FilesSCLSteam124_Status);
                 Components.SCLSteam127.UpdateStatus(lbl_FilesSCLSteam127_Status);
+                Components.SCLSteam129.UpdateStatus(lbl_FilesSCLSteam129_Status);
                 Components.DowngradedSC.UpdateStatus(lbl_FilesSCLDowngradedSC_Status);
                 Components.AdditionalSaveFiles.UpdateStatus(lbl_FilesAdditionalSF_Status);
 
                 btn_lbl_FilesMain_Name.ToolTip = Components.Base.GetToolTip();
                 lbl_FilesBase124_Name.ToolTip = Components.Base124.GetToolTip();
-                lbl_FilesSCLRockstar124_Name.ToolTip = Components.SCLRockstar124.GetToolTip();
+                lbl_FilesBase129_Name.ToolTip = Components.Base129.GetToolTip();
                 lbl_FilesSCLRockstar127_Name.ToolTip = Components.SCLRockstar127.GetToolTip();
-                lbl_FilesSCLSteam124_Name.ToolTip = Components.SCLSteam124.GetToolTip();
+                lbl_FilesSCLRockstar124_Name.ToolTip = Components.SCLRockstar124.GetToolTip();
+                lbl_FilesSCLRockstar129_Name.ToolTip = Components.SCLRockstar129.GetToolTip();
                 lbl_FilesSCLSteam127_Name.ToolTip = Components.SCLSteam127.GetToolTip();
+                lbl_FilesSCLSteam124_Name.ToolTip = Components.SCLSteam124.GetToolTip();
+                lbl_FilesSCLSteam129_Name.ToolTip = Components.SCLSteam129.GetToolTip();
                 lbl_FilesSCLDowngradedSC_Name.ToolTip = Components.DowngradedSC.GetToolTip();
                 lbl_FilesAdditionalSF_Name.ToolTip = Components.AdditionalSaveFiles.GetToolTip();
 
@@ -563,11 +590,11 @@ namespace Project_127
                 Version tmp = Components.Base.GetInstalledVersion();
                 if (tmp != new Version("0.0.0.0"))
                 {
-                    btn_lbl_FilesMain_Name.Content = "Required Files (v." + tmp.Minor + ")";
+                    btn_lbl_FilesMain_Name.Content = "Required Files (Dragon Emu) (v." + tmp.Minor + ")";
                 }
                 else
                 {
-                    btn_lbl_FilesMain_Name.Content = "Required Files";
+                    btn_lbl_FilesMain_Name.Content = "Required Files (Dragon Emu)";
                 }
 
                 Border_Loading.Visibility = Visibility.Hidden;
@@ -790,17 +817,26 @@ namespace Project_127
                 case ComponentManager.Components.Base124:
                     rtrn = "124_DR490N";
                     break;
+                case ComponentManager.Components.Base129:
+                    rtrn = "129_DR490N";
+                    break;
                 case ComponentManager.Components.SCLRockstar124:
                     rtrn = "AM_124_ROCKSTAR";
                     break;
                 case ComponentManager.Components.SCLRockstar127:
                     rtrn = "AM_127_ROCKSTAR";
                     break;
+                case ComponentManager.Components.SCLRockstar129:
+                    rtrn = "AM_129_ROCKSTAR";
+                    break;
                 case ComponentManager.Components.SCLSteam124:
                     rtrn = "AM_124_STEAM";
                     break;
                 case ComponentManager.Components.SCLSteam127:
                     rtrn = "AM_127_STEAM";
+                    break;
+                case ComponentManager.Components.SCLSteam129:
+                    rtrn = "AM_129_STEAM";
                     break;
                 case ComponentManager.Components.DowngradedSC:
                     rtrn = "SOCIALCLUB_1178";
@@ -823,17 +859,26 @@ namespace Project_127
                 case ComponentManager.Components.Base124:
                     rtrn = "Files required to launch version 1.24 through dr490n Launcher";
                     break;
+                case ComponentManager.Components.Base129:
+                    rtrn = "Files required to launch version 1.29 through dr490n Launcher";
+                    break;
                 case ComponentManager.Components.SCLRockstar124:
                     rtrn = "Files for Launching through Social Club for Rockstar 1.24";
                     break;
                 case ComponentManager.Components.SCLRockstar127:
                     rtrn = "Files for Launching through Social Club for Rockstar 1.27";
                     break;
+                case ComponentManager.Components.SCLRockstar129:
+                    rtrn = "Files for Launching through Social Club for Rockstar 1.29";
+                    break;
                 case ComponentManager.Components.SCLSteam124:
                     rtrn = "Files for Launching through Social Club for Steam 1.24";
                     break;
                 case ComponentManager.Components.SCLSteam127:
                     rtrn = "Files for Launching through Social Club for Steam 1.27";
+                    break;
+                case ComponentManager.Components.SCLSteam129:
+                    rtrn = "Files for Launching through Social Club for Steam 1.29";
                     break;
                 case ComponentManager.Components.DowngradedSC:
                     rtrn = "Files for Launching through Social Club (Downgraded Social Club Files)";
@@ -876,14 +921,20 @@ namespace Project_127
                     return LauncherLogic.ZIPFilePath;
                 case ComponentManager.Components.Base124:
                     return LauncherLogic.DowngradeBase124FilePath;
+                case ComponentManager.Components.Base129:
+                    return LauncherLogic.DowngradeBase129FilePath;
                 case ComponentManager.Components.SCLRockstar124:
                     return LauncherLogic.DowngradeAlternativeFilePathRockstar124;
                 case ComponentManager.Components.SCLRockstar127:
                     return LauncherLogic.DowngradeAlternativeFilePathRockstar127;
+                case ComponentManager.Components.SCLRockstar129:
+                    return LauncherLogic.DowngradeAlternativeFilePathRockstar129;
                 case ComponentManager.Components.SCLSteam124:
                     return LauncherLogic.DowngradeAlternativeFilePathSteam124;
                 case ComponentManager.Components.SCLSteam127:
                     return LauncherLogic.DowngradeAlternativeFilePathSteam127;
+                case ComponentManager.Components.SCLSteam129:
+                    return LauncherLogic.DowngradeAlternativeFilePathSteam129;
                 case ComponentManager.Components.DowngradedSC:
                     return LaunchAlternative.SCL_SC_DOWNGRADED;
                 case ComponentManager.Components.AdditionalSaveFiles:
@@ -901,16 +952,22 @@ namespace Project_127
                     return LauncherLogic.IsDowngradedGTA(LauncherLogic.DowngradeEmuFilePath);
                 case ComponentManager.Components.Base124:
                     return LauncherLogic.IsDowngradedGTA(LauncherLogic.DowngradeBase124FilePath);
+                case ComponentManager.Components.Base129:
+                    return LauncherLogic.IsDowngradedGTA(LauncherLogic.DowngradeBase129FilePath);
                 case ComponentManager.Components.DowngradedSC:
                     return (LaunchAlternative.Get_SCL_InstallationState(LaunchAlternative.SCL_SC_DOWNGRADED) == LaunchAlternative.SCL_InstallationStates.Downgraded);
                 case ComponentManager.Components.SCLRockstar124:
                     return LauncherLogic.IsDowngradedGTA(LauncherLogic.DowngradeAlternativeFilePathRockstar124);
                 case ComponentManager.Components.SCLRockstar127:
                     return LauncherLogic.IsDowngradedGTA(LauncherLogic.DowngradeAlternativeFilePathRockstar127);
+                case ComponentManager.Components.SCLRockstar129:
+                    return LauncherLogic.IsDowngradedGTA(LauncherLogic.DowngradeAlternativeFilePathRockstar129);
                 case ComponentManager.Components.SCLSteam124:
                     return LauncherLogic.IsDowngradedGTA(LauncherLogic.DowngradeAlternativeFilePathSteam124);
                 case ComponentManager.Components.SCLSteam127:
                     return LauncherLogic.IsDowngradedGTA(LauncherLogic.DowngradeAlternativeFilePathSteam127);
+                case ComponentManager.Components.SCLSteam129:
+                    return LauncherLogic.IsDowngradedGTA(LauncherLogic.DowngradeAlternativeFilePathSteam129);
                 case ComponentManager.Components.AdditionalSaveFiles:
                     return true;
                 default:

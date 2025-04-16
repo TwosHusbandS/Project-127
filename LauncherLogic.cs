@@ -274,6 +274,10 @@ namespace Project_127
                 long SizeOfDowngradeBase124Update = HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeBase124FilePath.TrimEnd('\\') + @"\update\update.rpf");
                 long SizeOfDowngradeBase124PlayGTAV = HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeBase124FilePath.TrimEnd('\\') + @"\playgtav.exe");
 
+                long SizeOfDowngradeBase129GTAV = HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeBase129FilePath.TrimEnd('\\') + @"\GTA5.exe");
+                long SizeOfDowngradeBase129Update = HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeBase129FilePath.TrimEnd('\\') + @"\update\update.rpf");
+                long SizeOfDowngradeBase129PlayGTAV = HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeBase129FilePath.TrimEnd('\\') + @"\playgtav.exe");
+
                 long SizeOfDowngradeAlternativeSteam127GTAV = HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeAlternativeFilePathSteam127.TrimEnd('\\') + @"\GTA5.exe");
                 long SizeOfDowngradeAlternativeSteam127Update = HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeAlternativeFilePathSteam127.TrimEnd('\\') + @"\update\update.rpf");
                 long SizeOfDowngradeAlternativeSteam127PlayGTAV = HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeAlternativeFilePathSteam127.TrimEnd('\\') + @"\playgtav.exe");
@@ -290,6 +294,14 @@ namespace Project_127
                 long SizeOfDowngradeAlternativeRockstar124Update = HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeAlternativeFilePathRockstar124.TrimEnd('\\') + @"\update\update.rpf");
                 long SizeOfDowngradeAlternativeRockstar124PlayGTAV = HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeAlternativeFilePathRockstar124.TrimEnd('\\') + @"\playgtav.exe");
 
+                long SizeOfDowngradeAlternativeSteam129GTAV = HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeAlternativeFilePathSteam129.TrimEnd('\\') + @"\GTA5.exe");
+                long SizeOfDowngradeAlternativeSteam129Update = HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeAlternativeFilePathSteam129.TrimEnd('\\') + @"\update\update.rpf");
+                long SizeOfDowngradeAlternativeSteam129PlayGTAV = HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeAlternativeFilePathSteam129.TrimEnd('\\') + @"\playgtav.exe");
+
+                long SizeOfDowngradeAlternativeRockstar129GTAV = HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeAlternativeFilePathRockstar129.TrimEnd('\\') + @"\GTA5.exe");
+                long SizeOfDowngradeAlternativeRockstar129Update = HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeAlternativeFilePathRockstar129.TrimEnd('\\') + @"\update\update.rpf");
+                long SizeOfDowngradeAlternativeRockstar129PlayGTAV = HelperClasses.FileHandling.GetSizeOfFile(LauncherLogic.DowngradeAlternativeFilePathRockstar129.TrimEnd('\\') + @"\playgtav.exe");
+
                 // if both Files in the GTA V Install Path exist
                 if (SizeOfGTAV > 0 && SizeOfUpdate > 0)
                 {
@@ -298,7 +310,11 @@ namespace Project_127
                     {
                         rtrn = InstallationStates.Downgraded;
                     }
-                    if (SizeOfGTAV == SizeOfDowngradeBase124GTAV && SizeOfUpdate == SizeOfDowngradeBase124Update && SizeOfPlayGTAV == SizeOfDowngradeBase124PlayGTAV)
+                    else if (SizeOfGTAV == SizeOfDowngradeBase124GTAV && SizeOfUpdate == SizeOfDowngradeBase124Update && SizeOfPlayGTAV == SizeOfDowngradeBase124PlayGTAV)
+                    {
+                        rtrn = InstallationStates.Downgraded;
+                    }
+                    else if (SizeOfGTAV == SizeOfDowngradeBase129GTAV && SizeOfUpdate == SizeOfDowngradeBase129Update && SizeOfPlayGTAV == SizeOfDowngradeBase129PlayGTAV)
                     {
                         rtrn = InstallationStates.Downgraded;
                     }
@@ -315,6 +331,14 @@ namespace Project_127
                         rtrn = InstallationStates.Downgraded;
                     }
                     else if (SizeOfGTAV == SizeOfDowngradeAlternativeRockstar124GTAV && SizeOfUpdate == SizeOfDowngradeAlternativeRockstar124Update)
+                    {
+                        rtrn = InstallationStates.Downgraded;
+                    }
+                    else if (SizeOfGTAV == SizeOfDowngradeAlternativeSteam129GTAV && SizeOfUpdate == SizeOfDowngradeAlternativeSteam129Update)
+                    {
+                        rtrn = InstallationStates.Downgraded;
+                    }
+                    else if (SizeOfGTAV == SizeOfDowngradeAlternativeRockstar129GTAV && SizeOfUpdate == SizeOfDowngradeAlternativeRockstar129Update)
                     {
                         rtrn = InstallationStates.Downgraded;
                     }
@@ -428,6 +452,10 @@ namespace Project_127
                         {
                             return DowngradeAlternativeFilePathSteam124;
                         }
+                        else if (Settings.SocialClubLaunchGameVersion == "129")
+                        {
+                            return DowngradeAlternativeFilePathSteam129;
+                        }
                         else
                         {
                             return DowngradeAlternativeFilePathSteam127;
@@ -438,6 +466,10 @@ namespace Project_127
                         if (Settings.SocialClubLaunchGameVersion == "124")
                         {
                             return DowngradeAlternativeFilePathRockstar124;
+                        }
+                        else if (Settings.SocialClubLaunchGameVersion == "129")
+                        {
+                            return DowngradeAlternativeFilePathRockstar129;
                         }
                         else
                         {
@@ -451,13 +483,17 @@ namespace Project_127
                 }
                 else
                 {
-                    if (Settings.DragonEmuGameVersion == "127")
+                    if (Settings.DragonEmuGameVersion == "124")
                     {
-                        return DowngradeEmuFilePath;
+                        return DowngradeBase124FilePath;
+                    }
+                    else if (Settings.DragonEmuGameVersion == "129")
+                    {
+                        return DowngradeBase129FilePath;
                     }
                     else
                     {
-                        return DowngradeBase124FilePath;
+                        return DowngradeEmuFilePath;
                     }
                 }
             }
@@ -478,16 +514,19 @@ namespace Project_127
         /// Property of often used variable. (DowngradeBase124)
         /// </summary>
         public static string DowngradeBase124FilePath { get { return LauncherLogic.ZIPFilePath.TrimEnd('\\') + @"\Project_127_Files\DowngradeFiles124\"; } }
+        public static string DowngradeBase129FilePath { get { return LauncherLogic.ZIPFilePath.TrimEnd('\\') + @"\Project_127_Files\DowngradeFiles129\"; } }
 
         /// <summary>
         /// Property of often used variable. (DowngradeAlternativeFilePathSteam127)
         /// </summary>
         public static string DowngradeAlternativeFilePathSteam127 { get { return LauncherLogic.ZIPFilePath.TrimEnd('\\') + @"\Project_127_Files\DowngradeFiles_Alternative\steam\127\"; } }
+        public static string DowngradeAlternativeFilePathSteam129 { get { return LauncherLogic.ZIPFilePath.TrimEnd('\\') + @"\Project_127_Files\DowngradeFiles_Alternative\steam\129\"; } }
 
         /// <summary>
         /// Property of often used variable. (DowngradeAlternativeFilePathRockstar127)
         /// </summary>
         public static string DowngradeAlternativeFilePathRockstar127 { get { return LauncherLogic.ZIPFilePath.TrimEnd('\\') + @"\Project_127_Files\DowngradeFiles_Alternative\rockstar\127\"; } }
+        public static string DowngradeAlternativeFilePathRockstar129 { get { return LauncherLogic.ZIPFilePath.TrimEnd('\\') + @"\Project_127_Files\DowngradeFiles_Alternative\rockstar\129\"; } }
 
 
         /// <summary>
@@ -668,6 +707,11 @@ namespace Project_127
 
             HelperClasses.FileHandling.deleteFile(LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\launc.dat");
             HelperClasses.FileHandling.deleteFile(LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\P127_ASMPATCHER_SCRIPTHOOK.dll");
+
+            if (Settings.Retailer != Settings.Retailers.Steam)
+            {
+                HelperClasses.FileHandling.deleteFile(LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\steam_appid.txt");
+            }
 
             // We dont need to mess with social club versions since the launch process doesnt depend on it
 
@@ -1230,6 +1274,10 @@ namespace Project_127
                                 {
                                     ComponentManager.Components.Base124.ReInstall();
                                 }
+                                else if (Settings.DragonEmuGameVersion == "129")
+                                {
+                                    ComponentManager.Components.Base129.ReInstall();
+                                }
                                 else
                                 {
                                     ComponentManager.Components.Base.ReInstall();
@@ -1244,6 +1292,10 @@ namespace Project_127
                                         ComponentManager.Components.SCLRockstar124.ReInstall();
 
                                     }
+                                    else if (Settings.SocialClubLaunchGameVersion == "129")
+                                    {
+                                        ComponentManager.Components.SCLRockstar129.ReInstall();
+                                    }
                                     else
                                     {
                                         ComponentManager.Components.SCLRockstar127.ReInstall();
@@ -1254,7 +1306,10 @@ namespace Project_127
                                     if (Settings.SocialClubLaunchGameVersion == "124")
                                     {
                                         ComponentManager.Components.SCLSteam124.ReInstall();
-
+                                    }
+                                    else if (Settings.SocialClubLaunchGameVersion == "129")
+                                    {
+                                        ComponentManager.Components.SCLSteam129.ReInstall();
                                     }
                                     else
                                     {

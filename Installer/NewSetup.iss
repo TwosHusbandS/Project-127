@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Project 1.27"
-#define MyAppVersion "1.5.0.0"
+#define MyAppVersion "1.5.1.0"
 #define MyAppPublisher "Project 1.27 Inc."
 #define MyAppURL "https://github.com/TwosHusbandS/Project-127/"
 #define MyAppExeName "Project 127 Launcher.exe"
@@ -26,7 +26,7 @@ AllowNoIcons=yes
 ;PrivilegesRequired=lowest
 PrivilegesRequiredOverridesAllowed=dialog
 OutputDir=.
-OutputBaseFilename=Project_127_Installer_V_1_5_0_0
+OutputBaseFilename=Project_127_Installer_V_1_5_1_0
 SetupIconFile=..\Artwork\icon.ico
 Compression=lzma
 SolidCompression=yes
@@ -38,26 +38,41 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 [Tasks]
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
+[InstallDelete]
+; Delete specific files in UglyFiles
+Name: "{app}\UglyFiles\cef.pak"; Type: files
+Name: "{app}\UglyFiles\cef_100_percent.pak"; Type: files
+Name: "{app}\UglyFiles\cef_200_percent.pak"; Type: files
+Name: "{app}\UglyFiles\cef_extensions.pak"; Type: files
+Name: "{app}\UglyFiles\devtools_resources.pak"; Type: files
+Name: "{app}\UglyFiles\snapshot_blob.bin"; Type: files
 
+; Delete contents of folders
+Name: "{app}\UglyFiles\swiftshader\*"; Type: filesandordirs
+Name: "{app}\UglyFiles\CEF_CacheFiles\*"; Type: filesandordirs
+
+; Optionally delete the now-empty folders
+Name: "{app}\UglyFiles\swiftshader"; Type: dirifempty
+Name: "{app}\UglyFiles\CEF_CacheFiles"; Type: dirifempty
 
 [Files]
 Source: "..\bin\x64\Release\Project 127 Launcher.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\bin\x64\Release\JUMPSCRIPT_LICENSE"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\bin\x64\Release\LICENSE"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\bin\x64\Release\UglyFiles\Antlr3.Runtime.dll"; DestDir: "{app}\UglyFiles"; Flags: ignoreversion
-Source: "..\bin\x64\Release\UglyFiles\cef.pak"; DestDir: "{app}\UglyFiles"; Flags: ignoreversion
-Source: "..\bin\x64\Release\UglyFiles\cef_100_percent.pak"; DestDir: "{app}\UglyFiles"; Flags: ignoreversion
-Source: "..\bin\x64\Release\UglyFiles\cef_200_percent.pak"; DestDir: "{app}\UglyFiles"; Flags: ignoreversion
-Source: "..\bin\x64\Release\UglyFiles\cef_extensions.pak"; DestDir: "{app}\UglyFiles"; Flags: ignoreversion
 Source: "..\bin\x64\Release\UglyFiles\CefSharp.BrowserSubprocess.Core.dll"; DestDir: "{app}\UglyFiles"; Flags: ignoreversion
 Source: "..\bin\x64\Release\UglyFiles\CefSharp.BrowserSubprocess.exe"; DestDir: "{app}\UglyFiles"; Flags: ignoreversion
 Source: "..\bin\x64\Release\UglyFiles\CefSharp.Core.dll"; DestDir: "{app}\UglyFiles"; Flags: ignoreversion
+Source: "..\bin\x64\Release\UglyFiles\CefSharp.Core.Runtime.dll"; DestDir: "{app}\UglyFiles"; Flags: ignoreversion
 Source: "..\bin\x64\Release\UglyFiles\CefSharp.dll"; DestDir: "{app}\UglyFiles"; Flags: ignoreversion
 Source: "..\bin\x64\Release\UglyFiles\CefSharp.Wpf.dll"; DestDir: "{app}\UglyFiles"; Flags: ignoreversion
+Source: "..\bin\x64\Release\UglyFiles\chrome_100_percent.pak"; DestDir: "{app}\UglyFiles"; Flags: ignoreversion
+Source: "..\bin\x64\Release\UglyFiles\chrome_200_percent.pak"; DestDir: "{app}\UglyFiles"; Flags: ignoreversion
 Source: "..\bin\x64\Release\UglyFiles\chrome_elf.dll"; DestDir: "{app}\UglyFiles"; Flags: ignoreversion
 Source: "..\bin\x64\Release\UglyFiles\CredentialManagement.dll"; DestDir: "{app}\UglyFiles"; Flags: ignoreversion
 Source: "..\bin\x64\Release\UglyFiles\d3dcompiler_47.dll"; DestDir: "{app}\UglyFiles"; Flags: ignoreversion
-Source: "..\bin\x64\Release\UglyFiles\devtools_resources.pak"; DestDir: "{app}\UglyFiles"; Flags: ignoreversion
+Source: "..\bin\x64\Release\UglyFiles\dxcompiler.dll"; DestDir: "{app}\UglyFiles"; Flags: ignoreversion
+Source: "..\bin\x64\Release\UglyFiles\dxil.dll"; DestDir: "{app}\UglyFiles"; Flags: ignoreversion
 Source: "..\bin\x64\Release\UglyFiles\ExpressionEvaluator.dll"; DestDir: "{app}\UglyFiles"; Flags: ignoreversion
 Source: "..\bin\x64\Release\UglyFiles\GameOverlay.dll"; DestDir: "{app}\UglyFiles"; Flags: ignoreversion
 Source: "..\bin\x64\Release\UglyFiles\GSF.Core.dll"; DestDir: "{app}\UglyFiles"; Flags: ignoreversion
@@ -71,11 +86,12 @@ Source: "..\bin\x64\Release\UglyFiles\P127_ASMPATCHER_SCRIPTHOOK.dll"; DestDir: 
 Source: "..\bin\x64\Release\UglyFiles\P127_Jumpscript.exe"; DestDir: "{app}\UglyFiles"; Flags: ignoreversion
 Source: "..\bin\x64\Release\UglyFiles\Project 1.27.exe"; DestDir: "{app}\UglyFiles"; Flags: ignoreversion
 Source: "..\bin\x64\Release\UglyFiles\Project 1.27.exe.manifest"; DestDir: "{app}\UglyFiles"; Flags: ignoreversion
+Source: "..\bin\x64\Release\UglyFiles\resources.pak"; DestDir: "{app}\UglyFiles"; Flags: ignoreversion
 Source: "..\bin\x64\Release\UglyFiles\SharpDX.Direct2D1.dll"; DestDir: "{app}\UglyFiles"; Flags: ignoreversion
 Source: "..\bin\x64\Release\UglyFiles\SharpDX.dll"; DestDir: "{app}\UglyFiles"; Flags: ignoreversion
 Source: "..\bin\x64\Release\UglyFiles\SharpDX.DXGI.dll"; DestDir: "{app}\UglyFiles"; Flags: ignoreversion
-Source: "..\bin\x64\Release\UglyFiles\snapshot_blob.bin"; DestDir: "{app}\UglyFiles"; Flags: ignoreversion
 Source: "..\bin\x64\Release\UglyFiles\System.Buffers.dll"; DestDir: "{app}\UglyFiles"; Flags: ignoreversion
+Source: "..\bin\x64\Release\UglyFiles\System.IO.Pipelines.dll"; DestDir: "{app}\UglyFiles"; Flags: ignoreversion
 Source: "..\bin\x64\Release\UglyFiles\System.Memory.dll"; DestDir: "{app}\UglyFiles"; Flags: ignoreversion
 Source: "..\bin\x64\Release\UglyFiles\System.Numerics.Vectors.dll"; DestDir: "{app}\UglyFiles"; Flags: ignoreversion
 Source: "..\bin\x64\Release\UglyFiles\System.Runtime.CompilerServices.Unsafe.dll"; DestDir: "{app}\UglyFiles"; Flags: ignoreversion
@@ -84,30 +100,12 @@ Source: "..\bin\x64\Release\UglyFiles\System.Text.Json.dll"; DestDir: "{app}\Ugl
 Source: "..\bin\x64\Release\UglyFiles\System.Threading.Tasks.Extensions.dll"; DestDir: "{app}\UglyFiles"; Flags: ignoreversion
 Source: "..\bin\x64\Release\UglyFiles\System.ValueTuple.dll"; DestDir: "{app}\UglyFiles"; Flags: ignoreversion
 Source: "..\bin\x64\Release\UglyFiles\v8_context_snapshot.bin"; DestDir: "{app}\UglyFiles"; Flags: ignoreversion
+Source: "..\bin\x64\Release\UglyFiles\vk_swiftshader.dll"; DestDir: "{app}\UglyFiles"; Flags: ignoreversion
+Source: "..\bin\x64\Release\UglyFiles\vk_swiftshader_icd.json"; DestDir: "{app}\UglyFiles"; Flags: ignoreversion
+Source: "..\bin\x64\Release\UglyFiles\vulkan-1.dll"; DestDir: "{app}\UglyFiles"; Flags: ignoreversion
 Source: "..\bin\x64\Release\UglyFiles\WpfAnimatedGif.dll"; DestDir: "{app}\UglyFiles"; Flags: ignoreversion
-Source: "..\bin\x64\Release\UglyFiles\Artwork\bg_cat.png"; DestDir: "{app}\UglyFiles\Artwork"; Flags: ignoreversion
-Source: "..\bin\x64\Release\UglyFiles\Artwork\bg_default.png"; DestDir: "{app}\UglyFiles\Artwork"; Flags: ignoreversion
-Source: "..\bin\x64\Release\UglyFiles\Artwork\bg_fourtwenty.png"; DestDir: "{app}\UglyFiles\Artwork"; Flags: ignoreversion
-Source: "..\bin\x64\Release\UglyFiles\Artwork\bg_germania.png"; DestDir: "{app}\UglyFiles\Artwork"; Flags: ignoreversion
-Source: "..\bin\x64\Release\UglyFiles\Artwork\bg_turkey.png"; DestDir: "{app}\UglyFiles\Artwork"; Flags: ignoreversion
-Source: "..\bin\x64\Release\UglyFiles\Artwork\bg_murica.png"; DestDir: "{app}\UglyFiles\Artwork"; Flags: ignoreversion
-Source: "..\bin\x64\Release\UglyFiles\Artwork\bg_spooky.png"; DestDir: "{app}\UglyFiles\Artwork"; Flags: ignoreversion
-Source: "..\bin\x64\Release\UglyFiles\Artwork\bg_valentine.png"; DestDir: "{app}\UglyFiles\Artwork"; Flags: ignoreversion
-Source: "..\bin\x64\Release\UglyFiles\Artwork\bg_winter.png"; DestDir: "{app}\UglyFiles\Artwork"; Flags: ignoreversion
-Source: "..\bin\x64\Release\UglyFiles\Artwork\bg_aprilfools.png"; DestDir: "{app}\UglyFiles\Artwork"; Flags: ignoreversion
-Source: "..\bin\x64\Release\UglyFiles\Artwork\P127_Slogan.png"; DestDir: "{app}\UglyFiles\Artwork"; Flags: ignoreversion
-Source: "..\bin\x64\Release\UglyFiles\Artwork\Preview_1.png"; DestDir: "{app}\UglyFiles\Artwork"; Flags: ignoreversion
-Source: "..\bin\x64\Release\UglyFiles\Artwork\Preview_10.png"; DestDir: "{app}\UglyFiles\Artwork"; Flags: ignoreversion
-Source: "..\bin\x64\Release\UglyFiles\Artwork\Preview_2.png"; DestDir: "{app}\UglyFiles\Artwork"; Flags: ignoreversion
-Source: "..\bin\x64\Release\UglyFiles\Artwork\Preview_3.png"; DestDir: "{app}\UglyFiles\Artwork"; Flags: ignoreversion
-Source: "..\bin\x64\Release\UglyFiles\Artwork\Preview_4.png"; DestDir: "{app}\UglyFiles\Artwork"; Flags: ignoreversion
-Source: "..\bin\x64\Release\UglyFiles\Artwork\Preview_5.png"; DestDir: "{app}\UglyFiles\Artwork"; Flags: ignoreversion
-Source: "..\bin\x64\Release\UglyFiles\Artwork\Preview_6.png"; DestDir: "{app}\UglyFiles\Artwork"; Flags: ignoreversion
-Source: "..\bin\x64\Release\UglyFiles\Artwork\Preview_7.png"; DestDir: "{app}\UglyFiles\Artwork"; Flags: ignoreversion
-Source: "..\bin\x64\Release\UglyFiles\Artwork\Preview_8.png"; DestDir: "{app}\UglyFiles\Artwork"; Flags: ignoreversion
-Source: "..\bin\x64\Release\UglyFiles\Artwork\Preview_9.png"; DestDir: "{app}\UglyFiles\Artwork"; Flags: ignoreversion
-Source: "..\bin\x64\Release\UglyFiles\swiftshader\libEGL.dll"; DestDir: "{app}\UglyFiles\swiftshader"; Flags: ignoreversion
-Source: "..\bin\x64\Release\UglyFiles\swiftshader\libGLESv2.dll"; DestDir: "{app}\UglyFiles\swiftshader"; Flags: ignoreversion
+Source: "..\bin\x64\Release\UglyFiles\Artwork\*"; DestDir: "{app}\UglyFiles\Artwork"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "..\bin\x64\Release\UglyFiles\locales\*"; DestDir: "{app}\UglyFiles\locales"; Flags: ignoreversion recursesubdirs createallsubdirs
 
 
 [UninstallDelete]
