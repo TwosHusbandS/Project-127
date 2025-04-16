@@ -118,6 +118,7 @@ Pretty much built with straight C# visualized with WPF
 * Grab the [latest Installer][installer-latest-url] from [the Installer folder][installer-folder-url]
 * Execute said Installer
 * Open Project 127
+* Legacy installers can be found in the [legacy-installers branch](https://github.com/TwosHusbandS/Project-127/tree/legacy_installers/Installer).
 
 ### User Instructions:
 
@@ -168,7 +169,7 @@ To get a local copy up and running follow these simple example steps.
 * Some of the Code (especially XAML / GUI related) is not the best looking and far from best practice.
 * If you can think of Improvements or new Features feel free to make a Pull Request or [contact me](#contact). 
 * Can always use an extra pair of eyes to make sure I dont do anything stupid.
-
+* **You need [Github LFS (Large File Storage](https://git-lfs.com/)** due to me being lazy and having installer binaries in code.
 
 -----
 

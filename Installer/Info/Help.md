@@ -4,6 +4,7 @@
 * Get your GTA in a current Up-To-Date State by Repairing / Verifying Game Files via your choosen Retailer (Steam, Rockstar, Epic)
 * Launch your GTA to make sure its working and in an Upgraded State.
 * Download the [latest Installer](https://github.com/TwosHusbandS/Project-127/raw/master/Installer/Project_127_Installer_Latest.exe)
+* * Legacy installers can be found in the [legacy-installers branch](https://github.com/TwosHusbandS/Project-127/tree/legacy_installers/Installer).
 * Execute it. Windows will check it for Viruses. This will take 5-10 Seconds.
 * Let Project 1.27 Install.
 * Open Project 1.27
