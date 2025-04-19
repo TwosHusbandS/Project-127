@@ -83,6 +83,39 @@ namespace Project_127
         {
             GameStates currGameState = GameState;
 
+            if (Settings.SSAOverlayEnabled && Settings.EnableOverlay && NoteOverlay.IsOverlayInit())
+            {
+                List<string> NotesTexts = new List<string>();
+                List<string> NotesTextsTitles = new List<string>();
+                string[] contenta = HelperClasses.FileHandling.ReadFileEachLine(Settings.GTAVInstallationPath + "SSA_MissingVehicles.txt");
+                string contents = "";
+
+
+                for (int j = 0; j <= contenta.Length - 1; j++)
+                {
+                contents += contenta[j];
+                    if (j != contenta.Length - 1)
+                    {
+                    contents += "\n";
+                    }
+                }
+
+                if (String.IsNullOrWhiteSpace(contents))
+                {
+                    contents = "Note - File could not be read. File doesnt exist or is empty";
+                }
+
+                NotesTexts.Add(contents);
+                NotesTextsTitles.Add(" ");
+                NoteOverlay.NotesLoaded = NotesTexts.ToArray();
+                NoteOverlay.NotesLoadedTitle = NotesTextsTitles.ToArray();
+
+                HelperClasses.Logger.Log("NotesLoadedIndex is now: 0");
+                NoteOverlay.NotesLoadedIndex = 0;
+                NoteOverlay.MyGTAOverlay.setText(NoteOverlay.NotesLoaded[0]);
+                NoteOverlay.MyGTAOverlay.title.text = NoteOverlay.NotesLoadedTitle[0];
+            }
+
             if (currGameState == GameStates.Running)
             {
                 GameStateStuckCounter = 0;
