@@ -370,6 +370,7 @@ namespace Project_127
             {"EnableAlternativeLaunchForceCProgramFiles", "False"},
             {"EnableCopyFilesInsteadOfHardlinking", "False"},
             {"AutoMTLAuthOnStartup", "True"},
+	    {"SSAOverlayEnabled", "False"},	
             {"PostMTLAction", "MinimizeRGL"},
             {"EnableSlowCompare", "False"},
             {"EnableWineCompability", "False"},
