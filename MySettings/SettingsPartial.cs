@@ -294,6 +294,18 @@ namespace Project_127.MySettings
             }
         }
 
+ 	public static bool SSAOverlayEnabled
+ 	{
+     	    get
+     	    {
+                 return GetBoolFromString(GetSetting("SSAOverlayEnabled"));
+     	    }
+             set
+             {
+         	SetSetting("SSAOverlayEnabled", value.ToString());
+     	    }
+ 	}
+
         /// <summary>
         /// Settings InstallationPath. Gets and Sets from Dictionary.
         /// </summary>
