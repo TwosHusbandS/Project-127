@@ -18,6 +18,7 @@ using Project_127.MySettings;
 using System.Diagnostics;
 using System.Windows.Threading;
 using System.Speech.Synthesis;
+using CefSharp.DevTools.Debugger;
 
 namespace Project_127.Overlay
 {
@@ -200,6 +201,7 @@ namespace Project_127.Overlay
 			LoadNoteOverlayWithCustomPage = NoteOverlayPages.NoteFiles;
 
 			ButtonMouseOverMagic(btn_cb_Set_EnableOverlay);
+            ButtonMouseOverMagic(btn_cb_Set_EnableOverlayRefresh);
 			ButtonMouseOverMagic(btn_cb_Set_OverlayMultiMonitorMode);
 			RefreshIfOptionsHide();
 		}
@@ -256,10 +258,42 @@ namespace Project_127.Overlay
 			}
 		}
 
-		/// <summary>
-		/// Loading Texts from Settings into RAM / UI / Overlay
-		/// </summary>
-		public static void LoadTexts()
+		public static void RefreshText()
+		{
+			try
+			{
+				Overlay.NoteOverlayPages.MyNoteFile tmp = new Overlay.NoteOverlayPages.MyNoteFile(Settings.OverlayNotesMain[NotesLoadedIndex]);
+
+				string[] contenta = HelperClasses.FileHandling.ReadFileEachLine(tmp.FilePath);
+				string contents = "";
+
+				for (int j = 0; j <= contenta.Length - 1; j++)
+				{
+				    contents += contenta[j];
+				    if (j != contenta.Length - 1)
+				    {
+				        contents += "\n";
+				    }
+				}
+
+				if (String.IsNullOrWhiteSpace(contents))
+				{
+				    contents = "Note - File could not be read. File doesnt exist or is empty";
+				}
+
+				NotesLoaded[NotesLoadedIndex] = contents;
+				NotesLoadedTitle[NotesLoadedIndex] = "Project 1.27 - Overlay - " + tmp.FileNiceName;
+
+				RefreshTextOfOverlayObject();
+            }
+			catch (Exception ex)
+			{}
+        }
+
+        /// <summary>
+        /// Loading Texts from Settings into RAM / UI / Overlay
+        /// </summary>
+        public static void LoadTexts()
 		{
 			List<string> NotesTexts = new List<string>();
 			List<string> NotesTextsTitles = new List<string>();
@@ -564,6 +598,15 @@ namespace Project_127.Overlay
 			ChangeNoteIndex(NotesLoadedNewIndex);
 		}
 
+		public static void RefreshTextOfOverlayObject()
+		{
+			if (IsOverlayInit())
+			{
+                MyGTAOverlay.setText(NotesLoaded[NotesLoadedIndex]);
+                MyGTAOverlay.title.text = NotesLoadedTitle[NotesLoadedIndex];
+            }
+        }
+
 		/// <summary>
 		/// Change of the Index of the Notes which are loaded
 		/// </summary>
@@ -576,9 +619,8 @@ namespace Project_127.Overlay
 				{
 					HelperClasses.Logger.Log("NotesLoadedIndex is now: " + pNotesLoadedNewIndex);
 					NotesLoadedIndex = pNotesLoadedNewIndex;
-					MyGTAOverlay.setText(NotesLoaded[pNotesLoadedNewIndex]);
-					MyGTAOverlay.title.text = NotesLoadedTitle[pNotesLoadedNewIndex];
-					double tmp = (Overlay.NoteOverlayPages.NoteOverlay_Look.OverlayTextSize + 10) * 2 + 20;
+					RefreshTextOfOverlayObject();
+                    double tmp = (Overlay.NoteOverlayPages.NoteOverlay_Look.OverlayTextSize + 10) * 2 + 20;
 					MyGTAOverlay.SetInitialScrollPosition((int)tmp);
 				}
 			}
@@ -626,7 +668,10 @@ namespace Project_127.Overlay
 					Settings.EnableOverlay = !Settings.EnableOverlay;
 					RefreshIfOptionsHide();
 					break;
-				case "btn_cb_Set_OverlayMultiMonitorMode":
+				case "btn_cb_Set_EnableOverlayRefresh":
+                    Settings.EnableOverlayRefresh = !Settings.EnableOverlayRefresh;
+                    break;
+                case "btn_cb_Set_OverlayMultiMonitorMode":
 					Settings.OverlayMultiMonitorMode = !Settings.OverlayMultiMonitorMode;
 					break;
 			}
@@ -707,7 +752,10 @@ namespace Project_127.Overlay
 				case "btn_cb_Set_OverlayMultiMonitorMode":
 					SetCheckBoxBackground(myBtn, Settings.OverlayMultiMonitorMode);
 					break;
-			}
+				case "btn_cb_Set_EnableOverlayRefresh":
+                    SetCheckBoxBackground(myBtn, Settings.EnableOverlayRefresh);
+                    break;
+            }
 
 		}
 

@@ -823,6 +823,7 @@ namespace Project_127.MySettings
             ButtonMouseOverMagic(btn_cb_Set_EnableAutoStartLiveSplit);
             ButtonMouseOverMagic(btn_cb_Set_EnableAutoStartNohboard);
             ButtonMouseOverMagic(btn_cb_Set_EnableOverlay);
+            ButtonMouseOverMagic(btn_cb_Set_EnableOverlayRefresh);
             ButtonMouseOverMagic(btn_cb_Set_EnableOverlayMultiMonitor);
             ButtonMouseOverMagic(btn_cb_Set_EnableAutoStartStreamProgram);
             ButtonMouseOverMagic(btn_cb_Set_AutoSetHighPriority);
@@ -1115,6 +1116,9 @@ namespace Project_127.MySettings
                     break;
                 case "btn_cb_Set_EnableOverlay":
                     SetCheckBoxBackground(myBtn, Settings.EnableOverlay);
+                    break;
+                case "btn_cb_Set_EnableOverlayRefresh":
+                    SetCheckBoxBackground(myBtn, Settings.EnableOverlayRefresh);
                     break;
                 case "btn_cb_Set_EnableOverlayMultiMonitor":
                     SetCheckBoxBackground(myBtn, Settings.OverlayMultiMonitorMode);
@@ -1455,6 +1459,9 @@ namespace Project_127.MySettings
                     break;
                 case "btn_cb_Set_EnableOverlay":
                     Settings.EnableOverlay = !Settings.EnableOverlay;
+                    break;
+                case "btn_cb_Set_EnableOverlayRefresh":
+                    Settings.EnableOverlayRefresh = !Settings.EnableOverlayRefresh;
                     break;
                 case "btn_cb_Set_EnableOverlayMultiMonitor":
                     Settings.OverlayMultiMonitorMode = !Settings.OverlayMultiMonitorMode;

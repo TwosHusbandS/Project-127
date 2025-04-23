@@ -81,6 +81,15 @@ namespace Project_127
 
         public static GameStates PollGameState()
         {
+            if (Settings.EnableOverlayRefresh && Settings.EnableOverlay && NoteOverlay.IsOverlayInit())
+            {
+                try
+                {
+                    NoteOverlay.RefreshText();
+                }
+                catch (Exception ex) { }
+            }
+
             GameStates currGameState = GameState;
 
             if (currGameState == GameStates.Running)

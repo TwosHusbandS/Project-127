@@ -403,6 +403,7 @@ namespace Project_127
    
 			// Extra Features
 			{"EnableOverlay", "False"},
+			{"EnableOverlayRefresh", "True"},
             {"EnableAutoStartJumpScript", "False" },
             {"JumpScriptKey1", "32" },
             {"JumpScriptKey2", "76" },
