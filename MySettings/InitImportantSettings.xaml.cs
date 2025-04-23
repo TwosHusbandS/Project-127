@@ -181,7 +181,7 @@ namespace Project_127.MySettings
             for (int i = start; i <= GTAVPathGuesses.Count - 1; i++)
             {
                 HelperClasses.Logger.Log("GTAV Guess Number " + (i + 1).ToString() + " is: '" + GTAVPathGuesses[i] + "'");
-                if (LauncherLogic.IsGTAVInstallationPathCorrect(GTAVPathGuesses[i].PathGuess, false))
+                if (LauncherLogic.IsGTAVInstallationPathCorrect(GTAVPathGuesses[i].PathGuess, false) == LauncherLogic.GTAVInstallationType.Legacy)
                 {
                     HelperClasses.Logger.Log("GTAV Guess Number " + (i + 1).ToString() + " is theoretically VALID. Asking user if he wants it");
                     btn_No.Visibility = Visibility.Visible;
@@ -313,7 +313,7 @@ namespace Project_127.MySettings
             }
             else
             {
-                if (LauncherLogic.IsGTAVInstallationPathCorrect(GTAVInstallationPathUserChoice, false))
+                if (LauncherLogic.IsGTAVInstallationPathCorrect(GTAVInstallationPathUserChoice, false) == LauncherLogic.GTAVInstallationType.Legacy)
                 {
                     HelperClasses.Logger.Log("Picked path '" + GTAVInstallationPathUserChoice + "' is valid and will be set as Settings.GTAVInstallationPath.");
                 }
@@ -325,7 +325,14 @@ namespace Project_127.MySettings
                     btn_Yes.Tag = "ForcePath";
                     btn_No.Tag = "ForcePath";
                     btn_BigBtn.Visibility = Visibility.Hidden;
-                    lbl_Main.Content = "GTA V Path detected to be not correct. Are you sure?\nForce '" + GTAVInstallationPathUserChoice + "' as your GTAV Installation Location?";
+                    if (LauncherLogic.IsGTAVInstallationPathCorrect(GTAVInstallationPathUserChoice, false) == LauncherLogic.GTAVInstallationType.Enhanced)
+                    {
+                        lbl_Main.Content = "Error.\nYou need a GTA V Legacy Installation, detected Installation is GTAV Enhanced.\nForce '" + GTAVInstallationPathUserChoice + "' as your GTAV Installation Location?";
+                    }
+                    else
+                    {
+                        lbl_Main.Content = "GTA V Path detected to be not correct. Are you sure?\nYou need a GTA V Legacy Installation.\nForce '" + GTAVInstallationPathUserChoice + "' as your GTAV Installation Location?";
+                    }
                     lbl_Main.Tag = GTAVInstallationPathUserChoice;
                     GTAVInstallationPathUserChoice = "";
                 }
