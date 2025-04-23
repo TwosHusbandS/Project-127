@@ -799,6 +799,10 @@ namespace Project_127
                 }
 
                 Settings.LastLaunchedVersion = Globals.ProjectVersion;
+
+                HelperClasses.Logger.Log("Deleting CEF_CacheFiles because you are on a P127 version you have not launched on your system yet.");
+                string cefcachepath2 = Globals.ProjectInstallationPathBinary.TrimEnd('\\') + @"\CEF_CacheFiles";
+                HelperClasses.FileHandling.DeleteFolder(cefcachepath2);
             }
 
             // Deleting all Installer and ZIP Files from own Project Installation Path
@@ -858,7 +862,10 @@ namespace Project_127
 
             HelperClasses.Logger.Log("Only CEF Init to go...");
 
-            Auth.ROSIntegration.CEFInitialize();
+            // Await the synchronous method in a non-blocking way
+            await Task.Run(() => Auth.ROSIntegration.CEFInitialize());
+
+            HelperClasses.Logger.Log("CEF init DONE");
 
             if (LauncherLogic.LaunchWay == LauncherLogic.LaunchWays.DragonEmu)
             {
