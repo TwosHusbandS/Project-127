@@ -446,6 +446,7 @@
     </EmbeddedResource>
     <None Include="app.manifest" />
     <Resource Include="HelperClasses\llpatch.json" />
+    <None Include="Installer\Info\Changelogs\V_1_5_2_0_Changelog.md" />
     <None Include="Installer\Info\Changelogs\V_1_5_1_0_Changelog.md" />
     <None Include="Installer\Info\Changelogs\V_1_5_0_0_Changelog.md" />
     <None Include="Installer\Info\Changelogs\V_1_4_1_0_Changelog.md" />
