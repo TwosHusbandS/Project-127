@@ -30,6 +30,7 @@ using System.Windows.Media.TextFormatting;
 using GSF.Parsing;
 using System.Windows.Interop;
 using CefSharp.DevTools.Page;
+using static Project_127.LauncherLogic;
 
 namespace Project_127.MySettings
 {
@@ -273,7 +274,7 @@ namespace Project_127.MySettings
             string GTAVInstallationPathUserChoice = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.Folder, "Pick the Folder which contains your GTA5.exe", StartUpPath);
             HelperClasses.Logger.Log("Users picked path is: '" + GTAVInstallationPathUserChoice + "'");
 
-            while (!(LauncherLogic.IsGTAVInstallationPathCorrect(GTAVInstallationPathUserChoice, false)))
+            while (!(LauncherLogic.IsGTAVInstallationPathCorrect(GTAVInstallationPathUserChoice, false) == LauncherLogic.GTAVInstallationType.Legacy))
             {
                 if (String.IsNullOrWhiteSpace(GTAVInstallationPathUserChoice))
                 {
@@ -281,7 +282,17 @@ namespace Project_127.MySettings
                     return;
                 }
                 HelperClasses.Logger.Log("Users picked path detected to be faulty. Asking user to try again");
-                bool yesno = PopupWrapper.PopupYesNo("GTA V Path detected to be not correct. Are you sure?\nForce '" + GTAVInstallationPathUserChoice + "' as your GTAV Installation Location?");
+
+                string popupmsg = "";
+                if (LauncherLogic.IsGTAVInstallationPathCorrect(GTAVInstallationPathUserChoice, false) == GTAVInstallationType.Enhanced)
+                {
+                    popupmsg = "Error.\nYou need a GTA V Legacy Installation, detected Installation is GTAV Enhanced.\n\nForce '" + GTAVInstallationPathUserChoice + "' as your GTAV Installation Location?";
+                }
+                else
+                {
+                    popupmsg = "GTA V Path detected to be not correct. Are you sure?\n\nGTAV - Enhanced is not supported, you need GTA V - Legacy.\n\nForce '" + GTAVInstallationPathUserChoice + "' as your GTAV Installation Location?";
+                }
+                bool yesno = PopupWrapper.PopupYesNo(popupmsg);
                 if (yesno == true)
                 {
                     HelperClasses.Logger.Log("Will force the Path that user picked even tho Algorithm think its faulty.");
@@ -812,6 +823,7 @@ namespace Project_127.MySettings
             ButtonMouseOverMagic(btn_cb_Set_EnableAutoStartLiveSplit);
             ButtonMouseOverMagic(btn_cb_Set_EnableAutoStartNohboard);
             ButtonMouseOverMagic(btn_cb_Set_EnableOverlay);
+            ButtonMouseOverMagic(btn_cb_Set_EnableOverlayRefresh);
             ButtonMouseOverMagic(btn_cb_Set_EnableOverlayMultiMonitor);
             ButtonMouseOverMagic(btn_cb_Set_EnableAutoStartStreamProgram);
             ButtonMouseOverMagic(btn_cb_Set_AutoSetHighPriority);
@@ -1104,6 +1116,9 @@ namespace Project_127.MySettings
                     break;
                 case "btn_cb_Set_EnableOverlay":
                     SetCheckBoxBackground(myBtn, Settings.EnableOverlay);
+                    break;
+                case "btn_cb_Set_EnableOverlayRefresh":
+                    SetCheckBoxBackground(myBtn, Settings.EnableOverlayRefresh);
                     break;
                 case "btn_cb_Set_EnableOverlayMultiMonitor":
                     SetCheckBoxBackground(myBtn, Settings.OverlayMultiMonitorMode);
@@ -1445,6 +1460,9 @@ namespace Project_127.MySettings
                 case "btn_cb_Set_EnableOverlay":
                     Settings.EnableOverlay = !Settings.EnableOverlay;
                     break;
+                case "btn_cb_Set_EnableOverlayRefresh":
+                    Settings.EnableOverlayRefresh = !Settings.EnableOverlayRefresh;
+                    break;
                 case "btn_cb_Set_EnableOverlayMultiMonitor":
                     Settings.OverlayMultiMonitorMode = !Settings.OverlayMultiMonitorMode;
                     break;
@@ -1624,11 +1642,20 @@ namespace Project_127.MySettings
 
         public static void RepairGTA_UserInteraction()
         {
-            if (!LauncherLogic.IsGTAVInstallationPathCorrect() && !LauncherLogic.GTAVInstallationIncorrectMessageThrownAlready)
+            if (LauncherLogic.IsGTAVInstallationPathCorrect() != GTAVInstallationType.Legacy && !LauncherLogic.GTAVInstallationIncorrectMessageThrownAlready)
             {
                 HelperClasses.Logger.Log("GTA V Installation Path not found or incorrect. User will get Popup");
 
-                bool yesno2 = PopupWrapper.PopupYesNo("Error:\nGTA V Installation Path is not a valid Path.\nProceed?");
+                string popupmsg = "";
+                if (LauncherLogic.IsGTAVInstallationPathCorrect(false) == GTAVInstallationType.Enhanced)
+                {
+                    popupmsg = "Error.\nYou need a GTA V Legacy Installation, detected Installation is GTAV Enhanced.\n\nDo you want to force this Repair?";
+                }
+                else
+                {
+                    popupmsg = "GTA V Path detected to be not correct. Are you sure?\n\nGTAV - Enhanced is not supported, you need GTA V - Legacy.\n\nDo you want to force this Repair?";
+                }
+                bool yesno2 = PopupWrapper.PopupYesNo(popupmsg);
                 if (yesno2 == true)
                 {
                     HelperClasses.Logger.Log("User wants to force this Repair. Will not throw the WrongGTAVPathError again on this P127 instance.");

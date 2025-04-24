@@ -1193,6 +1193,22 @@ namespace Project_127.MySettings
         }
 
         /// <summary>
+        /// Settings EnableOverlayRefresh. Gets and Sets from the Dictionary.
+        /// </summary>
+        public static bool EnableOverlayRefresh
+        {
+            get
+            {
+                return GetBoolFromString(GetSetting("EnableOverlayRefresh"));
+            }
+            set
+            {
+                SetSetting("EnableOverlayRefresh", value.ToString());
+                NoteOverlay.OverlaySettingsChanged();
+            }
+        }
+
+        /// <summary>
         /// Settings OverlayMultiMonitorMode. Gets and Sets from the Dictionary.
         /// </summary>
         public static bool OverlayMultiMonitorMode

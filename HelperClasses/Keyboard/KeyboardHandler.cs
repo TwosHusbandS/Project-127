@@ -131,7 +131,10 @@ namespace Project_127.HelperClasses.Keyboard
 			// start keyboard listener when not already running
 			KeyboardListener.Start();
 			KeyboardListener.DontStop = true;
-			KeyboardListener.Stop(); // this sets WantToStop to true
+			//KeyboardListener.Stop(); // this sets WantToStop to true
+			// i commented this out, because we dont want to set WantToStop.
+			// we only set that, if we try to stop keyboard listener, while its waiting for a keypress for button remapping
+			// this is not the case here
 
 			// Checking if time has passed yet or we have a keypress
 			int MsPassed = 0;

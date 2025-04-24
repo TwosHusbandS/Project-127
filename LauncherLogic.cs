@@ -81,6 +81,15 @@ namespace Project_127
 
         public static GameStates PollGameState()
         {
+            if (Settings.EnableOverlayRefresh && Settings.EnableOverlay && NoteOverlay.IsOverlayInit())
+            {
+                try
+                {
+                    NoteOverlay.RefreshText();
+                }
+                catch (Exception ex) { }
+            }
+
             GameStates currGameState = GameState;
 
             if (currGameState == GameStates.Running)
@@ -636,11 +645,20 @@ namespace Project_127
         /// </summary>
         public static void Upgrade(bool IgnoreNewFiles = false, bool IgnoreUninstalledComponenets = false)
         {
-            if (!LauncherLogic.IsGTAVInstallationPathCorrect() && !LauncherLogic.GTAVInstallationIncorrectMessageThrownAlready)
+            if (LauncherLogic.IsGTAVInstallationPathCorrect() != GTAVInstallationType.Legacy && !LauncherLogic.GTAVInstallationIncorrectMessageThrownAlready)
             {
                 HelperClasses.Logger.Log("GTA V Installation Path not found or incorrect. User will get Popup");
 
-                if (PopupWrapper.PopupYesNo("Error:\nGTA V Installation Path is not a valid Path.\nDo you want to force this Upgrade?") == true)
+                string popupmsg = "";
+                if (LauncherLogic.IsGTAVInstallationPathCorrect(false) == GTAVInstallationType.Enhanced)
+                {
+                    popupmsg = "Error.\nYou need a GTA V Legacy Installation, detected Installation is GTAV Enhanced.\n\nDo you want to force this Upgrade?";
+                }
+                else
+                {
+                    popupmsg = "GTA V Path detected to be not correct. Are you sure?\n\nGTAV - Enhanced is not supported, you need GTA V - Legacy.\n\nDo you want to force this Upgrade?";
+                }
+                if (PopupWrapper.PopupYesNo(popupmsg) == true)
                 {
                     HelperClasses.Logger.Log("User wants to force this Upgrade. Will not throw the WrongGTAVPathError again on this P127 instance.");
                     LauncherLogic.GTAVInstallationIncorrectMessageThrownAlready = true;
@@ -781,11 +799,20 @@ namespace Project_127
         /// </summary>
         public static void Downgrade(bool IgnoreNewFiles = false)
         {
-            if (!LauncherLogic.IsGTAVInstallationPathCorrect() && !LauncherLogic.GTAVInstallationIncorrectMessageThrownAlready)
+            if (LauncherLogic.IsGTAVInstallationPathCorrect() != GTAVInstallationType.Legacy && !LauncherLogic.GTAVInstallationIncorrectMessageThrownAlready)
             {
                 HelperClasses.Logger.Log("GTA V Installation Path not found or incorrect. User will get Popup");
 
-                if (PopupWrapper.PopupYesNo("Error:\nGTA V Installation Path is not a valid Path.\nDo you want to force this Downgrade?") == true)
+                string popupmsg = "";
+                if (LauncherLogic.IsGTAVInstallationPathCorrect(false) == GTAVInstallationType.Enhanced)
+                {
+                    popupmsg = "Error.\nYou need a GTA V Legacy Installation, detected Installation is GTAV Enhanced.\n\nDo you want to force this Downgrade?";
+                }
+                else
+                {
+                    popupmsg = "GTA V Path detected to be not correct. Are you sure?\n\nGTAV - Enhanced is not supported, you need GTA V - Legacy.\n\nDo you want to force this Downgrade?";
+                }
+                if (PopupWrapper.PopupYesNo(popupmsg) == true)
                 {
                     HelperClasses.Logger.Log("User wants to force this Downgrade. Will not throw the WrongGTAVPathError again on this P127 instance.");
                     LauncherLogic.GTAVInstallationIncorrectMessageThrownAlready = true;
@@ -1591,7 +1618,7 @@ namespace Project_127
                         MyLines[i] = MyLines[i].TrimEnd('\\') + @"\steamapps\common\Grand Theft Auto V\";
 
                         // Check if we can find a file from the game
-                        if (IsGTAVInstallationPathCorrect(MyLines[i]))
+                        if (IsGTAVInstallationPathCorrect(MyLines[i]) == GTAVInstallationType.Legacy)
                         {
                             HelperClasses.Logger.Log("GTAV Path Magic by steam detected to be: '" + MyLines[i] + "'", 3);
                             return MyLines[i];
@@ -1607,23 +1634,40 @@ namespace Project_127
 
         public static bool GTAVInstallationIncorrectMessageThrownAlready = false;
 
+
+       public enum GTAVInstallationType
+        {
+            None,
+            Legacy,
+            Enhanced
+        }
+
         /// <summary>
         /// Checks if Parameter Path is a correct GTA V Installation Path
         /// </summary>
         /// <param name="pPath"></param>
         /// <returns></returns>
-        public static bool IsGTAVInstallationPathCorrect(string pPath, bool pLogThis = true)
+        public static GTAVInstallationType IsGTAVInstallationPathCorrect(string pPath, bool pLogThis = true)
         {
             if (pLogThis) { HelperClasses.Logger.Log("Trying to see if GTAV Installation Path ('" + pPath + "') is a theoretical valid Path", 3); }
             if (HelperClasses.FileHandling.doesFileExist(pPath.TrimEnd('\\') + @"\x64b.rpf"))
             {
-                if (pLogThis) { HelperClasses.Logger.Log("It is", 4); }
-                return true;
+                if (pLogThis) { HelperClasses.Logger.Log("It is, checking if ehanced exe is present", 4); }
+                if (HelperClasses.FileHandling.doesFileExist(pPath.TrimEnd('\\') + @"\GTA5_Enhanced.exe"))
+                {
+                    if (pLogThis) { HelperClasses.Logger.Log("GTA5_Enhanced.exe IS present, its GTAVInstallationType-Enhanced", 4); }
+                    return GTAVInstallationType.Enhanced;
+                }
+                else
+                {
+                    if (pLogThis) { HelperClasses.Logger.Log("GTA5_Enhanced.exe is NOT present, its GTAVInstallationType-Legacy", 4); }
+                    return GTAVInstallationType.Legacy;
+                }
             }
             else
             {
-                if (pLogThis) { HelperClasses.Logger.Log("It is not", 4); }
-                return false;
+                if (pLogThis) { HelperClasses.Logger.Log("It is not, its GTAVInstallationType-None", 4); }
+                return GTAVInstallationType.None;
             }
         }
 
@@ -1631,7 +1675,7 @@ namespace Project_127
         /// Checks if Settings.GTAVInstallationPath is a correct GTA V Installation Path
         /// </summary>
         /// <returns></returns>
-        public static bool IsGTAVInstallationPathCorrect(bool LogAttempt = true)
+        public static GTAVInstallationType IsGTAVInstallationPathCorrect(bool LogAttempt = true)
         {
             return IsGTAVInstallationPathCorrect(Settings.GTAVInstallationPath, LogAttempt);
         }

@@ -236,7 +236,7 @@ namespace Project_127
         /// <summary>
         /// Property of other Buildinfo. Will be in the top message of logs
         /// </summary>
-        public static string BuildInfo = "1.5.1.0 - RC 3";
+        public static string BuildInfo = "1.5.2.0 - RC 2";
 
 
         /// <summary>
@@ -403,6 +403,7 @@ namespace Project_127
    
 			// Extra Features
 			{"EnableOverlay", "False"},
+			{"EnableOverlayRefresh", "True"},
             {"EnableAutoStartJumpScript", "False" },
             {"JumpScriptKey1", "32" },
             {"JumpScriptKey2", "76" },
@@ -798,6 +799,10 @@ namespace Project_127
                 }
 
                 Settings.LastLaunchedVersion = Globals.ProjectVersion;
+
+                HelperClasses.Logger.Log("Deleting CEF_CacheFiles because you are on a P127 version you have not launched on your system yet.");
+                string cefcachepath2 = Globals.ProjectInstallationPathBinary.TrimEnd('\\') + @"\CEF_CacheFiles";
+                HelperClasses.FileHandling.DeleteFolder(cefcachepath2);
             }
 
             // Deleting all Installer and ZIP Files from own Project Installation Path
@@ -857,7 +862,10 @@ namespace Project_127
 
             HelperClasses.Logger.Log("Only CEF Init to go...");
 
-            Auth.ROSIntegration.CEFInitialize();
+            // Await the synchronous method in a non-blocking way
+            await Task.Run(() => Auth.ROSIntegration.CEFInitialize());
+
+            HelperClasses.Logger.Log("CEF init DONE");
 
             if (LauncherLogic.LaunchWay == LauncherLogic.LaunchWays.DragonEmu)
             {
