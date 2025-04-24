@@ -138,14 +138,30 @@ namespace Project_127.Overlay.NoteOverlayPages
 						if (yesno == true)
 						{
 							HelperClasses.FileHandling.deleteFile(filepath);
-							HelperClasses.FileHandling.copyFile(files[i], filepath);
+						}
+						else
+						{
+							HelperClasses.Logger.Log("User does not want to delete already existing notefile");
+							continue;
 						}
 					}
+					if (files[i].ToUpper()[0] == filepath.ToUpper()[0])
+					{
+                        try
+                        {
+                            HelperClasses.FileHandling.HardLinkFiles(filepath, files[i], true);
+                        }
+                        catch (Exception ex)
+                        {
+                            HelperClasses.Logger.Log("Failed to hardlink files inside notes somewhere. " + ex.ToString(), true, 0);
+                            continue;
+                        }
+                    }
 					else
 					{
-						HelperClasses.FileHandling.copyFile(files[i], filepath);
-					}
-				}
+                        HelperClasses.FileHandling.copyFile(files[i], filepath);
+                    }
+                }
 				MyNoteFile tmp = new MyNoteFile(filename);
 				MNFL.Add(tmp);
 			}
