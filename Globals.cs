@@ -508,6 +508,7 @@ namespace Project_127
                 Settings.InitImportantSettings();
 
                 Settings.AntiVirusFix();
+                Settings.AntiControlledFolderFix();
 
                 // Set FirstLaunch to false
                 Settings.FirstLaunch = false;
@@ -796,6 +797,12 @@ namespace Project_127
                     HelperClasses.Logger.Log("Deleting CEF_CacheFiles since users last launched version is below 1.5.1.0");
                     string cefcachepath = Globals.ProjectInstallationPathBinary.TrimEnd('\\') + @"\CEF_CacheFiles";
                     HelperClasses.FileHandling.DeleteFolder(cefcachepath);
+                }
+
+                if (Settings.LastLaunchedVersion < new Version("1.5.3.0"))
+                {
+                    HelperClasses.Logger.Log("Last launched version is below 1.5.3.0");
+                    Settings.AntiControlledFolderFix();
                 }
 
                 Settings.LastLaunchedVersion = Globals.ProjectVersion;

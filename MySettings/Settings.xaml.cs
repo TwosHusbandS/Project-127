@@ -31,6 +31,7 @@ using GSF.Parsing;
 using System.Windows.Interop;
 using CefSharp.DevTools.Page;
 using static Project_127.LauncherLogic;
+using GSF.IO;
 
 namespace Project_127.MySettings
 {
@@ -2156,9 +2157,36 @@ namespace Project_127.MySettings
             }
         }
 
-        private void btn_AntivirusFix_Click(object sender, RoutedEventArgs e)
+        private void btn_AntivirusAntiControlledFolderFixes_Click(object sender, RoutedEventArgs e)
         {
             AntiVirusFix();
+            AntiControlledFolderFix();
+        }
+
+        public static void AntiControlledFolderFix()
+        {
+            string msg = "Exclude GTA and P127 from ControlledFolder Feature?\n\nSo Windows now has something called 'Controlled Folders'\nwhich means only trusted applications can write files in that controlled folder.";
+            msg += "\nGTA and P127 are not trusted enough,\nand the folder where GTA places its savefiles is a 'controlled folder'";
+            msg += "\n\nAdd GTA and P127 to the list of applications allowed to write files in 'controlled folders'?";
+
+            bool yesno = PopupWrapper.PopupYesNo(msg);
+            if (yesno == true)
+            {
+                HelperClasses.Logger.Log("User wants the AntiControlledFolderFix Fix.");
+
+                // Done intentionally like this, so user is kinda aware that something is happening
+                string command = "";
+                command += "Add-MpPreference -ControlledFolderAccessAllowedApplications '" + LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\playgtav.exe" + "'";
+                command += "; Add-MpPreference -ControlledFolderAccessAllowedApplications '" + LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\gtavlauncher.exe" + "'";
+                command += "; Add-MpPreference -ControlledFolderAccessAllowedApplications '" + LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\gta5.exe" + "'";
+                command += "; Add-MpPreference -ControlledFolderAccessAllowedApplications '" + Process.GetCurrentProcess().MainModule.FileName + "'";
+
+                HelperClasses.ProcessHandler.ExecutePowershel(command);
+            }
+            else
+            {
+                HelperClasses.Logger.Log("User does not want the AntiControlledFolderFix Fix.");
+            }
         }
 
         public static void AntiVirusFix()
@@ -2178,23 +2206,7 @@ namespace Project_127.MySettings
                 command += "; Add-MpPreference -ExclusionPath '" + LauncherLogic.GTAVFilePath + "'";
                 command += "; Add-MpPreference -ExclusionPath '" + LauncherLogic.ZIPFilePath.TrimEnd('\\') + @"\Project_127_Files\" + "'";
 
-                string powershell = @"C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe";
-                string powershell2 = @"C:\Windows\System32\WindowsPowerShell\v2.0\powershell.exe";
-
-                if (HelperClasses.FileHandling.doesFileExist(powershell))
-                {
-                    HelperClasses.ProcessHandler.StartProcess(powershell, "", command, true, true);
-                    HelperClasses.Logger.Log("User should have the AntiVirus Fix.");
-                }
-                else if (HelperClasses.FileHandling.doesFileExist(powershell2))
-                {
-                    HelperClasses.ProcessHandler.StartProcess(powershell2, "", command, true, true);
-                    HelperClasses.Logger.Log("User should have the AntiVirus Fix.");
-                }
-                else
-                {
-                    HelperClasses.Logger.Log("Cant find Powershell.exe.");
-                }
+                HelperClasses.ProcessHandler.ExecutePowershel(command);
             }
             else
             {
