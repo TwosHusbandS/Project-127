@@ -2157,9 +2157,13 @@ namespace Project_127.MySettings
             }
         }
 
-        private void btn_AntivirusAntiControlledFolderFixes_Click(object sender, RoutedEventArgs e)
+        private void btn_AntivirusFix_Click(object sender, RoutedEventArgs e)
         {
             AntiVirusFix();
+        }
+
+        private void btn_AntiControlledFolderFix_Click(object sender, RoutedEventArgs e)
+        {
             AntiControlledFolderFix();
         }
 
