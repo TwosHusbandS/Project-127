@@ -336,7 +336,7 @@ namespace Project_127.HelperClasses
 
 				HelperClasses.FileHandling.WriteStringToFileOverwrite(Globals.DebugFile, DebugMessage.ToArray());
 
-				HelperClasses.ProcessHandler.StartProcess(@"C:\Windows\explorer.exe", pCommandLineArguments: Globals.ProjectInstallationPath);
+				HelperClasses.ProcessHandler.StartProcess(Globals.ExplorerExeFilePath, pCommandLineArguments: Globals.ProjectInstallationPath);
 			});
 		}
 

@@ -572,5 +572,38 @@ namespace Project_127.HelperClasses
             return false;
         }
 
+
+
+        public static string GetPowershellPath()
+        {
+            RegistryKey myRK = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64).CreateSubKey("SOFTWARE").CreateSubKey("Microsoft").CreateSubKey("PowerShell").CreateSubKey("1").CreateSubKey("ShellIds").CreateSubKey("Microsoft.PowerShell");
+            string PowershellPath = HelperClasses.RegeditHandler.GetValue(myRK, "Path");
+            if (FileHandling.doesFileExist(PowershellPath)) {
+                return PowershellPath;
+            }
+            else
+            {
+                return "";
+            }
+
+        }
+
+        public static bool ExecutePowershel(string command)
+        {
+            HelperClasses.Logger.Log("Executing Powershell.", 1);
+            string PowerShellPath = GetPowershellPath();
+            if (String.IsNullOrEmpty(PowerShellPath))
+            {
+                HelperClasses.Logger.Log("Executing Powershell FAILED, PowerShellPath not found", 1);
+                return false;
+            }
+            else
+            {
+                HelperClasses.ProcessHandler.StartProcess(PowerShellPath, "", command, true, true);
+                HelperClasses.Logger.Log("Executing Powershell SUCCESS", 1);
+                return true;
+            }
+        }
+
     } // End of Class
 } // End of Namespace

@@ -236,8 +236,16 @@ namespace Project_127
         /// <summary>
         /// Property of other Buildinfo. Will be in the top message of logs
         /// </summary>
-        public static string BuildInfo = "1.5.2.0 - RC 2";
+        public static string BuildInfo = "1.5.3.0 - RC 2";
 
+
+        public static string WindowsDirectory { get { return System.Environment.GetEnvironmentVariable("WINDIR"); } }
+
+        public static string WindowsDrive { get { return Path.GetPathRoot(WindowsDirectory); } }
+
+        public static string ExplorerExeFilePath { get { return WindowsDirectory.TrimEnd('\\') + @"\explorer.exe"; } } 
+
+        public static string NotepadExeFilePath { get { return WindowsDirectory.TrimEnd('\\') + @"\notepad.exe"; } }
 
         /// <summary>
         /// Returns all Command Line Args as StringArray
@@ -508,6 +516,7 @@ namespace Project_127
                 Settings.InitImportantSettings();
 
                 Settings.AntiVirusFix();
+                Settings.AntiControlledFolderFix();
 
                 // Set FirstLaunch to false
                 Settings.FirstLaunch = false;
@@ -796,6 +805,12 @@ namespace Project_127
                     HelperClasses.Logger.Log("Deleting CEF_CacheFiles since users last launched version is below 1.5.1.0");
                     string cefcachepath = Globals.ProjectInstallationPathBinary.TrimEnd('\\') + @"\CEF_CacheFiles";
                     HelperClasses.FileHandling.DeleteFolder(cefcachepath);
+                }
+
+                if (Settings.LastLaunchedVersion < new Version("1.5.3.0"))
+                {
+                    HelperClasses.Logger.Log("Last launched version is below 1.5.3.0");
+                    Settings.AntiControlledFolderFix();
                 }
 
                 Settings.LastLaunchedVersion = Globals.ProjectVersion;

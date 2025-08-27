@@ -306,7 +306,7 @@ namespace Project_127.Overlay.NoteOverlayPages
 				{
 					if (HelperClasses.FileHandling.doesFileExist(MNF.FilePath))
 					{
-						ProcessHandler.StartProcess(@"C:\Windows\System32\notepad.exe", pCommandLineArguments: MNF.FilePath);
+						ProcessHandler.StartProcess(Globals.NotepadExeFilePath, pCommandLineArguments: MNF.FilePath);
 					}
 				}
 

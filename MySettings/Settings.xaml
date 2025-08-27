@@ -141,7 +141,9 @@
 
                             <Button Grid.Row="10" Grid.Column="0" Grid.ColumnSpan="4" Style="{StaticResource btn_SE_Path}" x:Name="btn_RepairGTA" ToolTip="'Repairs' your GTA V Installation. Clears everything." Click="btn_RepairGTA_Click" Content="Repair GTA V Installation"/>
 
-                            <Button Grid.Row="11" Grid.Column="0" Grid.ColumnSpan="4" Style="{StaticResource btn_SE_Path}" x:Name="btn_AntivirusFix" ToolTip="Exclude P127 Folders from Windows Defender / AntiVirus" Click="btn_AntivirusFix_Click" Content="Exclude P127 Folders from Windows Defender / AntiVirus"/>
+                            <Button Grid.Row="11" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource btn_SE_Path}" x:Name="btn_AntivirusFix" ToolTip="Exclude P127 Folders from Windows Defender" Click="btn_AntivirusFix_Click" Content="Exclude P127 Folders from Windows Defender"/>
+
+                            <Button Grid.Row="11" Grid.Column="2" Grid.ColumnSpan="2" Style="{StaticResource btn_SE_Path}" x:Name="btn_AntiControlledFolderFix" ToolTip="Add exceptions to 'controlled folders'" Click="btn_AntiControlledFolderFix_Click" Content="Fix GTA not being able to write Savefiles"/>
 
                             <Button Grid.Row="12" Grid.Column="0" Grid.ColumnSpan="4" Style="{StaticResource btn_SE_Path}" x:Name="btn_Import_Zip" ToolTip="Import a P127 ZIP File manually. Rightclick to paste a DirectDownloadLink, Leftclick to select a File." Click="btn_Import_Zip_Click" Content="Click Me!"/>
                             

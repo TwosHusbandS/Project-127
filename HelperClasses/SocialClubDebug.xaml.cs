@@ -72,7 +72,7 @@ namespace Project_127.HelperClasses
                 {
                     folder = HelperClasses.FileHandling.GetParentFolder(folder);
                 }
-                HelperClasses.ProcessHandler.StartProcess(@"C:\Windows\explorer.exe", pCommandLineArguments: folder);
+                HelperClasses.ProcessHandler.StartProcess(Globals.ExplorerExeFilePath, pCommandLineArguments: folder);
             }
             catch (Exception ex)
             {

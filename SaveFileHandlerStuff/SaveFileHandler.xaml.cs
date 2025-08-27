@@ -1182,11 +1182,11 @@ namespace Project_127.SaveFileHandlerStuff
             ContextMenu cm = (ContextMenu)mi.Parent;
             if (cm.Name == "GTAV")
             {
-                ProcessHandler.StartProcess(@"C:\Windows\explorer.exe", pCommandLineArguments: MySaveFile.CurrGTASavesPath);
+                ProcessHandler.StartProcess(Globals.ExplorerExeFilePath, pCommandLineArguments: MySaveFile.CurrGTASavesPath);
             }
             else
             {
-                ProcessHandler.StartProcess(@"C:\Windows\explorer.exe", pCommandLineArguments: MySaveFile.CurrentBackupSavesPath);
+                ProcessHandler.StartProcess(Globals.ExplorerExeFilePath, pCommandLineArguments: MySaveFile.CurrentBackupSavesPath);
             }
         }
 

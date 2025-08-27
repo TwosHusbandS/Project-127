@@ -134,7 +134,10 @@ namespace Project_127.HelperClasses
                 new BuildVersionTable("1.0.3407.0", "1.70"),
                 new BuildVersionTable("1.0.3411.0", "1.70"),
                 new BuildVersionTable("1.0.3442.0", "1.70"),
-                new BuildVersionTable("1.0.3504.0", "1.70")
+                new BuildVersionTable("1.0.3504.0", "1.70"),
+                new BuildVersionTable("1.0.3521.0", "1.70"),
+                new BuildVersionTable("1.0.3570.0", "1.71"),
+                new BuildVersionTable("1.0.3586.0", "1.71")
             };
 
 			return tmp;
