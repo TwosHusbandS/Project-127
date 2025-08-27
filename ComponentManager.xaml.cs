@@ -788,7 +788,7 @@ namespace Project_127
 
         private void ImportComponenet(Components Component)
         {
-            string rtrn = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.File, "Select the ZIP File you want to import", @"C:\", false, "ZIP Files|*.zip*");
+            string rtrn = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.File, "Select the ZIP File you want to import", Globals.WindowsDrive, false, "ZIP Files|*.zip*");
 
             if (HelperClasses.FileHandling.doesFileExist(rtrn))
             {

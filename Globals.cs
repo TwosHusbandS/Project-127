@@ -239,6 +239,14 @@ namespace Project_127
         public static string BuildInfo = "1.5.2.0 - RC 2";
 
 
+        public static string WindowsDirectory { get { return System.Environment.GetEnvironmentVariable("WINDIR"); } }
+
+        public static string WindowsDrive { get { return Path.GetPathRoot(WindowsDirectory); } }
+
+        public static string ExplorerExeFilePath { get { return WindowsDirectory.TrimEnd('\\') + @"\explorer.exe"; } } 
+
+        public static string NotepadExeFilePath { get { return WindowsDirectory.TrimEnd('\\') + @"\notepad.exe"; } }
+
         /// <summary>
         /// Returns all Command Line Args as StringArray
         /// </summary>

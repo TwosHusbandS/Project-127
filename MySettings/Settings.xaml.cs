@@ -266,7 +266,7 @@ namespace Project_127.MySettings
             string StartUpPath = Settings.GTAVInstallationPath;
             if (String.IsNullOrWhiteSpace(StartUpPath))
             {
-                StartUpPath = @"C:\";
+                StartUpPath = Globals.WindowsDrive;
             }
             else
             {
@@ -300,7 +300,7 @@ namespace Project_127.MySettings
                     Settings.GTAVInstallationPath = GTAVInstallationPathUserChoice;
                     break;
                 }
-                GTAVInstallationPathUserChoice = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.Folder, "Pick the Folder which contains your GTA5.exe", @"C:\");
+                GTAVInstallationPathUserChoice = HelperClasses.FileHandling.OpenDialogExplorer(HelperClasses.FileHandling.PathDialogType.Folder, "Pick the Folder which contains your GTA5.exe", Globals.WindowsDrive);
                 HelperClasses.Logger.Log("New Users picked path is: '" + GTAVInstallationPathUserChoice + "'");
             }
             HelperClasses.Logger.Log("Picked path '" + GTAVInstallationPathUserChoice + "' is valid and will be set as Settings.GTAVInstallationPath.");
@@ -457,7 +457,7 @@ namespace Project_127.MySettings
                         string StartUpPathZIP = Settings.ZIPExtractionPath;
                         if (String.IsNullOrWhiteSpace(StartUpPathZIP))
                         {
-                            StartUpPathZIP = @"C:\";
+                            StartUpPathZIP = Globals.WindowsDrive;
                         }
                         else
                         {
@@ -488,7 +488,7 @@ namespace Project_127.MySettings
                         string StartUpPath = Settings.PathLiveSplit;
                         if (!HelperClasses.FileHandling.doesFileExist(StartUpPath))
                         {
-                            StartUpPath = @"C:\";
+                            StartUpPath = Globals.WindowsDrive;
                         }
                         else
                         {
@@ -511,7 +511,7 @@ namespace Project_127.MySettings
                         string StartUpPath2 = Settings.PathStreamProgram;
                         if (!HelperClasses.FileHandling.doesFileExist(StartUpPath2))
                         {
-                            StartUpPath2 = @"C:\";
+                            StartUpPath2 = Globals.WindowsDrive;
                         }
                         else
                         {
@@ -534,7 +534,7 @@ namespace Project_127.MySettings
                         string StartUpPath3 = Settings.PathNohboard;
                         if (!HelperClasses.FileHandling.doesFileExist(StartUpPath3))
                         {
-                            StartUpPath3 = @"C:\";
+                            StartUpPath3 = Globals.WindowsDrive;
                         }
                         else
                         {
@@ -557,7 +557,7 @@ namespace Project_127.MySettings
                         string StartUpPath4 = Settings.PathFPSLimiter;
                         if (!HelperClasses.FileHandling.doesFileExist(StartUpPath4))
                         {
-                            StartUpPath4 = @"C:\";
+                            StartUpPath4 = Globals.WindowsDrive;
                         }
                         else
                         {
@@ -579,10 +579,10 @@ namespace Project_127.MySettings
             {
                 if (!HelperClasses.FileHandling.doesPathExist(explorerStartPath))
                 {
-                    explorerStartPath = @"C:\";
+                    explorerStartPath = Globals.WindowsDrive;
                 }
 
-                HelperClasses.ProcessHandler.StartProcess(@"C:\Windows\explorer.exe", pCommandLineArguments: explorerStartPath);
+                HelperClasses.ProcessHandler.StartProcess(Globals.ExplorerExeFilePath, pCommandLineArguments: explorerStartPath);
             }
 
             RefreshGUI();

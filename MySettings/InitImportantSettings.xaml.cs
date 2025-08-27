@@ -297,7 +297,7 @@ namespace Project_127.MySettings
             string StartUpPath = Settings.GTAVInstallationPath;
             if (String.IsNullOrWhiteSpace(StartUpPath))
             {
-                StartUpPath = @"C:\";
+                StartUpPath = Globals.WindowsDrive;
             }
             else
             {
