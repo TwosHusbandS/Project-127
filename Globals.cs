@@ -236,7 +236,7 @@ namespace Project_127
         /// <summary>
         /// Property of other Buildinfo. Will be in the top message of logs
         /// </summary>
-        public static string BuildInfo = "1.5.2.0 - RC 2";
+        public static string BuildInfo = "1.5.3.0 - RC 1";
 
 
         public static string WindowsDirectory { get { return System.Environment.GetEnvironmentVariable("WINDIR"); } }

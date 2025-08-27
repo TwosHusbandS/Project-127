@@ -48,7 +48,7 @@ namespace Project_127
             if (Globals.P127Branch != "master")
             {
                 // Opens the File
-                HelperClasses.ProcessHandler.StartProcess(Globals.NotepadExeFilPath, pCommandLineArguments: Globals.Logfile);
+                HelperClasses.ProcessHandler.StartProcess(Globals.NotepadExeFilePath, pCommandLineArguments: Globals.Logfile);
             }
         }
 
