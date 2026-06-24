@@ -245,7 +245,7 @@ namespace Project_127
 
         public static string ExplorerExeFilePath { get { return WindowsDirectory.TrimEnd('\\') + @"\explorer.exe"; } } 
 
-        public static string NotepadExeFilePath { get { return WindowsDirectory.TrimEnd('\\') + @"\notepad.exe"; } }
+        public static string NotepadExeFilePath { get { return WindowsDirectory.TrimEnd('\\') + @"\System32\notepad.exe"; } }
 
         /// <summary>
         /// Returns all Command Line Args as StringArray
@@ -812,6 +812,29 @@ namespace Project_127
                     HelperClasses.Logger.Log("Last launched version is below 1.5.3.0");
                     Settings.AntiControlledFolderFix();
                 }
+
+				if (Settings.LastLaunchedVersion < new Version("1.5.4.0"))
+				{
+    				HelperClasses.Logger.Log("Last launched version is below 1.5.4.0");
+    				if (Settings.Retailer != Settings.Retailers.XboxPC)
+    				{
+        				try
+        				{
+            				RegistryKey BaseKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64).OpenSubKey(@"SOFTWARE\WOW6432Node\Rockstar Games\Grand Theft Auto V");
+            				string XboxInstallFolder = HelperClasses.RegeditHandler.GetValue(BaseKey, "InstallFolderXboxPc");
+            				if (!string.IsNullOrEmpty(XboxInstallFolder))
+            				{
+                				bool XboxChoice = PopupWrapper.PopupYesNo("Project 1.27 now supports XboxPC (Game Pass) retailer.\nIs your GTA V retailer XboxPC?");
+                				if (XboxChoice == true)
+                				{
+                    				Settings.Retailer = Settings.Retailers.XboxPC;
+                				}
+            				}
+        				}
+
+        				catch { }
+    				}
+				}
 
                 Settings.LastLaunchedVersion = Globals.ProjectVersion;
 
@@ -2168,3 +2191,5 @@ namespace Project_127
 
     } // End of Class
 } // End of Namespace
+
+

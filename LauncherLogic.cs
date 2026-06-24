@@ -48,6 +48,12 @@ namespace Project_127
         public static bool InFileOperationWrapperLoop = false;
 
         /// <summary>
+        /// GUI Update lock
+        /// </summary>
+
+        public static int GUIUpdateLock = 0;
+
+        /// <summary>
         /// Property of our GameState. Gets polled every 2.5 seconds
         /// </summary>
         public static GameStates GameState
@@ -393,7 +399,7 @@ namespace Project_127
             }
             set
             {
-                if (Settings.Retailer == Settings.Retailers.Epic)
+                if (Settings.Retailer == Settings.Retailers.Epic || Settings.Retailer == Settings.Retailers.XboxPC)
                 {
                     if (value == LaunchWays.SocialClubLaunch)
                     {
@@ -1098,6 +1104,12 @@ namespace Project_127
                     // This does not work with custom wrapper StartProcess in ProcessHandler...i guess this is fine
                     Process.Start(@"com.epicgames.launcher://apps/9d2d0eb64d5c44529cece33fe2a46482?action=launch&silent=true");
                 }
+                // If XboxPC
+                else if (Settings.Retailer == Settings.Retailers.XboxPC)
+                {
+                    HelperClasses.Logger.Log("Trying to start Game normally through XboxPC.", 1);
+                    Process.Start(@"msgamelaunch://shortcutLaunch/?ProductId=9N9RSV4F7ZR0&Exe=GTAO");
+                }
                 // If Rockstar
                 else
                 {
@@ -1295,7 +1307,7 @@ namespace Project_127
                         {
                             Upgrade(false, true);
 
-                            if (LauncherLogic.LaunchWay == LauncherLogic.LaunchWays.DragonEmu || Settings.Retailer == Settings.Retailers.Epic)
+                            if (LauncherLogic.LaunchWay == LauncherLogic.LaunchWays.DragonEmu || Settings.Retailer == Settings.Retailers.Epic || Settings.Retailer == Settings.Retailers.XboxPC)
                             {
                                 if (Settings.DragonEmuGameVersion == "124")
                                 {
@@ -1364,6 +1376,12 @@ namespace Project_127
             else
             {
                 NewPath = Directory.GetParent(OrigPath).ToString().TrimEnd('\\') + @"\UpgradeFiles_Backup_" + NewPath.TrimEnd('\\');
+            }
+
+            if (Settings.Retailer == Settings.Retailers.XboxPC)
+            {
+                PopupWrapper.PopupOk("Backup not available for XboxPC retailer.");
+                return;
             }
 
             if (!(HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(UpgradeFilePath).Length >= 2 && HelperClasses.BuildVersionTable.IsUpgradedGTA(UpgradeFilePath)))
@@ -2051,6 +2069,8 @@ namespace Project_127
             }
         }
 
+
     } // End of Class
 } // End of NameSpace
+
 

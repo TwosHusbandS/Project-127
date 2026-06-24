@@ -554,7 +554,7 @@ namespace Project_127.Overlay
 		/// <param name="text">Text to display</param>
 		public void setText(string text)
 		{
-			HelperClasses.Logger.Log("Overlay text updated");
+			//HelperClasses.Logger.Log("Overlay text updated");
 			this.text = text;
 		}
 
@@ -1393,3 +1393,4 @@ namespace Project_127.Overlay
 	}
 
 }
+

@@ -105,6 +105,8 @@ namespace Project_127.MySettings
         public string NS_ZIPPath = "";
         public bool NS_EnableCopyFilesInsteadOfHardlinking = false;
         public string NS_Retailer = "";
+        public string PossibleXboxPC = "";
+        public string XboxDriveRoot = "";
 
         public void AddGuesses()
         {
@@ -140,6 +142,8 @@ namespace Project_127.MySettings
                     HelperClasses.Logger.Log("Init important settings, in addGuesses, in RegistryBaseKey foreach, post epic");
                     string PossibleRockstar = HelperClasses.RegeditHandler.GetValue(myRKTemp, "InstallFolder");
                     HelperClasses.Logger.Log("Init important settings, in addGuesses, in RegistryBaseKey foreach, post rockstar");
+                    PossibleXboxPC = HelperClasses.RegeditHandler.GetValue(myRKTemp, "InstallFolderXboxPc");
+                    HelperClasses.Logger.Log("Init important settings, in addGuesses, in RegistryBaseKey foreach, post XboxPC");
 
                     if (!string.IsNullOrEmpty(PossibleSteam))
                     {
@@ -152,6 +156,11 @@ namespace Project_127.MySettings
                     if (!string.IsNullOrEmpty(PossibleRockstar))
                     {
                         GTAVPathGuessesDuplicates.Add(new GTAVPathGuess(PossibleRockstar, Retailers.Rockstar));
+                    }
+
+                    if (!string.IsNullOrEmpty(PossibleXboxPC))
+                    {
+                        GTAVPathGuessesDuplicates.Add(new GTAVPathGuess(PossibleXboxPC, Retailers.XboxPC));
                     }
                 }
                 catch { }
@@ -233,11 +242,64 @@ namespace Project_127.MySettings
             }
         }
 
+        public static bool IsValidDriveChar(char value)
+        {
+            return (uint)((value | 0x20) - 'a') <= (uint)('z' - 'a');
+        }
+
+        public static bool IsDirectorySeparator(char c)
+        {
+            return c == '\\' || c == '/';
+        }
+
+        public static bool IsPartiallyQualified(ReadOnlySpan<char> path)
+        {
+            if (path.Length < 2)
+            {
+                return true;
+            }
+
+            if (IsDirectorySeparator(path[0]))
+            {
+                return !(path[1] == '?' || IsDirectorySeparator(path[1]));
+            }
+
+            return !((path.Length >= 3)
+                && (path[1] == ':')
+                && IsDirectorySeparator(path[2])
+                && IsValidDriveChar(path[0]));
+        }
+
+        /// Source: PathInternal.Windows.cs
+        public static bool IsPathFullyQualified(ReadOnlySpan<char> path)
+        {
+            return !IsPartiallyQualified(path);
+        }
+
         public void CheckIfGTAVPathDone()
         {
             if (!String.IsNullOrWhiteSpace(NS_GTAVPath))
             {
                 HelperClasses.Logger.Log("GTAV Path set: '" + NS_GTAVPath + "'");
+
+                if (Settings.FirstLaunch)
+                {
+                    try
+                    {
+                        if (!string.IsNullOrEmpty(PossibleXboxPC))
+                        {
+                            if (String.Equals(PossibleXboxPC.TrimEnd('\\'), NS_GTAVPath.TrimEnd('\\'), StringComparison.OrdinalIgnoreCase))
+                            {
+                                XboxDriveRoot = System.IO.Path.GetPathRoot(NS_GTAVPath.TrimEnd('\\'));
+                                if (!IsPathFullyQualified(XboxDriveRoot.AsSpan()))
+                                {
+                                    XboxDriveRoot = "";
+                                }
+                            }
+                        }
+                    }
+                    catch { }
+                }
 
                 pb_sth.Value = 30;
                 lbl_Header.Content = "Initiating the most important Settings Project 1.27 needs. (1/4)";
@@ -251,7 +313,17 @@ namespace Project_127.MySettings
                 btn_BigBtn.Visibility = Visibility.Hidden;
 
                 HelperClasses.Logger.Log("Asking about ZIP Path (Project_127_Folder) now");
-                lbl_Main.Content = "Project 1.27 needs a Folder where it installs all of its Components and saves Files for Upgrading and Downgrading.\nIt is recommend to do this on the same Drive / Partition as your GTAV Installation Path\nBest Case (and default Location) is your GTAV Path.\nDo you want to use the default recommendation?";
+                
+                if (!string.IsNullOrEmpty(XboxDriveRoot))
+                {
+                    lbl_Main.Content = "Project 1.27 needs a Folder where it installs all of its Components and saves Files for Upgrading and Downgrading.\nIt is recommend to do this on the same Drive / Partition as your GTAV Installation Path\nDo you want to use " + XboxDriveRoot + " as the default recommendation?";
+                }
+
+                else
+                {
+                    lbl_Main.Content = "Project 1.27 needs a Folder where it installs all of its Components and saves Files for Upgrading and Downgrading.\nIt is recommend to do this on the same Drive / Partition as your GTAV Installation Path\nBest Case (and default Location) is your GTAV Path.\nDo you want to use the default recommendation?";
+                }
+                
                 btn_No.Visibility = Visibility.Visible;
                 btn_Yes.Visibility = Visibility.Visible;
                 btn_No.Tag = "ZIPDefault";
@@ -259,8 +331,6 @@ namespace Project_127.MySettings
                 btn_BigBtn.Visibility = Visibility.Hidden;
             }
         }
-
-
 
         public void PickZIPPathLocation()
         {
@@ -493,8 +563,15 @@ namespace Project_127.MySettings
             {
                 if (replyvalue)
                 {
-                    HelperClasses.Logger.Log("User wants default ZIPPath (same as GTAV Path)");
-                    NS_ZIPPath = NS_GTAVPath;
+                    HelperClasses.Logger.Log("User wants default ZIPPath");
+                    if (!string.IsNullOrEmpty(XboxDriveRoot))
+                    {
+                        NS_ZIPPath = XboxDriveRoot;
+                    }
+                    else
+                    {
+                        NS_ZIPPath = NS_GTAVPath;
+                    }
                     CheckIfZIPPathDone();
                 }
                 else

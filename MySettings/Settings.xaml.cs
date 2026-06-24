@@ -1246,7 +1246,7 @@ namespace Project_127.MySettings
                 Rect_HideOptions_AutoCoreFix.Visibility = Visibility.Visible;
             }
 
-            if (Retailer == Retailers.Epic)
+            if (Retailer == Retailers.Epic || Retailer == Retailers.XboxPC)
             {
                 Rect_HideOptions_SCL_Launch.Visibility = Visibility.Visible;
             }
@@ -2392,3 +2392,4 @@ namespace Project_127.MySettings
 
     } // End of Class
 } // End of Namespace 
+

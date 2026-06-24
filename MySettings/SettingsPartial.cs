@@ -776,7 +776,8 @@ namespace Project_127.MySettings
             // THESE NEED TO BE IN THAT SPELLING AND UPPERCASING
             Steam,
             Rockstar,
-            Epic
+            Epic,
+			XboxPC
         }
 
         /// <summary>
@@ -2086,6 +2087,7 @@ namespace Project_127.MySettings
             }
             return rtrn;
         }
+
 
 
     } // End of partial Class

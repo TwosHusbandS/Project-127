@@ -155,7 +155,16 @@ string lpSymlinkFileName, string lpTargetFileName, SymbolicLink dwFlags);
                     FileVersionInfo FVI = FileVersionInfo.GetVersionInfo(filePath);
                     rtrn = new Version(FVI.FileVersion);
                 }
-                catch { }
+                catch
+                {
+                    if (Settings.Retailer == Settings.Retailers.XboxPC)
+                    {
+                        if (String.Equals(filePath, LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\gta5.exe", StringComparison.OrdinalIgnoreCase) || String.Equals(filePath, LauncherLogic.UpgradeFilePath.TrimEnd('\\') + @"\gta5.exe", StringComparison.OrdinalIgnoreCase))
+                        {
+                            rtrn = new Version("99.99.99.99");
+                        }
+                    }
+                }
             }
 
             return rtrn;
@@ -1033,10 +1042,23 @@ string lpSymlinkFileName, string lpTargetFileName, SymbolicLink dwFlags);
             {
                 if (doesFileExist(pFilePath))
                 {
-                    File.SetAttributes(pFilePath, FileAttributes.Normal);
+                    if (Settings.Retailer == Settings.Retailers.XboxPC)
+                    {
+                        if (!String.Equals(pFilePath, LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\gta5.exe", StringComparison.OrdinalIgnoreCase) && !String.Equals(pFilePath, LauncherLogic.UpgradeFilePath.TrimEnd('\\') + @"\gta5.exe", StringComparison.OrdinalIgnoreCase) && !String.Equals(pFilePath, LauncherLogic.UpgradeFilePath.TrimEnd('\\') + @"\playgtav.exe", StringComparison.OrdinalIgnoreCase) && !String.Equals(pFilePath, LauncherLogic.GTAVFilePath.TrimEnd('\\') + @"\playgtav.exe", StringComparison.OrdinalIgnoreCase))
+                        {
+                            File.SetAttributes(pFilePath, FileAttributes.Normal);
+                        }
+                    }
+
+                    else
+                    {
+                        File.SetAttributes(pFilePath, FileAttributes.Normal);
+                    }
+
                     File.Delete(pFilePath);
                 }
             }
+            
             catch (Exception e)
             {
                 HelperClasses.Logger.Log("Deleting File failed ('" + pFilePath + "').", true, 0);
