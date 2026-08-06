@@ -31,9 +31,9 @@ namespace Project_127
         /// </summary>
         public static ReadMeStates LastReadMeState = ReadMeStates.About;
 
-        public static bool HideVideo = true;
+        public static bool HideVideo = false;
         public static string DragonsLink = "https://github.com/jaredtb";
-        public static string AnthersDemoVideoLink = "https://www.youtube.com/watch?v=dQw4w9WgXcQ&t=PLACEHOLDER";
+        public static string AnthersDemoVideoLink = "https://www.youtube.com/watch?v=-vs8sRI6hLg&t=22s";
 
 
         /// <summary>
