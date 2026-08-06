@@ -554,7 +554,7 @@ namespace Project_127.Overlay
 		/// <param name="text">Text to display</param>
 		public void setText(string text)
 		{
-			HelperClasses.Logger.Log("Overlay text updated");
+			// HelperClasses.Logger.Log("Overlay text updated");  // removed because this was spamming logs on some event listener
 			this.text = text;
 		}
 
