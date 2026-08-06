@@ -444,12 +444,13 @@ namespace Project_127.Auth
 			byte[] reqBody = EncryptROSData(BuildPostString(
 						new Dictionary<string, string>{
 							{ "ticket", session.ticket },
+							{ "platformId", "8" }, // pcros aka Legacy
 							{ "titleId", "11" },
 						}), session.sessionKey);
 
 			var req = new HttpRequestMessage
 			{
-				RequestUri = new Uri("http://prod.ros.rockstargames.com/launcher/11/launcherservices/app.asmx/GetTitleAccessToken"),
+				RequestUri = new Uri("http://prod.ros.rockstargames.com/launcher/11/launcherservices/app.asmx/GetTitleAccessToken2"),
 				Method = HttpMethod.Post,
 			};
 			req.Headers.Add("Host", "prod.ros.rockstargames.com");
