@@ -1011,16 +1011,17 @@ namespace Project_127
                             HelperClasses.Logger.Log("ComponentMngr - Updating SaveFiles.");
 
                             List<MyFileOperation> MFOs = new List<MyFileOperation>();
-                            bool yesno2 = PopupWrapper.PopupYesNo("Do you want to back up your old SaveFiles??");
+                            bool yesno2 = PopupWrapper.PopupYesNo("Do you want to back up your old SaveFiles??\nOtherwise all Savefiles will be deleted.");
                             if (yesno2 == true)
                             {
                                 HelperClasses.Logger.Log("ComponentMngr - User wants to back up old savefiles.");
 
                                 // move everything one folder down
+                                string OldSaveFilesFoldername = "Old_Savefiles";
                                 string[] FilePaths = HelperClasses.FileHandling.GetFilesFromFolderAndSubFolder(LauncherLogic.SaveFilesPath);
                                 string[] SubFolders = HelperClasses.FileHandling.GetSubFolders(LauncherLogic.SaveFilesPath);
 
-                                string SaveFilesOldFolder = LauncherLogic.SaveFilesPath.TrimEnd('\\') + @"\Old_Savefiles";
+                                string SaveFilesOldFolder = LauncherLogic.SaveFilesPath.TrimEnd('\\') + @"\" + OldSaveFilesFoldername;
                                 MFOs.Add(new MyFileOperation(MyFileOperation.FileOperations.Create, SaveFilesOldFolder, "", "Creating Old SaveFile Folder (" + SaveFilesOldFolder + ")", 0, MyFileOperation.FileOrFolder.Folder));
 
                                 foreach (string FilePath in FilePaths)
@@ -1034,6 +1035,14 @@ namespace Project_127
                                 }
                                 foreach (string SubFolder in SubFolders)
                                 {
+                                    if (SubFolder.ToLower().Contains(OldSaveFilesFoldername.ToLower()))
+                                    {
+                                        // if we dont do this, we move everything from all subfolders to the Old_Savefiles folder
+                                        // and then delete the very same folder, since we also moved files from inside
+                                        // but then we delete where we back uped to
+                                        // so for backups of backups, wwe need to skip this folder for deletion
+                                        continue;
+                                    }
                                     MFOs.Add(new MyFileOperation(MyFileOperation.FileOperations.Delete, SubFolder, "", "Deleting '" + SubFolder + "' (subfolder) since we have moved the files to backup directory", 0, MyFileOperation.FileOrFolder.Folder));
                                 }
                             }
