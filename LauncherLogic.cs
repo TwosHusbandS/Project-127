@@ -511,9 +511,6 @@ namespace Project_127
 
 
 
-
-
-
         /// <summary>
         /// Property of often used variable. (DowngradeEmuFilePath)
         /// </summary>
@@ -565,6 +562,11 @@ namespace Project_127
         /// Property of often used variable. (SupportFilePath)
         /// </summary>
         public static string SaveFilesPath { get { return LauncherLogic.SupportFilePath.TrimEnd('\\') + @"\SaveFiles\"; } }
+
+        /// <summary>
+        /// Property of often used variable. (ModManagerFilePath)
+        /// </summary>
+        public static string ModManagerFilePath { get { return LauncherLogic.SupportFilePath.TrimEnd('\\') + @"\ModManagerFiles\"; } }
 
         /// <summary>
         /// Property of often used variable. (GTAVFilePath)

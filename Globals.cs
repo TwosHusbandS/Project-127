@@ -28,6 +28,8 @@ using System.Timers;
 using System.Windows.Navigation;
 using System.Security.Cryptography;
 using System.Web.Script.Serialization;
+using Project_127.Properties;
+using Settings = Project_127.MySettings.Settings;
 
 namespace Project_127
 {
@@ -1632,7 +1634,8 @@ namespace Project_127
             ReadMe,
             GTA,
             NoteOverlay,
-            ComponentManager
+            ComponentManager,
+            ModManager
         }
 
         /// <summary>
@@ -1682,6 +1685,7 @@ namespace Project_127
                         MainWindow.MW.btn_ReadMe.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
                         MainWindow.MW.btn_NoteOverlay.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
                         MainWindow.MW.btn_ComponentManager.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
+                        MainWindow.MW.btn_ModManager.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
                         break;
                     case PageStates.SaveFileHandler:
                         MainWindow.MW.Frame_Main.Content = new SaveFileHandler();
@@ -1692,6 +1696,7 @@ namespace Project_127
                         MainWindow.MW.btn_ReadMe.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
                         MainWindow.MW.btn_NoteOverlay.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
                         MainWindow.MW.btn_ComponentManager.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
+                        MainWindow.MW.btn_ModManager.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
                         break;
                     case PageStates.ReadMe:
                         MainWindow.MW.Frame_Main.Content = new ReadMe();
@@ -1702,6 +1707,7 @@ namespace Project_127
                         MainWindow.MW.btn_SaveFiles.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
                         MainWindow.MW.btn_NoteOverlay.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
                         MainWindow.MW.btn_ComponentManager.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
+                        MainWindow.MW.btn_ModManager.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
                         break;
                     case PageStates.NoteOverlay:
                         MainWindow.MW.Frame_Main.Content = new Overlay.NoteOverlay();
@@ -1712,6 +1718,7 @@ namespace Project_127
                         MainWindow.MW.btn_SaveFiles.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
                         MainWindow.MW.btn_ReadMe.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
                         MainWindow.MW.btn_ComponentManager.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
+                        MainWindow.MW.btn_ModManager.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
                         break;
                     case PageStates.ComponentManager:
                         MainWindow.MW.Frame_Main.Content = new ComponentManager();
@@ -1722,6 +1729,18 @@ namespace Project_127
                         MainWindow.MW.btn_SaveFiles.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
                         MainWindow.MW.btn_ReadMe.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
                         MainWindow.MW.btn_NoteOverlay.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
+                        MainWindow.MW.btn_ModManager.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
+                        break;
+                    case PageStates.ModManager:
+                        MainWindow.MW.Frame_Main.Content = new ModManager();
+                        MainWindow.MW.btn_ModManager.Style = Application.Current.FindResource("btn_hamburgeritem_selected") as Style;
+
+                        MainWindow.MW.btn_Auth.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
+                        MainWindow.MW.btn_Settings.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
+                        MainWindow.MW.btn_SaveFiles.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
+                        MainWindow.MW.btn_ReadMe.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
+                        MainWindow.MW.btn_NoteOverlay.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
+                        MainWindow.MW.btn_ComponentManager.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
                         break;
                     case PageStates.Auth:
                         Auth.ROSIntegration.AuthErrorMessageThrownAlready = false;
@@ -1743,6 +1762,7 @@ namespace Project_127
                         MainWindow.MW.btn_SaveFiles.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
                         MainWindow.MW.btn_NoteOverlay.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
                         MainWindow.MW.btn_ComponentManager.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
+                        MainWindow.MW.btn_ModManager.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
                         break;
                     case PageStates.GTA:
                         MainWindow.MW.Frame_Main.Content = new GTA_Page();
@@ -1753,6 +1773,7 @@ namespace Project_127
                         MainWindow.MW.btn_SaveFiles.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
                         MainWindow.MW.btn_NoteOverlay.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
                         MainWindow.MW.btn_ComponentManager.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
+                        MainWindow.MW.btn_ModManager.Style = Application.Current.FindResource("btn_hamburgeritem") as Style;
                         break;
                 }
                 MainWindow.ClearHistory(MainWindow.MW.Frame_Main);

@@ -260,6 +260,19 @@ namespace Project_127
         }
 
 
+        private void btn_ModManager_Click(object sender, RoutedEventArgs e)
+        {
+            if (Globals.PageState == Globals.PageStates.ModManager)
+            {
+                Globals.PageState = Globals.PageStates.GTA;
+            }
+            else
+            {
+                Globals.PageState = Globals.PageStates.ModManager;
+            }
+        }
+
+
         /// <summary>
         /// Method which gets called when the Settings Button is clicked
         /// </summary>

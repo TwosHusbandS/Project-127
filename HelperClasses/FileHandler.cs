@@ -76,13 +76,18 @@ string lpSymlinkFileName, string lpTargetFileName, SymbolicLink dwFlags);
         /// <param name="pFilter"></param>
         /// <param name="pStartLocation"></param>
         /// <returns></returns>
-        public static string OpenDialogExplorer(PathDialogType pPathDialogType, string pTitle, string pStartLocation, bool pMultiSelect = false, string pFilter = null)
+        public static string OpenDialogExplorer(PathDialogType pPathDialogType, string pTitle, string pStartLocation = "", bool pMultiSelect = false, string pFilter = null)
         {
+            string startPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+            if (doesPathExist(pStartLocation))
+            {
+                startPath = pStartLocation;
+            }
             if (pPathDialogType == PathDialogType.File)
             {
                 OpenFileDialog myFileDialog = new OpenFileDialog();
                 myFileDialog.Filter = pFilter;
-                myFileDialog.InitialDirectory = pStartLocation;
+                myFileDialog.InitialDirectory = startPath;
                 myFileDialog.Title = pTitle;
                 myFileDialog.Multiselect = pMultiSelect;
 
@@ -92,17 +97,21 @@ string lpSymlinkFileName, string lpTargetFileName, SymbolicLink dwFlags);
             }
             else if (pPathDialogType == PathDialogType.Folder)
             {
-                var fsd = new OwnOpenFolderDialog.FolderSelectDialog(pTitle, pStartLocation);
+                var fsd = new OwnOpenFolderDialog.FolderSelectDialog(pTitle, startPath);
                 fsd.ShowDialog();
                 return fsd.FileName;
             }
             return "";
         }
 
-        public static string SaveFileDialog(string Title, string Filter)
+        public static string SaveFileDialog(string Title, string Filter, string InitialDirectory = "")
         {
             SaveFileDialog saveFileDialog = new SaveFileDialog();
             saveFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+            if (doesPathExist(InitialDirectory))
+            {
+                saveFileDialog.InitialDirectory = InitialDirectory;
+            }
             saveFileDialog.Filter = Filter;
             saveFileDialog.Title = Title;
             saveFileDialog.ShowDialog();
@@ -683,7 +692,7 @@ string lpSymlinkFileName, string lpTargetFileName, SymbolicLink dwFlags);
                 {
                     PopupWrapper.PopupProgressMD5(File);
                 }
-            }    
+            }
         }
 
         /// <summary>
@@ -1275,6 +1284,7 @@ string lpSymlinkFileName, string lpTargetFileName, SymbolicLink dwFlags);
             HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\UpgradeFiles");
             HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\UpgradeFiles\update");
             HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\SupportFiles\");
+            HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\SupportFiles\ModManagerFiles");
             HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\SupportFiles\Notes");
             HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\SupportFiles\Installer");
             HelperClasses.FileHandling.createPath(pZIPFileExtractLocation.TrimEnd('\\') + @"\Project_127_Files\SupportFiles\SaveFiles");

@@ -282,6 +282,9 @@
     </Compile>
     <Compile Include="Auth\RC4.cs" />
     <Compile Include="Popups\PopupWrapper.cs" />
+    <Compile Include="ModManager.xaml.cs">
+      <DependentUpon>ModManager.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ReadMe.xaml.cs">
       <DependentUpon>ReadMe.xaml</DependentUpon>
     </Compile>
@@ -406,6 +409,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Popups\PopupTextbox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ModManager.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -85,7 +85,12 @@ namespace Project_127
 			mi7B.Click += new System.EventHandler(this.menuItem_ComponentManager_Click);
 			cm.MenuItems.Add(mi7B);
 
-			System.Windows.Forms.MenuItem mi8 = new System.Windows.Forms.MenuItem();
+            System.Windows.Forms.MenuItem mi7C = new System.Windows.Forms.MenuItem();
+            mi7C.Text = "ModManager";
+            mi7C.Click += new System.EventHandler(this.menuItem_ModManager_Click);
+            cm.MenuItems.Add(mi7C);
+
+            System.Windows.Forms.MenuItem mi8 = new System.Windows.Forms.MenuItem();
 			mi8.Text = "Settings";
 			mi8.Click += new System.EventHandler(this.menuItem_Settings_Click);
 			cm.MenuItems.Add(mi8);
@@ -260,12 +265,23 @@ namespace Project_127
 			Globals.PageState = Globals.PageStates.ReadMe;
 		}
 
-		/// <summary>
-		/// Tray Icon - Context Menu - Method (Close)
-		/// </summary>
-		/// <param name="Sender"></param>
-		/// <param name="e"></param>
-		private void menuItem_Close_Click(object Sender, EventArgs e)
+        /// <summary>
+        /// Tray Icon - Context Menu - Method (Information)
+        /// </summary>
+        /// <param name="Sender"></param>
+        /// <param name="e"></param>
+        private void menuItem_ModManager_Click(object sender, EventArgs e)
+        {
+            menuItem_Show_Click(null, null);
+            Globals.PageState = Globals.PageStates.ModManager;
+        }
+
+        /// <summary>
+        /// Tray Icon - Context Menu - Method (Close)
+        /// </summary>
+        /// <param name="Sender"></param>
+        /// <param name="e"></param>
+        private void menuItem_Close_Click(object Sender, EventArgs e)
 		{
 			Globals.ProperExit();
 		}

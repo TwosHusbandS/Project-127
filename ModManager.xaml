@@ -1,0 +1,105 @@
+﻿<Page x:Class="Project_127.ModManager"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:Project_127"
+      xmlns:gif="http://wpfanimatedgif.codeplex.com"
+      xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+      mc:Ignorable="d" 
+        Title="Component Manager" d:DesignHeight="600" d:DesignWidth="720"        
+        Background="{x:Static local:MyColors.App_Submenu_Background}">
+    <Grid x:Name="Grid_Outer"  Margin="15,0,15,0" Height="600">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="7*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Label Style="{StaticResource lbl}" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Left" FontSize="24" Height="60" VerticalAlignment="Bottom" Margin="0,0,0,0" Content="Mod Manager"/>
+        </Grid>
+
+        <Grid Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition Height="8*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="10"/>
+                <ColumnDefinition Width="2*"/>
+            </Grid.ColumnDefinitions>
+            <Button Grid.Row="0" Grid.Column="0" Style="{StaticResource btn_SM}" FontSize="16" x:Name="btn_ApplyPreset" Content="Apply preset" ToolTip="Apply a preset." Click="btn_ApplyPreset_Click"/>
+            <Label Style="{StaticResource lbl}" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3" HorizontalAlignment="Left" FontSize="24" Height="60" VerticalAlignment="Bottom" Margin="0,0,0,0" Content="Active:"/>
+
+            <Border Grid.Row="1" Grid.Column="0" Margin="0" BorderBrush="{x:Static local:MyColors.SFH_DGBorderBrush}" BorderThickness="{x:Static local:MyColors.SFH_DGBorderThickness}" Background="{x:Static local:MyColors.SFH_DGBackground}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition Height="7*"/>
+                    </Grid.RowDefinitions>
+                    <Rectangle Grid.Row="0" Grid.Column="0" Fill="{x:Static local:MyColors.SE_Lbl_Header_Background}"/>
+                    <Label Style="{StaticResource lbl}" Foreground="{x:Static local:MyColors.SE_Lbl_Header_Foreground}" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Left" FontSize="18" VerticalAlignment="Bottom" Margin="0,0,0,10" Content="Presets"/>
+                    <Button Grid.Row="0" Margin="0,0,60,0" Width="40" Height="40" HorizontalAlignment="Right" Style="{StaticResource btn_SM}" FontSize="16" x:Name="btn_Presets_Plus" Content="+" ToolTip="." Click="btn_Presets_Plus_Click"/>
+                    <Button Grid.Row="0" Margin="0,0,10,0" Width="40" Height="40" HorizontalAlignment="Right" Style="{StaticResource btn_SM}" FontSize="16" x:Name="btn_Presets_Minus" Content="-" ToolTip="." Click="btn_Presets_Minus_Click"/>
+                    <ScrollViewer x:Name="sv_Presets" Grid.Row="1">
+                        <DataGrid x:Name="dg_Presets" Style="{StaticResource dg_cm}" PreviewMouseWheel="dg_Presets_PreviewMouseWheel" GotFocus="dg_Presets_GotFocus"  PreviewKeyDown="dg_Presets_PreviewKeyDown" PreviewMouseRightButtonDown="dg_Presets_PreviewMouseRightButtonDown">
+                            <DataGrid.Resources>
+                                <Style TargetType="DataGridRow">
+                                    <EventSetter Event="MouseDoubleClick" Handler="DataGridRow_MouseDoubleClick"/>
+                                </Style>
+                            </DataGrid.Resources>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Filename" Binding="{Binding FileName, Mode=OneWay}" Width="*" FontSize="20"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </ScrollViewer>
+                </Grid>
+            </Border>
+
+
+            <Border Grid.Column="3" Grid.Row="1"  Margin="0" BorderBrush="{x:Static local:MyColors.SFH_DGBorderBrush}" BorderThickness="{x:Static local:MyColors.SFH_DGBorderThickness}" Background="{x:Static local:MyColors.SFH_DGBackground}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition Height="7*"/>
+                    </Grid.RowDefinitions>
+                    <Rectangle Grid.Row="0" Grid.Column="0" Fill="{x:Static local:MyColors.SE_Lbl_Header_Background}"/>
+                    <Label Style="{StaticResource lbl}" Foreground="{x:Static local:MyColors.SE_Lbl_Header_Foreground}" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Left" FontSize="18" VerticalAlignment="Bottom" Margin="0,0,0,10" Content="Files in Preset:"/>
+                    <Button Grid.Row="0" Grid.Column="0" Margin="0,0,130,0" Width="40" Height="40" HorizontalAlignment="Right" Style="{StaticResource btn_SM}" FontSize="16" x:Name="btn_PresetFiles_Plus" Content="+" ToolTip="." Click="btn_PresetFiles_Plus_Click"/>
+                    <Button Grid.Row="0" Grid.Column="0" Margin="0,0,80,0" Width="40" Height="40" HorizontalAlignment="Right" Style="{StaticResource btn_SM}" FontSize="16" x:Name="btn_PresetFiles_Minus" Content="-" ToolTip="." Click="btn_PresetFiles_Minus_Click"/>
+                    <Button Grid.Row="0" Grid.Column="0" Margin="0,0,10,0" Width="60" Height="40" HorizontalAlignment="Right" Style="{StaticResource btn_SM}" FontSize="16" x:Name="btn_PresetFiles_Edit" Content="Edit" ToolTip="." Click="btn_PresetFiles_Edit_Click"/>
+
+                    <ScrollViewer x:Name="sv_PresetFiles" Grid.Row="1">
+                        <DataGrid x:Name="dg_PresetFiles" Style="{StaticResource dg_cm}" PreviewMouseWheel="dg_PresetFiles_PreviewMouseWheel" GotFocus="dg_PresetFiles_GotFocus"  PreviewKeyDown="dg_PresetFiles_PreviewKeyDown" PreviewMouseRightButtonDown="dg_PresetFiles_PreviewMouseRightButtonDown">
+                            <DataGrid.Resources>
+                                <Style TargetType="DataGridRow">
+                                    <EventSetter Event="MouseDoubleClick" Handler="DataGridRow_MouseDoubleClick"/>
+                                </Style>
+                            </DataGrid.Resources>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Filename" Binding="{Binding FileName, Mode=OneWay}" Width="*" FontSize="20"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </ScrollViewer>
+                </Grid>
+            </Border>
+        </Grid>
+        <Grid Grid.Row="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+
+            <Button Grid.Row="0" Grid.Column="0" Margin="15,15,15,15" Style="{StaticResource btn_SM}" FontSize="16" x:Name="btn_Import" Content="Import" ToolTip="Import a preset." Click="btn_Import_Click"/>
+            <Button Grid.Row="0" Grid.Column="1" Margin="15,15,15,15" Style="{StaticResource btn_SM}" FontSize="16" x:Name="btn_Export" Content="Export" ToolTip="Export a preset." Click="btn_Export_Click"/>
+
+
+        </Grid>
+    </Grid>
+</Page>
